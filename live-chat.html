@@ -1,414 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- Include the Emoji Button library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emoji-button/3.4.0/emoji-button.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/emoji-button/3.4.0/emoji-button.min.js"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Chat</title>
+    <title>Feature Removed</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            text-align: center;
             margin: 0;
             padding: 0;
-            display: flex;
-            height: 100vh;
+            background-color: #f9f9f9;
         }
-
-        #chat-container {
-            display: flex;
-            width: 100%;
-            height: 100%;
+        .container {
+            margin-top: 10%;
         }
-
-        #chat-box {
-            flex: 3;
-            padding: 10px;
-            overflow-y: auto;
-            border-right: 1px solid #ddd;
-            background-color: #fff;
+        h1 {
+            color: #ff0000;
+            font-size: 2.5em;
         }
-
-        #online-users {
-            flex: 1;
-            padding: 10px;
-            border-left: 1px solid #ddd;
-            background-color: #f5f5f5;
-            max-width: 300px;
-            overflow-y: auto;
+        p {
+            font-size: 1.2em;
+            color: #333;
         }
-
-        .message {
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 10px;
-            max-width: 70%;
-        }
-
-        .message.user {
-            background-color: #d1e7ff;
-            align-self: flex-end;
-        }
-
-        .message.bot {
-            background-color: #e2e2e2;
-            align-self: flex-start;
-        }
-
-        #input-container {
-            display: flex;
-            border-top: 1px solid #ddd;
-            background-color: #fff;
-        }
-
-        #message-input {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            outline: none;
-            border-radius: 0;
-        }
-
-        #send-button {
-            padding: 10px;
-            border: none;
-            background-color: #007bff;
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #007BFF;
             color: white;
-            border-radius: 0;
-            cursor: pointer;
-        }
-
-        #send-button:hover {
-            background-color: #0056b3;
-        }
-
-        #username-container {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            background-color: #fff;
-            display: flex;
-            align-items: center;
-        }
-
-        #username {
-            margin-left: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 5px;
-        }
-
-        .reactions {
-            margin-top: 5px;
-            display: flex;
-            gap: 5px;
-        }
-
-        .reaction-button {
-            background: none;
             border: none;
             cursor: pointer;
+            border-radius: 5px;
         }
-
-        #message-toolbar {
-            display: flex;
-            gap: 5px;
-        }
-
-        #online-users img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .online-user {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
-
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/emoji-button@latest/dist/index.min.js"></script>
-
-    <link rel="stylesheet" href="styles.css">
-
-    <nav class="navbar" style="height:7%">
-        <ul class="nav-links">
-            <li class="nav-item"><a href="/">Home</a></li>
-            <li class="nav-item"><a href="/#products">Products</a></li>
-            <li class="nav-item"><a href="/#help">Help</a></li>
-            <li class="nav-item"><a href="/#about">About</a></li>
-            <li class="nav-item dropdown">
-                <a href="javascript:void(0)" class="dropbtn">More</a>
-                <div class="dropdown-content">
-                    <a href="/#portfolio">Portfolio</a>
-                    <a href="/#contact">Contact</a>
-                    <a href="/#blog">Blog</a>
-                    <a href="/live-chat">Live Chat</a>
-                </div>
-            </li>
-        </ul>
-        <div id="username-container" style="left:10%; position:relative">
-            <label for="username">Username:</label>
-            <input class="search-bar" type="text" id="username" placeholder="Enter your username">
-            <label for="avatar-image"> Avatar:</label>
-            <input type="file" id="avatar-upload" accept="image/*" />
-            <img id="avatar-image" src="" alt=""
-                style="width: 50px; height: 50px; border-radius: 50%;outline-color: black;outline-width: thick;/*! outline: black; */outline-offset: 1px;outline-style: groove;">
-        </div>
-    </nav>
-    <div id="chat-container">
-        <div id="chat-box">
-            <div id="chat-box"></div>
-        </div>
-        <div id="online-users">
-            <!-- Online users will be populated here -->
-        </div>
-
+    <div class="container">
+        <h1>Sorry!</h1>
+        <p>Due to security concerns, we have decided to remove this feature.</p>
+        <p>If you were submitting feedback, you can instead send it to <a href="mailto:contact@unlim8ted.com">contact@unlim8ted.com</a>.</p>
+        <p>If you were looking for help, you can contact <a href="mailto:support@unlim8ted.com">support@unlim8ted.com</a>.</p>
+        <p>If you want this feature re-added and happen to be a web developer, you can contact <a href="mailto:enquiries@unlim8ted.com">enquiries@unlim8ted.com</a> if you want to help.</p>
+        <button onclick="history.back()">Go Back</button>
     </div>
-    <div id="sending stuff">
-        <div id="typing-indicator" style="display:none;">Someone is typing...</div>
-        <div id="emoji-picker" style="position:absolute; bottom: 60px; left: 10px;"></div>
-        <div id="input-container">
-            <div id="message-toolbar">
-                <button onclick="applyFormat('bold')">Bold</button>
-                <button onclick="applyFormat('italic')">Italic</button>
-                <button onclick="applyFormat('underline')">Underline</button>
-                <button id="emoji-button">😊</button>
-            </div>
-            <input type="text" spellcheck="true" id="message-input" placeholder="Type a message...">
-            <button id="send-button">Send</button>
-        </div>
-    </div>
-
-    <script>
-        const notificationSound = new Audio('notification.mp3');
-
-        function playNotificationSound() {
-            notificationSound.play();
-        }
-
-        let lastMessageCount = 0;
-
-        function fetchMessages() {
-    fetch('/get_messages')
-        .then(response => response.json())
-        .then(data => {
-            const chatBox = document.getElementById('chat-box');
-            const isScrolledToBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 1;
-
-            chatBox.innerHTML = ''; // Clear existing messages
-
-            data.messages.forEach(message => {
-                m = message;
-                const avatarElement = document.createElement('img');
-                const messageElement = document.createElement('div');
-                avatarElement.style = "width: 50px; height: 50px; border-radius: 50%; position: relative;";
-
-                // Add reactions section
-                const reactionContainer = document.createElement('div');
-                reactionContainer.classList.add('reactions');
-                // Using textContent to prevent XSS in button labels
-                const thumbsUpButton = document.createElement('button');
-                thumbsUpButton.classList.add('reaction-button');
-                thumbsUpButton.textContent = '👍';
-                thumbsUpButton.setAttribute('data-reaction', '👍');
-                
-                const thumbsDownButton = document.createElement('button');
-                thumbsDownButton.classList.add('reaction-button');
-                thumbsDownButton.textContent = '👎';
-                thumbsDownButton.setAttribute('data-reaction', '👎');
-                
-                reactionContainer.appendChild(thumbsUpButton);
-                reactionContainer.appendChild(thumbsDownButton);
-
-                messageElement.classList.add('message');
-                messageElement.appendChild(reactionContainer);
-                
-                avatarandstuff = message.split("||s.fwle;m[||tvh34t|", 2);
-                try {
-                    avatar = avatarandstuff[0];
-                    message = avatarandstuff[1];
-
-                    avatar = avatar.replace('{', '').replace("}", "");
-
-                    if (message.startsWith('Bot:')) {
-                        messageElement.classList.add('bot');
-                    } else {
-                        messageElement.classList.add('user');
-                    }
-
-                    // Set avatar src safely
-                    avatarElement.setAttribute('src', avatar);
-
-                    // Use textContent to safely add the message text
-                    const messageText = document.createElement('span');
-                    messageText.textContent = message;
-
-                    // Append the avatar and the message safely
-                    messageElement.appendChild(avatarElement);
-                    messageElement.appendChild(messageText);
-                }
-                catch {
-                    message = m;
-                    if (message.startsWith('Bot:')) {
-                        messageElement.classList.add('bot');
-                    } else {
-                        messageElement.classList.add('user');
-                    }
-
-                    // Use textContent to prevent XSS
-                    const messageText = document.createElement('span');
-                    messageText.textContent = message;
-
-                    messageElement.appendChild(messageText);
-                }
-                
-                messageElement.appendChild(reactionContainer);
-                chatBox.appendChild(messageElement);
-            });
-
-            const newMessageCount = data.messages.length;
-            const isNewMessageAdded = newMessageCount > lastMessageCount;
-            lastMessageCount = newMessageCount;
-
-            if (isScrolledToBottom || isNewMessageAdded) {
-                chatBox.scrollTop = chatBox.scrollHeight;
-                if (isNewMessageAdded) {
-                    playNotificationSound();
-                }
-            }
-        });
-}
-
-        //function fetchOnlineUsers() {
-        //    fetch('/get_online_users')
-        //        .then(response => response.json())
-        //        .then(data => {
-        //            const onlineUsers = document.getElementById('online-users');
-        //            onlineUsers.innerHTML = ''; // Clear existing users
-//
-        //            data.users.forEach(user => {
-        //                const userElement = document.createElement('div');
-        //                userElement.classList.add('online-user');
-        //                userElement.innerHTML = `
-        //                    <img src="${user.avatar}" alt="${user.username}">
-        //                    <span>${user.username}</span>
-        //                `;
-        //                onlineUsers.appendChild(userElement);
-        //            });
-        //        });
-        //}
-
-        const typingIndicator = document.getElementById('typing-indicator');
-
-        function sendTypingStatus(isTyping) {
-            fetch('/typing_status', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ isTyping })
-            });
-        }
-
-        document.getElementById('message-input').addEventListener('input', () => {
-            sendTypingStatus(true);
-            clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(() => sendTypingStatus(false), 2000);
-        });
-
-        function updateTypingStatus(data) {
-            typingIndicator.style.display = data.isTyping ? 'block' : 'none';
-        }
-
-        function applyFormat(command) {
-            document.execCommand(command, false, null);
-        }
-
-        // Handle avatar upload and display
-        document.getElementById('avatar-upload').addEventListener('change', event => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById('avatar-image').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        document.addEventListener("DOMContentLoaded", event => {
-        try{
-            const reader = new FileReader();
-            const avatarupload = document.getElementById('avatar-upload');
-            const src = reader.readAsDataURL(avatarupload.files[0]);//TODO: doesn't work right now readas data url does not return anything
-            document.getElementById('avatar-image').src = src;
-        }
-        catch{
-            null
-        }
-        })
-        // Initialize emoji picker
-        const picker = new EmojiButton();
-        picker.on('emoji', emoji => {
-            document.getElementById('message-input').value += emoji;
-        });
-        document.getElementById('emoji-button').addEventListener('click', () => {
-            picker.togglePicker(document.getElementById('emoji-picker'));
-        });
-
-        function sendMessage() {
-            const username = document.getElementById('username').value.trim();
-            const messageInput = document.getElementById('message-input');
-            const message = messageInput.value.trim();
-            const avatar = document.getElementById('avatar-upload').nextElementSibling.attributes.src.nodeValue
-            if (message && username) {
-                fetch('/send_message', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({'username': username,'message': message, 'avatar': avatar })
-                }).then(response => response.json())
-                    .then(() => {
-                        messageInput.value = '';
-                        fetchMessages();
-                    });
-            }
-            messageInput.value = '';
-            if (!username) {
-                alert("To send messages you must have a valid username.");
-            }
-        }
-
-        document.getElementById('send-button').addEventListener('click', sendMessage);
-
-        document.getElementById('message-input').addEventListener('keypress', function (event) {
-            if (event.key === 'Enter') {
-                event.preventDefault(); // Prevents new line in the input field
-                sendMessage();
-            }
-        });
-
-        // Fetch messages and online users periodically
-        setInterval(() => {
-            fetchMessages();
-        }, 100); // Fetch every 5 seconds
-        // Fetch messages and online users periodically
-        setInterval(() => {
-            fetchOnlineUsers();
-        }, 200); // Fetch every 5 seconds
-
-        // Initial fetch
-        fetchMessages();
-        fetchOnlineUsers();
-    </script>
 </body>
-
 </html>
