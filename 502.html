@@ -1,0 +1,67 @@
+<!-- Save this as /usr/share/nginx/html/502.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>502 Bad Gateway</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8d7da;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 50px;
+            color: #721c24;
+        }
+        p {
+            font-size: 18px;
+            color: #856404;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+        }
+        .refresh-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .refresh-button:hover {
+            background-color: #0056b3;
+        }
+        .funny-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>502 Bad Gateway</h1>
+        <p>Looks like something went wrong between the servers. Again. 🙄</p>
+        <img src="https://via.placeholder.com/400x200" alt="Error Image">
+        <p>But don't worry, you can try refreshing the page or come back later when the servers are in a better mood!</p>
+        <a href="javascript:location.reload()" class="refresh-button">Refresh the Page</a>
+        <a href="javascript:history.back()" class="refresh-button">Go backwards in time?</a>
+        <p class="funny-text">If refreshing doesn’t help, maybe go make a cup of tea? ☕</p>
+    </div>
+</body>
+</html>

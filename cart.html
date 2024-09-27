@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        header .back-btn, header .cart-btn {
+            position: absolute;
+            top: 30px;
+            color: white;
+            text-decoration: none;
+            font-size: larger;
+        }
+
+        header .back-btn {
+            left: 20px;
+        }
+
+        header .cart-btn {
+            right: 20px;
+        }
+
+        main {
+            padding: 2rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            background-color: #fff;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .cart-item h3, .cart-item p {
+            margin: 0;
+        }
+
+        .cart-item .remove-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cart-item .remove-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Popup notification styles */
+        .added-to-cart-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .slideIn {
+            animation: slideIn 0.5s forwards;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li class="nav-item"><a href="">Home</a></li>
+            <li class="nav-item"><a href="/#products">Products</a></li>
+            <li class="nav-item"><a href="/#help">Help</a></li>
+            <li class="nav-item"><a href="/#about">About</a></li>
+            <li class="nav-item dropdown">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a href="/#portfolio">Portfolio</a>
+                    <a href="/#contact">Contact</a>
+                    <a href="/#blog">Blog</a>
+                    <a href="/live-chat">Live Chat</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    <header>
+        <h1>Cart</h1>
+        <a class="back-btn" href="#" onclick="history.back();">Go Back</a>
+        <a class="cart-btn" href="cart" style="font-size: larger; position: absolute; top: 30px">🛍️</a>
+    </header>
+
+    <main>
+        <div id="cart-items"></div>
+        <p id="cart-empty-message">Your cart is empty.</p>
+    </main>
+
+    <footer>
+        &copy; 2024 Unlim8ted Studio Productions, all rights reserved
+    </footer>
+
+    <div id="added-to-cart-notification" class="added-to-cart-notification">
+        Added to cart!
+    </div>
+
+    <script>
+
+        // Set cart to cookies
+        function setCartToCookies(cart) {
+            localStorage.setItem('unlim8ted-cart', JSON.stringify(cart));
+        }
+
+        // Function to display the cart
+        function displayCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartEmptyMessage = document.getElementById('cart-empty-message');
+            const cart = getCookie("unlim8ted-cart") 
+            cartItemsContainer.innerHTML = '';
+
+            if (cart.length > 0) {
+                cartEmptyMessage.style.display = 'none';
+                cart.forEach((item, index) => {
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <div>
+                            <img src=${item.image}></img>
+                            <h3>${item.name}</h3>
+                            <p>$${item.price}</p>
+                        </div>
+                        <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
+                    `;
+                    cartItemsContainer.appendChild(cartItem);
+                });
+            } else {
+                cartEmptyMessage.style.display = 'block';
+            }
+        }
+
+        function getCartFromCookies() {
+            const cartJSON = getCookie('unlim8ted-cart');
+            if (cartJSON) {
+                return cartJSON;
+            }
+            return null;
+        }
+        function getCookie(key) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        // Check if the cookie starts with the desired key
+        if (cookie.startsWith(key + '=')) {
+            return cookie.substring((key + '=').length, cookie.length);
+        }
+    }
+    return null;
+}
+
+        // Function to remove item from cart
+        function removeFromCart(index) {
+            let cart = getCartFromCookies();
+            cart.splice(index, 1);
+            setCartToCookies(cart);
+            displayCart();
+        }
+
+        // Function to show the added-to-cart notification
+        function showAddedToCartNotification() {
+            const notification = document.getElementById('added-to-cart-notification');
+            notification.classList.add('slideIn');
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+                notification.classList.remove('slideIn');
+            }, 2000);
+        }
+
+        // Display cart on page load
+        document.addEventListener('DOMContentLoaded', displayCart);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Now</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        main {
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .buy-section {
+            background-color: #fff;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .buy-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .buy-section label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .buy-section input[type="number"],
+        .buy-section input[type="text"] {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .buy-section button,
+        #buy-now-link {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .buy-section button:hover,
+        #buy-now-link:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        img {
+            max-width: 100%; /* Ensure images are not too big */
+            height: auto;
+            border-radius: 5px;
+        }
+
+        video {
+            max-width: 100%; /* Ensure videos are not too big */
+            height: auto;
+            margin-top: 1rem;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Buy Now</h1>
+    </header>
+
+    <main>
+        <section id="@product id@" class="buy-section">
+            <h2 id="@product name@">@product name@</h2>
+            <img src="@product image@" alt="Product Image" class="@image@">
+            <video src="@product video@" controls class="@video@"></video>
+            <p id="@product description@">@product description@</p>
+            <p id="@product price@">$@product price@</p>
+            <label for="donation-amount">Donation Amount ($):</label>
+            <input type="number" id="donation-amount" name="donation-amount" min="0" step="0.01" value="0">
+            <div id="payment-section" class="hidden">
+                <label for="card-number">Credit Card Number:</label>
+                <input type="text" id="card-number" name="card-number" placeholder="1234-5678-9012-3456">
+                <label for="expiry-date">Expiry Date:</label>
+                <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY">
+                <label for="cvv">CVV:</label>
+                <input type="text" id="cvv" name="cvv" placeholder="123">
+            </div>
+            <button id="buy-now-button">Buy Now</button>
+            <a id="message" class="hidden"></p>
+            <div id="@additional images@"></div>
+            <div id="@additional videos@"></div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', load_page);
+        async function load_page() {
+            const products = await getProducts();
+            async function getProducts() {
+                try {
+                    const response = await fetch('./tools/data/products.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const products = await response.json();
+                    return products;
+                } catch (error) {
+                    console.error('Error fetching products:', error);
+                }
+            }
+
+            function replacePlaceholders(current_product) {
+                document.body.innerHTML = document.body.innerHTML.replace(/@product id@/g, current_product.id);
+                document.body.innerHTML = document.body.innerHTML.replace(/@product image@/g, current_product.image);
+                document.body.innerHTML = document.body.innerHTML.replace(/@product video@/g, current_product.video);
+                document.body.innerHTML = document.body.innerHTML.replace(/@product name@/g, current_product.name);
+                document.body.innerHTML = document.body.innerHTML.replace(/@product description@/g, current_product.description);
+                document.body.innerHTML = document.body.innerHTML.replace(/@product price@/g, current_product.price.toFixed(2));
+                document.body.innerHTML = document.body.innerHTML.replace(/@product link@/g, current_product.link);
+
+                const additionalImagesDiv = document.getElementById('@additional images@');
+                if (additionalImagesDiv) {
+                    additionalImagesDiv.innerHTML = '';
+                    current_product.additional_images.forEach(image => {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = image;
+                        additionalImagesDiv.appendChild(imgElement);
+                    });
+                }
+
+                const additionalVideosDiv = document.getElementById('@additional videos@');
+                if (additionalVideosDiv) {
+                    additionalVideosDiv.innerHTML = '';
+                    current_product.additional_videos.forEach(video => {
+                        const videoElement = document.createElement('video');
+                        videoElement.src = video;
+                        videoElement.controls = true;
+                        additionalVideosDiv.appendChild(videoElement);
+                    });
+                }
+            }
+
+            let current_product = null;
+            for (let dict of products) {
+                if ('#' + dict.id == window.location.hash) {
+                    current_product = dict;
+                    break;
+                }
+            }
+
+            if (current_product) {
+                replacePlaceholders(current_product);
+                const donationInput = document.getElementById('donation-amount');
+                const paymentSection = document.getElementById('payment-section');
+                const buyNowButton = document.getElementById('buy-now-button');
+                const message = document.getElementById('message');
+
+                function checkPaymentSection() {
+                    const donationAmount = parseFloat(donationInput.value);
+                    const productPrice = parseFloat(current_product.price);
+
+                    if (donationAmount > 0 || productPrice > 0) {
+                        paymentSection.classList.remove('hidden');
+                    } else {
+                        paymentSection.classList.add('hidden');
+                    }
+                }
+
+                donationInput.addEventListener('input', checkPaymentSection);
+
+                buyNowButton.addEventListener('click', function () {
+                    const donationAmount = parseFloat(donationInput.value);
+                    const productPrice = parseFloat(current_product.price);
+                    const cardNumber = document.getElementById('card-number').value;
+                    const expiryDate = document.getElementById('expiry-date').value;
+                    const cvv = document.getElementById('cvv').value;
+
+                    if (donationAmount === 0 && productPrice === 0) {
+                        message.textContent = 'Thank you! Your free product is on the way.';
+                        message.setAttribute("href", current_product.link)
+                        message.classList.remove('hidden');
+                    } else {
+                        if (cardNumber && expiryDate && cvv) {
+                            message.textContent = 'Thank you for your purchase/donation!';
+                            message.setAttribute("href", current_product.link)
+                            message.classList.remove('hidden');
+                        } else {
+                            message.textContent = 'Please fill out all payment details.';
+                            message.classList.remove('hidden');
+                        }
+                    }
+                });
+
+                checkPaymentSection(); // Initial check
+            } else {
+                console.log("Product not found or incorrect ID in URL.");
+            }
+        }
+    </script>
+</body>
+
+</html>
