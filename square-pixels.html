@@ -124,25 +124,85 @@
           <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
         </a>
       </div>
-    <nav class="navbar">
-      <ul class="nav-links">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="/#products">Products</a></li>
-        <li class="nav-item"><a href="/#help">Help</a></li>
-        <li class="nav-item"><a href="/#about">About</a></li>
-        <li class="nav-item dropdown">
-          <a href="javascript:void(0)" class="dropbtn">More</a>
-          <div class="dropdown-content">
-            <a href="/#portfolio">Portfolio</a>
-            <a href="/#contact">Contact</a>
-            <a href="/#blog">Blog</a>
-            <a href="/live-chat">Live Chat</a>
-            <a href="/live-game">Live Chat and Game</a>
-            <a href="/puzzle-squares">Puzzle Squares</a>
-          </div>
-        </li>
-      </ul>
-    </nav>
+      <style>
+
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f9f9f9;
+          box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dropdown:hover .dropdown-content {
+          display: block;
+        }
+        
+        .dropdown-content a {
+          color: black;
+          text-decoration: none;
+          padding: 12px 16px;
+          display: block;
+        }
+        
+        .dropdown-content a:hover {
+          background-color: #ddd;
+        }
+        
+        .navbar-toggle {
+          display: none;
+          background-color: #333;
+          color: white;
+          padding: 14px 20px;
+          border: none;
+          cursor: pointer;
+          font-size: 18px;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+          .nav-links {
+            flex-direction: column;
+            display: none;
+          }
+        
+          .nav-links.show {
+            display: flex;
+          }
+        
+          .navbar-toggle {
+            display: block;
+          }
+        }
+        
+          </style>
+          <script>
+          function toggleMenu() {
+            const navLinks = document.getElementById("navbarLinks");
+            navLinks.classList.toggle("show");
+          }
+          </script>
+          <nav class="navbar">
+            <div class="navbar-header">
+              <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+              <ul class="nav-links" id="navbarLinks">
+                <li class="nav-item"><a href="/">Home</a></li>
+                <li class="nav-item"><a href="/#products">Products</a></li>
+                <li class="nav-item"><a href="/#help">Help</a></li>
+                <li class="nav-item"><a href="/#about">About</a></li>
+                <li class="nav-item dropdown">
+                  <a href="javascript:void(0)" class="dropbtn">More</a>
+                  <div class="dropdown-content">
+                    <a href="/#portfolio">Portfolio</a>
+                    <a href="/#contact">Contact</a>
+                    <a href="/#blog">Blog</a>
+                    <a href="/live-chat">Live Chat</a>
+                    <a href="/live-game">Live Chat and Game</a>
+                    <a href="/puzzle-squares">Puzzle Squares</a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </nav>
     <style>  /* logo */
       .logo {
           position: absolute;
