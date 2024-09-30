@@ -6,7 +6,18 @@
 </head>
 
 <body>
-
+  <style>  /* logo */
+    .logo {
+        position: absolute;
+        z-index: 1;
+        top: 3rem;
+        left: 3rem;
+        display: block;
+    }
+    
+    .logo img {
+        height: 140px;
+    }</style>
   <style>
     :root {
       -webkit-box-sizing: border-box;
@@ -658,6 +669,12 @@
       /* Remove the border if not needed */
     }
   </style>
+        <div id="inner-wrap">
+          <div class="logo" style="z-index: 2;">
+            <a href="/">
+              <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
+            </a>
+          </div>
     <nav class="navbar">
       <ul class="nav-links">
         <li class="nav-item"><a href="/">Home</a></li>

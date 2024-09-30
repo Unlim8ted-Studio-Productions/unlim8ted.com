@@ -53,8 +53,26 @@
             margin-top: 30px;
         }
     </style>
+    <style>  /* logo */
+        .logo {
+            position: absolute;
+            z-index: 1;
+            top: 3rem;
+            left: 3rem;
+            display: block;
+        }
+        
+        .logo img {
+            height: 140px;
+        }</style>
 </head>
 <body>
+    <div id="inner-wrap">
+        <div class="logo" style="z-index: 2;">
+          <a href="/">
+            <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
+          </a>
+        </div>
     <div class="container">
         <h1>404</h1>
         <p>Well, this is awkward...</p>
