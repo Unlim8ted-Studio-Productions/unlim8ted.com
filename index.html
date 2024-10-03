@@ -492,6 +492,247 @@
         <h2>AI</h2>
         <p>Explore our AI products.</p>
       </a>
+      <div>
+        <style>
+
+      
+          h1 {
+              margin-bottom: 30px;
+          }
+      
+          .spinner-container {
+              position: relative;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+          }
+      
+          .spinner {
+              position: relative;
+              width: 60vw;
+              max-width: 300px;
+              height: 60vw;
+              max-height: 300px;
+              border-radius: 50%;
+              border: 10px solid #ddd;
+              box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+              overflow: hidden;
+          }
+      
+          .spinner-wheel {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              width: 100%;
+              height: 100%;
+              transform: translate(-50%, -50%);
+              border-radius: 50%;
+          }
+      
+          .spinner-choice {
+              position: absolute;
+              width: 50%;
+              height: 50%;
+              text-align: center;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transform-origin: bottom right;
+              font-weight: bold;
+              font-size: 1vw;
+              color: white;
+          }
+      
+          .spinner-choice span {
+              transform: rotate(-45deg); /* Undo the rotation to make text readable */
+              display: block;
+              width: 100px;
+          }
+      
+          .selector-triangle {
+              position: absolute;
+              top: 0%;
+              width: 0;
+              height: 0;
+              border-left: 20px solid transparent;
+              border-right: 20px solid transparent;
+              border-bottom: 40px solid red;
+              z-index: 2;
+              rotate:180deg
+          }
+      
+          .spin-btn {
+              margin-top: 20px;
+              padding: 10px 20px;
+              font-size: 16px;
+              cursor: pointer;
+              background-color: #3498db;
+              color: white;
+              border: none;
+              border-radius: 5px;
+          }
+      
+          .spin-btn:hover {
+              background-color: #2980b9;
+          }
+      
+          .popup {
+              display: none;
+              position: fixed;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              background-color: #fff;
+              border: 2px solid #ddd;
+              padding: 20px;
+              box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+              z-index: 10;
+          }
+      
+          .popup a {
+              color: #3498db;
+              text-decoration: none;
+              font-weight: bold;
+          }
+      
+          .popup a:hover {
+              text-decoration: underline;
+          }
+      
+          .overlay {
+              display: none;
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(0, 0, 0, 0.5);
+              z-index: 9;
+          }
+      
+          /* Media query to adjust font size on smaller screens */
+          @media (max-width: 768px) {
+              .spinner-choice {
+                  font-size: 3vw;
+              }
+          }
+      </style>
+      
+      <h1>Don't know what to get? Let the spinner choose for you!</h1>
+      
+      <div class="spinner-container">
+          <div class="selector-triangle"></div>
+          <div class="spinner">
+              <div class="spinner-wheel"></div>
+          </div>
+      </div>
+      
+      <button class="spin-btn">Spin the Wheel!</button>
+      
+      <div class="overlay" id="overlay"></div>
+      <div class="popup" id="popup">
+          <h2 id="popup-text"></h2>
+          <a href="#" id="popup-link">Visit the page</a>
+      </div>
+      
+      <script>
+          let options = [];
+          let isSpinning = false; // Track whether the spinner is currently spinning
+      
+          // Fetch the spinner data from JSON file
+          fetch('tools/data/spinner.json')
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  return response.json(); // Automatically parses JSON if valid
+              })
+              .then(data => {
+                  options = data;
+                  loadSpinnerChoices(options); // Populate the spinner with the fetched options
+              })
+              .catch(error => console.error('Error loading spinner data:', error));
+      
+          // Function to load the spinner choices visually
+          function loadSpinnerChoices(options) {
+              const spinnerWheel = document.querySelector('.spinner-wheel');
+              const numberOfOptions = options.length;
+              const angleIncrement = 360 / numberOfOptions; // Divide the circle into equal parts
+      
+              spinnerWheel.innerHTML = ''; // Clear previous content
+      
+              options.forEach((option, index) => {
+                  const spinnerChoice = document.createElement('div');
+                  spinnerChoice.classList.add('spinner-choice');
+                  
+                  // Set each segment's rotation and color dynamically
+                  spinnerChoice.style.transform = `rotate(${index * angleIncrement}deg) skewY(${90 - angleIncrement}deg)`;
+                  spinnerChoice.style.backgroundColor = getRandomColor();
+                  spinnerChoice.innerHTML = `<span>${option.name}</span>`;
+                  
+                  spinnerWheel.appendChild(spinnerChoice);
+              });
+          }
+      
+  // Function to trigger the spin
+  function spin() {
+      if (isSpinning) return; // Prevent spinning if already in progress
+  
+      isSpinning = true; // Set the spinning flag
+      const spinnerWheel = document.querySelector('.spinner-wheel');
+      const spinBtn = document.querySelector('.spin-btn');
+      const randomDegree = Math.floor(Math.random() * 360) + 360; // Ensure at least one full rotation
+  
+      // Disable the button while spinning
+      spinBtn.disabled = true;
+      spinnerWheel.style.transition = 'transform 4s ease-out';
+      spinnerWheel.style.transform = `translate(-50%, -50%) rotate(${randomDegree}deg)`;
+  
+      const selectedOption = options[Math.floor(Math.random() * options.length)];
+  
+      // After the spin is complete, show the popup and re-enable the button
+      setTimeout(() => {
+          showPopup(selectedOption);
+          spinBtn.disabled = false; // Re-enable the spin button
+          isSpinning = false; // Reset spinning flag
+      }, 4000); // Match the spin duration
+  }
+          // Show the popup with the result
+          function showPopup(option) {
+              const popup = document.getElementById('popup');
+              const overlay = document.getElementById('overlay');
+              const popupText = document.getElementById('popup-text');
+              const popupLink = document.getElementById('popup-link');
+      
+              popupText.innerHTML = `You've got: ${option.name}`;
+              popupLink.href = option.link;
+              popupLink.innerHTML = 'Visit the page';
+      
+              overlay.style.display = 'block';
+              popup.style.display = 'block';
+          }
+      
+          // Function to generate random colors for the segments
+          function getRandomColor() {
+              const letters = '0123456789ABCDEF';
+              let color = '#';
+              for (let i = 0; i < 6; i++) {
+                  color += letters[Math.floor(Math.random() * 16)];
+              }
+              return color;
+          }
+      
+          // Close popup when clicking the overlay
+          document.getElementById('overlay').onclick = function () {
+              document.getElementById('popup').style.display = 'none';
+              document.getElementById('overlay').style.display = 'none';
+          }
+      
+          // Add click event to the spin button
+          document.querySelector('.spin-btn').onclick = spin;
+      </script>
+      
+      </div>
     </div>
   </div>
 
