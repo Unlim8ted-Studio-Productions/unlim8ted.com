@@ -4,6 +4,208 @@
     <meta charset="UTF-8">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
+      <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+  <style media="screen" type="text/css">
+    .layer1_class {
+      position: absolute;
+      z-index: 1;
+      top: 100px;
+      left: 0px;
+      visibility: visible;
+    }
+
+    .layer2_class {
+      position: absolute;
+      z-index: 2;
+      top: 10px;
+      left: 10px;
+      visibility: hidden;
+    }
+
+    .loader {
+      position: fixed;
+      background-color: black;
+      opacity: 1;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0%;
+      z-index: 999999988;
+    }
+
+    .loaderr-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      /* To stack spinner and text vertically */
+      height: 100vh;
+      /* Full viewport height to ensure vertical centering */
+    }
+
+    .loaderr {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 8px solid transparent;
+      border-top: 8px solid #3498db;
+      border-right: 8px solid #e74c3c;
+      border-bottom: 8px solid #f1c40f;
+      border-left: 8px solid #9b59b6;
+      -webkit-animation: spin 1.5s linear infinite;
+      animation: spin 1.5s linear infinite;
+      box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
+      position: relative;
+    }
+
+    .loaderr:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid transparent;
+      border-top: 8px solid rgba(52, 152, 219, 0.7);
+      border-right: 8px solid rgba(231, 76, 60, 0.7);
+      border-bottom: 8px solid rgba(241, 196, 15, 0.7);
+      border-left: 8px solid rgba(155, 89, 182, 0.7);
+      -webkit-animation: spin-reverse 1.5s linear infinite;
+      animation: spin-reverse 1.5s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @-webkit-keyframes spin-reverse {
+      0% {
+        -webkit-transform: rotate(360deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(0deg);
+      }
+    }
+
+    @keyframes spin-reverse {
+      0% {
+        transform: rotate(360deg);
+      }
+
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+
+    /* Loading text animation */
+    .loading-text {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #3498db;
+      font-family: Arial, sans-serif;
+      letter-spacing: 2px;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+
+    @-webkit-keyframes load-out {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
+
+    @keyframes load-out {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
+  </style>
+  <!-- Styles for the No-JavaScript message -->
+  <style>
+    .no-js-message {
+      background: #2c4762;
+      color: red;
+      font-size: 20px;
+      text-align: center;
+      padding: 20px;
+      z-index: 999999999999999999999999999999999999999999999;
+      position: fixed;
+      width: 100%;
+      top: 0;
+    }
+  </style>
+
+  <!-- No-JavaScript message -->
+  <noscript>
+    <div class="no-js-message">
+      Please enable JavaScript to use this website properly.
+    </div>
+  </noscript>
+  <div class="loader">
+    <div class="loaderr-container">
+      <div class="loaderr"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+  </div>
+
+  </div>
+  <script>
+    // This function will execute after the full page has finished loading
+    window.onload = function () {
+      // Trigger fade-out animation for the loader
+      document.querySelector('.loaderr').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+      document.querySelector('.loaderr').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+      document.querySelector('.loading-text').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+      document.querySelector('.loading-text').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+      document.querySelector('.loader').style.animation = 'load-out 4s forwards';
+      document.querySelector('.loader').style.webkitAnimation = 'load-out 4s forwards';
+
+    }
+  </script>
+  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - Page Not Found</title>
     <style>

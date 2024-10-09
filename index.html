@@ -4,7 +4,247 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Primary Meta Tags -->
   <title>Unlim8ted</title>
+  <meta name="title" content="Unlim8ted" />
+  <meta name="description"
+    content="Unlim8ted Studio Productions offers innovative entertainment experiences, including films, music, books, games, software, and AI products." />
+
+  <!-- Website / General -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://unlim8ted.com" />
+  <meta property="og:title" content="Unlim8ted" />
+  <meta property="og:description"
+    content="Unlim8ted Studio Productions offers innovative entertainment experiences, including films, music, books, games, software, and AI products." />
+  <meta property="og:image" content="https://unlim8ted.com/images/logo/logo.png" />
+  <meta property="og:site_name" content="Unlim8ted Studio Productions" />
+
+  <!-- GitHub -->
+  <meta property="og:profile" content="GitHub" />
+  <meta property="og:url" content="https://github.com/Unlim8ted-Studio-Productions" />
+  <meta property="og:image" content="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" />
+  <meta property="og:description" content="Check out Unlim8ted Studio Productions projects on GitHub!" />
+
+  <!-- YouTube -->
+  <meta property="og:profile" content="YouTube" />
+  <meta property="og:url" content="https://www.youtube.com/@unlim8tedstudioproductions" />
+  <meta property="og:image" content="https://www.youtube.com/img/desktop/yt_1200.png" />
+  <meta property="og:description" content="Watch videos from Unlim8ted Studio Productions on YouTube." />
+
+  <!-- Reddit 
+    <meta property="og:profile" content="Reddit" />
+    <meta property="og:url" content="https://www.reddit.com/user/Unlim8tedStudios/" />
+    <meta property="og:image" content="https://www.redditinc.com/assets/images/site/reddit-logo.png" />
+    <meta property="og:description" content="Join the conversation on Reddit with Unlim8ted Studios!" />-->
+
+  <!-- Optional Meta Tags for other platforms -->
+  <meta name="keywords"
+    content="films, music, books, games, software, AI products, entertainment, unlim8ted, Unlim8ted Studio Productions" />
+  <meta name="author" content="Unlim8ted Studio Productions" />
+
+
+  <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+  <style media="screen" type="text/css">
+    .layer1_class {
+      position: absolute;
+      z-index: 1;
+      top: 100px;
+      left: 0px;
+      visibility: visible;
+    }
+
+    .layer2_class {
+      position: absolute;
+      z-index: 2;
+      top: 10px;
+      left: 10px;
+      visibility: hidden;
+    }
+
+    .loader {
+      position: fixed;
+      background-color: black;
+      opacity: 1;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0%;
+      z-index: 999999988;
+    }
+
+    .loaderr-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      /* To stack spinner and text vertically */
+      height: 100vh;
+      /* Full viewport height to ensure vertical centering */
+    }
+
+    .loaderr {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 8px solid transparent;
+      border-top: 8px solid #3498db;
+      border-right: 8px solid #e74c3c;
+      border-bottom: 8px solid #f1c40f;
+      border-left: 8px solid #9b59b6;
+      -webkit-animation: spin 1.5s linear infinite;
+      animation: spin 1.5s linear infinite;
+      box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
+      position: relative;
+    }
+
+    .loaderr:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid transparent;
+      border-top: 8px solid rgba(52, 152, 219, 0.7);
+      border-right: 8px solid rgba(231, 76, 60, 0.7);
+      border-bottom: 8px solid rgba(241, 196, 15, 0.7);
+      border-left: 8px solid rgba(155, 89, 182, 0.7);
+      -webkit-animation: spin-reverse 1.5s linear infinite;
+      animation: spin-reverse 1.5s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @-webkit-keyframes spin-reverse {
+      0% {
+        -webkit-transform: rotate(360deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(0deg);
+      }
+    }
+
+    @keyframes spin-reverse {
+      0% {
+        transform: rotate(360deg);
+      }
+
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+
+    /* Loading text animation */
+    .loading-text {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #3498db;
+      font-family: Arial, sans-serif;
+      letter-spacing: 2px;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+
+    @-webkit-keyframes load-out {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
+
+    @keyframes load-out {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
+  </style>
+  <!-- Styles for the No-JavaScript message -->
+  <style>
+    .no-js-message {
+      background: #2c4762;
+      color: red;
+      font-size: 20px;
+      text-align: center;
+      padding: 20px;
+      z-index: 999999999999999999999999999999999999999999999;
+      position: fixed;
+      width: 100%;
+      top: 0;
+    }
+  </style>
+
+  <!-- No-JavaScript message -->
+  <noscript>
+    <div class="no-js-message">
+      Please enable JavaScript to use this website properly.
+    </div>
+  </noscript>
+  <div class="loader">
+    <div class="loaderr-container">
+      <div class="loaderr"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+  </div>
+
+  </div>
+  <script>
+    // This function will execute after the full page has finished loading
+    window.onload = function () {
+      // Trigger fade-out animation for the loader
+      document.querySelector('.loaderr').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+      document.querySelector('.loaderr').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+      document.querySelector('.loading-text').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+      document.querySelector('.loading-text').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+      document.querySelector('.loader').style.animation = 'load-out 4s forwards';
+      document.querySelector('.loader').style.webkitAnimation = 'load-out 4s forwards';
+
+    }
+  </script>
+  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+
   <style>
     .content-section {
       display: none;
@@ -316,65 +556,73 @@
       navLinks.classList.toggle("show");
     }
   </script>
-<nav class="navbar">
-  <div class="navbar-header">
-    <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-    <ul class="nav-links" id="navbarLinks">
-      <li class="nav-item"><a href="/">Home</a></li>
-      <li class="nav-item"><a href="/#products">Products</a></li>
-      <li class="nav-item"><a href="/#help">Help</a></li>
-      <li class="nav-item"><a href="/#about">About</a></li>
-      <li class="nav-item dropdown">
-        <a href="javascript:void(0)" class="dropbtn">More</a>
-        <div class="dropdown-content">
-          <a href="/#portfolio">Portfolio</a>
-          <a href="/#contact">Contact</a>
-          <a href="/#blog">Blog</a>
-          <a href="/live-chat">Live Chat</a>
-          <a href="/live-game">Live Chat and Game</a>
-          <a href="/puzzle-squares">Puzzle Squares</a>
-        </div>
-      </li>
-    </ul>
-  </div>
-</nav>
-<style>  
-  /* logo */
-  .logo {
+  <nav class="navbar">
+    <div class="navbar-header">
+      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+      <ul class="nav-links" id="navbarLinks">
+        <li class="nav-item"><a href="/">Home</a></li>
+        <li class="nav-item"><a href="/#products">Products</a></li>
+        <li class="nav-item"><a href="/#help">Help</a></li>
+        <li class="nav-item"><a href="/#about">About</a></li>
+        <li class="nav-item dropdown">
+          <a href="javascript:void(0)" class="dropbtn">More</a>
+          <div class="dropdown-content">
+            <a href="/#portfolio">Portfolio</a>
+            <a href="/#contact">Contact</a>
+            <a href="/#blog">Blog</a>
+            <a href="/live-chat">Live Chat</a>
+            <a href="/live-game">Live Chat and Game</a>
+            <a href="/puzzle-squares">Puzzle Squares</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <style>
+    /* logo */
+    .logo {
       position: absolute;
       z-index: 1;
-      top: 5%;  /* Adjust top position relative to viewport height */
-      left: 5%; /* Adjust left position relative to viewport width */
+      top: 5%;
+      /* Adjust top position relative to viewport height */
+      left: 5%;
+      /* Adjust left position relative to viewport width */
       display: block;
-  }
+    }
 
-  .logo img {
-      height: 10vw; /* Adjust height relative to viewport width */
-      max-height: 140px; /* Set a maximum height to prevent the logo from getting too large on larger screens */
-      width: auto; /* Maintain aspect ratio */
-  }
+    .logo img {
+      height: 10vw;
+      /* Adjust height relative to viewport width */
+      max-height: 140px;
+      /* Set a maximum height to prevent the logo from getting too large on larger screens */
+      width: auto;
+      /* Maintain aspect ratio */
+    }
 
-  /* Media query for small devices */
-  @media (max-width: 600px) {
+    /* Media query for small devices */
+    @media (max-width: 600px) {
       .logo img {
-          height: 20vw; /* Larger logo for smaller devices */
+        height: 20vw;
+        /* Larger logo for smaller devices */
       }
-  }
-</style>
+    }
+  </style>
 
 
-<!-- Rest of the content -->
+  <!-- Rest of the content -->
 
   <a class="cart-btn" href="cart" style="font-size: larger; position: absolute; top: 30px">🛍️</a>
 
   <div id="home" class="content-section">
 
-<!-- Video Background -->
-<video autoplay muted loop id="backgroundVideo" style="position: absolute; top: 0; left: 0; width: 100%; height: auto; z-index: 1; object-fit: cover;">
-  <canvas id="canvas" style="z-index:300"></canvas>
-<source id="video" src="images/back.webm" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+    <!-- Video Background -->
+    <video autoplay muted loop id="backgroundVideo"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: auto; z-index: 1; object-fit: cover;">
+      <canvas id="canvas" style="z-index:300"></canvas>
+      <source id="video" src="images/back.webm" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+
     <body>
       <div id="inner-wrap">
         <div class="logo" style="z-index: 2;">
@@ -494,251 +742,250 @@
       </a>
       <div>
         <style>
-
-      
           h1 {
-              margin-bottom: 30px;
+            margin-bottom: 30px;
           }
-      
+
           .spinner-container {
-              position: relative;
-              display: flex;
-              justify-content: center;
-              align-items: center;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
-      
+
           .spinner {
-              position: relative;
-              width: 60vw;
-              max-width: 300px;
-              height: 60vw;
-              max-height: 300px;
-              border-radius: 50%;
-              border: 10px solid #ddd;
-              box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-              overflow: hidden;
+            position: relative;
+            width: 60vw;
+            max-width: 300px;
+            height: 60vw;
+            max-height: 300px;
+            border-radius: 50%;
+            border: 10px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
           }
-      
+
           .spinner-wheel {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              width: 100%;
-              height: 100%;
-              transform: translate(-50%, -50%);
-              border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
           }
-      
+
           .spinner-choice {
-              position: absolute;
-              width: 50%;
-              height: 50%;
-              text-align: center;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              transform-origin: bottom right;
-              font-weight: bold;
-              font-size: 1vw;
-              color: white;
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-origin: bottom right;
+            font-weight: bold;
+            font-size: 1vw;
+            color: white;
           }
-      
+
           .spinner-choice span {
-              transform: rotate(-45deg); /* Undo the rotation to make text readable */
-              display: block;
-              width: 100px;
+            transform: rotate(-45deg);
+            /* Undo the rotation to make text readable */
+            display: block;
+            width: 100px;
           }
-      
+
           .selector-triangle {
-              position: absolute;
-              top: 0%;
-              width: 0;
-              height: 0;
-              border-left: 20px solid transparent;
-              border-right: 20px solid transparent;
-              border-bottom: 40px solid red;
-              z-index: 2;
-              rotate:180deg
+            position: absolute;
+            top: 0%;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 40px solid red;
+            z-index: 2;
+            rotate: 180deg
           }
-      
+
           .spin-btn {
-              margin-top: 20px;
-              padding: 10px 20px;
-              font-size: 16px;
-              cursor: pointer;
-              background-color: #3498db;
-              color: white;
-              border: none;
-              border-radius: 5px;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
           }
-      
+
           .spin-btn:hover {
-              background-color: #2980b9;
+            background-color: #2980b9;
           }
-      
+
           .popup {
-              display: none;
-              position: fixed;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              background-color: #fff;
-              border: 2px solid #ddd;
-              padding: 20px;
-              box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-              z-index: 10;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 2px solid #ddd;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
           }
-      
+
           .popup a {
-              color: #3498db;
-              text-decoration: none;
-              font-weight: bold;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
           }
-      
+
           .popup a:hover {
-              text-decoration: underline;
+            text-decoration: underline;
           }
-      
+
           .overlay {
-              display: none;
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              background-color: rgba(0, 0, 0, 0.5);
-              z-index: 9;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9;
           }
-      
+
           /* Media query to adjust font size on smaller screens */
           @media (max-width: 768px) {
-              .spinner-choice {
-                  font-size: 3vw;
-              }
+            .spinner-choice {
+              font-size: 3vw;
+            }
           }
-      </style>
-      
-      <h1>Don't know what to get? Let the spinner choose for you!</h1>
-      
-      <div class="spinner-container">
+        </style>
+
+        <h1>Don't know what to get? Let the spinner choose for you!</h1>
+
+        <div class="spinner-container">
           <div class="selector-triangle"></div>
           <div class="spinner">
-              <div class="spinner-wheel"></div>
+            <div class="spinner-wheel"></div>
           </div>
-      </div>
-      
-      <button class="spin-btn">Spin the Wheel!</button>
-      
-      <div class="overlay" id="overlay"></div>
-      <div class="popup" id="popup">
+        </div>
+
+        <button class="spin-btn">Spin the Wheel!</button>
+
+        <div class="overlay" id="overlay"></div>
+        <div class="popup" id="popup">
           <h2 id="popup-text"></h2>
           <a href="#" id="popup-link">Visit the page</a>
-      </div>
-      
-      <script>
+        </div>
+
+        <script>
           let options = [];
           let isSpinning = false; // Track whether the spinner is currently spinning
-      
+
           // Fetch the spinner data from JSON file
           fetch('tools/data/spinner.json')
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                  }
-                  return response.json(); // Automatically parses JSON if valid
-              })
-              .then(data => {
-                  options = data;
-                  loadSpinnerChoices(options); // Populate the spinner with the fetched options
-              })
-              .catch(error => console.error('Error loading spinner data:', error));
-      
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json(); // Automatically parses JSON if valid
+            })
+            .then(data => {
+              options = data;
+              loadSpinnerChoices(options); // Populate the spinner with the fetched options
+            })
+            .catch(error => console.error('Error loading spinner data:', error));
+
           // Function to load the spinner choices visually
           function loadSpinnerChoices(options) {
-              const spinnerWheel = document.querySelector('.spinner-wheel');
-              const numberOfOptions = options.length;
-              const angleIncrement = 360 / numberOfOptions; // Divide the circle into equal parts
-      
-              spinnerWheel.innerHTML = ''; // Clear previous content
-      
-              options.forEach((option, index) => {
-                  const spinnerChoice = document.createElement('div');
-                  spinnerChoice.classList.add('spinner-choice');
-                  
-                  // Set each segment's rotation and color dynamically
-                  spinnerChoice.style.transform = `rotate(${index * angleIncrement}deg) skewY(${90 - angleIncrement}deg)`;
-                  spinnerChoice.style.backgroundColor = getRandomColor();
-                  spinnerChoice.innerHTML = `<span>${option.name}</span>`;
-                  
-                  spinnerWheel.appendChild(spinnerChoice);
-              });
+            const spinnerWheel = document.querySelector('.spinner-wheel');
+            const numberOfOptions = options.length;
+            const angleIncrement = 360 / numberOfOptions; // Divide the circle into equal parts
+
+            spinnerWheel.innerHTML = ''; // Clear previous content
+
+            options.forEach((option, index) => {
+              const spinnerChoice = document.createElement('div');
+              spinnerChoice.classList.add('spinner-choice');
+
+              // Set each segment's rotation and color dynamically
+              spinnerChoice.style.transform = `rotate(${index * angleIncrement}deg) skewY(${90 - angleIncrement}deg)`;
+              spinnerChoice.style.backgroundColor = getRandomColor();
+              spinnerChoice.innerHTML = `<span>${option.name}</span>`;
+
+              spinnerWheel.appendChild(spinnerChoice);
+            });
           }
-      
-  // Function to trigger the spin
-  function spin() {
-      if (isSpinning) return; // Prevent spinning if already in progress
-  
-      isSpinning = true; // Set the spinning flag
-      const spinnerWheel = document.querySelector('.spinner-wheel');
-      const spinBtn = document.querySelector('.spin-btn');
-      const randomDegree = Math.floor(Math.random() * 360) + 360; // Ensure at least one full rotation
-  
-      // Disable the button while spinning
-      spinBtn.disabled = true;
-      spinnerWheel.style.transition = 'transform 4s ease-out';
-      spinnerWheel.style.transform = `translate(-50%, -50%) rotate(${randomDegree}deg)`;
-  
-      const selectedOption = options[Math.floor(Math.random() * options.length)];
-  
-      // After the spin is complete, show the popup and re-enable the button
-      setTimeout(() => {
-          showPopup(selectedOption);
-          spinBtn.disabled = false; // Re-enable the spin button
-          isSpinning = false; // Reset spinning flag
-      }, 4000); // Match the spin duration
-  }
+
+          // Function to trigger the spin
+          function spin() {
+            if (isSpinning) return; // Prevent spinning if already in progress
+
+            isSpinning = true; // Set the spinning flag
+            const spinnerWheel = document.querySelector('.spinner-wheel');
+            const spinBtn = document.querySelector('.spin-btn');
+            const randomDegree = Math.floor(Math.random() * 360) + 360; // Ensure at least one full rotation
+
+            // Disable the button while spinning
+            spinBtn.disabled = true;
+            spinnerWheel.style.transition = 'transform 4s ease-out';
+            spinnerWheel.style.transform = `translate(-50%, -50%) rotate(${randomDegree}deg)`;
+
+            const selectedOption = options[Math.floor(Math.random() * options.length)];
+
+            // After the spin is complete, show the popup and re-enable the button
+            setTimeout(() => {
+              showPopup(selectedOption);
+              spinBtn.disabled = false; // Re-enable the spin button
+              isSpinning = false; // Reset spinning flag
+            }, 4000); // Match the spin duration
+          }
           // Show the popup with the result
           function showPopup(option) {
-              const popup = document.getElementById('popup');
-              const overlay = document.getElementById('overlay');
-              const popupText = document.getElementById('popup-text');
-              const popupLink = document.getElementById('popup-link');
-      
-              popupText.innerHTML = `According to the wheel, you should go and get your very own ${option.name}`;
-              popupLink.href = option.link;
-              popupLink.innerHTML = 'Visit the page';
-      
-              overlay.style.display = 'block';
-              popup.style.display = 'block';
+            const popup = document.getElementById('popup');
+            const overlay = document.getElementById('overlay');
+            const popupText = document.getElementById('popup-text');
+            const popupLink = document.getElementById('popup-link');
+
+            popupText.innerHTML = `According to the wheel, you should go and get your very own ${option.name}`;
+            popupLink.href = option.link;
+            popupLink.innerHTML = 'Visit the page';
+
+            overlay.style.display = 'block';
+            popup.style.display = 'block';
           }
-      
+
           // Function to generate random colors for the segments
           function getRandomColor() {
-              const letters = '0123456789ABCDEF';
-              let color = '#';
-              for (let i = 0; i < 6; i++) {
-                  color += letters[Math.floor(Math.random() * 16)];
-              }
-              return color;
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+              color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
           }
-      
+
           // Close popup when clicking the overlay
           document.getElementById('overlay').onclick = function () {
-              document.getElementById('popup').style.display = 'none';
-              document.getElementById('overlay').style.display = 'none';
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
           }
-      
+
           // Add click event to the spin button
           document.querySelector('.spin-btn').onclick = spin;
-      </script>
-      
+        </script>
+
       </div>
     </div>
-        <!-- Copyright -->
-        <div style="margin-top: 20px;">
-          <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-        </div>
-      </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
   </div>
 
   <div id="films" class="content-section">
@@ -769,11 +1016,11 @@
       </a>
       <!-- Add more film items here -->
     </div>
-        <!-- Copyright -->
-        <div style="margin-top: 20px;">
-          <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-        </div>
-      </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
   </div>
 
   <div id="music" class="content-section">
@@ -798,11 +1045,11 @@
       </a>
       <!-- Add more music items here -->
     </div>
-        <!-- Copyright -->
-        <div style="margin-top: 20px;">
-          <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-        </div>
-      </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
   </div>
 
   <div id="games" class="content-section">
@@ -837,11 +1084,11 @@
       </a>
       <!-- Add more game items here -->
     </div>
-        <!-- Copyright -->
-        <div style="margin-top: 20px;">
-          <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-        </div>
-      </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
   </div>
   <div id="books" class="content-section">
     <h1>Books</h1>
@@ -899,11 +1146,11 @@
       </a>
       <!-- Add more book items here -->
     </div>
-        <!-- Copyright -->
-        <div style="margin-top: 20px;">
-          <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-        </div>
-      </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
   </div>
 
 
@@ -1003,11 +1250,11 @@
 
       <!-- Add more software items here -->
     </div>
-        <!-- Copyright -->
-        <div style="margin-top: 20px;">
-          <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-        </div>
-      </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
   </div>
 
   <div id="AI" class="content-section">
@@ -1027,11 +1274,11 @@
       </a>
       <!-- Add more music items here -->
     </div>
-        <!-- Copyright -->
-        <div style="margin-top: 20px;">
-          <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-        </div>
-      </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
   </div>
   <!-- Help Section -->
   <div id="help" class="content-section">
@@ -1192,7 +1439,8 @@
 
   </script>
 
-  <!--TODO:Also add in products and images for clothes make hovering products show 
+</html>
+<!--TODO:Also add in products and images for clothes make hovering products show 
   descripion, make cart work, make products have a template which gets filled 
   in from a list of information about the products depending on # instead of having
    the same template with a few changes for every single product.-->
