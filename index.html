@@ -229,19 +229,35 @@
 
   </div>
   <script>
-    // This function will execute after the full page has finished loading
-    window.onload = function () {
-      // Trigger fade-out animation for the loader
-      document.querySelector('.loaderr').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-      document.querySelector('.loaderr').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+// This function will execute after the full page has finished loading
+window.onload = function () {
+  // Trigger fade-out animation for the loader spinner
+  const loaderSpinner = document.querySelector('.loaderr');
+  const loadingText = document.querySelector('.loading-text');
+  const loaderContainer = document.querySelector('.loader');
 
-      document.querySelector('.loading-text').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-      document.querySelector('.loading-text').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+  // Apply animations
+  loaderSpinner.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+  loaderSpinner.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+  
+  loadingText.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+  loadingText.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
 
-      document.querySelector('.loader').style.animation = 'load-out 4s forwards';
-      document.querySelector('.loader').style.webkitAnimation = 'load-out 4s forwards';
+  loaderContainer.style.animation = 'load-out 4s forwards';
+  loaderContainer.style.webkitAnimation = 'load-out 4s forwards';
 
-    }
+  // Set a timeout to remove the elements after the load-out animation
+  setTimeout(function() {
+    // Remove the spinner and text after 1.5 seconds (duration of fade-out)
+    if (loaderSpinner) loaderSpinner.remove();
+    if (loadingText) loadingText.remove();
+    if (loaderContainer) loaderContainer.remove();
+
+  }, 1000); // 1 seconds for the fade-out animation
+
+
+};
+
   </script>
   <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
 
