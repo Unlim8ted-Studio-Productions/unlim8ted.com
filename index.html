@@ -45,7 +45,6 @@
 
   <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
   <style media="screen" type="text/css">
-
     .loader {
       position: fixed;
       background-color: black;
@@ -215,25 +214,25 @@
 
   </div>
   <script>
-// This function will execute after the full page has finished loading
-window.onload = function () {
-  // Trigger fade-out animation for the loader spinner
-  const loaderSpinner = document.querySelector('.loaderr');
-  const loadingText = document.querySelector('.loading-text');
-  const loaderContainer = document.querySelector('.loader');
+    // This function will execute after the full page has finished loading
+    window.onload = function () {
+      // Trigger fade-out animation for the loader spinner
+      const loaderSpinner = document.querySelector('.loaderr');
+      const loadingText = document.querySelector('.loading-text');
+      const loaderContainer = document.querySelector('.loader');
 
-  // Apply animations
-  loaderSpinner.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-  loaderSpinner.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
-  
-  loadingText.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-  loadingText.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+      // Apply animations
+      loaderSpinner.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+      loaderSpinner.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
 
-  loaderContainer.style.animation = 'load-out 4s forwards';
-  loaderContainer.style.webkitAnimation = 'load-out 4s forwards';
+      loadingText.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+      loadingText.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+      loaderContainer.style.animation = 'load-out 4s forwards';
+      loaderContainer.style.webkitAnimation = 'load-out 4s forwards';
 
 
-};
+    };
 
   </script>
   <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
@@ -271,6 +270,13 @@ window.onload = function () {
     }
 
     h2 {
+      font-size: 2rem;
+      margin-top: 20px;
+      color: #555;
+      border-radius: 2rem;
+    }
+
+    hh2 {
       font-size: 1.8em;
       margin-top: 20px;
       color: #555;
@@ -350,6 +356,9 @@ window.onload = function () {
       }
 
       h2 {
+        font-size: 1.5em;
+      }
+      hh2 {
         font-size: 1.5em;
       }
 
@@ -609,7 +618,8 @@ window.onload = function () {
   <div id="home" class="content-section">
 
     <!-- Video Background -->
-    <video autoplay="" muted="" loop="" id="backgroundVideo" style="position: absolute; top: 0; left: 0; width: 100%; height: auto; z-index: 1; object-fit: cover;pointer-events: none;">
+    <video autoplay="" muted="" loop="" id="backgroundVideo"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: auto; z-index: 1; object-fit: cover;pointer-events: none;">
       <canvas id="canvas" style="z-index:300"></canvas>
       <source id="video" src="images/back.webm" type="video/mp4">
       Your browser does not support the video tag.
@@ -619,11 +629,349 @@ window.onload = function () {
       <div id="inner-wrap">
         <div class="logo" style="z-index: 2;">
           <a href="/">
-            <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
+            <img src="images/logo/logo.png" alt="logo"> <!--https://images.unlim8ted.com/logo/logo.png-->
           </a>
         </div>
 
         <div class="bg"></div>
+
+        <style>
+          .glitch {
+            font-size: 5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff,
+              0.025em 0.04em 0 #fffc00;
+            animation: glitch 725ms infinite;
+          }
+
+          .glitch span {
+            position: absolute;
+            top: 0;
+            left: 0;
+          }
+
+          .glitch span:first-child {
+            animation: glitch 500ms infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+            transform: translate(-0.04em, -0.03em);
+            opacity: 0.75;
+          }
+
+          .glitch span:last-child {
+            animation: glitch 375ms infinite;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+            transform: translate(0.04em, 0.03em);
+            opacity: 0.75;
+          }
+
+          @keyframes glitch {
+            0% {
+              text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff,
+                0.025em 0.04em 0 #fffc00;
+            }
+
+            15% {
+              text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff,
+                0.025em 0.04em 0 #fffc00;
+            }
+
+            16% {
+              text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff,
+                -0.05em -0.05em 0 #fffc00;
+            }
+
+            49% {
+              text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff,
+                -0.05em -0.05em 0 #fffc00;
+            }
+
+            50% {
+              text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff,
+                0 -0.04em 0 #fffc00;
+            }
+
+            99% {
+              text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff,
+                0 -0.04em 0 #fffc00;
+            }
+
+            100% {
+              text-shadow: -0.05em 0 0 #00fffc, -0.025em -0.04em 0 #fc00ff,
+                -0.04em -0.025em 0 #fffc00;
+            }
+          }
+
+
+          /* Base styles for headers */
+          h1,
+          h2,
+          h3 {
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            display: block;
+            font-weight: bold;
+            margin-bottom: 40px;
+            /* Increased spacing */
+            text-align: center;
+            /* Ensure text is centered */
+            padding: 20px;
+            /* Padding around the text */
+          }
+
+          /* Unique styling for each header */
+          h1 {
+            font-size: 4rem;
+            margin: 0;
+          }
+
+          h2 {
+            font-size: 3rem;
+            margin: 0;
+          }
+
+          h3 {
+            font-size: 2rem;
+            margin: 0;
+          }
+
+          /* Black fading background around text */
+          h1::before,
+          h1::after,
+          h2::before,
+          h2::after,
+          h3::before,
+          h3::after {
+            content: attr(data-text);
+            position: absolute;
+            left: -30px;
+            right: -30px;
+            top: -30px;
+            bottom: -30px;
+            opacity: 0.8;
+            z-index: -1;
+            padding: 20px;
+            /* Extra padding around the text */
+            background: radial-gradient(circle, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 70%);
+            animation: glitch-h1 1s infinite alternate-reverse;
+          }
+
+          /* Glitch effect for h1 */
+          h1::before,
+          h1::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            opacity: 0.8;
+            z-index: -1;
+            animation: glitch-h1 1s infinite alternate-reverse;
+          }
+
+          h1::after {
+            color: #0ff;
+            z-index: -2;
+            animation: glitch2-h1 1.5s infinite alternate;
+          }
+
+          @keyframes glitch-h1 {
+            0% {
+              transform: translate(0, 0);
+            }
+
+            15% {
+              transform: translate(-5px, 5px);
+            }
+
+            30% {
+              transform: translate(5px, -5px);
+            }
+
+            45% {
+              transform: translate(-2px, 2px);
+            }
+
+            60% {
+              transform: translate(3px, -3px);
+            }
+
+            75% {
+              transform: translate(-6px, 6px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+            }
+          }
+
+          @keyframes glitch2-h1 {
+            0% {
+              transform: translate(0, 0);
+              opacity: 0.5;
+            }
+
+            20% {
+              transform: translate(4px, -4px);
+            }
+
+            50% {
+              transform: translate(-4px, 4px);
+            }
+
+            80% {
+              transform: translate(2px, -2px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+              opacity: 0.5;
+            }
+          }
+
+          /* Glitch effect for h2 */
+          h2::before,
+          h2::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            opacity: 0.8;
+            z-index: -1;
+            animation: glitch-h2 2s infinite alternate-reverse;
+          }
+
+          h2::after {
+            color: #f0f;
+            z-index: -2;
+            animation: glitch2-h2 2.5s infinite alternate;
+          }
+
+          @keyframes glitch-h2 {
+            0% {
+              transform: translate(0, 0);
+            }
+
+            10% {
+              transform: translate(-3px, 3px);
+            }
+
+            25% {
+              transform: translate(3px, -3px);
+            }
+
+            50% {
+              transform: translate(-5px, 5px);
+            }
+
+            70% {
+              transform: translate(6px, -6px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+            }
+          }
+
+          @keyframes glitch2-h2 {
+            0% {
+              transform: translate(0, 0);
+              opacity: 0.4;
+            }
+
+            30% {
+              transform: translate(5px, -5px);
+            }
+
+            60% {
+              transform: translate(-5px, 5px);
+            }
+
+            90% {
+              transform: translate(3px, -3px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+              opacity: 0.4;
+            }
+          }
+
+          /* Glitch effect for h3 */
+          h3::before,
+          h3::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            opacity: 0.8;
+            z-index: -1;
+            animation: glitch-h3 3s infinite alternate-reverse;
+          }
+
+          h3::after {
+            color: #ff0;
+            z-index: -2;
+            animation: glitch2-h3 3.5s infinite alternate;
+          }
+
+          @keyframes glitch-h3 {
+            0% {
+              transform: translate(0, 0);
+            }
+
+            20% {
+              transform: translate(-2px, 2px);
+            }
+
+            40% {
+              transform: translate(4px, -4px);
+            }
+
+            60% {
+              transform: translate(-3px, 3px);
+            }
+
+            80% {
+              transform: translate(6px, -6px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+            }
+          }
+
+          @keyframes glitch2-h3 {
+            0% {
+              transform: translate(0, 0);
+              opacity: 0.3;
+            }
+
+            25% {
+              transform: translate(3px, -3px);
+            }
+
+            50% {
+              transform: translate(-3px, 3px);
+            }
+
+            75% {
+              transform: translate(2px, -2px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+              opacity: 0.3;
+            }
+          }
+        </style>
 
         <div class="parallax">
           <div class="parallax-group">
@@ -635,13 +983,14 @@ window.onload = function () {
             <div class="layer fill"></div>
           </div>
           <div class="content">
-            <h3>The sky is not the limit...</h1>
-              <h2>We are...</p>
-                <h1>Meaning there is no limit.</p>
+            <h3 data-text="The sky is not the limit...">The sky is not the limit...</h3>
+            <h2 class="glitch" data-text="We are...">We are...</h2>
+            <h1 data-text="Meaning there is no limit.">Meaning there is no limit.</h1>
           </div>
-
         </div>
-        
+
+
+
         <div style="bottom:20;position:absolute;background-color:rgb(222, 184, 135);height:470px;width:100%">
           <div style="max-width: 1200px; margin: auto;">
 
@@ -1310,15 +1659,15 @@ window.onload = function () {
     <h1>Portfolio</h1>
     <div class="portfolio-grid">
       <div class="portfolio-item">
-        <h2>Square Pixels</h2>
+        <hh2>Square Pixels</hh2>
         <p>A groundbreaking project that explores the intersection of art and technology through pixel-based design.</p>
       </div>
       <div class="portfolio-item">
-        <h2>Life of a Meatball</h2>
+        <hh2>Life of a Meatball</hh2>
         <p>An animated journey following the adventures of a meatball, exploring themes of identity and belonging.</p>
       </div>
       <div class="portfolio-item">
-        <h2>The Glitch</h2>
+        <hh2>The Glitch</hh2>
         <p>An experimental short film that delves into the nature of reality and the imperfections that make us human.
         </p>
       </div>
@@ -1356,18 +1705,18 @@ window.onload = function () {
     <h1>Blog</h1>
     <div class="blog-grid">
       <div class="blog-post">
-        <h2>Embracing Creativity: How to Find Inspiration in the Everyday</h2>
+        <hh2>Embracing Creativity: How to Find Inspiration in the Everyday</hh2>
         <p>Discover how to tap into your creative potential by finding inspiration in the world around you...</p>
         <a href="#">Read more</a>
       </div>
       <div class="blog-post">
-        <h2>The Future of Entertainment: What to Expect from the Industry</h2>
+        <hh2>The Future of Entertainment: What to Expect from the Industry</hh2>
         <p>Explore the latest trends in the entertainment industry and what they mean for creators and audiences
           alike...</p>
         <a href="#">Read more</a>
       </div>
       <div class="blog-post">
-        <h2>Behind the Scenes: The Making of 'Life of a Meatball'</h2>
+        <hh2>Behind the Scenes: The Making of 'Life of a Meatball'</hh2>
         <p>Get an inside look at the creative process behind one of our most beloved projects...</p>
         <a href="#">Read more</a>
       </div>
