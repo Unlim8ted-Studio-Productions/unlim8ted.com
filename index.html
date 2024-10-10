@@ -45,21 +45,6 @@
 
   <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
   <style media="screen" type="text/css">
-    .layer1_class {
-      position: absolute;
-      z-index: 1;
-      top: 100px;
-      left: 0px;
-      visibility: visible;
-    }
-
-    .layer2_class {
-      position: absolute;
-      z-index: 2;
-      top: 10px;
-      left: 10px;
-      visibility: hidden;
-    }
 
     .loader {
       position: fixed;
@@ -70,6 +55,7 @@
       top: 0;
       left: 0%;
       z-index: 999999988;
+      pointer-events: none;
     }
 
     .loaderr-container {
@@ -245,15 +231,6 @@ window.onload = function () {
 
   loaderContainer.style.animation = 'load-out 4s forwards';
   loaderContainer.style.webkitAnimation = 'load-out 4s forwards';
-
-  // Set a timeout to remove the elements after the load-out animation
-  setTimeout(function() {
-    // Remove the spinner and text after 1.5 seconds (duration of fade-out)
-    if (loaderSpinner) loaderSpinner.remove();
-    if (loadingText) loadingText.remove();
-    if (loaderContainer) loaderContainer.remove();
-
-  }, 1000); // 1 seconds for the fade-out animation
 
 
 };
