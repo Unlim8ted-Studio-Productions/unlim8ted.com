@@ -276,12 +276,6 @@
       border-radius: 2rem;
     }
 
-    hh2 {
-      font-size: 1.8em;
-      margin-top: 20px;
-      color: #555;
-    }
-
     p {
       line-height: 1.6;
     }
@@ -356,9 +350,6 @@
       }
 
       h2 {
-        font-size: 1.5em;
-      }
-      hh2 {
         font-size: 1.5em;
       }
 
@@ -636,7 +627,7 @@
         <div class="bg"></div>
 
         <style>
-          .glitch {
+          .content .glitch {
             font-size: 5rem;
             font-weight: bold;
             text-transform: uppercase;
@@ -646,20 +637,20 @@
             animation: glitch 725ms infinite;
           }
 
-          .glitch span {
+          .content .glitch span {
             position: absolute;
             top: 0;
             left: 0;
           }
 
-          .glitch span:first-child {
+          .content .glitch span:first-child {
             animation: glitch 500ms infinite;
             clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
             transform: translate(-0.04em, -0.03em);
             opacity: 0.75;
           }
 
-          .glitch span:last-child {
+          .content .glitch span:last-child {
             animation: glitch 375ms infinite;
             clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
             transform: translate(0.04em, 0.03em);
@@ -705,9 +696,9 @@
 
 
           /* Base styles for headers */
-          h1,
-          h2,
-          h3 {
+          .content h1,
+          .content h2,
+          .content h3 {
             color: #fff;
             font-family: 'Arial', sans-serif;
             position: relative;
@@ -722,28 +713,28 @@
           }
 
           /* Unique styling for each header */
-          h1 {
+          .content h1 {
             font-size: 4rem;
             margin: 0;
           }
 
-          h2 {
+          .content h2 {
             font-size: 3rem;
             margin: 0;
           }
 
-          h3 {
+          .content h3 {
             font-size: 2rem;
             margin: 0;
           }
 
           /* Black fading background around text */
-          h1::before,
-          h1::after,
-          h2::before,
-          h2::after,
-          h3::before,
-          h3::after {
+          .content h1::before,
+          .content h1::after,
+          .content h2::before,
+          .content h2::after,
+          .content h3::before,
+          .content h3::after {
             content: attr(data-text);
             position: absolute;
             left: -30px;
@@ -759,8 +750,8 @@
           }
 
           /* Glitch effect for h1 */
-          h1::before,
-          h1::after {
+          .content h1::before,
+          .content h1::after {
             content: attr(data-text);
             position: absolute;
             left: 0;
@@ -772,7 +763,7 @@
             animation: glitch-h1 1s infinite alternate-reverse;
           }
 
-          h1::after {
+          .content h1::after {
             color: #0ff;
             z-index: -2;
             animation: glitch2-h1 1.5s infinite alternate;
@@ -833,8 +824,8 @@
           }
 
           /* Glitch effect for h2 */
-          h2::before,
-          h2::after {
+          .content h2::before,
+          .content h2::after {
             content: attr(data-text);
             position: absolute;
             left: 0;
@@ -846,7 +837,7 @@
             animation: glitch-h2 2s infinite alternate-reverse;
           }
 
-          h2::after {
+          .content h2::after {
             color: #f0f;
             z-index: -2;
             animation: glitch2-h2 2.5s infinite alternate;
@@ -903,8 +894,8 @@
           }
 
           /* Glitch effect for h3 */
-          h3::before,
-          h3::after {
+          .content h3::before,
+          .content h3::after {
             content: attr(data-text);
             position: absolute;
             left: 0;
@@ -916,7 +907,7 @@
             animation: glitch-h3 3s infinite alternate-reverse;
           }
 
-          h3::after {
+          .content h3::after {
             color: #ff0;
             z-index: -2;
             animation: glitch2-h3 3.5s infinite alternate;
@@ -971,6 +962,104 @@
               opacity: 0.3;
             }
           }
+          /* Large screens (desktops) */
+@media (min-width: 1024px) {
+  .content .glitch {
+    font-size: 5rem;
+  }
+
+  .content h1 {
+    font-size: 4rem;
+  }
+
+  .content h2 {
+    font-size: 3rem;
+  }
+
+  .content h3 {
+    font-size: 2rem;
+  }
+}
+
+/* Medium screens (tablets, small laptops) */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .content .glitch {
+    font-size: 3.5rem;
+  }
+
+  .content h1 {
+    font-size: 3rem;
+  }
+
+  .content h2 {
+    font-size: 2.5rem;
+  }
+
+  .content h3 {
+    font-size: 2rem;
+  }
+}
+
+/* Small screens (mobile phones) */
+@media (max-width: 767px) {
+  .content .glitch {
+    font-size: 2.5rem;
+  }
+
+  .content h1 {
+    font-size: 2rem;
+  }
+
+  .content h2 {
+    font-size: 1.75rem;
+  }
+
+  .content h3 {
+    font-size: 1.5rem;
+  }
+
+  /* Adjust margins and padding for smaller screens */
+  .content h1,
+  .content h2,
+  .content h3 {
+    margin-bottom: 20px;
+    padding: 10px;
+  }
+
+  /* Ensure the glitch span elements are properly scaled for smaller screens */
+  .content .glitch span:first-child,
+  .content .glitch span:last-child {
+    clip-path: none; /* Remove clipping for smaller screens */
+    transform: none; /* Simplify transforms for better performance */
+  }
+}
+
+/* Extra small screens (very small phones) */
+@media (max-width: 480px) {
+  .content .glitch {
+    font-size: 2rem;
+  }
+
+  .content h1 {
+    font-size: 1.75rem;
+  }
+
+  .content h2 {
+    font-size: 1.5rem;
+  }
+
+  .content h3 {
+    font-size: 1.25rem;
+  }
+
+  .content h1, 
+  .content h2, 
+  .content h3 {
+    margin-bottom: 15px;
+    padding: 8px;
+  }
+}
+
         </style>
 
         <div class="parallax">
@@ -1659,15 +1748,15 @@
     <h1>Portfolio</h1>
     <div class="portfolio-grid">
       <div class="portfolio-item">
-        <hh2>Square Pixels</hh2>
+        <h2>Square Pixels</h2>
         <p>A groundbreaking project that explores the intersection of art and technology through pixel-based design.</p>
       </div>
       <div class="portfolio-item">
-        <hh2>Life of a Meatball</hh2>
+        <h2>Life of a Meatball</h2>
         <p>An animated journey following the adventures of a meatball, exploring themes of identity and belonging.</p>
       </div>
       <div class="portfolio-item">
-        <hh2>The Glitch</hh2>
+        <h2>The Glitch</h2>
         <p>An experimental short film that delves into the nature of reality and the imperfections that make us human.
         </p>
       </div>
@@ -1705,18 +1794,18 @@
     <h1>Blog</h1>
     <div class="blog-grid">
       <div class="blog-post">
-        <hh2>Embracing Creativity: How to Find Inspiration in the Everyday</hh2>
+        <h2>Embracing Creativity: How to Find Inspiration in the Everyday</h2>
         <p>Discover how to tap into your creative potential by finding inspiration in the world around you...</p>
         <a href="#">Read more</a>
       </div>
       <div class="blog-post">
-        <hh2>The Future of Entertainment: What to Expect from the Industry</hh2>
+        <h2>The Future of Entertainment: What to Expect from the Industry</h2>
         <p>Explore the latest trends in the entertainment industry and what they mean for creators and audiences
           alike...</p>
         <a href="#">Read more</a>
       </div>
       <div class="blog-post">
-        <hh2>Behind the Scenes: The Making of 'Life of a Meatball'</hh2>
+        <h2>Behind the Scenes: The Making of 'Life of a Meatball'</h2>
         <p>Get an inside look at the creative process behind one of our most beloved projects...</p>
         <a href="#">Read more</a>
       </div>
