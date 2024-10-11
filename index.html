@@ -1018,19 +1018,50 @@
     font-size: 1.5rem;
   }
 
-  /* Adjust margins and padding for smaller screens */
-  .content h1,
-  .content h2,
-  .content h3 {
-    margin-bottom: 20px;
-    padding: 10px;
-  }
-
-  /* Ensure the glitch span elements are properly scaled for smaller screens */
   .content .glitch span:first-child,
   .content .glitch span:last-child {
-    clip-path: none; /* Remove clipping for smaller screens */
-    transform: none; /* Simplify transforms for better performance */
+    clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%); /* Adjust clip-path for better alignment */
+    transform: translate(0, 0); /* Remove transforms to prevent misalignment */
+    opacity: 0.75;
+  }
+
+  .content .glitch span:last-child {
+    clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%); /* Adjust for bottom half */
+    transform: translate(0, 0); /* Ensure no offset on smaller screens */
+    opacity: 0.75;
+  }
+
+  /* Adjust glitch animations for smaller screens */
+  @keyframes glitch {
+    0% {
+      text-shadow: 0.03em 0 0 #00fffc, -0.02em -0.03em 0 #fc00ff,
+        0.02em 0.03em 0 #fffc00;
+    }
+    100% {
+      text-shadow: -0.03em 0 0 #00fffc, -0.02em -0.03em 0 #fc00ff,
+        -0.03em -0.03em 0 #fffc00;
+    }
+  }
+
+  @keyframes glitch-h1 {
+    0% {
+      transform: translate(0, 0);
+    }
+
+    100% {
+      transform: translate(0, 0); /* No movement on smaller screens for better alignment */
+    }
+  }
+
+  @keyframes glitch2-h1 {
+    0% {
+      transform: translate(0, 0);
+      opacity: 0.5;
+    }
+    100% {
+      transform: translate(0, 0);
+      opacity: 0.5; /* Keep glitch opacity consistent */
+    }
   }
 }
 
@@ -1052,13 +1083,26 @@
     font-size: 1.25rem;
   }
 
-  .content h1, 
-  .content h2, 
-  .content h3 {
-    margin-bottom: 15px;
-    padding: 8px;
+  .content .glitch span:first-child,
+  .content .glitch span:last-child {
+    clip-path: none; /* Remove clip-path for very small screens */
+    transform: none; /* Remove transforms to prevent misalignment */
+    opacity: 0.75;
+  }
+
+  /* Further reduce text shadow effect for glitch */
+  @keyframes glitch {
+    0% {
+      text-shadow: 0.02em 0 0 #00fffc, -0.01em -0.02em 0 #fc00ff,
+        0.01em 0.02em 0 #fffc00;
+    }
+    100% {
+      text-shadow: -0.02em 0 0 #00fffc, -0.01em -0.02em 0 #fc00ff,
+        -0.02em -0.02em 0 #fffc00;
+    }
   }
 }
+
 
         </style>
 
