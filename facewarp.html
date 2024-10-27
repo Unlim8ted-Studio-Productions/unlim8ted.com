@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TensorFlow.js Face Warp Effects</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #111;
+    }
+
+    video, canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #effects-panel {
+  position: fixed;
+  bottom: 20px; /* Adjust to avoid covering important parts */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Responsive grid */
+  gap: 10px;
+  justify-items: center;
+  width: 90%; /* Fit within the screen */
+  max-width: 600px;
+  z-index: 1000; /* Ensure it stays on top */
+}
+
+
+    .effect-checkbox {
+      color: white;
+      background-color: #333;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    /* Loading bar */
+    #loading-bar {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50%;
+      height: 10px;
+      background-color: #555;
+    }
+
+    #loading-progress {
+      width: 0;
+      height: 100%;
+      background-color: #0f0;
+    }
+
+    /* Hide loading bar when model is loaded */
+    #loading-bar.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas"></canvas>
+
+  <!-- Loading bar -->
+  <div id="loading-bar">
+    <div id="loading-progress"></div>
+  </div>
+
+  <!-- Effects panel with checkboxes in grid -->
+  <div id="effects-panel">
+    <label class="effect-checkbox">
+      <input type="checkbox" id="glow" /> Glowing Outline
+    </label>
+    <label class="effect-checkbox">
+      <input type="checkbox" id="highlight-eyes" /> Highlight Eyes
+    </label>
+    <label class="effect-checkbox">
+      <input type="checkbox" id="highlight-nose" /> Highlight Nose
+    </label>
+    <label class="effect-checkbox">
+      <input type="checkbox" id="highlight-mouth" /> Highlight Mouth
+    </label>
+    <label class="effect-checkbox">
+      <input type="checkbox" id="highlight-face" /> Highlight Face Shape
+    </label>
+    <label class="effect-checkbox">
+      <input type="checkbox" id="random-dots" /> Random Dots Effect
+    </label>
+    <label class="effect-checkbox">
+      <input type="checkbox" id="alien-warp" /> Alien Face Warp
+    </label>
+    <label class="effect-checkbox">
+      <input type="checkbox" id="moose-warp" /> Moose Face Warp
+    </label>
+    <label class="effect-checkbox">
+        <input type="checkbox" id="laser-eyes" /> Laser Eyes
+      </label>
+      <label class="effect-checkbox">
+        <input type="checkbox" id="breathingfire" /> Breath Fire
+      </label>
+      <label class="effect-checkbox">
+        <input type="checkbox" id="sunglasses" /> Sunglasses
+      </label>
+      <label class="effect-checkbox">
+        <input type="checkbox" id="horns" /> Horns
+      </label>
+      <label class="effect-checkbox">
+        <input type="checkbox" id="mustache" /> Mustache
+      </label>
+      <label class="effect-checkbox">
+        <input type="checkbox" id="eyebrows" /> Eyebrows
+      </label>
+      <label class="effect-checkbox">
+        <input type="checkbox" id="crying" /> Crying
+      </label>
+      <label class="effect-checkbox">
+        <input type="checkbox" id="ocean-background" /> Ocean Background
+      </label>
+      
+  </div>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const loadingBar = document.getElementById('loading-bar');
+    const loadingProgress = document.getElementById('loading-progress');
+
+    const effects = {
+  glow: document.getElementById('glow'),
+  highlightEyes: document.getElementById('highlight-eyes'),
+  highlightNose: document.getElementById('highlight-nose'),
+  highlightMouth: document.getElementById('highlight-mouth'),
+  highlightFace: document.getElementById('highlight-face'),
+  randomDots: document.getElementById('random-dots'),
+  alienWarp: document.getElementById('alien-warp'),
+  mooseWarp: document.getElementById('moose-warp'),
+  laserEyes: document.getElementById('laser-eyes'),
+  breathingfire: document.getElementById('breathingfire'),
+  sunglasses: document.getElementById('sunglasses'),
+  horns: document.getElementById('horns'),
+  mustache: document.getElementById('mustache'),
+  eyebrows: document.getElementById('eyebrows'),
+  crying: document.getElementById('crying'),
+  oceanBackground: document.getElementById('ocean-background')
+};
+
+
+
+    async function setupCamera() {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 640, height: 480 },
+      });
+      video.srcObject = stream;
+
+      return new Promise((resolve) => {
+        video.onloadedmetadata = () => {
+          resolve(video);
+        };
+      });
+    }
+
+    async function loadFacemeshModel() {
+      // Track loading progress
+      let model;
+      const updateProgress = (progress) => {
+        loadingProgress.style.width = `${progress * 100}%`;
+      };
+
+      return new Promise((resolve) => {
+        facemesh.load().then((m) => {
+          model = m;
+          updateProgress(1); // Model fully loaded
+          resolve(model);
+        });
+      });
+    }
+
+    async function main() {
+      await setupCamera();
+      const model = await loadFacemeshModel();
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      // Hide the loading bar once the model is loaded
+      loadingBar.classList.add('hidden');
+
+      async function detectFace() {
+        const predictions = await model.estimateFaces(video);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        if (predictions.length > 0) {
+          predictions.forEach(prediction => {
+            const keypoints = prediction.scaledMesh;
+
+            // Apply effects based on selected checkboxes
+            if (effects.glow.checked) {
+              ctx.strokeStyle = 'rgba(0, 255, 0, 0.6)';
+              ctx.lineWidth = 5;
+              ctx.beginPath();
+              for (let i = 0; i < keypoints.length; i++) {
+                const [x, y] = keypoints[i];
+                if (i === 0) {
+                  ctx.moveTo(x, y);
+                } else {
+                  ctx.lineTo(x, y);
+                }
+              }
+              ctx.closePath();
+              ctx.stroke();
+            }
+
+            if (effects.highlightEyes.checked) {
+              ctx.fillStyle = 'rgba(0, 0, 255, 0.6)';
+              const leftEyeIndex = 33;
+              const rightEyeIndex = 263;
+              const [leftEyeX, leftEyeY] = keypoints[leftEyeIndex];
+              const [rightEyeX, rightEyeY] = keypoints[rightEyeIndex];
+              ctx.beginPath();
+              ctx.arc(leftEyeX, leftEyeY, 10, 0, 2 * Math.PI);
+              ctx.arc(rightEyeX, rightEyeY, 10, 0, 2 * Math.PI);
+              ctx.fill();
+            }
+
+            if (effects.alienWarp.checked) {
+  // Fill the face area with an "alien" green color
+  ctx.fillStyle = 'rgba(0, 255, 0, 0.2)'; // Light green tint
+  ctx.beginPath();
+  keypoints.forEach(([x, y], i) => {
+    ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  ctx.fill();
+
+  // Stretch the face to create an "Alien" effect
+  ctx.strokeStyle = 'rgba(0, 255, 0, 0.6)';
+  ctx.lineWidth = 2;
+  keypoints.forEach(([x, y], i) => {
+    let scale = i % 2 === 0 ? 1.5 : 0.5; // Stretch every other point for effect
+    ctx.beginPath();
+    ctx.arc(x * scale, y * scale, 3, 0, 2 * Math.PI);
+    ctx.stroke();
+  });
+}
+// Function to draw sunglasses over eyes
+function drawSunglasses(ctx, leftEyeX, leftEyeY, rightEyeX, rightEyeY) {
+  const width = Math.abs(rightEyeX - leftEyeX) + 40; // Width of sunglasses
+  const height = 20; // Height of sunglasses
+  const middleX = (leftEyeX + rightEyeX) / 2; // Midpoint between eyes
+  const middleY = (leftEyeY + rightEyeY) / 2;
+
+  ctx.fillStyle = 'black'; // Sunglasses color
+  ctx.fillRect(middleX - width / 2, middleY - height / 2, width, height);
+  ctx.fillStyle = 'gray'; // Sunglass bridge
+  ctx.fillRect(middleX - 10, middleY - 5, 20, 10);
+}
+
+// Function to draw horns above the head
+function drawHorns(ctx, foreheadX, foreheadY) {
+  ctx.strokeStyle = 'saddlebrown'; // Horn color
+  ctx.lineWidth = 5;
+
+  // Left horn
+  ctx.beginPath();
+  ctx.moveTo(foreheadX - 40, foreheadY - 60); // Starting point
+  ctx.lineTo(foreheadX - 60, foreheadY - 100); // First branch
+  ctx.lineTo(foreheadX - 80, foreheadY - 80);  // Second branch
+  ctx.stroke();
+
+  // Right horn
+  ctx.beginPath();
+  ctx.moveTo(foreheadX + 40, foreheadY - 60); // Starting point
+  ctx.lineTo(foreheadX + 60, foreheadY - 100); // First branch
+  ctx.lineTo(foreheadX + 80, foreheadY - 80);  // Second branch
+  ctx.stroke();
+}
+
+// Function to draw mustache
+function drawMustache(ctx, mouthX, mouthY) {
+  ctx.strokeStyle = 'black'; // Mustache color
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(mouthX - 30, mouthY); // Left part of mustache
+  ctx.lineTo(mouthX - 10, mouthY + 10);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(mouthX + 30, mouthY); // Right part of mustache
+  ctx.lineTo(mouthX + 10, mouthY + 10);
+  ctx.stroke();
+}
+
+// Function to draw eyebrows
+function drawEyebrows(ctx, leftEyeX, leftEyeY, rightEyeX, rightEyeY) {
+  ctx.strokeStyle = 'black'; // Eyebrow color
+  ctx.lineWidth = 4;
+
+  // Left eyebrow
+  ctx.beginPath();
+  ctx.moveTo(leftEyeX - 20, leftEyeY - 30);
+  ctx.lineTo(leftEyeX + 20, leftEyeY - 30);
+  ctx.stroke();
+
+  // Right eyebrow
+  ctx.beginPath();
+  ctx.moveTo(rightEyeX - 20, rightEyeY - 30);
+  ctx.lineTo(rightEyeX + 20, rightEyeY - 30);
+  ctx.stroke();
+}
+function adjustCanvasSize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  oceanCanvas.width = canvas.width;
+  oceanCanvas.height = canvas.height;
+}
+
+window.addEventListener('resize', adjustCanvasSize);
+adjustCanvasSize(); // Call once on initial load
+
+// Function to animate tears falling from eyes
+function drawCrying(ctx, leftEyeX, leftEyeY, rightEyeX, rightEyeY) {
+  const tearSpeed = 2; // Speed at which the tears fall
+  const tearSize = 5;  // Size of the tears
+
+  // Left eye tear (animated falling)
+  let leftTearY = leftEyeY;
+  const leftTearInterval = setInterval(() => {
+    ctx.fillStyle = 'rgba(0, 0, 255, 0.5)'; // Blue color for tears
+    ctx.clearRect(leftEyeX - tearSize, leftTearY - tearSize, tearSize * 2, tearSize * 2); // Clear previous tear position
+    ctx.beginPath();
+    ctx.arc(leftEyeX, leftTearY, tearSize, 0, 2 * Math.PI);
+    ctx.fill();
+    leftTearY += tearSpeed;
+    if (leftTearY > canvas.height) {
+      clearInterval(leftTearInterval); // Reset tear when it falls off the screen
+    }
+  }, 50);
+
+  // Right eye tear (animated falling)
+  let rightTearY = rightEyeY;
+  const rightTearInterval = setInterval(() => {
+    ctx.fillStyle = 'rgba(0, 0, 255, 0.5)';
+    ctx.clearRect(rightEyeX - tearSize, rightTearY - tearSize, tearSize * 2, tearSize * 2);
+    ctx.beginPath();
+    ctx.arc(rightEyeX, rightTearY, tearSize, 0, 2 * Math.PI);
+    ctx.fill();
+    rightTearY += tearSpeed;
+    if (rightTearY > canvas.height) {
+      clearInterval(rightTearInterval);
+    }
+  }, 50);
+}
+async function loadFacemeshModel() {
+  let progress = 0;
+  const updateProgress = (increment) => {
+    progress += increment;
+    loadingProgress.style.width = `${progress * 100}%`;
+  };
+
+  const model = await facemesh.load({
+    maxFaces: 1,
+    onProgress: updateProgress(0.5) // Update progress while loading
+  });
+
+  updateProgress(1); // Model fully loaded
+  return model;
+}
+
+// Function to create a dynamic ocean effect on a canvas
+function createDynamicOcean(ctx, canvas) {
+  const waveHeight = 20;
+  const waveLength = 100;
+  const waveSpeed = 0.05;
+  let time = 0;
+
+  function drawWaves() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#0077be'; // Ocean blue color
+
+    ctx.beginPath();
+    for (let x = 0; x <= canvas.width; x++) {
+      let y = waveHeight * Math.sin((x / waveLength) + time) + canvas.height / 2;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.lineTo(0, canvas.height);
+    ctx.closePath();
+    ctx.fill();
+
+    time += waveSpeed;
+    requestAnimationFrame(drawWaves);
+  }
+
+  drawWaves();
+}
+
+// Function to replace background with ocean and mask the face (filling the head shape)
+function replaceBackgroundWithFilledHead(ctx, video, keypoints, oceanCanvas) {
+  // Draw the dynamic ocean canvas first
+  ctx.drawImage(oceanCanvas, 0, 0, canvas.width, canvas.height);
+
+  // Create a mask around the face to show only the head (filled)
+  ctx.save();
+  ctx.beginPath();
+  keypoints.forEach(([x, y], i) => {
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  });
+  ctx.closePath();
+  ctx.clip();
+
+  // Draw the video on top of the ocean background, showing only the head
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  // Restore canvas state
+  ctx.restore();
+}
+let oceanCanvas = document.createElement('canvas');
+oceanCanvas.width = canvas.width;
+oceanCanvas.height = canvas.height;
+let oceanCtx = oceanCanvas.getContext('2d');
+
+// Create the dynamic ocean effect on its own canvas
+createDynamicOcean(oceanCtx, oceanCanvas);
+
+if (effects.oceanBackground.checked) {
+  // Replace the background with dynamic ocean and show only the head
+  replaceBackgroundWithFilledHead(ctx, video, keypoints, oceanCanvas);
+
+  // Simulate water ripples around the head as it moves
+  //createHeadRipple(ctx, keypoints);
+}
+
+
+
+if (effects.sunglasses.checked) {
+  // Get eye keypoints
+  const leftEyeIndex = 33;
+  const rightEyeIndex = 263;
+  const [leftEyeX, leftEyeY] = keypoints[leftEyeIndex];
+  const [rightEyeX, rightEyeY] = keypoints[rightEyeIndex];
+
+  drawSunglasses(ctx, leftEyeX, leftEyeY, rightEyeX, rightEyeY);
+}
+
+if (effects.horns.checked) {
+  // Get forehead keypoint
+  const foreheadIndex = 10;
+  const [foreheadX, foreheadY] = keypoints[foreheadIndex];
+
+  drawHorns(ctx, foreheadX, foreheadY);
+}
+
+if (effects.mustache.checked) {
+  // Get mouth keypoint
+  const mouthIndex = 13;
+  const [mouthX, mouthY] = keypoints[mouthIndex];
+
+  drawMustache(ctx, mouthX, mouthY);
+}
+
+if (effects.eyebrows.checked) {
+  // Get eye keypoints
+  const leftEyeIndex = 33;
+  const rightEyeIndex = 263;
+  const [leftEyeX, leftEyeY] = keypoints[leftEyeIndex];
+  const [rightEyeX, rightEyeY] = keypoints[rightEyeIndex];
+
+  drawEyebrows(ctx, leftEyeX, leftEyeY, rightEyeX, rightEyeY);
+}
+
+if (effects.crying.checked) {
+  // Get eye keypoints
+  const leftEyeIndex = 33;
+  const rightEyeIndex = 263;
+  const [leftEyeX, leftEyeY] = keypoints[leftEyeIndex];
+  const [rightEyeX, rightEyeY] = keypoints[rightEyeIndex];
+
+  drawCrying(ctx, leftEyeX, leftEyeY, rightEyeX, rightEyeY);
+}
+
+if (effects.mooseWarp.checked) {
+  // Fill the face area with a "moose" brown color
+  ctx.fillStyle = 'rgba(139, 69, 19, 0.2)'; // Light brown tint
+  ctx.beginPath();
+  keypoints.forEach(([x, y], i) => {
+    ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  ctx.fill();
+
+  // Create a moose-like appearance by distorting face width
+  ctx.strokeStyle = 'brown';
+  ctx.lineWidth = 2;
+  keypoints.forEach(([x, y], i) => {
+    let xOffset = i % 2 === 0 ? 40 : -40; // Pull points outwards for "moose" effect
+    ctx.beginPath();
+    ctx.arc(x + xOffset, y, 3, 0, 2 * Math.PI);
+    ctx.stroke();
+  });
+
+  // Add antlers above the face (simplified lines for antlers)
+  const [foreheadX, foreheadY] = keypoints[10]; // Pick a point near the forehead
+  ctx.strokeStyle = 'saddlebrown';
+  ctx.lineWidth = 5;
+
+  // Left antler
+  ctx.beginPath();
+  ctx.moveTo(foreheadX - 40, foreheadY - 60); // Starting point
+  ctx.lineTo(foreheadX - 60, foreheadY - 100); // First branch
+  ctx.lineTo(foreheadX - 80, foreheadY - 80);  // Second branch
+  ctx.stroke();
+
+  // Right antler
+  ctx.beginPath();
+  ctx.moveTo(foreheadX + 40, foreheadY - 60); // Starting point
+  ctx.lineTo(foreheadX + 60, foreheadY - 100); // First branch
+  ctx.lineTo(foreheadX + 80, foreheadY - 80);  // Second branch
+  ctx.stroke();
+}
+// Function to create fire particles around hands
+function createFireParticles(ctx, handX, handY) {
+  const numParticles = 20; // Number of particles for each hand
+  for (let i = 0; i < numParticles; i++) {
+    const particleX = handX + (Math.random() - 0.5) * 30; // Spread particles randomly
+    const particleY = handY + (Math.random() - 0.5) * 30;
+    const size = Math.random() * 5 + 2; // Random size for fire particles
+    const opacity = Math.random() * 0.5 + 0.5; // Random opacity for glow effect
+    const redIntensity = Math.random() * 50 + 200; // Vary the red intensity of fire
+
+    ctx.fillStyle = `rgba(${redIntensity}, 69, 0, ${opacity})`; // Red-orange fire
+    ctx.beginPath();
+    ctx.arc(particleX, particleY, size, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+}
+
+// Function to create a fire stream from the mouth
+function createFireStream(ctx, mouthX, mouthY) {
+  const numParticles = 100; // Number of particles in the fire stream
+  const fireLength = 150; // Length of the fire stream
+
+  for (let i = 0; i < numParticles; i++) {
+    // Random spread for fire stream particles
+    const particleX = mouthX + Math.random() * fireLength; // Stream going to the right
+    const particleY = mouthY + (Math.random() - 0.5) * 50; // Vertical spread
+
+    const size = Math.random() * 8 + 3; // Random size for fire particles
+    const opacity = Math.random() * 0.4 + 0.6; // Random opacity for glow effect
+    const redIntensity = Math.random() * 50 + 200; // Vary the red intensity of fire
+
+    ctx.fillStyle = `rgba(${redIntensity}, 69, 0, ${opacity})`; // Red-orange fire color
+    ctx.beginPath();
+    ctx.arc(particleX, particleY, size, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+}
+
+if (effects.breathingfire.checked) {
+  // Get mouth keypoint (use approximate index for the mouth)
+  const mouthIndex = 13; // Approximate keypoint for the mouth
+  const [mouthX, mouthY] = keypoints[mouthIndex];
+
+  // Create a fire stream from the mouth
+  createFireStream(ctx, mouthX, mouthY);
+}
+
+
+if (effects.laserEyes.checked) {
+  // Draw laser beams from the eyes based on head direction
+  const leftEyeIndex = 33;
+  const rightEyeIndex = 263;
+  const foreheadIndex = 10; // Forehead as a reference for head movement
+
+  const [leftEyeX, leftEyeY] = keypoints[leftEyeIndex];
+  const [rightEyeX, rightEyeY] = keypoints[rightEyeIndex];
+  const [foreheadX, foreheadY] = keypoints[foreheadIndex];
+
+  // Calculate head rotation angle (using forehead and eye positions as a simple estimate)
+  const headAngle = Math.atan2(foreheadY - leftEyeY, foreheadX - leftEyeX);
+
+  // Set laser direction based on head angle (adjust multiplier for laser length)
+  const laserLength = 200;
+  const laserOffsetX = Math.cos(headAngle) * laserLength;
+  const laserOffsetY = Math.sin(headAngle) * laserLength;
+
+  // Left eye laser
+  ctx.strokeStyle = 'red';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(leftEyeX, leftEyeY);
+  ctx.lineTo(leftEyeX + laserOffsetX, leftEyeY + laserOffsetY);
+  ctx.stroke();
+
+  // Right eye laser
+  ctx.beginPath();
+  ctx.moveTo(rightEyeX, rightEyeY);
+  ctx.lineTo(rightEyeX + laserOffsetX, rightEyeY + laserOffsetY);
+  ctx.stroke();
+}
+
+
+
+            if (effects.highlightNose.checked) {
+              ctx.fillStyle = 'rgba(255, 0, 0, 0.6)';
+              const noseIndex = 1;
+              const [noseX, noseY] = keypoints[noseIndex];
+              ctx.beginPath();
+              ctx.arc(noseX, noseY, 10, 0, 2 * Math.PI);
+              ctx.fill();
+            }
+
+            if (effects.highlightMouth.checked) {
+              ctx.fillStyle = 'rgba(255, 165, 0, 0.6)';
+              const mouthIndex = 13;
+              const [mouthX, mouthY] = keypoints[mouthIndex];
+              ctx.beginPath();
+              ctx.arc(mouthX, mouthY, 10, 0, 2 * Math.PI);
+              ctx.fill();
+            }
+
+            if (effects.highlightFace.checked) {
+              ctx.strokeStyle = 'rgba(255, 255, 0, 0.6)';
+              ctx.lineWidth = 3;
+              ctx.beginPath();
+              for (let i = 0; i < keypoints.length; i++) {
+                const [x, y] = keypoints[i];
+                if (i === 0) {
+                  ctx.moveTo(x, y);
+                } else {
+                  ctx.lineTo(x, y);
+                }
+              }
+              ctx.closePath();
+              ctx.stroke();
+            }
+
+            if (effects.randomDots.checked) {
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+              keypoints.forEach(([x, y]) => {
+                ctx.beginPath();
+                ctx.arc(x, y, Math.random() * 3 + 1, 0, 2 * Math.PI);
+                ctx.fill();
+              });
+            }
+          });
+        }
+
+        requestAnimationFrame(detectFace);
+      }
+
+      detectFace();
+    }
+
+    main();
+  </script>
+</body>
+</html>
