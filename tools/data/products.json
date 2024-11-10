@@ -268,7 +268,7 @@
     "video": null,
     "additional_videos": [],
     "name": "The Glitch",
-    "description": "",
+    "description": "In progress...",
     "price": 0,
     "type": "Entertainment"
   },
@@ -279,9 +279,21 @@
     "video": null,
     "additional_videos": [],
     "name": "The Glitch (the book)",
-    "description": ".",
+    "description": "In progress...",
     "price": 0,
     "type": "Entertainment"
+  },
+  {
+    "id": "theglitchscreenplay",
+    "image": null,
+    "additional_images": [],
+    "video": null,
+    "additional_videos": [],
+    "name": "The Glitch (the screen play)",
+    "description": "The screen play for the short film 'The Glitch'.",
+    "price": 0,
+    "type": "Entertainment",
+    "link": "https://docs.google.com/document/d/1SYcF4x2AdHc1DwZstHEIL2uV-Fe5pHN3iR-lZnyupso/edit?usp=sharing"
   },
   {
     "id": "Copy-Keyframes-to-Selected-Blender-Addon",
