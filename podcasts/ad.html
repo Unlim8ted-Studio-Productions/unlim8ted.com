@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Product Layout</title>
+<style>
+    /* Basic Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(45deg, #1a1a2e, #282a36, #1a1a2e);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        font-family: Arial, sans-serif;
+        color: #fff;
+        overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Container */
+    .container {
+        width: 80%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 350px;
+    }
+
+    /* Product Squares with Increased Spacing */
+    .product {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin: 350px 0; /* Increased spacing for tilt-shift effect */
+        position: relative;
+        opacity: 0.6;
+        transition: opacity 0.3s, transform 0.3s;
+    }
+    
+
+    .product.active {
+        opacity: 1;
+        transform: scale(1.1); /* Slightly larger glow effect */
+    }
+
+    /* Alternating Layout */
+    .product:nth-child(even) .product-box {
+        order: 2;
+    }
+
+    .product-box {
+        width: 250px;
+        height: 250px;
+        background-color: #333;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #00ffff;
+        box-shadow: 0 0 25px rgba(144, 0, 255, 0.7);
+        transition: box-shadow 0.3s;
+        overflow: hidden; /* Prevents overflow */
+        position: relative; /* Needed for absolute positioning of the img */
+    }
+    
+
+    .product-box img {
+        width: 100%;      /* Ensures the image covers the full width of the box */
+        height: 100%;     /* Ensures the image covers the full height of the box */
+        object-fit: cover; /* Ensures the image covers the box without distortion */
+        position: absolute; /* Positions the image correctly within the box */
+        top: 50%;          /* These two lines center the image vertically */
+        left: 50%;
+        transform: translate(-50%, -50%); /* Centers the image perfectly */
+    }
+    
+    /* Description Box */
+    .product-details {
+        background: #282a36;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+        width: 50%;
+    }
+
+    .product-details h2 {
+        color: #ff00ff;
+        margin: 0 0 10px 0;
+    }
+
+    .product-details p {
+        color: #c0c0c0;
+        margin: 10px 0;
+    }
+
+    .product-details .price {
+        font-size: 20px;
+        color: #ff00ff;
+        font-weight: bold;
+    }
+
+    /* Connecting Lines */
+    .line {
+        width: 2px;
+        height: 150px; /* Increased height for added spacing */
+        background: linear-gradient(180deg, rgba(144, 0, 255, 0.7), rgba(0, 255, 255, 0.7));
+        position: absolute;
+    }
+
+    /* Positioning lines to alternate sides */
+    .product:nth-child(odd) .line {
+        left: 280px;
+    }
+    
+    .product:nth-child(even) .line {
+        right: 280px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+<!-- Product 1 -->
+<div class="product">
+    <div class="product-box">
+        <img src="images/products/films/The Life Of A Meatball.jpg" alt="Product 1 Image">
+    </div>
+    <div class="line"></div>
+    <div class="product-details">
+        <h2>The Life of a Meatball - Short Film</h2>
+        <p>Deep within the Tasmanian Jungles lie meatball factories. These factories produce meatballs, although something quite special can happen as shown in this captivating documentary.</p>
+        <span class="price">$0.00</span>
+    </div>
+</div>
+
+<!-- Product 2 -->
+<div class="product">
+    <div class="product-box">
+        <img src="images/products/clothes/sfesehjkl_-removebg-preview.png" alt="Product 2 Image">
+    </div>
+    <div class="line"></div>
+    <div class="product-details">
+        <h2>Unlim8ted T-Shirt</h2>
+        <p>Stylish and comfortable, available now for a low price.</p>
+        <span class="price">$24.99</span>
+    </div>
+</div>
+
+<!-- Product 3 -->
+<div class="product">
+    <div class="product-box">
+        <img src="images/products/films/TheGlitchCover.png" alt="Product 3 Image">
+    </div>
+    <div class="line"></div>
+    <div class="product-details">
+        <h2>The Glitch - Short Film</h2>
+        <p>An amazing short film about what "reality" actually means.</p>
+        <span class="price">$0.00</span>
+    </div>
+</div>
+
+
+    <!-- Add more products as needed -->
+</div>
+<script>
+    function smoothScroll(duration) {
+        let start = null;
+        const step = timestamp => {
+            if (!start) start = timestamp;
+            const progress = timestamp - start;
+            const position = progress / duration; // Calculate progress percentage
+            const y = position * (document.body.scrollHeight - window.innerHeight); // Target scroll position
+            window.scrollTo(0, y); // Perform the scroll
+            if (progress < duration) { // Continue scrolling
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    window.addEventListener('keydown', function(event) {
+        if (event.keyCode === 32) { // 32 is the key code for the spacebar
+            event.preventDefault(); // Prevent the default spacebar action (scroll down)
+            smoothScroll(1500); // Adjust duration in milliseconds (10000ms = 10 seconds)
+        }
+    });
+</script>
+<script>
+    // JavaScript to add 'active' class when scrolling close to the product
+    document.addEventListener("scroll", function () {
+        const products = document.querySelectorAll('.product');
+        products.forEach(product => {
+            const rect = product.getBoundingClientRect();
+            const inViewport = rect.top >= 0 && rect.bottom <= window.innerHeight;
+
+            if (inViewport) {
+                product.classList.add('active');
+            } else {
+                product.classList.remove('active');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
