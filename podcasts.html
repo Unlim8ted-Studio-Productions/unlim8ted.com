@@ -365,7 +365,7 @@
             cursor: none; /* Hide the default cursor */
         }
 
-        .container {
+        .scrollable-container {
             max-width: 1200px;
             text-align: center;
             padding: 20px;
@@ -389,7 +389,11 @@
         h1, p, a.button {
             transition: transform 0.3s, color 0.3s;
         }
-
+.scrollable-container {
+    height: 80vh; /* Adjust height to fit your design */
+    overflow-y: auto; /* Allows vertical scrolling */
+    padding-bottom: 20px; /* Add some space for scroll bar */
+}
         h1 {
             color: #ffffff;
             text-shadow: 0 0 5px #ffffff, 0 0 10px #8b00ff, 0 0 15px #ffffff;
@@ -518,7 +522,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+   <div class="scrollable-container">
         <h1>Unlim8ted Podcasts</h1>
         <p>Welcome to Unlim8ted Studio Productions' podcast page! Here you'll find our latest audio content spanning various genres, including informational podcasts, fictional narratives, and insightful discussions about creativity, technology, and more.</p>
 
