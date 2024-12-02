@@ -211,7 +211,19 @@
         touch-action: none;
         padding: 20px; /* Add padding */
     }
-    
+    @media (max-height: 768px) {
+    div {
+        padding: 15px; /* Reduce padding on smaller screens */
+    }
+}
+
+@media (max-height: 480px) {
+    div {
+        width: 95%; /* Take up more screen space on very small devices */
+        padding: 10px; /* Further reduce padding */
+    }
+}
+
     #gameCanvas {
         max-width: 95vw; /* Limit maximum width */
         max-height: 85vh; /* Limit maximum height */
@@ -450,6 +462,7 @@
             <li>Wall collisions slow the puck down</li>
             <li>Special move: You can hit the puck backwards!</li>
             <li>Pockets and paddles change size during play</li>
+            <u style="font-size: large;"><b>AND YOU CAN EVEN CUSTOMIZE EVERYTHING IN THE SETTINGS (TOP RIGHT)</u></b>
         </ul>
         <button onclick="hideInstructions()">Got it!</button>
     </div>
