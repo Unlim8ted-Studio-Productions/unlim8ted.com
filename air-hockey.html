@@ -1,8 +1,8 @@
 
 <html><head>
-    <title>Unlim8ted Air Hockey</title>
-      <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
-  <style media="screen" type="text/css">
+<title>Unlim8ted Air Hockey</title>
+<!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+<style media="screen" type="text/css">
     .loader {
       position: fixed;
       background-color: black;
@@ -142,9 +142,8 @@
       }
     }
   </style>
-  
-  <!-- Styles for the No-JavaScript message -->
-  <style>
+<!-- Styles for the No-JavaScript message -->
+<style>
     .no-js-message {
       background: #2c4762;
       color: red;
@@ -157,22 +156,20 @@
       top: 0;
     }
   </style>
-
-  <!-- No-JavaScript message -->
-  <noscript>
-    <div class="no-js-message">
+<!-- No-JavaScript message -->
+<noscript>
+<div class="no-js-message">
       Please enable JavaScript to use this website properly.
     </div>
-  </noscript>
-  <div class="loader">
-    <div class="loaderr-container">
-      <div class="loaderr"></div>
-      <div class="loading-text">Loading...</div>
-    </div>
-  </div>
+</noscript>
+<div class="loader">
+<div class="loaderr-container">
+<div class="loaderr"></div>
+<div class="loading-text">Loading...</div>
+</div>
+</div>
 
-  </div>
-  <script>
+<script>
     // This function will execute after the full page has finished loading
     window.onload = function () {
       // Trigger fade-out animation for the loader spinner
@@ -194,11 +191,10 @@
     };
 
   </script>
-  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-
-  <link rel="stylesheet" href="styles.css">
-    <style>
+<!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+<link href="favicon.ico" rel="icon" type="image/x-icon"/>
+<link href="styles.css" rel="stylesheet"/>
+<style>
     body {
         display: flex;
         justify-content: center;
@@ -366,7 +362,7 @@
         cursor: pointer;
     }
     </style>
-    <style>
+<style>
         .dropdown-content {
           display: none;
           position: absolute;
@@ -415,167 +411,162 @@
           }
         }
       </style>
-      <script>
+<script>
         function toggleMenu() {
           const navLinks = document.getElementById("navbarLinks");
           navLinks.classList.toggle("show");
         }
       </script>
-      <nav class="navbar">
-        <div class="navbar-header">
-          <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-          <ul class="nav-links" id="navbarLinks">
-            <li class="nav-item"><a href="/">Home</a></li>
-            <li class="nav-item"><a href="/#products">Products</a></li>
-            <li class="nav-item"><a href="/#help">Help</a></li>
-            <li class="nav-item"><a href="/#about">About</a></li>
-            <li class="nav-item dropdown">
-              <a href="javascript:void(0)" class="dropbtn">More</a>
-              <div class="dropdown-content">
-                <a href="/#portfolio">Portfolio</a>
-                <a href="/#contact">Contact</a>
-                <a href="/#blog">Blog</a>
-                <a href="/live-chat">Live Chat</a>
-                <a href="/live-game">Live Chat and Game</a>
-                <a href="/puzzle-squares">Puzzle Squares</a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </head>
-    <body>
-    <div id="scoreBoard"><span class="player-score">Player: 0</span> | <span class="ai-score">AI: 0</span></div>
-    <button class="settings-button">⚙️ Settings</button>
-    <canvas id="gameCanvas" width="1125" height="600"></canvas>
-    <div id="instructions">
-        <h2>How to Play Air Hockey</h2>
-        <ul>
-            <li>Move your paddle with the mouse/touch (green paddle)</li>
-            <li>Hit the puck into opponent's goal (gold colored)</li>
-            <li>First to 10 points wins!</li>
-            <li>Left click for Power Shot</li>
-            <li>Right click for Speed Boost</li>
-            <li>Press 'R' to rotate table orientation</li>
-            <li>Press '?' to show these instructions again</li>
-            <li>Hitting with paddles increases puck speed</li>
-            <li>Wall collisions slow the puck down</li>
-            <li>Special move: You can hit the puck backwards!</li>
-            <li>Pockets and paddles change size during play</li>
-            <u style="font-size: large;"><b>AND YOU CAN EVEN CUSTOMIZE EVERYTHING IN THE SETTINGS (TOP RIGHT)</u></b>
-        </ul>
-        <button onclick="hideInstructions()">Got it!</button>
-    </div>
-    <div id="settingsMenu">
-        <button class="close-settings" onclick="toggleSettings()">×</button>
-        <h2>Settings</h2>
-        
-        <div class="settings-section">
-            <h3>Color Theme</h3>
-            <select id="colorTheme">
-                <option value="classic">Classic Neon</option>
-                <option value="retro">Retro Arcade</option>
-                <option value="ocean">Ocean Deep</option>
-                <option value="sunset">Sunset Vibes</option>
-            </select>
-        </div>
-        
-        <div class="settings-section">
-            <h3>Game Modifiers</h3>
-            <div class="modifier-option">
-                <label>Ball Speed</label>
-                <input type="range" id="ballSpeed" min="0.5" max="2" step="0.1" value="1">
-            </div>
-            <div class="modifier-option">
-                <label>AI Difficulty</label>
-                <select id="aiDifficulty">
-                    <option value="easy">Easy</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="hard">Hard</option>
-                    <option value="impossible">Impossible</option>
-                </select>
-            </div>
-            <div class="modifier-option">
-                <label>Paddle Size</label>
-                <input type="range" id="paddleSize" min="0.5" max="1.5" step="0.1" value="1">
-            </div>
-        </div>
-    
-        <div class="settings-section">
-            <h3>Gameplay Options</h3>
-            <div class="modifier-option">
-                <label>Number of Players</label>
-                <select id="playerCount">
-                    <option value="2">2 Players</option>
-                    <option value="3">3 Players</option>
-                    <option value="4">4 Players</option>
-                </select>
-            </div>
-            <div class="modifier-option">
-                <label>Paddle Shape</label>
-                <select id="paddleShape">
-                    <option value="rectangle">Rectangle</option>
-                    <option value="circle">Circle</option>
-                </select>
-            </div>
-            <div class="modifier-option">
-                <label>Enable Rotation</label>
-                <select id="rotationEnabled">
-                    <option value="true">Enabled</option>
-                    <option value="false">Disabled</option>
-                </select>
-            </div>
-            <div class="modifier-option">
-                <label>Enable Super Hit</label>
-                <select id="superHitEnabled">
-                    <option value="true">Enabled</option>
-                    <option value="false">Disabled</option>
-                </select>
-            </div>
-            <div class="modifier-option">
-                <label>Particle Effects</label>
-                <select id="particleEffects">
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
-                    <option value="off">Off</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="settings-section">
-            <h3>Sound Options</h3>
-            <div class="modifier-option">
-                <label>Sound Effects Volume</label>
-                <input type="range" id="sfxVolume" min="0" max="1" step="0.1" value="0.5">
-            </div>
-            <div class="modifier-option">
-                <label>Background Music</label>
-                <select id="backgroundMusic">
-                    <option value="none">None</option>
-                    <option value="retro">Retro Beats</option>
-                    <option value="ambient">Ambient</option>
-                    <option value="techno">Techno</option>
-                </select>
-            </div>
-        </div>
-        <div class="settings-section">
-            <h3>Game Settings</h3>
-            <div class="modifier-option">
-                <label>Wall Friction</label>
-                <input type="range" id="wallFriction" min="0.5" max="1" step="0.05" value="0.9">
-            </div>
-            <div class="modifier-option">
-                <label>Game Mode</label>
-                <select id="gameMode">
-                    <option value="classic">Classic</option>
-                    <option value="magnets">Magnets</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    
-    <script>
+<nav class="navbar">
+<div class="navbar-header">
+<button class="navbar-toggle" onclick="toggleMenu()" style="position:absolute; top:5px; left:1%">☰</button>
+<ul class="nav-links" id="navbarLinks">
+<li class="nav-item"><a href="/">Home</a></li>
+<li class="nav-item"><a href="/#products">Products</a></li>
+<li class="nav-item"><a href="/#help">Help</a></li>
+<li class="nav-item"><a href="/#about">About</a></li>
+<li class="nav-item dropdown">
+<a class="dropbtn" href="javascript:void(0)">More</a>
+<div class="dropdown-content">
+<a href="/#portfolio">Portfolio</a>
+<a href="/#contact">Contact</a>
+<a href="/#blog">Blog</a>
+<a href="/live-chat">Live Chat</a>
+<a href="/live-game">Live Chat and Game</a>
+<a href="/puzzle-squares">Puzzle Squares</a>
+</div>
+</li>
+</ul>
+</div>
+</nav>
+<meta content="Unlim8ted Air Hockey  Learn more at Unlim8ted Studio Productions." name="description"/></head>
+<body>
+<div id="scoreBoard"><span class="player-score">Player: 0</span> | <span class="ai-score">AI: 0</span></div>
+<button class="settings-button">⚙️ Settings</button>
+<canvas height="600" id="gameCanvas" width="1125"></canvas>
+<div id="instructions">
+<h2>How to Play Air Hockey</h2>
+<ul>
+<li>Move your paddle with the mouse/touch (green paddle)</li>
+<li>Hit the puck into opponent's goal (gold colored)</li>
+<li>First to 10 points wins!</li>
+<li>Left click for Power Shot</li>
+<li>Right click for Speed Boost</li>
+<li>Press 'R' to rotate table orientation</li>
+<li>Press '?' to show these instructions again</li>
+<li>Hitting with paddles increases puck speed</li>
+<li>Wall collisions slow the puck down</li>
+<li>Special move: You can hit the puck backwards!</li>
+<li>Pockets and paddles change size during play</li>
+<u style="font-size: large;"><b>AND YOU CAN EVEN CUSTOMIZE EVERYTHING IN THE SETTINGS (TOP RIGHT)</b></u>
+</ul>
+<button onclick="hideInstructions()">Got it!</button>
+</div>
+<div id="settingsMenu">
+<button class="close-settings" onclick="toggleSettings()">×</button>
+<h2>Settings</h2>
+<div class="settings-section">
+<h3>Color Theme</h3>
+<select id="colorTheme">
+<option value="classic">Classic Neon</option>
+<option value="retro">Retro Arcade</option>
+<option value="ocean">Ocean Deep</option>
+<option value="sunset">Sunset Vibes</option>
+</select>
+</div>
+<div class="settings-section">
+<h3>Game Modifiers</h3>
+<div class="modifier-option">
+<label>Ball Speed</label>
+<input id="ballSpeed" max="2" min="0.5" step="0.1" type="range" value="1"/>
+</div>
+<div class="modifier-option">
+<label>AI Difficulty</label>
+<select id="aiDifficulty">
+<option value="easy">Easy</option>
+<option selected="" value="medium">Medium</option>
+<option value="hard">Hard</option>
+<option value="impossible">Impossible</option>
+</select>
+</div>
+<div class="modifier-option">
+<label>Paddle Size</label>
+<input id="paddleSize" max="1.5" min="0.5" step="0.1" type="range" value="1"/>
+</div>
+</div>
+<div class="settings-section">
+<h3>Gameplay Options</h3>
+<div class="modifier-option">
+<label>Number of Players</label>
+<select id="playerCount">
+<option value="2">2 Players</option>
+<option value="3">3 Players</option>
+<option value="4">4 Players</option>
+</select>
+</div>
+<div class="modifier-option">
+<label>Paddle Shape</label>
+<select id="paddleShape">
+<option value="rectangle">Rectangle</option>
+<option value="circle">Circle</option>
+</select>
+</div>
+<div class="modifier-option">
+<label>Enable Rotation</label>
+<select id="rotationEnabled">
+<option value="true">Enabled</option>
+<option value="false">Disabled</option>
+</select>
+</div>
+<div class="modifier-option">
+<label>Enable Super Hit</label>
+<select id="superHitEnabled">
+<option value="true">Enabled</option>
+<option value="false">Disabled</option>
+</select>
+</div>
+<div class="modifier-option">
+<label>Particle Effects</label>
+<select id="particleEffects">
+<option value="high">High</option>
+<option value="medium">Medium</option>
+<option value="low">Low</option>
+<option value="off">Off</option>
+</select>
+</div>
+</div>
+<div class="settings-section">
+<h3>Sound Options</h3>
+<div class="modifier-option">
+<label>Sound Effects Volume</label>
+<input id="sfxVolume" max="1" min="0" step="0.1" type="range" value="0.5"/>
+</div>
+<div class="modifier-option">
+<label>Background Music</label>
+<select id="backgroundMusic">
+<option value="none">None</option>
+<option value="retro">Retro Beats</option>
+<option value="ambient">Ambient</option>
+<option value="techno">Techno</option>
+</select>
+</div>
+</div>
+<div class="settings-section">
+<h3>Game Settings</h3>
+<div class="modifier-option">
+<label>Wall Friction</label>
+<input id="wallFriction" max="1" min="0.5" step="0.05" type="range" value="0.9"/>
+</div>
+<div class="modifier-option">
+<label>Game Mode</label>
+<select id="gameMode">
+<option value="classic">Classic</option>
+<option value="magnets">Magnets</option>
+</select>
+</div>
+</div>
+</div>
+<script>
 
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -1625,4 +1616,4 @@ let fourthPlayerScore = 0;
     
     requestAnimationFrame(draw);
     </script>
-    </body></html>
+</body></html>

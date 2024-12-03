@@ -1,9 +1,8 @@
 <html><head>
-  <title>Unlim8ted Chess</title>
-<meta property="og:title" content="Unlim8ted Chess">
-
-  <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
-  <style media="screen" type="text/css">
+<title>Unlim8ted Chess</title>
+<meta content="Unlim8ted Chess" property="og:title"/>
+<!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+<style media="screen" type="text/css">
     .loader {
       position: fixed;
       background-color: black;
@@ -143,8 +142,8 @@
       }
     }
   </style>
-  <!-- Styles for the No-JavaScript message -->
-  <style>
+<!-- Styles for the No-JavaScript message -->
+<style>
     .no-js-message {
       background: #2c4762;
       color: red;
@@ -157,22 +156,20 @@
       top: 0;
     }
   </style>
-
-  <!-- No-JavaScript message -->
-  <noscript>
-    <div class="no-js-message">
+<!-- No-JavaScript message -->
+<noscript>
+<div class="no-js-message">
       Please enable JavaScript to use this website properly.
     </div>
-  </noscript>
-  <div class="loader">
-    <div class="loaderr-container">
-      <div class="loaderr"></div>
-      <div class="loading-text">Loading...</div>
-    </div>
-  </div>
+</noscript>
+<div class="loader">
+<div class="loaderr-container">
+<div class="loaderr"></div>
+<div class="loading-text">Loading...</div>
+</div>
+</div>
 
-  </div>
-  <script>
+<script>
     // This function will execute after the full page has finished loading
     window.onload = function () {
       // Trigger fade-out animation for the loader spinner
@@ -194,9 +191,8 @@
     };
 
   </script>
-  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-  <link rel="stylesheet" href="styles.css">
-
+<!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+<link href="styles.css" rel="stylesheet"/>
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -540,7 +536,7 @@ button {
     width: 300px;
   }
 }
-</style>  <style>
+</style> <style>
   .dropdown-content {
     display: none;
     position: absolute;
@@ -596,111 +592,102 @@ button {
   }
 </script>
 <nav class="navbar" style="z-index:9999999999999999999;">
-  <div class="navbar-header">
-    <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-    <ul class="nav-links" id="navbarLinks">
-      <li class="nav-item"><a href="/">Home</a></li>
-      <li class="nav-item"><a href="/#products">Products</a></li>
-      <li class="nav-item"><a href="/#help">Help</a></li>
-      <li class="nav-item"><a href="/#about">About</a></li>
-      <li class="nav-item dropdown">
-        <a href="javascript:void(0)" class="dropbtn">More</a>
-        <div class="dropdown-content">
-          <a href="/#portfolio">Portfolio</a>
-          <a href="/#contact">Contact</a>
-          <a href="/#blog">Blog</a>
-          <a href="/live-chat">Live Chat</a>
-          <a href="/live-game">Live Chat and Game</a>
-          <a href="/puzzle-squares">Puzzle Squares</a>
-        </div>
-      </li>
-    </ul>
-  </div>
+<div class="navbar-header">
+<button class="navbar-toggle" onclick="toggleMenu()" style="position:absolute; top:5px; left:1%">☰</button>
+<ul class="nav-links" id="navbarLinks">
+<li class="nav-item"><a href="/">Home</a></li>
+<li class="nav-item"><a href="/#products">Products</a></li>
+<li class="nav-item"><a href="/#help">Help</a></li>
+<li class="nav-item"><a href="/#about">About</a></li>
+<li class="nav-item dropdown">
+<a class="dropbtn" href="javascript:void(0)">More</a>
+<div class="dropdown-content">
+<a href="/#portfolio">Portfolio</a>
+<a href="/#contact">Contact</a>
+<a href="/#blog">Blog</a>
+<a href="/live-chat">Live Chat</a>
+<a href="/live-game">Live Chat and Game</a>
+<a href="/puzzle-squares">Puzzle Squares</a>
+</div>
+</li>
+</ul>
+</div>
 </nav>
-</head><body>
+<meta content="Title: Unlim8ted Chess. Learn more at Unlim8ted Studio Productions." name="description"/></head><body>
 <div class="main-menu" id="mainMenu">
-  <h1 class="menu-title">Challenge an AI to Chess</h1>
-  <div class="menu-options">
-    <button class="menu-button" id="playAiBtn">Play vs AI</button>
-    <button class="menu-button" id="playPlayerBtn">Play vs Player</button>
-    <button class="menu-button" id="aiVsAiBtn">AI vs AI</button>
-    <button class="menu-button" id="tutorialBtn">Tutorial</button>
-    <button class="menu-button" id="mainSettingsBtn">Settings</button>
-  </div>
+<h1 class="menu-title">Challenge an AI to Chess</h1>
+<div class="menu-options">
+<button class="menu-button" id="playAiBtn">Play vs AI</button>
+<button class="menu-button" id="playPlayerBtn">Play vs Player</button>
+<button class="menu-button" id="aiVsAiBtn">AI vs AI</button>
+<button class="menu-button" id="tutorialBtn">Tutorial</button>
+<button class="menu-button" id="mainSettingsBtn">Settings</button>
 </div>
-
+</div>
 <div class="difficulty-menu" id="difficultyMenu">
-  <button class="back-button" id="difficultyBackBtn">← Back</button>
-  <h2 class="menu-title">Select Difficulty</h2>
-  <div class="menu-options">
-    <button class="menu-button" data-difficulty="easy">Easy</button>
-    <button class="menu-button" data-difficulty="medium">Medium</button>
-    <button class="menu-button" data-difficulty="hard">Hard</button>
-  </div>
+<button class="back-button" id="difficultyBackBtn">← Back</button>
+<h2 class="menu-title">Select Difficulty</h2>
+<div class="menu-options">
+<button class="menu-button" data-difficulty="easy">Easy</button>
+<button class="menu-button" data-difficulty="medium">Medium</button>
+<button class="menu-button" data-difficulty="hard">Hard</button>
 </div>
-
+</div>
 <div class="game-container">
-  <div class="game-content">
-    <div class="chessboard-container">
-      <div class="chessboard" id="board"></div>
-      <ul class="capture-log" id="captureLog"></ul>
-    </div>
-    <div class="game-controls">
-      <button id="newGame">New Game</button>
-      <div id="difficulty">Difficulty: Easy</div>
-      <div id="timer">Time: 00:00</div>
-      <div class="status" id="status">Your turn (White)</div>
-    </div>
-  </div>
-
+<div class="game-content">
+<div class="chessboard-container">
+<div class="chessboard" id="board"></div>
+<ul class="capture-log" id="captureLog"></ul>
+</div>
+<div class="game-controls">
+<button id="newGame">New Game</button>
+<div id="difficulty">Difficulty: Easy</div>
+<div id="timer">Time: 00:00</div>
+<div class="status" id="status">Your turn (White)</div>
+</div>
+</div>
 </div>
 <button class="settings-button" id="settingsBtn">⚙️</button>
-
-
 <div class="settings-modal" id="settingsModal">
-  <div class="settings-content">
-    <h2>Settings</h2>
-    
-    <div class="settings-section">
-      <h3>Color Palette</h3>
-      <div class="color-palette-option" data-theme="default">
-        <input type="radio" name="palette" value="default" checked>
-        <label>Default</label>
-        <div class="palette-preview">
-          <div class="palette-square" style="background: #f0d9b5"></div>
-          <div class="palette-square" style="background: #b58863"></div>
-        </div>
-      </div>
-      <div class="color-palette-option" data-theme="neon">
-        <input type="radio" name="palette" value="neon">
-        <label>Neon</label>
-        <div class="palette-preview">
-          <div class="palette-square" style="background: #1a1a1a"></div>
-          <div class="palette-square" style="background: #000000"></div>
-        </div>
-      </div>
-      <div class="color-palette-option" data-theme="forest">
-        <input type="radio" name="palette" value="forest">
-        <label>Forest</label>
-        <div class="palette-preview">
-          <div class="palette-square" style="background: #c9dbc5"></div>
-          <div class="palette-square" style="background: #769656"></div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="settings-section">
-      <h3>Game Options</h3>
-      <div>
-        <input type="checkbox" id="showPossibleMoves">
-        <label for="showPossibleMoves">Show possible moves</label>
-      </div>
-    </div>
-    
-    <button id="closeSettings">Close</button>
-  </div>
+<div class="settings-content">
+<h2>Settings</h2>
+<div class="settings-section">
+<h3>Color Palette</h3>
+<div class="color-palette-option" data-theme="default">
+<input checked="" name="palette" type="radio" value="default"/>
+<label>Default</label>
+<div class="palette-preview">
+<div class="palette-square" style="background: #f0d9b5"></div>
+<div class="palette-square" style="background: #b58863"></div>
 </div>
-
+</div>
+<div class="color-palette-option" data-theme="neon">
+<input name="palette" type="radio" value="neon"/>
+<label>Neon</label>
+<div class="palette-preview">
+<div class="palette-square" style="background: #1a1a1a"></div>
+<div class="palette-square" style="background: #000000"></div>
+</div>
+</div>
+<div class="color-palette-option" data-theme="forest">
+<input name="palette" type="radio" value="forest"/>
+<label>Forest</label>
+<div class="palette-preview">
+<div class="palette-square" style="background: #c9dbc5"></div>
+<div class="palette-square" style="background: #769656"></div>
+</div>
+</div>
+</div>
+<div class="settings-section">
+<h3>Game Options</h3>
+<div>
+<input id="showPossibleMoves" type="checkbox"/>
+<label for="showPossibleMoves">Show possible moves</label>
+</div>
+</div>
+<button id="closeSettings">Close</button>
+</div>
+</div>
 <script>
 let currentDifficulty = 'medium';
 let gameMode = null; // 'ai', 'pvp', 'aivai', 'tutorial'
