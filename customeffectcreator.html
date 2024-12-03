@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Custom Effect Creator with Keypoints</title>
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Effect Creator with Keypoints</title>
+  <style>
     body {
       margin: 0;
       overflow: hidden;
@@ -44,19 +43,24 @@
       color: white;
     }
   </style>
-<meta content="Custom Effect Creator: Upload Image &amp; Define Keypoints Save keypoints Clear Points . Learn more at Unlim8ted Studio Productions." name="description"/></head>
+</head>
 <body>
-<h2>Custom Effect Creator: Upload Image &amp; Define Keypoints</h2>
-<!-- Image Upload -->
-<input accept="image/*" id="imageUpload" type="file"/>
-<!-- Canvas to Display Image -->
-<canvas height="480" id="imageCanvas" width="640"></canvas>
-<!-- Keypoints Display -->
-<div id="coordinates"></div>
-<!-- Buttons -->
-<button id="saveBtn">Save Keypoints</button>
-<button id="clearBtn">Clear Points</button>
-<script>
+  <h2>Custom Effect Creator: Upload Image & Define Keypoints</h2>
+
+  <!-- Image Upload -->
+  <input type="file" id="imageUpload" accept="image/*" />
+  
+  <!-- Canvas to Display Image -->
+  <canvas id="imageCanvas" width="640" height="480"></canvas>
+
+  <!-- Keypoints Display -->
+  <div id="coordinates"></div>
+
+  <!-- Buttons -->
+  <button id="saveBtn">Save Keypoints</button>
+  <button id="clearBtn">Clear Points</button>
+
+  <script>
     const canvas = document.getElementById('imageCanvas');
     const ctx = canvas.getContext('2d');
     const coordinatesDiv = document.getElementById('coordinates');

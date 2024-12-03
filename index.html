@@ -1,15 +1,512 @@
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<!-- Primary Meta Tags -->
-<title>Unlim8ted</title>
-<meta content="Unlim8ted" name="title">
-</meta><meta content="Unlim8ted  The sky is not the limit... We are... Meaning there is no limit . Learn more at Unlim8ted Studio Productions." name="description"/></head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Primary Meta Tags -->
+  <title>Unlim8ted</title>
+  <meta name="title" content="Unlim8ted" />
+  <meta name="description"
+    content="Unlim8ted Studio Productions offers innovative entertainment experiences, including films, music, books, games, software, and AI products." />
+
+  <!-- Website / General -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://unlim8ted.com" />
+  <meta property="og:title" content="Unlim8ted" />
+  <meta property="og:description"
+    content="Unlim8ted Studio Productions offers innovative entertainment experiences, including films, music, books, games, software, and AI products." />
+  <meta property="og:image" content="https://unlim8ted.com/images/logo/logo.png" />
+  <meta property="og:site_name" content="Unlim8ted Studio Productions" />
+
+  <!-- GitHub -->
+  <meta property="og:profile" content="GitHub" />
+  <meta property="og:url" content="https://github.com/Unlim8ted-Studio-Productions" />
+  <meta property="og:image" content="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" />
+  <meta property="og:description" content="Check out Unlim8ted Studio Productions projects on GitHub!" />
+
+  <!-- YouTube -->
+  <meta property="og:profile" content="YouTube" />
+  <meta property="og:url" content="https://www.youtube.com/@unlim8tedstudioproductions" />
+  <meta property="og:image" content="https://www.youtube.com/img/desktop/yt_1200.png" />
+  <meta property="og:description" content="Watch videos from Unlim8ted Studio Productions on YouTube." />
+
+  <!-- Reddit 
+    <meta property="og:profile" content="Reddit" />
+    <meta property="og:url" content="https://www.reddit.com/user/Unlim8tedStudios/" />
+    <meta property="og:image" content="https://www.redditinc.com/assets/images/site/reddit-logo.png" />
+    <meta property="og:description" content="Join the conversation on Reddit with Unlim8ted Studios!" />-->
+
+  <!-- Optional Meta Tags for other platforms -->
+  <meta name="keywords"
+    content="films, music, books, games, software, AI products, entertainment, unlim8ted, Unlim8ted Studio Productions" />
+  <meta name="author" content="Unlim8ted Studio Productions" />
+
+
+  <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+  <style media="screen" type="text/css">
+    .loader {
+      position: fixed;
+      background-color: black;
+      opacity: 1;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0%;
+      z-index: 999999988;
+      pointer-events: none;
+    }
+
+    .loaderr-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      /* To stack spinner and text vertically */
+      height: 100vh;
+      /* Full viewport height to ensure vertical centering */
+    }
+
+    .loaderr {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 8px solid transparent;
+      border-top: 8px solid #3498db;
+      border-right: 8px solid #e74c3c;
+      border-bottom: 8px solid #f1c40f;
+      border-left: 8px solid #9b59b6;
+      -webkit-animation: spin 1.5s linear infinite;
+      animation: spin 1.5s linear infinite;
+      box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
+      position: relative;
+    }
+
+    .loaderr:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid transparent;
+      border-top: 8px solid rgba(52, 152, 219, 0.7);
+      border-right: 8px solid rgba(231, 76, 60, 0.7);
+      border-bottom: 8px solid rgba(241, 196, 15, 0.7);
+      border-left: 8px solid rgba(155, 89, 182, 0.7);
+      -webkit-animation: spin-reverse 1.5s linear infinite;
+      animation: spin-reverse 1.5s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @-webkit-keyframes spin-reverse {
+      0% {
+        -webkit-transform: rotate(360deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(0deg);
+      }
+    }
+
+    @keyframes spin-reverse {
+      0% {
+        transform: rotate(360deg);
+      }
+
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+
+    /* Loading text animation */
+    .loading-text {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #3498db;
+      font-family: Arial, sans-serif;
+      letter-spacing: 2px;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+
+    @-webkit-keyframes load-out {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
+
+    @keyframes load-out {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
+  </style>
+  <!-- Styles for the No-JavaScript message -->
+  <style>
+    .no-js-message {
+      background: #2c4762;
+      color: red;
+      font-size: 20px;
+      text-align: center;
+      padding: 20px;
+      z-index: 999999999999999999999999999999999999999999999;
+      position: fixed;
+      width: 100%;
+      top: 0;
+    }
+  </style>
+
+  <!-- No-JavaScript message -->
+  <noscript>
+    <div class="no-js-message">
+      Please enable JavaScript to use this website properly.
+    </div>
+  </noscript>
+  <div class="loader">
+    <div class="loaderr-container">
+      <div class="loaderr"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+  </div>
+
+  </div>
+  <script>
+    // This function will execute after the full page has finished loading
+    window.onload = function () {
+      // Trigger fade-out animation for the loader spinner
+      const loaderSpinner = document.querySelector('.loaderr');
+      const loadingText = document.querySelector('.loading-text');
+      const loaderContainer = document.querySelector('.loader');
+
+      // Apply animations
+      loaderSpinner.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+      loaderSpinner.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+      loadingText.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+      loadingText.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+      loaderContainer.style.animation = 'load-out 4s forwards';
+      loaderContainer.style.webkitAnimation = 'load-out 4s forwards';
+
+
+    };
+
+  </script>
+  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+
+  <style>
+    .content-section {
+      display: none;
+    }
+  </style>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    a.button {
+      color: #8b00ff;
+      text-decoration: none;
+      font-weight: bold;
+      background: black;
+      border: 2px solid #8b00ff;
+      padding: 15px 25px;
+      font-size: 18px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 20px;
+  }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .content-section {
+      padding: 50px 20px;
+      margin: 20px auto;
+      max-width: 900px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #444;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-top: 20px;
+      color: #555;
+      border-radius: 2rem;
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .portfolio-grid,
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .portfolio-item,
+    .blog-post {
+      padding: 20px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      transition: box-shadow 0.3s;
+    }
+
+    .portfolio-item:hover,
+    .blog-post:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input,
+    textarea {
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px;
+      font-size: 1em;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Additional styling for responsiveness */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      h2 {
+        font-size: 1.5em;
+      }
+
+      .content-section {
+        padding: 30px 15px;
+      }
+
+      button {
+        padding: 8px;
+        font-size: 0.9em;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .fa {
+      padding: 20px;
+      font-size: 30px;
+      width: 70px;
+      height: 70px;
+      text-align: center;
+      text-decoration: none;
+      margin: 5px 2px;
+      border-radius: 50%;
+    }
+
+    .fa:hover {
+      opacity: 0.7;
+    }
+
+    .fa-facebook {
+      background: #3B5998;
+      color: white;
+    }
+
+    .fa-twitter {
+      background: #55ACEE;
+      color: white;
+    }
+
+    .fa-google {
+      background: #dd4b39;
+      color: white;
+    }
+
+    .fa-linkedin {
+      background: #007bb5;
+      color: white;
+    }
+
+    .fa-youtube {
+      background: #bb0000;
+      color: white;
+    }
+
+    .fa-instagram {
+      background: #125688;
+      color: white;
+    }
+
+    .fa-pinterest {
+      background: #cb2027;
+      color: white;
+    }
+
+    .fa-snapchat-ghost {
+      background: #fffc00;
+      color: white;
+      text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    }
+
+    .fa-skype {
+      background: #00aff0;
+      color: white;
+    }
+
+    .fa-android {
+      background: #a4c639;
+      color: white;
+    }
+
+    .fa-dribbble {
+      background: #ea4c89;
+      color: white;
+    }
+
+    .fa-vimeo {
+      background: #45bbff;
+      color: white;
+    }
+
+    .fa-tumblr {
+      background: #2c4762;
+      color: white;
+    }
+
+    .fa-vine {
+      background: #00b489;
+      color: white;
+    }
+
+    .fa-foursquare {
+      background: #45bbff;
+      color: white;
+    }
+
+    .fa-stumbleupon {
+      background: #eb4924;
+      color: white;
+    }
+
+    .fa-flickr {
+      background: #f40083;
+      color: white;
+    }
+
+    .fa-yahoo {
+      background: #430297;
+      color: white;
+    }
+
+    .fa-soundcloud {
+      background: #ff5500;
+      color: white;
+    }
+
+    .fa-reddit {
+      background: #ff5700;
+      color: white;
+    }
+
+    .fa-rss {
+      background: #ff6600;
+      color: white;
+    }
+
+    .fa-github {
+      background: black;
+      color: white;
+    }
+  </style>
+</head>
+
 <body>
-<style>
+  <style>
     .dropdown-content {
       display: none;
       position: absolute;
@@ -58,35 +555,35 @@
       }
     }
   </style>
-<script>
+  <script>
     function toggleMenu() {
       const navLinks = document.getElementById("navbarLinks");
       navLinks.classList.toggle("show");
     }
   </script>
-<nav class="navbar">
-<div class="navbar-header">
-<button class="navbar-toggle" onclick="toggleMenu()" style="position:absolute; top:5px; left:1%">☰</button>
-<ul class="nav-links" id="navbarLinks">
-<li class="nav-item"><a href="/">Home</a></li>
-<li class="nav-item"><a href="/#products">Products</a></li>
-<li class="nav-item"><a href="/#help">Help</a></li>
-<li class="nav-item"><a href="/#about">About</a></li>
-<li class="nav-item dropdown">
-<a class="dropbtn" href="javascript:void(0)">More</a>
-<div class="dropdown-content">
-<a href="/#portfolio">Portfolio</a>
-<a href="/#contact">Contact</a>
-<a href="/#blog">Blog</a>
-<a href="/live-chat">Live Chat</a>
-<a href="/live-game">Live Chat and Game</a>
-<a href="/puzzle-squares">Puzzle Squares</a>
-</div>
-</li>
-</ul>
-</div>
-</nav>
-<style>
+  <nav class="navbar">
+    <div class="navbar-header">
+      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+      <ul class="nav-links" id="navbarLinks">
+        <li class="nav-item"><a href="/">Home</a></li>
+        <li class="nav-item"><a href="/#products">Products</a></li>
+        <li class="nav-item"><a href="/#help">Help</a></li>
+        <li class="nav-item"><a href="/#about">About</a></li>
+        <li class="nav-item dropdown">
+          <a href="javascript:void(0)" class="dropbtn">More</a>
+          <div class="dropdown-content">
+            <a href="/#portfolio">Portfolio</a>
+            <a href="/#contact">Contact</a>
+            <a href="/#blog">Blog</a>
+            <a href="/live-chat">Live Chat</a>
+            <a href="/live-game">Live Chat and Game</a>
+            <a href="/puzzle-squares">Puzzle Squares</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <style>
     /* logo */
     .logo {
       position: absolute;
@@ -115,24 +612,33 @@
       }
     }
   </style>
-<!-- Rest of the content -->
-<a class="cart-btn" href="cart" style="font-size: larger; position: absolute; top: 30px">🛍️</a>
-<div class="content-section" id="home">
-<!-- Video Background -->
-<video autoplay="" id="backgroundVideo" loop="" muted="" style="position: absolute; top: 0; left: 0; width: 100%; height: auto; z-index: 1; object-fit: cover;pointer-events: none;">
-<canvas id="canvas" style="z-index:300"></canvas>
-<source id="video" src="images/back.webm" type="video/mp4"/>
+
+
+  <!-- Rest of the content -->
+
+  <a class="cart-btn" href="cart" style="font-size: larger; position: absolute; top: 30px">🛍️</a>
+
+  <div id="home" class="content-section">
+
+    <!-- Video Background -->
+    <video autoplay="" muted="" loop="" id="backgroundVideo"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: auto; z-index: 1; object-fit: cover;pointer-events: none;">
+      <canvas id="canvas" style="z-index:300"></canvas>
+      <source id="video" src="images/back.webm" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-<body>
-<div id="inner-wrap">
-<div class="logo" style="z-index: 2;">
-<a href="/">
-<img alt="logo" src="images/logo/logo.png"/> <!--https://images.unlim8ted.com/logo/logo.png-->
-</a>
-</div>
-<div class="bg"></div>
-<style>
+
+    <body>
+      <div id="inner-wrap">
+        <div class="logo" style="z-index: 2;">
+          <a href="/">
+            <img src="images/logo/logo.png" alt="logo"> <!--https://images.unlim8ted.com/logo/logo.png-->
+          </a>
+        </div>
+
+        <div class="bg"></div>
+
+        <style>
           .content .glitch {
             font-size: 5rem;
             font-weight: bold;
@@ -611,22 +1117,25 @@
 
 
         </style>
-<div class="parallax">
-<div class="parallax-group">
-<div class="layer"></div>
-<div class="layer"></div>
-<div class="layer"></div>
-<div class="layer"></div>
-<div class="layer"></div>
-<div class="layer fill"></div>
-</div>
-<div class="content">
-<h3 data-text="The sky is not the limit...">The sky is not the limit...</h3>
-<h2 class="glitch" data-text="We are...">We are...</h2>
-<h1 data-text="Meaning there is no limit.">Meaning there is no limit.</h1>
-</div>
-</div>
-<!--      <style>
+
+        <div class="parallax">
+          <div class="parallax-group">
+            <div class="layer"></div>
+            <div class="layer"></div>
+            <div class="layer"></div>
+            <div class="layer"></div>
+            <div class="layer"></div>
+            <div class="layer fill"></div>
+          </div>
+          <div class="content">
+            <h3 data-text="The sky is not the limit...">The sky is not the limit...</h3>
+            <h2 class="glitch" data-text="We are...">We are...</h2>
+            <h1 data-text="Meaning there is no limit.">Meaning there is no limit.</h1>
+          </div>
+        </div>
+
+
+  <!--      <style>
           @import url(https://fonts.googleapis.com/css?family=Lato:600);
         
         
@@ -787,95 +1296,103 @@
         </script>
 
       -->
-<div style="bottom:20;position:absolute;background-color:rgb(222, 184, 135);height:470px;width:100%">
-<div style="max-width: 1200px; margin: auto;">
-<!-- Social Media Links -->
-<div style="margin-bottom: 20px;">
-<h2>Follow Us</h2>
-<a aria-label="facebook social link" class="fa fa-facebook" href="#"></a>
-<a aria-label="twitter social link" class="fa fa-twitter" href="#"></a>
-<a aria-label="google social link" class="fa fa-google" href="#"></a>
-<a aria-label="linked in social link" class="fa fa-linkedin" href="#"></a>
-<a aria-label="youtube social link" class="fa fa-youtube" href="https://www.youtube.com/@unlim8tedstudioproductions"></a>
-<a aria-label="instagram social link" class="fa fa-instagram" href="#"></a>
-<a aria-label="pinterest social link" class="fa fa-pinterest" href="#"></a>
-<a aria-label="snapchat social link" class="fa fa-snapchat-ghost" href="#"></a>
-<a aria-label="skype social link" class="fa fa-skype" href="#"></a>
-<a aria-label="android social link" class="fa fa-android" href="#"></a>
-<a aria-label="dribbble social link" class="fa fa-dribbble" href="#"></a>
-<a aria-label="vimeo social link" class="fa fa-vimeo" href="#"></a>
-<a aria-label="tumblr social link" class="fa fa-tumblr" href="#"></a>
-<a aria-label="line social link" class="fa fa-vine" href="#"></a>
-<a aria-label="foursquare social link" class="fa fa-foursquare" href="#"></a>
-<a aria-label="stumbleupon social link" class="fa fa-stumbleupon" href="#"></a>
-<a aria-label="flickr social link" class="fa fa-flickr" href="#"></a>
-<a aria-label="yahoo social link" class="fa fa-yahoo" href="#"></a>
-<a class="fa fa-reddit" href="https://www.reddit.com/user/Unlim8tedStudios/"></a>
-<a aria-label="rss social link" class="fa fa-rss" href="#"></a>
-<a aria-label="github social link" class="fa fa-github" href="https://github.com/Unlim8ted-Studio-Productions"></a>
-</div>
-<!-- Newsletter Signup -->
-<div style="margin-bottom: 20px;">
-<h2>Newsletter Signup</h2>
-<form action="#news" method="post">
-<input placeholder="Enter your email" required="" style="padding: 10px; width: 300px;" type="email"/>
-<button style="padding: 10px 20px;" type="submit">Subscribe</button>
-</form>
-</div>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
-</div>
-</div>
-</body></div>
-<div class="content-section" id="products">
-<h1>Our Products</h1>
-<p>Discover our amazing products.</p>
-<div class="product-category">
-<a class="product-box" href="#films">
-<img alt="Films" src="images\products\films\The Life of a Meatball.jpg"/>
-<h2>Films</h2>
-<p>Explore our latest films.</p>
-</a>
-<a class="product-box" href="#music">
-<img alt="Music" src="images\products\music\music icon.png"/>
-<h2>Music</h2>
-<p>Listen to our newest music releases.</p>
-</a>
-<a class="product-box" href="/podcasts">
-<img alt="Podcast" src="images\products\podcasts\podcasts icon.png"/>
-<h2>Podcasts</h2>
-<p>Listen to our newest podcasts.</p>
-</a>
-<a class="product-box" href="#books">
-<img alt="Books" src="images/products/books/book icon.png"/>
-<h2>Books</h2>
-<p>Read our latest books.</p>
-</a>
-<a class="product-box" href="#games">
-<img alt="Games" src="\images\products\games\image.webp"/>
-<h2>Games</h2>
-<p>Play fun and challenging games.</p>
-</a>
-<a class="product-box" href="shop">
-<img alt="Clothes" src="\images\products\clothes\image.webp"/>
-<h2>Physical Items</h2>
-<p>Check out our stylish clothes.</p>
-</a>
-<a class="product-box" href="#software">
-<img alt="Software" src="https://github.com/Unlim8ted-Studio-Productions/Square-Pixels/blob/main/src/Recources/program%20recources/Screenshot%202023-09-21%20181742.png?raw=true"/>
-<h2>Software</h2>
-<p>Explore our apps and video games.</p>
-</a>
-<a class="product-box" href="#AI">
-<img alt="AI" src="images/products/ai/ai icon.png"/>
-<h2>AI</h2>
-<p>Explore our AI products.</p>
-</a>
-<div>
-<style>
+        <div style="bottom:20;position:absolute;background-color:rgb(222, 184, 135);height:470px;width:100%">
+          <div style="max-width: 1200px; margin: auto;">
+
+
+            <!-- Social Media Links -->
+            <div style="margin-bottom: 20px;">
+              <h2>Follow Us</h2>
+              <a href="#" aria-label="facebook social link" class="fa fa-facebook"></a>
+              <a href="#" aria-label="twitter social link" class="fa fa-twitter"></a>
+              <a href="#" aria-label="google social link" class="fa fa-google"></a>
+              <a href="#" aria-label="linked in social link" class="fa fa-linkedin"></a>
+              <a href="https://www.youtube.com/@unlim8tedstudioproductions" aria-label="youtube social link" class="fa fa-youtube"></a>
+              <a href="#" aria-label="instagram social link" class="fa fa-instagram"></a>
+              <a href="#" aria-label="pinterest social link" class="fa fa-pinterest"></a>
+              <a href="#" aria-label="snapchat social link" class="fa fa-snapchat-ghost"></a>
+              <a href="#" aria-label="skype social link" class="fa fa-skype"></a>
+              <a href="#" aria-label="android social link" class="fa fa-android"></a>
+              <a href="#" aria-label="dribbble social link" class="fa fa-dribbble"></a>
+              <a href="#" aria-label="vimeo social link" class="fa fa-vimeo"></a>
+              <a href="#" aria-label="tumblr social link" class="fa fa-tumblr"></a>
+              <a href="#" aria-label="line social link" class="fa fa-vine"></a>
+              <a href="#" aria-label="foursquare social link" class="fa fa-foursquare"></a>
+              <a href="#" aria-label="stumbleupon social link" class="fa fa-stumbleupon"></a>
+              <a href="#" aria-label="flickr social link" class="fa fa-flickr"></a>
+              <a href="#" aria-label="yahoo social link" class="fa fa-yahoo"></a>
+              <a href="https://www.reddit.com/user/Unlim8tedStudios/" class="fa fa-reddit"></a>
+              <a href="#" aria-label="rss social link" class="fa fa-rss"></a>
+              <a href="https://github.com/Unlim8ted-Studio-Productions" aria-label="github social link" class="fa fa-github"></a>
+
+            </div>
+            <!-- Newsletter Signup -->
+            <div style="margin-bottom: 20px;">
+              <h2>Newsletter Signup</h2>
+              <form action="#news" method="post">
+                <input type="email" placeholder="Enter your email" required style="padding: 10px; width: 300px;">
+                <button type="submit" style="padding: 10px 20px;">Subscribe</button>
+              </form>
+            </div>
+
+            <!-- Copyright -->
+            <div style="margin-top: 20px;">
+              <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+  </div>
+
+  <div id="products" class="content-section">
+    <h1>Our Products</h1>
+    <p>Discover our amazing products.</p>
+    <div class="product-category">
+      <a href="#films" class="product-box">
+        <img src="images\products\films\The Life of a Meatball.jpg" alt="Films">
+        <h2>Films</h2>
+        <p>Explore our latest films.</p>
+      </a>
+      <a href="#music" class="product-box">
+        <img src="images\products\music\music icon.png" alt="Music">
+        <h2>Music</h2>
+        <p>Listen to our newest music releases.</p>
+      </a>
+      <a href="/podcasts" class="product-box">
+        <img src="images\products\podcasts\podcasts icon.png" alt="Podcast">
+        <h2>Podcasts</h2>
+        <p>Listen to our newest podcasts.</p>
+      </a>
+      <a href="#books" class="product-box">
+        <img src="images/products/books/book icon.png" alt="Books">
+        <h2>Books</h2>
+        <p>Read our latest books.</p>
+      </a>
+      <a href="#games" class="product-box">
+        <img src="\images\products\games\image.webp" alt="Games">
+        <h2>Games</h2>
+        <p>Play fun and challenging games.</p>
+      </a>
+      <a href="shop" class="product-box">
+        <img src="\images\products\clothes\image.webp" alt="Clothes">
+        <h2>Physical Items</h2>
+        <p>Check out our stylish clothes.</p>
+      </a>
+      <a href="#software" class="product-box">
+        <img
+          src="https://github.com/Unlim8ted-Studio-Productions/Square-Pixels/blob/main/src/Recources/program%20recources/Screenshot%202023-09-21%20181742.png?raw=true"
+          alt="Software">
+        <h2>Software</h2>
+        <p>Explore our apps and video games.</p>
+      </a>
+      <a href="#AI" class="product-box">
+        <img src="images/products/ai/ai icon.png" alt="AI">
+        <h2>AI</h2>
+        <p>Explore our AI products.</p>
+      </a>
+      <div>
+        <style>
           h1 {
             margin-bottom: 30px;
           }
@@ -998,20 +1515,25 @@
             }
           }
         </style>
-<h1>Don't know what to get? Let the spinner choose for you!</h1>
-<div class="spinner-container">
-<div class="selector-triangle"></div>
-<div class="spinner">
-<div class="spinner-wheel"></div>
-</div>
-</div>
-<button class="spin-btn">Spin the Wheel!</button>
-<div class="overlay" id="overlay"></div>
-<div class="popup" id="popup">
-<h2 id="popup-text"></h2>
-<a href="#" id="popup-link">Visit the page</a>
-</div>
-<script>
+
+        <h1>Don't know what to get? Let the spinner choose for you!</h1>
+
+        <div class="spinner-container">
+          <div class="selector-triangle"></div>
+          <div class="spinner">
+            <div class="spinner-wheel"></div>
+          </div>
+        </div>
+
+        <button class="spin-btn">Spin the Wheel!</button>
+
+        <div class="overlay" id="overlay"></div>
+        <div class="popup" id="popup">
+          <h2 id="popup-text"></h2>
+          <a href="#" id="popup-link">Visit the page</a>
+        </div>
+
+        <script>
           let options = [];
           let isSpinning = false; // Track whether the spinner is currently spinning
 
@@ -1107,64 +1629,68 @@
           // Add click event to the spin button
           document.querySelector('.spin-btn').onclick = spin;
         </script>
-</div>
-</div>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
 
-<div class="content-section" id="films">
-<h1>Films</h1>
-<div class="search-bar">
-<input id="film-search" placeholder="Search films..." type="text"/>
-<select id="film-filter">
-<option value="all">All</option>
-<option value="action">Action</option>
-<option value="adventure">Adventure</option>
-<option value="short">Short Film</option>
-<option value="documentary">Documentary</option>
-<!-- Add more filter options as needed -->
-</select>
-</div>
-<div class="item-category" id="film-items">
-<a class="item-box" data-category="short" href="products#The-Life-of-a-Meatball">
-<img alt="The Life of a Meatball" src="images\products\films\The Life of a Meatball.jpg"/>
-<h3>The Life of a Meatball</h3>
-</a>
-<a class="item-box" data-category="short" href="products#theglitch">
-<img alt="The Glitch" src="images\products\films\TheGlitchCover.png"/>
-<h3>The Glitch</h3>
-</a>
-<!--
+      </div>
+    </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+  </div>
+
+  <div id="films" class="content-section">
+    <h1>Films</h1>
+    <div class="search-bar">
+      <input type="text" id="film-search" placeholder="Search films...">
+      <select id="film-filter">
+        <option value="all">All</option>
+        <option value="action">Action</option>
+        <option value="adventure">Adventure</option>
+        <option value="short">Short Film</option>
+        <option value="documentary">Documentary</option>
+        <!-- Add more filter options as needed -->
+      </select>
+    </div>
+    <div class="item-category" id="film-items">
+      <a href="products#The-Life-of-a-Meatball" class="item-box" data-category="short">
+        <img src="images\products\films\The Life of a Meatball.jpg" alt="The Life of a Meatball">
+        <h3>The Life of a Meatball</h3>
+      </a>
+      <a href="products#theglitch" class="item-box" data-category="short">
+        <img src="images\products\films\TheGlitchCover.png" alt="The Glitch">
+        <h3>The Glitch</h3>
+      </a>
+      <!--
       <a href="products" class="item-box" data-category="adventure">
         <img src="images/products/adventure-film.jpg" alt="Adventure Film">
         <h3>Adventure Film</h3>
       </a>-->
-<!-- Add more film items here -->
-</div>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
+      <!-- Add more film items here -->
+    </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+  </div>
 
-<div class="content-section" id="music">
-<h1>Music</h1>
-<div class="search-bar">
-<input id="music-search" placeholder="Search music..." type="text"/>
-<select id="music-filter">
-<option value="all">All</option>
-<option value="rock">Rock</option>
-<option value="pop">Pop</option>
-<!-- Add more filter options as needed -->
-</select>
-</div>
-<div class="item-category" id="music-items">
-<h2>nothing to see here yet...</h2>
-<h2>Check back later in case what you were loooking for was just hiding</h2>
-<!--
+  <div id="music" class="content-section">
+    <h1>Music</h1>
+    <div class="search-bar">
+      <input type="text" id="music-search" placeholder="Search music...">
+      <select id="music-filter">
+        <option value="all">All</option>
+        <option value="rock">Rock</option>
+        <option value="pop">Pop</option>
+        <!-- Add more filter options as needed -->
+      </select>
+    </div>
+    <div class="item-category" id="music-items">
+      <h2>nothing to see here yet...</h2>
+      <h2>Check back later in case what you were loooking for was just hiding</h2>
+
+      <!--
       <a href="products" class="item-box" data-category="rock">
         <img src="images/products/rock-music.jpg" alt="Rock Music">
         <h3>Rock Album</h3>
@@ -1174,29 +1700,31 @@
         <h3>Pop Album</h3>
       </a>
     -->
-<!-- Add more music items here -->
-</div>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
+      <!-- Add more music items here -->
+    </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+  </div>
 
-<div class="content-section" id="podcasts">
-<h1>Podcasts</h1>
-<div class="search-bar">
-<input id="podcast-search" placeholder="Search podcasts..." type="text"/>
-<select id="podcast-filter">
-<option value="all">All</option>
-<option value="informational">Informational</option>
-<option value="fiction">Fictional</option>
-<!-- Add more filter options as needed -->
-</select>
-</div>
-<div class="item-category" id="music-items">
-<h2>nothing to see here yet...</h2>
-<h2>Check back later in case what you were loooking for was just hiding</h2>
-<!--
+  <div id="podcasts" class="content-section">
+    <h1>Podcasts</h1>
+    <div class="search-bar">
+      <input type="text" id="podcast-search" placeholder="Search podcasts...">
+      <select id="podcast-filter">
+        <option value="all">All</option>
+        <option value="informational">Informational</option>
+        <option value="fiction">Fictional</option>
+        <!-- Add more filter options as needed -->
+      </select>
+    </div>
+    <div class="item-category" id="music-items">
+      <h2>nothing to see here yet...</h2>
+      <h2>Check back later in case what you were loooking for was just hiding</h2>
+
+      <!--
       <a href="products" class="item-box" data-category="rock">
         <img src="images/products/rock-music.jpg" alt="Rock Music">
         <h3>Rock Album</h3>
@@ -1206,234 +1734,262 @@
         <h3>Pop Album</h3>
       </a>
     -->
-<!-- Add more music items here -->
-</div>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
+      <!-- Add more music items here -->
+    </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+  </div>
 
-<div class="content-section" id="games">
-<h1>Games</h1>
-<div class="search-bar">
-<input id="music-search" placeholder="Search music..." type="text"/>
-<select id="music-filter">
-<option value="all">All</option>
-<option value="card games">Card Games</option>
-<option value="board games">Board Games</option>
-<option value="puzzles">Puzzles</option>
-<!-- Add more filter options as needed -->
-</select>
-</div>
-<div class="item-category" id="music-items">
-<a class="item-box" data-category="puzzles" href="squareproduct#https://unlim8ted-studio-productions.square.site/product/the-life-of-a-meatball-jigsaw-puzzle/20">
-<img alt="" src="\images\products\games\image.webp"/>
-<h3>The Life of a Meatball Puzzle</h3>
-</a>
-<a class="item-box" data-category="puzzles" href="/puzzle-squares">
-<img alt="" src="\images\products\games\puzzle-square-preview.png"/>
-<h3>Puzzle Square 1</h3>
-</a>
-<a class="item-box" data-category="puzzles" href="/puzzle-squares">
-<img alt="" src="\images\products\games\puzzle-square-preview.png"/>
-<h3>Puzzle Square 2</h3>
-</a>
-<a class="item-box" data-category="online" href="/air-hockey">
-<img alt="" src="\images\products\games\air-hockey-preview.webp"/>
-<h3>Air Hockey Online</h3>
-</a>
-<a class="item-box" data-category="card games" href="products#life">
-<img alt="" src="\images\products\games\life cover.jpeg"/>
-<h3>life</h3>
-</a>
-<!-- Add more game items here -->
-</div>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
+  <div id="games" class="content-section">
+    <h1>Games</h1>
+    <div class="search-bar">
+      <input type="text" id="music-search" placeholder="Search music...">
+      <select id="music-filter">
+        <option value="all">All</option>
+        <option value="card games">Card Games</option>
+        <option value="board games">Board Games</option>
+        <option value="puzzles">Puzzles</option>
+        <!-- Add more filter options as needed -->
+      </select>
+    </div>
+    <div class="item-category" id="music-items">
+      <a href="squareproduct#https://unlim8ted-studio-productions.square.site/product/the-life-of-a-meatball-jigsaw-puzzle/20"
+        class="item-box" data-category="puzzles">
+        <img src="\images\products\games\image.webp" alt="">
+        <h3>The Life of a Meatball Puzzle</h3>
+      </a>
+      <a href="/puzzle-squares" class="item-box" data-category="puzzles">
+        <img src="\images\products\games\puzzle-square-preview.png" alt="">
+        <h3>Puzzle Square 1</h3>
+      </a>
+      <a href="/puzzle-squares" class="item-box" data-category="puzzles">
+        <img src="\images\products\games\puzzle-square-preview.png" alt="">
+        <h3>Puzzle Square 2</h3>
+      </a>
+      <a href="/air-hockey" class="item-box" data-category="online">
+        <img src="\images\products\games\air-hockey-preview.webp" alt="">
+        <h3>Air Hockey Online</h3>
+      </a>
+      <a href="products#life" class="item-box" data-category="card games">
+        <img src="\images\products\games\life cover.jpeg" alt="">
+        <h3>life</h3>
+      </a>
+      <!-- Add more game items here -->
+    </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+  </div>
+  <div id="books" class="content-section">
+    <h1>Books</h1>
+    <div class="search-bar">
+      <input type="text" id="book-search" placeholder="Search books...">
+      <select id="book-filter">
+        <option value="all">All</option>
+        <option value="fiction">Fiction</option>
+        <option value="non-fiction">Non-fiction</option>
+        <option value="sci-fi">Sci-Fi</option>
+        <option value="fantasy">Fantasy</option>
+        <option value="comedy">Comedy</option>
 
-<div class="content-section" id="books">
-<h1>Books</h1>
-<div class="search-bar">
-<input id="book-search" placeholder="Search books..." type="text"/>
-<select id="book-filter">
-<option value="all">All</option>
-<option value="fiction">Fiction</option>
-<option value="non-fiction">Non-fiction</option>
-<option value="sci-fi">Sci-Fi</option>
-<option value="fantasy">Fantasy</option>
-<option value="comedy">Comedy</option>
-<!-- Add more filter options as needed -->
-</select>
-</div>
-<div class="item-category" id="book-items">
-<a class="item-box" data-category="sci-fi" href="products#theglitchbook">
-<img alt="Fiction Book" src="images/products/fiction-book.jpg"/>
-<h3>The Glitch (book)</h3>
-</a>
-<a class="item-box" data-category="sci-fi" href="products#theglitchscreenplay">
-<img alt="Fiction Book" src="images/products/fiction-book.jpg"/>
-<h3>The Glitch (screen play)</h3>
-</a>
-<a class="item-box" data-category="sci-fi" href="products">
-<img alt="Fiction Book" src="images/products/fiction-book.jpg"/>
-<h3>Alien</h3>
-</a>
-<a class="item-box" data-category="comedy" href="products">
-<img alt="Fiction Book" src="images/products/fiction-book.jpg"/>
-<h3>The pool world war.</h3>
-</a>
-<a class="item-box" data-category="fantasy" href="products">
-<img alt="Fiction Book" src="images/products/fiction-book.jpg"/>
-<h3>The Crystal's Conflict</h3>
-</a>
-<a class="item-box" data-category="fantasy" href="products">
-<img alt="Fiction Book" src="images/products/fiction-book.jpg"/>
-<h3>The Hidden Magic School</h3>
-</a>
-<a class="item-box" data-category="non-fiction" href="products">
-<img alt="Non-fiction Book" src="images/products/non-fiction-book.jpg"/>
-<h3>Holes in space and time.</h3>
-</a>
-<a class="item-box" data-category="fiction" href="products">
-<img alt="Non-fiction Book" src="images/products/non-fiction-book.jpg"/>
-<h3>Stranded</h3>
-</a>
-<a class="item-box" data-category="fiction" href="products">
-<img alt="Non-fiction Book" src="images/products/non-fiction-book.jpg"/>
-<h3>Ancient</h3>
-</a>
-<!-- Add more book items here -->
-</div>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
 
-<div class="content-section" id="software">
-<h1>Software</h1>
-<div class="search-bar">
-<input id="software-search" placeholder="Search software..." type="text"/>
-<select id="software-filter">
-<option value="all">All</option>
-<option value="productivity">Productivity</option>
-<option value="entertainment">Entertainment</option>
-<!-- Add more filter options as needed -->
-</select>
-</div>
-<div class="item-category" id="software-items">
-<a class="item-box" data-category="entertainment" href="products#Square-Pixels">
-<img alt="Square Pixels" src="https://github.com/Unlim8ted-Studio-Productions/Square-Pixels/blob/main/src/Recources/program%20recources/Screenshot%202023-09-21%20181742.png?raw=true"/>
-<h3>Square Pixels</h3>
-</a>
-<a class="item-box" data-category="productivity" href="products#Download-Any-Youtube-Video">
-<img alt="Download Any Youtube Video" src="images/products/download-any-youtube-video.jpg"/>
-<h3>Download Any Youtube Video</h3>
-</a>
-<a class="item-box" data-category="productivity" href="products#Face-Stuff">
-<img alt="Face Stuff" src="images/products/face-stuff.jpg"/>
-<h3>Face Stuff</h3>
-</a>
-<a class="item-box" data-category="entertainment" href="products#Multiplayer-Physics-Simulator">
-<img alt="Multiplayer Physics Simulator" src="images/products/multiplayer-physics-simulator.jpg"/>
-<h3>Multiplayer Physics Simulator</h3>
-</a>
-<a class="item-box" data-category="productivity" href="products#Easy-Pygame-UI-Creator">
-<img alt="Easy pygame UI Maker" src="images/products/easy_pygame_ui-maker.jpg"/>
-<h3>Easy pygame UI Creator</h3>
-</a>
-<a class="item-box" data-category="productivity" href="products#Copy-Keyframes-to-Selected-Blender-Addon">
-<img alt="Copy Keyframes to Selected Blender Addon" src="images/products/Copy-Keyframes-to-Selected-Blender-Addon.jpg"/>
-<h3>Copy Keyframes to Selected Blender Addon</h3>
-</a>
-<a class="item-box" data-category="all" href="products#ChatApp">
-<img alt="ChatApp" src="images/products/chatapp.jpg"/>
-<h3>ChatApp</h3>
-</a>
-<a class="item-box" data-category="productivity" href="products#Organisms_Sim">
-<img alt="Organisms Sim" src="images/products/organisms_sim.jpg"/>
-<h3>Organisms Sim</h3>
-</a>
-<a class="item-box" data-category="productivity" href="products#FTL-Node-Based-Modding">
-<img alt="FTL Node Based Modding" src="images/products/ftl-node-based-modding.jpg"/>
-<h3>FTL Node Based Modding</h3>
-</a>
-<a class="item-box" data-category="entertainment" href="products#FTL-ChooseYourSide">
-<img alt="FTL ChooseYourSide" src="images/products/ftl-chooseyourside.jpg"/>
-<h3>FTL ChooseYourSide</h3>
-</a>
-<a class="item-box" data-category="productivity" href="products#wrighting">
-<img alt="wrighting" src="images/products/wrighting.jpg"/>
-<h3>wrighting</h3>
-</a>
-<a class="item-box" data-category="productivity" href="products#Music-AI-Gen">
-<img alt="Music AI Gen" src="images/products/music-ai-gen.jpg"/>
-<h3>Music AI Gen</h3>
-</a>
-<a class="item-box" data-category="entertainment" href="products#ChessVR">
-<img alt="ChessVR" src="images/products/chessvr.jpg"/>
-<h3>ChessVR</h3>
-</a>
-<a class="item-box" data-category="entertainment" href="products#Kindel-E-ink-games">
-<img alt="Kindel E-ink games" src="images/products/kindel-e-ink-games.jpg"/>
-<h3>Kindel E-ink games</h3>
-</a>
-<a class="item-box" data-category="entertainment" href="products#turbo-octo-funicular">
-<img alt="turbo-octo-funicular" src="images/products/turbo-octo-funicular.jpg"/>
-<h3>turbo-octo-funicular</h3>
-</a>
-<a class="item-box" data-category="entertainment" href="products#unicornia">
-<img alt="Unicornia" src="images/products/unicornia.jpg"/>
-<h3>Unicornia</h3>
-</a>
-<a class="item-box" data-category="entertainment" href="products#confuzzled">
-<img alt="Confuzzled" src="images/products/Confuzzled.jpg"/>
-<h3>Confuzzled</h3>
-</a>
-<!-- Add more software items here -->
-</div>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
+        <!-- Add more filter options as needed -->
+      </select>
+    </div>
+    <div class="item-category" id="book-items">
+      <a href="products#theglitchbook" class="item-box" data-category="sci-fi">
+        <img src="images/products/fiction-book.jpg" alt="Fiction Book">
+        <h3>The Glitch (book)</h3>
+      </a>
+      <a href="products#theglitchscreenplay" class="item-box" data-category="sci-fi">
+        <img src="images/products/fiction-book.jpg" alt="Fiction Book">
+        <h3>The Glitch (screen play)</h3>
+      </a>
+      <a href="products" class="item-box" data-category="sci-fi">
+        <img src="images/products/fiction-book.jpg" alt="Fiction Book">
+        <h3>Alien</h3>
+      </a>
+      <a href="products" class="item-box" data-category="comedy">
+        <img src="images/products/fiction-book.jpg" alt="Fiction Book">
+        <h3>The pool world war.</h3>
+      </a>
+      <a href="products" class="item-box" data-category="fantasy">
+        <img src="images/products/fiction-book.jpg" alt="Fiction Book">
+        <h3>The Crystal's Conflict</h3>
+      </a>
+      <a href="products" class="item-box" data-category="fantasy">
+        <img src="images/products/fiction-book.jpg" alt="Fiction Book">
+        <h3>The Hidden Magic School</h3>
+      </a>
+      <a href="products" class="item-box" data-category="non-fiction">
+        <img src="images/products/non-fiction-book.jpg" alt="Non-fiction Book">
+        <h3>Holes in space and time.</h3>
+      </a>
 
-<div class="content-section" id="AI">
-<h1>AI</h1>
-<strong style="color:red">Note:</strong><a style="color:red"> Running the AI may consume a lot of device resources</a>
-<div class="search-bar">
-<input id="ai-search" placeholder="Search AI's..." type="text"/>
-<select id="AI-filter">
-<option value="all">All</option>
-<option value="Text generation">Text Generation</option>
-<option value="Text modification">Text Modification</option>
-<option value="Text classification">Text Classification</option>
-<option value="Music generation">Music Generation</option>
-<!-- Add more filter options as needed -->
-</select>
-</div>
-<div class="item-category" id="ai-items">
-<a class="item-box" data-category="Text generation" href="script-generator">
-<img alt="" src="images/products/Film-Script-Generator.jpg"/>
-<h3>Film Script Generator (removed)</h3>
-</a>
-<a class="item-box" data-category="Text generation" href="text-generator">
-<img alt="" src="images/products/Film-Script-Generator.jpg"/>
-<h3>Text Generator</h3>
-</a>
-<a class="item-box" data-category="Text modification" href="text-summarizer">
-<img alt="" src="images/products/Film-Script-Generator.jpg"/>
-<h3>Text Summarizer</h3>
-</a>
-<a class="item-box" data-category="Text classification" href="text-classifier">
-<img alt="" src="images/products/Film-Script-Generator.jpg"/>
-<h3>Text Classifier</h3>
-</a>
-<!--
+      <a href="products" class="item-box" data-category="fiction">
+        <img src="images/products/non-fiction-book.jpg" alt="Non-fiction Book">
+        <h3>Stranded</h3>
+      </a>
+      <a href="products" class="item-box" data-category="fiction">
+        <img src="images/products/non-fiction-book.jpg" alt="Non-fiction Book">
+        <h3>Ancient</h3>
+      </a>
+      <!-- Add more book items here -->
+    </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+  </div>
+
+
+  <div id="software" class="content-section">
+    <h1>Software</h1>
+    <div class="search-bar">
+      <input type="text" id="software-search" placeholder="Search software...">
+      <select id="software-filter">
+        <option value="all">All</option>
+        <option value="productivity">Productivity</option>
+        <option value="entertainment">Entertainment</option>
+        <!-- Add more filter options as needed -->
+      </select>
+    </div>
+    <div class="item-category" id="software-items">
+      <a href="products#Square-Pixels" class="item-box" data-category="entertainment">
+        <img
+          src="https://github.com/Unlim8ted-Studio-Productions/Square-Pixels/blob/main/src/Recources/program%20recources/Screenshot%202023-09-21%20181742.png?raw=true"
+          alt="Square Pixels">
+        <h3>Square Pixels</h3>
+      </a>
+
+      <a href="products#Download-Any-Youtube-Video" class="item-box" data-category="productivity">
+        <img src="images/products/download-any-youtube-video.jpg" alt="Download Any Youtube Video">
+        <h3>Download Any Youtube Video</h3>
+      </a>
+
+      <a href="products#Face-Stuff" class="item-box" data-category="productivity">
+        <img src="images/products/face-stuff.jpg" alt="Face Stuff">
+        <h3>Face Stuff</h3>
+      </a>
+
+      <a href="products#Multiplayer-Physics-Simulator" class="item-box" data-category="entertainment">
+        <img src="images/products/multiplayer-physics-simulator.jpg" alt="Multiplayer Physics Simulator">
+        <h3>Multiplayer Physics Simulator</h3>
+      </a>
+
+      <a href="products#Easy-Pygame-UI-Creator" class="item-box" data-category="productivity">
+        <img src="images/products/easy_pygame_ui-maker.jpg" alt="Easy pygame UI Maker">
+        <h3>Easy pygame UI Creator</h3>
+      </a>
+
+      <a href="products#Copy-Keyframes-to-Selected-Blender-Addon" class="item-box" data-category="productivity">
+        <img src="images/products/Copy-Keyframes-to-Selected-Blender-Addon.jpg" alt="Copy Keyframes to Selected Blender Addon">
+        <h3>Copy Keyframes to Selected Blender Addon</h3>
+      </a>
+
+      <a href="products#ChatApp" class="item-box" data-category="all">
+        <img src="images/products/chatapp.jpg" alt="ChatApp">
+        <h3>ChatApp</h3>
+      </a>
+
+      <a href="products#Organisms_Sim" class="item-box" data-category="productivity">
+        <img src="images/products/organisms_sim.jpg" alt="Organisms Sim">
+        <h3>Organisms Sim</h3>
+      </a>
+
+      <a href="products#FTL-Node-Based-Modding" class="item-box" data-category="productivity">
+        <img src="images/products/ftl-node-based-modding.jpg" alt="FTL Node Based Modding">
+        <h3>FTL Node Based Modding</h3>
+      </a>
+
+      <a href="products#FTL-ChooseYourSide" class="item-box" data-category="entertainment">
+        <img src="images/products/ftl-chooseyourside.jpg" alt="FTL ChooseYourSide">
+        <h3>FTL ChooseYourSide</h3>
+      </a>
+
+      <a href="products#wrighting" class="item-box" data-category="productivity">
+        <img src="images/products/wrighting.jpg" alt="wrighting">
+        <h3>wrighting</h3>
+      </a>
+
+      <a href="products#Music-AI-Gen" class="item-box" data-category="productivity">
+        <img src="images/products/music-ai-gen.jpg" alt="Music AI Gen">
+        <h3>Music AI Gen</h3>
+      </a>
+
+      <a href="products#ChessVR" class="item-box" data-category="entertainment">
+        <img src="images/products/chessvr.jpg" alt="ChessVR">
+        <h3>ChessVR</h3>
+      </a>
+
+      <a href="products#Kindel-E-ink-games" class="item-box" data-category="entertainment">
+        <img src="images/products/kindel-e-ink-games.jpg" alt="Kindel E-ink games">
+        <h3>Kindel E-ink games</h3>
+      </a>
+
+      <a href="products#turbo-octo-funicular" class="item-box" data-category="entertainment">
+        <img src="images/products/turbo-octo-funicular.jpg" alt="turbo-octo-funicular">
+        <h3>turbo-octo-funicular</h3>
+      </a>
+
+      <a href="products#unicornia" class="item-box" data-category="entertainment">
+        <img src="images/products/unicornia.jpg" alt="Unicornia">
+        <h3>Unicornia</h3>
+      </a>
+
+      <a href="products#confuzzled" class="item-box" data-category="entertainment">
+        <img src="images/products/Confuzzled.jpg" alt="Confuzzled">
+        <h3>Confuzzled</h3>
+      </a>
+
+      <!-- Add more software items here -->
+    </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+  </div>
+
+  <div id="AI" class="content-section">
+    <h1>AI</h1>
+    <strong style="color:red">Note:</strong><a style="color:red"> Running the AI may consume a lot of device resources</a>
+    <div class="search-bar">
+      <input type="text" id="ai-search" placeholder="Search AI's...">
+      <select id="AI-filter">
+        <option value="all">All</option>
+        <option value="Text generation">Text Generation</option>
+        <option value="Text modification">Text Modification</option>
+        <option value="Text classification">Text Classification</option>
+        <option value="Music generation">Music Generation</option>
+
+        <!-- Add more filter options as needed -->
+      </select>
+    </div>
+    <div class="item-category" id="ai-items">
+      <a href="script-generator" class="item-box" data-category="Text generation">
+        <img src="images/products/Film-Script-Generator.jpg" alt="">
+        <h3>Film Script Generator (removed)</h3>
+      </a>
+      <a href="text-generator" class="item-box" data-category="Text generation">
+        <img src="images/products/Film-Script-Generator.jpg" alt="">
+        <h3>Text Generator</h3>
+      </a>
+      <a href="text-summarizer" class="item-box" data-category="Text modification">
+        <img src="images/products/Film-Script-Generator.jpg" alt="">
+        <h3>Text Summarizer</h3>
+      </a>
+      <a href="text-classifier" class="item-box" data-category="Text classification">
+        <img src="images/products/Film-Script-Generator.jpg" alt="">
+        <h3>Text Classifier</h3>
+      </a>
+      <!--
             <a href="text-translator" class="item-box" data-category="Text modification">
         <img src="images/products/Film-Script-Generator.jpg" alt="">
         <h3>Text Translator</h3>
@@ -1444,123 +2000,133 @@
       </a>
       <music generator/>
       -->
-<!-- Add more AI items here -->
-</div>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
 
-<!-- Help Section -->
-<div class="content-section" id="help">
-<h1>Help</h1>
-<p>If you need assistance, please check our FAQs or contact our support team for further help.</p>
-<p>Email us at: <a href="mailto:support@unlim8ted.com">support@unlim8ted.com</a></p>
-<form action="/submit_form" method="post">
-<label for="name">Name:</label>
-<input id="name" name="name" required="" type="text"/>
-<label for="email">Email:</label>
-<input id="email" name="email" required="" type="email"/>
-<label for="message">Message:</label>
-<textarea id="message" name="message" required="" rows="4"></textarea>
-<button type="submit">Submit</button>
-</form>
-<!-- Copyright -->
-<div style="margin-top: 100px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
-<!-- About Section -->
-<div class="content-section" id="about">
-<h1>About Us</h1>
-<p>Unlim8ted Studio Productions is an entertainment company dedicated to producing innovative and creative media
+      <!-- Add more AI items here -->
+    </div>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+  </div>
+  <!-- Help Section -->
+  <div id="help" class="content-section">
+    <h1>Help</h1>
+    <p>If you need assistance, please check our FAQs or contact our support team for further help.</p>
+    <p>Email us at: <a href="mailto:support@unlim8ted.com">support@unlim8ted.com</a></p>
+    <form action="/submit_form" method="post">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" rows="4" required></textarea>
+      <button type="submit">Submit</button>
+    </form>
+    <!-- Copyright -->
+    <div style="margin-top: 100px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <div id="about" class="content-section">
+    <h1>About Us</h1>
+    <p>Unlim8ted Studio Productions is an entertainment company dedicated to producing innovative and creative media
       content. We specialize in a wide range of productions, from film and animation to digital art and beyond.</p>
-<p>Our mission is to bring stories to life and provide unique entertainment experiences for audiences around the
+    <p>Our mission is to bring stories to life and provide unique entertainment experiences for audiences around the
       world.</p>
-<a class="button" href="/about-us">Find Out More</a>
-<!-- Copyright -->
-<div style="margin-top: 100px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
-<!-- Portfolio Section -->
-<div class="content-section" id="portfolio">
-<h1>Portfolio</h1>
-<div class="portfolio-grid">
-<div class="portfolio-item">
-<h2>Square Pixels</h2>
-<p>A groundbreaking project that explores the intersection of art and technology through pixel-based design.</p>
-</div>
-<div class="portfolio-item">
-<h2>Life of a Meatball</h2>
-<p>An animated journey following the adventures of a meatball, exploring themes of identity and belonging.</p>
-</div>
-<div class="portfolio-item">
-<h2>The Glitch</h2>
-<p>An experimental short film that delves into the nature of reality and the imperfections that make us human.
+      <a class="button" href="/about-us">Find Out More</a>
+    <!-- Copyright -->
+    <div style="margin-top: 100px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+
+  <!-- Portfolio Section -->
+  <div id="portfolio" class="content-section">
+    <h1>Portfolio</h1>
+    <div class="portfolio-grid">
+      <div class="portfolio-item">
+        <h2>Square Pixels</h2>
+        <p>A groundbreaking project that explores the intersection of art and technology through pixel-based design.</p>
+      </div>
+      <div class="portfolio-item">
+        <h2>Life of a Meatball</h2>
+        <p>An animated journey following the adventures of a meatball, exploring themes of identity and belonging.</p>
+      </div>
+      <div class="portfolio-item">
+        <h2>The Glitch</h2>
+        <p>An experimental short film that delves into the nature of reality and the imperfections that make us human.
         </p>
-</div>
-</div>
-<!-- Copyright -->
-<div style="margin-top: 100px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
-<!-- Contact Section -->
-<div class="content-section" id="contact">
-<h1>Contact Us</h1>
-<p>For any inquiries or support, feel free to reach out to us.</p>
-<p>Email: <a href="mailto:support@unlim8ted.com">support@unlim8ted.com</a></p>
-<form action="/submit_form" method="post">
-<label for="name">Name:</label>
-<input id="name" name="name" required="" type="text"/>
-<label for="email">Email:</label>
-<input id="email" name="email" required="" type="email"/>
-<label for="message">Message:</label>
-<textarea id="message" name="message" required="" rows="4"></textarea>
-<button type="submit">Submit</button>
-</form>
-<!-- Copyright -->
-<div style="margin-top: 100px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
-<!-- Blog Section -->
-<div class="content-section" id="blog">
-<h1>Blog</h1>
-<div class="blog-grid">
-<div class="blog-post">
-<h2>Embracing Creativity: How to Find Inspiration in the Everyday</h2>
-<p>Discover how to tap into your creative potential by finding inspiration in the world around you...</p>
-<a href="#">Read more</a>
-</div>
-<div class="blog-post">
-<h2>The Future of Entertainment: What to Expect from the Industry</h2>
-<p>Explore the latest trends in the entertainment industry and what they mean for creators and audiences
+      </div>
+    </div>
+    <!-- Copyright -->
+    <div style="margin-top: 100px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <div id="contact" class="content-section">
+    <h1>Contact Us</h1>
+    <p>For any inquiries or support, feel free to reach out to us.</p>
+    <p>Email: <a href="mailto:support@unlim8ted.com">support@unlim8ted.com</a></p>
+    <form action="/submit_form" method="post">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" rows="4" required></textarea>
+      <button type="submit">Submit</button>
+    </form>
+
+
+    <!-- Copyright -->
+    <div style="margin-top: 100px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+
+  <!-- Blog Section -->
+  <div id="blog" class="content-section">
+    <h1>Blog</h1>
+    <div class="blog-grid">
+      <div class="blog-post">
+        <h2>Embracing Creativity: How to Find Inspiration in the Everyday</h2>
+        <p>Discover how to tap into your creative potential by finding inspiration in the world around you...</p>
+        <a href="#">Read more</a>
+      </div>
+      <div class="blog-post">
+        <h2>The Future of Entertainment: What to Expect from the Industry</h2>
+        <p>Explore the latest trends in the entertainment industry and what they mean for creators and audiences
           alike...</p>
-<a href="#">Read more</a>
-</div>
-<div class="blog-post">
-<h2>Behind the Scenes: The Making of 'Life of a Meatball'</h2>
-<p>Get an inside look at the creative process behind one of our most beloved projects...</p>
-<a href="#">Read more</a>
-</div>
-</div>
-<!-- Newsletter Signup -->
-<div style="margin-bottom: 20px; margin-top: 100px;">
-<h2>Newsletter Signup</h2>
-<form action="#news" method="post">
-<input placeholder="Enter your email" required="" style="padding: 10px; width: 300px;" type="email"/>
-<button style="padding: 10px 20px;" type="submit">Subscribe</button>
-</form>
-</div>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-</div>
-<script>
+        <a href="#">Read more</a>
+      </div>
+      <div class="blog-post">
+        <h2>Behind the Scenes: The Making of 'Life of a Meatball'</h2>
+        <p>Get an inside look at the creative process behind one of our most beloved projects...</p>
+        <a href="#">Read more</a>
+      </div>
+    </div>
+    <!-- Newsletter Signup -->
+    <div style="margin-bottom: 20px; margin-top: 100px;">
+      <h2>Newsletter Signup</h2>
+      <form action="#news" method="post">
+        <input type="email" placeholder="Enter your email" required style="padding: 10px; width: 300px;">
+        <button type="submit" style="padding: 10px 20px;">Subscribe</button>
+      </form>
+    </div>
+
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
+
+
+  <script>
     function showContent() {
       const hash = window.location.hash || '#home';
       const sections = document.querySelectorAll('.content-section');
@@ -1602,7 +2168,8 @@
 
 
   </script>
-</body></html>
+
+</html>
 <!--TODO:Also add in products and images for clothes make hovering products show 
   descripion, make cart work, make products have a template which gets filled 
   in from a list of information about the products depending on # instead of having

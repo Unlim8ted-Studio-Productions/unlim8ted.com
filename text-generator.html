@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en">
-<head>
-<meta charset="utf-8"/>
-<title>Generate Text</title>
-<!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
-<style media="screen" type="text/css">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Generate Text</title>
+      <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+  <style media="screen" type="text/css">
     .loader {
       position: fixed;
       background-color: black;
@@ -145,8 +144,8 @@
       }
     }
   </style>
-<!-- Styles for the No-JavaScript message -->
-<style>
+  <!-- Styles for the No-JavaScript message -->
+  <style>
     .no-js-message {
       background: #2c4762;
       color: red;
@@ -159,20 +158,22 @@
       top: 0;
     }
   </style>
-<!-- No-JavaScript message -->
-<noscript>
-<div class="no-js-message">
+
+  <!-- No-JavaScript message -->
+  <noscript>
+    <div class="no-js-message">
       Please enable JavaScript to use this website properly.
     </div>
-</noscript>
-<div class="loader">
-<div class="loaderr-container">
-<div class="loaderr"></div>
-<div class="loading-text">Loading...</div>
-</div>
-</div>
+  </noscript>
+  <div class="loader">
+    <div class="loaderr-container">
+      <div class="loaderr"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+  </div>
 
-<script>
+  </div>
+  <script>
     // This function will execute after the full page has finished loading
     window.onload = function () {
       // Trigger fade-out animation for the loader spinner
@@ -194,10 +195,10 @@
     };
 
   </script>
-<!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-<link href="styles.css" rel="stylesheet"/>
-<link href="favicon.ico" rel="icon" type="image/x-icon"/>
-<style>
+  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
         /* Additional styles for navigation, dropdown, and responsiveness */
         .dropdown-content {
             display: none;
@@ -267,7 +268,7 @@
             }
         }
     </style>
-<style>
+        <style>
             body {
                 font-family: Arial, sans-serif;
                 padding: 20px;
@@ -318,47 +319,52 @@
                 font-weight: bold;
             }
         </style>
-<meta content="Title: Generate Text AI powered by Unlim8ted Unlim8ted Studio Productions." name="description"/></head>
-<body>
-<!-- Navbar and Logo -->
-<script>
+  </head>
+  <body>
+    <!-- Navbar and Logo -->
+    <script>
         function toggleMenu() {
             const navLinks = document.getElementById("navbarLinks");
             navLinks.classList.toggle("show");
         }
     </script>
-<nav class="navbar">
-<div class="navbar-header">
-<button class="navbar-toggle" onclick="toggleMenu()" style="position:absolute; top:5px; left:1%">☰</button>
-<ul class="nav-links" id="navbarLinks">
-<li class="nav-item"><a href="/">Home</a></li>
-<li class="nav-item"><a href="/#products">Products</a></li>
-<li class="nav-item"><a href="/#help">Help</a></li>
-<li class="nav-item"><a href="/#about">About</a></li>
-<li class="nav-item dropdown">
-<a class="dropbtn" href="javascript:void(0)">More</a>
-<div class="dropdown-content">
-<a href="/#portfolio">Portfolio</a>
-<a href="/#contact">Contact</a>
-<a href="/#blog">Blog</a>
-<a href="/live-chat">Live Chat</a>
-<a href="/live-game">Live Chat and Game</a>
-<a href="/puzzle-squares">Puzzle Squares</a>
-</div>
-</li>
-</ul>
-</div>
-</nav>
-<!-- Generate Functionality -->
-<h1>Generate Text<h5><strong style="color:red">Note:</strong><a style="color:red"> Running the AI may consume a lot of device resources</a>
-</h5></h1>
-<textarea cols="50" id="inputText" rows="10">Enter text here...</textarea>
-<button id="generate">Generate</button>
-<div class="loading-bar" id="loadingBar"></div>
-<p id="status">Status: Ready</p>
-<p id="output"></p>
-<!-- Script for Text Generation -->
-<script type="module">
+
+    <nav class="navbar">
+        <div class="navbar-header">
+            <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+            <ul class="nav-links" id="navbarLinks">
+                <li class="nav-item"><a href="/">Home</a></li>
+                <li class="nav-item"><a href="/#products">Products</a></li>
+                <li class="nav-item"><a href="/#help">Help</a></li>
+                <li class="nav-item"><a href="/#about">About</a></li>
+                <li class="nav-item dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">More</a>
+                    <div class="dropdown-content">
+                        <a href="/#portfolio">Portfolio</a>
+                        <a href="/#contact">Contact</a>
+                        <a href="/#blog">Blog</a>
+                        <a href="/live-chat">Live Chat</a>
+                        <a href="/live-game">Live Chat and Game</a>
+                        <a href="/puzzle-squares">Puzzle Squares</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+        <!-- Generate Functionality -->
+        <h1>Generate Text<h5><strong style="color:red">Note:</strong><a style="color:red"> Running the AI may consume a lot of device resources</a>
+        </h5></h1>
+        <textarea id="inputText" rows="10" cols="50">Enter text here...</textarea>
+        <button id="generate">Generate</button>
+        <div class="loading-bar" id="loadingBar"></div>
+        <p id="status">Status: Ready</p>
+        <p id="output"></p>
+
+        <!-- Script for Text Generation -->
+        <script type="module">
             import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0';
             let generator;
 
@@ -395,6 +401,6 @@
                 document.cookie = `${key}=${value}; max-age=86400; path=/`;
             }
         </script>
-
-</body>
+    </div>
+  </body>
 </html>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Buy Now</title>
-<!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
-<style media="screen" type="text/css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Now</title>
+      <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+  <style media="screen" type="text/css">
     .layer1_class {
       position: absolute;
       z-index: 1;
@@ -162,8 +162,8 @@
       }
     }
   </style>
-<!-- Styles for the No-JavaScript message -->
-<style>
+  <!-- Styles for the No-JavaScript message -->
+  <style>
     .no-js-message {
       background: #2c4762;
       color: red;
@@ -176,20 +176,22 @@
       top: 0;
     }
   </style>
-<!-- No-JavaScript message -->
-<noscript>
-<div class="no-js-message">
+
+  <!-- No-JavaScript message -->
+  <noscript>
+    <div class="no-js-message">
       Please enable JavaScript to use this website properly.
     </div>
-</noscript>
-<div class="loader">
-<div class="loaderr-container">
-<div class="loaderr"></div>
-<div class="loading-text">Loading...</div>
-</div>
-</div>
+  </noscript>
+  <div class="loader">
+    <div class="loaderr-container">
+      <div class="loaderr"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+  </div>
 
-<script>
+  </div>
+  <script>
     // This function will execute after the full page has finished loading
     window.onload = function () {
       // Trigger fade-out animation for the loader
@@ -204,9 +206,9 @@
 
     }
   </script>
-<!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-<link href="styles.css" rel="stylesheet"/>
-<style>
+  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+    <link rel="stylesheet" href="styles.css">
+    <style>
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
@@ -314,42 +316,47 @@
         }
     }
 </style>
-<meta content=" Buy Page  2024 Unlim8ted Studio Productions . Learn more at Unlim8ted Studio Productions." name="description"/></head>
+
+</head>
+
 <body>
-<div id="inner-wrap">
-<div class="logo" style="z-index: 2;">
-<a href="/">
-<img src="images/logo/logo.png"/> <!--https://images.unlim8ted.com/logo/logo.png-->
-</a>
-</div>
-<header>
-<h1>Buy Now</h1>
-<link href="favicon.ico" rel="icon" type="image/x-icon"/>
-</header>
-<main>
-<section class="buy-section" id="@product id@">
-<h2 id="@product name@">@product name@</h2>
-<img alt="Product Image" class="@image@" src="@product image@"/>
-<video class="@video@" controls="" src="@product video@"></video>
-<p id="@product description@">@product description@</p>
-<p id="@product price@">$@product price@</p>
-<label for="donation-amount">Donation Amount ($):</label>
-<input id="donation-amount" min="0" name="donation-amount" step="0.01" type="number" value="0"/>
-<div class="hidden" id="payment-section">
-<label for="card-number">Credit Card Number:</label>
-<input id="card-number" name="card-number" placeholder="1234-5678-9012-3456" type="text"/>
-<label for="expiry-date">Expiry Date:</label>
-<input id="expiry-date" name="expiry-date" placeholder="MM/YY" type="text"/>
-<label for="cvv">CVV:</label>
-<input id="cvv" name="cvv" placeholder="123" type="text"/>
-</div>
-<button id="buy-now-button">Buy Now</button>
-<a class="hidden" id="message">
-<div id="@additional images@"></div>
-<div id="@additional videos@"></div>
-</a></section>
-</main>
-<script>
+    <div id="inner-wrap">
+        <div class="logo" style="z-index: 2;">
+          <a href="/">
+            <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
+          </a>
+        </div>
+    <header>
+        <h1>Buy Now</h1>
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    </header>
+
+    <main>
+        <section id="@product id@" class="buy-section">
+            <h2 id="@product name@">@product name@</h2>
+            <img src="@product image@" alt="Product Image" class="@image@">
+            <video src="@product video@" controls class="@video@"></video>
+            <p id="@product description@">@product description@</p>
+            <p id="@product price@">$@product price@</p>
+            <label for="donation-amount">Donation Amount ($):</label>
+            <input type="number" id="donation-amount" name="donation-amount" min="0" step="0.01" value="0">
+            <div id="payment-section" class="hidden">
+                <label for="card-number">Credit Card Number:</label>
+                <input type="text" id="card-number" name="card-number" placeholder="1234-5678-9012-3456">
+                <label for="expiry-date">Expiry Date:</label>
+                <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY">
+                <label for="cvv">CVV:</label>
+                <input type="text" id="cvv" name="cvv" placeholder="123">
+            </div>
+            <button id="buy-now-button">Buy Now</button>
+            <a id="message" class="hidden"></p>
+            <div id="@additional images@"></div>
+            <div id="@additional videos@"></div>
+        </section>
+    </main>
+
+    <script>
         document.addEventListener('DOMContentLoaded', load_page);
         async function load_page() {
             const products = await getProducts();
@@ -454,10 +461,10 @@
             }
         }
     </script>
-</div></body>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-
+</body>
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+        <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+      </div>
+    </div>
 </html>

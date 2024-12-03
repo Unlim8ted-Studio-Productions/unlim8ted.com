@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html>
 <head>
-<link href="favicon.ico" rel="icon" type="image/x-icon"/>
-<!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
-<style media="screen" type="text/css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+  <style media="screen" type="text/css">
     .layer1_class {
       position: absolute;
       z-index: 1;
@@ -160,8 +159,8 @@
       }
     }
   </style>
-<!-- Styles for the No-JavaScript message -->
-<style>
+  <!-- Styles for the No-JavaScript message -->
+  <style>
     .no-js-message {
       background: #2c4762;
       color: red;
@@ -174,20 +173,22 @@
       top: 0;
     }
   </style>
-<!-- No-JavaScript message -->
-<noscript>
-<div class="no-js-message">
+
+  <!-- No-JavaScript message -->
+  <noscript>
+    <div class="no-js-message">
       Please enable JavaScript to use this website properly.
     </div>
-</noscript>
-<div class="loader">
-<div class="loaderr-container">
-<div class="loaderr"></div>
-<div class="loading-text">Loading...</div>
-</div>
-</div>
+  </noscript>
+  <div class="loader">
+    <div class="loaderr-container">
+      <div class="loaderr"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+  </div>
 
-<script>
+  </div>
+  <script>
     // This function will execute after the full page has finished loading
     window.onload = function () {
       // Trigger fade-out animation for the loader
@@ -202,10 +203,10 @@
 
     }
   </script>
-<!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-<script src="ned.js"></script>
-<script src="https://bumbu.me/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
-<script>// Load different node types and attach event listeners for them
+  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+	<script src="ned.js"></script>
+	<script src="https://bumbu.me/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
+	<script>// Load different node types and attach event listeners for them
         window.addEventListener('DOMContentLoaded', function () {
         
           // Choice Node with dynamic output
@@ -341,8 +342,8 @@
         document.querySelector("#exportXML").addEventListener("click", exportToXML);
         });
         </script> <!-- Load nodes from a separate file -->
-<link href="ned.css" rel="stylesheet" type="text/css"/>
-<style type="text/css">	
+	<link rel="stylesheet" type="text/css" href="ned.css">
+	<style type="text/css">	
 		body {
 			height: 100vh;
 			width: 100%;
@@ -377,36 +378,38 @@
 			user-select: none;
 		}
 	</style>
-<meta content="Title: text adventure creator node based ai . Learn more at Unlim8ted Studio Productions." name="description"/></head>
+</head>
 <body>
-<div id="sidebar">
-<h3>Nodes</h3>
-<button id="addChoiceNode">Add Choice Node</button><br/><br/>
-<button id="addLogicNode">Add Logic Node</button><br/><br/>
-<button id="addRewardNode">Add Reward Node</button><br/><br/>
-<button id="addIncreaseNode">Add Increase Node</button><br/><br/>
-<button id="addLocationNode">Add Location Node</button><br/><br/>
-<button id="addCharacterNode">Add Character Node</button><br/><br/>
-<button id="addItemNode">Add Item Node</button><br/><br/>
-<button id="addTextNode">Add Text Node</button><br/><br/>
-<button id="deleteNode">Delete Selected Node</button><br/><br/>
-<button id="exportXML">Export to XML</button>
-</div>
-<div id="svg-container">
-<svg id="svg" oncontextmenu="return false;">
-<defs>
-<pattern height="10" id="smallGrid" patternunits="userSpaceOnUse" width="10">
-<path d="M 10 0 L 0 0 0 10" fill="none" stroke="gray" stroke-width="0.5"></path>
-</pattern>
-<pattern height="100" id="bigGrid" patternunits="userSpaceOnUse" width="100">
-<rect fill="url(#smallGrid)" height="100" width="100"></rect>
-<path d="M 100 0 L 0 0 0 100" fill="none" stroke="gray" stroke-width="1"></path>
-</pattern>
-</defs>
-<rect fill="url(#bigGrid)" height="500%" id="grid" width="500%"></rect>
-</svg>
-</div>
-<script>
+	<div id="sidebar">
+		<h3>Nodes</h3>
+		<button id="addChoiceNode">Add Choice Node</button><br><br>
+		<button id="addLogicNode">Add Logic Node</button><br><br>
+		<button id="addRewardNode">Add Reward Node</button><br><br>
+		<button id="addIncreaseNode">Add Increase Node</button><br><br>
+		<button id="addLocationNode">Add Location Node</button><br><br>
+		<button id="addCharacterNode">Add Character Node</button><br><br>
+		<button id="addItemNode">Add Item Node</button><br><br>
+		<button id="addTextNode">Add Text Node</button><br><br>
+		<button id="deleteNode">Delete Selected Node</button><br><br>
+		<button id="exportXML">Export to XML</button>
+	</div>
+	<div id="svg-container">
+		<svg id="svg" oncontextmenu="return false;">
+			<defs>
+				<pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+					<path d="M 10 0 L 0 0 0 10" fill="none" stroke="gray" stroke-width="0.5"/>
+				</pattern>
+				<pattern id="bigGrid" width="100" height="100" patternUnits="userSpaceOnUse">
+					<rect width="100" height="100" fill="url(#smallGrid)"/>
+					<path d="M 100 0 L 0 0 0 100" fill="none" stroke="gray" stroke-width="1"/>
+				</pattern>
+			</defs>
+
+			<rect id="grid" width="500%" height="500%" fill="url(#bigGrid)" />
+		</svg>
+	</div>
+
+	<script>
 		var grid = document.querySelector("#grid");
 
 		var editor = Ned.create("#svg");
@@ -447,9 +450,9 @@
 		// Load node functions from nodes.js
 	</script>
 </body>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-<p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-</div>
-
+    <!-- Copyright -->
+    <div style="margin-top: 20px;">
+        <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+      </div>
+    </div>
 </html>

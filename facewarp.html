@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>TensorFlow.js Face Warp Effects</title>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TensorFlow.js Face Warp Effects</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
+  <style>
     body {
       margin: 0;
       overflow: hidden;
@@ -72,66 +71,70 @@
       display: none;
     }
   </style>
-<meta content="Title:Face Effects Glowing Outline Highlight Eyes Highlight Nose Highlight Mouth Highlight Face Shape Random Dots Effect Alien face Warp Laser Eyes Breath Fire Sun Learn more at Unlim8ted Studio Productions." name="description"/></head>
+</head>
 <body>
-<video autoplay="" id="video" playsinline=""></video>
-<canvas id="canvas"></canvas>
-<!-- Loading bar -->
-<div id="loading-bar">
-<div id="loading-progress"></div>
-</div>
-<!-- Effects panel with checkboxes in grid -->
-<div id="effects-panel">
-<label class="effect-checkbox">
-<input id="glow" type="checkbox"/> Glowing Outline
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas"></canvas>
+
+  <!-- Loading bar -->
+  <div id="loading-bar">
+    <div id="loading-progress"></div>
+  </div>
+
+  <!-- Effects panel with checkboxes in grid -->
+  <div id="effects-panel">
+    <label class="effect-checkbox">
+      <input type="checkbox" id="glow" /> Glowing Outline
     </label>
-<label class="effect-checkbox">
-<input id="highlight-eyes" type="checkbox"/> Highlight Eyes
+    <label class="effect-checkbox">
+      <input type="checkbox" id="highlight-eyes" /> Highlight Eyes
     </label>
-<label class="effect-checkbox">
-<input id="highlight-nose" type="checkbox"/> Highlight Nose
+    <label class="effect-checkbox">
+      <input type="checkbox" id="highlight-nose" /> Highlight Nose
     </label>
-<label class="effect-checkbox">
-<input id="highlight-mouth" type="checkbox"/> Highlight Mouth
+    <label class="effect-checkbox">
+      <input type="checkbox" id="highlight-mouth" /> Highlight Mouth
     </label>
-<label class="effect-checkbox">
-<input id="highlight-face" type="checkbox"/> Highlight Face Shape
+    <label class="effect-checkbox">
+      <input type="checkbox" id="highlight-face" /> Highlight Face Shape
     </label>
-<label class="effect-checkbox">
-<input id="random-dots" type="checkbox"/> Random Dots Effect
+    <label class="effect-checkbox">
+      <input type="checkbox" id="random-dots" /> Random Dots Effect
     </label>
-<label class="effect-checkbox">
-<input id="alien-warp" type="checkbox"/> Alien Face Warp
+    <label class="effect-checkbox">
+      <input type="checkbox" id="alien-warp" /> Alien Face Warp
     </label>
-<label class="effect-checkbox">
-<input id="moose-warp" type="checkbox"/> Moose Face Warp
+    <label class="effect-checkbox">
+      <input type="checkbox" id="moose-warp" /> Moose Face Warp
     </label>
-<label class="effect-checkbox">
-<input id="laser-eyes" type="checkbox"/> Laser Eyes
+    <label class="effect-checkbox">
+        <input type="checkbox" id="laser-eyes" /> Laser Eyes
       </label>
-<label class="effect-checkbox">
-<input id="breathingfire" type="checkbox"/> Breath Fire
+      <label class="effect-checkbox">
+        <input type="checkbox" id="breathingfire" /> Breath Fire
       </label>
-<label class="effect-checkbox">
-<input id="sunglasses" type="checkbox"/> Sunglasses
+      <label class="effect-checkbox">
+        <input type="checkbox" id="sunglasses" /> Sunglasses
       </label>
-<label class="effect-checkbox">
-<input id="horns" type="checkbox"/> Horns
+      <label class="effect-checkbox">
+        <input type="checkbox" id="horns" /> Horns
       </label>
-<label class="effect-checkbox">
-<input id="mustache" type="checkbox"/> Mustache
+      <label class="effect-checkbox">
+        <input type="checkbox" id="mustache" /> Mustache
       </label>
-<label class="effect-checkbox">
-<input id="eyebrows" type="checkbox"/> Eyebrows
+      <label class="effect-checkbox">
+        <input type="checkbox" id="eyebrows" /> Eyebrows
       </label>
-<label class="effect-checkbox">
-<input id="crying" type="checkbox"/> Crying
+      <label class="effect-checkbox">
+        <input type="checkbox" id="crying" /> Crying
       </label>
-<label class="effect-checkbox">
-<input id="ocean-background" type="checkbox"/> Ocean Background
+      <label class="effect-checkbox">
+        <input type="checkbox" id="ocean-background" /> Ocean Background
       </label>
-</div>
-<script>
+      
+  </div>
+
+  <script>
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
