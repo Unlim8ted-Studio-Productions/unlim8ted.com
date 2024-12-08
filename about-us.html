@@ -682,42 +682,50 @@
     <div class="cursor" id="cursor"></div>
 
     <script>
-        // JavaScript to make the custom cursor follow the mouse
-        const cursor = document.getElementById("cursor");
-        document.addEventListener("mousemove", (e) => {
-            cursor.style.top = `${e.clientY}px`;
-            cursor.style.left = `${e.clientX}px`;
-        });
-
-        // Expand container based on scroll position
-        document.addEventListener("scroll", function() {
-            const scrollPercentage = window.scrollY / (document.body.offsetHeight - window.innerHeight);
-            if (scrollPercentage > 0.1) {
-                document.querySelector('.container').classList.add('expanded');
-            } else {
-                document.querySelector('.container').classList.remove('expanded');
-            }
-        });
-
-        // Particle background effect
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            document.body.appendChild(particle);
-
-            const size = Math.random() * 5 + 1;
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            particle.style.top = `${Math.random() * window.innerHeight}px`;
-            particle.style.left = `${Math.random() * window.innerWidth}px`;
-            particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
-
-            particle.addEventListener('animationend', () => {
-                particle.remove();
-            });
-        }
-
-        setInterval(createParticle, 100);
-    </script>
+      // JavaScript to make the custom cursor follow the mouse
+      const cursor = document.getElementById("cursor");
+      document.addEventListener("mousemove", (e) => {
+          cursor.style.top = `${e.clientY}px`;
+          cursor.style.left = `${e.clientX}px`;
+      });
+  
+      // Expand container based on scroll position
+      document.addEventListener("scroll", function() {
+          const scrollPercentage = window.scrollY / (document.body.offsetHeight - window.innerHeight);
+          if (scrollPercentage > 0.1) {
+              document.querySelector('.container').classList.add('expanded');
+          } else {
+              document.querySelector('.container').classList.remove('expanded');
+          }
+      });
+  
+      // Particle background effect with a limit
+      const particleLimit = 100; // Maximum number of particles
+      let activeParticles = 0;
+  
+      function createParticle() {
+          if (activeParticles >= particleLimit) return; // Stop if the limit is reached
+  
+          const particle = document.createElement('div');
+          particle.classList.add('particle');
+          document.body.appendChild(particle);
+          activeParticles++;
+  
+          const size = Math.random() * 5 + 1;
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          particle.style.top = `${Math.random() * window.innerHeight}px`;
+          particle.style.left = `${Math.random() * window.innerWidth}px`;
+          particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+  
+          particle.addEventListener('animationend', () => {
+              particle.remove();
+              activeParticles--; // Decrease count when particle is removed
+          });
+      }
+  
+      setInterval(createParticle, 100);
+  </script>
+  
 </body>
 </html>
