@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unlim8ted Music</title>
-    <script src="https://unlim8ted.com/midi.js"></script>
     <style>
         /* Base styles */
         body {
@@ -51,85 +50,85 @@
             background: black;
             position: relative;
             overflow: hidden;
+            color: white;
         }
 
-        .notes {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            transform: translateY(100%);
-            animation: scrollNotes 5s linear infinite;
+        .playing-text {
+            font-size: 20px;
         }
 
-        @keyframes scrollNotes {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(-100%);
-            }
-        }
-
-        .note {
-            width: 20px;
-            height: 10px;
-            background: #8b00ff;
-            position: absolute;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.5);
-            }
+        .loading-text {
+            font-size: 16px;
+            color: yellow;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="song-list">
-            <div class="song-item" onclick="playMidi('The%20Echos%20of%20the%20Bells.mid')">
+            <div class="song-item" onclick="playTrack('The%20Echos%20of%20the%20Bells.mid', 'The%20Echos%20of%20the%20Bells.mp3')">
                 The Echos of the Bells
             </div>
-            <div class="song-item" onclick="playMidi('track1.mid')">
+            <div class="song-item" onclick="playTrack('track1.mid', 'track1.mp3')">
                 Track 1
             </div>
-            <div class="song-item" onclick="playMidi('track2.mid')">
+            <div class="song-item" onclick="playTrack('track2.mid', 'track2.mp3')">
                 Track 2
             </div>
-            <div class="song-item" onclick="playMidi('track3.mid')">
+            <div class="song-item" onclick="playTrack('track3.mid', 'track3.mp3')">
                 Track 3
             </div>
         </div>
-        <div class="midi-visualizer">
-            <div class="notes" id="notesContainer"></div>
+        <div class="midi-visualizer" id="visualizer">
+            <div class="playing-text" id="playingText">Select a song to play</div>
+            <div class="loading-text" id="loadingText" style="display: none;">Loading...</div>
         </div>
     </div>
 
     <script>
-        let audio = new Audio();
+        async function playTrack(midiFilename, audioFilename) {
+            const midiFileUrl = `https://unlim8ted.com/music/${midiFilename}`;
+            const audioFileUrl = `https://unlim8ted.com/music/${audioFilename}`;
 
-        function playMidi(filename) {
-            const midiFileUrl = `https://unlim8ted.com/music/${filename}`;
-            
-            MIDI.loadPlugin({
-                soundfontUrl: "./soundfont/",
-                instrument: "acoustic_grand_piano",
-                onsuccess: function () {
-                    MIDI.Player.stop();
-                    MIDI.Player.loadFile(midiFileUrl, () => {
-                        MIDI.Player.start();
-                        console.log("Playing MIDI:", filename);
+            const playingText = document.getElementById('playingText');
+            const loadingText = document.getElementById('loadingText');
+
+            // Show loading message
+            playingText.textContent = `Loading: ${decodeURIComponent(midiFilename)}`;
+            loadingText.style.display = 'block';
+
+            try {
+                // Ensure the MIDI file is fetched for visualization
+                const midiResponse = await fetch(midiFileUrl);
+                if (!midiResponse.ok) throw new Error("Failed to load MIDI file");
+
+                // Parse MIDI file for visualization (this is a placeholder for actual MIDI visualization logic)
+                console.log("MIDI file loaded for visualization:", midiFilename);
+
+                // Play the MP3 audio file
+                const audio = new Audio(audioFileUrl);
+                audio.addEventListener('canplaythrough', () => {
+                    loadingText.style.display = 'none';
+                    playingText.textContent = `Playing: ${decodeURIComponent(audioFilename)}`;
+                    audio.play().catch((error) => {
+                        console.error("Error playing audio file:", error);
+                        playingText.textContent = `Error: Unable to play ${decodeURIComponent(audioFilename)}`;
                     });
-                }
-            });
+                });
+
+                audio.addEventListener('error', () => {
+                    loadingText.style.display = 'none';
+                    playingText.textContent = `Error: Unable to load ${decodeURIComponent(audioFilename)}`;
+                    console.error("Error loading audio file:", audio.error);
+                });
+
+            } catch (error) {
+                // Handle errors while fetching the MIDI file
+                loadingText.style.display = 'none';
+                playingText.textContent = `Error: Unable to load ${decodeURIComponent(midiFilename)}`;
+                console.error("Error loading MIDI file:", error);
+            }
         }
-        
     </script>
 </body>
 </html>
