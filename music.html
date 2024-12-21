@@ -473,23 +473,25 @@
 
         function drawNotes() {
             if (!isPlaying) return;
-
+        
             const currentTime = performance.now() - startTime;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+        
             notes.forEach(note => {
                 const timeOffset = note.startTime - currentTime;
-                const y = canvas.height - (timeOffset / 10); // Align with audio timing
-
-                if (y > canvas.height || y < -20) return; // Skip notes outside canvas
-
+                const y = canvas.height - (timeOffset / 10) -  note.duration / 10; // Align with audio timing
+                const noteHeight = note.duration / 10; // Scale duration for visual representation
+        
+                if (y > canvas.height || y + noteHeight < 0) return; // Skip notes outside canvas
+        
                 const instrumentColor = colorPalette[note.instrument % colorPalette.length];
                 ctx.fillStyle = instrumentColor;
-                ctx.fillRect(note.midi * 10, y, 8, 20); // Note position and size
+                ctx.fillRect(note.midi * 10, y, 8, noteHeight); // Note position and size
             });
-
+        
             requestAnimationFrame(drawNotes);
         }
+        
 
         function playTrack(midiFilename, audioFilename) {
             const midiFileUrl = `https://unlim8ted.com/music/${midiFilename}`;
