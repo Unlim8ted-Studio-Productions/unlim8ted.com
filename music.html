@@ -1,9 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unlim8ted Music</title>
+    <meta name="description"
+        content="Unlim8ted Music. Great music made by Unlim8ted Studio Productions. Always free, no signup required. Powered by Unlim8ted Studio Productions." />
+    <style media="screen" type="text/css">
+        .layer1_class {
+            position: absolute;
+            z-index: 1;
+            top: 100px;
+            left: 0px;
+            visibility: visible;
+        }
+
+        .layer2_class {
+            position: absolute;
+            z-index: 2;
+            top: 10px;
+            left: 10px;
+            visibility: hidden;
+        }
+
+        .loader {
+            position: fixed;
+            background-color: black;
+            opacity: 1;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0%;
+            z-index: 999999988;
+            pointer-events: none;
+        }
+
+        .loaderr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            /* To stack spinner and text vertically */
+            height: 100vh;
+            /* Full viewport height to ensure vertical centering */
+        }
+
+        .loaderr {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top: 8px solid #3498db;
+            border-right: 8px solid #e74c3c;
+            border-bottom: 8px solid #f1c40f;
+            border-left: 8px solid #9b59b6;
+            -webkit-animation: spin 1.5s linear infinite;
+            animation: spin 1.5s linear infinite;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
+            position: relative;
+        }
+
+        .loaderr:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top: 8px solid rgba(52, 152, 219, 0.7);
+            border-right: 8px solid rgba(231, 76, 60, 0.7);
+            border-bottom: 8px solid rgba(241, 196, 15, 0.7);
+            border-left: 8px solid rgba(155, 89, 182, 0.7);
+            -webkit-animation: spin-reverse 1.5s linear infinite;
+            animation: spin-reverse 1.5s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @-webkit-keyframes spin-reverse {
+            0% {
+                -webkit-transform: rotate(360deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(0deg);
+            }
+        }
+
+        @keyframes spin-reverse {
+            0% {
+                transform: rotate(360deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        /* Loading text animation */
+        .loading-text {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #3498db;
+            font-family: Arial, sans-serif;
+            letter-spacing: 2px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+
+        @-webkit-keyframes load-out {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes load-out {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+    <!-- Styles for the No-JavaScript message -->
+    <style>
+        .no-js-message {
+            background: #2c4762;
+            color: red;
+            font-size: 20px;
+            text-align: center;
+            padding: 20px;
+            z-index: 999999999999999999999999999999999999999999999;
+            position: fixed;
+            width: 100%;
+            top: 0;
+        }
+    </style>
+
+    <!-- No-JavaScript message -->
+    <noscript>
+        <div class="no-js-message">
+            Please enable JavaScript to use this website properly.
+        </div>
+    </noscript>
+    <div class="loader">
+        <div class="loaderr-container">
+            <div class="loaderr"></div>
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+
+    </div>
+    <script>
+        // This function will execute after the full page has finished loading
+        window.onload = function () {
+            // Trigger fade-out animation for the loader
+            document.querySelector('.loaderr').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+            document.querySelector('.loaderr').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+            document.querySelector('.loading-text').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+            document.querySelector('.loading-text').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+            document.querySelector('.loader').style.animation = 'load-out 4s forwards';
+            document.querySelector('.loader').style.webkitAnimation = 'load-out 4s forwards';
+
+        }
+    </script>
+    <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+    <style>
+        /* Navigation Bar Styles */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #333333d0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 3;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-item a {
+            display: block;
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nav-item a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 3;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            z-index: 3;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: black;
+            text-decoration: none;
+            padding: 12px 16px;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .navbar-toggle {
+            display: none;
+            background-color: #333;
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                display: none;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .navbar-toggle {
+                display: block;
+            }
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById("navbarLinks");
+            navLinks.classList.toggle("show");
+        }
+    </script>
+
+
+
+    <nav class="navbar">
+        <div class="navbar-header">
+            <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+            <ul class="nav-links" id="navbarLinks">
+                <li class="nav-item"><a href="/">Home</a></li>
+                <li class="nav-item"><a href="/#products">Products</a></li>
+                <li class="nav-item"><a href="/#help">Help</a></li>
+                <li class="nav-item"><a href="/#about">About</a></li>
+                <li class="nav-item dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">More</a>
+                    <div class="dropdown-content">
+                        <a href="/#portfolio">Portfolio</a>
+                        <a href="/#contact">Contact</a>
+                        <a href="/#blog">Blog</a>
+                        <a href="/live-chat">Live Chat</a>
+                        <a href="/live-game">Live Chat and Game</a>
+                        <a href="/puzzle-squares">Puzzle Squares</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
     <style>
         /* Base styles */
         body {
@@ -45,6 +391,7 @@
         .midi-visualizer {
             flex: 2;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             background: black;
@@ -53,20 +400,38 @@
             color: white;
         }
 
-        .playing-text {
-            font-size: 20px;
+        canvas {
+            width: 100%;
+            height: 80%;
         }
 
-        .loading-text {
-            font-size: 16px;
-            color: yellow;
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .playing-text {
+            font-size: 20px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+
+
+        .timeline {
+            width: 90%;
+            margin: 10px auto;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <div class="song-list">
-            <div class="song-item" onclick="playTrack('The%20Echos%20of%20the%20Bells.mid', 'The%20Echos%20of%20the%20Bells.mp3')">
+        <div class="song-list" style="padding-top: 50px;">
+            <div class="song-item"
+                onclick="playTrack('The%20Echos%20of%20the%20Bells.mid', 'The%20Echos%20of%20the%20Bells.mp3')">
                 The Echos of the Bells
             </div>
             <div class="song-item" onclick="playTrack('track1.mid', 'track1.mp3')">
@@ -78,57 +443,143 @@
             <div class="song-item" onclick="playTrack('track3.mid', 'track3.mp3')">
                 Track 3
             </div>
+            <p>©2024 Unlim8ted Studio Productions. All rights reserved.</p>
         </div>
+
         <div class="midi-visualizer" id="visualizer">
-            <div class="playing-text" id="playingText">Select a song to play</div>
-            <div class="loading-text" id="loadingText" style="display: none;">Loading...</div>
+            <canvas id="midiCanvas"></canvas>
+            <div class="controls">
+                <button onclick="pauseTrack()">Pause</button>
+                <button onclick="resumeTrack()">Start</button>
+                <input type="range" id="timeline" class="timeline" min="0" max="100" value="0" step="1"
+                    onchange="seekTrack(event)">
+                <input type="range" id="volume" min="0" max="1" step="0.01" value="1" onchange="setVolume(event)">
+            </div>
         </div>
     </div>
 
     <script>
-        async function playTrack(midiFilename, audioFilename) {
+        const canvas = document.getElementById('midiCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth / 2;
+        canvas.height = window.innerHeight * 0.8;
+
+        let notes = [];
+        let startTime = null;
+        let audio = null;
+        let isPlaying = false;
+        let midiDuration = 0;
+        let colorPalette = ['#8b00ff', '#5200a3', '#ff00ff', '#a800ff', '#660099'];
+
+        function drawNotes() {
+            if (!isPlaying) return;
+
+            const currentTime = performance.now() - startTime;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            notes.forEach(note => {
+                const timeOffset = note.startTime - currentTime;
+                const y = canvas.height - (timeOffset / 10); // Align with audio timing
+
+                if (y > canvas.height || y < -20) return; // Skip notes outside canvas
+
+                const instrumentColor = colorPalette[note.instrument % colorPalette.length];
+                ctx.fillStyle = instrumentColor;
+                ctx.fillRect(note.midi * 10, y, 8, 20); // Note position and size
+            });
+
+            requestAnimationFrame(drawNotes);
+        }
+
+        function playTrack(midiFilename, audioFilename) {
             const midiFileUrl = `https://unlim8ted.com/music/${midiFilename}`;
             const audioFileUrl = `https://unlim8ted.com/music/${audioFilename}`;
 
-            const playingText = document.getElementById('playingText');
-            const loadingText = document.getElementById('loadingText');
 
-            // Show loading message
-            playingText.textContent = `Loading: ${decodeURIComponent(midiFilename)}`;
-            loadingText.style.display = 'block';
+            const timeline = document.getElementById('timeline');
 
-            try {
-                // Ensure the MIDI file is fetched for visualization
-                const midiResponse = await fetch(midiFileUrl);
-                if (!midiResponse.ok) throw new Error("Failed to load MIDI file");
 
-                // Parse MIDI file for visualization (this is a placeholder for actual MIDI visualization logic)
-                console.log("MIDI file loaded for visualization:", midiFilename);
+            if (audio) {
+                audio.pause();
+                audio = null;
+            }
 
-                // Play the MP3 audio file
-                const audio = new Audio(audioFileUrl);
-                audio.addEventListener('canplaythrough', () => {
-                    loadingText.style.display = 'none';
-                    playingText.textContent = `Playing: ${decodeURIComponent(audioFilename)}`;
-                    audio.play().catch((error) => {
+            fetch(midiFileUrl)
+                .then(response => response.arrayBuffer())
+                .then(data => {
+                    const midi = new Midi(data);
+
+                    notes = midi.tracks.flatMap((track, index) =>
+                        track.notes.map(note => ({
+                            midi: note.midi,
+                            startTime: note.time * 1000, // Convert to milliseconds
+                            duration: note.duration * 1000,
+                            instrument: index
+                        }))
+                    );
+
+                    midiDuration = midi.duration * 1000; // Duration in milliseconds
+                    timeline.max = midiDuration;
+
+                    startTime = performance.now();
+                    drawNotes();
+
+                    audio = new Audio(audioFileUrl);
+                    audio.volume = parseFloat(document.getElementById('volume').value);
+                    audio.play().then(() => {
+                        isPlaying = true;
+
+                        audio.ontimeupdate = () => {
+                            timeline.value = audio.currentTime * 1000;
+                        };
+                        drawNotes();
+                    }).catch(error => {
                         console.error("Error playing audio file:", error);
-                        playingText.textContent = `Error: Unable to play ${decodeURIComponent(audioFilename)}`;
+
                     });
+
+                    audio.onended = () => {
+                        isPlaying = false;
+                    };
+                })
+                .catch(error => {
+                    console.error("Error loading MIDI file:", error);
+
                 });
 
-                audio.addEventListener('error', () => {
-                    loadingText.style.display = 'none';
-                    playingText.textContent = `Error: Unable to load ${decodeURIComponent(audioFilename)}`;
-                    console.error("Error loading audio file:", audio.error);
-                });
+        }
 
-            } catch (error) {
-                // Handle errors while fetching the MIDI file
-                loadingText.style.display = 'none';
-                playingText.textContent = `Error: Unable to load ${decodeURIComponent(midiFilename)}`;
-                console.error("Error loading MIDI file:", error);
+        function pauseTrack() {
+            if (audio && isPlaying) {
+                audio.pause();
+                isPlaying = false;
+            }
+        }
+
+        function resumeTrack() {
+            if (audio && !isPlaying) {
+                audio.play();
+                isPlaying = true;
+                startTime = performance.now() - audio.currentTime * 1000;
+                drawNotes();
+            }
+        }
+
+        function seekTrack(event) {
+            const seekTime = event.target.value;
+            if (audio) {
+                audio.currentTime = seekTime / 1000;
+                startTime = performance.now() - seekTime;
+                drawNotes();
+            }
+        }
+
+        function setVolume(event) {
+            if (audio) {
+                audio.volume = parseFloat(event.target.value);
             }
         }
     </script>
 </body>
+
 </html>
