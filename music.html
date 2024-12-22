@@ -469,29 +469,46 @@
         let audio = null;
         let isPlaying = false;
         let midiDuration = 0;
-        let colorPalette = ['#ff00c1', '#9600ff', '#4900ff', '#00b8ff', '#00fff9'];
+        let colorPalette = [
+            '#ff00c1', // Bright pink
+            '#9600ff', // Vivid violet
+            '#4900ff', // Deep indigo
+            '#00b8ff', // Bright blue
+            '#00fff9', // Aqua cyan
+            '#ff7400', // Vibrant orange
+            '#ffcc00', // Bold yellow
+            '#9cff00', // Lime green
+            '#00ff6b', // Bright green
+            '#ff003c', // Scarlet red
+            '#00ffcc', // Teal
+            '#3c00ff', // Rich purple
+            '#eaff00', // Lemon yellow
+            '#ff0074', // Magenta
+            '#00ff96', // Mint green
+        ];
+
 
         function drawNotes() {
             if (!isPlaying) return;
-        
+
             const currentTime = performance.now() - startTime;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
+
             notes.forEach(note => {
                 const timeOffset = note.startTime - currentTime;
-                const y = canvas.height - (timeOffset / 10) -  note.duration / 10; // Align with audio timing
+                const y = canvas.height - (timeOffset / 10) - note.duration / 10; // Align with audio timing
                 const noteHeight = note.duration / 10; // Scale duration for visual representation
-        
+
                 if (y > canvas.height || y + noteHeight < 0) return; // Skip notes outside canvas
-        
+
                 const instrumentColor = colorPalette[note.instrument % colorPalette.length];
                 ctx.fillStyle = instrumentColor;
                 ctx.fillRect(note.midi * 10, y, 8, noteHeight); // Note position and size
             });
-        
+
             requestAnimationFrame(drawNotes);
         }
-        
+
 
         function playTrack(midiFilename, audioFilename) {
             const midiFileUrl = `https://unlim8ted.com/music/${midiFilename}`;
