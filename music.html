@@ -317,6 +317,91 @@
                 display: block;
             }
         }
+                .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .controls button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .controls input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            background: linear-gradient(to right, #007bff, #0056b3);
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #ffffff;
+            border: 2px solid #007bff;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .controls input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .controls input[type="range"]::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            background: #ffffff;
+            border: 2px solid #007bff;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .controls input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 600px) {
+            .controls button {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+
+            .controls input[type="range"] {
+                width: 150px;
+            }
+        }
+
+        @media (min-width: 601px) {
+            .controls input[type="range"] {
+                width: 200px;
+            }
+        }
+
     </style>
     <script>
         function toggleMenu() {
@@ -448,7 +533,7 @@
 
         <div class="midi-visualizer" id="visualizer">
             <canvas id="midiCanvas"></canvas>
-            <div class="controls">
+            <div class="controls" id="controls">
                 <button onclick="pauseTrack()">Pause</button>
                 <button onclick="resumeTrack()">Start</button>
                 <input type="range" id="timeline" class="timeline" min="0" max="100" value="0" step="1"
@@ -490,24 +575,43 @@
 
         function drawNotes() {
             if (!isPlaying) return;
-
+        
             const currentTime = performance.now() - startTime;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+        
+            const noteWidth = canvas.width / 128; // Scale width based on the canvas size (MIDI range has 128 keys)
+        
             notes.forEach(note => {
                 const timeOffset = note.startTime - currentTime;
                 const y = canvas.height - (timeOffset / 10) - note.duration / 10; // Align with audio timing
                 const noteHeight = note.duration / 10; // Scale duration for visual representation
-
+        
                 if (y > canvas.height || y + noteHeight < 0) return; // Skip notes outside canvas
-
-                const instrumentColor = colorPalette[note.instrument % colorPalette.length];
+        
+                const instrumentIndex = note.instrument % colorPalette.length;
+                const instrumentColor = colorPalette[instrumentIndex];
+        
+                // Offset each instrument slightly for clarity
+                const x = (note.midi * noteWidth); // Slight horizontal offset per instrument
+        
                 ctx.fillStyle = instrumentColor;
-                ctx.fillRect(note.midi * 10, y, 8, noteHeight); // Note position and size
+                ctx.fillRect(x, y, noteWidth - 2, noteHeight); // Note position and size
             });
-
+        
             requestAnimationFrame(drawNotes);
         }
+        
+        // Adjust canvas size dynamically for both desktop and mobile
+        function resizeCanvas() {
+            const isMobile = /Mobi|Android/i.test(navigator.userAgent); // Simple mobile detection
+            canvas.width = isMobile ? window.innerWidth : Math.min(window.innerWidth, 1280); // Full width on mobile, max width on desktop
+            canvas.height = isMobile ? window.innerHeight * 0.7 : window.innerHeight * 0.8; // Adjust height slightly for each platform
+        }
+        
+        // Listen for window resize events
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas(); // Initial setup
+        
 
 
         function playTrack(midiFilename, audioFilename) {
