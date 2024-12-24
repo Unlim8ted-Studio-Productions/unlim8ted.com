@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Unlim8ted</title>
+    <meta name="description" content="'About Us' Unlim8ted Studio Productions is a dynamic entertainment company based in the united states . our mission is to create engaging and innovative experiences across a variety of media . the animated film follows the adventures of a meatball Learn more at Unlim8ted Studio Productions." name="description"/>
+  <style media="screen" type="text/css">
+    .layer1_class {
+      position: absolute;
+      z-index: 1;
+      top: 100px;
+      left: 0px;
+      visibility: visible;
+    }
+
+    .layer2_class {
+      position: absolute;
+      z-index: 2;
+      top: 10px;
+      left: 10px;
+      visibility: hidden;
+    }
+
+    .loader {
+      position: fixed;
+      background-color: black;
+      opacity: 1;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0%;
+      z-index: 999999988;
+      pointer-events: none;
+    }
+
+    .loaderr-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      /* To stack spinner and text vertically */
+      height: 100vh;
+      /* Full viewport height to ensure vertical centering */
+    }
+
+    .loaderr {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 8px solid transparent;
+      border-top: 8px solid #3498db;
+      border-right: 8px solid #e74c3c;
+      border-bottom: 8px solid #f1c40f;
+      border-left: 8px solid #9b59b6;
+      -webkit-animation: spin 1.5s linear infinite;
+      animation: spin 1.5s linear infinite;
+      box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
+      position: relative;
+    }
+
+    .loaderr:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid transparent;
+      border-top: 8px solid rgba(52, 152, 219, 0.7);
+      border-right: 8px solid rgba(231, 76, 60, 0.7);
+      border-bottom: 8px solid rgba(241, 196, 15, 0.7);
+      border-left: 8px solid rgba(155, 89, 182, 0.7);
+      -webkit-animation: spin-reverse 1.5s linear infinite;
+      animation: spin-reverse 1.5s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @-webkit-keyframes spin-reverse {
+      0% {
+        -webkit-transform: rotate(360deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(0deg);
+      }
+    }
+
+    @keyframes spin-reverse {
+      0% {
+        transform: rotate(360deg);
+      }
+
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+
+    /* Loading text animation */
+    .loading-text {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #3498db;
+      font-family: Arial, sans-serif;
+      letter-spacing: 2px;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+
+    @-webkit-keyframes load-out {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
+
+    @keyframes load-out {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
+  </style>
+  <!-- Styles for the No-JavaScript message -->
+  <style>
+    .no-js-message {
+      background: #2c4762;
+      color: red;
+      font-size: 20px;
+      text-align: center;
+      padding: 20px;
+      z-index: 999999999999999999999999999999999999999999999;
+      position: fixed;
+      width: 100%;
+      top: 0;
+    }
+  </style>
+
+  <!-- No-JavaScript message -->
+  <noscript>
+    <div class="no-js-message">
+      Please enable JavaScript to use this website properly.
+    </div>
+  </noscript>
+  <div class="loader">
+    <div class="loaderr-container">
+      <div class="loaderr"></div>
+      <div class="loading-text">Loading...</div>
+    </div>
+  </div>
+
+  </div>
+  <script>
+    // This function will execute after the full page has finished loading
+    window.onload = function () {
+      // Trigger fade-out animation for the loader
+      document.querySelector('.loaderr').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+      document.querySelector('.loaderr').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+      document.querySelector('.loading-text').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+      document.querySelector('.loading-text').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+      document.querySelector('.loader').style.animation = 'load-out 4s forwards';
+      document.querySelector('.loader').style.webkitAnimation = 'load-out 4s forwards';
+
+    }
+  </script>
+  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+  
+    <title>About Us</title>
+    <style>
+        /* Base styles */
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            cursor: none; /* Hide the default cursor */
+        }
+
+        .container {
+            max-width: 800px;
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #8b00ff;
+            border-radius: 10px;
+            background: linear-gradient(145deg, #2d033b, #12001e);
+            box-shadow: 0 0 20px rgba(139, 0, 255, 0.6);
+            opacity: 0;
+            transform: translateY(100px);
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        /* Slide-up animation */
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1, p, a.button {
+            transition: transform 0.3s, color 0.3s;
+        }
+
+        h1 {
+            color: #ffffff;
+            text-shadow: 0 0 5px #ffffff, 0 0 10px #8b00ff, 0 0 15px #ffffff;
+        }
+
+        p {
+            color: #ddd;
+        }
+
+        a.button {
+            color: #8b00ff;
+            text-decoration: none;
+            font-weight: bold;
+            background: black;
+            border: 2px solid #8b00ff;
+            padding: 15px 25px;
+            font-size: 18px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        h1:hover, p:hover, a.button:hover {
+            color: #dba4ff;
+            transform: scale(1.05);
+            background-color: #1a002e;
+            box-shadow: 0 0 15px rgba(139, 0, 255, 0.5);
+        }
+
+        .icon-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .icon {
+            position: absolute;
+            transition: transform 0.5s ease-out, opacity 0.5s ease;
+            opacity: 0; /* Start icons as invisible */
+        }
+
+        .container.expanded {
+            max-height: 120%; /* Example of expansion */
+            transition: max-height 0.5s ease-out;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            position: fixed;
+            border-radius: 50%;
+            background-color: rgba(139, 0, 255, 0.7);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, width 0.1s, height 0.1s;
+            box-shadow: 0 0 10px rgba(139, 0, 255, 0.6), 0 0 15px rgba(219, 164, 255, 0.5);
+        }
+
+        h1:hover ~ .cursor, p:hover ~ .cursor, a.button:hover ~ .cursor {
+            width: 30px;
+            height: 30px;
+            background-color: rgba(219, 164, 255, 0.7);
+        }
+    </style>
+    <style>
+      
+/* Navigation Bar Styles */
+.navbar {
+  display: flex;
+  justify-content: center;
+  background-color: #333333d0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 3;
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-item a {
+  display: block;
+  color: white;
+  padding: 14px 20px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.nav-item a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 3;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+  z-index: 3;
+}
+      .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f9f9f9;
+          box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .dropdown:hover .dropdown-content {
+          display: block;
+      }
+
+      .dropdown-content a {
+          color: black;
+          text-decoration: none;
+          padding: 12px 16px;
+          display: block;
+      }
+
+      .dropdown-content a:hover {
+          background-color: #ddd;
+      }
+
+      .navbar-toggle {
+          display: none;
+          background-color: #333;
+          color: white;
+          padding: 14px 20px;
+          border: none;
+          cursor: pointer;
+          font-size: 18px;
+      }
+
+      /* Responsive styles */
+      @media (max-width: 768px) {
+          .nav-links {
+              flex-direction: column;
+              display: none;
+          }
+
+          .nav-links.show {
+              display: flex;
+          }
+
+          .navbar-toggle {
+              display: block;
+          }
+      }
+  </style>
+  <script>
+      function toggleMenu() {
+          const navLinks = document.getElementById("navbarLinks");
+          navLinks.classList.toggle("show");
+      }
+  </script>
+
+
+
+  <nav class="navbar">
+      <div class="navbar-header">
+          <button class="navbar-toggle" style="position:absolute; top:5px; left:1%"
+              onclick="toggleMenu()">☰</button>
+          <ul class="nav-links" id="navbarLinks">
+              <li class="nav-item"><a href="/">Home</a></li>
+              <li class="nav-item"><a href="/#products">Products</a></li>
+              <li class="nav-item"><a href="/#help">Help</a></li>
+              <li class="nav-item"><a href="/#about">About</a></li>
+              <li class="nav-item dropdown">
+                  <a href="javascript:void(0)" class="dropbtn">More</a>
+                  <div class="dropdown-content">
+                      <a href="/#portfolio">Portfolio</a>
+                      <a href="/#contact">Contact</a>
+                      <a href="/#blog">Blog</a>
+                      <a href="/live-chat">Live Chat</a>
+                      <a href="/live-game">Live Chat and Game</a>
+                      <a href="/puzzle-squares">Puzzle Squares</a>
+                  </div>
+              </li>
+          </ul>
+      </div>
+  </nav>
+    <style>
+        body {
+            background: linear-gradient(145deg, #2d033b, #12001e);
+            background-attachment: fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            margin: 0;
+            cursor: none;
+            overflow-y: auto;
+        }
+
+        .container {
+            max-width: 800px;
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #8b00ff;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 20px rgba(139, 0, 255, 0.6);
+            opacity: 0;
+            transform: translateY(100px);
+            animation: slideUp 1s ease-out forwards;
+            margin: 50px auto;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1, p, a.button {
+            transition: transform 0.3s, color 0.3s;
+        }
+
+        h1 {
+            color: #ffffff;
+            text-shadow: 0 0 5px #ffffff, 0 0 10px #8b00ff, 0 0 15px #ffffff;
+        }
+
+        p {
+            color: #ddd;
+        }
+
+        a.button {
+            color: #8b00ff;
+            text-decoration: none;
+            font-weight: bold;
+            background: black;
+            border: 2px solid #8b00ff;
+            padding: 15px 25px;
+            font-size: 18px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        h1:hover, p:hover, a.button:hover {
+            color: #dba4ff;
+            transform: scale(1.05);
+            background-color: #1a002e;
+            box-shadow: 0 0 15px rgba(139, 0, 255, 0.5);
+        }
+
+        .container.expanded {
+            max-height: 120%;
+            transition: max-height 0.5s ease-out;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            position: fixed;
+            border-radius: 50%;
+            background-color: rgba(139, 0, 255, 0.7);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, width 0.1s, height 0.1s;
+            box-shadow: 0 0 10px rgba(139, 0, 255, 0.6), 0 0 15px rgba(219, 164, 255, 0.5);
+        }
+
+        h1:hover ~ .cursor, p:hover ~ .cursor, a.button:hover ~ .cursor strong:hover ~ .cursor{
+            width: 30px;
+            height: 30px;
+            background-color: rgba(219, 164, 255, 0.7);
+        }
+
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: moveParticle linear infinite;
+        }
+
+        @keyframes moveParticle {
+            from {
+                transform: translateY(0) translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(100vh) translateX(calc(100vw * (random() - 0.5)));
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Privacy Policy for Unlim8ted Studio Productions</h1>
+    <p>At Unlim8ted Studio Productions, your privacy is a top priority. This Privacy Policy explains how we collect, use, and protect your personal information across our various platforms, including our website, games, software, and other digital services. By accessing our services, you consent to the practices outlined in this policy.</p>
+
+    <h2>Information We Collect</h2>
+    <ul>
+        <p><strong>Personal Information:</strong> When you register for our services, we may collect details such as your name, email address, and other contact information.</p>
+        <p><strong>Usage Data:</strong> Information about how you interact with our services, including pages visited, time spent, and actions performed within our games and software.</p>
+        <p><strong>Device Information:</strong> Details about the device you use to access our services, such as operating system, browser type, and IP address.</p>
+        <p><strong>Cookies and Tracking Data:</strong> Small files stored on your device to improve functionality, analyze usage, and personalize your experience.</p>
+    </ul>
+
+    <h2>How We Use Your Information</h2>
+    <ul>
+        <p><strong>Provide and Improve Services:</strong> To deliver and enhance the quality of our games, software, and digital tools.</p>
+        <p><strong>Personalization:</strong> To tailor your experience based on your preferences and usage patterns.</p>
+        <p><strong>Communication:</strong> To send updates, respond to inquiries, and share promotional content (with your consent).</p>
+        <p><strong>Analytics:</strong> To understand user behavior and optimize our offerings.</p>
+        <p><strong>Security:</strong> To ensure the integrity and safety of our platforms and prevent unauthorized access.</p>
+    </ul>
+
+    <h2>How We Protect Your Data</h2>
+    <ul>
+        <p><strong>Encryption:</strong> We use secure encryption methods to protect sensitive data during transmission.</p>
+        <p><strong>Access Controls:</strong> Data access is limited to authorized personnel only, ensuring your information is safe.</p>
+        <p><strong>Regular Audits:</strong> We perform routine checks to identify and address potential vulnerabilities.</p>
+    </ul>
+
+    <h2>Sharing Your Information</h2>
+    <p>We do not sell or share your personal information with third parties except in the following situations:</p>
+    <ul>
+        <p><strong>Service Providers:</strong> Trusted third-party vendors who assist us in delivering our services (e.g., payment processors, analytics providers).</p>
+        <p><strong>Legal Requirements:</strong> When required by law or in response to valid legal requests.</p>
+        <p><strong>Consent:</strong> When you explicitly consent to sharing your information for specific purposes.</p>
+    </ul>
+
+    <h2>Your Rights and Choices</h2>
+    <ul>
+        <p><strong>Access and Update:</strong> You have the right to access and update your personal information at any time.</p>
+        <p><strong>Opt-Out:</strong> You can opt out of receiving promotional communications by following the unsubscribe instructions included in emails.</p>
+        <p><strong>Data Deletion:</strong> Request the deletion of your personal data, subject to legal obligations.</p>
+    </ul>
+
+    <h2>Cookies and Tracking Technologies</h2>
+    <p>We use cookies and similar tracking technologies to improve your experience on our platform. By using our services, you consent to the use of these technologies unless you opt out. You can manage your cookie preferences through your browser settings.</p>
+
+    <h2>Children’s Privacy</h2>
+    <p>Our services are not directed at children under the age of 13. We do not knowingly collect personal information from children. If we become aware that we have collected data from a child, we will take steps to delete it.</p>
+
+    <h2>Changes to This Privacy Policy</h2>
+    <p>We may update this Privacy Policy periodically to reflect changes in our practices or for legal, regulatory, or operational reasons. You will be notified of significant changes through our website or by other means.</p>
+
+    <h2>Contact Us</h2>
+    <p>If you have any questions or concerns about this Privacy Policy or how we handle your data, please contact us:</p>
+    <ul>
+        <p><strong>support@unlim8ted.com:</strong> For privacy-related inquiries or concerns.</p>
+        <p><strong>contact@unlim8ted.com:</strong> For general inquiries.</p>
+    </ul>
+
+    <h2>Your Consent</h2>
+    <p>By using our services, you consent to the collection and use of information as outlined in this Privacy Policy.</p>
+</div>
+
+
+        <a href="/#contact" class="button">Contact Us</a>
+            <!-- Copyright -->
+    <div style="margin-top: 20px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+
+    </div>
+
+    <!-- Custom cursor element -->
+    <div class="cursor" id="cursor"></div>
+
+    <script>
+      // JavaScript to make the custom cursor follow the mouse
+      const cursor = document.getElementById("cursor");
+      document.addEventListener("mousemove", (e) => {
+          cursor.style.top = `${e.clientY}px`;
+          cursor.style.left = `${e.clientX}px`;
+      });
+  
+      // Expand container based on scroll position
+      document.addEventListener("scroll", function() {
+          const scrollPercentage = window.scrollY / (document.body.offsetHeight - window.innerHeight);
+          if (scrollPercentage > 0.1) {
+              document.querySelector('.container').classList.add('expanded');
+          } else {
+              document.querySelector('.container').classList.remove('expanded');
+          }
+      });
+  
+      // Particle background effect with a limit
+      const particleLimit = 100; // Maximum number of particles
+      let activeParticles = 0;
+  
+      function createParticle() {
+          if (activeParticles >= particleLimit) return; // Stop if the limit is reached
+  
+          const particle = document.createElement('div');
+          particle.classList.add('particle');
+          document.body.appendChild(particle);
+          activeParticles++;
+  
+          const size = Math.random() * 5 + 1;
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          particle.style.top = `${Math.random() * window.innerHeight}px`;
+          particle.style.left = `${Math.random() * window.innerWidth}px`;
+          particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+  
+          particle.addEventListener('animationend', () => {
+              particle.remove();
+              activeParticles--; // Decrease count when particle is removed
+          });
+      }
+  
+      setInterval(createParticle, 100);
+  </script>
+  
+</body>
+</html>

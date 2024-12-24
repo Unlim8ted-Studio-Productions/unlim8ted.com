@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with Auth0</title>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(145deg, #1d1d3d, #080820);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #6c3483;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #9b59b6;
+        }
+
+        #profile {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-top: 10px;
+        }
+
+        #profile p {
+            font-size: 18px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Auth0 Login</h1>
+    <button id="login">Login</button>
+    <button id="logout">Logout</button>
+    <div id="profile"></div>
+    
+    <script>
+        auth0.createAuth0Client({
+            domain: "dev-pg5jutq8l5zbi8uy.us.auth0.com",
+            clientId: "5txBzrup3dVbAQavFL9F8J36dfe4710h",
+            authorizationParams: {
+                redirect_uri: "https://unlim8ted.com/login#callback" // Exact match with your Auth0 settings
+            }
+        }).then(async (auth0Client) => {
+        
+            // Login button
+            const loginButton = document.getElementById("login");
+            loginButton.addEventListener("click", (e) => {
+                e.preventDefault();
+                auth0Client.loginWithRedirect();
+            });
+
+            // Handle Auth0 redirect callback
+            if (location.search.includes("state=") &&
+                (location.search.includes("code=") || location.search.includes("error="))) {
+                await auth0Client.handleRedirectCallback();
+                window.history.replaceState({}, document.title, "/");
+            }
+
+            // Logout button
+            const logoutButton = document.getElementById("logout");
+            logoutButton.addEventListener("click", (e) => {
+                e.preventDefault();
+                auth0Client.logout({ returnTo: window.location.origin });
+            });
+
+            // Check authentication and display profile
+            const isAuthenticated = await auth0Client.isAuthenticated();
+            const userProfile = await auth0Client.getUser();
+
+            const profileElement = document.getElementById("profile");
+            if (isAuthenticated) {
+                profileElement.style.display = "block";
+                profileElement.innerHTML = `
+                    <p>${userProfile.name}</p>
+                    <img src="${userProfile.picture}" alt="Profile Picture" />
+                `;
+            } else {
+                profileElement.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
