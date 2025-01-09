@@ -1907,11 +1907,6 @@
   <script>
     function showContent() {
       var hash = window.location.hash || '#home';
-      if (hash == '#home') {
-        if (localStorage.getItem('theme') === 'dark') { // check if dark mode is enabled
-          hash = '#dark-home'
-        }
-      }
       const sections = document.querySelectorAll('.content-section');
       sections.forEach(section => {
         section.style.display = section.id === hash.substring(1) ? 'block' : 'none';
