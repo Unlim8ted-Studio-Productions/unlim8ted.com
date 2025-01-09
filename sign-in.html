@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Sign-In</title>
+  <title>Unlim8ted Sign-In</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
@@ -102,8 +102,8 @@
 
   <!-- Sign-in container -->
   <div class="container">
-    <div class="logo">Google</div>
-    <p>Sign in to continue to your account</p>
+    <div class="logo">Sign In</div>
+    <p>Sign in or sign up to continue to your account</p>
     <div id="g_id_onload"
          data-client_id="657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com"
          data-login_uri="https://unlim8ted.com" 
@@ -130,7 +130,7 @@
     function handleCredentialResponse(response) {
       console.log("Encoded JWT ID token: " + response.credential);
       // Redirect to the products section
-      window.location.href = '#products';
+      window.location.href = 'unlim8ted.com#products';
     }
   </script>
 </body>
