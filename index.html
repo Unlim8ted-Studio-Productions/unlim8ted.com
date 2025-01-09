@@ -958,79 +958,127 @@
 <!-- Section 4 -->
 <div class="section" id="section4">
   <div class="categories">
-    <div class="category category-left" onclick="alert('Category 1 clicked!')">Category 1</div>
-    <div class="category category-right" onclick="alert('Category 2 clicked!')">Category 2</div>
-    <div class="category category-left" onclick="alert('Category 3 clicked!')">Category 3</div>
-    <div class="category category-right" onclick="alert('Category 4 clicked!')">Category 4</div>
+    <a href="#films" class="product-box">
+      <img src="images/products/films/The Life of a Meatball.jpg" alt="Films">
+      <h2>Films</h2>
+      <p>Explore our latest films.</p>
+    </a>
+    <a href="/music" class="product-box">
+      <img src="images/products/music/music icon.png" alt="Music">
+      <h2>Music</h2>
+      <p>Listen to our newest music releases.</p>
+    </a>
+    <a href="/podcasts" class="product-box">
+      <img src="images/products/podcasts/podcasts icon.png" alt="Podcasts">
+      <h2>Podcasts</h2>
+      <p>Listen to our newest podcasts.</p>
+    </a>
+    <a href="#books" class="product-box">
+      <img src="images/products/books/book icon.png" alt="Books">
+      <h2>Books</h2>
+      <p>Read our latest books.</p>
+    </a>
+    <a href="#games" class="product-box">
+      <img src="images/products/games/image.webp" alt="Games">
+      <h2>Games</h2>
+      <p>Play fun and challenging games.</p>
+    </a>
+    <a href="shop" class="product-box">
+      <img src="images/products/clothes/image.webp" alt="Clothes">
+      <h2>Physical Items</h2>
+      <p>Check out our stylish clothes.</p>
+    </a>
+    <a href="#software" class="product-box">
+      <img
+        src="https://github.com/Unlim8ted-Studio-Productions/Square-Pixels/blob/main/src/Recources/program%20recources/Screenshot%202023-09-21%20181742.png?raw=true"
+        alt="Software">
+      <h2>Software</h2>
+      <p>Explore our apps and video games.</p>
+    </a>
+    <a href="#AI" class="product-box">
+      <img src="images/products/ai/ai icon.png" alt="AI">
+      <h2>AI</h2>
+      <p>Explore our AI products.</p>
+    </a>
   </div>
 </div>
 
 <style>
-  /* Section 4 Styling */
   #section4 {
+    height: 200vh; /* Double height to allow scrolling */
     display: flex;
-    justify-content: center;
     align-items: center;
-    position: relative;
+    justify-content: center;
     overflow: hidden;
+    position: relative;
+    background-color: #1a1a1a;
   }
 
   .categories {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: translateY(100%); /* Start out of view */
+  }
+
+  .product-box {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 10px;
+    padding: 1rem;
+    transform: translateX(-150%);
+    transition: transform 0.3s ease;
+    cursor: pointer;
     position: relative;
   }
 
-  .category {
-    padding: 1rem 2rem;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: white;
-    background: linear-gradient(135deg, #00ffcc, #ff00ff);
-    border-radius: 5px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
-    position: absolute;
-    opacity: 0;
-    transform: translateX(-100%);
-    transition: transform 0.6s ease, opacity 0.6s ease;
+  .product-box img {
+    max-width: 100px;
+    border-radius: 10px;
+    margin-bottom: 1rem;
   }
 
-  .category-right {
-    transform: translateX(100%);
+  .product-box h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
   }
 
-  #section4.visible .category-left {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-  #section4.visible .category-right {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-  @media (max-width: 768px) {
-    .category {
-      font-size: 1rem;
-    }
+  .product-box p {
+    font-size: 1rem;
   }
 </style>
-
 <script>
-  // Dynamically position the categories at different Y positions
-  const section4 = document.getElementById("section4");
-  const categories = section4.querySelectorAll(".category");
+  const section4 = document.getElementById('section4');
+  const categories = section4.querySelectorAll('.product-box');
 
-  categories.forEach((category, index) => {
-    const yOffset = 50 * index; // Adjust spacing between categories
-    category.style.top = `${yOffset}px`;
+  window.addEventListener('scroll', () => {
+    const sectionTop = section4.offsetTop;
+    const sectionHeight = section4.offsetHeight;
+    const scrollPosition = window.scrollY + window.innerHeight;
+
+    // Calculate scroll progress within Section 4
+    const progress = Math.min(
+      Math.max((scrollPosition - sectionTop) / sectionHeight, 0),
+      1
+    );
+
+    // Move categories in and out
+    categories.forEach((category, index) => {
+      const direction = index % 2 === 0 ? -1 : 1; // Alternate directions
+      const offset = direction * (150 - progress * 300); // Start far, move in, then out
+      category.style.transform = `translateX(${offset}%)`;
+    });
   });
-
-  // Add the fourth section to the observer
-  observer.observe(section4);
 </script>
+
 
 </div>
 
@@ -1232,7 +1280,7 @@
       </a>
       <a href="#software" class="product-box">
         <img
-          src="https://github.com/Unlim8ted-Studio-Productions/Square-Pixels/blob/main/src/Recources/program%20recources/Screenshot%202023-09-21%20181742.png?raw=true"
+          src="unlim8ted.com/images/products/software/Screenshot 2023-09-21 181742(1).png"
           alt="Software">
         <h2>Software</h2>
         <p>Explore our apps and video games.</p>
