@@ -9,8 +9,8 @@
   <meta name="title" content="Unlim8ted" />
   <meta name="description"
     content="Unlim8ted Studio Productions offers innovative entertainment experiences, including films, music, books, games, software, and AI products." />
-
-    <!-- Website / General -->
+    <meta name="google-signin-client_id" content="657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com">
+  <!-- Website / General -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://unlim8ted.com" />
   <meta property="og:title" content="Unlim8ted" />
@@ -661,9 +661,7 @@
             <a href="/puzzle-squares">Puzzle Squares</a>
           </div>
         </li>
-        <a href="/old"><button>Old site</button></a>
-
-
+        <a href="https://unlim8ted.com"><button>Switch to New Experience</button></a>
       </ul>
     </div>
   </nav>
@@ -758,367 +756,750 @@
 
   <a class="cart-btn" href="cart" style="font-size: larger; position: absolute; top: 30px">🛍️</a>
 
+  <div id="home" class="content-section">
 
-  <!-- Dark Mode Content (Initially Hidden) -->
-  <div id="home" style="display: none;">
-    <style>
-      /* Base Styling */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+    <!-- Video Background -->
+    <video autoplay="" muted="" loop="" id="backgroundVideo"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: auto; z-index: 1; object-fit: cover;pointer-events: none; min-height: 150px; max-height: 500px;">
+      <canvas id="canvas" style="z-index:300"></canvas>
+      <source id="video" src="images/back.webm" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
 
-      body {
-        font-family: Arial, sans-serif;
-        color: white;
-        background-color: #000;
-        overflow-x: hidden;
-      }
-
-
-      .navbar a:hover {
-        color: #00ffcc;
-      }
-
-      /* Hero Section */
-      .hero {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        background: linear-gradient(135deg, #1a1a1a, #000000);
-      }
-
-      .hero h1 {
-        font-size: 4rem;
-        text-shadow: 0 0 20px #00ffcc, 0 0 30px #ff00ff;
-        margin-bottom: 1rem;
-        animation: glow 2s infinite alternate;
-      }
-
-      .hero p {
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
-      }
-
-      .hero button {
-        padding: 1rem 2rem;
-        font-size: 1rem;
-        font-weight: bold;
-        background: #00ffcc;
-        color: #000;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-
-      .hero button:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 20px #00ffcc;
-      }
-
-      /* Scrollable Content Sections */
-      .section {
-        height: 100vh;
-        padding: 5rem 2rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        opacity: 0;
-        transform: translateY(50px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-      }
-
-      .section.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      .section img {
-        max-width: 80%;
-        margin: 2rem 0;
-        border-radius: 10px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-      }
-
-      .section h2 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-      }
-
-      .section p {
-        max-width: 600px;
-        font-size: 1rem;
-        color: #ffffff;
-      }
-
-      /* Footer */
-      .footer {
-        padding: 2rem;
-        background: rgba(0, 0, 0, 0.8);
-        text-align: center;
-      }
-
-      .footer p {
-        color: #aaa;
-      }
-
-      /* Keyframe Animations */
-      @keyframes glow {
-        from {
-          text-shadow: 0 0 10px #00ffcc, 0 0 20px #ff00ff;
-        }
-
-        to {
-          text-shadow: 0 0 20px #00ffcc, 0 0 40px #ff00ff;
-        }
-      }
-      @media (max-width: 768px) {
-        .hero h1 {
-          font-size: 2.5rem;
-        }
-
-        .hero p {
-          font-size: 1rem;
-        }
-
-        .section h2 {
-          font-size: 2rem;
-        }
-
-        .section p {
-          font-size: 0.9rem;
-        }
-      }
-    </style>
-    <style>
-      #image-track {
-        display: flex;
-        gap: 4vmin;
-        transform: translate(0%, -50%);
-        user-select: none;
-        /* -- Prevent image highlighting -- */
-      }
-
-      #image-track>.image {
-        width: 40vmin;
-        height: 56vmin;
-        object-fit: cover;
-        object-position: 100% center;
-      }
-
-    </style>
-
-      <!-- Hero Section -->
-      <div class="hero" id="hero">
-        <h1 style="color:#bcfaf7;">Welcome to Unlim8ted</h1>
-        <p>Innovative entertainment at your fingertips.</p>
-        <a href="/sign-in"><button>Get Started</button></a>
-      </div>
-
-      <!-- Section 1 -->
-      <div style="transform: translateY(-10rem); background-color: #1a1a1a;">
-      <div class="section" id="section1">
-        <h2>Explore the Future</h2>
-        <p>Discover groundbreaking innovations that redefine the future of entertainment.</p>
-        <img src="https://picsum.photos/800/400" alt="Placeholder">
-      </div>
-
-      <!-- Section 2 -->
-      <div class="section" id="section2"> 
-        <h2>Gallery</h2>
-        <p>Take a look at some of our projects and achievements.</p>
-        <div id="image-track" style="margin-top: 14rem;" data-mouse-down-at="0" data-prev-percentage="0">
-          <img class="image" src="" draggable="false" />
-          <img class="image" src="https://unlim8ted.com/images/products/films/The Life of a Meatball.jpg" draggable="false" />
-          <img class="image" src="https://unlim8ted.com/images/products/films/TheGlitchCover.png" draggable="false" />
-          <img class="image" src="https://unlim8ted.com/images/products/software/Screenshot 2023-09-21 181742(1).png" draggable="false" />
-          <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
-          <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
-          <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
-          <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
+    <body>
+      <div id="inner-wrap">
+        <div class="logo" style="z-index: 2;">
+          <a href="/">
+            <img src="images/logo/logo.png" alt="logo"> <!--https://images.unlim8ted.com/logo/logo.png-->
+          </a>
         </div>
-      </div>
-      <!-- Section 3 -->
-<div class="section" id="section3">
-  <div class="content">
-    <div class="text-slide" id="text-slide-left">
-      <h3>Innovate with Us</h3>
-      <p>Explore our latest creative projects shaping the entertainment industry.</p>
-    </div>
-    <div class="image-slide" id="image-slide-right">
-      <img src="https://picsum.photos/300/200" alt="Innovation" />
-    </div>
-  </div>
-</div>
 
-<style>
-  #section3 {
-    padding: 2rem 0.5rem; /* Reduced padding */
-    transform: scale(0.8); /* Scales the entire section to 50% */
-    transform-origin: top center; /* Keeps the scaling centered */
-  }
+        <div class="bg"></div>
 
-  #section3 .content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 400px; /* Reduced max width */
-    margin: 0 auto;
-    gap: 0.75rem; /* Smaller gap */
-  }
+        <style>
+          .content .glitch {
+            font-size: 5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff,
+              0.025em 0.04em 0 #fffc00;
+            animation: glitch 725ms infinite;
+          }
 
-  #section3 .text-slide {
-    flex: 1;
-    opacity: 0;
-    transform: translateX(-25px); /* Reduced translation */
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
+          .content .glitch span {
+            position: absolute;
+            top: 0;
+            left: 0;
+          }
 
-  #section3 .image-slide {
-    flex: 1;
-    opacity: 0;
-    transform: translateX(25px); /* Reduced translation */
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
+          .content .glitch span:first-child {
+            animation: glitch 500ms infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+            transform: translate(-0.04em, -0.03em);
+            opacity: 0.75;
+          }
 
-  #section3.visible .text-slide {
-    opacity: 1;
-    transform: translateX(0);
-  }
+          .content .glitch span:last-child {
+            animation: glitch 375ms infinite;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+            transform: translate(0.04em, 0.03em);
+            opacity: 0.75;
+          }
 
-  #section3.visible .image-slide {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  #section3 .text-slide h3 {
-    font-size: 1rem; /* Smaller font size */
-    margin-bottom: 0.25rem;
-  }
-
-  #section3 .text-slide p {
-    font-size: 0.75rem; /* Smaller font size */
-  }
-
-  #section3 .image-slide img {
-    max-width: 100%;
-    border-radius: 4px; /* Reduced radius */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4); /* Reduced shadow */
-  }
-
-  @media (max-width: 768px) {
-    #section3 .content {
-      flex-direction: column;
-      text-align: center;
-    }
-
-    #section3 .text-slide,
-    #section3 .image-slide {
-      transform: translateX(0);
-    }
-  }
-</style>
-
-<script>
-  // Add the third section to the observer
-  const section3 = document.getElementById("section3");
-  observer.observe(section3);
-</script>
-
-    </div>
-    <script>
-      // Select the container element you want to control
-      const parentDiv = document.querySelector("div[style*='transform: translateY']");
-    
-      // Function to handle scrolling and update transform property
-      const updateTransformOnScroll = () => {
-        const scrollY = window.scrollY; // Get the current scroll position
-        const translateY = -scrollY / 10; // Calculate transform value, adjust the divisor for speed
-    
-        // Apply the transform to the div
-        parentDiv.style.transform = `translateY(${translateY}rem)`;
-      };
-    
-      // Attach the scroll event listener
-      window.addEventListener("scroll", updateTransformOnScroll);
-    </script>
-    
-
-      <!-- Footer -->
-      <div class="footer" id="footer">
-        <p>© 2025 Unlim8ted Studio Productions. All rights reserved.</p>
-      </div>
-
-      <!-- JavaScript for Scroll Animations -->
-      <script>
-        const sections = document.querySelectorAll('.section');
-
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
+          @keyframes glitch {
+            0% {
+              text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff,
+                0.025em 0.04em 0 #fffc00;
             }
-          });
-        }, { threshold: 0.2 });
 
-        sections.forEach((section) => observer.observe(section));
-      </script>
+            15% {
+              text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff,
+                0.025em 0.04em 0 #fffc00;
+            }
 
-      <script>const track = document.getElementById("image-track");
+            16% {
+              text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff,
+                -0.05em -0.05em 0 #fffc00;
+            }
 
-        const handleOnDown = e => track.dataset.mouseDownAt = e.clientX;
+            49% {
+              text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff,
+                -0.05em -0.05em 0 #fffc00;
+            }
 
-        const handleOnUp = () => {
-          track.dataset.mouseDownAt = "0";
-          track.dataset.prevPercentage = track.dataset.percentage;
-        }
+            50% {
+              text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff,
+                0 -0.04em 0 #fffc00;
+            }
 
-        const handleOnMove = e => {
-          if (track.dataset.mouseDownAt === "0") return;
+            99% {
+              text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff,
+                0 -0.04em 0 #fffc00;
+            }
 
-          const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
-            maxDelta = window.innerWidth / 2;
+            100% {
+              text-shadow: -0.05em 0 0 #00fffc, -0.025em -0.04em 0 #fc00ff,
+                -0.04em -0.025em 0 #fffc00;
+            }
+          }
 
-          const percentage = (mouseDelta / maxDelta) * -100,
-            nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
-            nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
 
-          track.dataset.percentage = nextPercentage;
+          /* Base styles for headers */
+          .content h1,
+          .content h2,
+          .content h3 {
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            display: block;
+            font-weight: bold;
+            margin-bottom: 40px;
+            /* Increased spacing */
+            text-align: center;
+            /* Ensure text is centered */
+            padding: 20px;
+            /* Padding around the text */
+          }
 
-          track.animate({
-            transform: `translate(${nextPercentage}%, -50%)`
-          }, { duration: 1200, fill: "forwards" });
+          /* Unique styling for each header */
+          .content h1 {
+            font-size: 4rem;
+            margin: 0;
+          }
 
-          for (const image of track.getElementsByClassName("image")) {
-            image.animate({
-              objectPosition: `${100 + nextPercentage}% center`
-            }, { duration: 1200, fill: "forwards" });
+          .content h2 {
+            font-size: 3rem;
+            margin: 0;
+          }
+
+          .content h3 {
+            font-size: 2rem;
+            margin: 0;
+          }
+
+          /* Black fading background around text */
+          .content h1::before,
+          .content h1::after,
+          .content h2::before,
+          .content h2::after,
+          .content h3::before,
+          .content h3::after {
+            content: attr(data-text);
+            position: absolute;
+            left: -30px;
+            right: -30px;
+            top: -30px;
+            bottom: -30px;
+            opacity: 0.8;
+            z-index: -1;
+            padding: 20px;
+            /* Extra padding around the text */
+            background: radial-gradient(circle, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 70%);
+            animation: glitch-h1 1s infinite alternate-reverse;
+          }
+
+          /* Glitch effect for h1 */
+          .content h1::before,
+          .content h1::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            opacity: 0.8;
+            z-index: -1;
+            animation: glitch-h1 1s infinite alternate-reverse;
+          }
+
+          .content h1::after {
+            color: #0ff;
+            z-index: -2;
+            animation: glitch2-h1 1.5s infinite alternate;
+          }
+
+          @keyframes glitch-h1 {
+            0% {
+              transform: translate(0, 0);
+            }
+
+            15% {
+              transform: translate(-5px, 5px);
+            }
+
+            30% {
+              transform: translate(5px, -5px);
+            }
+
+            45% {
+              transform: translate(-2px, 2px);
+            }
+
+            60% {
+              transform: translate(3px, -3px);
+            }
+
+            75% {
+              transform: translate(-6px, 6px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+            }
+          }
+
+          @keyframes glitch2-h1 {
+            0% {
+              transform: translate(0, 0);
+              opacity: 0.5;
+            }
+
+            20% {
+              transform: translate(4px, -4px);
+            }
+
+            50% {
+              transform: translate(-4px, 4px);
+            }
+
+            80% {
+              transform: translate(2px, -2px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+              opacity: 0.5;
+            }
+          }
+
+          /* Glitch effect for h2 */
+          .content h2::before,
+          .content h2::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            opacity: 0.8;
+            z-index: -1;
+            animation: glitch-h2 2s infinite alternate-reverse;
+          }
+
+          .content h2::after {
+            color: #f0f;
+            z-index: -2;
+            animation: glitch2-h2 2.5s infinite alternate;
+          }
+
+          @keyframes glitch-h2 {
+            0% {
+              transform: translate(0, 0);
+            }
+
+            10% {
+              transform: translate(-3px, 3px);
+            }
+
+            25% {
+              transform: translate(3px, -3px);
+            }
+
+            50% {
+              transform: translate(-5px, 5px);
+            }
+
+            70% {
+              transform: translate(6px, -6px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+            }
+          }
+
+          @keyframes glitch2-h2 {
+            0% {
+              transform: translate(0, 0);
+              opacity: 0.4;
+            }
+
+            30% {
+              transform: translate(5px, -5px);
+            }
+
+            60% {
+              transform: translate(-5px, 5px);
+            }
+
+            90% {
+              transform: translate(3px, -3px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+              opacity: 0.4;
+            }
+          }
+
+          /* Glitch effect for h3 */
+          .content h3::before,
+          .content h3::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            opacity: 0.8;
+            z-index: -1;
+            animation: glitch-h3 3s infinite alternate-reverse;
+          }
+
+          .content h3::after {
+            color: #ff0;
+            z-index: -2;
+            animation: glitch2-h3 3.5s infinite alternate;
+          }
+
+          @keyframes glitch-h3 {
+            0% {
+              transform: translate(0, 0);
+            }
+
+            20% {
+              transform: translate(-2px, 2px);
+            }
+
+            40% {
+              transform: translate(4px, -4px);
+            }
+
+            60% {
+              transform: translate(-3px, 3px);
+            }
+
+            80% {
+              transform: translate(6px, -6px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+            }
+          }
+
+          @keyframes glitch2-h3 {
+            0% {
+              transform: translate(0, 0);
+              opacity: 0.3;
+            }
+
+            25% {
+              transform: translate(3px, -3px);
+            }
+
+            50% {
+              transform: translate(-3px, 3px);
+            }
+
+            75% {
+              transform: translate(2px, -2px);
+            }
+
+            100% {
+              transform: translate(0, 0);
+              opacity: 0.3;
+            }
+          }
+
+          /* Large screens (desktops) */
+          @media (min-width: 1024px) {
+            .content .glitch {
+              font-size: 5rem;
+            }
+
+            .content h1 {
+              font-size: 4rem;
+            }
+
+            .content h2 {
+              font-size: 3rem;
+            }
+
+            .content h3 {
+              font-size: 2rem;
+            }
+          }
+
+          /* Medium screens (tablets, small laptops) */
+          @media (max-width: 1023px) and (min-width: 768px) {
+            .content .glitch {
+              font-size: 3.5rem;
+            }
+
+            .content h1 {
+              font-size: 3rem;
+            }
+
+            .content h2 {
+              font-size: 2.5rem;
+            }
+
+            .content h3 {
+              font-size: 2rem;
+            }
+          }
+
+          /* Small screens (mobile phones) */
+          @media (max-width: 767px) {
+            .content .glitch {
+              font-size: 2.5rem;
+            }
+
+            .content h1 {
+              font-size: 2rem;
+            }
+
+            .content h2 {
+              font-size: 1.75rem;
+            }
+
+            .content h3 {
+              font-size: 1.5rem;
+            }
+
+            .content .glitch span:first-child,
+            .content .glitch span:last-child {
+              clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%);
+              /* Adjust clip-path for better alignment */
+              transform: translate(0, 0);
+              /* Remove transforms to prevent misalignment */
+              opacity: 0.75;
+            }
+
+            .content .glitch span:last-child {
+              clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+              /* Adjust for bottom half */
+              transform: translate(0, 0);
+              /* Ensure no offset on smaller screens */
+              opacity: 0.75;
+            }
+
+            /* Adjust glitch animations for smaller screens */
+            @keyframes glitch {
+              0% {
+                text-shadow: 0.03em 0 0 #00fffc, -0.02em -0.03em 0 #fc00ff,
+                  0.02em 0.03em 0 #fffc00;
+              }
+
+              100% {
+                text-shadow: -0.03em 0 0 #00fffc, -0.02em -0.03em 0 #fc00ff,
+                  -0.03em -0.03em 0 #fffc00;
+              }
+            }
+
+            @keyframes glitch-h1 {
+              0% {
+                transform: translate(0, 0);
+              }
+
+              100% {
+                transform: translate(0, 0);
+                /* No movement on smaller screens for better alignment */
+              }
+            }
+
+            @keyframes glitch2-h1 {
+              0% {
+                transform: translate(0, 0);
+                opacity: 0.5;
+              }
+
+              100% {
+                transform: translate(0, 0);
+                opacity: 0.5;
+                /* Keep glitch opacity consistent */
+              }
+            }
+          }
+
+          /* Extra small screens (very small phones) */
+          @media (max-width: 480px) {
+            .content .glitch {
+              font-size: 2rem;
+            }
+
+            .content h1 {
+              font-size: 1.75rem;
+            }
+
+            .content h2 {
+              font-size: 1.5rem;
+            }
+
+            .content h3 {
+              font-size: 1.25rem;
+            }
+
+            .content .glitch span:first-child,
+            .content .glitch span:last-child {
+              clip-path: none;
+              /* Remove clip-path for very small screens */
+              transform: none;
+              /* Remove transforms to prevent misalignment */
+              opacity: 0.75;
+            }
+
+            /* Further reduce text shadow effect for glitch */
+            @keyframes glitch {
+              0% {
+                text-shadow: 0.02em 0 0 #00fffc, -0.01em -0.02em 0 #fc00ff,
+                  0.01em 0.02em 0 #fffc00;
+              }
+
+              100% {
+                text-shadow: -0.02em 0 0 #00fffc, -0.01em -0.02em 0 #fc00ff,
+                  -0.02em -0.02em 0 #fffc00;
+              }
+            }
+          }
+        </style>
+
+        <div class="parallax">
+          <div class="parallax-group">
+            <div class="layer"></div>
+            <div class="layer"></div>
+            <div class="layer"></div>
+            <div class="layer"></div>
+            <div class="layer"></div>
+            <div class="layer fill"></div>
+          </div>
+          <div class="content">
+            <h3 data-text="The sky is not the limit...">The sky is not the limit...</h3>
+            <h2 class="glitch" data-text="We are...">We are...</h2>
+            <h1 data-text="Meaning there is no limit.">Meaning there is no limit.</h1>
+          </div>
+        </div>
+
+
+        <!--      <style>
+          @import url(https://fonts.googleapis.com/css?family=Lato:600);
+        
+        
+        .rotating-text {
+          font-family: Lato, sans-serif;
+          font-weight: 600;
+          font-size: 36px;
+          color: white;
+          transform: translateX(-0px);
+          width: 100%;
+        
+          p {
+            display: inline-flex;
+            margin: 0;
+            vertical-align: top;
+        
+            .word {
+              position: absolute;
+              display: flex;
+              opacity: 0;
+        
+              .letter {
+                transform-origin: center center 25px;
+        
+                &.out {
+                  transform: rotateX(90deg);
+                  transition: 0.32s cubic-bezier(0.6, 0, 0.7, 0.2);
+                }
+                &.in {
+                  transition: 0.38s ease;
+                }
+                &.behind {
+                  transform: rotateX(-90deg);
+                }
+              }
+            }
           }
         }
+        
+        .alizarin {
+          color: #e74c3c  !important;
+        }
+        
+        .wisteria {
+          color: #8e44ad;
+        }
+        
+        .peter-river {
+          color: #3498db;
+        }
+        
+        .emerald {
+          color: #2ecc71;
+        }
+        
+        .sun-flower {
+          color: #f1c40f;
+        }
+/* Media Queries for smaller screens */
+@media (max-width: 768px) {
+  .rotating-text p {
+    display: block; /* Stack the text vertically */
+    text-align: center;
+    margin-bottom: 85px; /* Adds space between the static text and rotating text */
+    width:min-content;
+    background-color: #2c3e50; /* Ensure the background color extends to the p */
+      }
+
+  .rotating-text p:first-child {
+    margin-bottom: 20px; /* Adds space between the static text and rotating text */
+  }
+
+  .rotating-text {
+    font-size: 6vw; /* Smaller text size for tablet screens */
+    transform: translateX(0); /* Adjust positioning */
+    margin-bottom: 20px; /* Adds space between the static text and rotating text */
+    background-color: #2c3e50; /* Ensure the background color extends to the p */
+
+  }
+}
+
+@media (max-width: 480px) {
+  .rotating-text p {
+    display: block; /* Stack the text vertically */
+    text-align: center;
+    margin-bottom: 85px; /* Adds space between the static text and rotating text */
+    width:min-content;
+    background-color: #2c3e50; /* Ensure the background color extends to the p */
+  }
 
 
-        window.onmousedown = e => handleOnDown(e);
+  .rotating-text p:first-child {
+    margin-bottom: 20px; /* Adds space between the static text and rotating text */
+  }
 
-        window.ontouchstart = e => handleOnDown(e.touches[0]);
+  .rotating-text {
+    font-size: 8vw; /* Smaller text size for mobile */
+    transform: translateX(0); /* Ensure text remains centered */
+    margin-bottom: 20px; /* Adds space between the static text and rotating text */
+    background-color: #2c3e50; /* Ensure the background color extends */
+  }
+}
 
-        window.onmouseup = e => handleOnUp(e);
+        </style>
+        <div style="background-color: #2c3e50; width:100%" class="rotating-text">
+          <p>Unlim8ted has the best</p>
+          <p>
+            <span class="word alizarin" style="color:#e74c3c;">games.</span>
+            <span class="word wisteria">clothes.</span>
+            <span class="word peter-river">tools.</span>
+            <span class="word emerald">films.</span>
+            <span class="word sun-flower">products.</span>
+          </p>
+        </div>
+        <script>
+        let words = document.querySelectorAll(".word");
+        words.forEach(word => {
+          let letters = word.textContent.split("");
+          word.textContent = "";
+          letters.forEach(letter => {
+            let span = document.createElement("span");
+            span.textContent = letter;
+            span.className = "letter";
+            word.append(span);
+          });
+        });
+        
+        let currentWordIndex = 0;
+        let maxWordIndex = words.length - 1;
+        words[currentWordIndex].style.opacity = "1";
+        
+        let rotateText = () => {
+          let currentWord = words[currentWordIndex];
+          let nextWord = currentWordIndex === maxWordIndex ? words[0] : words[currentWordIndex + 1];
+          
+          // Rotate out letters of current word
+          Array.from(currentWord.children).forEach((letter, i) => {
+            setTimeout(() => {
+              letter.className = "letter out";
+            }, i * 80);
+          });
+        
+          // Reveal and rotate in letters of next word
+          nextWord.style.opacity = "1";
+          Array.from(nextWord.children).forEach((letter, i) => {
+            letter.className = "letter behind";
+            setTimeout(() => {
+              letter.className = "letter in";
+            }, 340 + i * 80);
+          });
+        
+          currentWordIndex = currentWordIndex === maxWordIndex ? 0 : currentWordIndex + 1;
+        };
+        
+        rotateText();
+        setInterval(rotateText, 2000);
+        
+        </script>
 
-        window.ontouchend = e => handleOnUp(e.touches[0]);
+      -->
+        <div style="bottom:20;position:absolute;background-color:rgb(222, 184, 135);height:470px;width:100%">
+          <div
+            style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
 
-        window.onmousemove = e => handleOnMove(e);
+            <!-- Social Media Links -->
+            <div style="margin-bottom: 20px;">
+              <h2>Follow Us</h2>
+              <a href="#" aria-label="facebook social link" class="fa fa-facebook"></a>
+              <a href="#" aria-label="twitter social link" class="fa fa-twitter"></a>
+              <a href="#" aria-label="google social link" class="fa fa-google"></a>
+              <a href="#" aria-label="linked in social link" class="fa fa-linkedin"></a>
+              <a href="https://www.youtube.com/@unlim8tedstudioproductions" aria-label="youtube social link"
+                class="fa fa-youtube"></a>
+              <a href="#" aria-label="instagram social link" class="fa fa-instagram"></a>
+              <a href="#" aria-label="pinterest social link" class="fa fa-pinterest"></a>
+              <a href="#" aria-label="snapchat social link" class="fa fa-snapchat-ghost"></a>
+              <a href="#" aria-label="skype social link" class="fa fa-skype"></a>
+              <a href="#" aria-label="android social link" class="fa fa-android"></a>
+              <a href="#" aria-label="dribbble social link" class="fa fa-dribbble"></a>
+              <a href="#" aria-label="vimeo social link" class="fa fa-vimeo"></a>
+              <a href="#" aria-label="tumblr social link" class="fa fa-tumblr"></a>
+              <a href="#" aria-label="line social link" class="fa fa-vine"></a>
+              <a href="#" aria-label="foursquare social link" class="fa fa-foursquare"></a>
+              <a href="#" aria-label="stumbleupon social link" class="fa fa-stumbleupon"></a>
+              <a href="#" aria-label="flickr social link" class="fa fa-flickr"></a>
+              <a href="#" aria-label="yahoo social link" class="fa fa-yahoo"></a>
+              <a href="https://www.reddit.com/user/Unlim8tedStudios/" class="fa fa-reddit"></a>
+              <a href="#" aria-label="rss social link" class="fa fa-rss"></a>
+              <a href="https://github.com/Unlim8ted-Studio-Productions" aria-label="github social link"
+                class="fa fa-github"></a>
 
-        window.ontouchmove = e => handleOnMove(e.touches[0]);
-      </script>
+            </div>
+            <!-- Newsletter Signup -->
+            <div style="margin-bottom: 20px;">
+              <h2>Newsletter Signup</h2>
+              <form action="#news" method="post">
+                <input type="email" placeholder="Enter your email" required style="padding: 10px; width: 300px;">
+                <button type="submit" style="padding: 10px 20px;">Subscribe</button>
+              </form>
+            </div>
+
+            <!-- Copyright -->
+
+
+            <div style="margin-top: 20px;">
+              <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+              <p>
+                <a href="/tos">Terms of Service</a> |
+                <a href="/privacy">Privacy Policy</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
   </div>
-
-
 
   <div id="products" class="content-section">
     <h1>Our Products</h1>
