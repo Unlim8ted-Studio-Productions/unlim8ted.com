@@ -9,7 +9,7 @@
   <meta name="title" content="Unlim8ted" />
   <meta name="description"
     content="Unlim8ted Studio Productions offers innovative entertainment experiences, including films, music, books, games, software, and AI products." />
-
+    <meta name="google-signin-client_id" content="657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com">
   <!-- Website / General -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://unlim8ted.com" />
@@ -41,7 +41,7 @@
   <meta name="keywords"
     content="films, music, books, games, software, AI products, entertainment, unlim8ted, Unlim8ted Studio Productions" />
   <meta name="author" content="Unlim8ted Studio Productions" />
-<script type="application/ld+json">
+  <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -337,7 +337,8 @@
       border-radius: 8px;
       display: inline-block;
       margin-top: 20px;
-  }
+    }
+
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
@@ -423,7 +424,7 @@
     button {
       padding: 10px;
       font-size: 1em;
-      background-color: #007bff;
+      background-color: #000000;
       color: white;
       border: none;
       border-radius: 4px;
@@ -432,7 +433,7 @@
     }
 
     button:hover {
-      background-color: #0056b3;
+      background-color: rgb(57, 200, 145);
     }
 
     /* Additional styling for responsiveness */
@@ -660,6 +661,63 @@
             <a href="/puzzle-squares">Puzzle Squares</a>
           </div>
         </li>
+        <button id="themeToggle">Switch to Neon Mode</button>
+        <script>
+          // Check if the "theme" session exists in sessionStorage
+          if (!sessionStorage.getItem('theme')) {
+            // If no "theme" is found, set it to "dark" and reload the page
+            sessionStorage.setItem('theme', 'dark');
+            location.reload();
+          } else {
+            // Apply the theme based on the value stored in sessionStorage
+            const theme = sessionStorage.getItem('theme');
+            document.body.classList.add(theme); // Assuming the class name matches the theme
+          }
+        </script>
+        
+        <script>
+          // Function to toggle the class on all elements
+
+          document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('themeToggle');
+            const home = document.getElementById("home")
+            const darkhome = document.getElementById("dark-home")
+
+            function toggleDarkMode(enable) {
+              if (enable) {
+                document.body.classList.add('dark-mode');
+                darkhome.style.display = "block"
+                home.style.display = "none"
+              } else {
+                document.body.classList.remove('dark-mode');
+                darkhome.style.display = "none"
+                home.style.display = "block"
+              }
+
+              // Update button text
+              themeToggle.innerText = enable ? 'Switch to Light Mode' : 'Switch to Neon Mode';
+
+              // Save preference in localStorage
+              localStorage.setItem('theme', enable ? 'dark' : 'light');
+            }
+            // Check for saved theme preference
+            const darkModeEnabled = localStorage.getItem('theme') === 'dark';
+            if (darkModeEnabled) {
+              toggleDarkMode(true);
+            }
+
+            // Add event listener to toggle button
+            themeToggle.addEventListener('click', () => {
+              const isDarkMode = localStorage.getItem('theme') === 'dark';
+              if (!isDarkMode){
+                location.reload()
+              }
+              toggleDarkMode(!isDarkMode); // Toggle dark mode state
+            });
+          });
+        </script>
+
+
       </ul>
     </div>
   </nav>
@@ -690,6 +748,62 @@
         height: 20vw;
         /* Larger logo for smaller devices */
       }
+    }
+
+    /* Default (light mode) styles are already defined */
+
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background-color: #121212;
+      color: #fff;
+    }
+
+    body.dark-mode a {
+      color: #00ffcc;
+      background-color: #28292f;
+    }
+
+    body.dark-mode a:hover {
+      color: #ff00ff;
+      background-color: #000;
+    }
+
+    body.dark-mode .content-section {
+      background-color: #1a1a1a;
+      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    }
+
+    body.dark-mode .button {
+      background: #00ffcc;
+      border: 2px solid #ff00ff;
+      color: #121212;
+    }
+
+    body.dark-mode .button:hover {
+      background: #ff00ff;
+      border: 2px solid #00ffcc;
+    }
+
+    body.dark-mode .navbar {
+      background-color: #1a1a1a;
+    }
+
+    body.dark-mode .spinner-choice {
+      background-color: #1a1a1a;
+      color: #00ffcc;
+    }
+
+    body.dark-mode .loading-text {
+      color: #ff00ff;
+    }
+
+    body.dark-mode .fa {
+      background: #1a1a1a;
+      color: #00ffcc;
+    }
+
+    body.dark-mode .fa:hover {
+      color: #ff00ff;
     }
   </style>
 
@@ -1054,148 +1168,158 @@
               opacity: 0.3;
             }
           }
+
           /* Large screens (desktops) */
-@media (min-width: 1024px) {
-  .content .glitch {
-    font-size: 5rem;
-  }
+          @media (min-width: 1024px) {
+            .content .glitch {
+              font-size: 5rem;
+            }
 
-  .content h1 {
-    font-size: 4rem;
-  }
+            .content h1 {
+              font-size: 4rem;
+            }
 
-  .content h2 {
-    font-size: 3rem;
-  }
+            .content h2 {
+              font-size: 3rem;
+            }
 
-  .content h3 {
-    font-size: 2rem;
-  }
-}
+            .content h3 {
+              font-size: 2rem;
+            }
+          }
 
-/* Medium screens (tablets, small laptops) */
-@media (max-width: 1023px) and (min-width: 768px) {
-  .content .glitch {
-    font-size: 3.5rem;
-  }
+          /* Medium screens (tablets, small laptops) */
+          @media (max-width: 1023px) and (min-width: 768px) {
+            .content .glitch {
+              font-size: 3.5rem;
+            }
 
-  .content h1 {
-    font-size: 3rem;
-  }
+            .content h1 {
+              font-size: 3rem;
+            }
 
-  .content h2 {
-    font-size: 2.5rem;
-  }
+            .content h2 {
+              font-size: 2.5rem;
+            }
 
-  .content h3 {
-    font-size: 2rem;
-  }
-}
+            .content h3 {
+              font-size: 2rem;
+            }
+          }
 
-/* Small screens (mobile phones) */
-@media (max-width: 767px) {
-  .content .glitch {
-    font-size: 2.5rem;
-  }
+          /* Small screens (mobile phones) */
+          @media (max-width: 767px) {
+            .content .glitch {
+              font-size: 2.5rem;
+            }
 
-  .content h1 {
-    font-size: 2rem;
-  }
+            .content h1 {
+              font-size: 2rem;
+            }
 
-  .content h2 {
-    font-size: 1.75rem;
-  }
+            .content h2 {
+              font-size: 1.75rem;
+            }
 
-  .content h3 {
-    font-size: 1.5rem;
-  }
+            .content h3 {
+              font-size: 1.5rem;
+            }
 
-  .content .glitch span:first-child,
-  .content .glitch span:last-child {
-    clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%); /* Adjust clip-path for better alignment */
-    transform: translate(0, 0); /* Remove transforms to prevent misalignment */
-    opacity: 0.75;
-  }
+            .content .glitch span:first-child,
+            .content .glitch span:last-child {
+              clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%);
+              /* Adjust clip-path for better alignment */
+              transform: translate(0, 0);
+              /* Remove transforms to prevent misalignment */
+              opacity: 0.75;
+            }
 
-  .content .glitch span:last-child {
-    clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%); /* Adjust for bottom half */
-    transform: translate(0, 0); /* Ensure no offset on smaller screens */
-    opacity: 0.75;
-  }
+            .content .glitch span:last-child {
+              clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+              /* Adjust for bottom half */
+              transform: translate(0, 0);
+              /* Ensure no offset on smaller screens */
+              opacity: 0.75;
+            }
 
-  /* Adjust glitch animations for smaller screens */
-  @keyframes glitch {
-    0% {
-      text-shadow: 0.03em 0 0 #00fffc, -0.02em -0.03em 0 #fc00ff,
-        0.02em 0.03em 0 #fffc00;
-    }
-    100% {
-      text-shadow: -0.03em 0 0 #00fffc, -0.02em -0.03em 0 #fc00ff,
-        -0.03em -0.03em 0 #fffc00;
-    }
-  }
+            /* Adjust glitch animations for smaller screens */
+            @keyframes glitch {
+              0% {
+                text-shadow: 0.03em 0 0 #00fffc, -0.02em -0.03em 0 #fc00ff,
+                  0.02em 0.03em 0 #fffc00;
+              }
 
-  @keyframes glitch-h1 {
-    0% {
-      transform: translate(0, 0);
-    }
+              100% {
+                text-shadow: -0.03em 0 0 #00fffc, -0.02em -0.03em 0 #fc00ff,
+                  -0.03em -0.03em 0 #fffc00;
+              }
+            }
 
-    100% {
-      transform: translate(0, 0); /* No movement on smaller screens for better alignment */
-    }
-  }
+            @keyframes glitch-h1 {
+              0% {
+                transform: translate(0, 0);
+              }
 
-  @keyframes glitch2-h1 {
-    0% {
-      transform: translate(0, 0);
-      opacity: 0.5;
-    }
-    100% {
-      transform: translate(0, 0);
-      opacity: 0.5; /* Keep glitch opacity consistent */
-    }
-  }
-}
+              100% {
+                transform: translate(0, 0);
+                /* No movement on smaller screens for better alignment */
+              }
+            }
 
-/* Extra small screens (very small phones) */
-@media (max-width: 480px) {
-  .content .glitch {
-    font-size: 2rem;
-  }
+            @keyframes glitch2-h1 {
+              0% {
+                transform: translate(0, 0);
+                opacity: 0.5;
+              }
 
-  .content h1 {
-    font-size: 1.75rem;
-  }
+              100% {
+                transform: translate(0, 0);
+                opacity: 0.5;
+                /* Keep glitch opacity consistent */
+              }
+            }
+          }
 
-  .content h2 {
-    font-size: 1.5rem;
-  }
+          /* Extra small screens (very small phones) */
+          @media (max-width: 480px) {
+            .content .glitch {
+              font-size: 2rem;
+            }
 
-  .content h3 {
-    font-size: 1.25rem;
-  }
+            .content h1 {
+              font-size: 1.75rem;
+            }
 
-  .content .glitch span:first-child,
-  .content .glitch span:last-child {
-    clip-path: none; /* Remove clip-path for very small screens */
-    transform: none; /* Remove transforms to prevent misalignment */
-    opacity: 0.75;
-  }
+            .content h2 {
+              font-size: 1.5rem;
+            }
 
-  /* Further reduce text shadow effect for glitch */
-  @keyframes glitch {
-    0% {
-      text-shadow: 0.02em 0 0 #00fffc, -0.01em -0.02em 0 #fc00ff,
-        0.01em 0.02em 0 #fffc00;
-    }
-    100% {
-      text-shadow: -0.02em 0 0 #00fffc, -0.01em -0.02em 0 #fc00ff,
-        -0.02em -0.02em 0 #fffc00;
-    }
-  }
-}
+            .content h3 {
+              font-size: 1.25rem;
+            }
 
+            .content .glitch span:first-child,
+            .content .glitch span:last-child {
+              clip-path: none;
+              /* Remove clip-path for very small screens */
+              transform: none;
+              /* Remove transforms to prevent misalignment */
+              opacity: 0.75;
+            }
 
+            /* Further reduce text shadow effect for glitch */
+            @keyframes glitch {
+              0% {
+                text-shadow: 0.02em 0 0 #00fffc, -0.01em -0.02em 0 #fc00ff,
+                  0.01em 0.02em 0 #fffc00;
+              }
+
+              100% {
+                text-shadow: -0.02em 0 0 #00fffc, -0.01em -0.02em 0 #fc00ff,
+                  -0.02em -0.02em 0 #fffc00;
+              }
+            }
+          }
         </style>
 
         <div class="parallax">
@@ -1215,7 +1339,7 @@
         </div>
 
 
-  <!--      <style>
+        <!--      <style>
           @import url(https://fonts.googleapis.com/css?family=Lato:600);
         
         
@@ -1376,8 +1500,9 @@
         </script>
 
       -->
-      <div style="bottom:20;position:absolute;background-color:rgb(222, 184, 135);height:470px;width:100%">
-        <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+        <div style="bottom:20;position:absolute;background-color:rgb(222, 184, 135);height:470px;width:100%">
+          <div
+            style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
 
             <!-- Social Media Links -->
             <div style="margin-bottom: 20px;">
@@ -1386,7 +1511,8 @@
               <a href="#" aria-label="twitter social link" class="fa fa-twitter"></a>
               <a href="#" aria-label="google social link" class="fa fa-google"></a>
               <a href="#" aria-label="linked in social link" class="fa fa-linkedin"></a>
-              <a href="https://www.youtube.com/@unlim8tedstudioproductions" aria-label="youtube social link" class="fa fa-youtube"></a>
+              <a href="https://www.youtube.com/@unlim8tedstudioproductions" aria-label="youtube social link"
+                class="fa fa-youtube"></a>
               <a href="#" aria-label="instagram social link" class="fa fa-instagram"></a>
               <a href="#" aria-label="pinterest social link" class="fa fa-pinterest"></a>
               <a href="#" aria-label="snapchat social link" class="fa fa-snapchat-ghost"></a>
@@ -1402,7 +1528,8 @@
               <a href="#" aria-label="yahoo social link" class="fa fa-yahoo"></a>
               <a href="https://www.reddit.com/user/Unlim8tedStudios/" class="fa fa-reddit"></a>
               <a href="#" aria-label="rss social link" class="fa fa-rss"></a>
-              <a href="https://github.com/Unlim8ted-Studio-Productions" aria-label="github social link" class="fa fa-github"></a>
+              <a href="https://github.com/Unlim8ted-Studio-Productions" aria-label="github social link"
+                class="fa fa-github"></a>
 
             </div>
             <!-- Newsletter Signup -->
@@ -1415,20 +1542,381 @@
             </div>
 
             <!-- Copyright -->
-        
 
-              <div style="margin-top: 20px;">
-                <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-                <p>
-                  <a href="/tos">Terms of Service</a> | 
-                  <a href="/privacy">Privacy Policy</a>
-                </p>
-              </div>
+
+            <div style="margin-top: 20px;">
+              <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+              <p>
+                <a href="/tos">Terms of Service</a> |
+                <a href="/privacy">Privacy Policy</a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
   </div>
+
+  <!-- Dark Mode Content (Initially Hidden) -->
+  <div id="dark-home" style="display: none;">
+    <style>
+      /* Base Styling */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        color: white;
+        background-color: #000;
+        overflow-x: hidden;
+      }
+
+
+      .navbar a:hover {
+        color: #00ffcc;
+      }
+
+      /* Hero Section */
+      .hero {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: linear-gradient(135deg, #1a1a1a, #000000);
+      }
+
+      .hero h1 {
+        font-size: 4rem;
+        text-shadow: 0 0 20px #00ffcc, 0 0 30px #ff00ff;
+        margin-bottom: 1rem;
+        animation: glow 2s infinite alternate;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+      }
+
+      .hero button {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        font-weight: bold;
+        background: #00ffcc;
+        color: #000;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .hero button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px #00ffcc;
+      }
+
+      /* Scrollable Content Sections */
+      .section {
+        height: 100vh;
+        padding: 5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+
+      .section.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .section img {
+        max-width: 80%;
+        margin: 2rem 0;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .section p {
+        max-width: 600px;
+        font-size: 1rem;
+        color: #ffffff;
+      }
+
+      /* Footer */
+      .footer {
+        padding: 2rem;
+        background: rgba(0, 0, 0, 0.8);
+        text-align: center;
+      }
+
+      .footer p {
+        color: #aaa;
+      }
+
+      /* Keyframe Animations */
+      @keyframes glow {
+        from {
+          text-shadow: 0 0 10px #00ffcc, 0 0 20px #ff00ff;
+        }
+
+        to {
+          text-shadow: 0 0 20px #00ffcc, 0 0 40px #ff00ff;
+        }
+      }
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero p {
+          font-size: 1rem;
+        }
+
+        .section h2 {
+          font-size: 2rem;
+        }
+
+        .section p {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+    <style>
+      #image-track {
+        display: flex;
+        gap: 4vmin;
+        transform: translate(0%, -50%);
+        user-select: none;
+        /* -- Prevent image highlighting -- */
+      }
+
+      #image-track>.image {
+        width: 40vmin;
+        height: 56vmin;
+        object-fit: cover;
+        object-position: 100% center;
+      }
+
+    </style>
+
+      <!-- Hero Section -->
+      <div class="hero" id="hero">
+        <h1 style="color:#bcfaf7;">Welcome to Unlim8ted</h1>
+        <p>Innovative entertainment at your fingertips.</p>
+        <a href="/sign-in"><button>Get Started</button></a>
+      </div>
+
+      <!-- Section 1 -->
+      <div style="transform: translateY(-10rem); background-color: #1a1a1a;">
+      <div class="section" id="section1">
+        <h2>Explore the Future</h2>
+        <p>Discover groundbreaking innovations that redefine the future of entertainment.</p>
+        <img src="https://picsum.photos/800/400" alt="Placeholder">
+      </div>
+
+      <!-- Section 2 -->
+      <div class="section" id="section2"> 
+        <h2>Gallery</h2>
+        <p>Take a look at some of our projects and achievements.</p>
+        <div id="image-track" style="margin-top: 14rem;" data-mouse-down-at="0" data-prev-percentage="0">
+          <img class="image" src="" draggable="false" />
+          <img class="image" src="https://unlim8ted.com/images/products/films/The Life of a Meatball.jpg" draggable="false" />
+          <img class="image" src="https://unlim8ted.com/images/products/films/TheGlitchCover.png" draggable="false" />
+          <img class="image" src="https://unlim8ted.com/images/products/software/Screenshot 2023-09-21 181742(1).png" draggable="false" />
+          <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
+          <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
+          <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
+          <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
+        </div>
+      </div>
+      <!-- Section 3 -->
+<div class="section" id="section3">
+  <div class="content">
+    <div class="text-slide" id="text-slide-left">
+      <h3>Innovate with Us</h3>
+      <p>Explore our latest creative projects shaping the entertainment industry.</p>
+    </div>
+    <div class="image-slide" id="image-slide-right">
+      <img src="https://picsum.photos/300/200" alt="Innovation" />
+    </div>
+  </div>
+</div>
+
+<style>
+  #section3 {
+    padding: 2rem 0.5rem; /* Reduced padding */
+    transform: scale(0.8); /* Scales the entire section to 50% */
+    transform-origin: top center; /* Keeps the scaling centered */
+  }
+
+  #section3 .content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 400px; /* Reduced max width */
+    margin: 0 auto;
+    gap: 0.75rem; /* Smaller gap */
+  }
+
+  #section3 .text-slide {
+    flex: 1;
+    opacity: 0;
+    transform: translateX(-25px); /* Reduced translation */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  #section3 .image-slide {
+    flex: 1;
+    opacity: 0;
+    transform: translateX(25px); /* Reduced translation */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  #section3.visible .text-slide {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  #section3.visible .image-slide {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  #section3 .text-slide h3 {
+    font-size: 1rem; /* Smaller font size */
+    margin-bottom: 0.25rem;
+  }
+
+  #section3 .text-slide p {
+    font-size: 0.75rem; /* Smaller font size */
+  }
+
+  #section3 .image-slide img {
+    max-width: 100%;
+    border-radius: 4px; /* Reduced radius */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4); /* Reduced shadow */
+  }
+
+  @media (max-width: 768px) {
+    #section3 .content {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    #section3 .text-slide,
+    #section3 .image-slide {
+      transform: translateX(0);
+    }
+  }
+</style>
+
+<script>
+  // Add the third section to the observer
+  const section3 = document.getElementById("section3");
+  observer.observe(section3);
+</script>
+
+    </div>
+    <script>
+      // Select the container element you want to control
+      const parentDiv = document.querySelector("div[style*='transform: translateY']");
+    
+      // Function to handle scrolling and update transform property
+      const updateTransformOnScroll = () => {
+        const scrollY = window.scrollY; // Get the current scroll position
+        const translateY = -scrollY / 10; // Calculate transform value, adjust the divisor for speed
+    
+        // Apply the transform to the div
+        parentDiv.style.transform = `translateY(${translateY}rem)`;
+      };
+    
+      // Attach the scroll event listener
+      window.addEventListener("scroll", updateTransformOnScroll);
+    </script>
+    
+
+      <!-- Footer -->
+      <div class="footer" id="footer">
+        <p>© 2025 Unlim8ted Studio Productions. All rights reserved.</p>
+      </div>
+
+      <!-- JavaScript for Scroll Animations -->
+      <script>
+        const sections = document.querySelectorAll('.section');
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        }, { threshold: 0.2 });
+
+        sections.forEach((section) => observer.observe(section));
+      </script>
+
+      <script>const track = document.getElementById("image-track");
+
+        const handleOnDown = e => track.dataset.mouseDownAt = e.clientX;
+
+        const handleOnUp = () => {
+          track.dataset.mouseDownAt = "0";
+          track.dataset.prevPercentage = track.dataset.percentage;
+        }
+
+        const handleOnMove = e => {
+          if (track.dataset.mouseDownAt === "0") return;
+
+          const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
+            maxDelta = window.innerWidth / 2;
+
+          const percentage = (mouseDelta / maxDelta) * -100,
+            nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+            nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+
+          track.dataset.percentage = nextPercentage;
+
+          track.animate({
+            transform: `translate(${nextPercentage}%, -50%)`
+          }, { duration: 1200, fill: "forwards" });
+
+          for (const image of track.getElementsByClassName("image")) {
+            image.animate({
+              objectPosition: `${100 + nextPercentage}% center`
+            }, { duration: 1200, fill: "forwards" });
+          }
+        }
+
+
+        window.onmousedown = e => handleOnDown(e);
+
+        window.ontouchstart = e => handleOnDown(e.touches[0]);
+
+        window.onmouseup = e => handleOnUp(e);
+
+        window.ontouchend = e => handleOnUp(e.touches[0]);
+
+        window.onmousemove = e => handleOnMove(e);
+
+        window.ontouchmove = e => handleOnMove(e.touches[0]);
+      </script>
+  </div>
+
+
 
   <div id="products" class="content-section">
     <h1>Our Products</h1>
@@ -1938,7 +2426,6 @@
   </div>
   </div>
 
-
   <div id="software" class="content-section">
     <h1>Software</h1>
     <div class="search-bar">
@@ -1952,9 +2439,7 @@
     </div>
     <div class="item-category" id="software-items">
       <a href="square-pixels" class="item-box" data-category="entertainment">
-        <img
-          src="unlim8ted.com/images/products/software/Screenshot 2023-09-21 181742(1).png"
-          alt="Square Pixels">
+        <img src="unlim8ted.com/images/products/software/Screenshot 2023-09-21 181742(1).png" alt="Square Pixels">
         <h3>Square Pixels</h3>
       </a>
 
@@ -1979,7 +2464,8 @@
       </a>
 
       <a href="products#Copy-Keyframes-to-Selected-Blender-Addon" class="item-box" data-category="productivity">
-        <img src="images/products/Copy-Keyframes-to-Selected-Blender-Addon.jpg" alt="Copy Keyframes to Selected Blender Addon">
+        <img src="images/products/Copy-Keyframes-to-Selected-Blender-Addon.jpg"
+          alt="Copy Keyframes to Selected Blender Addon">
         <h3>Copy Keyframes to Selected Blender Addon</h3>
       </a>
 
@@ -2049,7 +2535,8 @@
 
   <div id="AI" class="content-section">
     <h1>AI</h1>
-    <strong style="color:red">Note:</strong><a style="color:red"> Running the AI may consume a lot of device resources</a>
+    <strong style="color:red">Note:</strong><a style="color:red"> Running the AI may consume a lot of device
+      resources</a>
     <div class="search-bar">
       <input type="text" id="ai-search" placeholder="Search AI's...">
       <select id="AI-filter">
@@ -2126,7 +2613,7 @@
       content. We specialize in a wide range of productions, from film and animation to digital art and beyond.</p>
     <p>Our mission is to bring stories to life and provide unique entertainment experiences for audiences around the
       world.</p>
-      <a class="button" href="/about-us">Find Out More</a>
+    <a class="button" href="/about-us">Find Out More</a>
     <!-- Copyright -->
     <div style="margin-top: 100px;">
       <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
@@ -2218,7 +2705,12 @@
 
   <script>
     function showContent() {
-      const hash = window.location.hash || '#home';
+      var hash = window.location.hash || '#home';
+      if (hash == '#home') {
+        if (localStorage.getItem('theme') === 'dark') { // check if dark mode is enabled
+          hash = '#dark-home'
+        }
+      }
       const sections = document.querySelectorAll('.content-section');
       sections.forEach(section => {
         section.style.display = section.id === hash.substring(1) ? 'block' : 'none';
