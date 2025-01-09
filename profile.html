@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -117,21 +118,35 @@
   <!-- Profile container -->
   <div class="container">
     <img src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-pic" id="profile-pic">
-    <h1 id="name">John Doe</h1>
+    <h1 id="name">Loading...</h1>
     <div class="user-info">
-      <p>Email: <span id="email">johndoe@example.com</span></p>
-      <p>Joined: <span id="joined">January 1, 2023</span></p>
-      <p>Membership: <span id="membership">Premium</span></p>
+      <p>Email: <span id="email">Loading...</span></p>
     </div>
     <div class="actions">
-      <button class="button" onclick="editProfile()">Edit Profile</button>
       <button class="button logout" onclick="logout()">Log Out</button>
     </div>
   </div>
 
   <script>
-    function editProfile() {
-      alert('Edit profile functionality will be implemented soon.');
+    function handleCredentialResponse(response) {
+      const jwt = response.credential;
+      const userInfo = parseJwt(jwt);
+
+      // Populate user data on the profile page
+      document.getElementById('name').innerText = userInfo.name || "User";
+      document.getElementById('email').innerText = userInfo.email || "No email provided";
+      document.getElementById('profile-pic').src = userInfo.picture || "https://via.placeholder.com/100";
+
+      console.log("User info:", userInfo);
+    }
+
+    function parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
     }
 
     function logout() {
@@ -139,24 +154,14 @@
       window.location.href = '/login'; // Adjust to your login page
     }
 
-    // Example of dynamically loading profile data
-    document.addEventListener('DOMContentLoaded', () => {
-      // Simulate fetching user data
-      const userData = {
-        name: 'Jane Smith',
-        email: 'janesmith@example.com',
-        joined: 'March 15, 2022',
-        membership: 'Free',
-        profilePic: 'https://via.placeholder.com/100?text=JS'
-      };
-
-      // Update UI
-      document.getElementById('name').innerText = userData.name;
-      document.getElementById('email').innerText = userData.email;
-      document.getElementById('joined').innerText = userData.joined;
-      document.getElementById('membership').innerText = userData.membership;
-      document.getElementById('profile-pic').src = userData.profilePic;
-    });
+    // Initialize Google Sign-In
+    window.onload = () => {
+      google.accounts.id.initialize({
+        client_id: "657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com",
+        callback: handleCredentialResponse,
+      });
+      google.accounts.id.prompt(); // Automatically prompts the user to sign in
+    };
   </script>
 </body>
 </html>
