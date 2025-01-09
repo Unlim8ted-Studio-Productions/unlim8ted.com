@@ -922,11 +922,11 @@
       </div>
 
       <!-- Section 1 -->
-      <div style="transform: translateY(-10rem); background-color: #1a1a1a;">
+      <div style="transform: translateY(0rem); background-color: #1a1a1a;">
       <div class="section" id="section1">
         <h2>Explore the Future</h2>
         <p>Discover groundbreaking innovations that redefine the future of entertainment.</p>
-        <img src="https://picsum.photos/800/400" alt="Placeholder">
+        <img src="https://unlim8ted.com/images/home/path to future.png" alt="Image of Path to future">
       </div>
 
       <!-- Section 2 -->
@@ -952,9 +952,86 @@
       <p>Explore our latest creative projects shaping the entertainment industry.</p>
     </div>
     <div class="image-slide" id="image-slide-right">
-      <img src="https://picsum.photos/300/200" alt="Innovation" />
+      <img src="https://unlim8ted.com/images/home/sunset.png" alt="Image of sunset" />
     </div>
   </div>
+<!-- Section 4 -->
+<div class="section" id="section4">
+  <div class="categories">
+    <div class="category category-left" onclick="alert('Category 1 clicked!')">Category 1</div>
+    <div class="category category-right" onclick="alert('Category 2 clicked!')">Category 2</div>
+    <div class="category category-left" onclick="alert('Category 3 clicked!')">Category 3</div>
+    <div class="category category-right" onclick="alert('Category 4 clicked!')">Category 4</div>
+  </div>
+</div>
+
+<style>
+  /* Section 4 Styling */
+  #section4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .categories {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: relative;
+  }
+
+  .category {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #00ffcc, #ff00ff);
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    position: absolute;
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: transform 0.6s ease, opacity 0.6s ease;
+  }
+
+  .category-right {
+    transform: translateX(100%);
+  }
+
+  #section4.visible .category-left {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  #section4.visible .category-right {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .category {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<script>
+  // Dynamically position the categories at different Y positions
+  const section4 = document.getElementById("section4");
+  const categories = section4.querySelectorAll(".category");
+
+  categories.forEach((category, index) => {
+    const yOffset = 50 * index; // Adjust spacing between categories
+    category.style.top = `${yOffset}px`;
+  });
+
+  // Add the fourth section to the observer
+  observer.observe(section4);
+</script>
+
 </div>
 
 <style>
