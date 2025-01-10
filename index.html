@@ -607,7 +607,7 @@
     }
 
     .dropdown-content a:hover {
-      background-color: #ddd;
+      background-color: #2d2849;
     }
 
     .navbar-toggle {
@@ -647,18 +647,18 @@
       <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
       <ul class="nav-links" id="navbarLinks">
         <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="/#products">Products</a></li>
-        <li class="nav-item"><a href="/#help">Help</a></li>
-        <li class="nav-item"><a href="/#about">About</a></li>
+        <li class="nav-item"><a href="/old/#products">Products</a></li>
+        <li class="nav-item"><a href="/old/#help">Help</a></li>
+        <li class="nav-item"><a href="/old/#about">About</a></li>
         <li class="nav-item dropdown">
           <a href="javascript:void(0)" class="dropbtn">More</a>
           <div class="dropdown-content">
-            <a href="/#portfolio">Portfolio</a>
-            <a href="/#contact">Contact</a>
-            <a href="/#blog">Blog</a>
-            <a href="/live-chat">Live Chat</a>
-            <a href="/live-game">Live Chat and Game</a>
-            <a href="/puzzle-squares">Puzzle Squares</a>
+            <a href="/old/#portfolio">Portfolio</a>
+            <a href="/old/#contact">Contact</a>
+            <a href="/old/#blog">Blog</a>
+            <a href="/old/live-chat">Live Chat</a>
+            <a href="/old/live-game">Live Chat and Game</a>
+            <a href="/old/puzzle-squares">Puzzle Squares</a>
           </div>
         </li>
         <a href="/old"><button>Old site</button></a>
@@ -699,56 +699,56 @@
     /* Default (light mode) styles are already defined */
 
     /* Dark Mode Styles */
-    body.dark-mode {
+    body {
       background-color: #121212;
       color: #fff;
     }
 
-    body.dark-mode a {
+    body a {
       color: #00ffcc;
       background-color: #28292f;
     }
 
-    body.dark-mode a:hover {
+    body a:hover {
       color: #ff00ff;
       background-color: #000;
     }
 
-    body.dark-mode .content-section {
+    body .content-section {
       background-color: #1a1a1a;
       box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
     }
 
-    body.dark-mode .button {
+    body .button {
       background: #00ffcc;
       border: 2px solid #ff00ff;
       color: #121212;
     }
 
-    body.dark-mode .button:hover {
+    body .button:hover {
       background: #ff00ff;
       border: 2px solid #00ffcc;
     }
 
-    body.dark-mode .navbar {
+    body .navbar {
       background-color: #1a1a1a;
     }
 
-    body.dark-mode .spinner-choice {
+    body .spinner-choice {
       background-color: #1a1a1a;
       color: #00ffcc;
     }
 
-    body.dark-mode .loading-text {
+    body .loading-text {
       color: #ff00ff;
     }
 
-    body.dark-mode .fa {
+    body .fa {
       background: #1a1a1a;
       color: #00ffcc;
     }
 
-    body.dark-mode .fa:hover {
+    body .fa:hover {
       color: #ff00ff;
     }
   </style>
@@ -758,7 +758,7 @@
 
   <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
 
-  <div id="home" style="display: none;">
+  <div id="home" style="display: block;">
     <style>
       .navbar a:hover {
         color: #00ffcc;
