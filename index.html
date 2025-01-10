@@ -647,18 +647,18 @@
       <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
       <ul class="nav-links" id="navbarLinks">
         <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="/old#products">Products</a></li>
-        <li class="nav-item"><a href="/old#help">Help</a></li>
-        <li class="nav-item"><a href="/old#about">About</a></li>
+        <li class="nav-item"><a href="#products">Products</a></li>
+        <li class="nav-item"><a href="#help">Help</a></li>
+        <li class="nav-item"><a href="#about">About</a></li>
         <li class="nav-item dropdown">
           <a href="javascript:void(0)" class="dropbtn">More</a>
           <div class="dropdown-content">
-            <a href="/old#portfolio">Portfolio</a>
-            <a href="/old#contact">Contact</a>
-            <a href="/old#blog">Blog</a>
-            <a href="/oldlive-chat">Live Chat</a>
-            <a href="/oldlive-game">Live Chat and Game</a>
-            <a href="/oldpuzzle-squares">Puzzle Squares</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#contact">Contact</a>
+            <a href="#blog">Blog</a>
+            <a href="live-chat">Live Chat</a>
+            <a href="live-game">Live Chat and Game</a>
+            <a href="puzzle-squares">Puzzle Squares</a>
           </div>
         </li>
         <a href="/old"><button>Old site</button></a>
@@ -758,7 +758,7 @@
 
   <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
 
-  <div id="home" style="display: block;">
+  <div id="home">
     <style>
       .navbar a:hover {
         color: #00ffcc;
@@ -2131,10 +2131,16 @@
   <script>
     function showContent() {
       var hash = window.location.hash || '#home';
-      const sections = document.querySelectorAll('.content-section');
+      if (hash!="#home"){
+        const sections = document.querySelectorAll('.content-section');
       sections.forEach(section => {
         section.style.display = section.id === hash.substring(1) ? 'block' : 'none';
       });
+      }
+      else{
+        const home = getElementById("home");
+        home.style.display = 'block'
+      }
     }
 
     window.addEventListener('hashchange', showContent);
