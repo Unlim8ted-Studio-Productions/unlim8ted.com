@@ -761,21 +761,6 @@
 
   <div id="home" style="display: block;">
     <style>
-      /* Base Styling */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: Arial, sans-serif;
-        color: white;
-        background-color: #000;
-        overflow-x: hidden;
-      }
-
-
       .navbar a:hover {
         color: #00ffcc;
       }
@@ -859,10 +844,13 @@
 
       /* Footer */
       .footer {
-        padding: 2rem;
-        background: rgba(0, 0, 0, 0.8);
-        text-align: center;
-      }
+    position: relative;
+    background: rgba(0, 0, 0, 0.8);
+    text-align: center;
+    padding: 2rem;
+  }
+
+  
 
       .footer p {
         color: #aaa;
@@ -914,12 +902,20 @@
 
     </style>
 
-      <!-- Hero Section -->
-      <div class="hero" id="hero">
-        <h1 style="color:#bcfaf7;">Welcome to Unlim8ted</h1>
-        <p>Innovative entertainment at your fingertips.</p>
-        <a href="/sign-in"><button>Get Started</button></a>
-      </div>
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="background">
+      <span style="top: 20%; left: 10%; animation-delay: 0s;"></span>
+      <span style="top: 40%; left: 70%; animation-delay: 2s;"></span>
+      <span style="top: 70%; left: 30%; animation-delay: 4s;"></span>
+      <span style="top: 50%; left: 90%; animation-delay: 1.5s;"></span>
+      <span style="top: 80%; left: 50%; animation-delay: 3s;"></span>
+    </div>
+    <h1 style="color:#bcfaf7;">Welcome to Unlim8ted</h1>
+    <p>Innovative entertainment at your fingertips.</p>
+    <a href="/sign-in"><button>Get Started</button></a>
+  </div>
+
 
       <!-- Section 1 -->
       <div style="transform: translateY(0rem); background-color: #1a1a1a;">
@@ -938,7 +934,7 @@
           <img class="image" src="https://unlim8ted.com/images/products/films/The Life of a Meatball.jpg" draggable="false" />
           <img class="image" src="https://unlim8ted.com/images/products/films/TheGlitchCover.png" draggable="false" />
           <img class="image" src="https://unlim8ted.com/images/products/software/Screenshot 2023-09-21 181742(1).png" draggable="false" />
-          <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
+          <img class="image" src="https://unlim8ted.com/images/products/clothes/sfesehjkl_-removebg-preview.png" draggable="false" />
           <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
           <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
           <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
@@ -949,231 +945,306 @@
   <div class="content">
     <div class="text-slide" id="text-slide-left">
       <h3>Innovate with Us</h3>
-      <p>Explore our latest creative projects shaping the entertainment industry.</p>
+      <p>Explore our latest partners shaping the entertainment industry:</p>
     </div>
     <div class="image-slide" id="image-slide-right">
       <img src="https://unlim8ted.com/images/home/sunset.png" alt="Image of sunset" />
     </div>
+
   </div>
-<!-- Section 4 -->
-<div class="section" id="section4">
-  <div class="categories">
-    <a href="#films" class="product-box">
-      <img src="images/products/films/The Life of a Meatball.jpg" alt="Films">
-      <h2>Films</h2>
-      <p>Explore our latest films.</p>
-    </a>
-    <a href="/music" class="product-box">
-      <img src="images/products/music/music icon.png" alt="Music">
-      <h2>Music</h2>
-      <p>Listen to our newest music releases.</p>
-    </a>
-    <a href="/podcasts" class="product-box">
-      <img src="images/products/podcasts/podcasts icon.png" alt="Podcasts">
-      <h2>Podcasts</h2>
-      <p>Listen to our newest podcasts.</p>
-    </a>
-    <a href="#books" class="product-box">
-      <img src="images/products/books/book icon.png" alt="Books">
-      <h2>Books</h2>
-      <p>Read our latest books.</p>
-    </a>
-    <a href="#games" class="product-box">
-      <img src="images/products/games/image.webp" alt="Games">
-      <h2>Games</h2>
-      <p>Play fun and challenging games.</p>
-    </a>
-    <a href="shop" class="product-box">
-      <img src="images/products/clothes/image.webp" alt="Clothes">
-      <h2>Physical Items</h2>
-      <p>Check out our stylish clothes.</p>
-    </a>
-    <a href="#software" class="product-box">
-      <img
-        src="https://github.com/Unlim8ted-Studio-Productions/Square-Pixels/blob/main/src/Recources/program%20recources/Screenshot%202023-09-21%20181742.png?raw=true"
-        alt="Software">
-      <h2>Software</h2>
-      <p>Explore our apps and video games.</p>
-    </a>
-    <a href="#AI" class="product-box">
-      <img src="images/products/ai/ai icon.png" alt="AI">
-      <h2>AI</h2>
-      <p>Explore our AI products.</p>
-    </a>
-  </div>
-</div>
-
-<style>
-  #section4 {
-    height: 200vh; /* Double height to allow scrolling */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-    background-color: #1a1a1a;
-  }
-
-  .categories {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    transform: translateY(100%); /* Start out of view */
-  }
-
-  .product-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border-radius: 10px;
-    padding: 1rem;
-    transform: translateX(-150%);
-    transition: transform 0.3s ease;
-    cursor: pointer;
-    position: relative;
-  }
-
-  .product-box img {
-    max-width: 100px;
-    border-radius: 10px;
-    margin-bottom: 1rem;
-  }
-
-  .product-box h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .product-box p {
-    font-size: 1rem;
-  }
-</style>
-<script>
-  const section4 = document.getElementById('section4');
-  const categories = section4.querySelectorAll('.product-box');
-
-  window.addEventListener('scroll', () => {
-    const sectionTop = section4.offsetTop;
-    const sectionHeight = section4.offsetHeight;
-    const scrollPosition = window.scrollY + window.innerHeight;
-
-    // Calculate scroll progress within Section 4
-    const progress = Math.min(
-      Math.max((scrollPosition - sectionTop) / sectionHeight, 0),
-      1
-    );
-
-    // Move categories in and out
-    categories.forEach((category, index) => {
-      const direction = index % 2 === 0 ? -1 : 1; // Alternate directions
-      const offset = direction * (150 - progress * 300); // Start far, move in, then out
-      category.style.transform = `translateX(${offset}%)`;
-    });
-  });
-</script>
 
 
-</div>
-
-<style>
-  #section3 {
-    padding: 2rem 0.5rem; /* Reduced padding */
-    transform: scale(0.8); /* Scales the entire section to 50% */
-    transform-origin: top center; /* Keeps the scaling centered */
-  }
-
-  #section3 .content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 400px; /* Reduced max width */
-    margin: 0 auto;
-    gap: 0.75rem; /* Smaller gap */
-  }
-
-  #section3 .text-slide {
-    flex: 1;
-    opacity: 0;
-    transform: translateX(-25px); /* Reduced translation */
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
-
-  #section3 .image-slide {
-    flex: 1;
-    opacity: 0;
-    transform: translateX(25px); /* Reduced translation */
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
-
-  #section3.visible .text-slide {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  #section3.visible .image-slide {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  #section3 .text-slide h3 {
-    font-size: 1rem; /* Smaller font size */
-    margin-bottom: 0.25rem;
-  }
-
-  #section3 .text-slide p {
-    font-size: 0.75rem; /* Smaller font size */
-  }
-
-  #section3 .image-slide img {
-    max-width: 100%;
-    border-radius: 4px; /* Reduced radius */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4); /* Reduced shadow */
-  }
-
-  @media (max-width: 768px) {
-    #section3 .content {
-      flex-direction: column;
-      text-align: center;
+  <style>
+    #section3 {
+      padding: 2rem 0.5rem; /* Reduced padding */
+      transform: scale(0.8); /* Scales the entire section to 50% */
+      transform-origin: top center; /* Keeps the scaling centered */
     }
-
-    #section3 .text-slide,
+  
+    #section3 .content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 400px; /* Reduced max width */
+      margin: 0 auto;
+      gap: 0.75rem; /* Smaller gap */
+    }
+  
+    #section3 .text-slide {
+      flex: 1;
+      opacity: 0;
+      transform: translateX(-25px); /* Reduced translation */
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+  
     #section3 .image-slide {
+      flex: 1;
+      opacity: 0;
+      transform: translateX(25px); /* Reduced translation */
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+  
+    #section3.visible .text-slide {
+      opacity: 1;
       transform: translateX(0);
     }
-  }
-</style>
+  
+    #section3.visible .image-slide {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  
+    #section3 .text-slide h3 {
+      font-size: 1rem; /* Smaller font size */
+      margin-bottom: 0.25rem;
+    }
+  
+    #section3 .text-slide p {
+      font-size: 0.75rem; /* Smaller font size */
+    }
+  
+    #section3 .image-slide img {
+      max-width: 100%;
+      border-radius: 4px; /* Reduced radius */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4); /* Reduced shadow */
+    }
+  
+    @media (max-width: 768px) {
+      #section3 .content {
+        flex-direction: column;
+        text-align: center;
+      }
+  
+      #section3 .text-slide,
+      #section3 .image-slide {
+        transform: translateX(0);
+      }
+    }
+  </style>
+  
+  <script>
+    // Add the third section to the observer
+    const section3 = document.getElementById("section3");
+    observer.observe(section3);
+  </script>
+  
+      </div>
+      <script>
+        // Select the container element you want to control
+        const parentDiv = document.querySelector("div[style*='transform: translateY']");
+      
+        // Function to handle scrolling and update transform property
+        const updateTransformOnScroll = () => {
+          const scrollY = window.scrollY; // Get the current scroll position
+          const translateY = -scrollY / 10; // Calculate transform value, adjust the divisor for speed
+      
+          // Apply the transform to the div
+          parentDiv.style.transform = `translateY(${translateY}rem)`;
+        };
+      
+        // Attach the scroll event listener
+        window.addEventListener("scroll", updateTransformOnScroll);
+      </script>
 
+
+
+<div class="section" id="section4">
+  <style>
+    /* Section 4 Infinite Scrolling Images */
+    #section4 {
+      position: relative;
+      width: 100%;
+      height: 60vh; /* Adjust the height */
+      background-color: #111;
+      overflow: hidden; /* Hide overflow */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index:2;
+    }
+  
+    .slider-container-partners {
+      display: flex;
+      align-items: center;
+      animation: slide 10s linear infinite; /* Continuous sliding */
+      gap: 2rem; /* Space between images */
+    }
+  
+    .slider-container img {
+      height: 100%; /* Ensure full height */
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Shadow effect */
+      transition: transform 0.3s ease;
+    }
+  
+    .slider-container-partners img:hover {
+      transform: scale(1.1); /* Slight zoom on hover */
+    }
+  
+    @keyframes slide {
+      0% {
+        transform: translateX(0); /* Start position */
+      }
+      100% {
+        transform: translateX(-153%); /* Slide to the left */
+      }
+    }
+  
+    /* Duplicate the container for seamless looping */
+    .slider-container-partners img {
+      height: 20%; /* Ensure full height */
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Shadow effect */
+      transition: transform 0.3s ease;
+      top: -10rem;
+      position: relative;
+    }
+  
+    @media (max-width: 768px) {
+      #section4 {
+        height: 40vh; /* Adjust for smaller screens */
+      }
+  
+      .slider-container-partners img {
+        width: 150px; /* Smaller images */
+      }
+    }
+  </style>
+  <div class="slider-container-partners">
+    <img src="images/logo/logoipsum-289.svg" alt="partner-logo">
+    <img src="images/logo/logoipsum-331.svg" alt="partner-logo">
+    <img src="images/logo/Zipper Line Logo.png" alt="partner-logo">
+    <img src="images/logo/logoipsum-338.svg" alt="partner-logo">
+    <img src="images/logo/Bnacintech Industries logo.png" alt="partner-logo">
+    <img src="images/logo/logoipsum-346.svg" alt="partner-logo">
+    <img src="images/logo/logoipsum-317.svg" alt="partner-logo">
+    <img src="images/logo/logoipsum-339.svg" alt="partner-logo">
+    <!--duplicates for seamless loop:-->
+    <img src="images/logo/logoipsum-289.svg" alt="partner-logo">
+    <img src="images/logo/logoipsum-331.svg" alt="partner-logo">
+    <img src="images/logo/Zipper Line Logo.png" alt="partner-logo">
+    <img src="images/logo/logoipsum-338.svg" alt="partner-logo">
+    <img src="images/logo/Bnacintech Industries logo.png" alt="partner-logo">
+    <img src="images/logo/logoipsum-346.svg" alt="partner-logo">
+    <img src="images/logo/logoipsum-317.svg" alt="partner-logo">
+    <img src="images/logo/logoipsum-339.svg" alt="partner-logo">
+  </div>
+  
+</div>
+
+  <!-- Final Section -->
+  <div class="hero" id="final">
+    <div class="background" style="position:absolute; top:-10rem;">
+      <span style="top: 20%; left: 10%; animation-delay: 0s;"></span>
+      <span style="top: 40%; left: 70%; animation-delay: 2s;"></span>
+      <span style="top: 70%; left: 30%; animation-delay: 4s;"></span>
+      <span style="top: 50%; left: 90%; animation-delay: 1.5s;"></span>
+      <span style="top: 80%; left: 50%; animation-delay: 3s;"></span>
+    </div>
+    <h1 style="color:#bcfaf7;position:relative;top:-13rem;">So are you ready to start using Unlim8ted?</h1>
+    <a href="/sign-in" style="position:relative;top:-13rem;"><button>Get Started</button></a>
+  </div>
+</div>
+
+
+</div>
+
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      color: black;
+      background: radial-gradient(circle at center, #0f0c29, #302b63, #24243e);
+      overflow-x: hidden;
+    }
+
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .background span {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(45deg, #00ff99, #ff0077);
+      opacity: 0.7;
+      filter: blur(8px);
+      animation: float 6s infinite ease-in-out;
+      border-radius: 50%;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+      }
+      50% {
+        transform: translateY(-40px) translateX(20px);
+      }
+    }
+  /* Section 4 Styling */
+  #final {
+    padding-top:10rem;
+    background-color:#00000000;
+    background:#00000000;
+    width:100%;
+    z-index:-1;
+  }
+    /* Final Section Styling */
+    #final {
+      position: sticky;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #1a1a1a, #000000);
+      text-align: center;
+      z-index: 10;
+    }
+  #section4 {
+    position: relative;
+    width: 100%;
+    height: 75vh; /* Double the viewport height for scrolling animation */
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+</style>
 <script>
-  // Add the third section to the observer
-  const section3 = document.getElementById("section3");
-  observer.observe(section3);
+  //const section4 = document.getElementById("section4");
+  //const categories = section4.querySelectorAll(".category");
+//
+  //const handleScroll = () => {
+  //  const sectionTop = section4.offsetTop;
+  //  const sectionHeight = section4.offsetHeight;
+  //  const scrollY = window.scrollY;
+//
+  //  categories.forEach((category, index) => {
+  //    const progress = (scrollY - sectionTop) / sectionHeight; // Scrolling progress
+  //    const offset = progress*200 - index; // Staggered offset per category
+  //    const isVisible = offset > -250 && offset < 250; // Range for visibility
+  //    const yOffset = index * 150; // Different Y offset per category
+//
+  //    if (isVisible) {
+  //      const direction = category.classList.contains("category-left") ? -1 : 1;
+  //      const translateX = direction * (100 - Math.abs(offset));
+//
+  //      category.style.transform = `translateX(${translateX}vw) translateY(${yOffset}px)`;
+  //      category.style.opacity = 1;
+  //    } else {
+  //     category.style.opacity = 0;
+  //    }
+  //  });
+  //};
+//
+  //window.addEventListener("scroll", handleScroll);
 </script>
 
-    </div>
-    <script>
-      // Select the container element you want to control
-      const parentDiv = document.querySelector("div[style*='transform: translateY']");
-    
-      // Function to handle scrolling and update transform property
-      const updateTransformOnScroll = () => {
-        const scrollY = window.scrollY; // Get the current scroll position
-        const translateY = -scrollY / 10; // Calculate transform value, adjust the divisor for speed
-    
-        // Apply the transform to the div
-        parentDiv.style.transform = `translateY(${translateY}rem)`;
-      };
-    
-      // Attach the scroll event listener
-      window.addEventListener("scroll", updateTransformOnScroll);
-    </script>
-    
+
+</div>
 
       <!-- Footer -->
       <div class="footer" id="footer">
