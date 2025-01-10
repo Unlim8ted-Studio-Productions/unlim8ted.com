@@ -756,8 +756,7 @@
 
   <!-- Rest of the content -->
 
-  <a class="cart-btn" href="cart" style="font-size: larger; position: absolute; top: 30px">🛍️</a>
-
+  <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
 
   <div id="home" style="display: block;">
     <style>
@@ -1045,17 +1044,16 @@
       </div>
       <script>
         // Select the container element you want to control
-        const parentDiv = document.querySelector("div[style*='transform: translateY']");
-        console.log(parentDiv)
+        const parentDiv = document.getElementById("moving-scrolling-container");
         // Function to handle scrolling and update transform property
         const updateTransformOnScroll = () => {
           const scrollY = window.scrollY; // Get the current scroll position
           const translateY = -scrollY / 10; // Calculate transform value, adjust the divisor for speed
-  
+
           // Apply the transform to the div
           parentDiv.style.transform = `translateY(${translateY}rem)`;
         };
-  
+
         // Attach the scroll event listener
         window.addEventListener("scroll", updateTransformOnScroll);
       </script>
@@ -1137,7 +1135,6 @@
               /* Smaller images */
             }
           }
-
         </style>
         <div class="slider-container-partners">
           <img src="images/logo/logoipsum-289.svg" alt="partner-logo">
@@ -1170,12 +1167,12 @@
           <span style="top: 50%; left: 90%; animation-delay: 1.5s;"></span>
           <span style="top: 80%; left: 50%; animation-delay: 3s;"></span>
         </div>
-        <h1 style="color:#bcfaf7;position:relative;top:-13rem;">So are you ready to start using Unlim8ted?</h1>
+        <h1 id="neon-bar" style="color:#bcfaf7;position:relative;top:-13rem;">So are you ready to start using Unlim8ted?</h1>
         <a href="/sign-in" style="position:relative;top:-13rem;"><button>Get Started</button></a>
-        <div class="footer" style="width:100%; bottom:-10rem" id="footer">
+        <div class="footer" style="width:100%; bottom:-10rem" id="homefooter">
           <p>© 2025 Unlim8ted Studio Productions. All rights reserved.</p>
         </div>
-    
+ 
       </div>
     </div>
     <!-- Footer -->
@@ -1247,8 +1244,8 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      color: black;
-      background: radial-gradient(circle at center, #0f0c29, #302b63, #24243e);
+      color: white;
+      background-color: #000;
       overflow-x: hidden;
     }
 

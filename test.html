@@ -1,83 +1,129 @@
-<style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infinite Neon Horizontal Scroll</title>
+  <style>
     body {
-        overflow: hidden;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      overflow: hidden; /* Prevent default scrolling behavior */
     }
 
-    #image-track {
-        display: flex;
-        gap: 4vmin;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(0%, -50%);
-        user-select: none;
-        /* -- Prevent image highlighting -- */
+    main {
+      height: 150vh; /* Simulate a tall main content */
+      background: linear-gradient(to bottom, #1a1a2e, #16213e);
+      color: white;
+      text-align: center;
+      padding: 50px;
     }
 
-    #image-track>.image {
-        width: 40vmin;
-        height: 56vmin;
-        object-fit: cover;
-        object-position: 100% center;
+    footer {
+      height: 100px;
+      background: #0f3460;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-
-</style>
-<div id="image-track-partners" data-mouse-down-at="0" data-prev-percentage="0">
-    <img class="image" src="https://unlim8ted.com/images/logo/logo.png" draggable="false" />
-    <img class="image" src="https://unlim8ted.com/images/logo/Zipper Line Logo.png" draggable="false" />
-    <img class="image" src="https://unlim8ted.com/images/logo/Sky Tale Media Logo.png" draggable="false" />
-    <img class="image" src="https://unlim8ted.com/images/logo/Likemind logo.png" draggable="false" />
-    <img class="image" src="https://unlim8ted.com/images/logo/Bnacintech Industries logo.png" draggable="false" />
-    <img class="image" src="https://unlim8ted.com/images/logo/New Heights Logo.png" draggable="false" />
-    <img class="image" src="https://unlim8ted.com/images/logo/new horizons industries" draggable="false" />
-    <img class="image" src="https://unlim8ted.com/images/logo/cookies incorporated" draggable="false" />
-</div>
-
-
-<script>const track = document.getElementById("image-track-partners");
-
-    const handleOnDown = e => track.dataset.mouseDownAt = e.clientX;
-
-    const handleOnUp = () => {
-        track.dataset.mouseDownAt = "0";
-        track.dataset.prevPercentage = track.dataset.percentage;
+    .neon-bar-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 8px; /* Thin flat bar */
+      background: #1a1a2e;
+      overflow: hidden;
+      z-index: 1000;
+      visibility: hidden; /* Hidden until horizontal scrolling starts */
     }
 
-    const handleOnMove = e => {
-        if (track.dataset.mouseDownAt === "0") return;
+    .neon-bar {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      width: 200%; /* Double width for seamless scrolling */
+    }
 
-        const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
-            maxDelta = window.innerWidth / 2;
+    .neon-item {
+      width: 100px;
+      height: 8px;
+      background: linear-gradient(to right, #00f, #0ff);
+      border-radius: 4px;
+      box-shadow: 0 0 10px #00f, 0 0 20px #0ff;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Scroll Down</h1>
+    <p>When you reach the footer, scrolling transitions to infinite horizontal scrolling.</p>
+  </main>
+  <footer id="homefooter">
+    Footer Section
+  </footer>
+  <div class="neon-bar-container" id="neon-bar-container">
+    <div class="neon-bar" id="neon-bar">
+      <!-- Neon items will be added dynamically -->
+    </div>
+  </div>
 
-        const percentage = (mouseDelta / maxDelta) * -100,
-            nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
-            nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+  <script>
+    const footer = document.getElementById('homefooter');
+    const neonBarContainer = document.getElementById('neon-bar-container');
+    const neonBar = document.getElementById('neon-bar');
 
-        track.dataset.percentage = nextPercentage;
+    // Add neon items dynamically
+    for (let i = 0; i < 20; i++) {
+      const div = document.createElement('div');
+      div.classList.add('neon-item');
+      neonBar.appendChild(div);
+    }
 
-        track.animate({
-            transform: `translate(${nextPercentage}%, -50%)`
-        }, { duration: 1200, fill: "forwards" });
+    // Duplicate the neon items for seamless infinite scrolling
+    neonBar.innerHTML += neonBar.innerHTML;
 
-        for (const image of track.getElementsByClassName("image")) {
-            image.animate({
-                objectPosition: `${100 + nextPercentage}% center`
-            }, { duration: 1200, fill: "forwards" });
+    let isHorizontalScrollActive = false;
+    let horizontalScrollPosition = 0;
+
+    const handleWheelScroll = (evt) => {
+      const footerRect = footer.getBoundingClientRect();
+
+      // Check if user has reached the footer
+      if (footerRect.top <= window.innerHeight) {
+        evt.preventDefault();
+
+        // Activate horizontal scrolling
+        if (!isHorizontalScrollActive) {
+          isHorizontalScrollActive = true;
+          neonBarContainer.style.visibility = 'visible';
         }
-    }
 
-    /* -- Had to add extra lines for touch events -- */
+        // Handle horizontal scrolling
+        horizontalScrollPosition += evt.deltaY; // Use vertical scroll to drive horizontal movement
 
-    window.onmousedown = e => handleOnDown(e);
+        // Loop the scroll position for infinite effect
+        if (horizontalScrollPosition > neonBar.scrollWidth / 2) {
+          horizontalScrollPosition = 0;
+        } else if (horizontalScrollPosition < 0) {
+          horizontalScrollPosition = neonBar.scrollWidth / 2;
+        }
 
-    window.ontouchstart = e => handleOnDown(e.touches[0]);
+        // Apply the scroll position to the neon bar
+        neonBar.style.transform = `translateX(-${horizontalScrollPosition}px)`;
+      } else {
+        // Deactivate horizontal scrolling
+        if (isHorizontalScrollActive) {
+          isHorizontalScrollActive = false;
+          neonBarContainer.style.visibility = 'hidden';
+        }
+      }
+    };
 
-    window.onmouseup = e => handleOnUp(e);
-
-    window.ontouchend = e => handleOnUp(e.touches[0]);
-
-    window.onmousemove = e => handleOnMove(e);
-
-    window.ontouchmove = e => handleOnMove(e.touches[0]);
-</script>
+    // Add wheel event listener for scrolling
+    window.addEventListener('wheel', handleWheelScroll, { passive: false });
+  </script>
+</body>
+</html>
