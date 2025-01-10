@@ -1109,6 +1109,12 @@
         width: 150px; /* Smaller images */
       }
     }
+    html {
+  height: 100%; /* Full viewport height */
+  margin: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
   </style>
   <div class="slider-container-partners">
     <img src="images/logo/logoipsum-289.svg" alt="partner-logo">
@@ -1145,7 +1151,72 @@
     <a href="/sign-in" style="position:relative;top:-13rem;"><button>Get Started</button></a>
   </div>
 </div>
+    <!-- Footer -->
+    <div class="footer" id="footer">
+      <p>© 2025 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
 
+    <!-- JavaScript for Scroll Animations -->
+    <script>
+      const sections = document.querySelectorAll('.section');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.2 });
+
+      sections.forEach((section) => observer.observe(section));
+    </script>
+
+    <script>const track = document.getElementById("image-track");
+
+      const handleOnDown = e => track.dataset.mouseDownAt = e.clientX;
+
+      const handleOnUp = () => {
+        track.dataset.mouseDownAt = "0";
+        track.dataset.prevPercentage = track.dataset.percentage;
+      }
+
+      const handleOnMove = e => {
+        if (track.dataset.mouseDownAt === "0") return;
+
+        const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
+          maxDelta = window.innerWidth / 2;
+
+        const percentage = (mouseDelta / maxDelta) * -100,
+          nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+          nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+
+        track.dataset.percentage = nextPercentage;
+
+        track.animate({
+          transform: `translate(${nextPercentage}%, -50%)`
+        }, { duration: 1200, fill: "forwards" });
+
+        for (const image of track.getElementsByClassName("image")) {
+          image.animate({
+            objectPosition: `${100 + nextPercentage}% center`
+          }, { duration: 1200, fill: "forwards" });
+        }
+      }
+
+
+      window.onmousedown = e => handleOnDown(e);
+
+      window.ontouchstart = e => handleOnDown(e.touches[0]);
+
+      window.onmouseup = e => handleOnUp(e);
+
+      window.ontouchend = e => handleOnUp(e.touches[0]);
+
+      window.onmousemove = e => handleOnMove(e);
+
+      window.ontouchmove = e => handleOnMove(e.touches[0]);
+    </script>
+</div>
 
 </div>
 
@@ -1245,73 +1316,6 @@
 
 
 </div>
-
-      <!-- Footer -->
-      <div class="footer" id="footer">
-        <p>© 2025 Unlim8ted Studio Productions. All rights reserved.</p>
-      </div>
-
-      <!-- JavaScript for Scroll Animations -->
-      <script>
-        const sections = document.querySelectorAll('.section');
-
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-            }
-          });
-        }, { threshold: 0.2 });
-
-        sections.forEach((section) => observer.observe(section));
-      </script>
-
-      <script>const track = document.getElementById("image-track");
-
-        const handleOnDown = e => track.dataset.mouseDownAt = e.clientX;
-
-        const handleOnUp = () => {
-          track.dataset.mouseDownAt = "0";
-          track.dataset.prevPercentage = track.dataset.percentage;
-        }
-
-        const handleOnMove = e => {
-          if (track.dataset.mouseDownAt === "0") return;
-
-          const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
-            maxDelta = window.innerWidth / 2;
-
-          const percentage = (mouseDelta / maxDelta) * -100,
-            nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
-            nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
-
-          track.dataset.percentage = nextPercentage;
-
-          track.animate({
-            transform: `translate(${nextPercentage}%, -50%)`
-          }, { duration: 1200, fill: "forwards" });
-
-          for (const image of track.getElementsByClassName("image")) {
-            image.animate({
-              objectPosition: `${100 + nextPercentage}% center`
-            }, { duration: 1200, fill: "forwards" });
-          }
-        }
-
-
-        window.onmousedown = e => handleOnDown(e);
-
-        window.ontouchstart = e => handleOnDown(e.touches[0]);
-
-        window.onmouseup = e => handleOnUp(e);
-
-        window.ontouchend = e => handleOnUp(e.touches[0]);
-
-        window.onmousemove = e => handleOnMove(e);
-
-        window.ontouchmove = e => handleOnMove(e.touches[0]);
-      </script>
-  </div>
 
 
 
