@@ -5,7 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Unlim8ted Sign-In</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Import Firebase as ES Modules -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
+      authDomain: "unlim8ted-db.firebaseapp.com",
+      projectId: "unlim8ted-db",
+      storageBucket: "unlim8ted-db.appspot.com",
+      messagingSenderId: "1059428499872",
+      appId: "1:1059428499872:web:855308683718237de6e4c5",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    // Handle Google Sign-In
+    const handleGoogleSignIn = async () => {
+      const provider = new GoogleAuthProvider();
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        alert(`Welcome, ${user.displayName}!`);
+        window.location.href = 'https://unlim8ted.com#products';
+      } catch (error) {
+        console.error('Google Sign-In error:', error.message);
+        alert('Failed to sign in with Google.');
+      }
+    };
+
+    // Handle Email/Password Sign-In
+    const handleEmailSignIn = async (event) => {
+      event.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        alert(`Welcome back, ${user.email}!`);
+        window.location.href = 'https://unlim8ted.com#products';
+      } catch (error) {
+        console.error('Email Sign-In error:', error.message);
+        alert('Failed to sign in. Check your email and password.');
+      }
+    };
+
+    // Attach event listeners after DOM content loads
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('google-signin-btn').addEventListener('click', handleGoogleSignIn);
+      document.getElementById('email-signin-form').addEventListener('submit', handleEmailSignIn);
+    });
+  </script>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -54,6 +109,7 @@
       box-shadow: 0 10px 30px rgba(0, 255, 153, 0.3);
       padding: 2rem;
       max-width: 400px;
+      width: 90%;
     }
 
     .logo {
@@ -68,9 +124,41 @@
       margin-top: 2rem;
     }
 
-    p {
-      font-size: 1rem;
-      color: #d0d0d0;
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px 0;
+      width: 100%;
+    }
+
+    #google-signin-btn {
+      background-color: #4285F4;
+      color: white;
+    }
+
+    #google-signin-btn:hover {
+      background-color: #357ae8;
+    }
+
+    #email-signin-form input {
+      padding: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    #email-signin-form button {
+      background: #00ff99;
+      color: #24243e;
+    }
+
+    #email-signin-form button:hover {
+      background: #00cc77;
     }
 
     .info {
@@ -104,34 +192,19 @@
   <div class="container">
     <div class="logo">Sign In</div>
     <p>Sign in or sign up to continue to your account</p>
-    <div id="g_id_onload"
-         data-client_id="657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com"
-         data-login_uri="https://unlim8ted.com" 
-         data-callback="handleCredentialResponse"
-         data-auto_prompt="false">
-    </div>
     <div class="button-container">
-      <div class="g_id_signin"
-           data-type="standard"
-           data-shape="rectangular"
-           data-theme="outline"
-           data-text="signin_with"
-           data-size="large"
-           data-logo_alignment="left">
-      </div>
+      <button id="google-signin-btn">Sign in with Google</button>
+      <p style="margin: 1rem 0;">Or</p>
+      <form id="email-signin-form">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+      </form>
     </div>
     <div class="info">
       <p>An account is needed to comment, rate products, and add things to your cart, but it is not required.</p>
       <p>If you'd prefer not to create an account, you can visit our <a href="#products">Products</a> or <a href="#about">About Us</a> sections.</p>
     </div>
   </div>
-
-  <script>
-    function handleCredentialResponse(response) {
-      console.log("Encoded JWT ID token: " + response.credential);
-      // Redirect to the products section
-      window.location.href = 'https://unlim8ted.com#products';
-    }
-  </script>
 </body>
 </html>
