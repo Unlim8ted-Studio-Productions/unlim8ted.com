@@ -135,13 +135,29 @@
     }
 
     #google-signin-btn {
-      background-color: #4285F4;
-      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #00ff99;
+      color: #24243e;
+      border: none;
+      border-radius: 25px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 5px 10px rgba(0, 255, 153, 0.3);
     }
 
     #google-signin-btn:hover {
-      background-color: #357ae8;
+      background: #00cc77;
     }
+
+    #google-signin-btn img {
+      width: 20px;
+      margin-right: 10px;
+    }
+
 
     #email-signin-form input {
       padding: 10px;
@@ -193,7 +209,11 @@
     <div class="logo">Sign In</div>
     <p>Sign in or sign up to continue to your account</p>
     <div class="button-container">
-      <button id="google-signin-btn">Sign in with Google</button>
+      <div class="button-container">
+        <button id="google-signin-btn">
+          <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google Logo">
+          Sign in with Google
+        </button>
       <p style="margin: 1rem 0;">Or</p>
       <form id="email-signin-form">
         <input type="email" id="email" placeholder="Email" required>
