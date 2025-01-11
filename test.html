@@ -1,100 +1,139 @@
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<style>        .profile-dropdown {
-  position: relative;
-  display: inline-block;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sign-In Example</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-.profile-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-}
+        .top-right {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background-color: white;
-  min-width: 150px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1;
-  border-radius: 5px;
-  overflow: hidden;
-}
+        .profile {
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+        }
 
-.dropdown-content a {
-  padding: 10px 15px;
-  text-decoration: none;
-  display: block;
-  color: #333;
-  font-size: 14px;
-}
+        .profile-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
+        .profile-dropdown a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px 20px;
+            display: block;
+        }
 
-.profile-dropdown:hover .dropdown-content {
-  display: block;
-}</style>
-        <div class="user-menu" id="user-menu"></div>
-    <script>
-      // Initialize Google Sign-In
-      function handleCredentialResponse(response) {
-          const userData = JSON.parse(atob(response.credential.split('.')[1]));
+        .profile-dropdown a:hover {
+            background-color: #f8f8f8;
+        }
+    </style>
+</head>
+<body>
 
-          // Save user data in localStorage
-          localStorage.setItem('user', JSON.stringify({
-              name: userData.name,
-              email: userData.email,
-              picture: userData.picture
-          }));
+<div class="top-right" id="user-control">
+    <!-- Dynamic content will be inserted here -->
+</div>
 
-          updateUserMenu();
-      }
+<script>
+    let isSignedIn = false; // Initial state
+    let userInfo = null;
 
-      window.onload = function () {
-          google.accounts.id.initialize({
-              client_id: "657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com",
-              callback: handleCredentialResponse
-          });
+    const userControl = document.getElementById('user-control');
 
-          // Render the sign-in button
-          updateUserMenu();
-      };
+    function renderSignInButton() {
+        const signInButton = document.createElement('div');
+        signInButton.id = "g_id_onload";
+        signInButton.dataset.client_id = "657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com"; // Replace with your Google Client ID
+        signInButton.dataset.context = "signin";
+        signInButton.dataset.callback = "handleCredentialResponse";
+        signInButton.dataset.auto_select = "false";
 
-      function updateUserMenu() {
-          const userMenu = document.getElementById('user-menu');
-          const user = JSON.parse(localStorage.getItem('user'));
+        userControl.appendChild(signInButton);
 
-          if (user) {
-              // User is signed in
-              userMenu.innerHTML = `
-                  <div class="profile-dropdown">
-                      <img src="${user.picture}" alt="Profile" class="profile-icon">
-                      <div class="dropdown-content">
-                          <a href="/profile">View Profile</a>
-                          <a href="#" id="sign-out">Sign Out</a>
-                      </div>
-                  </div>
-              `;
+        const signInDiv = document.createElement('div');
+        signInDiv.classList.add('g_id_signin');
+        userControl.appendChild(signInDiv);
+    }
 
-              document.getElementById('sign-out').addEventListener('click', () => {
-                  localStorage.removeItem('user');
-                  updateUserMenu();
-              });
-          } else {
-              // User is not signed in
-              userMenu.innerHTML = `
-                  <div id="g_id_signin"></div>
-              `;
+    function renderProfileDropdown() {
+        const profileIcon = document.createElement('div');
+        profileIcon.classList.add('profile');
+        profileIcon.style.backgroundImage = `url('${userInfo.picture}')`;
+        profileIcon.style.backgroundSize = "cover";
 
-              google.accounts.id.renderButton(
-                  document.getElementById('g_id_signin'),
-                  { theme: "outline", size: "large" } // Customization options
-              );
-          }
-      }
-  </script>
+        const dropdown = document.createElement('div');
+        dropdown.classList.add('profile-dropdown');
+        dropdown.innerHTML = `
+            <a href="#view-profile">View Profile</a>
+            <a href="#settings">Settings</a>
+            <a href="#logout" id="logout">Logout</a>
+        `;
+
+        profileIcon.appendChild(dropdown);
+        userControl.appendChild(profileIcon);
+
+        profileIcon.addEventListener('click', () => {
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.getElementById('logout').addEventListener('click', () => {
+            google.accounts.id.disableAutoSelect();
+            isSignedIn = false;
+            userInfo = null;
+            userControl.innerHTML = '';
+            renderSignInButton();
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!userControl.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    }
+
+    window.handleCredentialResponse = (response) => {
+        const jwt = response.credential;
+        const payload = JSON.parse(atob(jwt.split('.')[1]));
+        userInfo = {
+            name: payload.name,
+            email: payload.email,
+            picture: payload.picture
+        };
+
+        isSignedIn = true;
+        userControl.innerHTML = '';
+        renderProfileDropdown();
+    };
+
+    if (!isSignedIn) {
+        renderSignInButton();
+    }
+</script>
+
+</body>
+</html>
