@@ -8,22 +8,26 @@
     // Import Firebase SDK
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getFirestore, collection, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
     // Firebase configuration
     const firebaseConfig = {
-        apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
-        authDomain: "unlim8ted-db.firebaseapp.com",
-        projectId: "unlim8ted-db",
-        storageBucket: "unlim8ted-db.appspot.com",
-        messagingSenderId: "1059428499872",
-        appId: "1:1059428499872:web:855308683718237de6e4c5",
-      };
+      apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
+      authDomain: "unlim8ted-db.firebaseapp.com",
+      projectId: "unlim8ted-db",
+      storageBucket: "unlim8ted-db.appspot.com",
+      messagingSenderId: "1059428499872",
+      appId: "1:1059428499872:web:855308683718237de6e4c5",
+    };
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    // Sample products array
+    // Google Auth Provider
+    const provider = new GoogleAuthProvider();
+
     const products =[
     {
       "id": "The-Life-of-a-Meatball",
@@ -864,6 +868,30 @@
     }
   ];
 
+    // Handle Google Login
+    async function loginWithGoogle() {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        console.log("Logged in user:", user.email);
+        checkAdminStatus(user);
+      } catch (error) {
+        console.error("Login failed:", error);
+        alert("Login failed. Please try again.");
+      }
+    }
+
+    // Check Admin Status
+    async function checkAdminStatus(user) {
+      const adminEmails = ["admin@example.com"]; // Replace with actual admin emails
+      if (adminEmails.includes(user.email)) {
+        alert("Admin verified. Uploading products...");
+        uploadProducts();
+      } else {
+        alert("Access denied. You are not an admin.");
+      }
+    }
+
     // Upload products to Firestore
     async function uploadProducts() {
       try {
@@ -880,13 +908,15 @@
       }
     }
 
-    // Run upload
+    // Event listener for Google Login
     document.addEventListener("DOMContentLoaded", () => {
-      uploadProducts();
+      const googleLoginBtn = document.getElementById("googleLoginBtn");
+      googleLoginBtn.addEventListener("click", loginWithGoogle);
     });
   </script>
 </head>
 <body>
-  <h1>Uploading Products...</h1>
+  <h1>Admin Login</h1>
+  <button id="googleLoginBtn">Login with Google</button>
 </body>
 </html>
