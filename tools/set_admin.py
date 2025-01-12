@@ -14,7 +14,7 @@ def set_admin(uid):
     except Exception as e:
         print(f"Error setting admin: {e}")
 
-user_uids = ["hNkx9ZfbfaZA7bspDnzhoIf1AEG3", "mSCsH8TGW4QgyO6c2p4tzUhx6xa2","mSCsH8TGW4QgyO6c2p4tzUhx6xa2"]
+user_uids = ["hNkx9ZfbfaZA7bspDnzhoIf1AEG3", "mSCsH8TGW4QgyO6c2p4tzUhx6xa2","mSCsH8TGW4QgyO6c2p4tzUhx6xa2"] #example fake user accounts
 for id in user_uids:
     set_admin(id)
 
