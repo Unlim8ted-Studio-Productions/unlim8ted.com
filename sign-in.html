@@ -7,123 +7,87 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <!-- Import Firebase as ES Modules -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-functions.js";
-  
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
-      authDomain: "unlim8ted-db.firebaseapp.com",
-      projectId: "unlim8ted-db",
-      storageBucket: "unlim8ted-db.appspot.com",
-      messagingSenderId: "1059428499872",
-      appId: "1:1059428499872:web:855308683718237de6e4c5",
-    };
-  
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const functions = getFunctions();
-  
-    // Google Sign-In
-    async function handleGoogleSignIn() {
-      const provider = new GoogleAuthProvider();
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-  
-        // Send user data to backend
-        const addUser = httpsCallable(functions, "addUserToDatabase");
-        await addUser({
-          uid: user.uid,
-          name: user.displayName,
-          email: user.email,
-        });
-  
-        alert(`Welcome, ${user.displayName}!`);
-        window.location.href = 'https://unlim8ted.com#products';
-      } catch (error) {
-        console.error('Google Sign-In error:', error.message);
-        alert('Failed to sign in with Google.');
-      }
-    }
-  
-    // Email/Password Sign-In
-    async function handleEmailSignIn(event) {
-      event.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-  
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        alert(`Welcome back, ${user.email}!`);
-        window.location.href = 'https://unlim8ted.com#products';
-      } catch (error) {
-        console.error('Email Sign-In error:', error.message);
-        alert(`Failed to sign in, ${error.message}. Check your email and password.`);
-      }
-    }
-  
-    // Account Creation
-    async function handleAccountCreation(event) {
-      event.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-  
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-  
-        // Send user data to backend
-        const addUser = httpsCallable(functions, "addUserToDatabase");
-        await addUser({
-          uid: user.uid,
-          email: user.email,
-        });
-  
-        alert(`Account created successfully for ${user.email}!`);
-        window.location.href = 'https://unlim8ted.com#products';
-      } catch (error) {
-        console.error('Account Creation error:', error.message);
-        alert(`Failed to create account, ${error.message}. Please try again.`);
-      }
-    }
-  
-    // Toggle Between Modes
-    function toggleMode() {
-      const mode = document.getElementById('form-mode');
-      const submitButton = document.getElementById('form-submit');
-      const toggleText = document.getElementById('toggle-text');
-  
-      if (mode.textContent === 'Sign In') {
-        mode.textContent = 'Create Account';
-        submitButton.textContent = 'Create Account';
-        toggleText.textContent = 'Already have an account? Sign In.';
-        submitButton.onclick = handleAccountCreation;
-      } else {
-        mode.textContent = 'Sign In';
-        submitButton.textContent = 'Sign In';
-        toggleText.textContent = "Don't have an account? Create one.";
-        submitButton.onclick = handleEmailSignIn;
-      }
-    }
-  
-    // Expose functions to the global scope
-    window.handleGoogleSignIn = handleGoogleSignIn;
-    window.handleEmailSignIn = handleEmailSignIn;
-    window.handleAccountCreation = handleAccountCreation;
-    window.toggleMode = toggleMode;
-  
-    // Add Event Listeners
-    window.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('google-signin-btn').addEventListener('click', handleGoogleSignIn);
-      document.getElementById('toggle-text').addEventListener('click', toggleMode);
-      document.getElementById('form-submit').addEventListener('click', handleEmailSignIn);
-    });
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+// Initialize Firestore
+const db = getFirestore(app);
+
+// Add user to Firestore
+async function addUserToFirestore(user) {
+  try {
+    const userDocRef = doc(db, "users", user.uid);
+    await setDoc(userDocRef, {
+      email: user.email,
+      name: user.displayName || null,
+      createdAt: serverTimestamp(),
+    }, { merge: true });
+    console.log("User added to Firestore successfully.");
+  } catch (error) {
+    console.error("Error adding user to Firestore:", error.message);
+  }
+}
+
+// Updated Google Sign-In
+async function handleGoogleSignIn() {
+  const provider = new GoogleAuthProvider();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+
+    // Add user to Firestore
+    await addUserToFirestore(user);
+
+    alert(`Welcome, ${user.displayName}!`);
+    window.location.href = 'https://unlim8ted.com#products';
+  } catch (error) {
+    console.error('Google Sign-In error:', error.message);
+    alert('Failed to sign in with Google.');
+  }
+}
+
+// Updated Email Sign-In
+async function handleEmailSignIn(event) {
+  event.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Add user to Firestore
+    await addUserToFirestore(user);
+
+    alert(`Welcome back, ${user.email}!`);
+    window.location.href = 'https://unlim8ted.com#products';
+  } catch (error) {
+    console.error('Email Sign-In error:', error.message);
+    alert(`Failed to sign in, ${error.message}. Check your email and password.`);
+  }
+}
+
+// Updated Account Creation
+async function handleAccountCreation(event) {
+  event.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Add user to Firestore
+    await addUserToFirestore(user);
+
+    alert(`Account created successfully for ${user.email}!`);
+    window.location.href = 'https://unlim8ted.com#products';
+  } catch (error) {
+    console.error('Account Creation error:', error.message);
+    alert(`Failed to create account, ${error.message}. Please try again.`);
+  }
+}
+
   </script>
-  
   
   <style>
     body {
