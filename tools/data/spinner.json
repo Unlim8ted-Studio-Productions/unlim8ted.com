@@ -205,11 +205,11 @@
     },
     {
         "name": "The Life of a Meatball",
-        "link": "products#The-Life-of-a-Meatball"
+        "link": "product#The-Life-of-a-Meatball"
     },
     {
         "name": "The Glitch",
-        "link": "products#theglitch"
+        "link": "product#theglitch"
     },
     {
         "name": "The Life of a Meatball Puzzle",
@@ -225,15 +225,15 @@
     },
     {
         "name": "life",
-        "link": "products#life"
+        "link": "product#life"
     },
     {
         "name": "The Glitch (book)",
-        "link": "products#theglitchbook"
+        "link": "product#theglitchbook"
     },
     {
         "name": "The Glitch (screen play)",
-        "link": "products#theglitchscreenplay"
+        "link": "product#theglitchscreenplay"
     },
     {
         "name": "Alien",
@@ -265,70 +265,70 @@
     },
     {
         "name": "Square Pixels",
-        "link": "products#Square-Pixels"
+        "link": "product#Square-Pixels"
     },
     {
         "name": "Download Any Youtube Video",
-        "link": "products#Download-Any-Youtube-Video"
+        "link": "product#Download-Any-Youtube-Video"
     },
     {
         "name": "Face Stuff",
-        "link": "products#Face-Stuff"
+        "link": "product#Face-Stuff"
     },
     {
         "name": "Multiplayer Physics Simulator",
-        "link": "products#Multiplayer-Physics-Simulator"
+        "link": "product#Multiplayer-Physics-Simulator"
     },
     {
         "name": "Easy pygame UI Creator",
-        "link": "products#Easy-Pygame-UI-Creator"
+        "link": "product#Easy-Pygame-UI-Creator"
     },
     {
         "name": "ChatApp",
-        "link": "products#ChatApp"
+        "link": "product#ChatApp"
     },
     {
         "name": "Organisms Sim",
-        "link": "products#Organisms_Sim"
+        "link": "product#Organisms_Sim"
     },
     {
         "name": "FTL Node Based Modding",
-        "link": "products#FTL-Node-Based-Modding"
+        "link": "product#FTL-Node-Based-Modding"
     },
     {
         "name": "FTL ChooseYourSide",
-        "link": "products#FTL-ChooseYourSide"
+        "link": "product#FTL-ChooseYourSide"
     },
     {
         "name": "wrighting",
-        "link": "products#wrighting"
+        "link": "product#wrighting"
     },
     {
         "name": "Music AI Gen",
-        "link": "products#Music-AI-Gen"
+        "link": "product#Music-AI-Gen"
     },
     {
         "name": "ChessVR",
-        "link": "products#ChessVR"
+        "link": "product#ChessVR"
     },
     {
         "name": "Kindel E-ink games",
-        "link": "products#Kindel-E-ink-games"
+        "link": "product#Kindel-E-ink-games"
     },
     {
         "name": "turbo-octo-funicular",
-        "link": "products#turbo-octo-funicular"
+        "link": "product#turbo-octo-funicular"
     },
     {
         "name": "Unicornia",
-        "link": "products#unicornia"
+        "link": "product#unicornia"
     },
     {
         "name": "Confuzzled",
-        "link": "products#confuzzled"
+        "link": "product#confuzzled"
     },
     {
         "name": "Copy Keyframes to Selected (Blender Addon)",
-        "link": "products#Copy-Keyframes-to-Selected-Blender-Addon"
+        "link": "product#Copy-Keyframes-to-Selected-Blender-Addon"
     }
 ]
