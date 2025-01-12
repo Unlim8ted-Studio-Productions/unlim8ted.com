@@ -7,12 +7,24 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <!-- Import Firebase as ES Modules -->
   <script type="module">
-import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-
-// Initialize Firestore
-const db = getFirestore(app);
-
-// Add user to Firestore
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
+      authDomain: "unlim8ted-db.firebaseapp.com",
+      projectId: "unlim8ted-db",
+      storageBucket: "unlim8ted-db.appspot.com",
+      messagingSenderId: "1059428499872",
+      appId: "1:1059428499872:web:855308683718237de6e4c5",
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+  
+  // Add user to Firestore
 async function addUserToFirestore(user) {
   try {
     const userDocRef = doc(db, "users", user.uid);
@@ -86,7 +98,19 @@ async function handleAccountCreation(event) {
     alert(`Failed to create account, ${error.message}. Please try again.`);
   }
 }
-
+  
+    // Expose functions to the global scope
+    window.handleGoogleSignIn = handleGoogleSignIn;
+    window.handleEmailSignIn = handleEmailSignIn;
+    window.handleAccountCreation = handleAccountCreation;
+    window.toggleMode = toggleMode;
+  
+    // Add Event Listeners
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('google-signin-btn').addEventListener('click', handleGoogleSignIn);
+      document.getElementById('toggle-text').addEventListener('click', toggleMode);
+      document.getElementById('form-submit').addEventListener('click', handleEmailSignIn);
+    });
   </script>
   
   <style>
