@@ -9,6 +9,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
   
     // Firebase configuration
     const firebaseConfig = {
@@ -23,6 +24,24 @@
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
+    const db = getFirestore();
+  
+    // Add user to Firestore database
+    async function addUserToDatabase(user) {
+      try {
+        const userRef = doc(db, "users", user.uid);
+        await setDoc(userRef, {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName || null,
+          photoURL: user.photoURL || null,
+          createdAt: new Date().toISOString(),
+        });
+        console.log(`User ${user.email} added to the database.`);
+      } catch (error) {
+        console.error("Error adding user to database:", error.message);
+      }
+    }
   
     // Google Sign-In
     async function handleGoogleSignIn() {
@@ -30,27 +49,29 @@
       try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
+        await addUserToDatabase(user); // Add user to database
         alert(`Welcome, ${user.displayName}!`);
         window.location.href = 'https://unlim8ted.com#products';
       } catch (error) {
-        console.error('Google Sign-In error:', error.message);
-        alert('Failed to sign in with Google.');
+        console.error("Google Sign-In error:", error.message);
+        alert("Failed to sign in with Google.");
       }
     }
   
     // Email/Password Sign-In
     async function handleEmailSignIn(event) {
       event.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
   
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
+        await addUserToDatabase(user); // Add user to database
         alert(`Welcome back, ${user.email}!`);
-        window.location.href = 'https://unlim8ted.com#products';
+        window.location.href = "https://unlim8ted.com#products";
       } catch (error) {
-        console.error('Email Sign-In error:', error.message);
+        console.error("Email Sign-In error:", error.message);
         alert(`Failed to sign in, ${error.message}. Check your email and password.`);
       }
     }
@@ -58,34 +79,35 @@
     // Account Creation
     async function handleAccountCreation(event) {
       event.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
   
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
+        await addUserToDatabase(user); // Add user to database
         alert(`Account created successfully for ${user.email}!`);
-        window.location.href = 'https://unlim8ted.com#products';
+        window.location.href = "https://unlim8ted.com#products";
       } catch (error) {
-        console.error('Account Creation error:', error.message);
+        console.error("Account Creation error:", error.message);
         alert(`Failed to create account, ${error.message}. Please try again.`);
       }
     }
   
     // Toggle Between Modes
     function toggleMode() {
-      const mode = document.getElementById('form-mode');
-      const submitButton = document.getElementById('form-submit');
-      const toggleText = document.getElementById('toggle-text');
+      const mode = document.getElementById("form-mode");
+      const submitButton = document.getElementById("form-submit");
+      const toggleText = document.getElementById("toggle-text");
   
-      if (mode.textContent === 'Sign In') {
-        mode.textContent = 'Create Account';
-        submitButton.textContent = 'Create Account';
-        toggleText.textContent = 'Already have an account? Sign In.';
+      if (mode.textContent === "Sign In") {
+        mode.textContent = "Create Account";
+        submitButton.textContent = "Create Account";
+        toggleText.textContent = "Already have an account? Sign In.";
         submitButton.onclick = handleAccountCreation;
       } else {
-        mode.textContent = 'Sign In';
-        submitButton.textContent = 'Sign In';
+        mode.textContent = "Sign In";
+        submitButton.textContent = "Sign In";
         toggleText.textContent = "Don't have an account? Create one.";
         submitButton.onclick = handleEmailSignIn;
       }
@@ -98,12 +120,13 @@
     window.toggleMode = toggleMode;
   
     // Add Event Listeners
-    window.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('google-signin-btn').addEventListener('click', handleGoogleSignIn);
-      document.getElementById('toggle-text').addEventListener('click', toggleMode);
-      document.getElementById('form-submit').addEventListener('click', handleEmailSignIn);
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("google-signin-btn").addEventListener("click", handleGoogleSignIn);
+      document.getElementById("toggle-text").addEventListener("click", toggleMode);
+      document.getElementById("form-submit").addEventListener("click", handleEmailSignIn);
     });
   </script>
+  
   
   <style>
     body {
