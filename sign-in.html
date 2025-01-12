@@ -8,8 +8,8 @@
   <!-- Import Firebase as ES Modules -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  
     // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
@@ -19,13 +19,13 @@
       messagingSenderId: "1059428499872",
       appId: "1:1059428499872:web:855308683718237de6e4c5",
     };
-
+  
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
-
-    // Handle Google Sign-In
-    const handleGoogleSignIn = async () => {
+  
+    // Google Sign-In
+    async function handleGoogleSignIn() {
       const provider = new GoogleAuthProvider();
       try {
         const result = await signInWithPopup(auth, provider);
@@ -36,14 +36,14 @@
         console.error('Google Sign-In error:', error.message);
         alert('Failed to sign in with Google.');
       }
-    };
-
-    // Handle Email/Password Sign-In
-    const handleEmailSignIn = async (event) => {
+    }
+  
+    // Email/Password Sign-In
+    async function handleEmailSignIn(event) {
       event.preventDefault();
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-
+  
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
@@ -51,16 +51,60 @@
         window.location.href = 'https://unlim8ted.com#products';
       } catch (error) {
         console.error('Email Sign-In error:', error.message);
-        alert('Failed to sign in. Check your email and password.');
+        alert(`Failed to sign in, ${error.message}. Check your email and password.`);
       }
-    };
-
-    // Attach event listeners after DOM content loads
+    }
+  
+    // Account Creation
+    async function handleAccountCreation(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+  
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        alert(`Account created successfully for ${user.email}!`);
+        window.location.href = 'https://unlim8ted.com#products';
+      } catch (error) {
+        console.error('Account Creation error:', error.message);
+        alert(`Failed to create account, ${error.message}. Please try again.`);
+      }
+    }
+  
+    // Toggle Between Modes
+    function toggleMode() {
+      const mode = document.getElementById('form-mode');
+      const submitButton = document.getElementById('form-submit');
+      const toggleText = document.getElementById('toggle-text');
+  
+      if (mode.textContent === 'Sign In') {
+        mode.textContent = 'Create Account';
+        submitButton.textContent = 'Create Account';
+        toggleText.textContent = 'Already have an account? Sign In.';
+        submitButton.onclick = handleAccountCreation;
+      } else {
+        mode.textContent = 'Sign In';
+        submitButton.textContent = 'Sign In';
+        toggleText.textContent = "Don't have an account? Create one.";
+        submitButton.onclick = handleEmailSignIn;
+      }
+    }
+  
+    // Expose functions to the global scope
+    window.handleGoogleSignIn = handleGoogleSignIn;
+    window.handleEmailSignIn = handleEmailSignIn;
+    window.handleAccountCreation = handleAccountCreation;
+    window.toggleMode = toggleMode;
+  
+    // Add Event Listeners
     window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('google-signin-btn').addEventListener('click', handleGoogleSignIn);
-      document.getElementById('email-signin-form').addEventListener('submit', handleEmailSignIn);
+      document.getElementById('toggle-text').addEventListener('click', toggleMode);
+      document.getElementById('form-submit').addEventListener('click', handleEmailSignIn);
     });
   </script>
+  
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -208,8 +252,8 @@
   <div class="container">
     <div class="logo">Sign In</div>
     <p>Sign in or sign up to continue to your account</p>
-    <div class="button-container">
-      <div class="button-container">
+    <div id="form-mode">Sign In</div>
+          <div class="button-container">
         <button id="google-signin-btn">
           <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google Logo">
           Sign in with Google
@@ -218,12 +262,15 @@
       <form id="email-signin-form">
         <input type="email" id="email" placeholder="Email" required>
         <input type="password" id="password" placeholder="Password" required>
-        <button type="submit">Sign In</button>
+        <button id="form-submit" type="submit">Sign In</button>
+        <div class="info">
+          <p id="toggle-text" style="cursor: pointer; color: #00ff99; text-decoration: underline;">
+            Don't have an account? Create one.
+          </p>
+          <p>An account is needed to comment, rate products, and add things to your cart, but it is not required.</p>
+          <p>If you'd prefer not to create an account, you can visit our <a href="#products">Products</a> or <a href="#about">About Us</a> sections.</p>
+        </div>
       </form>
-    </div>
-    <div class="info">
-      <p>An account is needed to comment, rate products, and add things to your cart, but it is not required.</p>
-      <p>If you'd prefer not to create an account, you can visit our <a href="#products">Products</a> or <a href="#about">About Us</a> sections.</p>
     </div>
   </div>
 </body>
