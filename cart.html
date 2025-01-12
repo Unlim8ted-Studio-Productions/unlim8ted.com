@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unlim8ted - Cart</title>
-    <meta name="description"content="View your Unlim8ted cart, powered by Unlim8ted Studio Productions"/>
-      <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unlim8ted - Cart</title>
+  <meta name="description" content="View your Unlim8ted cart, powered by Unlim8ted Studio Productions" />
+  <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
   <style media="screen" type="text/css">
     .layer1_class {
       position: absolute;
@@ -208,259 +208,266 @@
     }
   </script>
   <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
 
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1rem;
-            text-align: center;
-            position: relative;
-        }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+      position: relative;
+    }
 
-        header .back-btn, header .cart-btn {
-            position: absolute;
-            top: 30px;
-            color: white;
-            text-decoration: none;
-            font-size: larger;
-        }
+    header .back-btn,
+    header .cart-btn {
+      position: absolute;
+      top: 30px;
+      color: white;
+      text-decoration: none;
+      font-size: larger;
+    }
 
-        header .back-btn {
-            left: 20px;
-        }
+    header .back-btn {
+      left: 20px;
+    }
 
-        header .cart-btn {
-            right: 20px;
-        }
+    header .cart-btn {
+      right: 20px;
+    }
 
-        main {
-            padding: 2rem;
-        }
+    main {
+      padding: 2rem;
+    }
 
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            background-color: #fff;
-            padding: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 1rem;
-        }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      background-color: #fff;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+    }
 
-        .cart-item h3, .cart-item p {
-            margin: 0;
-        }
+    .cart-item h3,
+    .cart-item p {
+      margin: 0;
+    }
 
-        .cart-item .remove-btn {
-            background-color: #f44336;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    .cart-item .remove-btn {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-        .cart-item .remove-btn:hover {
-            background-color: #d32f2f;
-        }
+    .cart-item .remove-btn:hover {
+      background-color: #d32f2f;
+    }
 
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 1rem;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
+    footer {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
 
-        /* Popup notification styles */
-        .added-to-cart-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #4caf50;
-            color: white;
-            padding: 1rem;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: none;
-            z-index: 1000;
-        }
+    /* Popup notification styles */
+    .added-to-cart-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #4caf50;
+      color: white;
+      padding: 1rem;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      display: none;
+      z-index: 1000;
+    }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
 
-        .slideIn {
-            animation: slideIn 0.5s forwards;
-        }
-    </style>
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .slideIn {
+      animation: slideIn 0.5s forwards;
+    }
+  </style>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <style>  
-        /* logo */
-        .logo {
-            position: absolute;
-            z-index: 1;
-            top: 5%;  /* Adjust top position relative to viewport height */
-            left: 5%; /* Adjust left position relative to viewport width */
-            display: block;
-        }
-    
-        .logo img {
-            height: 10vw; /* Adjust height relative to viewport width */
-            max-height: 140px; /* Set a maximum height to prevent the logo from getting too large on larger screens */
-            width: auto; /* Maintain aspect ratio */
-        }
-    
-        /* Media query for small devices */
-        @media (max-width: 600px) {
-            .logo img {
-                height: 20vw; /* Larger logo for smaller devices */
-            }
-        }
-    </style>
-    
+  <style>
+    /* logo */
+    .logo {
+      position: absolute;
+      z-index: 1;
+      top: 5%;
+      /* Adjust top position relative to viewport height */
+      left: 5%;
+      /* Adjust left position relative to viewport width */
+      display: block;
+    }
+
+    .logo img {
+      height: 10vw;
+      /* Adjust height relative to viewport width */
+      max-height: 140px;
+      /* Set a maximum height to prevent the logo from getting too large on larger screens */
+      width: auto;
+      /* Maintain aspect ratio */
+    }
+
+    /* Media query for small devices */
+    @media (max-width: 600px) {
+      .logo img {
+        height: 20vw;
+        /* Larger logo for smaller devices */
+      }
+    }
+  </style>
+
 </head>
 
 <body>
-    <div id="inner-wrap">
-        <div class="logo" style="z-index: 2;">
-          <a href="/">
-            <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
-          </a>
-        </div>
-        <style>
-
-            .dropdown-content {
-              display: none;
-              position: absolute;
-              background-color: #f9f9f9;
-              box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            }
-            
-            .dropdown:hover .dropdown-content {
-              display: block;
-            }
-            
-            .dropdown-content a {
-              color: black;
-              text-decoration: none;
-              padding: 12px 16px;
-              display: block;
-            }
-            
-            .dropdown-content a:hover {
-              background-color: #ddd;
-            }
-            
-            .navbar-toggle {
-              display: none;
-              background-color: #333;
-              color: white;
-              padding: 14px 20px;
-              border: none;
-              cursor: pointer;
-              font-size: 18px;
-            }
-            
-            /* Responsive styles */
-            @media (max-width: 768px) {
-              .nav-links {
-                flex-direction: column;
-                display: none;
-              }
-            
-              .nav-links.show {
-                display: flex;
-              }
-            
-              .navbar-toggle {
-                display: block;
-              }
-            }
-            
-              </style>
-              <script>
-              function toggleMenu() {
-                const navLinks = document.getElementById("navbarLinks");
-                navLinks.classList.toggle("show");
-              }
-              </script>
-  <nav class="navbar">
-    <div class="navbar-header">
-      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-      <ul class="nav-links" id="navbarLinks">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="products">Products</a></li>
-        <li class="nav-item"><a href="help">Help</a></li>
-        <li class="nav-item"><a href="about">About</a></li>
-        <li class="nav-item dropdown">
-          <a href="javascript:void(0)" class="dropbtn">More</a>
-          <div class="dropdown-content">
-            <a href="portfolio">Portfolio</a>
-            <a href="contact">Contact</a>
-            <a href="blog">Blog</a>
-            <a href="live-chat">Live Chat</a>
-            <a href="live-game">Live Chat and Game</a>
-            <a href="puzzle-squares">Puzzle Squares</a>
-          </div>
-        </li>
-        <a href="old"><button>Old site</button></a>
-      </ul>
+  <div id="inner-wrap">
+    <div class="logo" style="z-index: 2;">
+      <a href="/">
+        <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
+      </a>
     </div>
-  </nav>
+    <style>
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .dropdown-content a {
+        color: black;
+        text-decoration: none;
+        padding: 12px 16px;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #ddd;
+      }
+
+      .navbar-toggle {
+        display: none;
+        background-color: #333;
+        color: white;
+        padding: 14px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      /* Responsive styles */
+      @media (max-width: 768px) {
+        .nav-links {
+          flex-direction: column;
+          display: none;
+        }
+
+        .nav-links.show {
+          display: flex;
+        }
+
+        .navbar-toggle {
+          display: block;
+        }
+      }
+    </style>
+    <script>
+      function toggleMenu() {
+        const navLinks = document.getElementById("navbarLinks");
+        navLinks.classList.toggle("show");
+      }
+    </script>
+    <nav class="navbar">
+      <div class="navbar-header">
+        <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+        <ul class="nav-links" id="navbarLinks">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item"><a href="products">Products</a></li>
+          <li class="nav-item"><a href="help">Help</a></li>
+          <li class="nav-item"><a href="about">About</a></li>
+          <li class="nav-item dropdown">
+            <a href="javascript:void(0)" class="dropbtn">More</a>
+            <div class="dropdown-content">
+              <a href="portfolio">Portfolio</a>
+              <a href="contact">Contact</a>
+              <a href="blog">Blog</a>
+              <a href="live-chat">Live Chat</a>
+              <a href="live-game">Live Chat and Game</a>
+              <a href="puzzle-squares">Puzzle Squares</a>
+            </div>
+          </li>
+          <a href="old"><button>Old site</button></a>
+        </ul>
+      </div>
+    </nav>
     <header>
-        <h1>Cart</h1>
-        <a class="back-btn" href="#" onclick="history.back();">Go Back</a>
-        <a class="cart-btn" href="cart" style="font-size: larger; position: absolute; top: 30px">🛍️</a>
+      <h1>Cart</h1>
+      <a class="back-btn" href="#" onclick="history.back();">Go Back</a>
+      <a class="cart-btn" href="cart" style="font-size: larger; position: absolute; top: 30px">🛍️</a>
     </header>
 
     <main>
-        <div id="cart-items"></div>
-        <p id="cart-empty-message">Your cart is empty.</p>
+      <div id="cart-items"></div>
+      <p id="cart-empty-message">Your cart is empty.</p>
     </main>
 
     <div id="added-to-cart-notification" class="added-to-cart-notification">
-        Added to cart!
+      Added to cart!
     </div>
 
     <script>
 
-        // Set cart to cookies
-        function setCartToCookies(cart) {
-            localStorage.setItem('unlim8ted-cart', JSON.stringify(cart));
-        }
+      // Set cart to cookies
+      function setCartToCookies(cart) {
+        localStorage.setItem('unlim8ted-cart', JSON.stringify(cart));
+      }
 
-        // Function to display the cart
-        function displayCart() {
-            const cartItemsContainer = document.getElementById('cart-items');
-            const cartEmptyMessage = document.getElementById('cart-empty-message');
-            const cart = getCookie("unlim8ted-cart") 
-            cartItemsContainer.innerHTML = '';
+      // Function to display the cart
+      function displayCart() {
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartEmptyMessage = document.getElementById('cart-empty-message');
+        const cart = getCookie("unlim8ted-cart")
+        cartItemsContainer.innerHTML = '';
 
-            if (cart.length > 0) {
-                cartEmptyMessage.style.display = 'none';
-                cart.forEach((item, index) => {
-                    const cartItem = document.createElement('div');
-                    cartItem.className = 'cart-item';
-                    cartItem.innerHTML = `
+        if (cart.length > 0) {
+          cartEmptyMessage.style.display = 'none';
+          cart.forEach((item, index) => {
+            const cartItem = document.createElement('div');
+            cartItem.className = 'cart-item';
+            cartItem.innerHTML = `
                         <div>
                             <img src=${item.image}></img>
                             <h3>${item.name}</h3>
@@ -468,58 +475,59 @@
                         </div>
                         <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
                     `;
-                    cartItemsContainer.appendChild(cartItem);
-                });
-            } else {
-                cartEmptyMessage.style.display = 'block';
-            }
+            cartItemsContainer.appendChild(cartItem);
+          });
+        } else {
+          cartEmptyMessage.style.display = 'block';
         }
+      }
 
-        function getCartFromCookies() {
-            const cartJSON = getCookie('unlim8ted-cart');
-            if (cartJSON) {
-                return cartJSON;
-            }
-            return null;
+      function getCartFromCookies() {
+        const cartJSON = getCookie('unlim8ted-cart');
+        if (cartJSON) {
+          return cartJSON;
         }
-        function getCookie(key) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-        let cookie = cookies[i].trim();
-        // Check if the cookie starts with the desired key
-        if (cookie.startsWith(key + '=')) {
+        return null;
+      }
+      function getCookie(key) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i].trim();
+          // Check if the cookie starts with the desired key
+          if (cookie.startsWith(key + '=')) {
             return cookie.substring((key + '=').length, cookie.length);
+          }
         }
-    }
-    return null;
-}
+        return null;
+      }
 
-        // Function to remove item from cart
-        function removeFromCart(index) {
-            let cart = getCartFromCookies();
-            cart.splice(index, 1);
-            setCartToCookies(cart);
-            displayCart();
-        }
+      // Function to remove item from cart
+      function removeFromCart(index) {
+        let cart = getCartFromCookies();
+        cart.splice(index, 1);
+        setCartToCookies(cart);
+        displayCart();
+      }
 
-        // Function to show the added-to-cart notification
-        function showAddedToCartNotification() {
-            const notification = document.getElementById('added-to-cart-notification');
-            notification.classList.add('slideIn');
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-                notification.classList.remove('slideIn');
-            }, 2000);
-        }
+      // Function to show the added-to-cart notification
+      function showAddedToCartNotification() {
+        const notification = document.getElementById('added-to-cart-notification');
+        notification.classList.add('slideIn');
+        notification.style.display = 'block';
+        setTimeout(() => {
+          notification.style.display = 'none';
+          notification.classList.remove('slideIn');
+        }, 2000);
+      }
 
-        // Display cart on page load
-        document.addEventListener('DOMContentLoaded', displayCart);
+      // Display cart on page load
+      document.addEventListener('DOMContentLoaded', displayCart);
     </script>
 </body>
-    <!-- Copyright -->
-    <div style="margin-top: 20px;">
-        <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-      </div>
-    </div>
+<!-- Copyright -->
+<div style="margin-top: 20px;">
+  <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+</div>
+</div>
+
 </html>

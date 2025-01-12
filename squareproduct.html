@@ -2,12 +2,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unlim8ted Product Details</title>
-    <meta name="description"content="Unlim8ted Product page. Powered by Unlim8ted Studio Productions"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unlim8ted Product Details</title>
+  <meta name="description" content="Unlim8ted Product page. Powered by Unlim8ted Studio Productions" />
 
-      <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+  <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
   <style media="screen" type="text/css">
     .layer1_class {
       position: absolute;
@@ -209,290 +209,290 @@
     }
   </script>
   <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Custom styles for better presentation */
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Custom styles for better presentation */
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
 
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1rem;
-            text-align: center;
-        }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
 
-        main {
-            padding: 2rem;
-            display: flex;
-            justify-content: space-between;
-        }
+    main {
+      padding: 2rem;
+      display: flex;
+      justify-content: space-between;
+    }
 
-        .product-section {
-            display: none;
-            background-color: #fff;
-            padding: 1rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            width: 100%;
-            margin: 0 1rem;
-        }
+    .product-section {
+      display: none;
+      background-color: #fff;
+      padding: 1rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      width: 100%;
+      margin: 0 1rem;
+    }
 
-        .product-section.active {
-            display: block;
-        }
+    .product-section.active {
+      display: block;
+    }
 
-        .not-found-section {
-            background-color: #fff;
-            padding: 1rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: none;
-            border-radius: 5px;
-        }
+    .not-found-section {
+      background-color: #fff;
+      padding: 1rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      display: none;
+      border-radius: 5px;
+    }
 
-        .not-found-section.active {
-            display: block;
-        }
+    .not-found-section.active {
+      display: block;
+    }
 
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 1rem;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
+    footer {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
 
-        /* Styling for product details */
-        .product-details {
-            display: flex;
-            margin-top: 1rem;
-            padding: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            width: 100%;
-        }
+    /* Styling for product details */
+    .product-details {
+      display: flex;
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      width: 100%;
+    }
 
-        .left-sidebar,
-        .right-sidebar {
-            width: 200px;
-            padding: 1rem;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-        }
+    .left-sidebar,
+    .right-sidebar {
+      width: 200px;
+      padding: 1rem;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
 
-        .left-sidebar img,
-        .left-sidebar video {
-            max-width: 100%;
-            margin-bottom: 1rem;
-        }
+    .left-sidebar img,
+    .left-sidebar video {
+      max-width: 100%;
+      margin-bottom: 1rem;
+    }
 
-        .product-info {
-            flex: 1;
-            margin: 0 1rem;
-        }
+    .product-info {
+      flex: 1;
+      margin: 0 1rem;
+    }
 
-        .product-info h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
+    .product-info h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
 
-        .product-info p {
-            font-size: 1rem;
-            color: #555;
-            margin-bottom: 1rem;
-        }
+    .product-info p {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
 
-        .product-price {
-            font-size: 1.25rem;
-            color: #333;
-            margin-bottom: 1rem;
-        }
+    .product-price {
+      font-size: 1.25rem;
+      color: #333;
+      margin-bottom: 1rem;
+    }
 
-        /* Cart button and notification styles */
-        .cart-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #0056b3;
-            color: #fff;
-            padding: 5px 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1000;
-            display: block;
-            /* Initially hidden */
-        }
+    /* Cart button and notification styles */
+    .cart-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #0056b3;
+      color: #fff;
+      padding: 5px 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+      display: block;
+      /* Initially hidden */
+    }
 
-        .cart-btn:hover {
-            background-color: #4179b5;
-        }
+    .cart-btn:hover {
+      background-color: #4179b5;
+    }
 
-        .added-to-cart-notification {
-            position: fixed;
-            bottom: 70px;
-            right: 20px;
-            background-color: rgba(0, 123, 255, 0.8);
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            display: block;
-            /* Initially hidden */
-            z-index: 1000;
-            animation: slideIn 0.5s forwards;
-        }
+    .added-to-cart-notification {
+      position: fixed;
+      bottom: 70px;
+      right: 20px;
+      background-color: rgba(0, 123, 255, 0.8);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: block;
+      /* Initially hidden */
+      z-index: 1000;
+      animation: slideIn 0.5s forwards;
+    }
 
-        .buy-now-btn {
-            display: inline-block;
-            background-color: #007bff;
-            color: #fff;
-            padding: 0.75rem 1.5rem;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            margin-top: 1rem;
-            cursor: pointer;
-        }
+    .buy-now-btn {
+      display: inline-block;
+      background-color: #007bff;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
 
-        .buy-now-btn:hover {
-            background-color: #0056b3;
-        }
+    .buy-now-btn:hover {
+      background-color: #0056b3;
+    }
 
-        .rating {
-            font-size: 1rem;
-            color: #f39c12;
-        }
+    .rating {
+      font-size: 1rem;
+      color: #f39c12;
+    }
 
-        .comments-section {
-            margin-top: 2rem;
-        }
+    .comments-section {
+      margin-top: 2rem;
+    }
 
-        .comment {
-            padding: 0.5rem;
-            border-bottom: 1px solid #ddd;
-        }
-    </style>
-    <!-- Font Awesome Icon Library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+    .comment {
+      padding: 0.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+  </style>
+  <!-- Font Awesome Icon Library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: Arial;
-            margin: 0 auto;
-            /* Center website */
-            /*padding: 20px;*/
-        }
+    body {
+      font-family: Arial;
+      margin: 0 auto;
+      /* Center website */
+      /*padding: 20px;*/
+    }
 
-        .heading {
-            font-size: 25px;
-            margin-right: 25px;
-        }
+    .heading {
+      font-size: 25px;
+      margin-right: 25px;
+    }
 
-        .fa {
-            font-size: 25px;
-        }
+    .fa {
+      font-size: 25px;
+    }
 
-        .checked {
-            color: orange;
-        }
+    .checked {
+      color: orange;
+    }
 
-        /* Three column layout */
-        .side {
-            float: left;
-            width: 100%;
-            margin-top: 0px;
-        }
+    /* Three column layout */
+    .side {
+      float: left;
+      width: 100%;
+      margin-top: 0px;
+    }
 
-        .middle {
-            margin-top: 0px;
-            float: left;
-            width: 100%;
-        }
+    .middle {
+      margin-top: 0px;
+      float: left;
+      width: 100%;
+    }
 
-        /* Place text to the right */
-        .right {
-            text-align: right;
-        }
+    /* Place text to the right */
+    .right {
+      text-align: right;
+    }
 
-        /* Clear floats after the columns */
-        .row:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
 
-        /* The bar container */
-        .bar-container {
-            width: 100%;
-            background-color: #f1f1f1;
-            text-align: center;
-            color: white;
-        }
+    /* The bar container */
+    .bar-container {
+      width: 100%;
+      background-color: #f1f1f1;
+      text-align: center;
+      color: white;
+    }
 
-        /* Individual bars */
-        .bar-5 {
-            width: 60%;
-            height: 18px;
-            background-color: #04AA6D;
-        }
+    /* Individual bars */
+    .bar-5 {
+      width: 60%;
+      height: 18px;
+      background-color: #04AA6D;
+    }
 
-        .bar-4 {
-            width: 30%;
-            height: 18px;
-            background-color: #2196F3;
-        }
+    .bar-4 {
+      width: 30%;
+      height: 18px;
+      background-color: #2196F3;
+    }
 
-        .bar-3 {
-            width: 10%;
-            height: 18px;
-            background-color: #00bcd4;
-        }
+    .bar-3 {
+      width: 10%;
+      height: 18px;
+      background-color: #00bcd4;
+    }
 
-        .bar-2 {
-            width: 4%;
-            height: 18px;
-            background-color: #ff9800;
-        }
+    .bar-2 {
+      width: 4%;
+      height: 18px;
+      background-color: #ff9800;
+    }
 
-        .bar-1 {
-            width: 15%;
-            height: 18px;
-            background-color: #f44336;
-        }
+    .bar-1 {
+      width: 15%;
+      height: 18px;
+      background-color: #f44336;
+    }
 
-        .\@image\@ {
-            font: normal;
-        }
+    .\@image\@ {
+      font: normal;
+    }
 
-        .\@video\@ {
-            font: normal;
-        }
+    .\@video\@ {
+      font: normal;
+    }
 
-        /* Responsive layout - make the columns stack on top of each other instead of next to each other */
-        @media (max-width: 400px) {
+    /* Responsive layout - make the columns stack on top of each other instead of next to each other */
+    @media (max-width: 400px) {
 
-            .side,
-            .middle {
-                width: 100%;
-            }
+      .side,
+      .middle {
+        width: 100%;
+      }
 
-            .right {
-                display: none;
-            }
-        }
-    </style>
+      .right {
+        display: none;
+      }
+    }
+  </style>
 </head>
 <html lang="en">
 
@@ -502,29 +502,35 @@
 </head>
 
 <body>
-  <style>  
+  <style>
     /* logo */
     .logo {
-        position: absolute;
-        z-index: 1;
-        top: 5%;  /* Adjust top position relative to viewport height */
-        left: 5%; /* Adjust left position relative to viewport width */
-        display: block;
+      position: absolute;
+      z-index: 1;
+      top: 5%;
+      /* Adjust top position relative to viewport height */
+      left: 5%;
+      /* Adjust left position relative to viewport width */
+      display: block;
     }
 
     .logo img {
-        height: 10vw; /* Adjust height relative to viewport width */
-        max-height: 140px; /* Set a maximum height to prevent the logo from getting too large on larger screens */
-        width: auto; /* Maintain aspect ratio */
+      height: 10vw;
+      /* Adjust height relative to viewport width */
+      max-height: 140px;
+      /* Set a maximum height to prevent the logo from getting too large on larger screens */
+      width: auto;
+      /* Maintain aspect ratio */
     }
 
     /* Media query for small devices */
     @media (max-width: 600px) {
-        .logo img {
-            height: 20vw; /* Larger logo for smaller devices */
-        }
+      .logo img {
+        height: 20vw;
+        /* Larger logo for smaller devices */
+      }
     }
-</style>
+  </style>
 
   <style>
     :root {
@@ -1028,7 +1034,7 @@
       z-index: 3;
     }
 
-   
+
     /* start of products css */
     .content-section {
       padding: 50px;
@@ -1164,116 +1170,114 @@
       /* Remove the border if not needed */
     }
   </style>
-        <div id="inner-wrap">
-          <div class="logo" style="z-index: 2;">
-            <a href="/">
-              <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
-            </a>
-          </div>
-          <style>
-
-            .dropdown-content {
-              display: none;
-              position: absolute;
-              background-color: #f9f9f9;
-              box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            }
-            
-            .dropdown:hover .dropdown-content {
-              display: block;
-            }
-            
-            .dropdown-content a {
-              color: black;
-              text-decoration: none;
-              padding: 12px 16px;
-              display: block;
-            }
-            
-            .dropdown-content a:hover {
-              background-color: #ddd;
-            }
-            
-            .navbar-toggle {
-              display: none;
-              background-color: #333;
-              color: white;
-              padding: 14px 20px;
-              border: none;
-              cursor: pointer;
-              font-size: 18px;
-            }
-            
-            /* Responsive styles */
-            @media (max-width: 768px) {
-              .nav-links {
-                flex-direction: column;
-                display: none;
-              }
-            
-              .nav-links.show {
-                display: flex;
-              }
-            
-              .navbar-toggle {
-                display: block;
-              }
-            }
-            
-              </style>
-              <script>
-              function toggleMenu() {
-                const navLinks = document.getElementById("navbarLinks");
-                navLinks.classList.toggle("show");
-              }
-              </script>
-  <nav class="navbar">
-    <div class="navbar-header">
-      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-      <ul class="nav-links" id="navbarLinks">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="products">Products</a></li>
-        <li class="nav-item"><a href="help">Help</a></li>
-        <li class="nav-item"><a href="about">About</a></li>
-        <li class="nav-item dropdown">
-          <a href="javascript:void(0)" class="dropbtn">More</a>
-          <div class="dropdown-content">
-            <a href="portfolio">Portfolio</a>
-            <a href="contact">Contact</a>
-            <a href="blog">Blog</a>
-            <a href="live-chat">Live Chat</a>
-            <a href="live-game">Live Chat and Game</a>
-            <a href="puzzle-squares">Puzzle Squares</a>
-          </div>
-        </li>
-        <a href="old"><button>Old site</button></a>
-      </ul>
+  <div id="inner-wrap">
+    <div class="logo" style="z-index: 2;">
+      <a href="/">
+        <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
+      </a>
     </div>
-  </nav>
+    <style>
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      }
 
-  <div class="embed-container">
-    <embed class="full-screen-embed" src="https://unlim8ted-studio-productions.square.site/product/@product url@">
-  </div>
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .dropdown-content a {
+        color: black;
+        text-decoration: none;
+        padding: 12px 16px;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #ddd;
+      }
+
+      .navbar-toggle {
+        display: none;
+        background-color: #333;
+        color: white;
+        padding: 14px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      /* Responsive styles */
+      @media (max-width: 768px) {
+        .nav-links {
+          flex-direction: column;
+          display: none;
+        }
+
+        .nav-links.show {
+          display: flex;
+        }
+
+        .navbar-toggle {
+          display: block;
+        }
+      }
+    </style>
+    <script>
+      function toggleMenu() {
+        const navLinks = document.getElementById("navbarLinks");
+        navLinks.classList.toggle("show");
+      }
+    </script>
+    <nav class="navbar">
+      <div class="navbar-header">
+        <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+        <ul class="nav-links" id="navbarLinks">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item"><a href="products">Products</a></li>
+          <li class="nav-item"><a href="help">Help</a></li>
+          <li class="nav-item"><a href="about">About</a></li>
+          <li class="nav-item dropdown">
+            <a href="javascript:void(0)" class="dropbtn">More</a>
+            <div class="dropdown-content">
+              <a href="portfolio">Portfolio</a>
+              <a href="contact">Contact</a>
+              <a href="blog">Blog</a>
+              <a href="live-chat">Live Chat</a>
+              <a href="live-game">Live Chat and Game</a>
+              <a href="puzzle-squares">Puzzle Squares</a>
+            </div>
+          </li>
+          <a href="old"><button>Old site</button></a>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="embed-container">
+      <embed class="full-screen-embed" src="https://unlim8ted-studio-productions.square.site/product/@product url@">
+    </div>
 
 
 </body>
 
-    </html>
-    <section id="not-found" class="not-found-section">
-        <h2>Product Not Found</h2>
-        <p>We couldn't find the product you were looking for.</p>
-    </section>
-    <script>
+</html>
+<section id="not-found" class="not-found-section">
+  <h2>Product Not Found</h2>
+  <p>We couldn't find the product you were looking for.</p>
+</section>
+<script>
 
-        // Function to replace placeholders with product details
-        function replacePlaceholders() {
-            // Replace simple placeholders
-            document.body.innerHTML = document.body.innerHTML.replace(/@product url@/g, window.location.hash.replace("#",""));
-            }
-        replacePlaceholders();
-    </script>
-    <!-- Copyright -->
-    <div style="margin-top: 20px;">
-      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-    </div>
-  </div>
+  // Function to replace placeholders with product details
+  function replacePlaceholders() {
+    // Replace simple placeholders
+    document.body.innerHTML = document.body.innerHTML.replace(/@product url@/g, window.location.hash.replace("#", ""));
+  }
+  replacePlaceholders();
+</script>
+<!-- Copyright -->
+<div style="margin-top: 20px;">
+  <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+</div>
+</div>

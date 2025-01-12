@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Unlim8ted Classify Toxicity</title>
-    <meta name="description"content="Unlim8ted Classify Text Toxicity AI. Free forever no signup required. Powered by Unlim8ted Studio Productions Technology."/>
 
-      <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+<head>
+  <meta charset="UTF-8" />
+  <title>Unlim8ted Classify Toxicity</title>
+  <meta name="description"
+    content="Unlim8ted Classify Text Toxicity AI. Free forever no signup required. Powered by Unlim8ted Studio Productions Technology." />
+
+  <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
   <style media="screen" type="text/css">
     .loader {
       position: fixed;
@@ -198,220 +200,224 @@
 
   </script>
   <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <style>
-        /* Additional styles for navigation, dropdown, and responsiveness */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        }
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <style>
+    /* Additional styles for navigation, dropdown, and responsiveness */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
 
-        .dropdown-content a {
-            color: black;
-            text-decoration: none;
-            padding: 12px 16px;
-            display: block;
-        }
+    .dropdown-content a {
+      color: black;
+      text-decoration: none;
+      padding: 12px 16px;
+      display: block;
+    }
 
-        .dropdown-content a:hover {
-            background-color: #ddd;
-        }
+    .dropdown-content a:hover {
+      background-color: #ddd;
+    }
 
-        .navbar-toggle {
-            display: none;
-            background-color: #333;
-            color: white;
-            padding: 14px 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-        }
+    .navbar-toggle {
+      display: none;
+      background-color: #333;
+      color: white;
+      padding: 14px 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+    }
 
-        @media (max-width: 768px) {
-            .nav-links {
-                flex-direction: column;
-                display: none;
-            }
+    @media (max-width: 768px) {
+      .nav-links {
+        flex-direction: column;
+        display: none;
+      }
 
-            .nav-links.show {
-                display: flex;
-            }
+      .nav-links.show {
+        display: flex;
+      }
 
-            .navbar-toggle {
-                display: block;
-            }
-        }
+      .navbar-toggle {
+        display: block;
+      }
+    }
 
-        /* Logo styles */
-        .logo {
-            position: absolute;
-            z-index: 1;
-            top: 5%;
-            left: 5%;
-            display: block;
-        }
+    /* Logo styles */
+    .logo {
+      position: absolute;
+      z-index: 1;
+      top: 5%;
+      left: 5%;
+      display: block;
+    }
 
-        .logo img {
-            height: 10vw;
-            max-height: 140px;
-            width: auto;
-        }
+    .logo img {
+      height: 10vw;
+      max-height: 140px;
+      width: auto;
+    }
 
-        @media (max-width: 600px) {
-            .logo img {
-                height: 20vw;
-            }
-        }
-    </style>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                padding: 20px;
-                background-color: #f0f0f0;
-            }
-    
-            h1 {
-                color: #333;
-            }
-    
-            textarea {
-                width: 100%;
-                max-width: 500px;
-                margin-bottom: 10px;
-            }
-    
-            button {
-                padding: 10px 20px;
-                margin-top: 10px;
-                background-color: #4caf50;
-                color: white;
-                border: none;
-                cursor: pointer;
-            }
-    
-            button:hover {
-                background-color: #45a049;
-            }
-    
-            .loading-bar {
-                height: 5px;
-                background-color: #4caf50;
-                width: 0;
-                margin-top: 10px;
-                transition: width 0.5s;
-            }
-    
-            .warning {
-                background-color: #ffcc00;
-                padding: 10px;
-                margin-bottom: 20px;
-            }
-    
-            nav a {
-                margin: 0 10px;
-                text-decoration: none;
-                color: #4caf50;
-                font-weight: bold;
-            }
-        </style>
-  </head>
-  <body>
-    <!-- Navbar and Logo -->
-    <script>
-        function toggleMenu() {
-            const navLinks = document.getElementById("navbarLinks");
-            navLinks.classList.toggle("show");
-        }
-    </script>
+    @media (max-width: 600px) {
+      .logo img {
+        height: 20vw;
+      }
+    }
+  </style>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
 
-<nav class="navbar">
-  <div class="navbar-header">
-    <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-    <ul class="nav-links" id="navbarLinks">
-      <li class="nav-item"><a href="/">Home</a></li>
-      <li class="nav-item"><a href="products">Products</a></li>
-      <li class="nav-item"><a href="help">Help</a></li>
-      <li class="nav-item"><a href="about">About</a></li>
-      <li class="nav-item dropdown">
-        <a href="javascript:void(0)" class="dropbtn">More</a>
-        <div class="dropdown-content">
-          <a href="portfolio">Portfolio</a>
-          <a href="contact">Contact</a>
-          <a href="blog">Blog</a>
-          <a href="live-chat">Live Chat</a>
-          <a href="live-game">Live Chat and Game</a>
-          <a href="puzzle-squares">Puzzle Squares</a>
-        </div>
-      </li>
-      <a href="old"><button>Old site</button></a>
-    </ul>
-  </div>
-</nav>
+    h1 {
+      color: #333;
+    }
 
+    textarea {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 10px;
+    }
 
-        <!-- Classify Toxicity Functionality -->
-        <h1>Classify Text Toxicity<h5><strong style="color:red">Note:</strong><a style="color:red"> Running the AI may consume a lot of device resources</a>
-        </h5></h1>
-        <textarea id="inputText" rows="10" cols="50">Enter text here...</textarea>
-        <button id="classify">Classify</button>
-        <div class="loading-bar" id="loadingBar"></div>
-        <p id="status">Status: Ready</p>
-        <p id="output"></p>
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
 
-        <!-- Script for Toxicity Classification -->
-        <script type="module">
-            import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0';
-            let classifier;
+    button:hover {
+      background-color: #45a049;
+    }
 
-            document.getElementById('classify').addEventListener('click', async () => {
-                const text = document.getElementById('inputText').value;
-                const statusElement = document.getElementById('status');
-                const outputElement = document.getElementById('output');
-                const loadingBar = document.getElementById('loadingBar');
+    .loading-bar {
+      height: 5px;
+      background-color: #4caf50;
+      width: 0;
+      margin-top: 10px;
+      transition: width 0.5s;
+    }
 
-                if (!classifier) {
-                    updateStatus('Loading classification model...');
-                    loadingBar.style.width = '50%';
-                    classifier = await pipeline('text-classification', 'Xenova/toxic-bert');
-                }
+    .warning {
+      background-color: #ffcc00;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
 
-                updateStatus('Classifying...');
-                loadingBar.style.width = '100%';
-                const results = await classifier(text, { topk: null });
-                
-                let output = '';
-                results.forEach(element => {
-                    // Replace underscores with spaces and convert score to percentage
-                    let label = element.label.replace(/_/g, ' ');
-                    let score = (element.score * 100).toFixed(2); // Convert to percent
-                    output += `${label}: ${score}%<br>`;
-                });
-                
-                updateOutput(output);
-                saveToCookies('classify', output);
-            });
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #4caf50;
+      font-weight: bold;
+    }
+  </style>
+</head>
 
-            function updateStatus(message) {
-                document.getElementById('status').textContent = 'Status: ' + message;
-            }
+<body>
+  <!-- Navbar and Logo -->
+  <script>
+    function toggleMenu() {
+      const navLinks = document.getElementById("navbarLinks");
+      navLinks.classList.toggle("show");
+    }
+  </script>
 
-            function updateOutput(message) {
-                document.getElementById('output').innerHTML = message;
-                updateStatus('Ready');
-                document.getElementById('loadingBar').style.width = '0%';
-            }
-
-            function saveToCookies(key, value) {
-                document.cookie = `${key}=${value}; max-age=86400; path=/`;
-            }
-        </script>
+  <nav class="navbar">
+    <div class="navbar-header">
+      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+      <ul class="nav-links" id="navbarLinks">
+        <li class="nav-item"><a href="/">Home</a></li>
+        <li class="nav-item"><a href="products">Products</a></li>
+        <li class="nav-item"><a href="help">Help</a></li>
+        <li class="nav-item"><a href="about">About</a></li>
+        <li class="nav-item dropdown">
+          <a href="javascript:void(0)" class="dropbtn">More</a>
+          <div class="dropdown-content">
+            <a href="portfolio">Portfolio</a>
+            <a href="contact">Contact</a>
+            <a href="blog">Blog</a>
+            <a href="live-chat">Live Chat</a>
+            <a href="live-game">Live Chat and Game</a>
+            <a href="puzzle-squares">Puzzle Squares</a>
+          </div>
+        </li>
+        <a href="old"><button>Old site</button></a>
+      </ul>
     </div>
-  </body>
+  </nav>
+
+
+  <!-- Classify Toxicity Functionality -->
+  <h1>Classify Text Toxicity<h5><strong style="color:red">Note:</strong><a style="color:red"> Running the AI may consume
+        a lot of device resources</a>
+    </h5>
+  </h1>
+  <textarea id="inputText" rows="10" cols="50">Enter text here...</textarea>
+  <button id="classify">Classify</button>
+  <div class="loading-bar" id="loadingBar"></div>
+  <p id="status">Status: Ready</p>
+  <p id="output"></p>
+
+  <!-- Script for Toxicity Classification -->
+  <script type="module">
+    import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0';
+    let classifier;
+
+    document.getElementById('classify').addEventListener('click', async () => {
+      const text = document.getElementById('inputText').value;
+      const statusElement = document.getElementById('status');
+      const outputElement = document.getElementById('output');
+      const loadingBar = document.getElementById('loadingBar');
+
+      if (!classifier) {
+        updateStatus('Loading classification model...');
+        loadingBar.style.width = '50%';
+        classifier = await pipeline('text-classification', 'Xenova/toxic-bert');
+      }
+
+      updateStatus('Classifying...');
+      loadingBar.style.width = '100%';
+      const results = await classifier(text, { topk: null });
+
+      let output = '';
+      results.forEach(element => {
+        // Replace underscores with spaces and convert score to percentage
+        let label = element.label.replace(/_/g, ' ');
+        let score = (element.score * 100).toFixed(2); // Convert to percent
+        output += `${label}: ${score}%<br>`;
+      });
+
+      updateOutput(output);
+      saveToCookies('classify', output);
+    });
+
+    function updateStatus(message) {
+      document.getElementById('status').textContent = 'Status: ' + message;
+    }
+
+    function updateOutput(message) {
+      document.getElementById('output').innerHTML = message;
+      updateStatus('Ready');
+      document.getElementById('loadingBar').style.width = '0%';
+    }
+
+    function saveToCookies(key, value) {
+      document.cookie = `${key}=${value}; max-age=86400; path=/`;
+    }
+  </script>
+  </div>
+</body>
+
 </html>

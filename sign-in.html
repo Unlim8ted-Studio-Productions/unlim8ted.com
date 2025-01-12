@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -121,142 +122,144 @@
     });
   </script>
 
-<style>
-  body {
-    font-family: 'Arial', sans-serif;
-    background: radial-gradient(circle at center, #0f0c29, #302b63, #24243e);
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-    color: #e0e0e0;
-  }
-
-  .background {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: -1;
-  }
-
-  .background span {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(45deg, #00ff99, #ff0077);
-    opacity: 0.7;
-    filter: blur(8px);
-    animation: float 6s infinite ease-in-out;
-    border-radius: 50%;
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0) translateX(0);
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: radial-gradient(circle at center, #0f0c29, #302b63, #24243e);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      color: #e0e0e0;
     }
-    50% {
-      transform: translateY(-40px) translateX(20px);
+
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
     }
-  }
 
-  .container {
-    text-align: center;
-    background: rgba(30, 30, 30, 0.9);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 255, 153, 0.3);
-    padding: 2rem;
-    max-width: 400px;
-    width: 90%;
-  }
+    .background span {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(45deg, #00ff99, #ff0077);
+      opacity: 0.7;
+      filter: blur(8px);
+      animation: float 6s infinite ease-in-out;
+      border-radius: 50%;
+    }
 
-  .logo {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #00ff99;
-    margin-bottom: 1rem;
-    text-shadow: 0 0 10px #00ff99;
-  }
+    @keyframes float {
 
-  .button-container {
-    margin-top: 2rem;
-  }
+      0%,
+      100% {
+        transform: translateY(0) translateX(0);
+      }
 
-  button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 5px 0;
-    width: 100%;
-  }
+      50% {
+        transform: translateY(-40px) translateX(20px);
+      }
+    }
 
-  #google-signin-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #00ff99;
-    color: #24243e;
-    border: none;
-    border-radius: 25px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 5px 10px rgba(0, 255, 153, 0.3);
-  }
+    .container {
+      text-align: center;
+      background: rgba(30, 30, 30, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 255, 153, 0.3);
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+    }
 
-  #google-signin-btn:hover {
-    background: #00cc77;
-  }
+    .logo {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #00ff99;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px #00ff99;
+    }
 
-  #google-signin-btn img {
-    width: 20px;
-    margin-right: 10px;
-  }
+    .button-container {
+      margin-top: 2rem;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px 0;
+      width: 100%;
+    }
+
+    #google-signin-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #00ff99;
+      color: #24243e;
+      border: none;
+      border-radius: 25px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 5px 10px rgba(0, 255, 153, 0.3);
+    }
+
+    #google-signin-btn:hover {
+      background: #00cc77;
+    }
+
+    #google-signin-btn img {
+      width: 20px;
+      margin-right: 10px;
+    }
 
 
-  #email-signin-form input {
-    padding: 10px;
-    margin-bottom: 10px;
-    width: 100%;
-    border: none;
-    border-radius: 5px;
-    outline: none;
-  }
+    #email-signin-form input {
+      padding: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
 
-  #email-signin-form button {
-    background: #00ff99;
-    color: #24243e;
-  }
+    #email-signin-form button {
+      background: #00ff99;
+      color: #24243e;
+    }
 
-  #email-signin-form button:hover {
-    background: #00cc77;
-  }
+    #email-signin-form button:hover {
+      background: #00cc77;
+    }
 
-  .info {
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
-    color: #b0b0b0;
-  }
+    .info {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #b0b0b0;
+    }
 
-  .info a {
-    color: #00ff99;
-    text-decoration: none;
-    font-weight: bold;
-  }
+    .info a {
+      color: #00ff99;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-  .info a:hover {
-    text-decoration: underline;
-  }
-</style>
-<style>
-        
-  /* Navigation Bar Styles */
-  .navbar {
+    .info a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <style>
+    /* Navigation Bar Styles */
+    .navbar {
       display: flex;
       justify-content: center;
       background-color: #333333d0;
@@ -265,18 +268,18 @@
       width: 100%;
       z-index: 3;
     }
-    
+
     .nav-links {
       list-style: none;
       padding: 0;
       margin: 0;
       display: flex;
     }
-    
+
     .nav-item {
       position: relative;
     }
-    
+
     .nav-item a {
       display: block;
       color: white;
@@ -284,21 +287,21 @@
       text-decoration: none;
       text-align: center;
     }
-    
+
     .nav-item a:hover {
       background-color: #15131f;
       color: rgb(51, 207, 103);
     }
-    
+
     .dropdown-content {
       display: none;
       position: absolute;
       background-color: #f9f9f9;
       min-width: 160px;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
       z-index: 3;
     }
-    
+
     .dropdown-content a {
       color: black;
       padding: 12px 16px;
@@ -306,93 +309,95 @@
       display: block;
       text-align: left;
     }
-    
+
     .dropdown-content a:hover {
       background-color: #1c1d38;
     }
-    
+
     .dropdown:hover .dropdown-content {
       display: block;
       z-index: 3;
     }
-          .dropdown-content {
-              display: none;
-              position: absolute;
-              background-color: #251f1f;
-              box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-          }
-  
-          .dropdown:hover .dropdown-content {
-              display: block;
-          }
-  
-          .dropdown-content a {
-              color: rgb(255, 255, 255);
-              text-decoration: none;
-              padding: 12px 16px;
-              display: block;
-          }
-  
-          .dropdown-content a:hover {
-              background-color: #2d2849;
-          }
-  
-          .navbar-toggle {
-              display: none;
-              background-color: #333;
-              color: white;
-              padding: 14px 20px;
-              border: none;
-              cursor: pointer;
-              font-size: 18px;
-          }
-  
-          /* Responsive styles */
-          @media (max-width: 768px) {
-              .nav-links {
-                  flex-direction: column;
-                  display: none;
-              }
-  
-              .nav-links.show {
-                  display: flex;
-              }
-  
-              .navbar-toggle {
-                  display: block;
-              }
-          }
-      </style>
-      <script>
-          function toggleMenu() {
-              const navLinks = document.getElementById("navbarLinks");
-              navLinks.classList.toggle("show");
-          }
-      </script>
-    <nav class="navbar">
-      <div class="navbar-header">
-        <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-        <ul class="nav-links" id="navbarLinks">
-          <li class="nav-item"><a href="/">Home</a></li>
-          <li class="nav-item"><a href="products">Products</a></li>
-          <li class="nav-item"><a href="help">Help</a></li>
-          <li class="nav-item"><a href="about">About</a></li>
-          <li class="nav-item dropdown">
-            <a href="javascript:void(0)" class="dropbtn">More</a>
-            <div class="dropdown-content">
-              <a href="portfolio">Portfolio</a>
-              <a href="contact">Contact</a>
-              <a href="blog">Blog</a>
-              <a href="live-chat">Live Chat</a>
-              <a href="live-game">Live Chat and Game</a>
-              <a href="puzzle-squares">Puzzle Squares</a>
-            </div>
-          </li>
-          <a href="old"><button>Old site</button></a>
-        </ul>
-      </div>
-    </nav>
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #251f1f;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown-content a {
+      color: rgb(255, 255, 255);
+      text-decoration: none;
+      padding: 12px 16px;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #2d2849;
+    }
+
+    .navbar-toggle {
+      display: none;
+      background-color: #333;
+      color: white;
+      padding: 14px 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .nav-links {
+        flex-direction: column;
+        display: none;
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .navbar-toggle {
+        display: block;
+      }
+    }
+  </style>
+  <script>
+    function toggleMenu() {
+      const navLinks = document.getElementById("navbarLinks");
+      navLinks.classList.toggle("show");
+    }
+  </script>
+  <nav class="navbar">
+    <div class="navbar-header">
+      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+      <ul class="nav-links" id="navbarLinks">
+        <li class="nav-item"><a href="/">Home</a></li>
+        <li class="nav-item"><a href="products">Products</a></li>
+        <li class="nav-item"><a href="help">Help</a></li>
+        <li class="nav-item"><a href="about">About</a></li>
+        <li class="nav-item dropdown">
+          <a href="javascript:void(0)" class="dropbtn">More</a>
+          <div class="dropdown-content">
+            <a href="portfolio">Portfolio</a>
+            <a href="contact">Contact</a>
+            <a href="blog">Blog</a>
+            <a href="live-chat">Live Chat</a>
+            <a href="live-game">Live Chat and Game</a>
+            <a href="puzzle-squares">Puzzle Squares</a>
+          </div>
+        </li>
+        <a href="old"><button>Old site</button></a>
+      </ul>
+    </div>
+  </nav>
 </head>
+
 <body>
   <!-- Animated background -->
   <div class="background">
@@ -409,7 +414,9 @@
     <div id="form-mode">Sign In</div>
     <div class="button-container">
       <button id="google-signin-btn">
-        <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google Logo">
+        <img
+          src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA"
+          alt="Google Logo">
         Sign in with Google
       </button>
       <p style="margin: 1rem 0;">Or</p>
@@ -422,9 +429,12 @@
             Don't have an account? Create one.
           </p>
           <p>An account is needed to comment, rate products, and add things to your cart, but it is not required.</p>
-          <p>If you'd prefer not to create an account, you can visit our <a href="#products">Products</a> or <a href="#about">About Us</a> sections.</p>
-        </div>      </form>
+          <p>If you'd prefer not to create an account, you can visit our <a href="#products">Products</a> or <a
+              href="#about">About Us</a> sections.</p>
+        </div>
+      </form>
     </div>
   </div>
 </body>
+
 </html>

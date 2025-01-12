@@ -318,7 +318,8 @@
                 display: block;
             }
         }
-                .controls {
+
+        .controls {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -402,7 +403,6 @@
                 width: 200px;
             }
         }
-
     </style>
     <script>
         function toggleMenu() {
@@ -413,29 +413,29 @@
 
 
 
-<nav class="navbar">
-    <div class="navbar-header">
-      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-      <ul class="nav-links" id="navbarLinks">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="products">Products</a></li>
-        <li class="nav-item"><a href="help">Help</a></li>
-        <li class="nav-item"><a href="about">About</a></li>
-        <li class="nav-item dropdown">
-          <a href="javascript:void(0)" class="dropbtn">More</a>
-          <div class="dropdown-content">
-            <a href="portfolio">Portfolio</a>
-            <a href="contact">Contact</a>
-            <a href="blog">Blog</a>
-            <a href="live-chat">Live Chat</a>
-            <a href="live-game">Live Chat and Game</a>
-            <a href="puzzle-squares">Puzzle Squares</a>
-          </div>
-        </li>
-        <a href="old"><button>Old site</button></a>
-      </ul>
-    </div>
-  </nav>
+    <nav class="navbar">
+        <div class="navbar-header">
+            <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+            <ul class="nav-links" id="navbarLinks">
+                <li class="nav-item"><a href="/">Home</a></li>
+                <li class="nav-item"><a href="products">Products</a></li>
+                <li class="nav-item"><a href="help">Help</a></li>
+                <li class="nav-item"><a href="about">About</a></li>
+                <li class="nav-item dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">More</a>
+                    <div class="dropdown-content">
+                        <a href="portfolio">Portfolio</a>
+                        <a href="contact">Contact</a>
+                        <a href="blog">Blog</a>
+                        <a href="live-chat">Live Chat</a>
+                        <a href="live-game">Live Chat and Game</a>
+                        <a href="puzzle-squares">Puzzle Squares</a>
+                    </div>
+                </li>
+                <a href="old"><button>Old site</button></a>
+            </ul>
+        </div>
+    </nav>
     <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
     <style>
         /* Base styles */
@@ -580,43 +580,43 @@
 
         function drawNotes() {
             if (!isPlaying) return;
-        
+
             const currentTime = performance.now() - startTime;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
+
             const noteWidth = canvas.width / 128; // Scale width based on the canvas size (MIDI range has 128 keys)
-        
+
             notes.forEach(note => {
                 const timeOffset = note.startTime - currentTime;
                 const y = canvas.height - (timeOffset / 10) - note.duration / 10; // Align with audio timing
                 const noteHeight = note.duration / 10; // Scale duration for visual representation
-        
+
                 if (y > canvas.height || y + noteHeight < 0) return; // Skip notes outside canvas
-        
+
                 const instrumentIndex = note.instrument % colorPalette.length;
                 const instrumentColor = colorPalette[instrumentIndex];
-        
+
                 // Offset each instrument slightly for clarity
                 const x = (note.midi * noteWidth); // Slight horizontal offset per instrument
-        
+
                 ctx.fillStyle = instrumentColor;
                 ctx.fillRect(x, y, noteWidth - 2, noteHeight); // Note position and size
             });
-        
+
             requestAnimationFrame(drawNotes);
         }
-        
+
         // Adjust canvas size dynamically for both desktop and mobile
         function resizeCanvas() {
             const isMobile = /Mobi|Android/i.test(navigator.userAgent); // Simple mobile detection
             canvas.width = isMobile ? window.innerWidth : Math.min(window.innerWidth, 1280); // Full width on mobile, max width on desktop
             canvas.height = isMobile ? window.innerHeight * 0.7 : window.innerHeight * 0.8; // Adjust height slightly for each platform
         }
-        
+
         // Listen for window resize events
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas(); // Initial setup
-        
+
 
 
         function playTrack(midiFilename, audioFilename) {

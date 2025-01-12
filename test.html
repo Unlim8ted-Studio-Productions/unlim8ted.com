@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,87 +54,89 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="top-right" id="user-control">
-    <!-- Dynamic content will be inserted here -->
-</div>
+    <div class="top-right" id="user-control">
+        <!-- Dynamic content will be inserted here -->
+    </div>
 
-<script>
-    let isSignedIn = false; // Initial state
-    let userInfo = null;
+    <script>
+        let isSignedIn = false; // Initial state
+        let userInfo = null;
 
-    const userControl = document.getElementById('user-control');
+        const userControl = document.getElementById('user-control');
 
-    function renderSignInButton() {
-        const signInButton = document.createElement('div');
-        signInButton.id = "g_id_onload";
-        signInButton.dataset.client_id = "657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com"; // Replace with your Google Client ID
-        signInButton.dataset.context = "signin";
-        signInButton.dataset.callback = "handleCredentialResponse";
-        signInButton.dataset.auto_select = "false";
+        function renderSignInButton() {
+            const signInButton = document.createElement('div');
+            signInButton.id = "g_id_onload";
+            signInButton.dataset.client_id = "657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com"; // Replace with your Google Client ID
+            signInButton.dataset.context = "signin";
+            signInButton.dataset.callback = "handleCredentialResponse";
+            signInButton.dataset.auto_select = "false";
 
-        userControl.appendChild(signInButton);
+            userControl.appendChild(signInButton);
 
-        const signInDiv = document.createElement('div');
-        signInDiv.classList.add('g_id_signin');
-        userControl.appendChild(signInDiv);
-    }
+            const signInDiv = document.createElement('div');
+            signInDiv.classList.add('g_id_signin');
+            userControl.appendChild(signInDiv);
+        }
 
-    function renderProfileDropdown() {
-        const profileIcon = document.createElement('div');
-        profileIcon.classList.add('profile');
-        profileIcon.style.backgroundImage = `url('${userInfo.picture}')`;
-        profileIcon.style.backgroundSize = "cover";
+        function renderProfileDropdown() {
+            const profileIcon = document.createElement('div');
+            profileIcon.classList.add('profile');
+            profileIcon.style.backgroundImage = `url('${userInfo.picture}')`;
+            profileIcon.style.backgroundSize = "cover";
 
-        const dropdown = document.createElement('div');
-        dropdown.classList.add('profile-dropdown');
-        dropdown.innerHTML = `
+            const dropdown = document.createElement('div');
+            dropdown.classList.add('profile-dropdown');
+            dropdown.innerHTML = `
             <a href="#view-profile">View Profile</a>
             <a href="#settings">Settings</a>
             <a href="#logout" id="logout">Logout</a>
         `;
 
-        profileIcon.appendChild(dropdown);
-        userControl.appendChild(profileIcon);
+            profileIcon.appendChild(dropdown);
+            userControl.appendChild(profileIcon);
 
-        profileIcon.addEventListener('click', () => {
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        });
+            profileIcon.addEventListener('click', () => {
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            });
 
-        document.getElementById('logout').addEventListener('click', () => {
-            google.accounts.id.disableAutoSelect();
-            isSignedIn = false;
-            userInfo = null;
+            document.getElementById('logout').addEventListener('click', () => {
+                google.accounts.id.disableAutoSelect();
+                isSignedIn = false;
+                userInfo = null;
+                userControl.innerHTML = '';
+                renderSignInButton();
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!userControl.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+
+        window.handleCredentialResponse = (response) => {
+            const jwt = response.credential;
+            const payload = JSON.parse(atob(jwt.split('.')[1]));
+            userInfo = {
+                name: payload.name,
+                email: payload.email,
+                picture: payload.picture
+            };
+
+            isSignedIn = true;
             userControl.innerHTML = '';
-            renderSignInButton();
-        });
-
-        document.addEventListener('click', (event) => {
-            if (!userControl.contains(event.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
-    }
-
-    window.handleCredentialResponse = (response) => {
-        const jwt = response.credential;
-        const payload = JSON.parse(atob(jwt.split('.')[1]));
-        userInfo = {
-            name: payload.name,
-            email: payload.email,
-            picture: payload.picture
+            renderProfileDropdown();
         };
 
-        isSignedIn = true;
-        userControl.innerHTML = '';
-        renderProfileDropdown();
-    };
-
-    if (!isSignedIn) {
-        renderSignInButton();
-    }
-</script>
+        if (!isSignedIn) {
+            renderSignInButton();
+        }
+    </script>
 
 </body>
+
 </html>
