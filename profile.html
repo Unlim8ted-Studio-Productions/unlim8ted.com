@@ -245,13 +245,10 @@
     function logout() {
       auth.signOut().then(() => {
         alert("You have been logged out.");
-        window.location.href = "/login"; // Adjust to your login page
+        window.location.href = "/signin";
       }).catch(console.error);
     }
   
-    // Attach event listeners
-    document.getElementById("google-signin-btn").addEventListener("click", handleGoogleSignIn);
-    document.getElementById("save-profile-btn").addEventListener("click", saveProfile);
   </script>
   
 </body>
