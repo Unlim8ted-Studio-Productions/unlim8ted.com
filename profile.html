@@ -145,66 +145,114 @@
     </div>
   </div>
 
-  <script>
-    // Save profile information to Firestore
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
+      authDomain: "unlim8ted-db.firebaseapp.com",
+      projectId: "unlim8ted-db",
+      storageBucket: "unlim8ted-db.appspot.com",
+      messagingSenderId: "1059428499872",
+      appId: "1:1059428499872:web:855308683718237de6e4c5",
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore();
+  
+    // Ensure persistent session
+    setPersistence(auth, browserLocalPersistence).catch(console.error);
+  
+    // Sign in with Google
+    async function handleGoogleSignIn() {
+      const provider = new GoogleAuthProvider();
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+  
+        // Check or create user data in Firestore
+        await setDoc(doc(db, "users", user.uid), {
+          name: user.displayName,
+          email: user.email,
+          profilePicture: user.photoURL,
+        }, { merge: true });
+  
+        alert(`Welcome, ${user.displayName}!`);
+        loadProfile(user); // Load profile data into the UI
+      } catch (error) {
+        console.error("Google Sign-In error:", error.message);
+        alert("Failed to sign in with Google.");
+      }
+    }
+  
+    // Load profile data from Firestore
+    async function loadProfile(user) {
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        document.getElementById("name").innerText = userData.name || "User";
+        document.getElementById("email").innerText = userData.email || "No email provided";
+        document.getElementById("profile-pic").src = userData.profilePicture || "https://via.placeholder.com/100";
+      } else {
+        console.warn("No user data found in Firestore.");
+      }
+    }
+  
+    // Monitor auth state changes
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        loadProfile(user); // Load profile data if user is logged in
+      } else {
+        console.log("No user is logged in.");
+        window.location.href = "/login"; // Redirect to login page
+      }
+    });
+  
+    // Save profile changes
     async function saveProfile() {
-      const username = document.getElementById('username').value;
-      const profilePic = document.getElementById('profile-picture').files[0];
-
-      if (!username || !profilePic) {
-        alert("Please provide both a username and a profile picture.");
+      const user = auth.currentUser;
+      if (!user) {
+        alert("You need to be logged in to save your profile.");
         return;
       }
-
+  
+      const username = document.getElementById("username").value;
+      const profilePicInput = document.getElementById("profile-picture");
+      const profilePicFile = profilePicInput.files[0];
+  
+      // Save profile picture to database (adjust logic if needed for storage)
+      const profilePicURL = user.photoURL; // Use existing URL or implement storage upload
+  
       try {
-        // Save profile to Firestore (adjust database calls as per your backend logic)
-        const formData = new FormData();
-        formData.append('username', username);
-        formData.append('profilePicture', profilePic);
-
-        console.log("Profile saved successfully!");
-        alert("Profile updated.");
+        await setDoc(doc(db, "users", user.uid), {
+          username: username || user.displayName,
+          profilePicture: profilePicURL,
+        }, { merge: true });
+        alert("Profile updated successfully!");
+        loadProfile(user); // Refresh the profile UI
       } catch (error) {
         console.error("Error saving profile:", error.message);
+        alert("Failed to save profile. Please try again.");
       }
     }
-
-    function handleCredentialResponse(response) {
-      const jwt = response.credential;
-      const userInfo = parseJwt(jwt);
-
-      // Populate user data on the profile page
-      document.getElementById('name').innerText = userInfo.name || "User";
-      document.getElementById('email').innerText = userInfo.email || "No email provided";
-      document.getElementById('profile-pic').src = userInfo.picture || "https://via.placeholder.com/100";
-    }
-
-    function parseJwt(token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(jsonPayload);
-    }
-
+  
+    // Log out
     function logout() {
-      alert('You have been logged out.');
-      window.location.href = '/login'; // Adjust to your login page
+      auth.signOut().then(() => {
+        alert("You have been logged out.");
+        window.location.href = "/login"; // Adjust to your login page
+      }).catch(console.error);
     }
-
-    function viewWork() {
-      window.location.href = "https://unlim8ted.com#products"; // Adjust to your work page
-    }
-
-    // Initialize Google Sign-In
-    window.onload = () => {
-      google.accounts.id.initialize({
-        client_id: "657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com",
-        callback: handleCredentialResponse,
-      });
-      google.accounts.id.prompt();
-    };
+  
+    // Attach event listeners
+    document.getElementById("google-signin-btn").addEventListener("click", handleGoogleSignIn);
+    document.getElementById("save-profile-btn").addEventListener("click", saveProfile);
   </script>
+  
 </body>
 </html>
