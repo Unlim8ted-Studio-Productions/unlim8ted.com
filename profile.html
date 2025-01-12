@@ -139,9 +139,9 @@
       <input type="file" id="profile-picture" accept="image/*">
     </div>
     <div class="actions">
-      <button class="button" onclick="saveProfile()">Save Profile</button>
-      <button class="button" onclick="viewWork()">Browse our products</button>
-      <button class="button logout" onclick="logout()">Log Out</button>
+      <button id = "save" class="button">Save Profile</button>
+      <button id="viewprods" class="button">Browse our products</button>
+      <button id = "logout" class="button logout">Log Out</button>
     </div>
   </div>
 
@@ -209,7 +209,7 @@
         loadProfile(user); // Load profile data if user is logged in
       } else {
         console.log("No user is logged in.");
-        window.location.href = "/login"; // Redirect to login page
+        window.location.href = "https://unlim8ted.com/signin"; // Redirect to login page
       }
     });
   
@@ -245,10 +245,20 @@
     function logout() {
       auth.signOut().then(() => {
         alert("You have been logged out.");
-        window.location.href = "/signin";
+        window.location.href = "https://unlim8ted.com";
       }).catch(console.error);
     }
+
+    function viewProducts(){
+      window.location.href = "https://unlim8ted.com#products"
+    }
   
+    // Add Event Listeners
+    window.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("save").addEventListener("click", saveProfile);
+    document.getElementById("viewprods").addEventListener("click", viewProducts);
+    document.getElementById("logout").addEventListener("click", logout);
+    });
   </script>
   
 </body>
