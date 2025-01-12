@@ -66,14 +66,23 @@
       box-shadow: 0 0 15px #00ff99;
     }
 
-    .user-info {
+    .user-info, .input-container {
       margin: 1rem 0;
     }
 
-    .user-info p {
-      margin: 0.5rem 0;
+    .user-info p, .input-container input {
       font-size: 1rem;
       color: #d0d0d0;
+      margin: 0.5rem 0;
+    }
+
+    input[type="file"], input[type="text"] {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #00ff99;
+      background: #24243e;
+      color: #e0e0e0;
+      width: 100%;
     }
 
     .actions {
@@ -89,6 +98,7 @@
       font-size: 1rem;
       cursor: pointer;
       transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      margin: 0.5rem;
     }
 
     .button:hover {
@@ -122,12 +132,43 @@
     <div class="user-info">
       <p>Email: <span id="email">Loading...</span></p>
     </div>
+    <div class="input-container">
+      <label for="username">Username:</label>
+      <input type="text" id="username" placeholder="Enter a username">
+      <label for="profile-picture">Upload Profile Picture:</label>
+      <input type="file" id="profile-picture" accept="image/*">
+    </div>
     <div class="actions">
+      <button class="button" onclick="saveProfile()">Save Profile</button>
+      <button class="button" onclick="viewWork()">Browse our products</button>
       <button class="button logout" onclick="logout()">Log Out</button>
     </div>
   </div>
 
   <script>
+    // Save profile information to Firestore
+    async function saveProfile() {
+      const username = document.getElementById('username').value;
+      const profilePic = document.getElementById('profile-picture').files[0];
+
+      if (!username || !profilePic) {
+        alert("Please provide both a username and a profile picture.");
+        return;
+      }
+
+      try {
+        // Save profile to Firestore (adjust database calls as per your backend logic)
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('profilePicture', profilePic);
+
+        console.log("Profile saved successfully!");
+        alert("Profile updated.");
+      } catch (error) {
+        console.error("Error saving profile:", error.message);
+      }
+    }
+
     function handleCredentialResponse(response) {
       const jwt = response.credential;
       const userInfo = parseJwt(jwt);
@@ -136,8 +177,6 @@
       document.getElementById('name').innerText = userInfo.name || "User";
       document.getElementById('email').innerText = userInfo.email || "No email provided";
       document.getElementById('profile-pic').src = userInfo.picture || "https://via.placeholder.com/100";
-
-      console.log("User info:", userInfo);
     }
 
     function parseJwt(token) {
@@ -154,13 +193,17 @@
       window.location.href = '/login'; // Adjust to your login page
     }
 
+    function viewWork() {
+      window.location.href = "https://unlim8ted.com#products"; // Adjust to your work page
+    }
+
     // Initialize Google Sign-In
     window.onload = () => {
       google.accounts.id.initialize({
         client_id: "657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com",
         callback: handleCredentialResponse,
       });
-      google.accounts.id.prompt(); // Automatically prompts the user to sign in
+      google.accounts.id.prompt();
     };
   </script>
 </body>

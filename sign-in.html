@@ -89,7 +89,7 @@ async function handleEmailSignIn(event) {
     await addUserToFirestore(user);
 
     alert(`Welcome back, ${user.email}!`);
-    window.location.href = 'https://unlim8ted.com#products';
+    window.location.href = 'https://unlim8ted.com/profile';
   } catch (error) {
     console.error('Email Sign-In error:', error.message);
     alert(`Failed to sign in, ${error.message}. Check your email and password.`);
