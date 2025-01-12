@@ -447,7 +447,7 @@ g > path:nth-of-type(2) {
   
   .nav-item a:hover {
     background-color: #15131f;
-    color: black;
+    color: rgb(51, 207, 103);
   }
   
   .dropdown-content {
