@@ -328,14 +328,13 @@
 
     // Check Admin Status
     async function checkAdminStatus(user) {
-      const adminEmails = ["admin@example.com"]; // Replace with actual admin emails
-      if (adminEmails.includes(user.email)) {
-        alert("Admin verified. Uploading products...");
+      try{
         uploadProducts();
-      } else {
-        alert("Access denied. You are not an admin.");
       }
-    }
+      catch{
+        alert("Access denied. You are not an admin.");
+
+      }
 
     // Upload products to Firestore
     async function uploadProducts() {
