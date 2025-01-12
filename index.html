@@ -768,7 +768,7 @@
         margin: 0;
         overflow-x: hidden;
       }
-  
+
       .background {
         position: absolute;
         width: 100%;
@@ -776,7 +776,7 @@
         overflow: hidden;
         z-index: -1;
       }
-  
+
       .background span {
         position: absolute;
         width: 50px;
@@ -787,16 +787,19 @@
         animation: float 6s infinite ease-in-out;
         border-radius: 50%;
       }
-  
+
       @keyframes float {
-        0%, 100% {
+
+        0%,
+        100% {
           transform: translateY(0) translateX(0);
         }
+
         50% {
           transform: translateY(-40px) translateX(20px);
         }
       }
-  
+
       /* Hero Section */
       .hero {
         height: 100vh;
@@ -808,19 +811,19 @@
         background: linear-gradient(135deg, #1a1a1a, #000000);
         padding: 0 1rem;
       }
-  
+
       .hero h1 {
         font-size: 4rem;
         text-shadow: 0 0 20px #00ffcc, 0 0 30px #ff00ff;
         margin-bottom: 1rem;
         animation: glow 2s infinite alternate;
       }
-  
+
       .hero p {
         font-size: 1.2rem;
         margin-bottom: 2rem;
       }
-  
+
       .hero button {
         padding: 1rem 2rem;
         font-size: 1rem;
@@ -832,12 +835,12 @@
         border-radius: 5px;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
-  
+
       .hero button:hover {
         transform: scale(1.1);
         box-shadow: 0 0 20px #00ffcc;
       }
-  
+
       /* Scrollable Sections */
       .section {
         height: 100vh;
@@ -851,31 +854,31 @@
         transform: translateY(50px);
         transition: opacity 0.6s ease, transform 0.6s ease;
       }
-  
+
       .section.visible {
         opacity: 1;
         transform: translateY(0);
       }
-  
+
       .section h2 {
         font-size: 2.5rem;
         margin-bottom: 1rem;
       }
-  
+
       .section p {
         max-width: 600px;
         font-size: 1rem;
         color: #ffffff;
         margin-bottom: 2rem;
       }
-  
+
       .section img {
         max-width: 80%;
         margin: 2rem 0;
         border-radius: 10px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
       }
-  
+
       /* Gallery Section */
       #image-track {
         display: flex;
@@ -883,14 +886,14 @@
         transform: translate(0%, -50%);
         user-select: none;
       }
-  
-      #image-track > .image {
+
+      #image-track>.image {
         width: 40vmin;
         height: auto;
         object-fit: cover;
         object-position: 100% center;
       }
-  
+
       /* Footer */
       .footer {
         text-align: center;
@@ -899,63 +902,63 @@
         padding: 1.5rem;
         font-size: 0.9rem;
       }
-  
+
       /* Responsive Design */
       @media (max-width: 768px) {
         .hero h1 {
           font-size: 2.5rem;
         }
-  
+
         .hero p {
           font-size: 1rem;
         }
-  
+
         .hero button {
           font-size: 0.9rem;
           padding: 0.8rem 1.5rem;
         }
-  
+
         .section h2 {
           font-size: 2rem;
         }
-  
+
         .section p {
           font-size: 0.9rem;
         }
-  
-        #image-track > .image {
+
+        #image-track>.image {
           width: 60vmin;
         }
-  
+
         .footer {
           font-size: 0.8rem;
           padding: 1rem;
         }
       }
-  
+
       @media (max-width: 480px) {
         .hero h1 {
           font-size: 2rem;
         }
-  
+
         .hero p {
           font-size: 0.8rem;
         }
-  
+
         .hero button {
           font-size: 0.8rem;
           padding: 0.6rem 1rem;
         }
-  
+
         .section h2 {
           font-size: 1.5rem;
         }
-  
+
         .section p {
           font-size: 0.75rem;
         }
-  
-        #image-track > .image {
+
+        #image-track>.image {
           width: 70vmin;
         }
       }
@@ -976,7 +979,8 @@
     </div>
 
 
-    <div id="moving-scrolling-container" style="transform: translateY(0rem); background-color: #1a1a1a;">
+    <div id="moving-scrolling-container"
+      style="transform: translateY(0rem); background: linear-gradient(rgb(26, 26, 26) 79%, rgb(0, 0, 0) 80%);">
       <!-- Section 1 -->
       <div class="section" id="section1">
         <h2>Explore the Future</h2>
@@ -1227,12 +1231,13 @@
           <span style="top: 50%; left: 90%; animation-delay: 1.5s;"></span>
           <span style="top: 80%; left: 50%; animation-delay: 3s;"></span>
         </div>
-        <h1 id="neon-bar" style="color:#bcfaf7;position:relative;top:-13rem;">So are you ready to start using Unlim8ted?</h1>
+        <h1 id="neon-bar" style="color:#bcfaf7;position:relative;top:-13rem;">So are you ready to start using Unlim8ted?
+        </h1>
         <a href="/sign-in" style="position:relative;top:-13rem;"><button>Get Started</button></a>
-        <div class="footer" style="width:100%; bottom:-10rem" id="homefooter">
+        <div class="footer" style="width:110%; bottom:-10rem" id="homefooter">
           <p>© 2025 Unlim8ted Studio Productions. All rights reserved.</p>
         </div>
- 
+
       </div>
     </div>
     <!-- Footer -->
@@ -1298,128 +1303,136 @@
       window.ontouchmove = e => handleOnMove(e.touches[0]);
     </script>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      color: white;
-      background-color: #000;
-      overflow-x: hidden;
-    }
-
-    .background {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: -1;
-    }
-
-    .background span {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(45deg, #00ff99, #ff0077);
-      opacity: 0.7;
-      filter: blur(8px);
-      animation: float 6s infinite ease-in-out;
-      border-radius: 50%;
-    }
-
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0) translateX(0);
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        color: white;
+        background-color: #000;
+        overflow-x: hidden;
       }
 
-      50% {
-        transform: translateY(-40px) translateX(20px);
+      .background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1;
       }
-    }
 
-    /* Section 4 Styling */
-    #final {
-      padding-top: 10rem;
-      background-color: #00000000;
-      background: #00000000;
-      width: 100%;
-      z-index: -1;
-    }
+      .background span {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(45deg, #00ff99, #ff0077);
+        opacity: 0.7;
+        filter: blur(8px);
+        animation: float 6s infinite ease-in-out;
+        border-radius: 50%;
+      }
 
-    /* Final Section Styling */
-    #final {
-      position: sticky;
-      top: 50%;
-      transform: translateY(-50%);
-      background: linear-gradient(135deg, #1a1a1a, #000000);
-      text-align: center;
-      z-index: 10;
-    }
+      @keyframes float {
 
-    #section4 {
-      position: relative;
-      width: 100%;
-      height: 75vh;
-      /* Double the viewport height for scrolling animation */
-      background-color: #111;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  </style>
-  <script>
-    //const section4 = document.getElementById("section4");
-    //const categories = section4.querySelectorAll(".category");
-    //
-    //const handleScroll = () => {
-    //  const sectionTop = section4.offsetTop;
-    //  const sectionHeight = section4.offsetHeight;
-    //  const scrollY = window.scrollY;
-    //
-    //  categories.forEach((category, index) => {
-    //    const progress = (scrollY - sectionTop) / sectionHeight; // Scrolling progress
-    //    const offset = progress*200 - index; // Staggered offset per category
-    //    const isVisible = offset > -250 && offset < 250; // Range for visibility
-    //    const yOffset = index * 150; // Different Y offset per category
-    //
-    //    if (isVisible) {
-    //      const direction = category.classList.contains("category-left") ? -1 : 1;
-    //      const translateX = direction * (100 - Math.abs(offset));
-    //
-    //      category.style.transform = `translateX(${translateX}vw) translateY(${yOffset}px)`;
-    //      category.style.opacity = 1;
-    //    } else {
-    //     category.style.opacity = 0;
-    //    }
-    //  });
-    //};
-    //
-    //window.addEventListener("scroll", handleScroll);
-  </script>
-    <style>.overlay-text {
-      position: fixed;
-      bottom: 35%;
-      /* Adjust placement */
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      color: #00ffcc;
-      font-size: 1.5rem;
-      text-shadow: 0 0 10px #00ffcc, 0 0 20px #ff00ff;
-      z-index: -1;
-    }
-    
-    .overlay-text .highlight {
-      color: #ff0077;
-      font-weight: bold;
-      text-shadow: 0 0 15px #ff0077, 0 0 25px #00ffcc;
-    }</style>
+        0%,
+        100% {
+          transform: translateY(0) translateX(0);
+        }
+
+        50% {
+          transform: translateY(-40px) translateX(20px);
+        }
+      }
+
+      /* Section 4 Styling */
+      #final {
+        padding-top: 10rem;
+        background-color: #00000000;
+        background: #00000000;
+        width: 100%;
+        z-index: -1;
+      }
+
+      /* Final Section Styling */
+      #final {
+        position: sticky;
+        top: 50%;
+        transform: translateY(-50%);
+        background:
+          linear-gradient(to bottom, rgb(26, 26, 26) 80%, rgb(0, 0, 0) 100%),
+          /* Vertical gradient */
+          linear-gradient(135deg, #1a1a1a, #000000);
+        /* Diagonal gradient */
+        background-blend-mode: multiply;
+        /* Blend the two gradients */
+        text-align: center;
+        z-index: 10;
+      }
+
+      #section4 {
+        position: relative;
+        width: 100%;
+        height: 75vh;
+        /* Double the viewport height for scrolling animation */
+        background-color: #111;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+    <script>
+      //const section4 = document.getElementById("section4");
+      //const categories = section4.querySelectorAll(".category");
+      //
+      //const handleScroll = () => {
+      //  const sectionTop = section4.offsetTop;
+      //  const sectionHeight = section4.offsetHeight;
+      //  const scrollY = window.scrollY;
+      //
+      //  categories.forEach((category, index) => {
+      //    const progress = (scrollY - sectionTop) / sectionHeight; // Scrolling progress
+      //    const offset = progress*200 - index; // Staggered offset per category
+      //    const isVisible = offset > -250 && offset < 250; // Range for visibility
+      //    const yOffset = index * 150; // Different Y offset per category
+      //
+      //    if (isVisible) {
+      //      const direction = category.classList.contains("category-left") ? -1 : 1;
+      //      const translateX = direction * (100 - Math.abs(offset));
+      //
+      //      category.style.transform = `translateX(${translateX}vw) translateY(${yOffset}px)`;
+      //      category.style.opacity = 1;
+      //    } else {
+      //     category.style.opacity = 0;
+      //    }
+      //  });
+      //};
+      //
+      //window.addEventListener("scroll", handleScroll);
+    </script>
+    <style>
+      .overlay-text {
+        position: fixed;
+        bottom: 35%;
+        /* Adjust placement */
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        color: #00ffcc;
+        font-size: 1.5rem;
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #ff00ff;
+        z-index: -1;
+      }
+
+      .overlay-text .highlight {
+        color: #ff0077;
+        font-weight: bold;
+        text-shadow: 0 0 15px #ff0077, 0 0 25px #00ffcc;
+      }
+    </style>
     <!-- Overlay text -->
     <div class="overlay-text">
       <p>Even our pages are <span class="highlight">Unlim8ted</span>...</p>
     </div>
   </div>
-  
+
 
   <div id="products" class="content-section">
     <h1>Our Products</h1>
@@ -2207,15 +2220,15 @@
   <script>
     function showContent() {
       var hash = window.location.hash || '#home';
-      if (hash!="#home"){
+      if (hash != "#home") {
         const sections = document.querySelectorAll('.content-section');
         const home = document.getElementById("home");
         home.style.display = 'none'
-      sections.forEach(section => {
-        section.style.display = section.id === hash.substring(1) ? 'block' : 'none';
-      });
+        sections.forEach(section => {
+          section.style.display = section.id === hash.substring(1) ? 'block' : 'none';
+        });
       }
-      else{
+      else {
         const home = document.getElementById("home");
         home.style.display = 'block'
       }
