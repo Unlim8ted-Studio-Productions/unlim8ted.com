@@ -38,7 +38,24 @@ async function addUserToFirestore(user) {
     console.error("Error adding user to Firestore:", error.message);
   }
 }
+// Toggle Between Modes
+window.toggleMode = function toggleMode() {
+  const mode = document.getElementById('form-mode');
+  const submitButton = document.getElementById('form-submit');
+  const toggleText = document.getElementById('toggle-text');
 
+  if (mode.textContent === 'Sign In') {
+    mode.textContent = 'Create Account';
+    submitButton.textContent = 'Create Account';
+    toggleText.textContent = 'Already have an account? Sign In.';
+    submitButton.onclick = handleAccountCreation;
+  } else {
+    mode.textContent = 'Sign In';
+    submitButton.textContent = 'Sign In';
+    toggleText.textContent = "Don't have an account? Create one.";
+    submitButton.onclick = handleEmailSignIn;
+  }
+};
 // Updated Google Sign-In
 async function handleGoogleSignIn() {
   const provider = new GoogleAuthProvider();
