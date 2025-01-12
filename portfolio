@@ -1,0 +1,22 @@
+  <div id="portfolio" class="content-section">
+    <h1>Portfolio</h1>
+    <div class="portfolio-grid">
+      <div class="portfolio-item">
+        <h2>Square Pixels</h2>
+        <p>A groundbreaking project that explores the intersection of art and technology through pixel-based design.</p>
+      </div>
+      <div class="portfolio-item">
+        <h2>Life of a Meatball</h2>
+        <p>An animated journey following the adventures of a meatball, exploring themes of identity and belonging.</p>
+      </div>
+      <div class="portfolio-item">
+        <h2>The Glitch</h2>
+        <p>An experimental short film that delves into the nature of reality and the imperfections that make us human.
+        </p>
+      </div>
+    </div>
+    <!-- Copyright -->
+    <div style="margin-top: 100px;">
+      <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+    </div>
+  </div>
