@@ -749,214 +749,459 @@
     body .fa:hover {
       color: #ff00ff;
     }
-  </style>
 
-  <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
-  <div id="home">
-    <style>
-      /* Base Styles */
-      body {
-        font-family: Arial, sans-serif;
-        color: white;
-        background-color: #000;
-        margin: 0;
-        overflow-x: hidden;
+    /* Base Styles */
+    body {
+      font-family: Arial, sans-serif;
+      color: white;
+      background-color: #000;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .background span {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(45deg, #00ff99, #ff0077);
+      opacity: 0.7;
+      filter: blur(8px);
+      animation: float 6s infinite ease-in-out;
+      border-radius: 50%;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0) translateX(0);
       }
 
-      .background {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        z-index: -1;
+      50% {
+        transform: translateY(-40px) translateX(20px);
       }
+    }
 
-      .background span {
-        position: absolute;
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(45deg, #00ff99, #ff0077);
-        opacity: 0.7;
-        filter: blur(8px);
-        animation: float 6s infinite ease-in-out;
-        border-radius: 50%;
-      }
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(135deg, #1a1a1a, #000000);
+      padding: 0 1rem;
+    }
 
-      @keyframes float {
+    .hero h1 {
+      font-size: 4rem;
+      text-shadow: 0 0 20px #00ffcc, 0 0 30px #ff00ff;
+      margin-bottom: 1rem;
+      animation: glow 2s infinite alternate;
+    }
 
-        0%,
-        100% {
-          transform: translateY(0) translateX(0);
-        }
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
 
-        50% {
-          transform: translateY(-40px) translateX(20px);
-        }
-      }
+    .hero button {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      font-weight: bold;
+      background: #00ffcc;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-      /* Hero Section */
-      .hero {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        background: linear-gradient(135deg, #1a1a1a, #000000);
-        padding: 0 1rem;
-      }
+    .hero button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #00ffcc;
+    }
 
+    /* Scrollable Sections */
+    .section {
+      height: 100vh;
+      padding: 3rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section p {
+      max-width: 600px;
+      font-size: 1rem;
+      color: #ffffff;
+      margin-bottom: 2rem;
+    }
+
+    .section img {
+      max-width: 80%;
+      margin: 2rem 0;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Gallery Section */
+    #image-track {
+      display: flex;
+      gap: 4vmin;
+      transform: translate(0%, -50%);
+      user-select: none;
+    }
+
+    #image-track>.image {
+      width: 40vmin;
+      height: auto;
+      object-fit: cover;
+      object-position: 100% center;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.8);
+      color: #aaa;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
       .hero h1 {
-        font-size: 4rem;
-        text-shadow: 0 0 20px #00ffcc, 0 0 30px #ff00ff;
-        margin-bottom: 1rem;
-        animation: glow 2s infinite alternate;
+        font-size: 2.5rem;
       }
 
       .hero p {
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
+        font-size: 1rem;
       }
 
       .hero button {
-        padding: 1rem 2rem;
-        font-size: 1rem;
-        font-weight: bold;
-        background: #00ffcc;
-        color: #000;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-
-      .hero button:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 20px #00ffcc;
-      }
-
-      /* Scrollable Sections */
-      .section {
-        height: 100vh;
-        padding: 3rem 1rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        opacity: 0;
-        transform: translateY(50px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-      }
-
-      .section.visible {
-        opacity: 1;
-        transform: translateY(0);
+        font-size: 0.9rem;
+        padding: 0.8rem 1.5rem;
       }
 
       .section h2 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
+        font-size: 2rem;
       }
 
       .section p {
-        max-width: 600px;
-        font-size: 1rem;
-        color: #ffffff;
-        margin-bottom: 2rem;
-      }
-
-      .section img {
-        max-width: 80%;
-        margin: 2rem 0;
-        border-radius: 10px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-      }
-
-      /* Gallery Section */
-      #image-track {
-        display: flex;
-        gap: 4vmin;
-        transform: translate(0%, -50%);
-        user-select: none;
-      }
-
-      #image-track>.image {
-        width: 40vmin;
-        height: auto;
-        object-fit: cover;
-        object-position: 100% center;
-      }
-
-      /* Footer */
-      .footer {
-        text-align: center;
-        background: rgba(0, 0, 0, 0.8);
-        color: #aaa;
-        padding: 1.5rem;
         font-size: 0.9rem;
       }
 
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        .hero h1 {
-          font-size: 2.5rem;
-        }
-
-        .hero p {
-          font-size: 1rem;
-        }
-
-        .hero button {
-          font-size: 0.9rem;
-          padding: 0.8rem 1.5rem;
-        }
-
-        .section h2 {
-          font-size: 2rem;
-        }
-
-        .section p {
-          font-size: 0.9rem;
-        }
-
-        #image-track>.image {
-          width: 60vmin;
-        }
-
-        .footer {
-          font-size: 0.8rem;
-          padding: 1rem;
-        }
+      #image-track>.image {
+        width: 60vmin;
       }
 
-      @media (max-width: 480px) {
-        .hero h1 {
-          font-size: 2rem;
-        }
-
-        .hero p {
-          font-size: 0.8rem;
-        }
-
-        .hero button {
-          font-size: 0.8rem;
-          padding: 0.6rem 1rem;
-        }
-
-        .section h2 {
-          font-size: 1.5rem;
-        }
-
-        .section p {
-          font-size: 0.75rem;
-        }
-
-        #image-track>.image {
-          width: 70vmin;
-        }
+      .footer {
+        font-size: 0.8rem;
+        padding: 1rem;
       }
-    </style>
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: 0.8rem;
+      }
+
+      .hero button {
+        font-size: 0.8rem;
+        padding: 0.6rem 1rem;
+      }
+
+      .section h2 {
+        font-size: 1.5rem;
+      }
+
+      .section p {
+        font-size: 0.75rem;
+      }
+
+      #image-track>.image {
+        width: 70vmin;
+      }
+    }
+
+    #section3 {
+      padding: 2rem 0.5rem;
+      /* Reduced padding */
+      transform: scale(0.8);
+      /* Scales the entire section to 50% */
+      transform-origin: top center;
+      /* Keeps the scaling centered */
+    }
+
+    #section3 .content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 400px;
+      /* Reduced max width */
+      margin: 0 auto;
+      gap: 0.75rem;
+      /* Smaller gap */
+    }
+
+    #section3 .text-slide {
+      flex: 1;
+      opacity: 0;
+      transform: translateX(-25px);
+      /* Reduced translation */
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    #section3 .image-slide {
+      flex: 1;
+      opacity: 0;
+      transform: translateX(25px);
+      /* Reduced translation */
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    #section3.visible .text-slide {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    #section3.visible .image-slide {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    #section3 .text-slide h3 {
+      font-size: 1rem;
+      /* Smaller font size */
+      margin-bottom: 0.25rem;
+    }
+
+    #section3 .text-slide p {
+      font-size: 0.75rem;
+      /* Smaller font size */
+    }
+
+    #section3 .image-slide img {
+      max-width: 100%;
+      border-radius: 4px;
+      /* Reduced radius */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+      /* Reduced shadow */
+    }
+
+    @media (max-width: 768px) {
+      #section3 .content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      #section3 .text-slide,
+      #section3 .image-slide {
+        transform: translateX(0);
+      }
+    }
+
+    /* Section 4 Infinite Scrolling Images */
+    #section4 {
+      position: relative;
+      width: 100%;
+      height: 60vh;
+      /* Adjust the height */
+      background-color: #111;
+      overflow: hidden;
+      /* Hide overflow */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .slider-container-partners {
+      display: flex;
+      align-items: center;
+      animation: slide 10s linear infinite;
+      /* Continuous sliding */
+      gap: 2rem;
+      /* Space between images */
+    }
+
+    .slider-container img {
+      height: 100%;
+      /* Ensure full height */
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      /* Shadow effect */
+      transition: transform 0.3s ease;
+    }
+
+    .slider-container-partners img:hover {
+      transform: scale(1.1);
+      /* Slight zoom on hover */
+    }
+
+    @keyframes slide {
+      0% {
+        transform: translateX(0);
+        /* Start position */
+      }
+
+      100% {
+        transform: translateX(-153%);
+        /* Slide to the left */
+      }
+    }
+
+    /* Duplicate the container for seamless looping */
+    .slider-container-partners img {
+      height: 20%;
+      /* Ensure full height */
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      /* Shadow effect */
+      transition: transform 0.3s ease;
+      top: -10rem;
+      position: relative;
+    }
+
+    @media (max-width: 768px) {
+      #section4 {
+        height: 40vh;
+        /* Adjust for smaller screens */
+      }
+
+      .slider-container-partners img {
+        width: 150px;
+        /* Smaller images */
+      }
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      color: white;
+      background-color: #000;
+      overflow-x: hidden;
+    }
+
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .background span {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(45deg, #00ff99, #ff0077);
+      opacity: 0.7;
+      filter: blur(8px);
+      animation: float 6s infinite ease-in-out;
+      border-radius: 50%;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0) translateX(0);
+      }
+
+      50% {
+        transform: translateY(-40px) translateX(20px);
+      }
+    }
+
+    /* Section 4 Styling */
+    #final {
+      padding-top: 10rem;
+      background-color: #00000000;
+      background: #00000000;
+      width: 100%;
+      z-index: -1;
+    }
+
+    /* Final Section Styling */
+    #final {
+      position: sticky;
+      top: 50%;
+      transform: translateY(-50%);
+      background:
+        linear-gradient(to bottom, rgb(26, 26, 26) 80%, rgb(0, 0, 0) 100%),
+        /* Vertical gradient */
+        linear-gradient(135deg, #1a1a1a, #000000);
+      /* Diagonal gradient */
+      background-blend-mode: multiply;
+      /* Blend the two gradients */
+      text-align: center;
+      z-index: 10;
+    }
+
+    #section4 {
+      position: relative;
+      width: 100%;
+      height: 75vh;
+      /* Double the viewport height for scrolling animation */
+      background-color: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .overlay-text {
+      position: fixed;
+      bottom: 35%;
+      /* Adjust placement */
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: #00ffcc;
+      font-size: 1.5rem;
+      text-shadow: 0 0 10px #00ffcc, 0 0 20px #ff00ff;
+      z-index: -1;
+    }
+
+    .overlay-text .highlight {
+      color: #ff0077;
+      font-weight: bold;
+      text-shadow: 0 0 15px #ff0077, 0 0 25px #00ffcc;
+    }
+  </style>
+
+
+  <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
+  <div id="home">
+
 
     <!-- Hero Section -->
     <div class="hero">
@@ -1010,190 +1255,9 @@
           <div class="image-slide" id="image-slide-right">
             <img src="https://unlim8ted.com/images/home/sunset.png" alt="Image of sunset" />
           </div>
-
         </div>
-
-
-        <style>
-          #section3 {
-            padding: 2rem 0.5rem;
-            /* Reduced padding */
-            transform: scale(0.8);
-            /* Scales the entire section to 50% */
-            transform-origin: top center;
-            /* Keeps the scaling centered */
-          }
-
-          #section3 .content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 400px;
-            /* Reduced max width */
-            margin: 0 auto;
-            gap: 0.75rem;
-            /* Smaller gap */
-          }
-
-          #section3 .text-slide {
-            flex: 1;
-            opacity: 0;
-            transform: translateX(-25px);
-            /* Reduced translation */
-            transition: opacity 0.4s ease, transform 0.4s ease;
-          }
-
-          #section3 .image-slide {
-            flex: 1;
-            opacity: 0;
-            transform: translateX(25px);
-            /* Reduced translation */
-            transition: opacity 0.4s ease, transform 0.4s ease;
-          }
-
-          #section3.visible .text-slide {
-            opacity: 1;
-            transform: translateX(0);
-          }
-
-          #section3.visible .image-slide {
-            opacity: 1;
-            transform: translateX(0);
-          }
-
-          #section3 .text-slide h3 {
-            font-size: 1rem;
-            /* Smaller font size */
-            margin-bottom: 0.25rem;
-          }
-
-          #section3 .text-slide p {
-            font-size: 0.75rem;
-            /* Smaller font size */
-          }
-
-          #section3 .image-slide img {
-            max-width: 100%;
-            border-radius: 4px;
-            /* Reduced radius */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-            /* Reduced shadow */
-          }
-
-          @media (max-width: 768px) {
-            #section3 .content {
-              flex-direction: column;
-              text-align: center;
-            }
-
-            #section3 .text-slide,
-            #section3 .image-slide {
-              transform: translateX(0);
-            }
-          }
-        </style>
-
-        <script>
-          // Add the third section to the observer
-          const section3 = document.getElementById("section3");
-          observer.observe(section3);
-        </script>
-
       </div>
-      <script>
-        // Select the container element you want to control
-        const parentDiv = document.getElementById("moving-scrolling-container");
-        // Function to handle scrolling and update transform property
-        const updateTransformOnScroll = () => {
-          const scrollY = window.scrollY; // Get the current scroll position
-          const translateY = -scrollY / 10; // Calculate transform value, adjust the divisor for speed
-
-          // Apply the transform to the div
-          parentDiv.style.transform = `translateY(${translateY}rem)`;
-        };
-
-        // Attach the scroll event listener
-        window.addEventListener("scroll", updateTransformOnScroll);
-      </script>
-
-
-
       <div class="section" id="section4">
-        <style>
-          /* Section 4 Infinite Scrolling Images */
-          #section4 {
-            position: relative;
-            width: 100%;
-            height: 60vh;
-            /* Adjust the height */
-            background-color: #111;
-            overflow: hidden;
-            /* Hide overflow */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-          }
-
-          .slider-container-partners {
-            display: flex;
-            align-items: center;
-            animation: slide 10s linear infinite;
-            /* Continuous sliding */
-            gap: 2rem;
-            /* Space between images */
-          }
-
-          .slider-container img {
-            height: 100%;
-            /* Ensure full height */
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            /* Shadow effect */
-            transition: transform 0.3s ease;
-          }
-
-          .slider-container-partners img:hover {
-            transform: scale(1.1);
-            /* Slight zoom on hover */
-          }
-
-          @keyframes slide {
-            0% {
-              transform: translateX(0);
-              /* Start position */
-            }
-
-            100% {
-              transform: translateX(-153%);
-              /* Slide to the left */
-            }
-          }
-
-          /* Duplicate the container for seamless looping */
-          .slider-container-partners img {
-            height: 20%;
-            /* Ensure full height */
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            /* Shadow effect */
-            transition: transform 0.3s ease;
-            top: -10rem;
-            position: relative;
-          }
-
-          @media (max-width: 768px) {
-            #section4 {
-              height: 40vh;
-              /* Adjust for smaller screens */
-            }
-
-            .slider-container-partners img {
-              width: 150px;
-              /* Smaller images */
-            }
-          }
-        </style>
         <div class="slider-container-partners">
           <img src="images/logo/logoipsum-289.svg" alt="partner-logo">
           <img src="images/logo/logoipsum-331.svg" alt="partner-logo">
@@ -1228,203 +1292,100 @@
         <h1 id="neon-bar" style="color:#bcfaf7;position:relative;top:-13rem;">So are you ready to start using Unlim8ted?
         </h1>
         <a href="/sign-in" style="position:relative;top:-13rem;"><button>Get Started</button></a>
+        <!-- Footer -->
         <div class="footer" style="width:110%; bottom:-10rem" id="homefooter">
           <p>© 2025 Unlim8ted Studio Productions. All rights reserved.</p>
         </div>
 
       </div>
     </div>
-    <!-- Footer -->
-
-    <!-- JavaScript for Scroll Animations -->
-    <script>
-      const sections = document.querySelectorAll('.section');
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, { threshold: 0.2 });
-
-      sections.forEach((section) => observer.observe(section));
-    </script>
-
-    <script>const track = document.getElementById("image-track");
-
-      const handleOnDown = e => track.dataset.mouseDownAt = e.clientX;
-
-      const handleOnUp = () => {
-        track.dataset.mouseDownAt = "0";
-        track.dataset.prevPercentage = track.dataset.percentage;
-      }
-
-      const handleOnMove = e => {
-        if (track.dataset.mouseDownAt === "0") return;
-
-        const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
-          maxDelta = window.innerWidth / 2;
-
-        const percentage = (mouseDelta / maxDelta) * -100,
-          nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
-          nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
-
-        track.dataset.percentage = nextPercentage;
-
-        track.animate({
-          transform: `translate(${nextPercentage}%, -50%)`
-        }, { duration: 1200, fill: "forwards" });
-
-        for (const image of track.getElementsByClassName("image")) {
-          image.animate({
-            objectPosition: `${100 + nextPercentage}% center`
-          }, { duration: 1200, fill: "forwards" });
-        }
-      }
 
 
-      window.onmousedown = e => handleOnDown(e);
-
-      window.ontouchstart = e => handleOnDown(e.touches[0]);
-
-      window.onmouseup = e => handleOnUp(e);
-
-      window.ontouchend = e => handleOnUp(e.touches[0]);
-
-      window.onmousemove = e => handleOnMove(e);
-
-      window.ontouchmove = e => handleOnMove(e.touches[0]);
-    </script>
-
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        color: white;
-        background-color: #000;
-        overflow-x: hidden;
-      }
-
-      .background {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        z-index: -1;
-      }
-
-      .background span {
-        position: absolute;
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(45deg, #00ff99, #ff0077);
-        opacity: 0.7;
-        filter: blur(8px);
-        animation: float 6s infinite ease-in-out;
-        border-radius: 50%;
-      }
-
-      @keyframes float {
-
-        0%,
-        100% {
-          transform: translateY(0) translateX(0);
-        }
-
-        50% {
-          transform: translateY(-40px) translateX(20px);
-        }
-      }
-
-      /* Section 4 Styling */
-      #final {
-        padding-top: 10rem;
-        background-color: #00000000;
-        background: #00000000;
-        width: 100%;
-        z-index: -1;
-      }
-
-      /* Final Section Styling */
-      #final {
-        position: sticky;
-        top: 50%;
-        transform: translateY(-50%);
-        background:
-          linear-gradient(to bottom, rgb(26, 26, 26) 80%, rgb(0, 0, 0) 100%),
-          /* Vertical gradient */
-          linear-gradient(135deg, #1a1a1a, #000000);
-        /* Diagonal gradient */
-        background-blend-mode: multiply;
-        /* Blend the two gradients */
-        text-align: center;
-        z-index: 10;
-      }
-
-      #section4 {
-        position: relative;
-        width: 100%;
-        height: 75vh;
-        /* Double the viewport height for scrolling animation */
-        background-color: #111;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    </style>
-    <script>
-      //const section4 = document.getElementById("section4");
-      //const categories = section4.querySelectorAll(".category");
-      //
-      //const handleScroll = () => {
-      //  const sectionTop = section4.offsetTop;
-      //  const sectionHeight = section4.offsetHeight;
-      //  const scrollY = window.scrollY;
-      //
-      //  categories.forEach((category, index) => {
-      //    const progress = (scrollY - sectionTop) / sectionHeight; // Scrolling progress
-      //    const offset = progress*200 - index; // Staggered offset per category
-      //    const isVisible = offset > -250 && offset < 250; // Range for visibility
-      //    const yOffset = index * 150; // Different Y offset per category
-      //
-      //    if (isVisible) {
-      //      const direction = category.classList.contains("category-left") ? -1 : 1;
-      //      const translateX = direction * (100 - Math.abs(offset));
-      //
-      //      category.style.transform = `translateX(${translateX}vw) translateY(${yOffset}px)`;
-      //      category.style.opacity = 1;
-      //    } else {
-      //     category.style.opacity = 0;
-      //    }
-      //  });
-      //};
-      //
-      //window.addEventListener("scroll", handleScroll);
-    </script>
-    <style>
-      .overlay-text {
-        position: fixed;
-        bottom: 35%;
-        /* Adjust placement */
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        color: #00ffcc;
-        font-size: 1.5rem;
-        text-shadow: 0 0 10px #00ffcc, 0 0 20px #ff00ff;
-        z-index: -1;
-      }
-
-      .overlay-text .highlight {
-        color: #ff0077;
-        font-weight: bold;
-        text-shadow: 0 0 15px #ff0077, 0 0 25px #00ffcc;
-      }
-    </style>
     <!-- Overlay text -->
     <div class="overlay-text">
       <p>Even our pages are <span class="highlight">Unlim8ted</span>...</p>
     </div>
   </div>
+
+  <script>
+    // Add the third section to the observer
+    const section3 = document.getElementById("section3");
+    observer.observe(section3);
+  </script>
+  <script>
+    // Select the container element you want to control
+    const parentDiv = document.getElementById("moving-scrolling-container");
+    // Function to handle scrolling and update transform property
+    const updateTransformOnScroll = () => {
+      const scrollY = window.scrollY; // Get the current scroll position
+      const translateY = -scrollY / 10; // Calculate transform value, adjust the divisor for speed
+
+      // Apply the transform to the div
+      parentDiv.style.transform = `translateY(${translateY}rem)`;
+    };
+
+    // Attach the scroll event listener
+    window.addEventListener("scroll", updateTransformOnScroll);
+  </script>
+  <!-- JavaScript for Scroll Animations -->
+  <script>
+    const sections = document.querySelectorAll('.section');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.2 });
+
+    sections.forEach((section) => observer.observe(section));
+  </script>
+
+  <script>const track = document.getElementById("image-track");
+
+    const handleOnDown = e => track.dataset.mouseDownAt = e.clientX;
+
+    const handleOnUp = () => {
+      track.dataset.mouseDownAt = "0";
+      track.dataset.prevPercentage = track.dataset.percentage;
+    }
+
+    const handleOnMove = e => {
+      if (track.dataset.mouseDownAt === "0") return;
+
+      const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
+        maxDelta = window.innerWidth / 2;
+
+      const percentage = (mouseDelta / maxDelta) * -100,
+        nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+        nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+
+      track.dataset.percentage = nextPercentage;
+
+      track.animate({
+        transform: `translate(${nextPercentage}%, -50%)`
+      }, { duration: 1200, fill: "forwards" });
+
+      for (const image of track.getElementsByClassName("image")) {
+        image.animate({
+          objectPosition: `${100 + nextPercentage}% center`
+        }, { duration: 1200, fill: "forwards" });
+      }
+    }
+
+
+    window.onmousedown = e => handleOnDown(e);
+
+    window.ontouchstart = e => handleOnDown(e.touches[0]);
+
+    window.onmouseup = e => handleOnUp(e);
+
+    window.ontouchend = e => handleOnUp(e.touches[0]);
+
+    window.onmousemove = e => handleOnMove(e);
+
+    window.ontouchmove = e => handleOnMove(e.touches[0]);
+  </script>
 
 </html>
