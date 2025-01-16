@@ -1203,56 +1203,7 @@
     }
   </style>
 
-<script>
-  let scrollInProgress = false; // Flag to track if a scroll is in progress
-  let cancelScroll = false; // Flag to cancel the current scroll
-  let currentDirection = 0; // Tracks the current scroll direction (1 for down, -1 for up)
-  
-  document.addEventListener('wheel', function (event) {
-    event.preventDefault();
-  
-    const newDirection = event.deltaY > 0 ? 1 : -1; // Determine new scroll direction
-    const scrollAmount = newDirection * 100; // Set scroll amount based on direction
-  
-    if (scrollInProgress) {
-      // Cancel ongoing scroll if the direction changes
-      if (newDirection !== currentDirection) {
-        cancelScroll = true;
-      }
-    }
-  
-    currentDirection = newDirection; // Update the current scroll direction
-    smoothScroll(document.documentElement, scrollAmount, 1000);
-  });
-  
-  function smoothScroll(domElement, pixel, delay) {
-    scrollInProgress = true; // Set the scroll in progress flag
-    const intervalToRepeat = 25;
-    const step = (intervalToRepeat * Math.abs(pixel)) / delay;
-    const direction = pixel > 0 ? 1 : -1;
-  
-    function scrollStep() {
-      if (cancelScroll) {
-        cancelScroll = false; // Reset cancel flag
-        scrollInProgress = false; // Reset scroll in progress flag
-        return; // Stop the scroll
-      }
-  
-      if (Math.abs(pixel) > 0) {
-        domElement.scrollTop += step * direction;
-        pixel -= step * direction;
-  
-        setTimeout(scrollStep, intervalToRepeat);
-      } else {
-        scrollInProgress = false; // Mark the scroll as complete
-      }
-    }
-  
-    scrollStep();
-  }
-  
-  
-  </script>
+
   <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
   <div id="home">
 
