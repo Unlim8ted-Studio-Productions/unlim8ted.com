@@ -215,7 +215,7 @@
             display: flex;
             justify-content: center;
             background-color: #333333d0;
-            position: fixed;
+            position: relative;
             top: 0;
             width: 100%;
             z-index: 3;
@@ -253,6 +253,22 @@
             box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 3;
         }
+        button {
+            padding: 10px;
+            font-size: 1em;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+          }
+
+      
+          button:hover {
+            background-color: rgb(57, 200, 145);
+            transform: scale(1.05);
+          }
 
         .dropdown-content a {
             color: black;
@@ -336,14 +352,11 @@
             font-size: 1em;
             border: none;
             border-radius: 5px;
-            background-color: #007bff;
-            color: #ffffff;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .controls button:hover {
-            background-color: #0056b3;
             transform: scale(1.05);
         }
 
@@ -432,7 +445,7 @@
                         <a href="puzzle-squares">Puzzle Squares</a>
                     </div>
                 </li>
-                <a href="old"><button>Old site</button></a>
+                <a href="old"><button style="position:relative;top:4px;">Old site</button></a>
             </ul>
         </div>
     </nav>
@@ -443,6 +456,7 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             font-family: Arial, sans-serif;
             background: linear-gradient(145deg, #1a002e, #000);
             color: white;
@@ -451,6 +465,7 @@
 
         .container {
             display: flex;
+            flex-direction: row;
             width: 100%;
             height: 100vh;
         }
@@ -473,6 +488,17 @@
 
         .song-item:hover {
             background: #8b00ff;
+        }
+
+        .pdf-link {
+            pointer-events: block; 
+            font-size: 14px;
+            color: #00ffcc;
+            text-decoration: none;
+        }
+
+        .pdf-link:hover {
+            text-decoration: underline;
         }
 
         .midi-visualizer {
@@ -498,49 +524,27 @@
             margin-top: 10px;
         }
 
-        .playing-text {
-            font-size: 20px;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
-
-
         .timeline {
             width: 90%;
             margin: 10px auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column-reverse;
+            }
+
+            .song-list {
+                border-right: none;
+                border-top: 2px solid #8b00ff;
+                padding-top: 10px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="song-list" style="padding-top: 50px;">
-            <div class="song-item"
-                onclick="playTrack('The%20Echos%20of%20the%20Bells.mid', 'The%20Echos%20of%20the%20Bells.mp3')">
-                The Echos of the Bells 
-            </div>
-            <div class="song-item" onclick="playTrack('Serene Winter Night.mid', 'Serene Winter Night.mp3')">
-                Serene Winter Night
-            </div>
-            <div class="song-item" onclick="playTrack('A Bright Winter.mid', 'A Bright Winter.mp3')">
-                A Bright Winter
-            </div>
-            <div class="song-item" onclick="playTrack('Resonating Magic.mid', 'Resonating Magic.mp3')">
-                Resonating Magic
-            </div>
-            <div class="song-item" onclick="playTrack('Blue Lasers.mid', 'Blue Lasers.mp3')">
-                Neon Lasers
-            </div>
-            <div class="song-item" onclick="playTrack('Defiant Quiet.mid', 'Defiant Quiet.mp3')">
-                Quiet Defiance
-            </div>
-            <div class="song-item" onclick="playTrack('Close to the End.mid', 'Close to the End.mp3')">
-                Close to the End
-            </div>
-        </div>
-
         <div class="midi-visualizer" id="visualizer">
             <canvas id="midiCanvas"></canvas>
             <div class="controls" id="controls">
@@ -552,7 +556,59 @@
             </div>
         </div>
 
-       
+        <div class="song-list">
+            <div class="song-item"
+                onclick="playTrack('The%20Echos%20of%20the%20Bells.mid', 'The%20Echos%20of%20the%20Bells.mp3')">
+                The Echos of the Bells
+                <br>
+                <a class="pdf-link" href="/pdfs/The%20Echos%20of%20the%20Bells-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('Serene Winter Night.mid', 'Serene Winter Night.mp3')">
+                Serene Winter Night
+                <br>
+                <a class="pdf-link" href="/pdfs/Serene%20Winter%20Night-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('A Bright Winter.mid', 'A Bright Winter.mp3')">
+                A Bright Winter
+                <br>
+                <a class="pdf-link" href="/pdfs/A%20Bright%20Winter-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('Resonating Magic.mid', 'Resonating Magic.mp3')">
+                Resonating Magic
+                <br>
+                <a class="pdf-link" href="/pdfs/Resonating%20Magic-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('Blue Lasers.mid', 'Blue Lasers.mp3')">
+                Neon Lasers
+                <br>
+                <a class="pdf-link" href="/pdfs/Blue%20Lasers-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('Defiant Quiet.mid', 'Defiant Quiet.mp3')">
+                Quiet Defiance
+                <br>
+                <a class="pdf-link" href="/pdfs/Defiant%20Quiet-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('Close to the End.mid', 'Close to the End.mp3')">
+                Close to the End
+                <br>
+                <a class="pdf-link" href="/pdfs/Close%20to%20the%20End-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+        </div>
     </div>
 
     <script>
