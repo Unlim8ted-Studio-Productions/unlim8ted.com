@@ -128,10 +128,12 @@
   <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
   <style media="screen" type="text/css">
     @media only screen and (max-width: 767px) {
-    html {
-  overflow-x: hidden;
-  width: 100%;
-}}
+      html {
+        overflow-x: hidden;
+        width: 100%;
+      }
+    }
+
     .loader {
       position: fixed;
       background-color: black;
@@ -331,6 +333,12 @@
 
   <link rel="stylesheet" href="styles.css">
   <style>
+    body,
+    html {
+      overflow: hidden;
+      height: 100%;
+    }
+
     a.button {
       color: #8b00ff;
       text-decoration: none;
@@ -348,8 +356,6 @@
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
       color: #333;
-      margin: 0;
-      padding: 0;
     }
 
     .content-section {
@@ -440,7 +446,11 @@
     button:hover {
       background-color: rgb(57, 200, 145);
     }
-
+    #firsthero .background{
+      z-index: 0;
+      position: relative;
+      margin: -40rem;
+    }
     /* Additional styling for responsiveness */
     @media (max-width: 768px) {
       h1 {
@@ -813,7 +823,7 @@
       margin-bottom: 1rem;
       animation: glow 2s infinite alternate;
     }
-
+  
     .hero p {
       font-size: 1.2rem;
       margin-bottom: 2rem;
@@ -838,8 +848,8 @@
 
     /* Scrollable Sections */
     .section {
-      height: 100vh;
-      padding: 3rem 1rem;
+      height: 70vh;
+      padding: 3rem .1rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -856,8 +866,19 @@
     }
 
     .section h2 {
+      color:rgb(57, 200, 145);
+      animation: glowy 2s infinite alternate;
       font-size: 2.5rem;
       margin-bottom: 1rem;
+    }
+    
+    @keyframes glowy {
+      0% {
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #ff00ff;
+      }
+      100% {
+        text-shadow: 0 0 20px #00ffcc, 0 0 30px #ff00ff;
+      }
     }
 
     .section p {
@@ -1053,15 +1074,16 @@
     .slider-container-partners {
       display: flex;
       align-items: center;
-      animation: slide 10s linear infinite;
+      justify-content: center;
+      animation: slide 20s linear infinite;
       /* Continuous sliding */
       gap: 2rem;
       /* Space between images */
     }
 
-    .slider-container img {
-      height: 100%;
-      /* Ensure full height */
+    .slider-container-partners img {
+      height: 100px;
+      /* Fixed height for consistency */
       border-radius: 10px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
       /* Shadow effect */
@@ -1075,26 +1097,14 @@
 
     @keyframes slide {
       0% {
-        transform: translateX(0);
-        /* Start position */
+      transform: translateX(0);
+      /* Start position */
       }
 
       100% {
-        transform: translateX(-153%);
-        /* Slide to the left */
+      transform: translateX(-50%);
+      /* Slide to the left */
       }
-    }
-
-    /* Duplicate the container for seamless looping */
-    .slider-container-partners img {
-      height: 20%;
-      /* Ensure full height */
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-      /* Shadow effect */
-      transition: transform 0.3s ease;
-      top: -10rem;
-      position: relative;
     }
 
     @media (max-width: 768px) {
@@ -1209,7 +1219,7 @@
 
 
     <!-- Hero Section -->
-    <div class="hero">
+    <div id="firsthero" class="hero">
       <div class="background">
         <span style="top: 20%; left: 10%; animation-delay: 0s;"></span>
         <span style="top: 40%; left: 70%; animation-delay: 2s;"></span>
@@ -1318,19 +1328,79 @@
     observer.observe(section3);
   </script>
   <script>
-    // Select the container element you want to control
-    const parentDiv = document.getElementById("moving-scrolling-container");
-    // Function to handle scrolling and update transform property
-    const updateTransformOnScroll = () => {
-      const scrollY = window.scrollY; // Get the current scroll position
-      const translateY = -scrollY / 10; // Calculate transform value, adjust the divisor for speed
+    // Select the elements
+    const homeContainer = document.getElementById("home");
+    const scrollingContainer = document.getElementById("moving-scrolling-container");
+    const footer = document.getElementById("homefooter");
 
-      // Apply the transform to the div
-      parentDiv.style.transform = `translateY(${translateY}rem)`;
+    // Track virtual scroll positions
+    let virtualScrollPosition = 0;
+    let currentScrollPositionHome = 0;
+    let currentScrollPositionScrolling = 0;
+    let isAnimating = false;
+
+    // Function to update the transformation of both containers
+    const updateTransformOnScroll = (deltaY, speedHome, speedScrolling) => {
+      // Update the virtual scroll position
+      virtualScrollPosition += deltaY;
+      // Footer's effective position is offsetTop minus the virtual scroll position
+      const contentHeight = Math.max(
+        homeContainer.offsetHeight,
+        scrollingContainer.offsetHeight,
+        footer.offsetTop + footer.offsetHeight
+    );
+      // Calculate the maximum scrollable position
+      maxScroll = Math.max(0, contentHeight - window.innerHeight);;
+      console.log(maxScroll)
+      // Clamp the virtual scroll position
+      virtualScrollPosition = Math.max(0, Math.min(virtualScrollPosition, maxScroll));
+
+      // Start animations for both containers if not already animating
+      if (!isAnimating) {
+        smoothScroll(speedHome, speedScrolling);
+      }
     };
 
-    // Attach the scroll event listener
-    window.addEventListener("scroll", updateTransformOnScroll);
+    // Smooth scrolling function
+    const smoothScroll = (speedHome, speedScrolling) => {
+      isAnimating = true;
+
+      const step = () => {
+        const difference = virtualScrollPosition - currentScrollPositionHome;
+
+        // Calculate movement for home container
+        const movementHome = difference * 0.1; // Easing factor
+        currentScrollPositionHome += movementHome;
+
+        // Calculate movement for scrolling container (faster)
+        const movementScrolling = (virtualScrollPosition - currentScrollPositionHome) * 0.1;
+        currentScrollPositionScrolling += movementScrolling;
+
+
+        // Apply transforms
+        homeContainer.style.transform = `translateY(-${currentScrollPositionHome}px)`;
+        scrollingContainer.style.transform = `translateY(-${currentScrollPositionScrolling}px)`;
+
+        // Stop animation if close to target
+        if (Math.abs(difference) > 0.5) {
+          requestAnimationFrame(step);
+        } else {
+          isAnimating = false; // Stop animating
+        }
+      };
+
+      requestAnimationFrame(step);
+    };
+
+    // Attach the wheel event listener with { passive: false }
+    window.addEventListener(
+      "wheel",
+      (event) => {
+        event.preventDefault(); // Prevent default scroll behavior
+        updateTransformOnScroll(event.deltaY, .02, .07); // Speed: Home = 1x, Scrolling Container = 1.5x
+      }
+    );
+
   </script>
   <!-- JavaScript for Scroll Animations -->
   <script>
@@ -1392,5 +1462,6 @@
 
     window.ontouchmove = e => handleOnMove(e.touches[0]);
   </script>
+
 
 </html>

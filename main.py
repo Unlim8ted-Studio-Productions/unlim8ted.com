@@ -419,6 +419,11 @@ class RoboBrain:
         Example:
             - move_forwards(50, 50) -> None
         """
+        if left_motor_speed < 0 or left_motor_speed > 100:
+            raise ValueError("Left motor speed must be between 0 and 100")
+        if right_motor_speed < 0 or right_motor_speed > 100:
+            raise ValueError("Right motor speed must be between 0 and 100")
+
         GPIO.output(LEFT_FW_PIN, GPIO.HIGH)  # Left motor rotates forward
         GPIO.output(LEFT_BK_PIN, GPIO.LOW)  # Left motor does not rotate backwards
         GPIO.output(RIGHT_FW_PIN, GPIO.HIGH)  # Right motor rotates forward
