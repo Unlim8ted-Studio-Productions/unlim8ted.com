@@ -333,6 +333,9 @@
 
   <link rel="stylesheet" href="styles.css">
   <style>
+    .content{
+      transform:none;
+    }
     body,
     html {
       overflow: hidden;
@@ -452,6 +455,24 @@
       margin: -40rem;
     }
     /* Additional styling for responsiveness */
+    @media (min-width: 794px) {
+      .content {
+        transform: scale(1.7);
+      }
+    }
+    @media (max-width: 768px) {
+      #image-slide-right {
+        display: none;
+      }
+      #section3 {
+        height:40vh;
+      }}
+    @media (min-width: 1302px) {
+      .content {
+        transform: scale(3);
+      }
+    }
+
     @media (max-width: 768px) {
       h1 {
         font-size: 2em;
@@ -981,7 +1002,7 @@
 
     #section3 {
       padding: 2rem 0.5rem;
-      /* Reduced padding */
+      /* Reduced padding 
       transform: scale(0.8);
       /* Scales the entire section to 50% */
       transform-origin: top center;
@@ -1079,6 +1100,8 @@
       /* Continuous sliding */
       gap: 2rem;
       /* Space between images */
+      position: relative;
+      top: -12rem;
     }
 
     .slider-container-partners img {
@@ -1182,6 +1205,9 @@
       z-index: 10;
     }
 
+    #section2 p{
+      margin-bottom: 4rem;
+    }
     #section4 {
       position: relative;
       width: 100%;
@@ -1308,7 +1334,7 @@
         </h1>
         <a href="/sign-in" style="position:relative;top:-13rem;"><button>Get Started</button></a>
         <!-- Footer -->
-        <div class="footer" style="width:110%; bottom:-10rem" id="homefooter">
+        <div class="footer" style="width:110%; bottom:-10rem;position: relative;" id="homefooter">
           <p>© 2025 Unlim8ted Studio Productions. All rights reserved.</p>
         </div>
 
@@ -1332,55 +1358,58 @@
     const homeContainer = document.getElementById("home");
     const scrollingContainer = document.getElementById("moving-scrolling-container");
     const footer = document.getElementById("homefooter");
-
+  
     // Track virtual scroll positions
     let virtualScrollPosition = 0;
     let currentScrollPositionHome = 0;
     let currentScrollPositionScrolling = 0;
     let isAnimating = false;
-
+    let lastTouchY = 0; // For touch event tracking
+  
     // Function to update the transformation of both containers
     const updateTransformOnScroll = (deltaY, speedHome, speedScrolling) => {
       // Update the virtual scroll position
       virtualScrollPosition += deltaY;
+  
       // Footer's effective position is offsetTop minus the virtual scroll position
       const contentHeight = Math.max(
         homeContainer.offsetHeight,
         scrollingContainer.offsetHeight,
         footer.offsetTop + footer.offsetHeight
-    );
+      );
+  
       // Calculate the maximum scrollable position
-      maxScroll = Math.max(0, contentHeight - window.innerHeight);;
-      console.log(maxScroll)
+      maxScroll = Math.max(0, contentHeight - window.innerHeight);
+      console.log(maxScroll);
+  
       // Clamp the virtual scroll position
       virtualScrollPosition = Math.max(0, Math.min(virtualScrollPosition, maxScroll));
-
+  
       // Start animations for both containers if not already animating
       if (!isAnimating) {
         smoothScroll(speedHome, speedScrolling);
       }
     };
-
+  
     // Smooth scrolling function
     const smoothScroll = (speedHome, speedScrolling) => {
       isAnimating = true;
-
+  
       const step = () => {
         const difference = virtualScrollPosition - currentScrollPositionHome;
-
+  
         // Calculate movement for home container
         const movementHome = difference * 0.1; // Easing factor
         currentScrollPositionHome += movementHome;
-
+  
         // Calculate movement for scrolling container (faster)
         const movementScrolling = (virtualScrollPosition - currentScrollPositionHome) * 0.1;
         currentScrollPositionScrolling += movementScrolling;
-
-
+  
         // Apply transforms
         homeContainer.style.transform = `translateY(-${currentScrollPositionHome}px)`;
         scrollingContainer.style.transform = `translateY(-${currentScrollPositionScrolling}px)`;
-
+  
         // Stop animation if close to target
         if (Math.abs(difference) > 0.5) {
           requestAnimationFrame(step);
@@ -1388,20 +1417,39 @@
           isAnimating = false; // Stop animating
         }
       };
-
+  
       requestAnimationFrame(step);
     };
-
-    // Attach the wheel event listener with { passive: false }
+  
+    // Attach the wheel event listener for desktop with { passive: false }
     window.addEventListener(
       "wheel",
       (event) => {
         event.preventDefault(); // Prevent default scroll behavior
-        updateTransformOnScroll(event.deltaY, .02, .07); // Speed: Home = 1x, Scrolling Container = 1.5x
-      }
+        updateTransformOnScroll(event.deltaY, 0.02, 0.07); // Speed: Home = 1x, Scrolling Container = 1.5x
+      },
+      { passive: false }
     );
-
+  
+    // Handle touch events for mobile
+    window.addEventListener("touchstart", (event) => {
+      // Record the initial touch position
+      lastTouchY = event.touches[0].clientY;
+    });
+  
+    window.addEventListener("touchmove", (event) => {
+      event.preventDefault(); // Prevent default scroll behavior
+  
+      // Calculate the deltaY (vertical movement) from touch
+      const touchY = event.touches[0].clientY;
+      const deltaY = lastTouchY - touchY;
+      lastTouchY = touchY;
+  
+      // Update transform based on touch movement
+      updateTransformOnScroll(deltaY, 0.02, 0.07); // Speed: Home = 1x, Scrolling Container = 1.5x
+    }, { passive: false });
   </script>
+  
   <!-- JavaScript for Scroll Animations -->
   <script>
     const sections = document.querySelectorAll('.section');
