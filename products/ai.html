@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Primary Meta Tags -->
+    <title>Unlim8ted - AI Products</title>
+    <meta name="title" content="Products - Unlim8ted" />
+    <meta name="description"
+        content="Explore a wide range of usefull AI products from Unlim8ted Studio Productions." />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://unlim8ted.com/products/">
+    <meta property="og:title" content="Products - Unlim8ted Studio Productions">
+    <meta property="og:description"
+        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
+    <meta property="og:image" content="https://unlim8ted.com/images/products-meta-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://unlim8ted.com/products/">
+    <meta property="twitter:title" content="Products - Unlim8ted Studio Productions">
+    <meta property="twitter:description"
+        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
+    <meta property="twitter:image" content="https://unlim8ted.com/images/products-meta-image.jpg">
+    <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style media="screen" type="text/css">
+        .loader {
+            position: fixed;
+            background-color: black;
+            opacity: 1;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0%;
+            z-index: 999999988;
+            pointer-events: none;
+        }
+
+        .loaderr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            /* To stack spinner and text vertically */
+            height: 100vh;
+            /* Full viewport height to ensure vertical centering */
+        }
+
+        .loaderr {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top: 8px solid #3498db;
+            border-right: 8px solid #e74c3c;
+            border-bottom: 8px solid #f1c40f;
+            border-left: 8px solid #9b59b6;
+            -webkit-animation: spin 1.5s linear infinite;
+            animation: spin 1.5s linear infinite;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
+            position: relative;
+        }
+
+        .loaderr:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top: 8px solid rgba(52, 152, 219, 0.7);
+            border-right: 8px solid rgba(231, 76, 60, 0.7);
+            border-bottom: 8px solid rgba(241, 196, 15, 0.7);
+            border-left: 8px solid rgba(155, 89, 182, 0.7);
+            -webkit-animation: spin-reverse 1.5s linear infinite;
+            animation: spin-reverse 1.5s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @-webkit-keyframes spin-reverse {
+            0% {
+                -webkit-transform: rotate(360deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(0deg);
+            }
+        }
+
+        @keyframes spin-reverse {
+            0% {
+                transform: rotate(360deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        /* Loading text animation */
+        .loading-text {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #3498db;
+            font-family: Arial, sans-serif;
+            letter-spacing: 2px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+
+        @-webkit-keyframes load-out {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes load-out {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+    <!-- Styles for the No-JavaScript message -->
+    <style>
+        .no-js-message {
+            background: #2c4762;
+            color: red;
+            font-size: 20px;
+            text-align: center;
+            padding: 20px;
+            z-index: 999999999999999999999999999999999999999999999;
+            position: fixed;
+            width: 100%;
+            top: 0;
+        }
+    </style>
+
+    <!-- No-JavaScript message -->
+    <noscript>
+        <div class="no-js-message">
+            Please enable JavaScript to use this website properly.
+        </div>
+    </noscript>
+    <div class="loader">
+        <div class="loaderr-container">
+            <div class="loaderr"></div>
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+    <script>
+        // This function will execute after the full page has finished loading
+        window.onload = function () {
+            // Trigger fade-out animation for the loader spinner
+            const loaderSpinner = document.querySelector('.loaderr');
+            const loadingText = document.querySelector('.loading-text');
+            const loaderContainer = document.querySelector('.loader');
+
+            // Apply animations
+            loaderSpinner.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+            loaderSpinner.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+            loadingText.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+            loadingText.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+            loaderContainer.style.animation = 'load-out 4s forwards';
+            loaderContainer.style.webkitAnimation = 'load-out 4s forwards';
+
+
+        };
+
+    </script>
+    <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+    <style>
+        /* Navigation Bar Styles */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #333333d0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 3;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-item a {
+            display: block;
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nav-item a:hover {
+            background-color: #15131f;
+            color: rgb(51, 207, 103);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 3;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #1c1d38;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            z-index: 3;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #251f1f;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+            padding: 12px 16px;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #2d2849;
+        }
+
+        .navbar-toggle {
+            display: none;
+            background-color: #333;
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                display: none;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .navbar-toggle {
+                display: block;
+            }
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById("navbarLinks");
+            navLinks.classList.toggle("show");
+        }
+    </script>
+    <nav class="navbar">
+        <div class="navbar-header">
+            <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+            <ul class="nav-links" id="navbarLinks">
+                <li class="nav-item"><a href="/">Home</a></li>
+                <li class="nav-item"><a href="products">Products</a></li>
+                <li class="nav-item"><a href="help">Help</a></li>
+                <li class="nav-item"><a href="about">About</a></li>
+                <li class="nav-item dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">More</a>
+                    <div class="dropdown-content">
+                        <a href="portfolio">Portfolio</a>
+                        <a href="contact">Contact</a>
+                        <a href="blog">Blog</a>
+                        <a href="live-chat">Live Chat</a>
+                        <a href="live-game">Live Chat and Game</a>
+                        <a href="puzzle-squares">Puzzle Squares</a>
+                    </div>
+                </li>
+                <a href="old"><button>Old site</button></a>
+            </ul>
+        </div>
+    </nav>
+    <style>
+        /* logo */
+        .logo {
+            position: absolute;
+            z-index: 1;
+            top: 5%;
+            /* Adjust top position relative to viewport height */
+            left: 5%;
+            /* Adjust left position relative to viewport width */
+            display: block;
+        }
+
+        .logo img {
+            height: 10vw;
+            /* Adjust height relative to viewport width */
+            max-height: 140px;
+            /* Set a maximum height to prevent the logo from getting too large on larger screens */
+            width: auto;
+            /* Maintain aspect ratio */
+        }
+
+        /* Media query for small devices */
+        @media (max-width: 600px) {
+            .logo img {
+                height: 20vw;
+                /* Larger logo for smaller devices */
+            }
+        }
+
+        button {
+            padding: 10px;
+            font-size: 1em;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: rgb(57, 200, 145);
+        }
+
+        .image {
+            max-width: 300px;
+        }
+
+        /* Cart button and notification styles */
+        .cart-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #0056b3;
+            color: #fff;
+            padding: 5px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+            display: block;
+            /* Initially hidden */
+        }
+
+        .cart-btn:hover {
+            background-color: #4179b5;
+        }
+    </style>
+    <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
+    <style>
+        /* General body styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+        }
+
+        .content-section {
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00ffc6;
+            text-shadow: 0 0 10px #00ffc6, 0 0 20px #00ffc6;
+            margin-bottom: 30px;
+        }
+
+        .product-category {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .product-box {
+            text-align: center;
+            background-color: #1c1c1c;
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            color: #e0e0e0;
+        }
+
+        .product-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 255, 198, 0.7);
+        }
+
+        .product-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .product-box h2 {
+            font-size: 1.5rem;
+            color: #00ffc6;
+        }
+
+        .product-box p {
+            font-size: 1rem;
+            color: #cccccc;
+        }
+
+        a {
+            color: #00ffc6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-shadow: 0 0 10px #00ffc6;
+        }
+
+
+
+        .product-category,
+        .item-category {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .product-box,
+        .item-box {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            width: 250px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .product-box:hover,
+        .item-box:hover {
+            transform: scale(1.05);
+        }
+
+        .product-box img,
+        .item-box img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-box h2,
+        .item-box h3 {
+            color: #000000;
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+
+        .product-box p,
+        .item-box p {
+            font-size: 1em;
+            color: #666;
+            padding: 0 10px 20px;
+        }
+
+        .search-bar {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .search-bar input[type="text"],
+        .search-bar select {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="AI" class="content-section">
+        <h1>AI</h1>
+        <strong style="color:red">Note:</strong><a style="color:red"> Running the AI may consume a lot of device
+            resources</a>
+        <div class="search-bar">
+            <input type="text" id="ai-search" placeholder="Search AI's...">
+            <select id="ai-filter">
+                <option value="all">All</option>
+                <option value="Text generation">Text Generation</option>
+                <option value="Text modification">Text Modification</option>
+                <option value="Text classification">Text Classification</option>
+                <option value="Music generation">Music Generation</option>
+
+                <!-- Add more filter options as needed -->
+            </select>
+        </div>
+        <div class="item-category" id="ai-items">
+            <a href="script-generator" class="item-box" data-category="Text generation">
+                <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
+                <h3>Film Script Generator (removed)</h3>
+            </a>
+            <a href="text-generator" class="item-box" data-category="Text generation">
+                <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
+                <h3>Text Generator</h3>
+            </a>
+            <a href="text-summarizer" class="item-box" data-category="Text modification">
+                <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
+                <h3>Text Summarizer</h3>
+            </a>
+            <a href="text-classifier" class="item-box" data-category="Text classification">
+                <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
+                <h3>Text Classifier</h3>
+            </a>
+            <!--
+            <a href="text-translator" class="item-box" data-category="Text modification">
+        <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
+        <h3>Text Translator</h3>
+      </a>
+      <a href="text2speech" class="item-box" data-category="Text modification">
+        <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
+        <h3>Text2Speech</h3>
+      </a>
+      <music generator/>
+      -->
+
+            <!-- Add more AI items here -->
+        </div>
+        <!-- Copyright -->
+        <div style="margin-top: 20px;">
+            <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>
