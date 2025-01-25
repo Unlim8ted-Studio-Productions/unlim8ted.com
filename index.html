@@ -333,9 +333,10 @@
 
   <link rel="stylesheet" href="styles.css">
   <style>
-    .content{
-      transform:none;
+    .content {
+      transform: none;
     }
+
     body,
     html {
       overflow: hidden;
@@ -449,24 +450,30 @@
     button:hover {
       background-color: rgb(57, 200, 145);
     }
-    #firsthero .background{
+
+    #firsthero .background {
       z-index: 0;
       position: relative;
       margin: -40rem;
     }
+
     /* Additional styling for responsiveness */
     @media (min-width: 794px) {
       .content {
         transform: scale(1.7);
       }
     }
+
     @media (max-width: 768px) {
       #image-slide-right {
         display: none;
       }
+
       #section3 {
-        height:40vh;
-      }}
+        height: 40vh;
+      }
+    }
+
     @media (min-width: 1302px) {
       .content {
         transform: scale(3);
@@ -844,7 +851,7 @@
       margin-bottom: 1rem;
       animation: glow 2s infinite alternate;
     }
-  
+
     .hero p {
       font-size: 1.2rem;
       margin-bottom: 2rem;
@@ -887,16 +894,17 @@
     }
 
     .section h2 {
-      color:rgb(57, 200, 145);
+      color: rgb(57, 200, 145);
       animation: glowy 2s infinite alternate;
       font-size: 2.5rem;
       margin-bottom: 1rem;
     }
-    
+
     @keyframes glowy {
       0% {
         text-shadow: 0 0 10px #00ffcc, 0 0 20px #ff00ff;
       }
+
       100% {
         text-shadow: 0 0 20px #00ffcc, 0 0 30px #ff00ff;
       }
@@ -1120,16 +1128,16 @@
 
     @keyframes slide {
       0% {
-      transform: translateX(0);
-      /* Start position */
+        transform: translateX(0);
+        /* Start position */
       }
 
       100% {
-      transform: translateX(-50%);
-      /* Slide to the left */
+        transform: translateX(-50%);
+        /* Slide to the left */
       }
     }
- 
+
 
 
     body {
@@ -1195,9 +1203,10 @@
       z-index: 10;
     }
 
-    #section2 p{
+    #section2 p {
       margin-bottom: 4rem;
     }
+
     #section4 {
       position: relative;
       width: 100%;
@@ -1234,16 +1243,16 @@
       user-select: none;
       gap: var(--gap);
       mask-image: linear-gradient(var(--mask-direction, to right),
-              hsl(0 0% 0% / 0),
-              hsl(0 0% 0% / 1) 20%,
-              hsl(0 0% 0% / 1) 80%,
-              hsl(0 0% 0% / 0));
-              top: -18rem;
-              position: relative;
-            
-  }
+          hsl(0 0% 0% / 0),
+          hsl(0 0% 0% / 1) 20%,
+          hsl(0 0% 0% / 1) 80%,
+          hsl(0 0% 0% / 0));
+      top: -18rem;
+      position: relative;
 
-  .marquee__group {
+    }
+
+    .marquee__group {
       flex-shrink: 0;
       display: flex;
       align-items: center;
@@ -1251,56 +1260,56 @@
       gap: var(--gap);
       min-width: 100%;
       animation: scroll-x var(--duration) linear infinite;
-  }
+    }
 
 
-  .marquee--vertical {
+    .marquee--vertical {
       --mask-direction: to bottom;
-  }
+    }
 
-  .marquee--vertical,
-  .marquee--vertical .marquee__group {
+    .marquee--vertical,
+    .marquee--vertical .marquee__group {
       flex-direction: column;
-  }
+    }
 
-  .marquee--vertical .marquee__group {
+    .marquee--vertical .marquee__group {
       animation-name: scroll-y;
-  }
+    }
 
-  .marquee--reverse .marquee__group {
+    .marquee--reverse .marquee__group {
       animation-direction: reverse;
       animation-delay: -3s;
-  }
+    }
 
-  @keyframes scroll-x {
+    @keyframes scroll-x {
       from {
-          transform: translateX(var(--scroll-start));
+        transform: translateX(var(--scroll-start));
       }
 
       to {
-          transform: translateX(var(--scroll-end));
+        transform: translateX(var(--scroll-end));
       }
-  }
+    }
 
 
-  /* Element styles */
-  .marquee img {
+    /* Element styles */
+    .marquee img {
       display: grid;
       place-items: center;
       width: var(--size);
       padding: calc(var(--size) / 5);
       border-radius: 0.5rem;
-      z-index:23;
-      
-  }
+      z-index: 23;
 
-  .marquee img:hover {
+    }
+
+    .marquee img:hover {
       transform: scale(1.1);
-  }
+    }
 
 
-  /* Parent wrapper */
-  .wrapper {
+    /* Parent wrapper */
+    .wrapper {
       display: flex;
       flex-direction: column;
       gap: var(--gap);
@@ -1311,64 +1320,60 @@
       --duration: 60s;
       --scroll-start: 0;
       --scroll-end: calc(-100% - var(--gap));
-  }
+    }
 
 
 
-  @keyframes fade {
+    @keyframes fade {
       to {
-          opacity: 0;
-          visibility: hidden;
+        opacity: 0;
+        visibility: hidden;
       }
-  }
-  @media (max-height: 950px) {
-    .marquee{
-     top:-16rem;
-    }
-   }
-   @media (max-height: 762px) {
-    .marquee{
-     top:-12rem;
-    }
-   }
-   @media (max-width: 768px) {
-    #section4 {
-      height: 40vh;
-      /* Adjust for smaller screens */
     }
 
-    .slider-container-partners img {
-      width: 150px;
-      /* Smaller images */
-    }
-  }
-  @media (max-height: 852px){
-    #firsthero h1,
-    #firsthero p,
-    #firsthero a {
-      position: relative;
-      top: 13rem;
+    @media (max-height: 950px) {
+      .marquee {
+        top: -16rem;
+      }
     }
 
-    
-  }/*
-  @media (max-height: 680px){
-    @media (max-width: 772px){
-    #section2 p {
-      margin-bottom: -6rem;
+    @media (max-height: 762px) {
+      .marquee {
+        top: -12rem;
+      }
     }
-    #section2 h2{
-      margin-bottom: 0px;
+
+    @media (max-width: 768px) {
+      #section4 {
+        height: 40vh;
+        /* Adjust for smaller screens */
+      }
+
+      .slider-container-partners img {
+        width: 150px;
+        /* Smaller images */
+      }
     }
-  }
-  }*/
-  @media (prefers-reduced-motion: reduce) {
-    .marquee__group {
+
+    @media (max-height: 852px) {
+
+      #firsthero h1,
+      #firsthero p,
+      #firsthero a {
+        position: relative;
+        top: 13rem;
+      }
+
+
+    }
+
+
+    @media (prefers-reduced-motion: reduce) {
+      .marquee__group {
         animation-play-state: paused;
+      }
     }
-}
-
-</style>
+  </style>
 
 
   <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
@@ -1430,37 +1435,39 @@
         </div>
       </div>
       <div class="section" id="section4">
-      <div class="wrapper">
+        <div class="wrapper">
           <div class="marquee">
-              <div class="marquee__group">
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-289.svg" alt="partner-logo" draggable="false">
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-331.svg" alt="partner-logo" draggable="false">
-      
-                  <img src="https://unlim8ted.com/images/logo/Zipper Line Logo.png" alt="partner-logo" draggable="false">
-      
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-338.svg" alt="partner-logo" draggable="false">
-                  <img src="https://unlim8ted.com/images/logo/Bnacintech Industries logo.png" alt="partner-logo" draggable="false">
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-346.svg" alt="partner-logo" draggable="false">
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-317.svg" alt="partner-logo" draggable="false">
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-339.svg" alt="partner-logo" draggable="false">
-      
-              </div>
-      
-              <div aria-hidden="true" class="marquee__group">
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-289.svg" alt="partner-logo" draggable="false">
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-331.svg" alt="partner-logo" draggable="false">
-      
-                  <img src="https://unlim8ted.com/images/logo/Zipper Line Logo.png" alt="partner-logo" draggable="false">
-      
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-338.svg" alt="partner-logo" draggable="false">
-                  <img src="https://unlim8ted.com/images/logo/Bnacintech Industries logo.png" alt="partner-logo" draggable="false">
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-346.svg" alt="partner-logo" draggable="false">
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-317.svg" alt="partner-logo" draggable="false">
-                  <img src="https://unlim8ted.com/images/logo/logoipsum-339.svg" alt="partner-logo" draggable="false">
-      
-              </div>
+            <div class="marquee__group">
+              <img src="https://unlim8ted.com/images/logo/logoipsum-289.svg" alt="partner-logo" draggable="false">
+              <img src="https://unlim8ted.com/images/logo/logoipsum-331.svg" alt="partner-logo" draggable="false">
+
+              <img src="https://unlim8ted.com/images/logo/Zipper Line Logo.png" alt="partner-logo" draggable="false">
+
+              <img src="https://unlim8ted.com/images/logo/logoipsum-338.svg" alt="partner-logo" draggable="false">
+              <img src="https://unlim8ted.com/images/logo/Bnacintech Industries logo.png" alt="partner-logo"
+                draggable="false">
+              <img src="https://unlim8ted.com/images/logo/logoipsum-346.svg" alt="partner-logo" draggable="false">
+              <img src="https://unlim8ted.com/images/logo/logoipsum-317.svg" alt="partner-logo" draggable="false">
+              <img src="https://unlim8ted.com/images/logo/logoipsum-339.svg" alt="partner-logo" draggable="false">
+
+            </div>
+
+            <div aria-hidden="true" class="marquee__group">
+              <img src="https://unlim8ted.com/images/logo/logoipsum-289.svg" alt="partner-logo" draggable="false">
+              <img src="https://unlim8ted.com/images/logo/logoipsum-331.svg" alt="partner-logo" draggable="false">
+
+              <img src="https://unlim8ted.com/images/logo/Zipper Line Logo.png" alt="partner-logo" draggable="false">
+
+              <img src="https://unlim8ted.com/images/logo/logoipsum-338.svg" alt="partner-logo" draggable="false">
+              <img src="https://unlim8ted.com/images/logo/Bnacintech Industries logo.png" alt="partner-logo"
+                draggable="false">
+              <img src="https://unlim8ted.com/images/logo/logoipsum-346.svg" alt="partner-logo" draggable="false">
+              <img src="https://unlim8ted.com/images/logo/logoipsum-317.svg" alt="partner-logo" draggable="false">
+              <img src="https://unlim8ted.com/images/logo/logoipsum-339.svg" alt="partner-logo" draggable="false">
+
+            </div>
           </div>
-      </div>
+        </div>
       </div>
 
       <!-- Final Section -->
@@ -1500,58 +1507,58 @@
     const homeContainer = document.getElementById("home");
     const scrollingContainer = document.getElementById("moving-scrolling-container");
     const footer = document.getElementById("homefooter");
-  
+
     // Track virtual scroll positions
     let virtualScrollPosition = 0;
     let currentScrollPositionHome = 0;
     let currentScrollPositionScrolling = 0;
     let isAnimating = false;
     let lastTouchY = 0; // For touch event tracking
-  
+
     // Function to update the transformation of both containers
     const updateTransformOnScroll = (deltaY, speedHome, speedScrolling) => {
       // Update the virtual scroll position
       virtualScrollPosition += deltaY;
-  
+
       // Footer's effective position is offsetTop minus the virtual scroll position
       const contentHeight = Math.max(
         homeContainer.offsetHeight,
         scrollingContainer.offsetHeight,
         footer.offsetTop + footer.offsetHeight
       );
-  
+
       // Calculate the maximum scrollable position
       maxScroll = Math.max(0, contentHeight - window.innerHeight);
       console.log(maxScroll);
-  
+
       // Clamp the virtual scroll position
       virtualScrollPosition = Math.max(0, Math.min(virtualScrollPosition, maxScroll));
-  
+
       // Start animations for both containers if not already animating
       if (!isAnimating) {
         smoothScroll(speedHome, speedScrolling);
       }
     };
-  
+
     // Smooth scrolling function
     const smoothScroll = (speedHome, speedScrolling) => {
       isAnimating = true;
-  
+
       const step = () => {
         const difference = virtualScrollPosition - currentScrollPositionHome;
-  
+
         // Calculate movement for home container
         const movementHome = difference * 0.1; // Easing factor
         currentScrollPositionHome += movementHome;
-  
+
         // Calculate movement for scrolling container (faster)
         const movementScrolling = (virtualScrollPosition - currentScrollPositionHome) * 0.1;
         currentScrollPositionScrolling += movementScrolling;
-  
+
         // Apply transforms
         homeContainer.style.transform = `translateY(-${currentScrollPositionHome}px)`;
         scrollingContainer.style.transform = `translateY(-${currentScrollPositionScrolling}px)`;
-  
+
         // Stop animation if close to target
         if (Math.abs(difference) > 0.5) {
           requestAnimationFrame(step);
@@ -1559,10 +1566,10 @@
           isAnimating = false; // Stop animating
         }
       };
-  
+
       requestAnimationFrame(step);
     };
-  
+
     // Attach the wheel event listener for desktop with { passive: false }
     window.addEventListener(
       "wheel",
@@ -1572,26 +1579,26 @@
       },
       { passive: false }
     );
-  
+
     // Handle touch events for mobile
     window.addEventListener("touchstart", (event) => {
       // Record the initial touch position
       lastTouchY = event.touches[0].clientY;
     });
-  
+
     window.addEventListener("touchmove", (event) => {
       event.preventDefault(); // Prevent default scroll behavior
-  
+
       // Calculate the deltaY (vertical movement) from touch
       const touchY = event.touches[0].clientY;
       const deltaY = lastTouchY - touchY;
       lastTouchY = touchY;
-  
+
       // Update transform based on touch movement
       updateTransformOnScroll(deltaY, 0.02, 0.07); // Speed: Home = 1x, Scrolling Container = 1.5x
     }, { passive: false });
   </script>
-  
+
   <!-- JavaScript for Scroll Animations -->
   <script>
     const sections = document.querySelectorAll('.section');
