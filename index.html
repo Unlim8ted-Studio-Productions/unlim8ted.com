@@ -1389,9 +1389,10 @@
         <span style="top: 50%; left: 90%; animation-delay: 1.5s;"></span>
         <span style="top: 80%; left: 50%; animation-delay: 3s;"></span>
       </div>
+      <div id="firstherocontent" style="transform:scale(100%)">
       <h1 style="color:#bcfaf7;">Welcome to Unlim8ted</h1>
       <p>Innovative entertainment at your fingertips.</p>
-      <a href="/sign-in"><button>Get Started</button></a>
+      <a href="/sign-in"><button>Get Started</button></a></div>
     </div>
 
 
@@ -1505,6 +1506,7 @@
   <script>
     // Select the elements
     const homeContainer = document.getElementById("home");
+    const firsthero = document.getElementById("firstherocontent");
     const scrollingContainer = document.getElementById("moving-scrolling-container");
     const footer = document.getElementById("homefooter");
 
@@ -1556,6 +1558,7 @@
         currentScrollPositionScrolling += movementScrolling;
 
         // Apply transforms
+        firsthero.style.transform = `scale(${100-currentScrollPositionHome/10}%)`
         homeContainer.style.transform = `translateY(-${currentScrollPositionHome}px)`;
         scrollingContainer.style.transform = `translateY(-${currentScrollPositionScrolling}px)`;
 
