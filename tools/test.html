@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Animated Page</title>
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+      padding: 0;
+    }
+
+    section {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Section 1: Hero */
+    #hero {
+      background: linear-gradient(135deg, #0f0f1f, #1f1f3f);
+      animation: backgroundScroll 10s infinite alternate;
+    }
+
+    #hero h1 {
+      font-size: 4rem;
+      text-shadow: 0 0 20px #00ffcc, 0 0 30px #ff0077;
+      animation: glowText 2s infinite alternate;
+    }
+
+    #hero p {
+      font-size: 1.5rem;
+      margin-top: 20px;
+    }
+
+    @keyframes glowText {
+      0% {
+        text-shadow: 0 0 20px #00ffcc;
+      }
+      100% {
+        text-shadow: 0 0 40px #ff0077;
+      }
+    }
+
+    @keyframes backgroundScroll {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 100% 100%;
+      }
+    }
+
+    /* Section 2: Animated Boxes */
+    #animated-boxes {
+      background: #1e1e2f;
+    }
+
+    .box-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    .box {
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, #00ffcc, #ff0077);
+      border-radius: 10px;
+      animation: float 3s infinite ease-in-out;
+    }
+
+    .box:nth-child(even) {
+      animation-delay: 1.5s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    /* Section 3: Scrolling Text */
+    #scrolling-text {
+      background: #181818;
+      overflow: hidden;
+    }
+
+    .scroll-container {
+      position: relative;
+      white-space: nowrap;
+      animation: scrollText 10s linear infinite;
+    }
+
+    .scroll-container h2 {
+      display: inline-block;
+      margin: 0 20px;
+      font-size: 2rem;
+      color: #00ffcc;
+      text-shadow: 0 0 15px #00ffcc;
+    }
+
+    @keyframes scrollText {
+      0% {
+        transform: translateX(100%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    /* Section 4: Interactive Elements */
+    #interactive-elements {
+      background: #2e2e3f;
+    }
+
+    .button {
+      background: linear-gradient(135deg, #00ffcc, #ff0077);
+      color: #fff;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #00ffcc;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #fff;
+      border-top: 5px solid #00ffcc;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Section 5: Footer */
+    footer {
+      background: #121212;
+      padding: 20px;
+      text-align: center;
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: #00ffcc;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      #hero h1 {
+        font-size: 3rem;
+      }
+
+      #hero p {
+        font-size: 1.2rem;
+      }
+
+      .box {
+        width: 120px;
+        height: 120px;
+      }
+
+      .scroll-container h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #hero h1 {
+        font-size: 2rem;
+      }
+
+      #hero p {
+        font-size: 1rem;
+      }
+
+      .box {
+        width: 100px;
+        height: 100px;
+      }
+
+      .scroll-container h2 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section id="hero">
+    <h1>Welcome to the Interactive Page</h1>
+    <p>Experience animations and interactivity like never before.</p>
+  </section>
+
+  <section id="animated-boxes">
+    <h2>Animated Boxes</h2>
+    <div class="box-container">
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+    </div>
+  </section>
+
+  <section id="scrolling-text">
+    <div class="scroll-container">
+      <h2>Interactive Design</h2>
+      <h2>Responsive Layout</h2>
+      <h2>Beautiful Animations</h2>
+      <h2>Neon Highlights</h2>
+    </div>
+  </section>
+
+  <section id="interactive-elements">
+    <h2>Interactive Elements</h2>
+    <button class="button">Click Me</button>
+    <div class="spinner"></div>
+  </section>
+
+  <footer>
+    <p>© 2025 Interactive Animated Page. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </footer>
+</body>
+
+</html>
