@@ -1203,9 +1203,6 @@
       z-index: 10;
     }
 
-    #section2 p {
-      margin-bottom: 4rem;
-    }
 
     #section4 {
       position: relative;
@@ -1367,12 +1364,69 @@
 
     }
 
+    @media (max-height:952px) {
+      #section2 p {
+        bottom: -3rem;
+        position: relative;
+      }
+
+      #section2 h2 {
+        margin-bottom: -4rem;
+      }
+    }
+
+    @media (max-height:808px) {
+      #section2 p {
+        margin-bottom: 17rem;
+        bottom: -20rem;
+        position: relative;
+      }
+
+      #section2 h2 {
+        position: relative;
+        bottom: -14rem;
+      }
+
+      #section1 h2 {
+        margin-top: 6rem;
+      }
+    }
+
+    @media (max-height:581px) {
+      #section2 p {
+        margin-bottom: 25rem;
+        bottom: -30rem;
+        position: relative;
+      }
+
+      #section2 h2 {
+        position: relative;
+        bottom: -25rem;
+      }
+
+      #section1 h2 {
+        margin-top: 13rem;
+      }
+    }
 
     @media (prefers-reduced-motion: reduce) {
       .marquee__group {
         animation-play-state: paused;
       }
     }
+
+    .neon-arrow {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      color: #0ff;
+      text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #00f, 0 0 80px #00f, 0 0 90px #00f;
+      
+    }
+
+
   </style>
 
 
@@ -1390,9 +1444,10 @@
         <span style="top: 80%; left: 50%; animation-delay: 3s;"></span>
       </div>
       <div id="firstherocontent" style="transform:scale(100%)">
-      <h1 style="color:#bcfaf7;">Welcome to Unlim8ted</h1>
-      <p>Innovative entertainment at your fingertips.</p>
-      <a href="/sign-in"><button>Get Started</button></a></div>
+        <h1 style="color:#bcfaf7;">Welcome to Unlim8ted</h1>
+        <p>Innovative entertainment at your fingertips.</p>
+        <a href="/sign-in"><button>Get Started</button></a>
+      </div>
     </div>
 
 
@@ -1422,6 +1477,11 @@
           <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
           <img class="image" src="https://unlim8ted.com/images/" draggable="false" />
         </div>
+        <svg style="position:absolute;fill:#00ffcc;right: 1rem;
+        transform: rotate(270deg);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 330"
+      width="100" height="100">
+      <path d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393 c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393 s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"/>
+    </svg>
       </div>
       <!-- Section 3 -->
       <div class="section" id="section3">
@@ -1498,6 +1558,11 @@
     </div>
   </div>
 
+  <div class="neon-arrow"><svg style="fill:#00ffcc;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 330"
+      width="100" height="100">
+      <path d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393 c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393 s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"/>
+    </svg></div>
+
   <script>
     // Add the third section to the observer
     const section3 = document.getElementById("section3");
@@ -1516,9 +1581,12 @@
     let currentScrollPositionScrolling = 0;
     let isAnimating = false;
     let lastTouchY = 0; // For touch event tracking
+    const arrow = document.querySelector('.neon-arrow');
 
     // Function to update the transformation of both containers
     const updateTransformOnScroll = (deltaY, speedHome, speedScrolling) => {
+          // Remove the neon arrow when the user scrolls
+      arrow.style.animation="fade 1.5s linear forwards"
       // Update the virtual scroll position
       virtualScrollPosition += deltaY;
 
@@ -1558,7 +1626,7 @@
         currentScrollPositionScrolling += movementScrolling;
 
         // Apply transforms
-        firsthero.style.transform = `scale(${100-currentScrollPositionHome/10}%)`
+        firsthero.style.transform = `scale(${100 - currentScrollPositionHome / 10}%)`
         homeContainer.style.transform = `translateY(-${currentScrollPositionHome}px)`;
         scrollingContainer.style.transform = `translateY(-${currentScrollPositionScrolling}px)`;
 
