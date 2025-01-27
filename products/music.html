@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlim8ted - Music</title>
+    <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+    <meta name="description"
+        content="Unlim8ted Music. Great music made by Unlim8ted Studio Productions. Always free, no signup required. Powered by Unlim8ted Studio Productions." />
+    <style media="screen" type="text/css">
+        .layer1_class {
+            position: absolute;
+            z-index: 1;
+            top: 100px;
+            left: 0px;
+            visibility: visible;
+        }
+
+        .layer2_class {
+            position: absolute;
+            z-index: 2;
+            top: 10px;
+            left: 10px;
+            visibility: hidden;
+        }
+
+        .loader {
+            position: fixed;
+            background-color: black;
+            opacity: 1;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0%;
+            z-index: 999999988;
+            pointer-events: none;
+        }
+
+        .loaderr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            /* To stack spinner and text vertically */
+            height: 100vh;
+            /* Full viewport height to ensure vertical centering */
+        }
+
+        .loaderr {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top: 8px solid #3498db;
+            border-right: 8px solid #e74c3c;
+            border-bottom: 8px solid #f1c40f;
+            border-left: 8px solid #9b59b6;
+            -webkit-animation: spin 1.5s linear infinite;
+            animation: spin 1.5s linear infinite;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
+            position: relative;
+        }
+
+        .loaderr:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top: 8px solid rgba(52, 152, 219, 0.7);
+            border-right: 8px solid rgba(231, 76, 60, 0.7);
+            border-bottom: 8px solid rgba(241, 196, 15, 0.7);
+            border-left: 8px solid rgba(155, 89, 182, 0.7);
+            -webkit-animation: spin-reverse 1.5s linear infinite;
+            animation: spin-reverse 1.5s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @-webkit-keyframes spin-reverse {
+            0% {
+                -webkit-transform: rotate(360deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(0deg);
+            }
+        }
+
+        @keyframes spin-reverse {
+            0% {
+                transform: rotate(360deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        /* Loading text animation */
+        .loading-text {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #3498db;
+            font-family: Arial, sans-serif;
+            letter-spacing: 2px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+
+        @-webkit-keyframes load-out {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes load-out {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+    <!-- Styles for the No-JavaScript message -->
+    <style>
+        .no-js-message {
+            background: #2c4762;
+            color: red;
+            font-size: 20px;
+            text-align: center;
+            padding: 20px;
+            z-index: 999999999999999999999999999999999999999999999;
+            position: fixed;
+            width: 100%;
+            top: 0;
+        }
+    </style>
+
+    <!-- No-JavaScript message -->
+    <noscript>
+        <div class="no-js-message">
+            Please enable JavaScript to use this website properly.
+        </div>
+    </noscript>
+    <div class="loader">
+        <div class="loaderr-container">
+            <div class="loaderr"></div>
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+
+    </div>
+    <script>
+        // This function will execute after the full page has finished loading
+        window.onload = function () {
+            // Trigger fade-out animation for the loader
+            document.querySelector('.loaderr').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+            document.querySelector('.loaderr').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+            document.querySelector('.loading-text').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+            document.querySelector('.loading-text').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+            document.querySelector('.loader').style.animation = 'load-out 4s forwards';
+            document.querySelector('.loader').style.webkitAnimation = 'load-out 4s forwards';
+
+        }
+    </script>
+    <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+    <style>
+        /* Navigation Bar Styles */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #333333d0;
+            position: relative;
+            top: 0;
+            width: 100%;
+            z-index: 3;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-item a {
+            display: block;
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nav-item a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 3;
+        }
+        button {
+            padding: 10px;
+            font-size: 1em;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+          }
+
+      
+          button:hover {
+            background-color: rgb(57, 200, 145);
+            transform: scale(1.05);
+          }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            z-index: 3;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: black;
+            text-decoration: none;
+            padding: 12px 16px;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .navbar-toggle {
+            display: none;
+            background-color: #333;
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                display: none;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .navbar-toggle {
+                display: block;
+            }
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .controls button:hover {
+            transform: scale(1.05);
+        }
+
+        .controls input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            background: linear-gradient(to right, #007bff, #0056b3);
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #ffffff;
+            border: 2px solid #007bff;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .controls input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .controls input[type="range"]::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            background: #ffffff;
+            border: 2px solid #007bff;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .controls input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 600px) {
+            .controls button {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+
+            .controls input[type="range"] {
+                width: 150px;
+            }
+        }
+
+        @media (min-width: 601px) {
+            .controls input[type="range"] {
+                width: 200px;
+            }
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById("navbarLinks");
+            navLinks.classList.toggle("show");
+        }
+    </script>
+
+
+
+    <nav class="navbar">
+        <div class="navbar-header">
+            <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+            <ul class="nav-links" id="navbarLinks">
+                <li class="nav-item"><a href="/">Home</a></li>
+                <li class="nav-item"><a href="/products">Products</a></li>
+                <li class="nav-item"><a href="/help">Help</a></li>
+                <li class="nav-item"><a href="/about">About</a></li>
+                <li class="nav-item dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">More</a>
+                    <div class="dropdown-content">
+                        <a href="/portfolio">Portfolio</a>
+                        <a href="/contact">Contact</a>
+                        <a href="/blog">Blog</a>
+                    </div>
+                </li>
+                <a href="old"><button>Old site</button></a>
+            </ul>
+        </div>
+    </nav>
+    <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
+    <style>
+        /* Base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(145deg, #1a002e, #000);
+            color: white;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .song-list {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #0f001a;
+            border-right: 2px solid #8b00ff;
+        }
+
+        .song-item {
+            padding: 15px;
+            border: 1px solid #8b00ff;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .song-item:hover {
+            background: #8b00ff;
+        }
+
+        .pdf-link {
+            pointer-events: block; 
+            font-size: 14px;
+            color: #00ffcc;
+            text-decoration: none;
+        }
+
+        .pdf-link:hover {
+            text-decoration: underline;
+        }
+
+        .midi-visualizer {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: black;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        canvas {
+            width: 100%;
+            height: 80%;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .timeline {
+            width: 90%;
+            margin: 10px auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column-reverse;
+            }
+
+            .song-list {
+                border-right: none;
+                border-top: 2px solid #8b00ff;
+                padding-top: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="midi-visualizer" id="visualizer">
+            <canvas id="midiCanvas"></canvas>
+            <div class="controls" id="controls">
+                <button onclick="pauseTrack()">Pause</button>
+                <button onclick="resumeTrack()">Start</button>
+                <input type="range" id="timeline" class="timeline" min="0" max="100" value="0" step="1"
+                    onchange="seekTrack(event)">
+                <input type="range" id="volume" min="0" max="1" step="0.01" value="1" onchange="setVolume(event)">
+            </div>
+        </div>
+
+        <div class="song-list">
+            <div class="song-item"
+                onclick="playTrack('The%20Echos%20of%20the%20Bells.mid', 'The%20Echos%20of%20the%20Bells.mp3')">
+                The Echos of the Bells
+                <br>
+                <a class="pdf-link" href="https://unlim8ted.com/music/pdf's/The%20Echos%20of%20the%20Bells-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('Serene Winter Night.mid', 'Serene Winter Night.mp3')">
+                Serene Winter Night
+                <br>
+                <a class="pdf-link" href="https://unlim8ted.com/music/pdf's/Serene%20Winter%20Night-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('A Bright Winter.mid', 'A Bright Winter.mp3')">
+                A Bright Winter
+                <br>
+                <a class="pdf-link" href="https://unlim8ted.com/music/pdf's/A%20Bright%20Winter-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('Resonating Magic.mid', 'Resonating Magic.mp3')">
+                Resonating Magic
+                <br>
+                <a class="pdf-link" href="https://unlim8ted.com/music/pdf's/Resonating%20Magic-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('Blue Lasers.mid', 'Blue Lasers.mp3')">
+                Neon Lasers
+                <br>
+                <a class="pdf-link" href="https://unlim8ted.com/music/pdf's/Blue%20Lasers-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('Defiant Quiet.mid', 'Defiant Quiet.mp3')">
+                Quiet Defiance
+                <br>
+                <a class="pdf-link" href="https://unlim8ted.com/music/pdf's/Defiant%20Quiet-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('Close to the End.mid', 'Close to the End.mp3')">
+                Close to the End
+                <br>
+                <a class="pdf-link" href="https://unlim8ted.com/music/pdf's/Close%20to%20the%20End-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <div class="song-item" onclick="playTrack('Darkness.mid', 'Darkness.mp3')">
+                Darkness
+                <br>
+                <a class="pdf-link" href="https://unlim8ted.com/music/pdf's/Darkness-Score_and_Parts.pdf" target="_blank">
+                    View PDF
+                </a>
+            </div>
+            <p>© 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('midiCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth / 2;
+        canvas.height = window.innerHeight * 0.8;
+
+        let notes = [];
+        let startTime = null;
+        let audio = null;
+        let isPlaying = false;
+        let midiDuration = 0;
+        let colorPalette = [
+            '#ff00c1', // Bright pink
+            '#9600ff', // Vivid violet
+            '#4900ff', // Deep indigo
+            '#00b8ff', // Bright blue
+            '#00fff9', // Aqua cyan
+            '#ff7400', // Vibrant orange
+            '#ffcc00', // Bold yellow
+            '#9cff00', // Lime green
+            '#00ff6b', // Bright green
+            '#ff003c', // Scarlet red
+            '#00ffcc', // Teal
+            '#3c00ff', // Rich purple
+            '#eaff00', // Lemon yellow
+            '#ff0074', // Magenta
+            '#00ff96', // Mint green
+        ];
+
+
+        function drawNotes() {
+            if (!isPlaying) return;
+
+            const currentTime = performance.now() - startTime;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const noteWidth = canvas.width / 128; // Scale width based on the canvas size (MIDI range has 128 keys)
+
+            notes.forEach(note => {
+                const timeOffset = note.startTime - currentTime;
+                const y = canvas.height - (timeOffset / 10) - note.duration / 10; // Align with audio timing
+                const noteHeight = note.duration / 10; // Scale duration for visual representation
+
+                if (y > canvas.height || y + noteHeight < 0) return; // Skip notes outside canvas
+
+                const instrumentIndex = note.instrument % colorPalette.length;
+                const instrumentColor = colorPalette[instrumentIndex];
+
+                // Offset each instrument slightly for clarity
+                const x = (note.midi * noteWidth); // Slight horizontal offset per instrument
+
+                ctx.fillStyle = instrumentColor;
+                ctx.fillRect(x, y, noteWidth - 2, noteHeight); // Note position and size
+            });
+
+            requestAnimationFrame(drawNotes);
+        }
+
+        // Adjust canvas size dynamically for both desktop and mobile
+        function resizeCanvas() {
+            const isMobile = /Mobi|Android/i.test(navigator.userAgent); // Simple mobile detection
+            canvas.width = isMobile ? window.innerWidth : Math.min(window.innerWidth, 1280); // Full width on mobile, max width on desktop
+            canvas.height = isMobile ? window.innerHeight * 0.7 : window.innerHeight * 0.8; // Adjust height slightly for each platform
+        }
+
+        // Listen for window resize events
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas(); // Initial setup
+
+
+
+        function playTrack(midiFilename, audioFilename) {
+            const midiFileUrl = `https://unlim8ted.com/music/${midiFilename}`;
+            const audioFileUrl = `https://unlim8ted.com/music/${audioFilename}`;
+
+
+            const timeline = document.getElementById('timeline');
+
+
+            if (audio) {
+                audio.pause();
+                audio = null;
+            }
+
+            fetch(midiFileUrl)
+                .then(response => response.arrayBuffer())
+                .then(data => {
+                    const midi = new Midi(data);
+
+                    notes = midi.tracks.flatMap((track, index) =>
+                        track.notes.map(note => ({
+                            midi: note.midi,
+                            startTime: note.time * 1000, // Convert to milliseconds
+                            duration: note.duration * 1000,
+                            instrument: index
+                        }))
+                    );
+
+                    midiDuration = midi.duration * 1000; // Duration in milliseconds
+                    timeline.max = midiDuration;
+
+                    startTime = performance.now();
+                    drawNotes();
+
+                    audio = new Audio(audioFileUrl);
+                    audio.volume = parseFloat(document.getElementById('volume').value);
+                    audio.play().then(() => {
+                        isPlaying = true;
+
+                        audio.ontimeupdate = () => {
+                            timeline.value = audio.currentTime * 1000;
+                        };
+                        drawNotes();
+                    }).catch(error => {
+                        console.error("Error playing audio file:", error);
+
+                    });
+
+                    audio.onended = () => {
+                        isPlaying = false;
+                    };
+                })
+                .catch(error => {
+                    console.error("Error loading MIDI file:", error);
+
+                });
+
+        }
+
+        function pauseTrack() {
+            if (audio && isPlaying) {
+                audio.pause();
+                isPlaying = false;
+            }
+        }
+
+        function resumeTrack() {
+            if (audio && !isPlaying) {
+                audio.play();
+                isPlaying = true;
+                startTime = performance.now() - audio.currentTime * 1000;
+                drawNotes();
+            }
+        }
+
+        function seekTrack(event) {
+            const seekTime = event.target.value;
+            if (audio) {
+                audio.currentTime = seekTime / 1000;
+                startTime = performance.now() - seekTime;
+                drawNotes();
+            }
+        }
+
+        function setVolume(event) {
+            if (audio) {
+                audio.volume = parseFloat(event.target.value);
+            }
+        }
+    </script>
+</body>
+
+</html>
