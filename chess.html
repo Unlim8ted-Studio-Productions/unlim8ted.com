@@ -689,7 +689,20 @@
       cursor: pointer;
       font-size: 18px;
     }
+    button {
+      padding: 10px;
+      font-size: 1em;
+      background-color: #000000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
+    button:hover {
+      background-color: rgb(57, 200, 145);
+    }
     /* Responsive styles */
     @media (max-width: 768px) {
       .nav-links {
@@ -746,6 +759,13 @@
       <button class="menu-button" id="aiVsAiBtn">AI vs AI</button>
       <button class="menu-button" id="tutorialBtn">Tutorial</button>
       <button class="menu-button" id="mainSettingsBtn">Settings</button>
+      <p style="color:white;" id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
+            <script>document.addEventListener("DOMContentLoaded", function () {
+                const currentYear = new Date().getFullYear();
+                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
+                document.getElementById("footer-text").innerHTML = footerText;
+            });
+            </script>
     </div>
   </div>
 

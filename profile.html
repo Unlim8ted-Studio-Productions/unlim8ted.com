@@ -289,6 +289,13 @@
       <button id="save" class="button">Save Profile</button>
       <button id="viewprods" class="button">Browse our products</button>
       <button id="logout" class="button logout">Log Out</button>
+      <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
+            <script>document.addEventListener("DOMContentLoaded", function () {
+                const currentYear = new Date().getFullYear();
+                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
+                document.getElementById("footer-text").innerHTML = footerText;
+            });
+            </script>
     </div>
   </div>
 

@@ -454,7 +454,13 @@
 </body>
     <!-- Copyright -->
     <div style="margin-top: 20px;">
-        <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
+        <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
+            <script>document.addEventListener("DOMContentLoaded", function () {
+                const currentYear = new Date().getFullYear();
+                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
+                document.getElementById("footer-text").innerHTML = footerText;
+            });
+            </script>
       </div>
     </div>
 </html>

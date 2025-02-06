@@ -563,14 +563,14 @@
     <div id="physical-items" class="content-section">
         <h1>Physical Items</h1>
         <div class="search-bar">
-            <input type="text" id="physical-items-search" placeholder="Search films...">
+            <input type="text" id="physical-items-search" placeholder="Search items...">
             <select id="physical-items-filter">
                 <option value="all">All</option>
                 <option value="t-shirts">Action</option>
                 <!--add more categories filters and price ranges-->
             </select>
         </div>
-        <div class="item-category" id="film-items">
+        <div class="item-category" id="items">
             <a href="https://unlim8ted.com/squareproduct#unlim8ted-hardcover-bound-notebook/51?cp=true&sa=true&sbp=false&q=false"
                 class="item-box" data-category="product">
                 <img src="https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p51_i1_w2000.jpeg?width=2400&optimize=medium"
@@ -988,6 +988,13 @@
                 <p><strong>Price:</strong> $7.00</p>
             </a>
         </div>
+        <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
+            <script>document.addEventListener("DOMContentLoaded", function () {
+                const currentYear = new Date().getFullYear();
+                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
+                document.getElementById("footer-text").innerHTML = footerText;
+            });
+            </script>
     </div>
 
 </html>
