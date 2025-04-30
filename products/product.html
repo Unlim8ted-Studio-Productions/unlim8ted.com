@@ -178,6 +178,7 @@
             width: 100%;
             top: 0;
         }
+
         .not-found-section {
             background-color: #fff;
             padding: 1rem;
@@ -219,7 +220,6 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         /* Custom styles for better presentation */
-
     </style>
     <!-- Font Awesome Icon Library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -234,11 +234,11 @@
             --text-light: #e0e0e0;
             --text-muted: #888;
         }
-    
+
         * {
             box-sizing: border-box;
-        } 
-    
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -246,7 +246,7 @@
             background-color: var(--bg-dark);
             color: var(--text-light);
         }
-    
+
         header,
         footer {
             background-color: #111;
@@ -258,17 +258,17 @@
             color: #fff;
         }
 
-        h1{
+        h1 {
             padding-top: 1rem;
         }
-    
+
         main {
             display: flex;
             justify-content: space-between;
             padding: 2rem;
             flex-wrap: wrap;
         }
-    
+
         .product-section,
         .not-found-section,
         .left-sidebar,
@@ -281,6 +281,7 @@
             padding: 1rem;
             transition: all 0.3s ease;
         }
+
         /* Styling for product details */
         .product-details {
             display: flex;
@@ -291,18 +292,18 @@
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
             width: 100%;
         }
-    
+
         .product-section {
             display: none;
             width: 100%;
             margin: 1rem 0;
         }
-    
+
         .product-section.active,
         .not-found-section.active {
             display: block;
         }
-    
+
         .left-sidebar img,
         .left-sidebar video {
             width: 100%;
@@ -310,28 +311,28 @@
             box-shadow: var(--highlight-glow);
             margin-bottom: 1rem;
         }
-    
+
         .product-info {
             flex: 1;
             margin: 0 1rem;
         }
-    
+
         .product-info h2 {
             color: var(--primary-neon);
             font-size: 1.75rem;
             text-shadow: var(--highlight-glow);
         }
-    
+
         .product-info p {
             color: var(--text-muted);
         }
-    
+
         .product-price {
             color: var(--secondary-neon);
             font-size: 1.25rem;
             text-shadow: var(--secondary-glow);
         }
-    
+
         .cart-btn,
         .buy-now-btn {
             background-color: transparent;
@@ -343,21 +344,21 @@
             transition: 0.3s ease-in-out;
             box-shadow: var(--highlight-glow);
         }
-    
+
         .cart-btn:hover,
         .buy-now-btn:hover {
             background-color: var(--primary-neon);
             color: #000;
             box-shadow: 0 0 20px var(--primary-neon);
         }
-    
+
         .cart-btn {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 1000;
         }
-    
+
         .added-to-cart-notification {
             position: fixed;
             bottom: 70px;
@@ -370,50 +371,51 @@
             animation: slideIn 0.5s forwards;
             box-shadow: var(--highlight-glow);
         }
-    
+
         @keyframes slideIn {
             from {
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-    
+
         .rating {
             font-size: 1.2rem;
             color: #ffcc00;
             text-shadow: 0 0 5px #ffcc00;
         }
-    
+
         .comments-section {
             margin-top: 2rem;
         }
-    
+
         .comment {
             border-bottom: 1px solid var(--primary-neon);
             padding: 0.5rem;
             color: var(--text-light);
         }
-    
+
         .heading {
             font-size: 2rem;
             color: var(--primary-neon);
             text-shadow: var(--highlight-glow);
         }
-    
+
         .checked {
             color: #f39c12;
         }
-    
+
         /* Ratings bar */
         .bar-container {
             background-color: #22222200;
             border-radius: 5px;
         }
-    
+
         .bar-1,
         .bar-2,
         .bar-3,
@@ -422,39 +424,64 @@
             height: 16px;
             border-radius: 10px;
         }
-    
-        .bar-5 { background-color: #00ffcc; width: 60%; box-shadow: 0 0 5px #00ffcc; }
-        .bar-4 { background-color: #33ccff; width: 30%; box-shadow: 0 0 5px #33ccff; }
-        .bar-3 { background-color: #00bcd4; width: 10%; box-shadow: 0 0 5px #00bcd4; }
-        .bar-2 { background-color: #ff9800; width: 4%; box-shadow: 0 0 5px #ff9800; }
-        .bar-1 { background-color: #f44336; width: 15%; box-shadow: 0 0 5px #f44336; }
-    
+
+        .bar-5 {
+            background-color: #00ffcc;
+            width: 60%;
+            box-shadow: 0 0 5px #00ffcc;
+        }
+
+        .bar-4 {
+            background-color: #33ccff;
+            width: 30%;
+            box-shadow: 0 0 5px #33ccff;
+        }
+
+        .bar-3 {
+            background-color: #00bcd4;
+            width: 10%;
+            box-shadow: 0 0 5px #00bcd4;
+        }
+
+        .bar-2 {
+            background-color: #ff9800;
+            width: 4%;
+            box-shadow: 0 0 5px #ff9800;
+        }
+
+        .bar-1 {
+            background-color: #f44336;
+            width: 15%;
+            box-shadow: 0 0 5px #f44336;
+        }
+
         /* Responsive Layout */
         @media (max-width: 600px) {
             main {
                 flex-direction: column;
             }
-    
+
             .left-sidebar,
             .right-sidebar {
                 width: 100%;
                 margin-bottom: 1rem;
             }
-    
+
             .product-info {
                 margin: 0;
             }
         }
-    
+
 
         .product-section.active {
             display: block;
         }
 
-    
+
         .not-found-section.active {
             display: block;
         }
+
         .left-sidebar,
         .right-sidebar {
             width: 200px;
@@ -547,6 +574,7 @@
             padding: 0.5rem;
             border-bottom: 1px solid #201f1f;
         }
+
         * {
             box-sizing: border-box;
         }
@@ -588,7 +616,7 @@
         .right {
             width: 100%;
             margin-top: -16px;
-            float:right;
+            float: right;
             text-align: right;
         }
 
@@ -753,7 +781,7 @@
                     <img class="@image@" src="@product image@" alt="">
                     <div id="@additional images@"></div>
                     <video class="@video@" controls>
-                        <source class="@video@" src="@product video@" type="video/mp4">
+                        <div id="main-video-placeholder"></div>
                         Your browser does not support the video tag.
                     </video>
                     <div id="@additional images@"></div>
@@ -878,16 +906,41 @@
                         console.error('Error fetching products:', error);
                     }
                 }
+                function extractYouTubeID(url) {
+                    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|embed)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+                    const match = url.match(regex);
+                    return match ? match[1] : null;
+                }
 
                 // Function to replace placeholders with product details
                 function replacePlaceholders(current_product) {
                     // Replace simple placeholders
                     document.body.innerHTML = document.body.innerHTML.replace(/@product id@/g, current_product.id);
                     document.body.innerHTML = document.body.innerHTML.replace(/@product image@/g, current_product.image);
-                    document.body.innerHTML = document.body.innerHTML.replace(/@product video@/g, current_product.video);
                     document.body.innerHTML = document.body.innerHTML.replace(/@product name@/g, current_product.name);
                     document.body.innerHTML = document.body.innerHTML.replace(/@product description@/g, current_product.description);
                     document.body.innerHTML = document.body.innerHTML.replace(/@product price@/g, current_product.price.toFixed(2));
+
+                    const mainVideoPlaceholder = document.getElementById("main-video-placeholder");
+                    if (current_product.video) {
+                        if (current_product.video.includes("youtube.com") || current_product.video.includes("youtu.be")) {
+                            const youtubeId = extractYouTubeID(current_product.video);
+                            const iframe = document.createElement('iframe');
+                            iframe.width = "100%";
+                            iframe.height = "315";
+                            iframe.src = `https://www.youtube.com/embed/${youtubeId}`;
+                            iframe.frameBorder = "0";
+                            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                            iframe.allowFullscreen = true;
+                            mainVideoPlaceholder.appendChild(iframe);
+                        } else {
+                            const video = document.createElement('video');
+                            video.controls = true;
+                            video.src = current_product.video;
+                            video.style.width = "100%";
+                            mainVideoPlaceholder.appendChild(video);
+                        }
+                    }
 
                     // Replace additional images placeholder
                     const additionalImagesDiv = document.getElementById('@additional images@');
@@ -921,7 +974,7 @@
                                 videoElement.controls = true;
                                 additionalVideosDiv.appendChild(videoElement);
                             }
-                            
+
 
                         });
                     }
@@ -1038,10 +1091,10 @@
         <div style="margin-top: 20px;">
             <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
             <script>document.addEventListener("DOMContentLoaded", function () {
-                const currentYear = new Date().getFullYear();
-                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
-                document.getElementById("footer-text").innerHTML = footerText;
-            });
+                    const currentYear = new Date().getFullYear();
+                    const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
+                    document.getElementById("footer-text").innerHTML = footerText;
+                });
             </script>
         </div>
     </div>
