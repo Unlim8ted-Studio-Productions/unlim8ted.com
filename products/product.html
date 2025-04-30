@@ -905,10 +905,24 @@
                     if (additionalVideosDiv) {
                         additionalVideosDiv.innerHTML = '';
                         current_product.additional_videos.forEach(video => {
-                            const videoElement = document.createElement('video');
-                            videoElement.src = video;
-                            videoElement.controls = true;
-                            additionalVideosDiv.appendChild(videoElement);
+                            if (video.includes("youtube.com") || video.includes("youtu.be")) {
+                                const youtubeId = extractYouTubeID(video);
+                                const iframe = document.createElement('iframe');
+                                iframe.width = "100%";
+                                iframe.height = "315";
+                                iframe.src = `https://www.youtube.com/embed/${youtubeId}`;
+                                iframe.frameBorder = "0";
+                                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                                iframe.allowFullscreen = true;
+                                additionalVideosDiv.appendChild(iframe);
+                            } else {
+                                const videoElement = document.createElement('video');
+                                videoElement.src = video;
+                                videoElement.controls = true;
+                                additionalVideosDiv.appendChild(videoElement);
+                            }
+                            
+
                         });
                     }
                 }
