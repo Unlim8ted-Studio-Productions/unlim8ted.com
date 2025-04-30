@@ -530,7 +530,7 @@
     <div id="inner-wrap">
         <div class="logo" style="z-index: 2;">
             <a href="/">
-                <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
+                <img src="https://unlim8ted.com/images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
             </a>
         </div>
         <style>
@@ -740,15 +740,13 @@
                 async function getProducts() {
                     try {
 
-                        const response = await fetch('unlim8ted.com/tools/data/products.json');
+                        const response = await fetch('https://unlim8ted.com/tools/data/products.json');
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
                         const products = await response.json();
                         console.log(products);
                         return products
-                        // You can use the `products` variable here for further processing
-                        // For example, you can call another function to display the products
                     } catch (error) {
                         console.error('Error fetching products:', error);
                     }
