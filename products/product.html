@@ -178,6 +178,12 @@
             width: 100%;
             top: 0;
         }
+        .not-found-section {
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
     </style>
 
     <!-- No-JavaScript message -->
@@ -213,63 +219,68 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         /* Custom styles for better presentation */
+
+    </style>
+    <!-- Font Awesome Icon Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        :root {
+            --bg-dark: #0d0d0d;
+            --card-bg: #1a1a1a;
+            --primary-neon: #00b3e0;
+            --secondary-neon: #00ff73;
+            --highlight-glow: 0 0 10px var(--primary-neon), 0 0 20px var(--primary-neon);
+            --secondary-glow: 0 0 10px var(--secondary-neon), 0 0 20px var(--secondary-neon);
+            --text-light: #e0e0e0;
+            --text-muted: #888;
+        }
+    
+        * {
+            box-sizing: border-box;
+        } 
+    
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
         }
-
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1rem;
+    
+        header,
+        footer {
+            background-color: #111;
             text-align: center;
+            padding: 1rem;
+            color: var(--primary-neon);
+            text-shadow: var(--highlight-glow);
+            background-color: #0f0f0f;
+            color: #fff;
         }
 
+        h1{
+            padding-top: 1rem;
+        }
+    
         main {
-            padding: 2rem;
             display: flex;
             justify-content: space-between;
+            padding: 2rem;
+            flex-wrap: wrap;
         }
-
-        .product-section {
-            display: none;
-            background-color: #fff;
+    
+        .product-section,
+        .not-found-section,
+        .left-sidebar,
+        .right-sidebar,
+        .product-details {
+            background-color: var(--card-bg);
+            border: 1px solid var(--primary-neon);
+            box-shadow: var(--highlight-glow);
+            border-radius: 10px;
             padding: 1rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            width: 100%;
-            margin: 0 1rem;
+            transition: all 0.3s ease;
         }
-
-        .product-section.active {
-            display: block;
-        }
-
-        .not-found-section {
-            background-color: #fff;
-            padding: 1rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: none;
-            border-radius: 5px;
-        }
-
-        .not-found-section.active {
-            display: block;
-        }
-
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 1rem;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
         /* Styling for product details */
         .product-details {
             display: flex;
@@ -277,16 +288,178 @@
             padding: 1rem;
             border: 1px solid #ddd;
             border-radius: 5px;
-            background-color: #fff;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
             width: 100%;
         }
+    
+        .product-section {
+            display: none;
+            width: 100%;
+            margin: 1rem 0;
+        }
+    
+        .product-section.active,
+        .not-found-section.active {
+            display: block;
+        }
+    
+        .left-sidebar img,
+        .left-sidebar video {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: var(--highlight-glow);
+            margin-bottom: 1rem;
+        }
+    
+        .product-info {
+            flex: 1;
+            margin: 0 1rem;
+        }
+    
+        .product-info h2 {
+            color: var(--primary-neon);
+            font-size: 1.75rem;
+            text-shadow: var(--highlight-glow);
+        }
+    
+        .product-info p {
+            color: var(--text-muted);
+        }
+    
+        .product-price {
+            color: var(--secondary-neon);
+            font-size: 1.25rem;
+            text-shadow: var(--secondary-glow);
+        }
+    
+        .cart-btn,
+        .buy-now-btn {
+            background-color: transparent;
+            color: var(--primary-neon);
+            border: 2px solid var(--primary-neon);
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            box-shadow: var(--highlight-glow);
+        }
+    
+        .cart-btn:hover,
+        .buy-now-btn:hover {
+            background-color: var(--primary-neon);
+            color: #000;
+            box-shadow: 0 0 20px var(--primary-neon);
+        }
+    
+        .cart-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    
+        .added-to-cart-notification {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background-color: var(--primary-neon);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            animation: slideIn 0.5s forwards;
+            box-shadow: var(--highlight-glow);
+        }
+    
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    
+        .rating {
+            font-size: 1.2rem;
+            color: #ffcc00;
+            text-shadow: 0 0 5px #ffcc00;
+        }
+    
+        .comments-section {
+            margin-top: 2rem;
+        }
+    
+        .comment {
+            border-bottom: 1px solid var(--primary-neon);
+            padding: 0.5rem;
+            color: var(--text-light);
+        }
+    
+        .heading {
+            font-size: 2rem;
+            color: var(--primary-neon);
+            text-shadow: var(--highlight-glow);
+        }
+    
+        .checked {
+            color: #f39c12;
+        }
+    
+        /* Ratings bar */
+        .bar-container {
+            background-color: #22222200;
+            border-radius: 5px;
+        }
+    
+        .bar-1,
+        .bar-2,
+        .bar-3,
+        .bar-4,
+        .bar-5 {
+            height: 16px;
+            border-radius: 10px;
+        }
+    
+        .bar-5 { background-color: #00ffcc; width: 60%; box-shadow: 0 0 5px #00ffcc; }
+        .bar-4 { background-color: #33ccff; width: 30%; box-shadow: 0 0 5px #33ccff; }
+        .bar-3 { background-color: #00bcd4; width: 10%; box-shadow: 0 0 5px #00bcd4; }
+        .bar-2 { background-color: #ff9800; width: 4%; box-shadow: 0 0 5px #ff9800; }
+        .bar-1 { background-color: #f44336; width: 15%; box-shadow: 0 0 5px #f44336; }
+    
+        /* Responsive Layout */
+        @media (max-width: 600px) {
+            main {
+                flex-direction: column;
+            }
+    
+            .left-sidebar,
+            .right-sidebar {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+    
+            .product-info {
+                margin: 0;
+            }
+        }
+    
 
+        .product-section.active {
+            display: block;
+        }
+
+    
+        .not-found-section.active {
+            display: block;
+        }
         .left-sidebar,
         .right-sidebar {
             width: 200px;
             padding: 1rem;
-            background-color: #fff;
+
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
         }
@@ -309,13 +482,11 @@
 
         .product-info p {
             font-size: 1rem;
-            color: #555;
             margin-bottom: 1rem;
         }
 
         .product-price {
             font-size: 1.25rem;
-            color: #333;
             margin-bottom: 1rem;
         }
 
@@ -354,7 +525,6 @@
 
         .buy-now-btn {
             display: inline-block;
-            background-color: #007bff;
             color: #fff;
             padding: 0.75rem 1.5rem;
             text-decoration: none;
@@ -362,10 +532,6 @@
             transition: background-color 0.3s ease;
             margin-top: 1rem;
             cursor: pointer;
-        }
-
-        .buy-now-btn:hover {
-            background-color: #0056b3;
         }
 
         .rating {
@@ -379,12 +545,8 @@
 
         .comment {
             padding: 0.5rem;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #201f1f;
         }
-    </style>
-    <!-- Font Awesome Icon Library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
         * {
             box-sizing: border-box;
         }
@@ -397,7 +559,7 @@
         }
 
         .heading {
-            font-size: 25px;
+            font-size: 23px;
             margin-right: 25px;
         }
 
@@ -424,6 +586,9 @@
 
         /* Place text to the right */
         .right {
+            width: 100%;
+            margin-top: -16px;
+            float:right;
             text-align: right;
         }
 
@@ -435,50 +600,13 @@
         }
 
         /* The bar container */
-        .bar-container {
-            width: 100%;
-            background-color: #f1f1f1;
-            text-align: center;
-            color: white;
-        }
-
-        /* Individual bars */
-        .bar-5 {
-            width: 60%;
-            height: 18px;
-            background-color: #04AA6D;
-        }
-
-        .bar-4 {
-            width: 30%;
-            height: 18px;
-            background-color: #2196F3;
-        }
-
-        .bar-3 {
-            width: 10%;
-            height: 18px;
-            background-color: #00bcd4;
-        }
-
-        .bar-2 {
-            width: 4%;
-            height: 18px;
-            background-color: #ff9800;
-        }
-
-        .bar-1 {
-            width: 15%;
-            height: 18px;
-            background-color: #f44336;
-        }
-
         .\@image\@ {
             font: normal;
         }
 
         .\@video\@ {
             font: normal;
+            border-radius: 8px;
         }
 
         /* Responsive layout - make the columns stack on top of each other instead of next to each other */
@@ -796,7 +924,6 @@
                 console.log(window.location.hash)
                 // Replace placeholders if the product is found, otherwise show the not-found section
                 if (current_product) {
-                    console.log("hi")
                     const section = document.getElementById('@product id@');
                     section.classList.add('active');
                     replacePlaceholders(current_product);
@@ -904,1297 +1031,3 @@
             </script>
         </div>
     </div>
-
-
-    <!--<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Custom styles for better presentation */
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1rem;
-            text-align: center;
-        }
-
-        main {
-            padding: 2rem;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .product-section {
-            display: none;
-            background-color: #fff;
-            padding: 1rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            width: 100%;
-            margin: 0 1rem;
-        }
-
-        .product-section.active {
-            display: block;
-        }
-
-        .not-found-section {
-            background-color: #fff;
-            padding: 1rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: none;
-            border-radius: 5px;
-        }
-
-        .not-found-section.active {
-            display: block;
-        }
-
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 1rem;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-        /* Styling for product details */
-        .product-details {
-            display: flex;
-            margin-top: 1rem;
-            padding: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            width: 100%;
-        }
-
-        .left-sidebar,
-        .right-sidebar {
-            width: 200px;
-            padding: 1rem;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-        }
-
-        .left-sidebar img,
-        .left-sidebar video {
-            max-width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        .product-info {
-            flex: 1;
-            margin: 0 1rem;
-        }
-
-        .product-info h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .product-info p {
-            font-size: 1rem;
-            color: #555;
-            margin-bottom: 1rem;
-        }
-
-        .product-price {
-            font-size: 1.25rem;
-            color: #333;
-            margin-bottom: 1rem;
-        }
-
-        /* Cart button and notification styles */
-        .cart-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #0056b3;
-            color: #fff;
-            padding: 5px 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1000;
-            display: block;
-            /* Initially hidden */
-        }
-
-        .cart-btn:hover {
-            background-color: #4179b5;
-        }
-
-        .added-to-cart-notification {
-            position: fixed;
-            bottom: 70px;
-            right: 20px;
-            background-color: rgba(0, 123, 255, 0.8);
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            display: block;
-            /* Initially hidden */
-            z-index: 1000;
-            animation: slideIn 0.5s forwards;
-        }
-
-        .buy-now-btn {
-            display: inline-block;
-            background-color: #007bff;
-            color: #fff;
-            padding: 0.75rem 1.5rem;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            margin-top: 1rem;
-            cursor: pointer;
-        }
-
-        .buy-now-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .rating {
-            font-size: 1rem;
-            color: #f39c12;
-        }
-
-        .comments-section {
-            margin-top: 2rem;
-        }
-
-        .comment {
-            padding: 0.5rem;
-            border-bottom: 1px solid #ddd;
-        }
-    </style>
-    !-- Font Awesome Icon Library -
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial;
-            margin: 0 auto;
-            /* Center website */
-            /*padding: 20px;*/
-        }
-
-        .heading {
-            font-size: 25px;
-            margin-right: 25px;
-        }
-
-        .fa {
-            font-size: 25px;
-        }
-
-        .checked {
-            color: orange;
-        }
-
-        /* Three column layout */
-        .side {
-            float: left;
-            width: 100%;
-            margin-top: 0px;
-        }
-
-        .middle {
-            margin-top: 0px;
-            float: left;
-            width: 100%;
-        }
-
-        /* Place text to the right */
-        .right {
-            text-align: right;
-        }
-
-        /* Clear floats after the columns */
-        .row:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
-        /* The bar container */
-        .bar-container {
-            width: 100%;
-            background-color: #f1f1f1;
-            text-align: center;
-            color: white;
-        }
-
-        /* Individual bars */
-        .bar-5 {
-            width: 60%;
-            height: 18px;
-            background-color: #04AA6D;
-        }
-
-        .bar-4 {
-            width: 30%;
-            height: 18px;
-            background-color: #2196F3;
-        }
-
-        .bar-3 {
-            width: 10%;
-            height: 18px;
-            background-color: #00bcd4;
-        }
-
-        .bar-2 {
-            width: 4%;
-            height: 18px;
-            background-color: #ff9800;
-        }
-
-        .bar-1 {
-            width: 15%;
-            height: 18px;
-            background-color: #f44336;
-        }
-
-        /* Responsive layout - make the columns stack on top of each other instead of next to each other */
-        @media (max-width: 400px) {
-
-            .side,
-            .middle {
-                width: 100%;
-            }
-
-            .right {
-                display: none;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <nav class="navbar">
-        <ul class="nav-links">
-            <li class="nav-item"><a href="">Home</a></li>
-            <li class="nav-item"><a href="#products">Products</a></li>
-            <li class="nav-item"><a href="#help">Help</a></li>
-            <li class="nav-item"><a href="#about">About</a></li>
-            <li class="nav-item dropdown">
-                <a href="javascript:void(0)" class="dropbtn">More</a>
-                <div class="dropdown-content">
-                    <a href="#portfolio">Portfolio</a>
-                    <a href="#contact">Contact</a>
-                    <a href="#blog">Blog</a>
-                </div>
-            </li>
-        </ul>
-    </nav>
-    <header>
-        <h1>Product Details</h1>
-        <a class="back-btn" href="#" onclick="history.back();">Go Back</a>
-        <a class="cart-btn" href="cart" style="font-size: larger; position: absolute; top: 30px">🛍️</a>
-    </header>
-
-    <main>
-        <section id="The-Life-of-a-Meatball" class="product-section">
-            <div class="product-details">
-                <div class="left-sidebar">
-                    <img src="images\products\films\The Life of a Meatball.jpg" alt="The Life of a Meatball">
-                    <img src="path/to/meatball-image2.jpg" alt="The Life of a Meatball - Image 2">
-                    <video controls>
-                        <source src="path/to/meatball-video.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="product-info">
-                    <h2>The Life of a Meatball</h2>
-                    <p>Deep within the Tasmanian Jungles lie meatball factories. These factories produce meatballs,
-                        although something quite special can happen as shown in this captivating "documentary".</p>
-                    <div class="comments-section">
-                        <h3>Comments</h3>
-                        <div id="graphcomment"><iframe id="gc-iframe"
-                                src="https://graphcomment.com/front/?url=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;title=Product+Details&amp;website_id=Unlim8ted&amp;identifier=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;theme=light&amp;overlay=false&amp;mobile=false&amp;lang=en&amp;cache=620992231&amp;hidden=false&amp;pid=bgfs88myuj&amp;auth=slave"
-                                frameborder="0" scrolling="yes" allowtransparency="true" horizontalscrolling="no"
-                                verticalscrolling="yes"
-                                style="width: 100% !important; border: medium !important; max-width: 980px; margin: 0px auto; display: block;"
-                                height="400"></iframe></div>
-                    </div>
-                </div>
-                <div class="right-sidebar">
-                    <div class="rating">
-                        </head>
-
-                        <body>
-
-                            <span class="heading">User Rating</span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <p>4.1 average based on 254 reviews.</p>
-                            <button class="buy-now-btn"
-                                onclick="addToCart('The Life of a Meatball', 'Deep within the Tasmanian Jungles lie meatball factories. These factories produce meatballs, although something quite special can happen as shown in this captivating quote documentary quote.', 'images\products\films\The Life of a Meatball.jpg', 0.00)">BuyNow</button>
-                            <p class="product-price">$0.00</p>
-                            <hr style="border:3px solid #f1f1f1">
-
-                            <div class="row">
-                                <div class="side">
-                                    <div>5 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-5"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>150</div>
-                                </div>
-                                <div class="side">
-                                    <div>4 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-4"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>63</div>
-                                </div>
-                                <div class="side">
-                                    <div>3 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-3"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>15</div>
-                                </div>
-                                <div class="side">
-                                    <div>2 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-2"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>6</div>
-                                </div>
-                                <div class="side">
-                                    <div>1 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-1"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>20</div>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section id="Download-Any-Youtube-Video" class="product-section">
-
-
-            <div class="product-details">
-
-
-                <div class="left-sidebar">
-
-
-                    <img src="none" alt="">
-
-
-                    <img src="None" alt="">
-
-
-                    <video controls>
-
-
-                        <source src="None" type="video/mp4">
-
-
-                        Your browser does not support the video tag.
-
-
-                    </video>
-
-
-                </div>
-
-
-                <div class="product-info">
-
-
-                    <h2>Download Any Youtube Video</h2>
-
-
-                    <p>Lets you easily download youtube videos either to watch later or to use to create something new!
-                    </p>
-
-
-                    <div class="comments-section">
-
-
-                        <h3>Comments</h3>
-
-
-                        <div id="graphcomment"><iframe id="gc-iframe"
-                                src="https://graphcomment.com/front/?url=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;title=Product+Details&amp;website_id=Unlim8ted&amp;identifier=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;theme=light&amp;overlay=false&amp;mobile=false&amp;lang=en&amp;cache=620992231&amp;hidden=false&amp;pid=bgfs88myuj&amp;auth=slave"
-                                frameborder="0" scrolling="yes" allowtransparency="true" horizontalscrolling="no"
-                                verticalscrolling="yes"
-                                style="width: 100% !important; border: medium !important; max-width: 980px; margin: 0px auto; display: block;"
-                                height="400"></iframe></div>
-
-
-                    </div>
-
-
-                </div>
-
-
-                <div class="right-sidebar">
-
-
-                    <div class="rating">
-
-
-                        </head>
-
-
-
-
-
-                        <body>
-
-
-
-
-
-                            <span class="heading">User Rating</span>
-
-
-                            <span class="fa fa-star checked"></span>
-
-
-                            <span class="fa fa-star checked"></span>
-
-
-                            <span class="fa fa-star checked"></span>
-
-
-                            <span class="fa fa-star checked"></span>
-
-
-                            <span class="fa fa-star"></span>
-
-
-                            <p>4.1 average based on 254 reviews.</p>
-
-
-                            <button class="buy-now-btn" onclick="addToCart('Download Any Youtube Video, Lets you easily download youtube videos either to watch later or to use to create something new!',none, 0.00)">Buy Now</button>
-
-
-                            <p class="product-price">$0.00</p>
-
-
-                            <hr style="border:3px solid #f1f1f1">
-
-
-
-
-
-                            <div class="row">
-
-
-                                <div class="side">
-
-
-                                    <div>5 star</div>
-
-
-                                </div>
-
-
-                                <div class="middle">
-
-
-                                    <div class="bar-container">
-
-
-                                        <div class="bar-5"></div>
-
-
-                                    </div>
-
-
-                                </div>
-
-
-                                <div class="side right">
-
-
-                                    <div>150</div>
-
-
-                                </div>
-
-
-                                <div class="side">
-
-
-                                    <div>4 star</div>
-
-
-                                </div>
-
-
-                                <div class="middle">
-
-
-                                    <div class="bar-container">
-
-
-                                        <div class="bar-4"></div>
-
-
-                                    </div>
-
-
-                                </div>
-
-
-                                <div class="side right">
-
-
-                                    <div>63</div>
-
-
-                                </div>
-
-
-                                <div class="side">
-
-
-                                    <div>3 star</div>
-
-
-                                </div>
-
-
-                                <div class="middle">
-
-
-                                    <div class="bar-container">
-
-
-                                        <div class="bar-3"></div>
-
-
-                                    </div>
-
-
-                                </div>
-
-
-                                <div class="side right">
-
-
-                                    <div>15</div>
-
-
-                                </div>
-
-
-                                <div class="side">
-
-
-                                    <div>2 star</div>
-
-
-                                </div>
-
-
-                                <div class="middle">
-
-
-                                    <div class="bar-container">
-
-
-                                        <div class="bar-2"></div>
-
-
-                                    </div>
-
-
-                                </div>
-
-
-                                <div class="side right">
-
-
-                                    <div>6</div>
-
-
-                                </div>
-
-
-                                <div class="side">
-
-
-                                    <div>1 star</div>
-
-
-                                </div>
-
-
-                                <div class="middle">
-
-
-                                    <div class="bar-container">
-
-
-                                        <div class="bar-1"></div>
-
-
-                                    </div>
-
-
-                                </div>
-
-
-                                <div class="side right">
-
-
-                                    <div>20</div>
-
-
-                                </div>
-
-
-                            </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-        </section>
-        <section id="Face-Stuff" class="product-section">
-            <div class="product-details">
-                <div class="left-sidebar">
-                    <img src="none" alt="">
-                    <img src="None" alt="">
-                    <video controls>
-                        <source src="None" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="product-info">
-                    <h2>Face Stuff</h2>
-                    <p>Cool experiments which use AI technology to apply cool effects to your face!</p>
-                    <div class="comments-section">
-                        <h3>Comments</h3>
-                        <div id="graphcomment"><iframe id="gc-iframe"
-                                src="https://graphcomment.com/front/?url=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;title=Product+Details&amp;website_id=Unlim8ted&amp;identifier=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;theme=light&amp;overlay=false&amp;mobile=false&amp;lang=en&amp;cache=620992231&amp;hidden=false&amp;pid=bgfs88myuj&amp;auth=slave"
-                                frameborder="0" scrolling="yes" allowtransparency="true" horizontalscrolling="no"
-                                verticalscrolling="yes"
-                                style="width: 100% !important; border: medium !important; max-width: 980px; margin: 0px auto; display: block;"
-                                height="400"></iframe></div>
-                    </div>
-                </div>
-                <div class="right-sidebar">
-                    <div class="rating">
-                        </head>
-
-                        <body>
-
-                            <span class="heading">User Rating</span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <p>4.1 average based on 254 reviews.</p>
-                            <button class="buy-now-btn" onclick="addToCart('Face Stuff', 'Cool experiments which use AI technology to apply cool effects to your face!', none, 0.00)">Buy
-                                Now</button>
-                            <p class="product-price">$0.00</p>
-                            <hr style="border:3px solid #f1f1f1">
-
-                            <div class="row">
-                                <div class="side">
-                                    <div>5 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-5"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>150</div>
-                                </div>
-                                <div class="side">
-                                    <div>4 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-4"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>63</div>
-                                </div>
-                                <div class="side">
-                                    <div>3 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-3"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>15</div>
-                                </div>
-                                <div class="side">
-                                    <div>2 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-2"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>6</div>
-                                </div>
-                                <div class="side">
-                                    <div>1 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-1"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>20</div>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section id="Multiplayer-Physics-Simulator" class="product-section">
-            <div class="product-details">
-                <div class="left-sidebar">
-                    <img src="none" alt="">
-                    <img src="None" alt="">
-                    <video controls>
-                        <source src="None" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="product-info">
-                    <h2>Multiplayer Physics Simulator</h2>
-                    <p>Multiplayer game with cool effects.</p>
-                    <div class="comments-section">
-                        <h3>Comments</h3>
-                        <div id="graphcomment"><iframe id="gc-iframe"
-                                src="https://graphcomment.com/front/?url=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;title=Product+Details&amp;website_id=Unlim8ted&amp;identifier=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;theme=light&amp;overlay=false&amp;mobile=false&amp;lang=en&amp;cache=620992231&amp;hidden=false&amp;pid=bgfs88myuj&amp;auth=slave"
-                                frameborder="0" scrolling="yes" allowtransparency="true" horizontalscrolling="no"
-                                verticalscrolling="yes"
-                                style="width: 100% !important; border: medium !important; max-width: 980px; margin: 0px auto; display: block;"
-                                height="400"></iframe></div>
-                    </div>
-                </div>
-                <div class="right-sidebar">
-                    <div class="rating">
-                        </head>
-
-                        <body>
-
-                            <span class="heading">User Rating</span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <p>4.1 average based on 254 reviews.</p>
-                            <button class="buy-now-btn" onclick="addToCart('Multiplayer Physics Simulator', 'Multiplayer game with cool effects.', none, 0.00)">Buy
-                                Now</button>
-                            <p class="product-price">$0.00</p>
-                            <hr style="border:3px solid #f1f1f1">
-
-                            <div class="row">
-                                <div class="side">
-                                    <div>5 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-5"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>150</div>
-                                </div>
-                                <div class="side">
-                                    <div>4 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-4"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>63</div>
-                                </div>
-                                <div class="side">
-                                    <div>3 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-3"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>15</div>
-                                </div>
-                                <div class="side">
-                                    <div>2 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-2"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>6</div>
-                                </div>
-                                <div class="side">
-                                    <div>1 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-1"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>20</div>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section id="Easy-Pygame-UI-Creator" class="product-section">
-            <div class="product-details">
-                <div class="left-sidebar">
-                    <img src="none" alt="">
-                    <img src="None" alt="">
-                    <video controls>
-                        <source src="None" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="product-info">
-                    <h2>Easy Pygame UI Creator</h2>
-                    <p>An application that makes the proccess of creating UI's using the Python library Pygame easy!</p>
-                    <div class="comments-section">
-                        <h3>Comments</h3>
-                        <div id="graphcomment"><iframe id="gc-iframe"
-                                src="https://graphcomment.com/front/?url=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;title=Product+Details&amp;website_id=Unlim8ted&amp;identifier=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;theme=light&amp;overlay=false&amp;mobile=false&amp;lang=en&amp;cache=620992231&amp;hidden=false&amp;pid=bgfs88myuj&amp;auth=slave"
-                                frameborder="0" scrolling="yes" allowtransparency="true" horizontalscrolling="no"
-                                verticalscrolling="yes"
-                                style="width: 100% !important; border: medium !important; max-width: 980px; margin: 0px auto; display: block;"
-                                height="400"></iframe></div>
-                    </div>
-                </div>
-                <div class="right-sidebar">
-                    <div class="rating">
-                        </head>
-
-                        <body>
-
-                            <span class="heading">User Rating</span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <p>4.1 average based on 254 reviews.</p>
-                            <button class="buy-now-btn" onclick="addToCart('Easy Pygame UI Creator', 'An application that makes the proccess of creating UI\'s using the Python library Pygame easy!', none, 0.00)">Buy
-                                Now</button>
-                            <p class="product-price">$0.00</p>
-                            <hr style="border:3px solid #f1f1f1">
-
-                            <div class="row">
-                                <div class="side">
-                                    <div>5 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-5"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>150</div>
-                                </div>
-                                <div class="side">
-                                    <div>4 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-4"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>63</div>
-                                </div>
-                                <div class="side">
-                                    <div>3 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-3"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>15</div>
-                                </div>
-                                <div class="side">
-                                    <div>2 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-2"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>6</div>
-                                </div>
-                                <div class="side">
-                                    <div>1 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-1"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>20</div>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section id="ChatApp" class="product-section">
-            <div class="product-details">
-                <div class="left-sidebar">
-                    <img src="none" alt="">
-                    <img src="None" alt="">
-                    <video controls>
-                        <source src="None" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="product-info">
-                    <h2>ChatApp</h2>
-                    <p>An app that makes it easy to chat with friends and loved ones with a clean and easy to use UI and fun effects!</p>
-                    <div class="comments-section">
-                        <h3>Comments</h3>
-                        <div id="graphcomment"><iframe id="gc-iframe"
-                                src="https://graphcomment.com/front/?url=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;title=Product+Details&amp;website_id=Unlim8ted&amp;identifier=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;theme=light&amp;overlay=false&amp;mobile=false&amp;lang=en&amp;cache=620992231&amp;hidden=false&amp;pid=bgfs88myuj&amp;auth=slave"
-                                frameborder="0" scrolling="yes" allowtransparency="true" horizontalscrolling="no"
-                                verticalscrolling="yes"
-                                style="width: 100% !important; border: medium !important; max-width: 980px; margin: 0px auto; display: block;"
-                                height="400"></iframe></div>
-                    </div>
-                </div>
-                <div class="right-sidebar">
-                    <div class="rating">
-                        </head>
-
-                        <body>
-
-                            <span class="heading">User Rating</span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <p>4.1 average based on 254 reviews.</p>
-                            <button class="buy-now-btn" onclick="addToCart('ChatApp', 'An app that makes it easy to chat with friends and loved ones with a clean and easy to use UI and fun effects!', none, 0.00)">Buy
-                                Now</button>
-                            <p class="product-price">$0.00</p>
-                            <hr style="border:3px solid #f1f1f1">
-
-                            <div class="row">
-                                <div class="side">
-                                    <div>5 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-5"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>150</div>
-                                </div>
-                                <div class="side">
-                                    <div>4 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-4"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>63</div>
-                                </div>
-                                <div class="side">
-                                    <div>3 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-3"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>15</div>
-                                </div>
-                                <div class="side">
-                                    <div>2 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-2"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>6</div>
-                                </div>
-                                <div class="side">
-                                    <div>1 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-1"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>20</div>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section id="Organisms-Sim" class="product-section">
-            <div class="product-details">
-                <div class="left-sidebar">
-                    <img src="none" alt="">
-                    <img src="None" alt="">
-                    <video controls>
-                        <source src="None" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="product-info">
-                    <h2>Organisms Sim</h2>
-                    <p>Various simulations showcasing evolution, natural selection, and neural networks.</p>
-                    <div class="comments-section">
-                        <h3>Comments</h3>
-                        <div id="graphcomment"><iframe id="gc-iframe"
-                                src="https://graphcomment.com/front/?url=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;title=Product+Details&amp;website_id=Unlim8ted&amp;identifier=null%2FC%3A%2FUsers%2FGus%2Fsource%2Frepos%2Fweb%2Fproducts&amp;theme=light&amp;overlay=false&amp;mobile=false&amp;lang=en&amp;cache=620992231&amp;hidden=false&amp;pid=bgfs88myuj&amp;auth=slave"
-                                frameborder="0" scrolling="yes" allowtransparency="true" horizontalscrolling="no"
-                                verticalscrolling="yes"
-                                style="width: 100% !important; border: medium !important; max-width: 980px; margin: 0px auto; display: block;"
-                                height="400"></iframe></div>
-                    </div>
-                </div>
-                <div class="right-sidebar">
-                    <div class="rating">
-                        </head>
-
-                        <body>
-
-                            <span class="heading">User Rating</span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <p>4.1 average based on 254 reviews.</p>
-                            <button class="buy-now-btn" onclick="addToCart('Organisms Sim', 'Various simulations showcasing evolution, natural selection, and neural networks.', none, 0.00)">Buy
-                                Now</button>
-                            <p class="product-price">$0.00</p>
-                            <hr style="border:3px solid #f1f1f1">
-
-                            <div class="row">
-                                <div class="side">
-                                    <div>5 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-5"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>150</div>
-                                </div>
-                                <div class="side">
-                                    <div>4 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-4"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>63</div>
-                                </div>
-                                <div class="side">
-                                    <div>3 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-3"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>15</div>
-                                </div>
-                                <div class="side">
-                                    <div>2 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-2"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>6</div>
-                                </div>
-                                <div class="side">
-                                    <div>1 star</div>
-                                </div>
-                                <div class="middle">
-                                    <div class="bar-container">
-                                        <div class="bar-1"></div>
-                                    </div>
-                                </div>
-                                <div class="side right">
-                                    <div>20</div>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        !-- Add more sections for other products as needed --
-
-        <section id="not-found" class="not-found-section">
-            <h2>Product Not Found</h2>
-            <p>We couldn't find the product you were looking for.</p>
-        </section>
-    </main>
-
-    <footer>
-        &copy; 2024 Unlim8ted Studio Productions, all rights reserved
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const hash = window.location.hash;
-            const productId = hash.substring(1); // Remove the # from the hash
-
-            if (productId) {
-                const productSection = document.getElementById(productId);
-                if (productSection) {
-                    productSection.classList.add('active');
-                } else {
-                    const notFoundSection = document.getElementById('not-found');
-                    notFoundSection.classList.add('active');
-                }
-            } else {
-                console.error('No product ID provided in hash:', hash);
-                const notFoundSection = document.getElementById('not-found');
-                notFoundSection.classList.add('active');
-            }
-        });
-
-        // Function to add item to cart
-        function addToCart(productName, product_description, image_url, price) {
-            let cart = getCartFromCookies();
-            if (!cart) {
-                cart = [];
-            }
-            cart.push({ productName, price });
-            setCartToCookies(cart);
-
-            // Create a popup notification
-            showAddedToCartNotification(productName);
-        }
-
-        // Function to show the "Added to Cart" notification
-        function showAddedToCartNotification(productName) {
-            var notification = document.createElement('div');
-            notification.classList.add('added-to-cart-notification');
-            notification.textContent = `Added "${productName}" to cart!`;
-            document.body.appendChild(notification);
-
-            // Remove notification after 2 seconds
-            setTimeout(function () {
-                notification.remove();
-            }, 2000);
-        }
-
-
-        // Function to retrieve cart from cookies
-        function getCartFromCookies() {
-            const cartJSON = Cookies.get('unlim8ted-cart');
-            if (cartJSON) {
-                return JSON.parse(cartJSON);
-            }
-            return null;
-        }
-
-        // Function to store cart in cookies
-        function setCartToCookies(cart) {
-            const cartJSON = JSON.stringify(cart);
-            Cookies.set('unlim8ted-cart', cartJSON, { expires: 365 }); // Expires in 365 days
-        }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
-</body>
-
-</html>

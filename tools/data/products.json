@@ -232,12 +232,23 @@
   },
   {
     "id": "theglitch",
+    "image": "https://unlim8ted.com/images/products/films/TheGlitchCover.png",
+    "additional_images": [],
+    "video": "https://www.youtube.com/watch?v=SFNspgJAhbM",
+    "additional_videos": [],
+    "name": "The Glitch",
+    "description": "Upcoming short film about a figure who must decide what reality means to them, while learning to forgive and striving to save those they love.",
+    "price": 0,
+    "type": "Entertainment"
+  },
+  {
+    "id": "TimeCat",
     "image": null,
     "additional_images": [],
     "video": null,
     "additional_videos": [],
     "name": "The Glitch",
-    "description": "In progress...",
+    "description": "A 2d platformer game about a cat who finds itself solving puzzles with a computer to survive.",
     "price": 0,
     "type": "Entertainment"
   },
