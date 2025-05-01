@@ -780,11 +780,10 @@
                 <div class="left-sidebar">
                     <img class="@image@" src="@product image@" alt="">
                     <div id="@additional images@"></div>
-                    <video class="@video@" controls>
-                        <div id="main-video-placeholder"></div>
-                        Your browser does not support the video tag.
-                    </video>
+                    <div class="@video@" id="main-video-placeholder"></div>
                     <div id="@additional images@"></div>
+                    <div id="@additional videos@"></div>
+
                 </div>
                 <div class="product-info">
                     <h2>@product name@</h2>
@@ -961,8 +960,8 @@
                             if (video.includes("youtube.com") || video.includes("youtu.be")) {
                                 const youtubeId = extractYouTubeID(video);
                                 const iframe = document.createElement('iframe');
-                                iframe.width = "100%";
-                                iframe.height = "315";
+                                iframe.width = "50";
+                                iframe.height = "100";
                                 iframe.src = `https://www.youtube.com/embed/${youtubeId}`;
                                 iframe.frameBorder = "0";
                                 iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
