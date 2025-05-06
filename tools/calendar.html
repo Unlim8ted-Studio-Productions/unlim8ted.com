@@ -97,141 +97,295 @@
             color: #2d3436;
         }
     </style>
-<!-- GAPI client for Calendar/Tasks -->
-<script src="https://apis.google.com/js/api.js" async defer></script>
 
-<!-- New Google Identity Services (GIS) -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- FullCalendar CSS & JS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="weather.js"></script>
+    <link rel="stylesheet" type="text/css" href="weather.css">
 
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://apis.google.com/js/api.js"></script>
 </head>
 
 <body>
     <canvas id="background"></canvas>
     <script>
-        const CLIENT_ID = '657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com';
+        const CLIENT_ID = '657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com ';
         const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/tasks.readonly';
-    
-        let tokenClient;
-    let gapiInited = false;
-    let gisInited = false;
 
-    function gapiLoaded() {
-        gapi.load('client', async () => {
-            await gapi.client.init({
+        let isGapiInitialized = false;
+
+        function handleClientLoad() {
+            gapi.load('client:auth2', initClient);
+        }
+
+        function initClient() {
+            gapi.client.init({
+                clientId: CLIENT_ID,
+                scope: SCOPES,
                 discoveryDocs: [
                     "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
                     "https://www.googleapis.com/discovery/v1/apis/tasks/v1/rest"
                 ]
+            }).then(() => {
+                isGapiInitialized = true;
+                const authInstance = gapi.auth2.getAuthInstance();
+                authInstance.isSignedIn.listen(updateSigninStatus);
+                updateSigninStatus(authInstance.isSignedIn.get());
+            }).catch(error => {
+                console.error("gapi.client.init failed", error);
             });
-            gapiInited = true;
-            maybeEnableButtons();
-        });
-    }
-
-    function gisLoaded() {
-        tokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: CLIENT_ID,
-            scope: SCOPES,
-            callback: (tokenResponse) => {
-                if (tokenResponse.error) {
-                    console.error(tokenResponse);
-                    return;
-                }
-                listUpcomingEvents();
-                listTasks();
-            }
-        });
-        gisInited = true;
-        maybeEnableButtons();
-    }
-
-    function maybeEnableButtons() {
-        if (gapiInited && gisInited) {
-            document.getElementById('signin-button').disabled = false;
         }
-    }
 
-    function handleAuthClick() {
-        tokenClient.requestAccessToken();
-    }
-
-    function listUpcomingEvents() {
-        gapi.client.calendar.events.list({
-            calendarId: 'primary',
-            timeMin: new Date().toISOString(),
-            maxResults: 5,
-            singleEvents: true,
-            orderBy: 'startTime'
-        }).then(response => {
-            const events = response.result.items;
-            const container = document.getElementById("calendar-events");
-            container.innerHTML = '';
-            if (events.length > 0) {
-                events.forEach(event => {
-                    const when = event.start.dateTime || event.start.date;
-                    container.innerHTML += `<p><strong>${event.summary}</strong><br>${when}</p>`;
-                });
+        function updateSigninStatus(isSignedIn) {
+            if (isSignedIn) {
+                loadCalendarEvents();
+                listTasks();
             } else {
-                container.innerText = 'No upcoming events.';
+                document.getElementById("calendar-events").innerText = "Not signed in.";
+                document.getElementById("tasks-list").innerText = "Not signed in.";
             }
-        });
-    }
+        }
 
-    function listTasks() {
-        gapi.client.tasks.tasklists.list().then(resp => {
-            const taskList = resp.result.items?.[0];
-            if (!taskList) return;
+        function signIn() {
+            if (!isGapiInitialized) {
+                console.error("GAPI not initialized");
+                return;
+            }
+            gapi.auth2.getAuthInstance().signIn();
+        }
 
-            gapi.client.tasks.tasks.list({ tasklist: taskList.id }).then(res => {
-                const tasks = res.result.items;
-                const container = document.getElementById("tasks-list");
-                container.innerHTML = '';
-                if (tasks?.length) {
-                    tasks.forEach(task => {
-                        container.innerHTML += `<p>${task.title}</p>`;
+        function signOut() {
+            if (!isGapiInitialized) {
+                console.error("GAPI not initialized");
+                return;
+            }
+            gapi.auth2.getAuthInstance().signOut();
+        }
+
+        let allEvents = [];
+
+        function loadCalendarEvents() {
+            gapi.client.calendar.calendarList.list().then(calendarResponse => {
+                const calendars = calendarResponse.result.items;
+
+                let pending = calendars.length;
+                if (pending === 0) return;
+
+                calendars.forEach(cal => {
+                    gapi.client.calendar.events.list({
+                        calendarId: cal.id,
+                        timeMin: new Date().toISOString(),
+                        maxResults: 50,
+                        singleEvents: true,
+                        orderBy: 'startTime'
+                    }).then(eventResponse => {
+                        const events = eventResponse.result.items.map(event => ({
+                            title: event.summary,
+                            start: event.start.dateTime || event.start.date,
+                            end: event.end?.dateTime || event.end?.date,
+                            backgroundColor: cal.backgroundColor || '#3788d8'
+                        }));
+                        allEvents = allEvents.concat(events);
+                        pending--;
+                        if (pending === 0) renderCalendar();
                     });
-                } else {
-                    container.innerText = 'No tasks found.';
-                }
+                });
             });
-        });
-    }
+        }
 
-    window.onload = () => {
-        gapiLoaded();
-        gisLoaded();
-    };
-</script>
+        function renderCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: '100%',
+                events: allEvents
+            });
+            calendar.render();
+        }
+        function loadFakeCalendarData() {
+    const fakeEvents = [
+        {
+            title: 'Math Homework Due',
+            start: '2025-05-07',
+            end: '2025-05-07',
+            backgroundColor: '#e74c3c'
+        },
+        {
+            title: 'Soccer Practice',
+            start: '2025-05-08T15:30:00',
+            end: '2025-05-08T17:00:00',
+            backgroundColor: '#27ae60'
+        },
+        {
+            title: 'Parent-Teacher Meeting',
+            start: '2025-05-09T09:00:00',
+            end: '2025-05-09T10:00:00',
+            backgroundColor: '#2980b9'
+        },
+        {
+            title: 'Science Fair',
+            start: '2025-05-10',
+            backgroundColor: '#f39c12'
+        },
+        {
+            title: 'Piano Recital',
+            start: '2025-05-11T13:00:00',
+            end: '2025-05-11T15:00:00',
+            backgroundColor: '#8e44ad'
+        }
+    ];
+
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: '100%',
+        events: fakeEvents
+    });
+    calendar.render();
+}
+
+        function listTasks() {
+            gapi.client.tasks.tasklists.list().then(resp => {
+                const taskList = resp.result.items?.[0];
+                if (!taskList) return;
+
+                gapi.client.tasks.tasks.list({ tasklist: taskList.id }).then(res => {
+                    const tasks = res.result.items;
+                    const container = document.getElementById("tasks-list");
+                    container.innerHTML = '';
+                    if (tasks?.length) {
+                        tasks.forEach(task => {
+                            container.innerHTML += `<p>${task.title}</p>`;
+                        });
+                    } else {
+                        container.innerText = 'No tasks found.';
+                    }
+                });
+            });
+        }
+
+        // Wait for full load
+        window.addEventListener('load', () => {
+            gapi.load('client:auth2', handleClientLoad);
+        });
     </script>
-    
-.
+
+    .
 
     <header>Overiew Dashboard</header>
     <div class="auth-section">
-        <button id="signin-button" onclick="handleAuthClick()" disabled>Link Google Account</button>
+        <button onclick="signIn()">Link Google Account</button>
         <button onclick="signOut()">Sign Out</button>
     </div>
     <div class="container">
         <div class="calendar">
-            <h2>Google Calendar</h2>
+            <h2>Calendar</h2>
             <div id="calendar-events">Loading events...</div>
         </div>
         <div class="tasks">
-            <h2>Google Tasks</h2>
+            <h2>Tasks</h2>
             <div id="tasks-list">Loading tasks...</div>
         </div>
         <div class="weather">
             <h2>Weather Panel</h2>
-            <a class="weatherwidget-io" href="https://forecast7.com/en/40d71n74d01/new-york/" data-label_1="NEW YORK"
-                data-label_2="WEATHER" data-theme="original" data-basecolor="rgba(255, 255, 255, 0)"
-                data-accent="rgba(1, 1, 1, 0.02)" data-textcolor="#fefefe" data-highcolor="#dc2b2b"
-                data-lowcolor="#1279c2" data-suncolor="#fbe627" data-mooncolor="#878686" data-cloudcolor="#878686"
-                data-cloudfill="#f9f7f7" data-raincolor="#1279c2" data-snowcolor="#2acccc">NEW YORK WEATHER</a>
+            <p id="weather-location">Getting weather near you...</p>
+            <a id="weather-widget" class="weatherwidget-io"
+               href="#"
+               data-label_1="WEATHER"
+               data-label_2=""
+               data-theme="original"
+               data-basecolor="rgba(255, 255, 255, 0)"
+               data-accent="rgba(1, 1, 1, 0.02)"
+               data-textcolor="#fefefe"
+               data-highcolor="#dc2b2b"
+               data-lowcolor="#1279c2"
+               data-suncolor="#fbe627"
+               data-mooncolor="#878686"
+               data-cloudcolor="#878686"
+               data-cloudfill="#f9f7f7"
+               data-raincolor="#1279c2"
+               data-snowcolor="#2acccc">
+               Loading...
+            </a>
             <script>
-                !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = 'https://weatherwidget.io/js/widget.min.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'weatherwidget-io-js');
-            </script>
-
-        </div>
+                function toForecast7Coord(value, isLat) {
+                    const abs = Math.abs(value);
+                    const deg = Math.floor(abs);
+                    const hundredths = Math.round((abs - deg) * 100);
+                    const dir = isLat
+                        ? (value >= 0 ? 'n' : 's')
+                        : (value >= 0 ? 'e' : 'w');
+                    return `${deg}d${hundredths.toString().padStart(2, '0')}${dir}`;
+                }
+                
+                function updateWeatherWidget(lat, lon, label) {
+                    const latStr = toForecast7Coord(lat, true);
+                    const lonStr = toForecast7Coord(lon, false);
+                    const slug = label.toLowerCase().replace(/\s+/g, '-');
+                    const url = `https://forecast7.com/en/${latStr}${lonStr}/${slug}/`;
+                
+                    const widget = document.getElementById('weather-widget');
+                    widget.href = url;
+                    widget.setAttribute('data-label_2', label);
+                    widget.innerText = `Forecast for ${label}`;
+                
+                    const oldScript = document.getElementById('weatherwidget-io-js');
+                    if (oldScript) oldScript.remove();
+                
+                    const js = document.createElement('script');
+                    js.id = 'weatherwidget-io-js';
+                    js.src = 'https://weatherwidget.io/js/widget.min.js';
+                    document.body.appendChild(js);
+                }
+                
+                function getLocationAndUpdateWidget() {
+                    if (!navigator.geolocation) {
+                        document.getElementById('weather-location').innerText = "Geolocation not supported.";
+                        return;
+                    }
+                
+                    navigator.geolocation.getCurrentPosition(
+                        position => {
+                            const { latitude, longitude } = position.coords;
+                
+                            // Reverse geocode to get city/state
+                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    const place =
+                                        data.address.city ||
+                                        data.address.town ||
+                                        data.address.village ||
+                                        data.address.state ||
+                                        data.address.country ||
+                                        "your area";
+                
+                                    document.getElementById('weather-location').innerText = `Weather near: ${place}`;
+                                    updateWeatherWidget(latitude, longitude, place);
+                                })
+                                .catch(err => {
+                                    console.error("Reverse geocoding failed:", err);
+                                    document.getElementById('weather-location').innerText = "Weather near: your area";
+                                    updateWeatherWidget(latitude, longitude, "your-area");
+                                });
+                        },
+                        err => {
+                            console.warn("Geolocation failed:", err);
+                            document.getElementById('weather-location').innerText = "Weather near: Stow, MA";
+                            updateWeatherWidget(42.44, -71.51, "Stow");
+                        }
+                    );
+                }
+                
+                getLocationAndUpdateWidget();
+                </script>
+                
+          </div>
+          
+        
     </div>
 
     <script>
