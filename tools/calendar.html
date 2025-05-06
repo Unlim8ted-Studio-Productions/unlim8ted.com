@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Overiew Dashboard</title>
+    <style>
+        /* Core layout + base styling */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        canvas#background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        header {
+            padding: 20px;
+            text-align: center;
+            font-size: 2em;
+            text-shadow: 0 0 10px #0ff;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            height: calc(100vh - 160px);
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .calendar,
+        .tasks,
+        .weather {
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .calendar {
+            grid-row: span 2;
+        }
+
+        .auth-section {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-buttons {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <style id="theme-style">
+        body {
+            background: radial-gradient(circle, #2d3436, #000);
+            color: #fab1a0;
+        }
+
+        header {
+            color: #fab1a0;
+            text-shadow: none;
+        }
+
+        .calendar,
+        .tasks,
+        .weather,
+        #weatherWidgetInner {
+            background-color: #2c3e50;
+            border: 1px solid #fab1a0;
+            box-shadow: 0 0 10px #e17055;
+        }
+
+        button {
+            border: 1px solid #fab1a0;
+            color: #fab1a0;
+            background-color: transparent;
+        }
+
+        button:hover {
+            background-color: #fab1a0;
+            color: #2d3436;
+        }
+    </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://apis.google.com/js/api.js"></script>    
+</head>
+
+<body>
+    <canvas id="background"></canvas>
+    <script>
+        const CLIENT_ID = '657222021545-6cie7sk23lanq2t6oj7t6ijs404nav4g.apps.googleusercontent.com ';
+        const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/tasks.readonly';
+    
+        let isGapiInitialized = false;
+    
+        function handleClientLoad() {
+            gapi.load('client:auth2', initClient);
+        }
+    
+        function initClient() {
+            gapi.client.init({
+                clientId: CLIENT_ID,
+                scope: SCOPES,
+                discoveryDocs: [
+                    "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
+                    "https://www.googleapis.com/discovery/v1/apis/tasks/v1/rest"
+                ]
+            }).then(() => {
+                isGapiInitialized = true;
+                const authInstance = gapi.auth2.getAuthInstance();
+                authInstance.isSignedIn.listen(updateSigninStatus);
+                updateSigninStatus(authInstance.isSignedIn.get());
+            }).catch(error => {
+                console.error("gapi.client.init failed", error);
+            });
+        }
+    
+        function updateSigninStatus(isSignedIn) {
+            if (isSignedIn) {
+                listUpcomingEvents();
+                listTasks();
+            } else {
+                document.getElementById("calendar-events").innerText = "Not signed in.";
+                document.getElementById("tasks-list").innerText = "Not signed in.";
+            }
+        }
+    
+        function signIn() {
+            if (!isGapiInitialized) {
+                console.error("GAPI not initialized");
+                return;
+            }
+            gapi.auth2.getAuthInstance().signIn();
+        }
+    
+        function signOut() {
+            if (!isGapiInitialized) {
+                console.error("GAPI not initialized");
+                return;
+            }
+            gapi.auth2.getAuthInstance().signOut();
+        }
+    
+        function listUpcomingEvents() {
+            gapi.client.calendar.events.list({
+                calendarId: 'primary',
+                timeMin: new Date().toISOString(),
+                maxResults: 5,
+                singleEvents: true,
+                orderBy: 'startTime'
+            }).then(response => {
+                const events = response.result.items;
+                const container = document.getElementById("calendar-events");
+                container.innerHTML = '';
+                if (events.length) {
+                    events.forEach(event => {
+                        const when = event.start.dateTime || event.start.date;
+                        container.innerHTML += `<p><strong>${event.summary}</strong><br>${when}</p>`;
+                    });
+                } else {
+                    container.innerText = 'No events found.';
+                }
+            });
+        }
+    
+        function listTasks() {
+            gapi.client.tasks.tasklists.list().then(resp => {
+                const taskList = resp.result.items?.[0];
+                if (!taskList) return;
+    
+                gapi.client.tasks.tasks.list({ tasklist: taskList.id }).then(res => {
+                    const tasks = res.result.items;
+                    const container = document.getElementById("tasks-list");
+                    container.innerHTML = '';
+                    if (tasks?.length) {
+                        tasks.forEach(task => {
+                            container.innerHTML += `<p>${task.title}</p>`;
+                        });
+                    } else {
+                        container.innerText = 'No tasks found.';
+                    }
+                });
+            });
+        }
+    
+        // Wait for full load
+        window.addEventListener('load', () => {
+            gapi.load('client:auth2', handleClientLoad);
+        });
+    </script>
+    
+.
+
+    <header>Overiew Dashboard</header>
+    <div class="auth-section">
+        <button onclick="signIn()">Link Google Account</button>
+        <button onclick="signOut()">Sign Out</button>
+    </div>
+    <div class="container">
+        <div class="calendar">
+            <h2>Google Calendar</h2>
+            <div id="calendar-events">Loading events...</div>
+        </div>
+        <div class="tasks">
+            <h2>Google Tasks</h2>
+            <div id="tasks-list">Loading tasks...</div>
+        </div>
+        <div class="weather">
+            <h2>Weather Panel</h2>
+            <a class="weatherwidget-io" href="https://forecast7.com/en/40d71n74d01/new-york/" data-label_1="NEW YORK"
+                data-label_2="WEATHER" data-theme="original" data-basecolor="rgba(255, 255, 255, 0)"
+                data-accent="rgba(1, 1, 1, 0.02)" data-textcolor="#fefefe" data-highcolor="#dc2b2b"
+                data-lowcolor="#1279c2" data-suncolor="#fbe627" data-mooncolor="#878686" data-cloudcolor="#878686"
+                data-cloudfill="#f9f7f7" data-raincolor="#1279c2" data-snowcolor="#2acccc">NEW YORK WEATHER</a>
+            <script>
+                !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = 'https://weatherwidget.io/js/widget.min.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'weatherwidget-io-js');
+            </script>
+
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('background');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let stars = Array(300).fill().map(() => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 1.5,
+            dx: (Math.random() - 0.5) * 0.5,
+            dy: (Math.random() - 0.5) * 0.5
+        }));
+
+        function animateBackground() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0ff';
+            stars.forEach(s => {
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                ctx.fill();
+                s.x += s.dx;
+                s.y += s.dy;
+                if (s.x < 0 || s.x > canvas.width) s.dx *= -1;
+                if (s.y < 0 || s.y > canvas.height) s.dy *= -1;
+            });
+            requestAnimationFrame(animateBackground);
+        }
+        animateBackground();
+    </script>
+</body>
+
+</html>
