@@ -12,7 +12,8 @@
     "name": "The Life of a Meatball",
     "description": "Deep within the Tasmanian Jungles lie meatball factories. These factories produce meatballs, although something quite special can happen as shown in this captivating documentary.",
     "price": 0.0,
-    "link": "https://youtu.be/FiDwWp7ZteE"
+    "link": "https://youtu.be/FiDwWp7ZteE",
+    "product-type": "film"
   },
   {
     "id": "ChatApp",
@@ -919,4 +920,5 @@
     "link": "https://unlim8ted.com/squareproduct#unlim8ted-cork-back-coaster/2?cp=true&sa=true&sbp=false&q=false",
     "product-type": "physical"
   }
+
 ]
