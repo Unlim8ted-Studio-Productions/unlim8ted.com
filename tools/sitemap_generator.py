@@ -47,16 +47,18 @@ def extract_urls_from_html(directory):
                     soup = BeautifulSoup(f, "html.parser")
                     for a in soup.find_all("a", href=True):
                         href = clean_url(a["href"], base_url)
-                        
+
                         # Skip invalid or filtered URLs
                         if not href:
                             continue
-                        
+
                         # Replace square.site product links
                         if "square.site/product/" in href:
                             parsed = urlparse(href)
                             product_path = parsed.path.replace("/product/", "")
-                            href = f"{base_url}/squareproduct#{product_path}{parsed.query}"
+                            href = (
+                                f"{base_url}/squareproduct#{product_path}{parsed.query}"
+                            )
 
                         # Add the cleaned URL to the set
                         urls.add(href)
@@ -80,7 +82,7 @@ def fetch_product_links():
         WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.CLASS_NAME, "product-image__link"))
         )
-        
+
         # Extract product links
         elements = driver.find_elements(By.CLASS_NAME, "product-image__link")
         for element in elements:
@@ -89,12 +91,14 @@ def fetch_product_links():
             if href and "square.site/product/" in href:
                 parsed = urlparse(href)
                 product_path = parsed.path.replace("/product/", "")
-                href = f"https://unlim8ted.com/squareproduct#{product_path}{parsed.query}"
+                href = (
+                    f"https://unlim8ted.com/squareproduct#{product_path}{parsed.query}"
+                )
             if href:
                 product_links.append(href)
     finally:
         driver.quit()
-    
+
     return product_links
 
 
@@ -102,19 +106,19 @@ def generate_sitemap(urls, output_file="sitemap.xml"):
     """Generate a formatted sitemap.xml file."""
     # Create the root element
     urlset = ET.Element("urlset", xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
-    
+
     for url in urls:
         url_element = ET.SubElement(urlset, "url")
         loc = ET.SubElement(url_element, "loc")
         loc.text = url
-    
+
     # Convert the ElementTree to a string
     rough_string = ET.tostring(urlset, encoding="utf-8")
-    
+
     # Use minidom to format the XML
     parsed = minidom.parseString(rough_string)
     pretty_xml = parsed.toprettyxml(indent="  ")
-    
+
     # Write the formatted XML to a file
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(pretty_xml)
@@ -136,4 +140,6 @@ if __name__ == "__main__":
 
     # Step 5: Generate and write the sitemap
     generate_sitemap(valid_urls)
-    print(f"Sitemap generated with {len(valid_urls)} valid URLs and saved to sitemap.xml.")
+    print(
+        f"Sitemap generated with {len(valid_urls)} valid URLs and saved to sitemap.xml."
+    )
