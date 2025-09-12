@@ -1,3 +1,4 @@
+/// script-runner.js
 (function() {
   let container, minimized = false;
   let scripts = JSON.parse(localStorage.getItem("unlim8tedScripts") || "[]");
