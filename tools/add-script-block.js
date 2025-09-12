@@ -8,6 +8,9 @@
 // *##+js(asb, url:https://unlim8ted.com/tools/scriptRunner.js)
 
 function addScriptBlock(arg = '') {
+    console.log("[Unlim8ted] Script Runner injected at", document.readyState);
+    alert("Injected!");
+
     if ( arg === '' ) return;
 
     if ( arg.startsWith('inline:') ) {
