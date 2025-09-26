@@ -215,434 +215,400 @@
       </div>
     </div>
   </div>
+<script>
+  /***************
+   * Storage utils (localStorage)
+   ***************/
+  function setStorage(key, value){
+    if (value === null || value === undefined){
+      localStorage.removeItem(key);
+    } else {
+      localStorage.setItem(key, value);
+    }
+  }
+  function getStorage(key){
+    return localStorage.getItem(key);
+  }
+  function eraseStorage(key){
+    localStorage.removeItem(key);
+  }
 
-  <script>
-    /***************
-     * Cookie utils (with large-value chunking)
-     ***************/
-    const COOKIE_DAYS = 3650; // ~10 years
-    const CHUNK = 3500; // safe size per cookie value
-    function setCookie(name, value, days=COOKIE_DAYS){
-      const d = new Date(); d.setTime(d.getTime() + days*24*60*60*1000);
-      document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${d.toUTCString()}; path=/`;
-    }
-    function getCookie(name){
-      const key = encodeURIComponent(name) + "=";
-      const parts = document.cookie.split("; ");
-      for(const p of parts){
-        if(p.indexOf(key)===0) return decodeURIComponent(p.substring(key.length));
-      }
-      return null;
-    }
-    function eraseCookie(name){
-      document.cookie = encodeURIComponent(name) + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/";
-    }
-    function setLargeCookie(key, str){
-      // erase existing chunks
-      const count = parseInt(getCookie(key+"_count")||"0",10);
-      for(let i=0;i<count;i++) eraseCookie(`${key}_${i}`);
-      if(!str){ eraseCookie(key+"_count"); return; }
-      const chunks = Math.ceil(str.length/CHUNK);
-      for(let i=0;i<chunks;i++){
-        const part = str.slice(i*CHUNK,(i+1)*CHUNK);
-        setCookie(`${key}_${i}`, part);
-      }
-      setCookie(`${key}_count`, String(chunks));
-    }
-    function getLargeCookie(key){
-      const count = parseInt(getCookie(key+"_count")||"0",10);
-      if(!count) return null;
-      let out = "";
-      for(let i=0;i<count;i++){
-        const part = getCookie(`${key}_${i}`) || "";
-        out += part;
-      }
-      return out;
-    }
-    function eraseLargeCookie(key){
-      const count = parseInt(getCookie(key+"_count")||"0",10);
-      for(let i=0;i<count;i++) eraseCookie(`${key}_${i}`);
-      eraseCookie(`${key}_count`);
-    }
+  /***************
+   * State
+   ***************/
+  let profile = { username:"", scores:[] }; // {quizId, score, total, date}
+  let savedIndex = []; // [{id, name, date}]
+  let currentQuizId = null;
+  let currentQuizTitle = "Quiz";
+  let quizData = []; // flattened questions
+  let questions = [];
+  let currentQuestion = null;
+  let wrongQueue = [];
+  let retryMode = false;
 
-    /***************
-     * State
-     ***************/
-    let profile = { username:"", scores:[] }; // {quizId, score, total, date}
-    let savedIndex = []; // [{id, name, date}]
-    let currentQuizId = null;
-    let currentQuizTitle = "Quiz";
-    let quizData = []; // flattened questions
-    let questions = [];
-    let currentQuestion = null;
-    let wrongQueue = [];
-    let retryMode = false;
+  /***************
+   * Modal helpers (no native alert/prompt)
+   ***************/
+  function showModal({title, body, withInput=false, placeholder="", okText="OK", cancelText="Cancel"}){
+    return new Promise(resolve=>{
+      const bg = document.getElementById("modalBg");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalBody = document.getElementById("modalBody");
+      const inputWrap = document.getElementById("modalInputWrap");
+      const input = document.getElementById("modalInput");
+      const okBtn = document.getElementById("modalOk");
+      const cancelBtn = document.getElementById("modalCancel");
+      modalTitle.textContent = title;
+      modalBody.textContent = body;
+      inputWrap.style.display = withInput ? "block":"none";
+      input.value = "";
+      input.placeholder = placeholder || "";
+      okBtn.textContent = okText;
+      cancelBtn.textContent = cancelText;
+      function clean(res){ bg.style.display="none"; okBtn.onclick=null; cancelBtn.onclick=null; resolve(res); }
+      okBtn.onclick = ()=> clean(withInput ? input.value.trim() : true);
+      cancelBtn.onclick = ()=> clean(false);
+      bg.style.display = "flex";
+      if(withInput){ setTimeout(()=>input.focus(), 50); }
+    });
+  }
+  function toast(body){ return showModal({title:"Notice", body, withInput:false, okText:"OK", cancelText:"Close"}); }
 
-    /***************
-     * Modal helpers (no native alert/prompt)
-     ***************/
-    function showModal({title, body, withInput=false, placeholder="", okText="OK", cancelText="Cancel"}){
-      return new Promise(resolve=>{
-        const bg = document.getElementById("modalBg");
-        const modalTitle = document.getElementById("modalTitle");
-        const modalBody = document.getElementById("modalBody");
-        const inputWrap = document.getElementById("modalInputWrap");
-        const input = document.getElementById("modalInput");
-        const okBtn = document.getElementById("modalOk");
-        const cancelBtn = document.getElementById("modalCancel");
-        modalTitle.textContent = title;
-        modalBody.textContent = body;
-        inputWrap.style.display = withInput ? "block":"none";
-        input.value = "";
-        input.placeholder = placeholder || "";
-        okBtn.textContent = okText;
-        cancelBtn.textContent = cancelText;
-        function clean(res){ bg.style.display="none"; okBtn.onclick=null; cancelBtn.onclick=null; resolve(res); }
-        okBtn.onclick = ()=> clean(withInput ? input.value.trim() : true);
-        cancelBtn.onclick = ()=> clean(false);
-        bg.style.display = "flex";
-        if(withInput){ setTimeout(()=>input.focus(), 50); }
+  /***************
+   * Navigation & profile menu
+   ***************/
+  const views = ["home","quiz","editor","saved","profile","settings"];
+  function navTo(view){
+    for(const v of views){
+      const el = document.getElementById(v+"View");
+      if(el) el.style.display = (v===view) ? "block" : "none";
+    }
+    // close dropdown
+    document.getElementById("profileMenu").style.display = "none";
+    if(view==="saved") renderSaved();
+    if(view==="profile") renderProfile();
+    if(view==="settings") document.getElementById("usernameInput").value = profile.username || "";
+  }
+  document.getElementById("avatar").addEventListener("click", ()=>{
+    const m = document.getElementById("profileMenu");
+    m.style.display = (m.style.display==="block") ? "none":"block";
+  });
+  window.addEventListener("click", (e)=>{
+    const menu = document.getElementById("profileMenu");
+    const avatar = document.getElementById("avatar");
+    if(!menu.contains(e.target) && !avatar.contains(e.target)){
+      menu.style.display="none";
+    }
+  });
+
+  function doLogout(){
+    showModal({title:"Logout", body:"This only clears your current session (local data remains). Continue?"})
+      .then(ok=>{
+        if(ok){
+          currentQuizId=null;
+          quizData=[]; questions=[]; wrongQueue=[]; retryMode=false;
+          navTo("home");
+        }
       });
-    }
-    function toast(body){ return showModal({title:"Notice", body, withInput:false, okText:"OK", cancelText:"Close"}); }
+  }
 
-    /***************
-     * Navigation & profile menu
-     ***************/
-    const views = ["home","quiz","editor","saved","profile","settings"];
-    function navTo(view){
-      for(const v of views){
-        const el = document.getElementById(v+"View");
-        if(el) el.style.display = (v===view) ? "block" : "none";
-      }
-      // close dropdown
-      document.getElementById("profileMenu").style.display = "none";
-      if(view==="saved") renderSaved();
-      if(view==="profile") renderProfile();
-      if(view==="settings") document.getElementById("usernameInput").value = profile.username || "";
+  /***************
+   * Persistence (localStorage)
+   ***************/
+  function loadAll(){
+    try{
+      const pf = getStorage("qp_profile");
+      if(pf) profile = JSON.parse(pf);
+      const idx = getStorage("qp_saved_index");
+      if(idx) savedIndex = JSON.parse(idx);
+    }catch{}
+    if(!profile || typeof profile!=="object") profile = {username:"",scores:[]};
+    if(!Array.isArray(savedIndex)) savedIndex = [];
+    updateAvatar();
+  }
+  function saveProfile(){
+    setStorage("qp_profile", JSON.stringify(profile));
+    updateAvatar();
+  }
+  function saveIndex(){
+    setStorage("qp_saved_index", JSON.stringify(savedIndex));
+  }
+  function updateAvatar(){
+    const a = document.getElementById("avatar");
+    const initial = (profile.username||"Guest").trim().charAt(0).toUpperCase() || "?";
+    a.textContent = initial;
+  }
+
+  function slugify(name){
+    return name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"quiz";
+  }
+
+  function saveQuizData(id, data){
+    setStorage("qp_quiz_"+id, data);
+  }
+  function loadQuizData(id){
+    return getStorage("qp_quiz_"+id);
+  }
+  function deleteQuizData(id){
+    eraseStorage("qp_quiz_"+id);
+  }
+
+  /***************
+   * Home: upload -> editor
+   ***************/
+  document.getElementById("fileInput").addEventListener("change", async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const text = await file.text();
+    try{
+      JSON.parse(text); // basic validation
+    }catch{
+      await toast("That file isn't valid JSON.");
+      return;
     }
-    document.getElementById("avatar").addEventListener("click", ()=>{
-      const m = document.getElementById("profileMenu");
-      m.style.display = (m.style.display==="block") ? "none":"block";
+    document.getElementById("editorArea").value = text;
+    navTo("editor");
+    await toast("Quiz loaded into the editor — make any changes, then Save or Start.");
+  });
+
+  /***************
+   * Editor actions
+   ***************/
+  async function saveQuizFlow(){
+    const text = document.getElementById("editorArea").value.trim();
+    let arr;
+    try{
+      arr = JSON.parse(text);
+      if(!Array.isArray(arr)) throw new Error("Root must be an array");
+    }catch{
+      await toast("Invalid JSON. Make sure the root value is an array of sections.");
+      return;
+    }
+    const name = await showModal({
+      title:"Save Quiz",
+      body:"Enter a name for this quiz:",
+      withInput:true,
+      placeholder:"e.g., Unit 2: Religions and Philosophies",
+      okText:"Save"
     });
-    window.addEventListener("click", (e)=>{
-      const menu = document.getElementById("profileMenu");
-      const avatar = document.getElementById("avatar");
-      if(!menu.contains(e.target) && !avatar.contains(e.target)){
-        menu.style.display="none";
-      }
-    });
+    if(!name) return;
+    const id = slugify(String(name));
+    // upsert index
+    const existing = savedIndex.find(x=>x.id===id);
+    if(existing){
+      existing.name = String(name);
+      existing.date = new Date().toISOString();
+    }else{
+      savedIndex.push({id, name:String(name), date:new Date().toISOString()});
+    }
+    saveIndex();
+    saveQuizData(id, text);
+    await toast("Saved.");
+    currentQuizId = id;
+    currentQuizTitle = String(name);
+  }
 
-    function doLogout(){
-      showModal({title:"Logout", body:"This only clears your current session (cookies remain). Continue?"})
-        .then(ok=>{
-          if(ok){
-            currentQuizId=null;
-            quizData=[]; questions=[]; wrongQueue=[]; retryMode=false;
-            navTo("home");
-          }
-        });
+  async function startQuizFromEditor(){
+    const text = document.getElementById("editorArea").value.trim();
+    let data;
+    try{
+      data = JSON.parse(text);
+      if(!Array.isArray(data)) throw new Error("Root must be an array");
+    }catch{
+      await toast("Invalid JSON — please fix in editor.");
+      return;
     }
+    // flatten questions
+    quizData = data.flatMap(sec => (sec?.questions)||[]);
+    if(quizData.length===0){
+      await toast("No questions found.");
+      return;
+    }
+    currentQuizTitle = (data[0]?.quiz_section) ? "Quiz: " + data[0].quiz_section : "Quiz";
+    initQuiz();
+    navTo("quiz");
+  }
 
-    /***************
-     * Persistence (cookies)
-     ***************/
-    function loadAll(){
-      try{
-        const pf = getLargeCookie("qp_profile");
-        if(pf) profile = JSON.parse(pf);
-        const idx = getCookie("qp_saved_index");
-        if(idx) savedIndex = JSON.parse(idx);
-      }catch{}
-      if(!profile || typeof profile!=="object") profile = {username:"",scores:[]};
-      if(!Array.isArray(savedIndex)) savedIndex = [];
-      updateAvatar();
+  /***************
+   * Saved quizzes
+   ***************/
+  function renderSaved(){
+    const ul = document.getElementById("savedList");
+    ul.innerHTML = "";
+    if(savedIndex.length===0){
+      ul.innerHTML = "<li>No saved quizzes yet.</li>";
+      return;
     }
-    function saveProfile(){
-      setLargeCookie("qp_profile", JSON.stringify(profile));
-      updateAvatar();
+    for(const item of savedIndex){
+      const li = document.createElement("li");
+      const left = document.createElement("div");
+      left.innerHTML = `<b>${item.name}</b><br><small>${new Date(item.date).toLocaleString()}</small>`;
+      const right = document.createElement("div");
+      const openBtn = document.createElement("button");
+      openBtn.className="btn primary";
+      openBtn.textContent="Open";
+      openBtn.onclick = async ()=>{
+        const raw = loadQuizData(item.id);
+        if(!raw){ await toast("Could not load this quiz."); return; }
+        document.getElementById("editorArea").value = raw;
+        currentQuizId = item.id;
+        currentQuizTitle = item.name;
+        navTo("editor");
+      };
+      const renameBtn = document.createElement("button");
+      renameBtn.className="btn ghost";
+      renameBtn.textContent="Rename";
+      renameBtn.onclick = async ()=>{
+        const newName = await showModal({title:"Rename", body:"Enter a new name:", withInput:true, placeholder:item.name, okText:"Rename"});
+        if(!newName) return;
+        item.name = String(newName);
+        item.date = new Date().toISOString();
+        saveIndex(); renderSaved();
+      };
+      const delBtn = document.createElement("button");
+      delBtn.className="btn danger";
+      delBtn.textContent="Delete";
+      delBtn.onclick = async ()=>{
+        const ok = await showModal({title:"Delete Quiz", body:`Delete “${item.name}”? This cannot be undone.`, okText:"Delete", cancelText:"Cancel"});
+        if(!ok) return;
+        deleteQuizData(item.id);
+        savedIndex = savedIndex.filter(x=>x.id!==item.id);
+        saveIndex(); renderSaved();
+      };
+      right.append(openBtn, renameBtn, delBtn);
+      li.append(left, right);
+      ul.appendChild(li);
     }
-    function saveIndex(){
-      setCookie("qp_saved_index", JSON.stringify(savedIndex));
-    }
-    function updateAvatar(){
-      const a = document.getElementById("avatar");
-      const initial = (profile.username||"Guest").trim().charAt(0).toUpperCase() || "?";
-      a.textContent = initial;
-    }
+  }
 
-    function slugify(name){
-      return name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"quiz";
-    }
-
-    function saveQuizData(id, data){
-      // data is JSON string
-      setLargeCookie("qp_quiz_"+id, data);
-    }
-    function loadQuizData(id){
-      return getLargeCookie("qp_quiz_"+id);
-    }
-    function deleteQuizData(id){
-      eraseLargeCookie("qp_quiz_"+id);
-    }
-
-    /***************
-     * Home: upload -> editor
-     ***************/
-    document.getElementById("fileInput").addEventListener("change", async (e)=>{
-      const file = e.target.files[0];
-      if(!file) return;
-      const text = await file.text();
-      try{
-        JSON.parse(text); // basic validation
-      }catch{
-        await toast("That file isn't valid JSON.");
-        return;
-      }
-      document.getElementById("editorArea").value = text;
-      navTo("editor");
-      await toast("Quiz loaded into the editor — make any changes, then Save or Start.");
-    });
-
-    /***************
-     * Editor actions
-     ***************/
-    async function saveQuizFlow(){
-      const text = document.getElementById("editorArea").value.trim();
-      let arr;
-      try{
-        arr = JSON.parse(text);
-        if(!Array.isArray(arr)) throw new Error("Root must be an array");
-      }catch{
-        await toast("Invalid JSON. Make sure the root value is an array of sections.");
-        return;
-      }
-      const name = await showModal({
-        title:"Save Quiz",
-        body:"Enter a name for this quiz:",
-        withInput:true,
-        placeholder:"e.g., Unit 2: Religions and Philosophies",
-        okText:"Save"
-      });
-      if(!name) return;
-      const id = slugify(String(name));
-      // upsert index
-      const existing = savedIndex.find(x=>x.id===id);
-      if(existing){
-        existing.name = String(name);
-        existing.date = new Date().toISOString();
-      }else{
-        savedIndex.push({id, name:String(name), date:new Date().toISOString()});
-      }
-      saveIndex();
-      saveQuizData(id, text);
-      await toast("Saved to cookies.");
-      currentQuizId = id;
-      currentQuizTitle = String(name);
-    }
-
-    async function startQuizFromEditor(){
-      const text = document.getElementById("editorArea").value.trim();
-      let data;
-      try{
-        data = JSON.parse(text);
-        if(!Array.isArray(data)) throw new Error("Root must be an array");
-      }catch{
-        await toast("Invalid JSON — please fix in editor.");
-        return;
-      }
-      // flatten questions
-      quizData = data.flatMap(sec => (sec?.questions)||[]);
-      if(quizData.length===0){
-        await toast("No questions found.");
-        return;
-      }
-      currentQuizTitle = (data[0]?.quiz_section) ? "Quiz: " + data[0].quiz_section : "Quiz";
-      initQuiz();
-      navTo("quiz");
-    }
-
-    /***************
-     * Saved quizzes
-     ***************/
-    function renderSaved(){
-      const ul = document.getElementById("savedList");
-      ul.innerHTML = "";
-      if(savedIndex.length===0){
-        ul.innerHTML = "<li>No saved quizzes yet.</li>";
-        return;
-      }
-      for(const item of savedIndex){
+  /***************
+   * Profile & settings
+   ***************/
+  function renderProfile(){
+    document.getElementById("profileName").textContent = profile.username || "Guest";
+    const ul = document.getElementById("scoreList");
+    ul.innerHTML = "";
+    if(!profile.scores?.length){
+      ul.innerHTML = "<li>No scores yet.</li>";
+    } else {
+      const recent = profile.scores.slice(-20).reverse();
+      for(const s of recent){
         const li = document.createElement("li");
-        const left = document.createElement("div");
-        left.innerHTML = `<b>${item.name}</b><br><small>${new Date(item.date).toLocaleString()}</small>`;
-        const right = document.createElement("div");
-        const openBtn = document.createElement("button");
-        openBtn.className="btn primary";
-        openBtn.textContent="Open";
-        openBtn.onclick = async ()=>{
-          const raw = loadQuizData(item.id);
-          if(!raw){ await toast("Could not load this quiz from cookies."); return; }
-          document.getElementById("editorArea").value = raw;
-          currentQuizId = item.id;
-          currentQuizTitle = item.name;
-          navTo("editor");
-        };
-        const renameBtn = document.createElement("button");
-        renameBtn.className="btn ghost";
-        renameBtn.textContent="Rename";
-        renameBtn.onclick = async ()=>{
-          const newName = await showModal({title:"Rename", body:"Enter a new name:", withInput:true, placeholder:item.name, okText:"Rename"});
-          if(!newName) return;
-          item.name = String(newName);
-          item.date = new Date().toISOString();
-          saveIndex(); renderSaved();
-        };
-        const delBtn = document.createElement("button");
-        delBtn.className="btn danger";
-        delBtn.textContent="Delete";
-        delBtn.onclick = async ()=>{
-          const ok = await showModal({title:"Delete Quiz", body:`Delete “${item.name}”? This cannot be undone.`, okText:"Delete", cancelText:"Cancel"});
-          if(!ok) return;
-          deleteQuizData(item.id);
-          savedIndex = savedIndex.filter(x=>x.id!==item.id);
-          saveIndex(); renderSaved();
-        };
-        right.append(openBtn, renameBtn, delBtn);
-        li.append(left, right);
+        li.innerHTML = `<span><b>${s.quiz}</b> — ${s.score}/${s.total}</span><span>${new Date(s.date).toLocaleString()}</span>`;
         ul.appendChild(li);
       }
     }
+  }
+  async function ensureUsername(){
+    if(profile.username) return;
+    const name = await showModal({title:"Welcome!", body:"Choose a username to personalize your profile:", withInput:true, placeholder:"e.g., Ella", okText:"Save"});
+    profile.username = (name && name.trim()) ? name.trim() : "Guest";
+    saveProfile();
+  }
+  function saveSettings(){
+    const v = document.getElementById("usernameInput").value.trim() || "Guest";
+    profile.username = v;
+    saveProfile();
+    toast("Settings saved.");
+    navTo("home");
+  }
 
-    /***************
-     * Profile & settings
-     ***************/
-    function renderProfile(){
-      document.getElementById("profileName").textContent = profile.username || "Guest";
-      const ul = document.getElementById("scoreList");
-      ul.innerHTML = "";
-      if(!profile.scores?.length){
-        ul.innerHTML = "<li>No scores yet.</li>";
-      } else {
-        const recent = profile.scores.slice(-20).reverse();
-        for(const s of recent){
-          const li = document.createElement("li");
-          li.innerHTML = `<span><b>${s.quiz}</b> — ${s.score}/${s.total}</span><span>${new Date(s.date).toLocaleString()}</span>`;
-          ul.appendChild(li);
-        }
-      }
-    }
-    async function ensureUsername(){
-      if(profile.username) return;
-      const name = await showModal({title:"Welcome!", body:"Choose a username to personalize your profile:", withInput:true, placeholder:"e.g., Ella", okText:"Save"});
-      profile.username = (name && name.trim()) ? name.trim() : "Guest";
-      saveProfile();
-    }
-    function saveSettings(){
-      const v = document.getElementById("usernameInput").value.trim() || "Guest";
-      profile.username = v;
-      saveProfile();
-      toast("Settings saved.");
-      navTo("home");
-    }
+  /***************
+   * Quiz engine
+   ***************/
+  function initQuiz(){
+    wrongQueue = [];
+    retryMode = false;
+    questions = shuffle([...quizData]); // random order
+    document.getElementById("quizTitle").textContent = currentQuizTitle || "Quiz";
+    nextBtnState(false);
+    nextQuestion();
+  }
+  function nextBtnState(disabled){
+    document.getElementById("nextBtn").disabled = disabled;
+  }
+  document.getElementById("nextBtn").addEventListener("click", nextQuestion);
 
-    /***************
-     * Quiz engine
-     ***************/
-    function initQuiz(){
-      wrongQueue = [];
-      retryMode = false;
-      questions = shuffle([...quizData]); // random order
-      document.getElementById("quizTitle").textContent = currentQuizTitle || "Quiz";
-      nextBtnState(false);
-      nextQuestion();
-    }
-    function nextBtnState(disabled){
-      document.getElementById("nextBtn").disabled = disabled;
-    }
-    document.getElementById("nextBtn").addEventListener("click", nextQuestion);
-
-    function nextQuestion(){
-      nextBtnState(true);
-      if(retryMode){
-        // must answer the same one correctly
-        renderQuestion(currentQuestion);
-        return;
-      }
-      if(wrongQueue.length>0){
-        currentQuestion = wrongQueue.shift();
-      } else if(questions.length>0){
-        currentQuestion = questions.pop();
-      } else {
-        // finished: record score (mastered = all)
-        const score = quizData.length;
-        profile.scores = profile.scores || [];
-        profile.scores.push({quiz: currentQuizTitle || (currentQuizId||"Quiz"), score, total: quizData.length, date:new Date().toISOString()});
-        saveProfile();
-        showModal({title:"All done!", body:"You’ve mastered all questions. Want to restart?"})
-          .then(ok=>{
-            if(ok){ initQuiz(); } else { navTo("home"); }
-          });
-        return;
-      }
+  function nextQuestion(){
+    nextBtnState(true);
+    if(retryMode){
       renderQuestion(currentQuestion);
+      return;
     }
-
-    function renderQuestion(q){
-      const qEl = document.getElementById("questionText");
-      const optWrap = document.getElementById("options");
-      qEl.textContent = q.question;
-      optWrap.innerHTML = "";
-      const shuffled = shuffle([...q.options]);
-      for(const opt of shuffled){
-        const btn = document.createElement("button");
-        btn.className="option";
-        btn.textContent = opt;
-        btn.onclick = ()=> handleAnswer(btn, q.answer);
-        optWrap.appendChild(btn);
-      }
-      updateProgress();
+    if(wrongQueue.length>0){
+      currentQuestion = wrongQueue.shift();
+    } else if(questions.length>0){
+      currentQuestion = questions.pop();
+    } else {
+      const score = quizData.length;
+      profile.scores = profile.scores || [];
+      profile.scores.push({quiz: currentQuizTitle || (currentQuizId||"Quiz"), score, total: quizData.length, date:new Date().toISOString()});
+      saveProfile();
+      showModal({title:"All done!", body:"You’ve mastered all questions. Want to restart?"})
+        .then(ok=>{
+          if(ok){ initQuiz(); } else { navTo("home"); }
+        });
+      return;
     }
+    renderQuestion(currentQuestion);
+  }
 
-    function handleAnswer(btn, correct){
-      const btns = [...document.querySelectorAll(".option")];
-      btns.forEach(b=>{
-        b.disabled = true;
-        if(b.textContent===correct) b.classList.add("correct");
-      });
-      if(btn.textContent===correct){
-        retryMode = false;
-      } else {
-        btn.classList.add("wrong");
-        wrongQueue.push(currentQuestion); // reappear later
-        retryMode = true; // must retry immediately
-      }
-      nextBtnState(false); // enable Next
-      updateProgress();
+  function renderQuestion(q){
+    const qEl = document.getElementById("questionText");
+    const optWrap = document.getElementById("options");
+    qEl.textContent = q.question;
+    optWrap.innerHTML = "";
+    const shuffled = shuffle([...q.options]);
+    for(const opt of shuffled){
+      const btn = document.createElement("button");
+      btn.className="option";
+      btn.textContent = opt;
+      btn.onclick = ()=> handleAnswer(btn, q.answer);
+      optWrap.appendChild(btn);
     }
+    updateProgress();
+  }
 
-    function updateProgress(){
-      const total = quizData.length;
-      const mastered = total - (questions.length + wrongQueue.length + (retryMode ? 1 : 0));
-      document.getElementById("progressText").textContent = `Mastered: ${mastered}/${total}`;
-      document.getElementById("progressBar").style.width = ((mastered/Math.max(1,total))*100).toFixed(1) + "%";
+  function handleAnswer(btn, correct){
+    const btns = [...document.querySelectorAll(".option")];
+    btns.forEach(b=>{
+      b.disabled = true;
+      if(b.textContent===correct) b.classList.add("correct");
+    });
+    if(btn.textContent===correct){
+      retryMode = false;
+    } else {
+      btn.classList.add("wrong");
+      wrongQueue.push(currentQuestion);
+      retryMode = true;
     }
+    nextBtnState(false);
+    updateProgress();
+  }
 
-    function shuffle(a){
-      for(let i=a.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];
-      }
-      return a;
+  function updateProgress(){
+    const total = quizData.length;
+    const mastered = total - (questions.length + wrongQueue.length + (retryMode ? 1 : 0));
+    document.getElementById("progressText").textContent = `Mastered: ${mastered}/${total}`;
+    document.getElementById("progressBar").style.width = ((mastered/Math.max(1,total))*100).toFixed(1) + "%";
+  }
+
+  function shuffle(a){
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];
     }
+    return a;
+  }
 
-    /***************
-     * Init
-     ***************/
-    (async function init(){
-      loadAll();
-      await ensureUsername();
-      navTo("home");
-    })();
-  </script>
+  /***************
+   * Init
+   ***************/
+  (async function init(){
+    loadAll();
+    await ensureUsername();
+    navTo("home");
+  })();
+</script>
+
 </body>
 </html>
