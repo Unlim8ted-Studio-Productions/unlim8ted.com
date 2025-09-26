@@ -315,17 +315,37 @@
   /***************
    * Persistence (localStorage)
    ***************/
-  function loadAll(){
-    try{
-      const pf = getStorage("qp_profile");
-      if(pf) profile = JSON.parse(pf);
-      const idx = getStorage("qp_saved_index");
-      if(idx) savedIndex = JSON.parse(idx);
-    }catch{}
-    if(!profile || typeof profile!=="object") profile = {username:"",scores:[]};
-    if(!Array.isArray(savedIndex)) savedIndex = [];
-    updateAvatar();
+async function loadAll(){
+  try{
+    const pf = getStorage("qp_profile");
+    if(pf) profile = JSON.parse(pf);
+    const idx = getStorage("qp_saved_index");
+    if(idx) savedIndex = JSON.parse(idx);
+  }catch{}
+  if(!profile || typeof profile!=="object") profile = {username:"",scores:[]};
+  if(!Array.isArray(savedIndex)) savedIndex = [];
+
+
+    try {
+      const res = await fetch("https://unlim8ted.com/tools/study-testing/combined_quiz.json");
+      if(res.ok){
+        const text = await res.text();
+        // validate
+        JSON.parse(text);
+        const name = "9th Grade, Honors World History Unit 3: World Religions";
+        const id = slugify(name);
+        savedIndex.push({id, name, date:new Date().toISOString()});
+        saveIndex();
+        saveQuizData(id, text);
+      }
+    } catch (e) {
+      console.warn("Could not fetch default quiz:", e);
+   
   }
+
+  updateAvatar();
+}
+
   function saveProfile(){
     setStorage("qp_profile", JSON.stringify(profile));
     updateAvatar();
