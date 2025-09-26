@@ -325,14 +325,15 @@ async function loadAll(){
   if(!profile || typeof profile!=="object") profile = {username:"",scores:[]};
   if(!Array.isArray(savedIndex)) savedIndex = [];
 
-
+  // if no quizzes saved yet, load the default example one
+  if(savedIndex.length === 0){
     try {
       const res = await fetch("https://unlim8ted.com/tools/study-testing/combined_quiz.json");
       if(res.ok){
         const text = await res.text();
         // validate
         JSON.parse(text);
-        const name = "9th Grade, Honors World History Unit 3: World Religions";
+        const name = "Honors World History 9th Grade Unit 3 World Religions";
         const id = slugify(name);
         savedIndex.push({id, name, date:new Date().toISOString()});
         saveIndex();
@@ -340,7 +341,7 @@ async function loadAll(){
       }
     } catch (e) {
       console.warn("Could not fetch default quiz:", e);
-   
+    }
   }
 
   updateAvatar();
@@ -632,3 +633,4 @@ async function loadAll(){
 
 </body>
 </html>
+
