@@ -12,7 +12,8 @@
     "name": "The Life of a Meatball",
     "description": "Deep within the Tasmanian Jungles lie meatball factories. These factories produce meatballs, although something quite special can happen as shown in this captivating documentary.",
     "price": 0.0,
-    "link": "https://youtu.be/FiDwWp7ZteE"
+    "link": "https://youtu.be/FiDwWp7ZteE",
+    "product-type": "film"
   },
   {
     "id": "ChatApp",
@@ -245,11 +246,12 @@
     "description": "A short film about a figure who must decide what reality means to them, while learning to forgive and striving to save those they love.",
     "price": 0,
     "type": "Entertainment",
-    "product-type": "film"
+    "product-type": "film",
+    "link": "https://www.youtube.com/watch?v=aD5bixOFGLo"
   },
   {
     "id": "TimeCat",
-    "image": "https://unlim8ted.com/images/products/games/TimeCat.png",
+    "image": "https://unlim8ted.com/images/products/games/TimeCatCover.png",
     "additional_images": [],
     "video": null,
     "additional_videos": [],
@@ -919,4 +921,8 @@
     "link": "https://unlim8ted.com/squareproduct#unlim8ted-cork-back-coaster/2?cp=true&sa=true&sbp=false&q=false",
     "product-type": "physical"
   }
+
 ]
+
+
+
