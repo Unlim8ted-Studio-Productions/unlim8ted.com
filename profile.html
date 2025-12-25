@@ -1,269 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unlim8ted - Profile</title>
+  <meta name="description" content="Manage your Unlim8ted account profile." />
   <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- Components -->
+  <script type="module" src="/components/site-navbar.js"></script>
+  <script type="module" src="/components/site-loader.js"></script>
+
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: radial-gradient(circle at center, #0f0c29, #302b63, #24243e);
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      color: #e0e0e0;
+    :root{
+      --bg1:#0f0c29; --bg2:#302b63; --bg3:#24243e;
+      --panel: rgba(30,30,30,.90);
+      --text: #e0e0e0;
+      --muted: #bdbdbd;
+      --accent: #00ff99;
+      --accent2: #ff0077;
+      --stroke: rgba(255,255,255,.12);
+      --shadow: 0 10px 30px rgba(0,255,153,.25);
+      --r: 16px;
     }
 
-    .background {
-      position: absolute;
-      width: 100%;
-      height: 100%;
+    body{
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at center, var(--bg1), var(--bg2), var(--bg3));
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      padding-top: 56px; /* navbar space */
+      overflow-x: hidden;
+    }
+
+    .background{
+      position: fixed;
+      inset: 0;
       overflow: hidden;
       z-index: -1;
     }
-
-    .background span {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(45deg, #00ff99, #ff0077);
-      opacity: 0.7;
+    .background span{
+      position:absolute;
+      width:50px; height:50px;
+      background: linear-gradient(45deg, var(--accent), var(--accent2));
+      opacity:.7;
       filter: blur(8px);
       animation: float 6s infinite ease-in-out;
       border-radius: 50%;
     }
-
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0) translateX(0);
-      }
-
-      50% {
-        transform: translateY(-40px) translateX(20px);
-      }
+    @keyframes float{
+      0%,100%{ transform: translateY(0) translateX(0); }
+      50%{ transform: translateY(-40px) translateX(20px); }
     }
 
-    .container {
-      text-align: center;
-      background: rgba(30, 30, 30, 0.9);
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 255, 153, 0.3);
-      padding: 2rem;
-      max-width: 500px;
-      width: 90%;
+    .wrap{
+      display:flex;
+      justify-content:center;
+      padding: 28px 14px 40px;
     }
 
-    .profile-pic {
-      width: 100px;
-      height: 100px;
+    .container{
+      width: min(520px, 92vw);
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      text-align:center;
+      backdrop-filter: blur(10px);
+    }
+
+    .profile-pic{
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
-      border: 3px solid #00ff99;
-      margin-bottom: 1rem;
-      box-shadow: 0 0 15px #00ff99;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 18px rgba(0,255,153,.35);
+      object-fit: cover;
+      margin-bottom: 10px;
+      background: rgba(255,255,255,.08);
     }
 
-    .user-info,
-    .input-container {
-      margin: 1rem 0;
+    h1{
+      margin: 8px 0 6px;
+      font-size: 24px;
+      letter-spacing:.2px;
     }
 
-    .user-info p,
-    .input-container input {
-      font-size: 1rem;
-      color: #d0d0d0;
-      margin: 0.5rem 0;
+    .meta{
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 14px;
     }
 
-    input[type="file"],
-    input[type="text"] {
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: 1px solid #00ff99;
-      background: #24243e;
-      color: #e0e0e0;
-      width: 100%;
+    .panel{
+      text-align:left;
+      margin-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      padding-top: 14px;
     }
 
-    .actions {
-      margin-top: 2rem;
+    label{
+      display:block;
+      font-size: 13px;
+      color: rgba(255,255,255,.75);
+      margin: 10px 0 6px;
     }
 
-    .button {
-      background: linear-gradient(45deg, #00ff99, #ff0077);
-      border: none;
-      border-radius: 20px;
-      color: #fff;
-      padding: 0.8rem 1.5rem;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-      margin: 0.5rem;
+    input[type="text"], input[type="url"]{
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,255,153,.45);
+      background: rgba(36,36,62,.85);
+      color: var(--text);
+      outline: none;
+      box-sizing:border-box;
+    }
+    input[type="text"]::placeholder, input[type="url"]::placeholder{
+      color: rgba(255,255,255,.55);
+    }
+    input[type="text"]:focus, input[type="url"]:focus{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,255,153,.12);
     }
 
-    .button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px #00ff99;
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+      margin-top: 18px;
     }
 
-    .button.logout {
-      background: #ff0077;
+    .btn{
+      border:none;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-weight: 800;
+      cursor:pointer;
+      color:#fff;
+      background: linear-gradient(45deg, var(--accent), var(--accent2));
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .btn:hover{
+      transform: scale(1.03);
+      box-shadow: 0 0 16px rgba(0,255,153,.28);
     }
 
-    .button.logout:hover {
-      box-shadow: 0 0 15px #ff0077;
+    .btn.secondary{
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .btn.secondary:hover{
+      box-shadow:none;
+      background: rgba(255,255,255,.12);
+    }
+
+    .btn.logout{
+      background: rgba(255,0,119,.85);
+    }
+    .btn.logout:hover{
+      box-shadow: 0 0 16px rgba(255,0,119,.25);
+    }
+
+    .status{
+      margin-top: 12px;
+      font-size: 13px;
+      color: rgba(255,255,255,.75);
+      min-height: 18px;
+      text-align:center;
+    }
+
+    .footer{
+      margin-top: 18px;
+      text-align:center;
+      font-size: 13px;
+      color: rgba(255,255,255,.6);
     }
   </style>
-  <style>
-    /* Navigation Bar Styles */
-    .navbar {
-      display: flex;
-      justify-content: center;
-      background-color: #333333d0;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 3;
-    }
-
-    .nav-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-    }
-
-    .nav-item {
-      position: relative;
-    }
-
-    .nav-item a {
-      display: block;
-      color: white;
-      padding: 14px 20px;
-      text-decoration: none;
-      text-align: center;
-    }
-
-    .nav-item a:hover {
-      background-color: #15131f;
-      color: rgb(51, 207, 103);
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      min-width: 160px;
-      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-      z-index: 3;
-    }
-
-    .dropdown-content a {
-      color: black;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-      text-align: left;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #1c1d38;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-      z-index: 3;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #251f1f;
-      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    .dropdown-content a {
-      color: rgb(255, 255, 255);
-      text-decoration: none;
-      padding: 12px 16px;
-      display: block;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #2d2849;
-    }
-
-    .navbar-toggle {
-      display: none;
-      background-color: #333;
-      color: white;
-      padding: 14px 20px;
-      border: none;
-      cursor: pointer;
-      font-size: 18px;
-    }
-
-    /* Responsive styles */
-    @media (max-width: 768px) {
-      .nav-links {
-        flex-direction: column;
-        display: none;
-      }
-
-      .nav-links.show {
-        display: flex;
-      }
-
-      .navbar-toggle {
-        display: block;
-      }
-    }
-  </style>
-  <script>
-    function toggleMenu() {
-      const navLinks = document.getElementById("navbarLinks");
-      navLinks.classList.toggle("show");
-    }
-  </script>
-  <nav class="navbar">
-    <div class="navbar-header">
-      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-      <ul class="nav-links" id="navbarLinks">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="products">Products</a></li>
-        <li class="nav-item"><a href="help">Help</a></li>
-        <li class="nav-item"><a href="about">About</a></li>
-        <li class="nav-item dropdown">
-          <a href="javascript:void(0)" class="dropbtn">More</a>
-          <div class="dropdown-content">
-            <a href="portfolio">Portfolio</a>
-            <a href="contact">Contact</a>
-            <a href="blog">Blog</a>
-            <a href="live-chat">Live Chat</a>
-            <a href="live-game">Live Chat and Game</a>
-            <a href="puzzle-squares">Puzzle Squares</a>
-          </div>
-        </li>
-        <a href="old"><button>Old site</button></a>
-      </ul>
-    </div>
-  </nav>
 </head>
 
 <body>
-  <!-- Animated background -->
+  <site-loader text="Loading..."></site-loader>
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+
   <div class="background">
     <span style="top: 20%; left: 10%; animation-delay: 0s;"></span>
     <span style="top: 40%; left: 70%; animation-delay: 2s;"></span>
@@ -272,149 +194,160 @@
     <span style="top: 80%; left: 50%; animation-delay: 3s;"></span>
   </div>
 
-  <!-- Profile container -->
-  <div class="container">
-    <img src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-pic" id="profile-pic">
-    <h1 id="name">Loading...</h1>
-    <div class="user-info">
-      <p>Email: <span id="email">Loading...</span></p>
-    </div>
-    <div class="input-container">
-      <label for="username">Username:</label>
-      <input type="text" id="username" placeholder="Enter a username">
-      <label for="profile-picture">Upload Profile Picture:</label>
-      <input type="file" id="profile-picture" accept="image/*">
-    </div>
-    <div class="actions">
-      <button id="save" class="button">Save Profile</button>
-      <button id="viewprods" class="button">Browse our products</button>
-      <button id="logout" class="button logout">Log Out</button>
-      <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
-            <script>document.addEventListener("DOMContentLoaded", function () {
-                const currentYear = new Date().getFullYear();
-                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
-                document.getElementById("footer-text").innerHTML = footerText;
-            });
-            </script>
+  <div class="wrap">
+    <div class="container">
+      <img id="profilePic" class="profile-pic" src="https://via.placeholder.com/110" alt="Profile picture" />
+      <h1 id="displayName">Loading…</h1>
+      <div class="meta">Email: <span id="email">Loading…</span></div>
+
+      <div class="panel">
+        <label for="username">Username</label>
+        <input id="username" type="text" placeholder="Enter a username" />
+
+        <label for="photoUrl">Profile photo URL (optional)</label>
+        <input id="photoUrl" type="url" placeholder="https://…" />
+        <div style="margin-top:8px;color:rgba(255,255,255,.55);font-size:12px;">
+          Note: File upload needs Firebase Storage. This field works now.
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="saveBtn" class="btn">Save Profile</button>
+        <button id="productsBtn" class="btn secondary">Browse Products</button>
+        <button id="logoutBtn" class="btn logout">Log Out</button>
+      </div>
+
+      <div id="status" class="status"></div>
+
+      <div class="footer">
+        <span id="footerText"></span>
+      </div>
     </div>
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
 
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
-      authDomain: "unlim8ted-db.firebaseapp.com",
-      projectId: "unlim8ted-db",
-      storageBucket: "unlim8ted-db.appspot.com",
-      messagingSenderId: "1059428499872",
-      appId: "1:1059428499872:web:855308683718237de6e4c5",
-    };
+    const { auth, db } = getFirebase();
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const db = getFirestore();
+    const $ = (id) => document.getElementById(id);
 
-    // Ensure persistent session
-    setPersistence(auth, browserLocalPersistence).catch(console.error);
+    const displayNameEl = $("displayName");
+    const emailEl = $("email");
+    const profilePicEl = $("profilePic");
+    const usernameEl = $("username");
+    const photoUrlEl = $("photoUrl");
+    const statusEl = $("status");
 
-    // Sign in with Google
-    async function handleGoogleSignIn() {
-      const provider = new GoogleAuthProvider();
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
+    const SIGNIN_URL = "https://unlim8ted.com/sign-in";
+    const PROFILE_DEFAULT = "https://via.placeholder.com/110";
 
-        // Check or create user data in Firestore
-        await setDoc(doc(db, "users", user.uid), {
-          name: user.displayName,
-          email: user.email,
-          profilePicture: user.photoURL,
+    function setStatus(msg, isError=false){
+      statusEl.textContent = msg || "";
+      statusEl.style.color = isError ? "rgba(255,120,120,.95)" : "rgba(255,255,255,.75)";
+    }
+
+    function fillUI(user, data){
+      const displayName = data?.displayName || data?.name || user.displayName || "User";
+      const email = data?.email || user.email || "—";
+      const username = data?.username || "";
+      const photoURL = data?.photoURL || data?.profilePicture || user.photoURL || PROFILE_DEFAULT;
+
+      displayNameEl.textContent = displayName;
+      emailEl.textContent = email;
+      usernameEl.value = username;
+      photoUrlEl.value = (data?.photoURL || data?.profilePicture || user.photoURL || "");
+      profilePicEl.src = photoURL || PROFILE_DEFAULT;
+    }
+
+    async function ensureUserDoc(user){
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()){
+        await setDoc(ref, {
+          uid: user.uid,
+          email: user.email || null,
+          displayName: user.displayName || null,
+          photoURL: user.photoURL || null,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
         }, { merge: true });
-
-        alert(`Welcome, ${user.displayName}!`);
-        loadProfile(user); // Load profile data into the UI
-      } catch (error) {
-        console.error("Google Sign-In error:", error.message);
-        alert("Failed to sign in with Google.");
+      } else {
+        // Keep email/displayName current (merge)
+        await setDoc(ref, {
+          email: user.email || null,
+          displayName: user.displayName || null,
+          photoURL: user.photoURL || null,
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
       }
+
+      return (await getDoc(ref)).data();
     }
 
-    // Load profile data from Firestore
-    async function loadProfile(user) {
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        document.getElementById("name").innerText = userData.name || "User";
-        document.getElementById("email").innerText = userData.email || "No email provided";
-        document.getElementById("profile-pic").src = userData.profilePicture || "https://via.placeholder.com/100";
-      } else {
-        console.warn("No user data found in Firestore.");
-      }
-    }
-
-    // Monitor auth state changes
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        loadProfile(user); // Load profile data if user is logged in
-      } else {
-        console.log("No user is logged in.");
-        window.location.href = "https://unlim8ted.com/signin"; // Redirect to login page
-      }
-    });
-
-    // Save profile changes
-    async function saveProfile() {
-      const user = auth.currentUser;
-      if (!user) {
-        alert("You need to be logged in to save your profile.");
+    onAuthStateChanged(auth, async (user) => {
+      if (!user){
+        window.location.href = SIGNIN_URL;
         return;
       }
 
-      const username = document.getElementById("username").value;
-      const profilePicInput = document.getElementById("profile-picture");
-      const profilePicFile = profilePicInput.files[0];
-
-      // Save profile picture to database (adjust logic if needed for storage)
-      const profilePicURL = user.photoURL; // Use existing URL or implement storage upload
-
-      try {
-        await setDoc(doc(db, "users", user.uid), {
-          username: username || user.displayName,
-          profilePicture: profilePicURL,
-        }, { merge: true });
-        alert("Profile updated successfully!");
-        loadProfile(user); // Refresh the profile UI
-      } catch (error) {
-        console.error("Error saving profile:", error.message);
-        alert("Failed to save profile. Please try again.");
+      try{
+        setStatus("Loading profile…");
+        const data = await ensureUserDoc(user);
+        fillUI(user, data);
+        setStatus("");
+      } catch (e){
+        console.error(e);
+        setStatus("Could not load profile.", true);
       }
-    }
-
-    // Log out
-    function logout() {
-      auth.signOut().then(() => {
-        alert("You have been logged out.");
-        window.location.href = "https://unlim8ted.com";
-      }).catch(console.error);
-    }
-
-    function viewProducts() {
-      window.location.href = "https://unlim8ted.com/products"
-    }
-
-    // Add Event Listeners
-    window.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("save").addEventListener("click", saveProfile);
-      document.getElementById("viewprods").addEventListener("click", viewProducts);
-      document.getElementById("logout").addEventListener("click", logout);
     });
+
+    $("saveBtn").addEventListener("click", async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const username = usernameEl.value.trim();
+      const photoURL = photoUrlEl.value.trim();
+
+      try{
+        setStatus("Saving…");
+        await setDoc(doc(db, "users", user.uid), {
+          username: username || null,
+          photoURL: photoURL || user.photoURL || null,
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+
+        // Refresh UI from Firestore
+        const snap = await getDoc(doc(db, "users", user.uid));
+        fillUI(user, snap.data());
+        setStatus("Saved ✅");
+        setTimeout(() => setStatus(""), 1200);
+      } catch (e){
+        console.error(e);
+        setStatus("Failed to save profile.", true);
+      }
+    });
+
+    $("productsBtn").addEventListener("click", () => {
+      window.location.href = "https://unlim8ted.com/products";
+    });
+
+    $("logoutBtn").addEventListener("click", async () => {
+      try{
+        await signOut(auth);
+        window.location.href = "https://unlim8ted.com";
+      } catch(e){
+        console.error(e);
+        setStatus("Logout failed.", true);
+      }
+    });
+
+    // Footer year
+    const y = new Date().getFullYear();
+    $("footerText").innerHTML = `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
   </script>
-
 </body>
-
 </html>

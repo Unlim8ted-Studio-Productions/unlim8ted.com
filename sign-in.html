@@ -1,388 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Unlim8ted Sign-In</title>
-  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
-      authDomain: "unlim8ted-db.firebaseapp.com",
-      projectId: "unlim8ted-db",
-      storageBucket: "unlim8ted-db.appspot.com",
-      messagingSenderId: "1059428499872",
-      appId: "1:1059428499872:web:855308683718237de6e4c5",
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const db = getFirestore();
-
-    // Ensure persistent login
-    setPersistence(auth, browserLocalPersistence).catch(console.error);
-
-    // Add user to Firestore
-    async function addUserToFirestore(user) {
-      try {
-        const userRef = doc(db, "users", user.uid);
-        await setDoc(userRef, {
-          email: user.email,
-          name: user.displayName || null,
-          createdAt: serverTimestamp(),
-        }, { merge: true });
-        console.log("User added/updated in Firestore.");
-      } catch (error) {
-        console.error("Error adding user to Firestore:", error.message);
-      }
-    }
-
-    // Google Sign-In
-    async function handleGoogleSignIn() {
-      const provider = new GoogleAuthProvider();
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        await addUserToFirestore(user);
-        alert(`Welcome, ${user.displayName}!`);
-        window.location.href = "https://unlim8ted.com/profile";
-      } catch (error) {
-        console.error("Google Sign-In error:", error.message);
-        alert("Failed to sign in with Google.");
-      }
-    }
-
-    // Email Sign-In
-    async function handleEmailSignIn(event) {
-      event.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        await addUserToFirestore(user);
-        alert(`Welcome back, ${user.email}!`);
-        window.location.href = "https://unlim8ted.com/profile";
-      } catch (error) {
-        console.error("Email Sign-In error:", error.message);
-        alert("Sign-in failed. Check your email and password.");
-      }
-    }
-
-    // Account Creation
-    async function handleAccountCreation(event) {
-      event.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        await addUserToFirestore(user);
-        alert(`Account created for ${user.email}!`);
-        window.location.href = "https://unlim8ted.com/profile";
-      } catch (error) {
-        console.error("Account Creation error:", error.message);
-        alert("Failed to create account. Try again.");
-      }
-    }
-
-    // Toggle Between Modes
-    function toggleMode() {
-      const mode = document.getElementById("form-mode");
-      const submitButton = document.getElementById("form-submit");
-      const toggleText = document.getElementById("toggle-text");
-
-      if (mode.textContent === "Sign In") {
-        mode.textContent = "Create Account";
-        submitButton.textContent = "Create Account";
-        toggleText.textContent = "Already have an account? Sign In.";
-        submitButton.onclick = handleAccountCreation;
-      } else {
-        mode.textContent = "Sign In";
-        submitButton.textContent = "Sign In";
-        toggleText.textContent = "Don't have an account? Create one.";
-        submitButton.onclick = handleEmailSignIn;
-      }
-    }
-
-    // Add Event Listeners
-    window.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("google-signin-btn").addEventListener("click", handleGoogleSignIn);
-      document.getElementById("toggle-text").addEventListener("click", toggleMode);
-      document.getElementById("form-submit").addEventListener("click", handleEmailSignIn);
-    });
-  </script>
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
 
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: radial-gradient(circle at center, #0f0c29, #302b63, #24243e);
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      color: #e0e0e0;
+    :root{
+      --bg1:#0f0c29; --bg2:#302b63; --bg3:#24243e;
+      --panel:rgba(30,30,30,.92);
+      --accent:#00ff99;
+      --accent2:#00cc77;
+      --text:#e0e0e0;
+      --muted:#b0b0b0;
     }
 
-    .background {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: -1;
+    body{
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at center, var(--bg1), var(--bg2), var(--bg3));
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      color:var(--text);
+      overflow:hidden;
+      padding-top:56px; /* space for navbar */
+      box-sizing:border-box;
     }
 
-    .background span {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(45deg, #00ff99, #ff0077);
-      opacity: 0.7;
+    /* Background blobs */
+    .background{
+      position:fixed;
+      inset:0;
+      overflow:hidden;
+      z-index:-1;
+    }
+    .background span{
+      position:absolute;
+      width:50px;height:50px;
+      background: linear-gradient(45deg, var(--accent), #ff0077);
+      opacity:.7;
       filter: blur(8px);
       animation: float 6s infinite ease-in-out;
-      border-radius: 50%;
+      border-radius:50%;
+    }
+    @keyframes float{
+      0%,100%{ transform: translateY(0) translateX(0); }
+      50%{ transform: translateY(-40px) translateX(20px); }
     }
 
-    @keyframes float {
+    /* Navbar */
+    .navbar{
+      position:fixed;
+      top:0; left:0; right:0;
+      display:flex;
+      justify-content:center;
+      background-color:#333333d0;
+      z-index:3;
+    }
+    .navbar-header{
+      width:100%;
+      max-width:1100px;
+      position:relative;
+    }
+    .navbar-toggle{
+      display:none;
+      background:#333;
+      color:#fff;
+      padding:10px 14px;
+      border:none;
+      cursor:pointer;
+      font-size:18px;
+      position:absolute;
+      top:6px;
+      left:10px;
+      border-radius:8px;
+    }
+    .nav-links{
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:flex;
+      justify-content:center;
+      gap:0;
+    }
+    .nav-item a{
+      display:block;
+      color:#fff;
+      padding:14px 18px;
+      text-decoration:none;
+      text-align:center;
+      white-space:nowrap;
+    }
+    .nav-item a:hover{
+      background:#15131f;
+      color:rgb(51,207,103);
+    }
+    .nav-item.dropdown{ position:relative; }
+    .dropdown-content{
+      display:none;
+      position:absolute;
+      left:0;
+      background:#251f1f;
+      box-shadow:0 8px 16px rgba(0,0,0,.2);
+      min-width:180px;
+      z-index:5;
+    }
+    .dropdown-content a{
+      color:#fff;
+      padding:12px 16px;
+      display:block;
+      text-align:left;
+    }
+    .dropdown-content a:hover{ background:#2d2849; }
+    .dropdown:hover .dropdown-content{ display:block; }
 
-      0%,
-      100% {
-        transform: translateY(0) translateX(0);
+    .nav-links .old-site-btn{
+      display:flex;
+      align-items:center;
+      padding:0 10px;
+    }
+    .nav-links .old-site-btn button{
+      border:none;
+      border-radius:10px;
+      padding:8px 12px;
+      cursor:pointer;
+    }
+
+    @media (max-width:768px){
+      .navbar-toggle{ display:block; }
+      .nav-links{
+        flex-direction:column;
+        display:none;
+        background-color:#333333f2;
+        padding-top:48px;
       }
-
-      50% {
-        transform: translateY(-40px) translateX(20px);
-      }
+      .nav-links.show{ display:flex; }
+      .dropdown-content{ position:relative; box-shadow:none; }
     }
 
-    .container {
-      text-align: center;
-      background: rgba(30, 30, 30, 0.9);
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 255, 153, 0.3);
-      padding: 2rem;
-      max-width: 400px;
-      width: 90%;
+    /* Auth card */
+    .container{
+      text-align:center;
+      background:var(--panel);
+      border-radius:15px;
+      box-shadow:0 10px 30px rgba(0,255,153,.3);
+      padding:2rem;
+      max-width:420px;
+      width:min(92vw, 420px);
+      margin:20px;
+    }
+    .logo{
+      font-size:2rem;
+      font-weight:bold;
+      color:var(--accent);
+      margin-bottom:.25rem;
+      text-shadow:0 0 10px var(--accent);
+    }
+    .subtitle{ margin:0 0 1rem; color:var(--muted); }
+
+    button{
+      padding:10px 16px;
+      border:none;
+      border-radius:12px;
+      font-size:16px;
+      cursor:pointer;
+      width:100%;
     }
 
-    .logo {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #00ff99;
-      margin-bottom: 1rem;
-      text-shadow: 0 0 10px #00ff99;
+    #google-signin-btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      background:var(--accent);
+      color:var(--bg3);
+      border-radius:25px;
+      box-shadow:0 5px 10px rgba(0,255,153,.3);
+      transition:background-color .2s ease;
     }
+    #google-signin-btn:hover{ background:var(--accent2); }
+    #google-signin-btn img{ width:20px; height:20px; }
 
-    .button-container {
-      margin-top: 2rem;
+    form{ margin:0; }
+    #email-signin-form input{
+      padding:10px;
+      margin:0 0 10px;
+      width:100%;
+      border:none;
+      border-radius:10px;
+      outline:none;
+      box-sizing:border-box;
     }
-
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 5px 0;
-      width: 100%;
+    #form-submit{
+      background:var(--accent);
+      color:var(--bg3);
     }
+    #form-submit:hover{ background:var(--accent2); }
 
-    #google-signin-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #00ff99;
-      color: #24243e;
-      border: none;
-      border-radius: 25px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      box-shadow: 0 5px 10px rgba(0, 255, 153, 0.3);
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      margin:6px 0 14px;
+      font-size:0.95rem;
+      color:var(--muted);
     }
-
-    #google-signin-btn:hover {
-      background: #00cc77;
+    .remember{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+      cursor:pointer;
+      white-space: nowrap;
     }
+    .remember input{ transform: translateY(5px); accent-color: var(--accent); }
 
-    #google-signin-btn img {
-      width: 20px;
-      margin-right: 10px;
+    .info{
+      margin-top:1rem;
+      font-size:.9rem;
+      color:var(--muted);
+      line-height:1.35;
     }
-
-
-    #email-signin-form input {
-      padding: 10px;
-      margin-bottom: 10px;
-      width: 100%;
-      border: none;
-      border-radius: 5px;
-      outline: none;
+    .info a{
+      color:var(--accent);
+      text-decoration:none;
+      font-weight:bold;
     }
+    .info a:hover{ text-decoration:underline; }
 
-    #email-signin-form button {
-      background: #00ff99;
-      color: #24243e;
+    .toggle{
+      cursor:pointer;
+      color:var(--accent);
+      text-decoration:underline;
+      margin:0.75rem 0 0.25rem;
+      display:inline-block;
     }
-
-    #email-signin-form button:hover {
-      background: #00cc77;
-    }
-
-    .info {
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
-      color: #b0b0b0;
-    }
-
-    .info a {
-      color: #00ff99;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .info a:hover {
-      text-decoration: underline;
-    }
+    .divider{ margin: 1rem 0; color: var(--muted); }
   </style>
-  <style>
-    /* Navigation Bar Styles */
-    .navbar {
-      display: flex;
-      justify-content: center;
-      background-color: #333333d0;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 3;
-    }
 
-    .nav-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-    }
-
-    .nav-item {
-      position: relative;
-    }
-
-    .nav-item a {
-      display: block;
-      color: white;
-      padding: 14px 20px;
-      text-decoration: none;
-      text-align: center;
-    }
-
-    .nav-item a:hover {
-      background-color: #15131f;
-      color: rgb(51, 207, 103);
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      min-width: 160px;
-      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-      z-index: 3;
-    }
-
-    .dropdown-content a {
-      color: black;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-      text-align: left;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #1c1d38;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-      z-index: 3;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #251f1f;
-      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    .dropdown-content a {
-      color: rgb(255, 255, 255);
-      text-decoration: none;
-      padding: 12px 16px;
-      display: block;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #2d2849;
-    }
-
-    .navbar-toggle {
-      display: none;
-      background-color: #333;
-      color: white;
-      padding: 14px 20px;
-      border: none;
-      cursor: pointer;
-      font-size: 18px;
-    }
-
-    /* Responsive styles */
-    @media (max-width: 768px) {
-      .nav-links {
-        flex-direction: column;
-        display: none;
-      }
-
-      .nav-links.show {
-        display: flex;
-      }
-
-      .navbar-toggle {
-        display: block;
-      }
-    }
-  </style>
   <script>
-    function toggleMenu() {
-      const navLinks = document.getElementById("navbarLinks");
-      navLinks.classList.toggle("show");
+    function toggleMenu(){
+      document.getElementById("navbarLinks").classList.toggle("show");
     }
   </script>
+
   <nav class="navbar">
     <div class="navbar-header">
-      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+      <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
       <ul class="nav-links" id="navbarLinks">
         <li class="nav-item"><a href="/">Home</a></li>
         <li class="nav-item"><a href="products">Products</a></li>
         <li class="nav-item"><a href="help">Help</a></li>
         <li class="nav-item"><a href="about">About</a></li>
         <li class="nav-item dropdown">
-          <a href="javascript:void(0)" class="dropbtn">More</a>
+          <a href="javascript:void(0)">More</a>
           <div class="dropdown-content">
             <a href="portfolio">Portfolio</a>
             <a href="contact">Contact</a>
@@ -392,14 +267,139 @@
             <a href="puzzle-squares">Puzzle Squares</a>
           </div>
         </li>
-        <a href="old"><button>Old site</button></a>
+        <li class="old-site-btn"><a href="old"><button type="button">Old site</button></a></li>
       </ul>
     </div>
   </nav>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      setPersistence,
+      browserLocalPersistence,
+      browserSessionPersistence,
+      onAuthStateChanged,
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
+      authDomain: "unlim8ted-db.firebaseapp.com",
+      projectId: "unlim8ted-db",
+      storageBucket: "unlim8ted-db.appspot.com",
+      messagingSenderId: "1059428499872",
+      appId: "1:1059428499872:web:855308683718237de6e4c5",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const redirectToProfile = () => (window.location.href = "https://unlim8ted.com/profile");
+
+    // If already signed in, bounce to profile (optional but nice)
+    onAuthStateChanged(auth, (user) => {
+      if (user) redirectToProfile();
+    });
+
+    async function addUserToFirestore(user){
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
+        email: user.email,
+        name: user.displayName || null,
+        createdAt: serverTimestamp(),
+      }, { merge: true });
+    }
+
+    async function applyPersistenceFromCheckbox(){
+      const remember = document.getElementById("rememberMe")?.checked ?? true;
+      await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+    }
+
+    async function handleGoogleSignIn(){
+      const provider = new GoogleAuthProvider();
+      try{
+        await applyPersistenceFromCheckbox();
+        const result = await signInWithPopup(auth, provider);
+        await addUserToFirestore(result.user);
+        redirectToProfile();
+      }catch(err){
+        console.error("Google Sign-In error:", err);
+        alert("Failed to sign in with Google.");
+      }
+    }
+
+    async function handleEmailSignIn(email, password){
+      await applyPersistenceFromCheckbox();
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      await addUserToFirestore(userCredential.user);
+      redirectToProfile();
+    }
+
+    async function handleAccountCreation(email, password){
+      await applyPersistenceFromCheckbox();
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await addUserToFirestore(userCredential.user);
+      redirectToProfile();
+    }
+
+    let isCreateMode = false;
+
+    function setMode(createMode){
+      isCreateMode = createMode;
+
+      document.getElementById("form-mode").textContent = createMode ? "Create Account" : "Sign In";
+      document.getElementById("form-submit").textContent = createMode ? "Create Account" : "Sign In";
+      document.getElementById("toggle-text").textContent = createMode
+        ? "Already have an account? Sign In."
+        : "Don't have an account? Create one.";
+    }
+
+    function toggleMode(){
+      setMode(!isCreateMode);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("google-signin-btn").addEventListener("click", handleGoogleSignIn);
+      document.getElementById("toggle-text").addEventListener("click", toggleMode);
+
+      // Use the FORM submit event (more reliable than button click)
+      document.getElementById("email-signin-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        try{
+          if (isCreateMode) {
+            await handleAccountCreation(email, password);
+          } else {
+            await handleEmailSignIn(email, password);
+          }
+        }catch(err){
+          console.error("Auth error:", err);
+          alert(isCreateMode
+            ? "Failed to create account. Try again."
+            : "Sign-in failed. Check your email and password."
+          );
+        }
+      });
+
+      setMode(false);
+
+      // Footer year
+      const y = new Date().getFullYear();
+      document.getElementById("footer-text").innerHTML =
+        `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+    });
+  </script>
 </head>
 
 <body>
-  <!-- Animated background -->
   <div class="background">
     <span style="top: 20%; left: 10%; animation-delay: 0s;"></span>
     <span style="top: 40%; left: 70%; animation-delay: 2s;"></span>
@@ -409,39 +409,40 @@
   </div>
 
   <div class="container">
-    <div class="logo">Sign In</div>
-    <p>Sign in or create an account to continue.</p>
-    <div id="form-mode">Sign In</div>
-    <div class="button-container">
-      <button id="google-signin-btn">
-        <img
-          src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA"
-          alt="Google Logo">
-        Sign in with Google
-      </button>
-      <p style="margin: 1rem 0;">Or</p>
-      <form id="email-signin-form">
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button id="form-submit" type="submit">Sign In</button>
-        <div class="info">
-          <p id="toggle-text" style="cursor: pointer; color: #00ff99; text-decoration: underline;">
-            Don't have an account? Create one.
-          </p>
-          <p>An account is needed to comment, rate products, and add things to your cart, but it is not required.</p>
-          <p>If you'd prefer not to create an account, you can visit our <a href="#products">Products</a> or <a
-              href="#about">About Us</a> sections.</p>
-              <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
-            <script>document.addEventListener("DOMContentLoaded", function () {
-                const currentYear = new Date().getFullYear();
-                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
-                document.getElementById("footer-text").innerHTML = footerText;
-            });
-            </script>
-        </div>
-      </form>
-    </div>
+    <div class="logo">Unlim8ted</div>
+    <p class="subtitle">Sign in or create an account to continue.</p>
+
+    <div id="form-mode" style="font-weight:700; margin-bottom: 10px;">Sign In</div>
+
+    <button id="google-signin-btn" type="button">
+      <img
+        src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA"
+        alt="Google Logo" />
+      Sign in with Google
+    </button>
+
+    <div class="divider">Or</div>
+
+    <form id="email-signin-form">
+      <input type="email" id="email" placeholder="Email" autocomplete="email" required />
+      <input type="password" id="password" placeholder="Password" autocomplete="current-password" required />
+
+      <div class="row">
+        <label class="remember" for="rememberMe">
+          <input id="rememberMe" type="checkbox" checked />
+          Remember me
+        </label>
+      </div>
+
+      <button id="form-submit" type="submit">Sign In</button>
+
+      <div class="info">
+        <span id="toggle-text" class="toggle">Don't have an account? Create one.</span>
+        <p>An account is needed to comment, rate products, and add things to your cart, but it is not required.</p>
+        <p>If you'd prefer not to create an account, you can visit our <a href="products">Products</a> or <a href="about">About Us</a> pages.</p>
+        <p id="footer-text"></p>
+      </div>
+    </form>
   </div>
 </body>
-
 </html>

@@ -1,539 +1,566 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Unlim8ted - Cart</title>
   <meta name="description" content="View your Unlim8ted cart, powered by Unlim8ted Studio Productions" />
-  <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
-  <style media="screen" type="text/css">
-    .layer1_class {
-      position: absolute;
-      z-index: 1;
-      top: 100px;
-      left: 0px;
-      visibility: visible;
-    }
-
-    .layer2_class {
-      position: absolute;
-      z-index: 2;
-      top: 10px;
-      left: 10px;
-      visibility: hidden;
-    }
-
-    .loader {
-      position: fixed;
-      background-color: black;
-      opacity: 1;
-      height: 100%;
-      width: 100%;
-      top: 0;
-      left: 0%;
-      z-index: 999999988;
-      pointer-events: none;
-    }
-
-    .loaderr-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      /* To stack spinner and text vertically */
-      height: 100vh;
-      /* Full viewport height to ensure vertical centering */
-    }
-
-    .loaderr {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 8px solid transparent;
-      border-top: 8px solid #3498db;
-      border-right: 8px solid #e74c3c;
-      border-bottom: 8px solid #f1c40f;
-      border-left: 8px solid #9b59b6;
-      -webkit-animation: spin 1.5s linear infinite;
-      animation: spin 1.5s linear infinite;
-      box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
-      position: relative;
-    }
-
-    .loaderr:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 8px solid transparent;
-      border-top: 8px solid rgba(52, 152, 219, 0.7);
-      border-right: 8px solid rgba(231, 76, 60, 0.7);
-      border-bottom: 8px solid rgba(241, 196, 15, 0.7);
-      border-left: 8px solid rgba(155, 89, 182, 0.7);
-      -webkit-animation: spin-reverse 1.5s linear infinite;
-      animation: spin-reverse 1.5s linear infinite;
-    }
-
-    @-webkit-keyframes spin {
-      0% {
-        -webkit-transform: rotate(0deg);
-      }
-
-      100% {
-        -webkit-transform: rotate(360deg);
-      }
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    @-webkit-keyframes spin-reverse {
-      0% {
-        -webkit-transform: rotate(360deg);
-      }
-
-      100% {
-        -webkit-transform: rotate(0deg);
-      }
-    }
-
-    @keyframes spin-reverse {
-      0% {
-        transform: rotate(360deg);
-      }
-
-      100% {
-        transform: rotate(0deg);
-      }
-    }
-
-    /* Loading text animation */
-    .loading-text {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #3498db;
-      font-family: Arial, sans-serif;
-      letter-spacing: 2px;
-      animation: pulse 1.5s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-      0% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.5;
-      }
-
-      100% {
-        opacity: 1;
-      }
-    }
-
-
-    @-webkit-keyframes load-out {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0;
-      }
-    }
-
-    @keyframes load-out {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0;
-      }
-    }
-  </style>
-  <!-- Styles for the No-JavaScript message -->
-  <style>
-    .no-js-message {
-      background: #2c4762;
-      color: red;
-      font-size: 20px;
-      text-align: center;
-      padding: 20px;
-      z-index: 999999999999999999999999999999999999999999999;
-      position: fixed;
-      width: 100%;
-      top: 0;
-    }
-  </style>
-
-  <!-- No-JavaScript message -->
-  <noscript>
-    <div class="no-js-message">
-      Please enable JavaScript to use this website properly.
-    </div>
-  </noscript>
-  <div class="loader">
-    <div class="loaderr-container">
-      <div class="loaderr"></div>
-      <div class="loading-text">Loading...</div>
-    </div>
-  </div>
-
-  </div>
-  <script>
-    // This function will execute after the full page has finished loading
-    window.onload = function () {
-      // Trigger fade-out animation for the loader
-      document.querySelector('.loaderr').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-      document.querySelector('.loaderr').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
-
-      document.querySelector('.loading-text').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-      document.querySelector('.loading-text').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
-
-      document.querySelector('.loader').style.animation = 'load-out 4s forwards';
-      document.querySelector('.loader').style.webkitAnimation = 'load-out 4s forwards';
-
-    }
-  </script>
-  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 0;
-      background-color: #f0f0f0;
-    }
-
-    header {
-      background-color: #333;
-      color: #fff;
-      padding: 1rem;
-      text-align: center;
-      position: relative;
-    }
-
-    header .back-btn,
-    header .cart-btn {
-      position: absolute;
-      top: 30px;
-      color: white;
-      text-decoration: none;
-      font-size: larger;
-    }
-
-    header .back-btn {
-      left: 20px;
-    }
-
-    header .cart-btn {
-      right: 20px;
-    }
-
-    main {
-      padding: 2rem;
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      background-color: #fff;
-      padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      margin-bottom: 1rem;
-    }
-
-    .cart-item h3,
-    .cart-item p {
-      margin: 0;
-    }
-
-    .cart-item .remove-btn {
-      background-color: #f44336;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .cart-item .remove-btn:hover {
-      background-color: #d32f2f;
-    }
-
-    footer {
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      padding: 1rem;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-    }
-
-    /* Popup notification styles */
-    .added-to-cart-notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: #4caf50;
-      color: white;
-      padding: 1rem;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      display: none;
-      z-index: 1000;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    .slideIn {
-      animation: slideIn 0.5s forwards;
-    }
-  </style>
   <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+
+  <!-- Components -->
+  <script type="module" src="/components/site-navbar.js"></script>
+  <script type="module" src="/components/site-loader.js"></script>
+
   <style>
-    /* logo */
-    .logo {
-      position: absolute;
-      z-index: 1;
-      top: 5%;
-      /* Adjust top position relative to viewport height */
-      left: 5%;
-      /* Adjust left position relative to viewport width */
-      display: block;
+    :root{
+      --bg: #0e0b16;
+      --panel: rgba(20,18,30,.88);
+      --panel2: rgba(28,26,42,.92);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.65);
+      --stroke: rgba(255,255,255,.10);
+      --accent: #00ff99;
+      --danger: #ff4d4d;
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --r: 18px;
     }
 
-    .logo img {
-      height: 10vw;
-      /* Adjust height relative to viewport width */
-      max-height: 140px;
-      /* Set a maximum height to prevent the logo from getting too large on larger screens */
-      width: auto;
-      /* Maintain aspect ratio */
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0,255,153,.12), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(255,0,119,.10), transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(52,152,219,.10), transparent 45%),
+        #07060b;
+      padding-top: 56px; /* room for fixed navbar */
+      min-height:100vh;
     }
 
-    /* Media query for small devices */
-    @media (max-width: 600px) {
-      .logo img {
-        height: 20vw;
-        /* Larger logo for smaller devices */
-      }
+    .wrap{
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 16px 60px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 18px;
+    }
+
+    h1{
+      margin:0;
+      font-size: 28px;
+      letter-spacing: .2px;
+    }
+    .sub{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.6fr .9fr;
+      gap: 16px;
+      align-items:start;
+    }
+
+    .card{
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .list{
+      padding: 14px;
+    }
+
+    .empty{
+      padding: 18px;
+      color: var(--muted);
+    }
+
+    .signedout{
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      color: var(--muted);
+    }
+
+    .signedout a{
+      color: var(--accent);
+      text-decoration:none;
+      font-weight:700;
+    }
+
+    /* Item row */
+    .item{
+      display:flex;
+      gap: 14px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+      margin-bottom: 10px;
+    }
+
+    .thumb{
+      width: 90px;
+      height: 90px;
+      border-radius: 16px;
+      overflow:hidden;
+      flex: 0 0 auto;
+      background: rgba(255,255,255,.07);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .thumb img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    .meta{
+      flex:1;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .title{
+      font-size: 15px;
+      font-weight: 800;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      letter-spacing: .2px;
+    }
+
+    .row2{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .price{
+      color: rgba(255,255,255,.85);
+      font-weight: 700;
+    }
+
+    /* Qty stepper */
+    .qty{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 999px;
+      padding: 6px 10px;
+    }
+
+    .qty button{
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: none;
+      cursor:pointer;
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      font-size: 18px;
+      line-height: 0;
+    }
+    .qty button:hover{
+      background: rgba(0,255,153,.16);
+      color: var(--accent);
+    }
+
+    .qty input{
+      width: 42px;
+      border:none;
+      background: transparent;
+      color: var(--text);
+      text-align:center;
+      outline:none;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .actions{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+    }
+
+    .iconbtn{
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.85);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .iconbtn:hover{
+      border-color: rgba(255,77,77,.35);
+      background: rgba(255,77,77,.12);
+      color: var(--danger);
+    }
+
+    /* Summary */
+    .summary{
+      padding: 16px;
+      position: sticky;
+      top: 76px;
+    }
+
+    .sum-title{
+      font-weight: 900;
+      letter-spacing:.2px;
+      margin-bottom: 10px;
+    }
+
+    .sumline{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding: 10px 0;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      font-size: 14px;
+    }
+    .sumline strong{
+      color: rgba(255,255,255,.92);
+    }
+
+    .total{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding: 14px 0 6px;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .cta{
+      margin-top: 12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .btn{
+      border:none;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-weight: 900;
+      cursor:pointer;
+      text-decoration:none;
+      text-align:center;
+      display:block;
+    }
+
+    .btn-primary{
+      background: var(--accent);
+      color: #0b1020;
+      box-shadow: 0 10px 22px rgba(0,255,153,.18);
+    }
+    .btn-primary:hover{ filter: brightness(.95); }
+
+    .btn-ghost{
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .btn-ghost:hover{ background: rgba(255,255,255,.08); }
+
+    .foot{
+      margin-top: 20px;
+      text-align:center;
+      color: rgba(255,255,255,.6);
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px){
+      .grid{ grid-template-columns: 1fr; }
+      .summary{ position: static; }
     }
   </style>
-
 </head>
 
 <body>
-  <div id="inner-wrap">
-    <div class="logo" style="z-index: 2;">
-      <a href="/">
-        <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
-      </a>
-    </div>
-    <style>
-      .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-      }
+  <site-loader text="Loading..."></site-loader>
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
 
-      .dropdown:hover .dropdown-content {
-        display: block;
-      }
-
-      .dropdown-content a {
-        color: black;
-        text-decoration: none;
-        padding: 12px 16px;
-        display: block;
-      }
-
-      .dropdown-content a:hover {
-        background-color: #ddd;
-      }
-
-      .navbar-toggle {
-        display: none;
-        background-color: #333;
-        color: white;
-        padding: 14px 20px;
-        border: none;
-        cursor: pointer;
-        font-size: 18px;
-      }
-
-      /* Responsive styles */
-      @media (max-width: 768px) {
-        .nav-links {
-          flex-direction: column;
-          display: none;
-        }
-
-        .nav-links.show {
-          display: flex;
-        }
-
-        .navbar-toggle {
-          display: block;
-        }
-      }
-    </style>
-    <script>
-      function toggleMenu() {
-        const navLinks = document.getElementById("navbarLinks");
-        navLinks.classList.toggle("show");
-      }
-    </script>
-    <nav class="navbar">
-      <div class="navbar-header">
-        <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-        <ul class="nav-links" id="navbarLinks">
-          <li class="nav-item"><a href="/">Home</a></li>
-          <li class="nav-item"><a href="products">Products</a></li>
-          <li class="nav-item"><a href="help">Help</a></li>
-          <li class="nav-item"><a href="about">About</a></li>
-          <li class="nav-item dropdown">
-            <a href="javascript:void(0)" class="dropbtn">More</a>
-            <div class="dropdown-content">
-              <a href="portfolio">Portfolio</a>
-              <a href="contact">Contact</a>
-              <a href="blog">Blog</a>
-              <a href="live-chat">Live Chat</a>
-              <a href="live-game">Live Chat and Game</a>
-              <a href="puzzle-squares">Puzzle Squares</a>
-            </div>
-          </li>
-          <a href="old"><button>Old site</button></a>
-        </ul>
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <h1>Your Cart</h1>
+        <p class="sub">Everything you’ve added lives here.</p>
       </div>
-    </nav>
-    <header>
-      <h1>Cart</h1>
-      <a class="back-btn" href="#" onclick="history.back();">Go Back</a>
-      <a class="cart-btn" href="cart" style="font-size: larger; position: absolute; top: 30px">🛍️</a>
-    </header>
-
-    <main>
-      <div id="cart-items"></div>
-      <p id="cart-empty-message">Your cart is empty.</p>
-    </main>
-
-    <div id="added-to-cart-notification" class="added-to-cart-notification">
-      Added to cart!
     </div>
 
-    <script>
+    <div id="signedOut" class="signedout" style="display:none;">
+      You’re not signed in. <a href="https://unlim8ted.com/sign-in">Sign in</a> to save your cart across devices.
+    </div>
 
-      // Set cart to cookies
-      function setCartToCookies(cart) {
-        localStorage.setItem('unlim8ted-cart', JSON.stringify(cart));
+    <div class="grid">
+      <div class="card list">
+        <div id="cartList"></div>
+        <div id="emptyState" class="empty" style="display:none;">Your cart is empty.</div>
+      </div>
+
+      <div class="card summary">
+        <div class="sum-title">Order Summary</div>
+
+        <div class="sumline">
+          <span>Items</span>
+          <strong><span id="itemCount">0</span></strong>
+        </div>
+
+        <div class="sumline">
+          <span>Subtotal</span>
+          <strong>$<span id="subtotal">0.00</span></strong>
+        </div>
+
+        <div class="sumline" style="border-bottom:none;">
+          <span>Estimated tax</span>
+          <strong style="color:rgba(255,255,255,.75);">—</strong>
+        </div>
+
+        <div class="total">
+          <span>Total</span>
+          <span>$<span id="total">0.00</span></span>
+        </div>
+
+        <div class="cta">
+          <a class="btn btn-primary" href="/checkout">Checkout</a>
+          <a class="btn btn-ghost" href="/products">Continue shopping</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span id="footer-text"></span>
+    </div>
+  </div>
+
+  <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import {
+      collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+    // ✅ You said firebase init is under components:
+    import { getFirebase } from "/components/firebase-init.js";
+
+    const { auth, db } = getFirebase();
+
+    const signedOut = document.getElementById("signedOut");
+    const cartList = document.getElementById("cartList");
+    const emptyState = document.getElementById("emptyState");
+
+    const itemCountEl = document.getElementById("itemCount");
+    const subtotalEl = document.getElementById("subtotal");
+    const totalEl = document.getElementById("total");
+
+    let unsub = null;
+    let wired = false;
+
+    const money = (n) => (Math.round((Number(n)||0)*100)/100).toFixed(2);
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, (c) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    function render(items){
+      cartList.innerHTML = "";
+
+      const count = items.reduce((s,it)=> s + (Number(it.qty)||1), 0);
+      const subtotal = items.reduce((s,it)=> s + (Number(it.price)||0) * (Number(it.qty)||1), 0);
+
+      itemCountEl.textContent = String(count);
+      subtotalEl.textContent = money(subtotal);
+      totalEl.textContent = money(subtotal); // (add shipping/tax later)
+
+      if (!items.length){
+        emptyState.style.display = "block";
+        return;
       }
+      emptyState.style.display = "none";
 
-      // Function to display the cart
-      function displayCart() {
-        const cartItemsContainer = document.getElementById('cart-items');
-        const cartEmptyMessage = document.getElementById('cart-empty-message');
-        const cart = getCookie("unlim8ted-cart")
-        cartItemsContainer.innerHTML = '';
+      for (const it of items){
+        const qty = Math.max(1, Number(it.qty)||1);
+        const price = Number(it.price)||0;
 
-        if (cart.length > 0) {
-          cartEmptyMessage.style.display = 'none';
-          cart.forEach((item, index) => {
-            const cartItem = document.createElement('div');
-            cartItem.className = 'cart-item';
-            cartItem.innerHTML = `
-                        <div>
-                            <img src=${item.image}></img>
-                            <h3>${item.name}</h3>
-                            <p>$${item.price}</p>
-                        </div>
-                        <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
-                    `;
-            cartItemsContainer.appendChild(cartItem);
-          });
-        } else {
-          cartEmptyMessage.style.display = 'block';
+        const row = document.createElement("div");
+        row.className = "item";
+        row.innerHTML = `
+          <div class="thumb">
+            ${it.image ? `<img src="${escapeHtml(it.image)}" alt="">` : "No image"}
+          </div>
+
+          <div class="meta">
+            <div class="title">${escapeHtml(it.title || it.name || "Item")}</div>
+
+            <div class="row2">
+              <div class="price">$${money(price)}</div>
+
+              <div class="qty" aria-label="Quantity">
+                <button type="button" data-dec="${it.id}" aria-label="Decrease quantity">−</button>
+                <input type="text" inputmode="numeric" value="${qty}" data-qty="${it.id}" aria-label="Quantity value">
+                <button type="button" data-inc="${it.id}" aria-label="Increase quantity">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="iconbtn" type="button" data-remove="${it.id}" title="Remove" aria-label="Remove">
+              🗑️
+            </button>
+          </div>
+        `;
+        cartList.appendChild(row);
+      }
+    }
+
+    async function setQty(uid, id, qty){
+      qty = Math.max(1, qty|0);
+      await updateDoc(doc(db, "users", uid, "cartItems", id), {
+        qty,
+        updatedAt: serverTimestamp()
+      });
+    }
+
+    async function removeItem(uid, id){
+      await deleteDoc(doc(db, "users", uid, "cartItems", id));
+    }
+
+    function wireEvents(uid){
+      if (wired) return;
+      wired = true;
+
+      cartList.addEventListener("click", async (e) => {
+        const rm = e.target.closest("[data-remove]");
+        if (rm){
+          const id = rm.getAttribute("data-remove");
+          try { await removeItem(uid, id); } catch (err){ console.error(err); }
+          return;
         }
-      }
 
-      function getCartFromCookies() {
-        const cartJSON = getCookie('unlim8ted-cart');
-        if (cartJSON) {
-          return cartJSON;
+        const inc = e.target.closest("[data-inc]");
+        if (inc){
+          const id = inc.getAttribute("data-inc");
+          const input = cartList.querySelector(`[data-qty="${CSS.escape(id)}"]`);
+          const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
+          input.value = String(current + 1);
+          try { await setQty(uid, id, current + 1); } catch (err){ console.error(err); }
+          return;
         }
-        return null;
-      }
-      function getCookie(key) {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          let cookie = cookies[i].trim();
-          // Check if the cookie starts with the desired key
-          if (cookie.startsWith(key + '=')) {
-            return cookie.substring((key + '=').length, cookie.length);
+
+        const dec = e.target.closest("[data-dec]");
+        if (dec){
+          const id = dec.getAttribute("data-dec");
+          const input = cartList.querySelector(`[data-qty="${CSS.escape(id)}"]`);
+          const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
+          const next = Math.max(1, current - 1);
+          input.value = String(next);
+          try { await setQty(uid, id, next); } catch (err){ console.error(err); }
+          return;
+        }
+      });
+
+      // Direct typing
+      let t = null;
+      cartList.addEventListener("input", (e) => {
+        const inp = e.target.closest("[data-qty]");
+        if (!inp) return;
+
+        const id = inp.getAttribute("data-qty");
+        let qty = parseInt(inp.value, 10);
+        if (!Number.isFinite(qty) || qty < 1) qty = 1;
+
+        clearTimeout(t);
+        t = setTimeout(async () => {
+          try { await setQty(uid, id, qty); } catch (err){ console.error(err); }
+        }, 300);
+      });
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (unsub){ unsub(); unsub = null; }
+      wired = false;
+
+      if (!user){
+        signedOut.style.display = "block";
+
+        // optional logged-out local cart view
+        let items = [];
+        try{
+          const raw = localStorage.getItem("unlim8ted-cart");
+          const arr = raw ? JSON.parse(raw) : [];
+          if (Array.isArray(arr)){
+            items = arr.map((it,i)=>({
+              id: it.id || `local-${i}`,
+              title: it.title || it.name || "Item",
+              price: it.price || 0,
+              qty: it.qty || 1,
+              image: it.image || null
+            }));
           }
-        }
-        return null;
+        }catch{}
+        render(items);
+        return;
       }
 
-      // Function to remove item from cart
-      function removeFromCart(index) {
-        let cart = getCartFromCookies();
-        cart.splice(index, 1);
-        setCartToCookies(cart);
-        displayCart();
-      }
+      signedOut.style.display = "none";
 
-      // Function to show the added-to-cart notification
-      function showAddedToCartNotification() {
-        const notification = document.getElementById('added-to-cart-notification');
-        notification.classList.add('slideIn');
-        notification.style.display = 'block';
-        setTimeout(() => {
-          notification.style.display = 'none';
-          notification.classList.remove('slideIn');
-        }, 2000);
-      }
+      const ref = collection(db, "users", user.uid, "cartItems");
+      unsub = onSnapshot(ref, (snap) => {
+        const items = [];
+        snap.forEach(d => {
+          const data = d.data() || {};
+          items.push({
+            id: d.id,
+            title: data.title || data.name || data.productName || d.id,
+            price: data.price ?? 0,
+            qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
+            image: data.image ?? data.imageUrl ?? null
+          });
+        });
+        render(items);
+      });
 
-      // Display cart on page load
-      document.addEventListener('DOMContentLoaded', displayCart);
-    </script>
+      wireEvents(user.uid);
+    });
+
+    // Footer year
+    const y = new Date().getFullYear();
+    document.getElementById("footer-text").innerHTML =
+      `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+  </script>
 </body>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-  <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
-            <script>document.addEventListener("DOMContentLoaded", function () {
-                const currentYear = new Date().getFullYear();
-                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
-                document.getElementById("footer-text").innerHTML = footerText;
-            });
-            </script>
-</div>
-</div>
-
 </html>
