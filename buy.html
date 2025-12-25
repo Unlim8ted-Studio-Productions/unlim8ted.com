@@ -1,625 +1,903 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Unlim8ted Studio Productions buy page." />
-  <title>Buy Now</title>
-  <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
-  <style media="screen" type="text/css">
-    .layer1_class {
-      position: absolute;
-      z-index: 1;
-      top: 100px;
-      left: 0px;
-      visibility: visible;
-    }
+  <title>Unlim8ted — Checkout</title>
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
 
-    .layer2_class {
-      position: absolute;
-      z-index: 2;
-      top: 10px;
-      left: 10px;
-      visibility: hidden;
-    }
-
-    .loader {
-      position: fixed;
-      background-color: black;
-      opacity: 1;
-      height: 100%;
-      width: 100%;
-      top: 0;
-      left: 0%;
-      z-index: 999999988;
-      pointer-events: none;
-    }
-
-    .loaderr-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      /* To stack spinner and text vertically */
-      height: 100vh;
-      /* Full viewport height to ensure vertical centering */
-    }
-
-    .loaderr {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 8px solid transparent;
-      border-top: 8px solid #3498db;
-      border-right: 8px solid #e74c3c;
-      border-bottom: 8px solid #f1c40f;
-      border-left: 8px solid #9b59b6;
-      -webkit-animation: spin 1.5s linear infinite;
-      animation: spin 1.5s linear infinite;
-      box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
-      position: relative;
-    }
-
-    .loaderr:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 8px solid transparent;
-      border-top: 8px solid rgba(52, 152, 219, 0.7);
-      border-right: 8px solid rgba(231, 76, 60, 0.7);
-      border-bottom: 8px solid rgba(241, 196, 15, 0.7);
-      border-left: 8px solid rgba(155, 89, 182, 0.7);
-      -webkit-animation: spin-reverse 1.5s linear infinite;
-      animation: spin-reverse 1.5s linear infinite;
-    }
-
-    @-webkit-keyframes spin {
-      0% {
-        -webkit-transform: rotate(0deg);
-      }
-
-      100% {
-        -webkit-transform: rotate(360deg);
-      }
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    @-webkit-keyframes spin-reverse {
-      0% {
-        -webkit-transform: rotate(360deg);
-      }
-
-      100% {
-        -webkit-transform: rotate(0deg);
-      }
-    }
-
-    @keyframes spin-reverse {
-      0% {
-        transform: rotate(360deg);
-      }
-
-      100% {
-        transform: rotate(0deg);
-      }
-    }
-
-    /* Loading text animation */
-    .loading-text {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #3498db;
-      font-family: Arial, sans-serif;
-      letter-spacing: 2px;
-      animation: pulse 1.5s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-      0% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.5;
-      }
-
-      100% {
-        opacity: 1;
-      }
-    }
-
-
-    @-webkit-keyframes load-out {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0;
-      }
-    }
-
-    @keyframes load-out {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0;
-      }
-    }
-  </style>
-  <!-- Styles for the No-JavaScript message -->
-  <style>
-    .no-js-message {
-      background: #2c4762;
-      color: red;
-      font-size: 20px;
-      text-align: center;
-      padding: 20px;
-      z-index: 999999999999999999999999999999999999999999999;
-      position: fixed;
-      width: 100%;
-      top: 0;
-    }
-  </style>
-
-  <!-- No-JavaScript message -->
-  <noscript>
-    <div class="no-js-message">
-      Please enable JavaScript to use this website properly.
-    </div>
-  </noscript>
-  <div class="loader">
-    <div class="loaderr-container">
-      <div class="loaderr"></div>
-      <div class="loading-text">Loading...</div>
-    </div>
-  </div>
-
-  </div>
-  <script>
-    // This function will execute after the full page has finished loading
-    window.onload = function () {
-      // Trigger fade-out animation for the loader
-      document.querySelector('.loaderr').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-      document.querySelector('.loaderr').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
-
-      document.querySelector('.loading-text').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-      document.querySelector('.loading-text').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
-
-      document.querySelector('.loader').style.animation = 'load-out 4s forwards';
-      document.querySelector('.loader').style.webkitAnimation = 'load-out 4s forwards';
-
-    }
-  </script>
-  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-  <style>
-    /* Navigation Bar Styles */
-    .navbar {
-      display: flex;
-      justify-content: center;
-      background-color: #333333d0;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 3;
-    }
-
-    .nav-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-    }
-
-    .nav-item {
-      position: relative;
-    }
-
-    .nav-item a {
-      display: block;
-      color: white;
-      padding: 14px 20px;
-      text-decoration: none;
-      text-align: center;
-    }
-
-    .nav-item a:hover {
-      background-color: #15131f;
-      color: rgb(51, 207, 103);
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      min-width: 160px;
-      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-      z-index: 3;
-    }
-
-    .dropdown-content a {
-      color: black;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-      text-align: left;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #1c1d38;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-      z-index: 3;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #251f1f;
-      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    .dropdown-content a {
-      color: rgb(255, 255, 255);
-      text-decoration: none;
-      padding: 12px 16px;
-      display: block;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #2d2849;
-    }
-
-    .navbar-toggle {
-      display: none;
-      background-color: #333;
-      color: white;
-      padding: 14px 20px;
-      border: none;
-      cursor: pointer;
-      font-size: 18px;
-    }
-
-    /* Responsive styles */
-    @media (max-width: 768px) {
-      .nav-links {
-        flex-direction: column;
-        display: none;
-      }
-
-      .nav-links.show {
-        display: flex;
-      }
-
-      .navbar-toggle {
-        display: block;
-      }
-    }
-  </style>
-  <script>
-    function toggleMenu() {
-      const navLinks = document.getElementById("navbarLinks");
-      navLinks.classList.toggle("show");
-    }
-  </script>
-  <nav class="navbar">
-    <div class="navbar-header">
-      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-      <ul class="nav-links" id="navbarLinks">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="products">Products</a></li>
-        <li class="nav-item"><a href="help">Help</a></li>
-        <li class="nav-item"><a href="about">About</a></li>
-        <li class="nav-item dropdown">
-          <a href="javascript:void(0)" class="dropbtn">More</a>
-          <div class="dropdown-content">
-            <a href="portfolio">Portfolio</a>
-            <a href="contact">Contact</a>
-            <a href="blog">Blog</a>
-            <a href="live-chat">Live Chat</a>
-            <a href="live-game">Live Chat and Game</a>
-            <a href="puzzle-squares">Puzzle Squares</a>
-          </div>
-        </li>
-        <a href="old"><button>Old site</button></a>
-      </ul>
-    </div>
-  </nav>
   <link rel="stylesheet" href="styles.css">
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 0;
-      background-color: #f0f0f0;
+    :root{
+      --bg:#07070b;
+      --panel:#0f1018;
+      --panel2:#121427;
+      --text:#e9e9f2;
+      --muted:rgba(233,233,242,.70);
+      --line:rgba(255,255,255,.08);
+      --brand:#00ff99;
+      --brand2:#00b3e0;
+      --warn:#ffcc66;
+      --danger:#ff4d6d;
+      --shadow: 0 16px 50px rgba(0,0,0,.55);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", sans-serif;
+      background:
+        radial-gradient(1200px 800px at 15% 5%, rgba(0,255,153,.12), transparent 60%),
+        radial-gradient(1200px 800px at 85% 15%, rgba(0,179,224,.10), transparent 55%),
+        radial-gradient(900px 600px at 50% 100%, rgba(255,204,102,.08), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      min-height:100vh;
     }
 
-    header {
-      background-color: #333;
-      color: #fff;
-      padding: 1rem;
-      text-align: center;
+    .page{
+      padding-top: 76px;
+      padding-bottom: 70px;
     }
 
-    main {
-      padding: 2rem;
-      display: flex;
-      justify-content: center;
+    .wrap{
+      width:min(1100px, 92vw);
+      margin: 0 auto;
     }
 
-    .buy-section {
-      background-color: #fff;
-      padding: 2rem;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-      width: 100%;
-      max-width: 600px;
+    .header{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+      margin: 26px 0 18px;
+    }
+    .title{
+      margin:0;
+      font-size: clamp(22px, 3.2vw, 34px);
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      margin: 6px 0 0;
+      color:var(--muted);
+      max-width: 64ch;
+      line-height:1.5;
+      font-size: 14px;
+    }
+    .headerActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
 
-    .buy-section h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
+    .btn{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight: 800;
+      letter-spacing:.2px;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.06); }
+    .btn:active{ transform: translateY(0px); }
+    .btn.primary{
+      border-color: rgba(0,255,153,.35);
+      background: linear-gradient(135deg, rgba(0,255,153,.18), rgba(0,179,224,.14));
+      box-shadow: 0 0 0 rgba(0,0,0,0);
+    }
+    .btn.primary:hover{ border-color: rgba(0,255,153,.55); }
+    .btn.danger{
+      border-color: rgba(255,77,109,.35);
+      background: rgba(255,77,109,.12);
     }
 
-    .buy-section label {
-      display: block;
-      margin-bottom: 0.5rem;
+    .grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 16px;
+      align-items:start;
+    }
+    @media (max-width: 920px){
+      .grid{ grid-template-columns: 1fr; }
     }
 
-    .buy-section input[type="number"],
-    .buy-section input[type="text"] {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 5px;
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .cardHead{
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.02);
+    }
+    .cardHead h2{
+      margin:0;
+      font-size: 16px;
+      letter-spacing:.2px;
+    }
+    .cardHead p{
+      margin: 6px 0 0;
+      color:var(--muted);
+      font-size: 13px;
+      line-height:1.4;
+    }
+    .cardBody{ padding: 16px; }
+
+    .itemRow{
+      display:flex;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.02);
+      align-items:center;
+    }
+    .itemRow + .itemRow{ margin-top: 10px; }
+    .thumb{
+      width: 74px;
+      height: 74px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      overflow:hidden;
+      flex: 0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .thumb .fallback{
+      color: rgba(233,233,242,.6);
+      font-weight:900;
+      letter-spacing:.6px;
     }
 
-    .buy-section button,
-    #buy-now-link {
-      display: inline-block;
-      background-color: #007bff;
-      color: #fff;
-      padding: 0.75rem 1.5rem;
-      text-decoration: none;
-      border-radius: 5px;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+    .info{
+      flex:1;
+      min-width: 0;
+    }
+    .info .name{
+      font-weight: 900;
+      margin: 0 0 4px;
+      font-size: 14px;
+      line-height:1.25;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .info .meta{
+      margin:0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height:1.4;
     }
 
-    .buy-section button:hover,
-    #buy-now-link:hover {
-      background-color: #0056b3;
+    .right{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+    .price{
+      font-weight: 900;
+      color: var(--brand);
+      white-space:nowrap;
+    }
+    .qty{
+      display:flex;
+      align-items:center;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      overflow:hidden;
+      background: rgba(255,255,255,.02);
+    }
+    .qty button{
+      border:0;
+      background: transparent;
+      color: var(--text);
+      padding: 8px 10px;
+      cursor:pointer;
+      font-weight: 900;
+    }
+    .qty span{
+      padding: 0 10px;
+      min-width: 24px;
+      text-align:center;
+      color: var(--muted);
+      font-weight: 900;
     }
 
-    .hidden {
-      display: none;
+    .divider{
+      height: 1px;
+      background: var(--line);
+      margin: 14px 0;
     }
 
-    img {
-      max-width: 100%;
-      /* Ensure images are not too big */
-      height: auto;
-      border-radius: 5px;
+    .summaryLine{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding: 8px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .summaryLine strong{
+      color: var(--text);
+      font-size: 13px;
+    }
+    .total{
+      font-size: 18px !important;
+      color: var(--text) !important;
     }
 
-    video {
-      max-width: 100%;
-      /* Ensure videos are not too big */
-      height: auto;
-      margin-top: 1rem;
-      border-radius: 5px;
+    .field{
+      display:grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    label{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+      letter-spacing:.2px;
+    }
+    input, textarea{
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      outline: none;
+    }
+    input::placeholder, textarea::placeholder{
+      color: rgba(233,233,242,.45);
+    }
+
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,255,153,.22);
+      background: rgba(0,255,153,.08);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing:.2px;
+    }
+
+    .emptyState{
+      padding: 18px;
+      border: 1px dashed rgba(255,255,255,.14);
+      border-radius: 14px;
+      color: var(--muted);
+      background: rgba(255,255,255,.02);
+      line-height:1.45;
+    }
+
+    .toast{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(0,255,153,.92);
+      color: #0b0b0f;
+      font-weight: 900;
+      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+      z-index: 99999;
+      display:none;
+    }
+
+    /* NEW: payment section on LEFT (below items) */
+    .paymentWrap{
+      margin-top: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      background: rgba(255,255,255,.02);
+      overflow:hidden;
+      display:none;
+    }
+    .paymentHead{
+      padding: 12px 12px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.02);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .paymentHead .left{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .paymentHead .left strong{
+      font-size: 13px;
+      letter-spacing:.2px;
+    }
+    .paymentHead .left span{
+      font-size: 12px;
+      color: var(--muted);
+      line-height:1.35;
+    }
+    .paymentBody{
+      padding: 12px;
+    }
+    .payGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 520px){
+      .payGrid{ grid-template-columns: 1fr; }
+    }
+    .paymentNote{
+      margin-top: 10px;
+      color: rgba(233,233,242,.55);
+      font-size: 12px;
+      line-height:1.4;
+    }
+    .inlineTag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,204,102,.25);
+      background: rgba(255,204,102,.10);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 900;
+      white-space:nowrap;
+    }
+
+    .footer{
+      margin: 22px 0 0;
+      color: rgba(233,233,242,.55);
+      font-size: 12px;
+      text-align:center;
     }
   </style>
-  <style>
-    /* logo */
-    .logo {
-      position: absolute;
-      z-index: 1;
-      top: 5%;
-      /* Adjust top position relative to viewport height */
-      left: 5%;
-      /* Adjust left position relative to viewport width */
-      display: block;
-    }
 
-    .logo img {
-      height: 10vw;
-      /* Adjust height relative to viewport width */
-      max-height: 140px;
-      /* Set a maximum height to prevent the logo from getting too large on larger screens */
-      width: auto;
-      /* Maintain aspect ratio */
-    }
-
-    /* Media query for small devices */
-    @media (max-width: 600px) {
-      .logo img {
-        height: 20vw;
-        /* Larger logo for smaller devices */
-      }
-    }
-  </style>
-
+  <!-- Components -->
+  <script src="/components/site-navbar.js" defer></script>
 </head>
 
 <body>
-  <div id="inner-wrap">
-    <div class="logo" style="z-index: 2;">
-      <a href="/">
-        <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
-      </a>
-    </div>
-    <header>
-      <h1>Buy Now</h1>
-      <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+  <site-navbar base=""></site-navbar>
 
-    </header>
-
-    <main>
-      <section id="@product id@" class="buy-section">
-        <h2 id="@product name@">@product name@</h2>
-        <img src="@product image@" alt="Product Image" class="@image@">
-        <video src="@product video@" controls class="@video@"></video>
-        <p id="@product description@">@product description@</p>
-        <p id="@product price@">$@product price@</p>
-        <label for="donation-amount">Donation Amount ($):</label>
-        <input type="number" id="donation-amount" name="donation-amount" min="0" step="0.01" value="0">
-        <div id="payment-section" class="hidden">
-          <label for="card-number">Credit Card Number:</label>
-          <input type="text" id="card-number" name="card-number" placeholder="1234-5678-9012-3456">
-          <label for="expiry-date">Expiry Date:</label>
-          <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY">
-          <label for="cvv">CVV:</label>
-          <input type="text" id="cvv" name="cvv" placeholder="123">
+  <div class="page">
+    <div class="wrap">
+      <div class="header">
+        <div>
+          <h1 class="title" id="pageTitle">Checkout</h1>
+          <p class="subtitle" id="pageSubtitle">
+            Review your order, adjust quantities, and then complete checkout.
+          </p>
         </div>
-        <button id="buy-now-button">Buy Now</button>
-        <a id="message" class="hidden"></p>
-          <div id="@additional images@"></div>
-          <div id="@additional videos@"></div>
-      </section>
-    </main>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', load_page);
-      async function load_page() {
-        const products = await getProducts();
-        async function getProducts() {
-          try {
-            const response = await fetch('./tools/data/products.json');
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const products = await response.json();
-            return products;
-          } catch (error) {
-            console.error('Error fetching products:', error);
-          }
+        <div class="headerActions">
+          <a class="btn" href="/products">← Back to Products</a>
+          <a class="btn primary" href="/cart">🛍️ View Cart</a>
+          <button class="btn danger" id="clearCartBtn" type="button">Clear Cart</button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- LEFT: items + payment (below) -->
+        <section class="card">
+          <div class="cardHead">
+            <h2 id="itemsTitle">Items</h2>
+            <p id="itemsHint">If you’re signed in, your cart is synced across devices.</p>
+          </div>
+
+          <div class="cardBody">
+            <div id="items"></div>
+
+            <!-- NEW: Payment info shows ONLY if total > 0 -->
+            <div class="paymentWrap" id="paymentWrap">
+              <div class="paymentHead">
+                <div class="left">
+                  <strong>Payment details</strong>
+                  <span>Shown only when your total is above $0.00.</span>
+                </div>
+                <span class="inlineTag">Demo</span>
+              </div>
+
+              <div class="paymentBody">
+                <div class="payGrid">
+                  <div class="field">
+                    <label for="cardNumber">Card number</label>
+                    <input id="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" />
+                  </div>
+
+                  <div class="field">
+                    <label for="cardName">Name on card</label>
+                    <input id="cardName" autocomplete="cc-name" placeholder="Name" />
+                  </div>
+
+                  <div class="field">
+                    <label for="exp">Expiry</label>
+                    <input id="exp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" />
+                  </div>
+
+                  <div class="field">
+                    <label for="cvc">CVC</label>
+                    <input id="cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" />
+                  </div>
+
+                  <div class="field" style="grid-column: 1 / -1;">
+                    <label for="billingZip">Billing ZIP (optional)</label>
+                    <input id="billingZip" inputmode="numeric" autocomplete="postal-code" placeholder="ZIP" />
+                  </div>
+                </div>
+
+                <div class="paymentNote">
+                  This is UI-only right now.
+                </div>
+              </div>
+            </div>
+            <!-- /payment -->
+          </div>
+        </section>
+
+        <!-- RIGHT: summary + checkout controls -->
+        <aside class="card">
+          <div class="cardHead">
+            <h2>Order Summary</h2>
+            <p>
+              <span class="pill">Demo checkout</span>
+              <span style="display:block;margin-top:8px;color:var(--muted);font-size:12px;">
+                This page doesn’t process real payments yet.
+              </span>
+            </p>
+          </div>
+
+          <div class="cardBody">
+            <div class="summaryLine"><span>Subtotal</span><strong id="subtotal">$—</strong></div>
+            <div class="summaryLine"><span>Donation</span><strong id="donationLabel">$0.00</strong></div>
+            <div class="summaryLine"><span>Tax</span><strong>$0.00</strong></div>
+            <div class="divider"></div>
+            <div class="summaryLine total"><span>Total</span><strong id="total">$—</strong></div>
+
+            <div class="divider"></div>
+
+            <div class="field">
+              <label for="donation">Optional donation</label>
+              <input id="donation" type="number" min="0" step="0.01" value="0" />
+            </div>
+
+            <div class="field">
+              <label for="email">Receipt email (optional)</label>
+              <input id="email" type="email" placeholder="you@example.com" />
+            </div>
+
+            <div class="field">
+              <label for="notes">Notes (optional)</label>
+              <textarea id="notes" rows="3" placeholder="Anything we should know?"></textarea>
+            </div>
+
+            <div class="divider"></div>
+
+            <button class="btn primary" id="checkoutBtn" type="button" style="width:100%;justify-content:center;">
+              Complete Checkout
+            </button>
+
+            <div id="resultArea" style="margin-top:12px;display:none;">
+              <div class="emptyState" id="resultBox"></div>
+              <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
+                <a class="btn primary" id="openProductBtn" href="#" style="display:none;">Open / Download</a>
+                <a class="btn" href="/products">Browse more</a>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="footer">
+        <p id="footerText">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import {
+      collection, doc, getDocs, updateDoc, deleteDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
+
+    const { auth, db } = getFirebase();
+
+    const $ = (id) => document.getElementById(id);
+
+    const itemsEl = $("items");
+    const subtotalEl = $("subtotal");
+    const donationEl = $("donation");
+    const donationLabelEl = $("donationLabel");
+    const totalEl = $("total");
+    const checkoutBtn = $("checkoutBtn");
+    const clearCartBtn = $("clearCartBtn");
+    const toastEl = $("toast");
+    const resultArea = $("resultArea");
+    const resultBox = $("resultBox");
+    const openProductBtn = $("openProductBtn");
+
+    const pageTitle = $("pageTitle");
+    const pageSubtitle = $("pageSubtitle");
+    const itemsTitle = $("itemsTitle");
+
+    // NEW: payment section elements
+    const paymentWrap = $("paymentWrap");
+    const cardNumberEl = $("cardNumber");
+    const cardNameEl = $("cardName");
+    const expEl = $("exp");
+    const cvcEl = $("cvc");
+
+    const hash = (window.location.hash || "").replace("#", "").trim();
+    const mode = (hash === "" || hash === "cart") ? "cart" : "single";
+    const singleProductId = (mode === "single") ? hash : null;
+
+    // ---- helpers
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.style.display = "block";
+      setTimeout(()=>toastEl.style.display="none", 1400);
+    }
+    function money(n){
+      if (typeof n !== "number" || Number.isNaN(n)) return "$—";
+      return "$" + n.toFixed(2);
+    }
+    function clampInt(n, lo, hi){
+      n = parseInt(n, 10);
+      if (Number.isNaN(n)) n = lo;
+      return Math.max(lo, Math.min(hi, n));
+    }
+    function notifyCartChanged(){
+      window.dispatchEvent(new CustomEvent("cart-changed"));
+    }
+
+    async function loadProducts(){
+      const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache:"no-store" });
+      if (!r.ok) throw new Error("Failed to load products.json");
+      return await r.json();
+    }
+
+    // ---- CART sources:
+    async function readCart(){
+      const user = auth.currentUser;
+
+      if (mode === "cart"){
+        if (user){
+          const snap = await getDocs(collection(db, "users", user.uid, "cartItems"));
+          return snap.docs.map(d => ({ id: d.id, ...d.data(), _source:"fire" }));
         }
+        const guest = JSON.parse(localStorage.getItem("unlim8ted-cart") || "[]");
+        return guest.map((x, i) => ({ ...x, id: String(i), _source:"guest" }));
+      }
 
-        function replacePlaceholders(current_product) {
-          document.body.innerHTML = document.body.innerHTML.replace(/@product id@/g, current_product.id);
-          document.body.innerHTML = document.body.innerHTML.replace(/@product image@/g, current_product.image);
-          document.body.innerHTML = document.body.innerHTML.replace(/@product video@/g, current_product.video);
-          document.body.innerHTML = document.body.innerHTML.replace(/@product name@/g, current_product.name);
-          document.body.innerHTML = document.body.innerHTML.replace(/@product description@/g, current_product.description);
-          document.body.innerHTML = document.body.innerHTML.replace(/@product price@/g, current_product.price.toFixed(2));
-          document.body.innerHTML = document.body.innerHTML.replace(/@product link@/g, current_product.link);
+      const products = await loadProducts();
+      const p = products.find(x => String(x.id) === String(singleProductId));
+      if (!p) return [];
+      return [{
+        id: "single",
+        _source: "single",
+        productId: String(p.id),
+        name: p.name || "Product",
+        price: Number(p.price || 0),
+        image: p.image || null,
+        qty: 1,
+        link: p.link || null
+      }];
+    }
 
-          const additionalImagesDiv = document.getElementById('@additional images@');
-          if (additionalImagesDiv) {
-            additionalImagesDiv.innerHTML = '';
-            current_product.additional_images.forEach(image => {
-              const imgElement = document.createElement('img');
-              imgElement.src = image;
-              additionalImagesDiv.appendChild(imgElement);
-            });
+    async function writeGuestCart(list){
+      localStorage.setItem("unlim8ted-cart", JSON.stringify(list));
+      notifyCartChanged();
+    }
+
+    async function incFireQty(docId, nextQty){
+      const user = auth.currentUser;
+      if (!user) return;
+      nextQty = clampInt(nextQty, 1, 99);
+      await updateDoc(doc(db, "users", user.uid, "cartItems", docId), { qty: nextQty });
+      notifyCartChanged();
+    }
+    async function delFireItem(docId){
+      const user = auth.currentUser;
+      if (!user) return;
+      await deleteDoc(doc(db, "users", user.uid, "cartItems", docId));
+      notifyCartChanged();
+    }
+    async function clearFireCart(){
+      const user = auth.currentUser;
+      if (!user) return;
+      const snap = await getDocs(collection(db, "users", user.uid, "cartItems"));
+      await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+      notifyCartChanged();
+    }
+
+    function renderEmpty(){
+      itemsEl.innerHTML = `
+        <div class="emptyState">
+          Your cart is empty.<br/>
+          <span style="color:rgba(233,233,242,.55)">Go add something awesome, then come back here.</span>
+        </div>
+      `;
+      subtotalEl.textContent = "$0.00";
+      donationLabelEl.textContent = "$0.00";
+      totalEl.textContent = "$0.00";
+      checkoutBtn.disabled = true;
+      paymentWrap.style.display = "none";
+    }
+
+    function itemThumbHTML(img, name){
+      if (!img) return `<div class="thumb"><div class="fallback">UL</div></div>`;
+      return `<div class="thumb"><img alt="${escapeAttr(name||"Product")}" src="${escapeAttr(img)}"></div>`;
+    }
+
+    function escapeAttr(s){
+      return String(s || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function computeTotals(items){
+      let subtotal = 0;
+      for (const it of items){
+        const qty = clampInt(it.qty || 1, 1, 99);
+        const price = Number(it.price || 0);
+        subtotal += qty * price;
+      }
+      const donation = Math.max(0, Number(donationEl.value || 0));
+      return { subtotal, donation, total: subtotal + donation };
+    }
+
+    function formatCardNumber(v){
+      const digits = (v || "").replace(/\D+/g, "").slice(0, 19);
+      return digits.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+    }
+    function formatExp(v){
+      const digits = (v || "").replace(/\D+/g, "").slice(0, 4);
+      if (digits.length <= 2) return digits;
+      return digits.slice(0,2) + "/" + digits.slice(2);
+    }
+    function formatCvc(v){
+      return (v || "").replace(/\D+/g, "").slice(0, 4);
+    }
+
+    // live format (nice UX, still demo)
+    cardNumberEl.addEventListener("input", () => cardNumberEl.value = formatCardNumber(cardNumberEl.value));
+    expEl.addEventListener("input", () => expEl.value = formatExp(expEl.value));
+    cvcEl.addEventListener("input", () => cvcEl.value = formatCvc(cvcEl.value));
+
+    function updateSummaryAndPayment(items){
+      const { subtotal, donation, total } = computeTotals(items);
+      subtotalEl.textContent = money(subtotal);
+      donationLabelEl.textContent = money(donation);
+      totalEl.textContent = money(total);
+
+      // NEW: show payment section only if total > 0
+      const needsPayment = total > 0.000001;
+      paymentWrap.style.display = needsPayment ? "block" : "none";
+    }
+
+    async function render(){
+      resultArea.style.display = "none";
+      openProductBtn.style.display = "none";
+      openProductBtn.href = "#";
+
+      const items = await readCart();
+
+      if (mode === "single"){
+        pageTitle.textContent = "Buy Now";
+        pageSubtitle.textContent = "You’re buying a single item. Want multiple items? Use your cart.";
+        itemsTitle.textContent = "Item";
+        clearCartBtn.style.display = "none";
+      } else {
+        pageTitle.textContent = "Checkout";
+        pageSubtitle.textContent = "Review your cart, adjust quantities, then complete checkout.";
+        itemsTitle.textContent = "Items in Cart";
+        clearCartBtn.style.display = "inline-flex";
+      }
+
+      if (!items.length){
+        renderEmpty();
+        return;
+      }
+
+      checkoutBtn.disabled = false;
+
+      itemsEl.innerHTML = "";
+      items.forEach((it, idx) => {
+        const qty = clampInt(it.qty || 1, 1, 99);
+        const price = Number(it.price || 0);
+
+        const row = document.createElement("div");
+        row.className = "itemRow";
+        row.innerHTML = `
+          ${itemThumbHTML(it.image, it.name)}
+          <div class="info">
+            <p class="name" title="${escapeAttr(it.name)}">${escapeAttr(it.name)}</p>
+            <p class="meta">Product ID: ${escapeAttr(it.productId || "")}</p>
+          </div>
+          <div class="right">
+            <div class="price">${money(price * qty)}</div>
+            <div class="qty">
+              <button type="button" data-action="dec">−</button>
+              <span>${qty}</span>
+              <button type="button" data-action="inc">+</button>
+            </div>
+            <button class="btn danger" type="button" data-action="remove" style="padding:8px 10px;border-radius:12px;">
+              ✕
+            </button>
+          </div>
+        `;
+
+        row.querySelector('[data-action="dec"]').addEventListener("click", async () => {
+          if (mode === "single") return;
+          const next = clampInt(qty - 1, 1, 99);
+          if (it._source === "fire") await incFireQty(it.id, next);
+          if (it._source === "guest"){
+            const guest = JSON.parse(localStorage.getItem("unlim8ted-cart") || "[]");
+            guest[idx].qty = next;
+            await writeGuestCart(guest);
           }
+          await render();
+          toast("Updated");
+        });
 
-          const additionalVideosDiv = document.getElementById('@additional videos@');
-          if (additionalVideosDiv) {
-            additionalVideosDiv.innerHTML = '';
-            current_product.additional_videos.forEach(video => {
-              const videoElement = document.createElement('video');
-              videoElement.src = video;
-              videoElement.controls = true;
-              additionalVideosDiv.appendChild(videoElement);
-            });
+        row.querySelector('[data-action="inc"]').addEventListener("click", async () => {
+          if (mode === "single") return;
+          const next = clampInt(qty + 1, 1, 99);
+          if (it._source === "fire") await incFireQty(it.id, next);
+          if (it._source === "guest"){
+            const guest = JSON.parse(localStorage.getItem("unlim8ted-cart") || "[]");
+            guest[idx].qty = next;
+            await writeGuestCart(guest);
           }
-        }
+          await render();
+          toast("Updated");
+        });
 
-        let current_product = null;
-        for (let dict of products) {
-          if ('#' + dict.id == window.location.hash) {
-            current_product = dict;
-            break;
+        row.querySelector('[data-action="remove"]').addEventListener("click", async () => {
+          if (mode === "single") return;
+          if (it._source === "fire") await delFireItem(it.id);
+          if (it._source === "guest"){
+            const guest = JSON.parse(localStorage.getItem("unlim8ted-cart") || "[]");
+            guest.splice(idx, 1);
+            await writeGuestCart(guest);
           }
-        }
+          await render();
+          toast("Removed");
+        });
 
-        if (current_product) {
-          replacePlaceholders(current_product);
-          const donationInput = document.getElementById('donation-amount');
-          const paymentSection = document.getElementById('payment-section');
-          const buyNowButton = document.getElementById('buy-now-button');
-          const message = document.getElementById('message');
+        itemsEl.appendChild(row);
+      });
 
-          function checkPaymentSection() {
-            const donationAmount = parseFloat(donationInput.value);
-            const productPrice = parseFloat(current_product.price);
+      updateSummaryAndPayment(items);
+    }
 
-            if (donationAmount > 0 || productPrice > 0) {
-              paymentSection.classList.remove('hidden');
-            } else {
-              paymentSection.classList.add('hidden');
-            }
-          }
+    async function completeCheckout(){
+      const items = await readCart();
+      if (!items.length){ toast("Cart is empty"); return; }
 
-          donationInput.addEventListener('input', checkPaymentSection);
+      const { subtotal, donation, total } = computeTotals(items);
 
-          buyNowButton.addEventListener('click', function () {
-            const donationAmount = parseFloat(donationInput.value);
-            const productPrice = parseFloat(current_product.price);
-            const cardNumber = document.getElementById('card-number').value;
-            const expiryDate = document.getElementById('expiry-date').value;
-            const cvv = document.getElementById('cvv').value;
+      // If total > 0, require "payment" fields filled (demo validation)
+      if (total > 0.000001){
+        const cardNum = (cardNumberEl.value || "").replace(/\D+/g,"");
+        const exp = (expEl.value || "").trim();
+        const cvc = (cvcEl.value || "").replace(/\D+/g,"");
 
-            if (donationAmount === 0 && productPrice === 0) {
-              message.textContent = 'Thank you! Your free product is on the way.';
-              message.setAttribute("href", current_product.link)
-              message.classList.remove('hidden');
-            } else {
-              if (cardNumber && expiryDate && cvv) {
-                message.textContent = 'Thank you for your purchase/donation!';
-                message.setAttribute("href", current_product.link)
-                message.classList.remove('hidden');
-              } else {
-                message.textContent = 'Please fill out all payment details.';
-                message.classList.remove('hidden');
-              }
-            }
-          });
-
-          checkPaymentSection(); // Initial check
-        } else {
-          console.log("Product not found or incorrect ID in URL.");
+        if (cardNum.length < 12 || exp.length < 4 || cvc.length < 3){
+          toast("Enter payment details");
+          return;
         }
       }
-    </script>
-</body>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-  <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
-            <script>document.addEventListener("DOMContentLoaded", function () {
-                const currentYear = new Date().getFullYear();
-                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
-                document.getElementById("footer-text").innerHTML = footerText;
-            });
-            </script>
-</div>
-</div>
 
+      let bestLink = null;
+      if (mode === "single"){
+        bestLink = items[0].link || null;
+      } else {
+        try{
+          const products = await loadProducts();
+          const first = items[0];
+          const p = products.find(x => String(x.id) === String(first.productId));
+          bestLink = p?.link || null;
+        } catch {}
+      }
+
+      // Clear cart after checkout (cart mode only)
+      if (mode === "cart"){
+        const user = auth.currentUser;
+        if (user){
+          await clearFireCart();
+        } else {
+          await writeGuestCart([]);
+        }
+      }
+
+      notifyCartChanged();
+      toast("Checkout complete");
+
+      resultArea.style.display = "block";
+      resultBox.innerHTML = `
+        <strong>Success!</strong><br/>
+        Your checkout is complete (demo).<br/>
+        <span style="color:rgba(233,233,242,.65)">
+          Subtotal: ${money(subtotal)} • Donation: ${money(donation)} • Total: ${money(total)}
+        </span>
+      `;
+
+      if (bestLink){
+        openProductBtn.style.display = "inline-flex";
+        openProductBtn.href = bestLink;
+        openProductBtn.target = "_blank";
+        openProductBtn.rel = "noopener";
+      }
+
+      // hide payment section after success (since cart is cleared)
+      paymentWrap.style.display = "none";
+      cardNumberEl.value = "";
+      cardNameEl.value = "";
+      expEl.value = "";
+      cvcEl.value = "";
+    }
+
+    async function clearCart(){
+      if (mode === "single"){ return; }
+      const user = auth.currentUser;
+      if (user){
+        await clearFireCart();
+      } else {
+        await writeGuestCart([]);
+      }
+      await render();
+      toast("Cart cleared");
+    }
+
+    donationEl.addEventListener("input", async () => {
+      const items = await readCart();
+      updateSummaryAndPayment(items);
+    });
+
+    checkoutBtn.addEventListener("click", completeCheckout);
+    clearCartBtn.addEventListener("click", clearCart);
+
+    window.addEventListener("cart-changed", () => {
+      if (mode === "cart") render();
+    });
+
+    onAuthStateChanged(auth, async () => {
+      await render();
+    });
+
+    const y = new Date().getFullYear();
+    $("footerText").innerHTML = `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+  </script>
+</body>
 </html>

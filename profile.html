@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,179 +13,201 @@
   <script type="module" src="/components/site-loader.js"></script>
 
   <style>
-    :root{
-      --bg1:#0f0c29; --bg2:#302b63; --bg3:#24243e;
-      --panel: rgba(30,30,30,.90);
+    :root {
+      --bg1: #0f0c29;
+      --bg2: #302b63;
+      --bg3: #24243e;
+      --panel: rgba(30, 30, 30, .90);
       --text: #e0e0e0;
       --muted: #bdbdbd;
       --accent: #00ff99;
       --accent2: #ff0077;
-      --stroke: rgba(255,255,255,.12);
-      --shadow: 0 10px 30px rgba(0,255,153,.25);
+      --stroke: rgba(255, 255, 255, .12);
+      --shadow: 0 10px 30px rgba(0, 255, 153, .25);
       --r: 16px;
     }
 
-    body{
+    body {
       font-family: Arial, sans-serif;
       background: radial-gradient(circle at center, var(--bg1), var(--bg2), var(--bg3));
       margin: 0;
       min-height: 100vh;
       color: var(--text);
-      padding-top: 56px; /* navbar space */
+      padding-top: 56px;
+      /* navbar space */
       overflow-x: hidden;
     }
 
-    .background{
+    .background {
       position: fixed;
       inset: 0;
       overflow: hidden;
       z-index: -1;
     }
-    .background span{
-      position:absolute;
-      width:50px; height:50px;
+
+    .background span {
+      position: absolute;
+      width: 50px;
+      height: 50px;
       background: linear-gradient(45deg, var(--accent), var(--accent2));
-      opacity:.7;
+      opacity: .7;
       filter: blur(8px);
       animation: float 6s infinite ease-in-out;
       border-radius: 50%;
     }
-    @keyframes float{
-      0%,100%{ transform: translateY(0) translateX(0); }
-      50%{ transform: translateY(-40px) translateX(20px); }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0) translateX(0);
+      }
+
+      50% {
+        transform: translateY(-40px) translateX(20px);
+      }
     }
 
-    .wrap{
-      display:flex;
-      justify-content:center;
+    .wrap {
+      display: flex;
+      justify-content: center;
       padding: 28px 14px 40px;
     }
 
-    .container{
+    .container {
       width: min(520px, 92vw);
       background: var(--panel);
       border: 1px solid var(--stroke);
       border-radius: var(--r);
       box-shadow: var(--shadow);
       padding: 22px;
-      text-align:center;
+      text-align: center;
       backdrop-filter: blur(10px);
     }
 
-    .profile-pic{
+    .profile-pic {
       width: 110px;
       height: 110px;
       border-radius: 50%;
       border: 3px solid var(--accent);
-      box-shadow: 0 0 18px rgba(0,255,153,.35);
+      box-shadow: 0 0 18px rgba(0, 255, 153, .35);
       object-fit: cover;
       margin-bottom: 10px;
-      background: rgba(255,255,255,.08);
+      background: rgba(255, 255, 255, .08);
     }
 
-    h1{
+    h1 {
       margin: 8px 0 6px;
       font-size: 24px;
-      letter-spacing:.2px;
+      letter-spacing: .2px;
     }
 
-    .meta{
+    .meta {
       color: var(--muted);
       font-size: 14px;
       margin-bottom: 14px;
     }
 
-    .panel{
-      text-align:left;
+    .panel {
+      text-align: left;
       margin-top: 14px;
-      border-top: 1px solid rgba(255,255,255,.10);
+      border-top: 1px solid rgba(255, 255, 255, .10);
       padding-top: 14px;
     }
 
-    label{
-      display:block;
+    label {
+      display: block;
       font-size: 13px;
-      color: rgba(255,255,255,.75);
+      color: rgba(255, 255, 255, .75);
       margin: 10px 0 6px;
     }
 
-    input[type="text"], input[type="url"]{
-      width:100%;
+    input[type="text"],
+    input[type="url"] {
+      width: 100%;
       padding: 10px 12px;
       border-radius: 10px;
-      border: 1px solid rgba(0,255,153,.45);
-      background: rgba(36,36,62,.85);
+      border: 1px solid rgba(0, 255, 153, .45);
+      background: rgba(36, 36, 62, .85);
       color: var(--text);
       outline: none;
-      box-sizing:border-box;
-    }
-    input[type="text"]::placeholder, input[type="url"]::placeholder{
-      color: rgba(255,255,255,.55);
-    }
-    input[type="text"]:focus, input[type="url"]:focus{
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(0,255,153,.12);
+      box-sizing: border-box;
     }
 
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:center;
+    input[type="text"]::placeholder,
+    input[type="url"]::placeholder {
+      color: rgba(255, 255, 255, .55);
+    }
+
+    input[type="text"]:focus,
+    input[type="url"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 255, 153, .12);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
       margin-top: 18px;
     }
 
-    .btn{
-      border:none;
+    .btn {
+      border: none;
       border-radius: 999px;
       padding: 11px 16px;
       font-weight: 800;
-      cursor:pointer;
-      color:#fff;
+      cursor: pointer;
+      color: #fff;
       background: linear-gradient(45deg, var(--accent), var(--accent2));
       transition: transform .15s ease, box-shadow .15s ease;
     }
-    .btn:hover{
+
+    .btn:hover {
       transform: scale(1.03);
-      box-shadow: 0 0 16px rgba(0,255,153,.28);
+      box-shadow: 0 0 16px rgba(0, 255, 153, .28);
     }
 
-    .btn.secondary{
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.14);
-    }
-    .btn.secondary:hover{
-      box-shadow:none;
-      background: rgba(255,255,255,.12);
+    .btn.secondary {
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .14);
     }
 
-    .btn.logout{
-      background: rgba(255,0,119,.85);
-    }
-    .btn.logout:hover{
-      box-shadow: 0 0 16px rgba(255,0,119,.25);
+    .btn.secondary:hover {
+      box-shadow: none;
+      background: rgba(255, 255, 255, .12);
     }
 
-    .status{
+    .btn.logout {
+      background: rgba(255, 0, 119, .85);
+    }
+
+    .btn.logout:hover {
+      box-shadow: 0 0 16px rgba(255, 0, 119, .25);
+    }
+
+    .status {
       margin-top: 12px;
       font-size: 13px;
-      color: rgba(255,255,255,.75);
+      color: rgba(255, 255, 255, .75);
       min-height: 18px;
-      text-align:center;
+      text-align: center;
     }
 
-    .footer{
+    .footer {
       margin-top: 18px;
-      text-align:center;
+      text-align: center;
       font-size: 13px;
-      color: rgba(255,255,255,.6);
+      color: rgba(255, 255, 255, .6);
     }
   </style>
 </head>
 
 <body>
   <site-loader text="Loading..."></site-loader>
-  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile"></site-navbar>
 
   <div class="background">
     <span style="top: 20%; left: 10%; animation-delay: 0s;"></span>
@@ -201,12 +224,22 @@
       <div class="meta">Email: <span id="email">Loading…</span></div>
 
       <div class="panel">
-        <label for="username">Username</label>
-        <input id="username" type="text" placeholder="Enter a username" />
+        <label for="username">Username <span style="opacity:.65">(max <span id="uMax"></span>)</span></label>
+        <input id="username" type="text" placeholder="Enter a username" maxlength="24" />
+        <div class="meta" style="margin:6px 0 0; font-size:12px;">
+          <span id="uCount">0</span>/<span id="uMax2"></span>
+          <span style="opacity:.65"> • letters/numbers/space/_/- only</span>
+        </div>
 
-        <label for="photoUrl">Profile photo URL (optional)</label>
-        <input id="photoUrl" type="url" placeholder="https://…" />
+        <label for="photoUrl" style="margin-top:14px;">Profile photo URL (optional)
+          <span style="opacity:.65">(max <span id="pMax"></span>)</span>
+        </label>
+        <input id="photoUrl" type="url" placeholder="https://…" maxlength="512" />
+        <div class="meta" style="margin:6px 0 0; font-size:12px; opacity:.75;">
+          <span id="pCount">0</span>/<span id="pMax2"></span>
+        </div>
       </div>
+
 
       <div class="actions">
         <button id="saveBtn" class="btn">Save Profile</button>
@@ -238,65 +271,150 @@
     const photoUrlEl = $("photoUrl");
     const statusEl = $("status");
 
+    // --- LIMITS (match your rules)
+    const USERNAME_MAX = 24;     // adjust to your rule
+    const PHOTOURL_MAX = 512;    // adjust to your rule
+
+    // UI counters
+    $("uMax").textContent = USERNAME_MAX;
+    $("uMax2").textContent = USERNAME_MAX;
+    $("pMax").textContent = PHOTOURL_MAX;
+    $("pMax2").textContent = PHOTOURL_MAX;
+
+    usernameEl.maxLength = USERNAME_MAX;
+    photoUrlEl.maxLength = PHOTOURL_MAX;
+
     const SIGNIN_URL = "https://unlim8ted.com/sign-in";
     const PROFILE_DEFAULT = "https://via.placeholder.com/110";
 
-    function setStatus(msg, isError=false){
+    function setStatus(msg, isError = false) {
       statusEl.textContent = msg || "";
       statusEl.style.color = isError ? "rgba(255,120,120,.95)" : "rgba(255,255,255,.75)";
     }
 
-    function fillUI(user, data){
-      const displayName = data?.displayName || data?.name || user.displayName || "User";
-      const email = data?.email || user.email || "—";
-      const username = data?.username || "";
-      const photoURL = data?.photoURL || data?.profilePicture || user.photoURL || PROFILE_DEFAULT;
-
-      displayNameEl.textContent = displayName;
-      emailEl.textContent = email;
-      usernameEl.value = username;
-      photoUrlEl.value = (data?.photoURL || data?.profilePicture || user.photoURL || "");
-      profilePicEl.src = photoURL || PROFILE_DEFAULT;
+    // --- sanitize / validate (client-side)
+    function clampLen(s, max) {
+      s = (s ?? "").toString();
+      if (s.length > max) s = s.slice(0, max);
+      return s;
     }
 
-    async function ensureUserDoc(user){
+    // allow: letters/numbers/space/_/-  (simple + safe)
+    function sanitizeUsername(raw) {
+      let s = (raw ?? "").toString().trim();
+      s = s.replace(/\s+/g, " ");                // collapse whitespace
+      s = s.replace(/[^a-zA-Z0-9 _-]/g, "");     // strip disallowed chars
+      s = clampLen(s, USERNAME_MAX);
+      return s;
+    }
+
+    function isValidUsername(s) {
+      if (!s) return false;
+      if (s.length > USERNAME_MAX) return false;
+      // must contain at least 2 chars, and not be all spaces
+      if (s.trim().length < 2) return false;
+      return true;
+    }
+
+    function sanitizePhotoUrl(raw) {
+      let s = (raw ?? "").toString().trim();
+      s = clampLen(s, PHOTOURL_MAX);
+      return s;
+    }
+
+    function isValidHttpUrl(s) {
+      if (!s) return true; // optional
+      try {
+        const u = new URL(s);
+        return (u.protocol === "http:" || u.protocol === "https:");
+      } catch {
+        return false;
+      }
+    }
+
+    // Prevent HTML injection in any displayed text (you already use textContent mostly)
+    function safeText(s) {
+      return (s ?? "").toString();
+    }
+
+    function updateCounters() {
+      const u = usernameEl.value ?? "";
+      const p = photoUrlEl.value ?? "";
+      $("uCount").textContent = Math.min(u.length, USERNAME_MAX);
+      $("pCount").textContent = Math.min(p.length, PHOTOURL_MAX);
+    }
+
+    // live sanitize as user types
+    usernameEl.addEventListener("input", () => {
+      const before = usernameEl.value;
+      const after = sanitizeUsername(before);
+      if (before !== after) usernameEl.value = after;
+      updateCounters();
+    });
+    photoUrlEl.addEventListener("input", () => {
+      // don’t over-sanitize URLs (just trim + max length)
+      const before = photoUrlEl.value;
+      const after = sanitizePhotoUrl(before);
+      if (before !== after) photoUrlEl.value = after;
+      updateCounters();
+    });
+
+    updateCounters();
+
+    function fillUI(user, data) {
+      // keep display stable
+      const name = safeText(data?.name || user.displayName || "User");
+      const email = safeText(data?.email || user.email || "—");
+
+      // rules-friendly fields
+      const username = safeText(data?.username || "");
+      const profilePicture = safeText(data?.profilePicture || user.photoURL || PROFILE_DEFAULT);
+
+      displayNameEl.textContent = name;
+      emailEl.textContent = email;
+
+      usernameEl.value = sanitizeUsername(username);
+      photoUrlEl.value = sanitizePhotoUrl(data?.profilePicture || user.photoURL || "");
+
+      profilePicEl.src = (profilePicture && isValidHttpUrl(profilePicture)) ? profilePicture : PROFILE_DEFAULT;
+
+      updateCounters();
+    }
+
+    async function ensureUserDoc(user) {
       const ref = doc(db, "users", user.uid);
       const snap = await getDoc(ref);
 
-      if (!snap.exists()){
-        await setDoc(ref, {
-          uid: user.uid,
-          email: user.email || null,
-          displayName: user.displayName || null,
-          photoURL: user.photoURL || null,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        }, { merge: true });
+      // Only write fields that your rules should allow.
+      // (If your rules only allow name/email/profilePicture, keep it like this.)
+      const base = {
+        name: user.displayName || null,
+        email: user.email || null,
+        profilePicture: user.photoURL || null,
+        updatedAt: serverTimestamp()
+      };
+
+      if (!snap.exists()) {
+        await setDoc(ref, { ...base, createdAt: serverTimestamp() }, { merge: true });
       } else {
-        // Keep email/displayName current (merge)
-        await setDoc(ref, {
-          email: user.email || null,
-          displayName: user.displayName || null,
-          photoURL: user.photoURL || null,
-          updatedAt: serverTimestamp(),
-        }, { merge: true });
+        await setDoc(ref, base, { merge: true });
       }
 
-      return (await getDoc(ref)).data();
+      const fresh = await getDoc(ref);
+      return fresh.data();
     }
 
     onAuthStateChanged(auth, async (user) => {
-      if (!user){
+      if (!user) {
         window.location.href = SIGNIN_URL;
         return;
       }
-
-      try{
+      try {
         setStatus("Loading profile…");
         const data = await ensureUserDoc(user);
         fillUI(user, data);
         setStatus("");
-      } catch (e){
+      } catch (e) {
         console.error(e);
         setStatus("Could not load profile.", true);
       }
@@ -306,25 +424,47 @@
       const user = auth.currentUser;
       if (!user) return;
 
-      const username = usernameEl.value.trim();
-      const photoURL = photoUrlEl.value.trim();
+      const username = sanitizeUsername(usernameEl.value);
+      const photoURL = sanitizePhotoUrl(photoUrlEl.value);
 
-      try{
+      // Validate against limits/rules
+      if (usernameEl.value !== username) usernameEl.value = username;
+      if (!isValidUsername(username)) {
+        setStatus(`Username must be 2–${USERNAME_MAX} chars (letters/numbers/space/_/-).`, true);
+        return;
+      }
+      if (photoURL.length > PHOTOURL_MAX) {
+        setStatus(`Photo URL is too long (max ${PHOTOURL_MAX}).`, true);
+        return;
+      }
+      if (!isValidHttpUrl(photoURL)) {
+        setStatus("Photo URL must be http(s):// (or leave blank).", true);
+        return;
+      }
+
+      try {
         setStatus("Saving…");
+
+        // Write only fields that match your locked rules.
+        // If your rules allow username too, keep it here.
+        // If your rules DO NOT allow username, remove username from setDoc.
         await setDoc(doc(db, "users", user.uid), {
-          username: username || null,
-          photoURL: photoURL || user.photoURL || null,
+          username: username,
+          profilePicture: photoURL || user.photoURL || null,
+          // keep these consistent, but still within allowed fields
+          name: user.displayName || null,
+          email: user.email || null,
           updatedAt: serverTimestamp(),
         }, { merge: true });
 
-        // Refresh UI from Firestore
         const snap = await getDoc(doc(db, "users", user.uid));
         fillUI(user, snap.data());
         setStatus("Saved");
         setTimeout(() => setStatus(""), 1200);
-      } catch (e){
+
+      } catch (e) {
         console.error(e);
-        setStatus("Failed to save profile.", true);
+        setStatus("Failed to save profile. (Rules may be blocking this write.)", true);
       }
     });
 
@@ -333,10 +473,10 @@
     });
 
     $("logoutBtn").addEventListener("click", async () => {
-      try{
+      try {
         await signOut(auth);
         window.location.href = "https://unlim8ted.com";
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Logout failed.", true);
       }
@@ -346,5 +486,7 @@
     const y = new Date().getFullYear();
     $("footerText").innerHTML = `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
   </script>
+
 </body>
+
 </html>

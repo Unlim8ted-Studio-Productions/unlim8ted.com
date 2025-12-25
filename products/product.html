@@ -414,316 +414,343 @@
     </div>
   </div>
 
-  <script type="module">
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import { collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getFirebase } from "/components/firebase-init.js";
+<script type="module">
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  import {
+    collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp,
+    doc, setDoc, getDocs, limit
+  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  import { getFirebase } from "/components/firebase-init.js";
 
-    const { auth, db } = getFirebase();
+  const { auth, db } = getFirebase();
 
-    const $ = (id) => document.getElementById(id);
+  const $ = (id) => document.getElementById(id);
 
-    const hero = $("hero");
-    const thumbs = $("thumbs");
-    const pName = $("pName");
-    const pDesc = $("pDesc");
-    const pPrice = $("pPrice");
-    const buyBtn = $("buyBtn");
-    const addBtn = $("addBtn");
+  const hero = $("hero");
+  const thumbs = $("thumbs");
+  const pName = $("pName");
+  const pDesc = $("pDesc");
+  const pPrice = $("pPrice");
+  const buyBtn = $("buyBtn");
+  const addBtn = $("addBtn");
 
-    const avgNum = $("avgNum");
-    const avgLabel = $("avgLabel");
-    const countLabel = $("countLabel");
-    const avgStars = $("avgStars");
-    const avgStarsBig = $("avgStarsBig");
-    const bars = $("bars");
+  const avgNum = $("avgNum");
+  const avgLabel = $("avgLabel");
+  const countLabel = $("countLabel");
+  const avgStars = $("avgStars");
+  const avgStarsBig = $("avgStarsBig");
+  const bars = $("bars");
 
-    const commentList = $("commentList");
-    const commentForm = $("commentForm");
-    const mustSignIn = $("mustSignIn");
-    const ratingSel = $("ratingSel");
-    const displayNameInput = $("displayName");
-    const commentText = $("commentText");
-    const formMsg = $("formMsg");
+  const commentList = $("commentList");
+  const commentForm = $("commentForm");
+  const mustSignIn = $("mustSignIn");
+  const ratingSel = $("ratingSel");
+  const displayNameInput = $("displayName");
+  const commentText = $("commentText");
+  const formMsg = $("formMsg");
 
-    const productId = (window.location.hash || "").replace("#", "").trim();
+  const productId = (window.location.hash || "").replace("#", "").trim();
 
-    function starsHTML(value){
-      const v = Math.max(0, Math.min(5, value));
-      let out = "";
-      for(let i=1;i<=5;i++){
-        out += (i <= Math.round(v)) ? "★" : "☆";
-      }
-      return out;
+  // ----------------------------
+  // Utils
+  // ----------------------------
+  function starsText(value) {
+    const v = Math.max(0, Math.min(5, value));
+    let out = "";
+    for (let i = 1; i <= 5; i++) out += (i <= Math.round(v)) ? "★" : "☆";
+    return out;
+  }
+
+  function toMoney(n) {
+    if (typeof n !== "number" || Number.isNaN(n)) return "$—";
+    return "$" + n.toFixed(2);
+  }
+
+  function extractYouTubeID(url) {
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|embed)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const m = (url || "").match(regex);
+    return m ? m[1] : null;
+  }
+
+  function setHeroMedia(item) {
+    hero.innerHTML = "";
+
+    if (item.image) {
+      const img = document.createElement("img");
+      img.src = item.image;
+      img.alt = item.name || "Product";
+      hero.appendChild(img);
+      return;
     }
 
-    function toMoney(n){
-      if (typeof n !== "number") return "$—";
-      return "$" + n.toFixed(2);
-    }
-
-    function extractYouTubeID(url){
-      const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|embed)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-      const m = (url||"").match(regex);
-      return m ? m[1] : null;
-    }
-
-    function setHeroMedia(item){
-      hero.innerHTML = "";
-
-      // prefer main image
-      if (item.image){
-        const img = document.createElement("img");
-        img.src = item.image;
-        img.alt = item.name || "Product";
-        hero.appendChild(img);
-        return;
-      }
-
-      // fallback to video
-      if (item.video){
-        if (item.video.includes("youtube.com") || item.video.includes("youtu.be")){
-          const id = extractYouTubeID(item.video);
-          const iframe = document.createElement("iframe");
-          iframe.src = `https://www.youtube.com/embed/${id}`;
-          iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-          iframe.allowFullscreen = true;
-          hero.appendChild(iframe);
-        } else {
-          const v = document.createElement("video");
-          v.controls = true;
-          v.src = item.video;
-          hero.appendChild(v);
-        }
+    if (item.video) {
+      if (item.video.includes("youtube.com") || item.video.includes("youtu.be")) {
+        const id = extractYouTubeID(item.video);
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube.com/embed/${id}`;
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+        iframe.allowFullscreen = true;
+        hero.appendChild(iframe);
       } else {
-        hero.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,.55);">No media</div>`;
+        const v = document.createElement("video");
+        v.controls = true;
+        v.src = item.video;
+        hero.appendChild(v);
       }
-    }
-
-    function buildThumbs(item){
-      thumbs.innerHTML = "";
-
-      const sources = [];
-
-      if (item.image) sources.push({ type:"img", src:item.image });
-      (item.additional_images || []).forEach(src => sources.push({ type:"img", src }));
-      if (item.video) sources.push({ type:"video", src:item.video });
-      (item.additional_videos || []).forEach(src => sources.push({ type:"video", src }));
-
-      // Keep it reasonable
-      sources.slice(0, 10).forEach(s => {
-        const t = document.createElement("div");
-        t.className = "thumb";
-
-        if (s.type === "img"){
-          const img = document.createElement("img");
-          img.src = s.src;
-          t.appendChild(img);
-          t.addEventListener("click", () => {
-            hero.innerHTML = "";
-            const big = document.createElement("img");
-            big.src = s.src;
-            big.alt = item.name || "Product";
-            hero.appendChild(big);
-          });
-        } else {
-          // video thumb -> set hero to video
-          t.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.75);font-weight:800;">▶</div>`;
-          t.addEventListener("click", () => {
-            hero.innerHTML = "";
-            if (s.src.includes("youtube.com") || s.src.includes("youtu.be")){
-              const id = extractYouTubeID(s.src);
-              const iframe = document.createElement("iframe");
-              iframe.src = `https://www.youtube.com/embed/${id}`;
-              iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-              iframe.allowFullscreen = true;
-              hero.appendChild(iframe);
-            } else {
-              const v = document.createElement("video");
-              v.controls = true;
-              v.src = s.src;
-              hero.appendChild(v);
-            }
-          });
-        }
-
-        thumbs.appendChild(t);
-      });
-    }
-
-    async function loadProducts(){
-      const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache:"no-store" });
-      if (!r.ok) throw new Error("Failed to load products.json");
-      return await r.json();
-    }
-
-    function renderBars(counts, total){
-      // counts: {1: n, 2:n, 3:n, 4:n, 5:n}
-      bars.innerHTML = "";
-      for (let star = 5; star >= 1; star--){
-        const n = counts[star] || 0;
-        const pct = total > 0 ? (n/total)*100 : 0;
-
-        const row = document.createElement("div");
-        row.className = "barRow";
-        row.innerHTML = `
-          <div>${star} star</div>
-          <div class="barTrack"><div class="barFill" style="width:${pct.toFixed(1)}%"></div></div>
-          <div style="text-align:right;">${n}</div>
-        `;
-        bars.appendChild(row);
-      }
-    }
-
-    function renderComments(docs){
-      commentList.innerHTML = "";
-      if (!docs.length){
-        commentList.innerHTML = `<div class="empty">No reviews yet. Be the first.</div>`;
-        return;
-      }
-
-      docs.forEach(d => {
-        const data = d.data();
-        const rating = Number(data.rating || 0);
-        const text = (data.text || "").trim();
-        const who = (data.displayName || "").trim() || "Anonymous";
-
-        // timestamp could be Firestore timestamp or string; handle both
-        let when = "";
-        const ts = data.timestamp;
-        if (ts && typeof ts.toDate === "function"){
-          when = ts.toDate().toLocaleString();
-        } else if (typeof ts === "string"){
-          when = ts;
-        } else {
-          when = "";
-        }
-
-        const el = document.createElement("div");
-        el.className = "comment";
-        el.innerHTML = `
-          <div class="commentTop">
-            <div class="who">${who} • <span style="color:#ffcc66">${starsHTML(rating)}</span></div>
-            <div class="when">${when}</div>
-          </div>
-          <p class="commentText">${escapeHTML(text)}</p>
-        `;
-        commentList.appendChild(el);
-      });
-    }
-
-    function escapeHTML(s){
-      return (s||"")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    // --- CART: signed-in -> Firestore, signed-out -> localStorage fallback
-    async function addToCart(item){
-      const user = auth.currentUser;
-
-      if (user){
-        // Store a cart item doc under users/{uid}/cartItems
-        const cartItemRef = doc(collection(db, "users", user.uid, "cartItems"));
-        await setDoc(cartItemRef, {
-          productId: item.id,
-          name: item.name || "",
-          price: Number(item.price || 0),
-          image: item.image || null,
-          qty: 1,
-          addedAt: serverTimestamp(),
-        });
-        return;
-      }
-
-      // guest fallback
-      const key = "unlim8ted-cart";
-      const existing = JSON.parse(localStorage.getItem(key) || "[]");
-      existing.push({
-        productId: item.id,
-        name: item.name || "",
-        price: Number(item.price || 0),
-        image: item.image || null,
-        qty: 1,
-        addedAt: Date.now()
-      });
-      localStorage.setItem(key, JSON.stringify(existing));
-    }
-
-    function toast(msg){
-      const t = document.createElement("div");
-      t.textContent = msg;
-      t.style.position="fixed";
-      t.style.right="18px";
-      t.style.bottom="18px";
-      t.style.padding="12px 14px";
-      t.style.borderRadius="14px";
-      t.style.background="rgba(0,255,153,.92)";
-      t.style.color="#0b0b0f";
-      t.style.fontWeight="900";
-      t.style.boxShadow="0 12px 30px rgba(0,0,0,.35)";
-      t.style.zIndex="99999";
-      document.body.appendChild(t);
-      setTimeout(()=>t.remove(), 1600);
-    }
-
-    // --- MAIN
-    if (!productId){
-      document.querySelector(".title").textContent = "Product Not Found";
-      pName.textContent = "No product selected";
-      pDesc.textContent = "Open a product using a URL like /product#some-id";
-      addBtn.disabled = true;
     } else {
-      const products = await loadProducts();
-      const item = products.find(p => String(p.id) === String(productId));
+      hero.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,.55);">No media</div>`;
+    }
+  }
 
-      if (!item){
-        document.querySelector(".title").textContent = "Product Not Found";
-        pName.textContent = "Product not found";
-        pDesc.textContent = "That product ID doesn't exist in products.json.";
-        addBtn.disabled = true;
+  function buildThumbs(item) {
+    thumbs.innerHTML = "";
+
+    const sources = [];
+    if (item.image) sources.push({ type: "img", src: item.image });
+    (item.additional_images || []).forEach(src => sources.push({ type: "img", src }));
+    if (item.video) sources.push({ type: "video", src: item.video });
+    (item.additional_videos || []).forEach(src => sources.push({ type: "video", src }));
+
+    sources.slice(0, 10).forEach(s => {
+      const t = document.createElement("div");
+      t.className = "thumb";
+
+      if (s.type === "img") {
+        const img = document.createElement("img");
+        img.src = s.src;
+        t.appendChild(img);
+
+        t.addEventListener("click", () => {
+          hero.innerHTML = "";
+          const big = document.createElement("img");
+          big.src = s.src;
+          big.alt = item.name || "Product";
+          hero.appendChild(big);
+        });
       } else {
-        document.querySelector(".title").textContent = item.name || "Product";
-        pName.textContent = item.name || "Untitled";
-        pDesc.textContent = item.description || "";
-        pPrice.textContent = toMoney(item.price);
-        buyBtn.href = `/buy#${encodeURIComponent(item.id)}`;
+        t.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.75);font-weight:800;">▶</div>`;
 
-        setHeroMedia(item);
-        buildThumbs(item);
-
-        addBtn.addEventListener("click", async () => {
-          try{
-            await addToCart(item);
-            toast("Added to cart");
-          } catch(e){
-            console.error(e);
-            toast("Could not add to cart");
+        t.addEventListener("click", () => {
+          hero.innerHTML = "";
+          if (s.src.includes("youtube.com") || s.src.includes("youtu.be")) {
+            const id = extractYouTubeID(s.src);
+            const iframe = document.createElement("iframe");
+            iframe.src = `https://www.youtube.com/embed/${id}`;
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+            hero.appendChild(iframe);
+          } else {
+            const v = document.createElement("video");
+            v.controls = true;
+            v.src = s.src;
+            hero.appendChild(v);
           }
         });
+      }
 
-        // ---- COMMENTS LIVE QUERY
-        const commentsRef = collection(db, "comments");
-        const q = query(
-          commentsRef,
-          where("productId", "==", String(item.id)),
-          orderBy("timestamp", "desc")
-        );
+      thumbs.appendChild(t);
+    });
+  }
 
-        onSnapshot(q, (snap) => {
+  async function loadProducts() {
+    const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache: "no-store" });
+    if (!r.ok) throw new Error("Failed to load products.json");
+    return await r.json();
+  }
+
+  function renderBars(counts, total) {
+    bars.innerHTML = "";
+    for (let star = 5; star >= 1; star--) {
+      const n = counts[star] || 0;
+      const pct = total > 0 ? (n / total) * 100 : 0;
+
+      const row = document.createElement("div");
+      row.className = "barRow";
+
+      const left = document.createElement("div");
+      left.textContent = `${star} star`;
+
+      const track = document.createElement("div");
+      track.className = "barTrack";
+
+      const fill = document.createElement("div");
+      fill.className = "barFill";
+      fill.style.width = `${pct.toFixed(1)}%`;
+
+      const right = document.createElement("div");
+      right.style.textAlign = "right";
+      right.textContent = String(n);
+
+      track.appendChild(fill);
+      row.appendChild(left);
+      row.appendChild(track);
+      row.appendChild(right);
+      bars.appendChild(row);
+    }
+  }
+
+  function renderComments(docs) {
+    commentList.innerHTML = "";
+
+    if (!docs.length) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "No reviews yet. Be the first.";
+      commentList.appendChild(empty);
+      return;
+    }
+
+    docs.forEach(d => {
+      const data = d.data();
+      const rating = Number(data.rating || 0);
+      const text = (data.text || "").trim();
+      const who = (data.displayName || "").trim() || "Anonymous";
+
+      let when = "";
+      const ts = data.createdAt;
+      if (ts && typeof ts.toDate === "function") when = ts.toDate().toLocaleString();
+
+      const el = document.createElement("div");
+      el.className = "comment";
+
+      const top = document.createElement("div");
+      top.className = "commentTop";
+
+      const whoEl = document.createElement("div");
+      whoEl.className = "who";
+      whoEl.textContent = `${who} • ${starsText(rating)}`;
+      whoEl.style.color = "#ffcc66";
+
+      const whenEl = document.createElement("div");
+      whenEl.className = "when";
+      whenEl.textContent = when;
+
+      const p = document.createElement("p");
+      p.className = "commentText";
+      p.textContent = text; // ✅ safe render (no HTML injection)
+
+      top.appendChild(whoEl);
+      top.appendChild(whenEl);
+
+      el.appendChild(top);
+      el.appendChild(p);
+
+      commentList.appendChild(el);
+    });
+  }
+
+  function toast(msg) {
+    const t = document.createElement("div");
+    t.textContent = msg;
+    t.style.position = "fixed";
+    t.style.right = "18px";
+    t.style.bottom = "18px";
+    t.style.padding = "12px 14px";
+    t.style.borderRadius = "14px";
+    t.style.background = "rgba(0,255,153,.92)";
+    t.style.color = "#0b0b0f";
+    t.style.fontWeight = "900";
+    t.style.boxShadow = "0 12px 30px rgba(0,0,0,.35)";
+    t.style.zIndex = "99999";
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 1600);
+  }
+
+  // Dispatch event so navbar/cart dropdown can refresh immediately
+  function notifyCartChanged() {
+    window.dispatchEvent(new CustomEvent("cart-changed"));
+  }
+
+  // --- CART: signed-in -> Firestore, signed-out -> localStorage fallback
+  async function addToCart(item) {
+    const user = auth.currentUser;
+
+    if (user) {
+      // put items under: users/{uid}/cartItems/{autoId}
+      const cartItemRef = doc(collection(db, "users", user.uid, "cartItems"));
+      await setDoc(cartItemRef, {
+        productId: String(item.id),
+        name: String(item.name || "").slice(0, 120),
+        price: Number(item.price || 0),
+        image: item.image ? String(item.image).slice(0, 600) : null,
+        qty: 1,
+        addedAt: serverTimestamp()
+      });
+      notifyCartChanged();
+      return;
+    }
+
+    const key = "unlim8ted-cart";
+    const existing = JSON.parse(localStorage.getItem(key) || "[]");
+    existing.push({
+      productId: String(item.id),
+      name: String(item.name || "").slice(0, 120),
+      price: Number(item.price || 0),
+      image: item.image ? String(item.image).slice(0, 600) : null,
+      qty: 1,
+      addedAt: Date.now()
+    });
+    localStorage.setItem(key, JSON.stringify(existing));
+    notifyCartChanged();
+  }
+
+  // ----------------------------
+  // MAIN
+  // ----------------------------
+  if (!productId) {
+    document.querySelector(".title").textContent = "Product Not Found";
+    pName.textContent = "No product selected";
+    pDesc.textContent = "Open a product using a URL like /product#some-id";
+    addBtn.disabled = true;
+  } else {
+    const products = await loadProducts();
+    const item = products.find(p => String(p.id) === String(productId));
+
+    if (!item) {
+      document.querySelector(".title").textContent = "Product Not Found";
+      pName.textContent = "Product not found";
+      pDesc.textContent = "That product ID doesn't exist in products.json.";
+      addBtn.disabled = true;
+    } else {
+      document.querySelector(".title").textContent = item.name || "Product";
+      pName.textContent = item.name || "Untitled";
+      pDesc.textContent = item.description || "";
+      pPrice.textContent = toMoney(item.price);
+      buyBtn.href = `/buy#${encodeURIComponent(item.id)}`;
+
+      setHeroMedia(item);
+      buildThumbs(item);
+
+      addBtn.addEventListener("click", async () => {
+        try {
+          await addToCart(item);
+          toast("Added to cart");
+        } catch (e) {
+          console.error(e);
+          toast("Could not add to cart");
+        }
+      });
+
+      // -----------------------------------
+      // COMMENTS LIVE QUERY (NEW PATH)
+      // products/{productId}/comments
+      // -----------------------------------
+      const commentsRef = collection(db, "products", String(item.id), "comments");
+      const commentsQ = query(commentsRef, orderBy("createdAt", "desc"));
+
+      onSnapshot(
+        commentsQ,
+        (snap) => {
           const docs = snap.docs;
 
           // compute rating stats
-          let total = docs.length;
+          const total = docs.length;
           let sum = 0;
-          const counts = {1:0,2:0,3:0,4:0,5:0};
+          const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 
-          for (const d of docs){
+          for (const d of docs) {
             const r = Number(d.data().rating || 0);
-            if (r >= 1 && r <= 5){
+            if (r >= 1 && r <= 5) {
               sum += r;
               counts[r] = (counts[r] || 0) + 1;
             }
@@ -733,68 +760,83 @@
 
           avgNum.textContent = total ? avg.toFixed(1) : "—";
           avgLabel.textContent = total ? "Average rating" : "No ratings yet";
-          countLabel.textContent = `${total} review${total===1?"":"s"}`;
-          avgStars.innerHTML = starsHTML(avg);
-          avgStarsBig.innerHTML = starsHTML(avg);
+          countLabel.textContent = `${total} review${total === 1 ? "" : "s"}`;
+          avgStars.textContent = starsText(avg);
+          avgStarsBig.textContent = starsText(avg);
 
           renderBars(counts, total);
           renderComments(docs);
-        });
+        },
+        (err) => {
+          console.error("Comments listener error:", err);
+          // If rules deny reads, show friendly message
+          commentList.innerHTML = `<div class="empty">Reviews unavailable.</div>`;
+        }
+      );
 
-        // auth -> show/hide review form
-        onAuthStateChanged(auth, (user) => {
-          if (user){
-            mustSignIn.style.display = "none";
-            commentForm.style.display = "grid";
-            // default name
-            displayNameInput.value = user.displayName || "";
-          } else {
-            commentForm.style.display = "none";
-            mustSignIn.style.display = "block";
-          }
-        });
+      // auth -> show/hide review form
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          mustSignIn.style.display = "none";
+          commentForm.style.display = "grid";
+          displayNameInput.value = user.displayName || "";
+        } else {
+          commentForm.style.display = "none";
+          mustSignIn.style.display = "block";
+        }
+      });
 
-        // submit review
-        commentForm.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const user = auth.currentUser;
-          if (!user) return;
+      // submit review (NEW PATH)
+      commentForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-          const rating = Number(ratingSel.value || 0);
-          const text = commentText.value.trim();
-          const displayName = displayNameInput.value.trim();
+        const user = auth.currentUser;
+        if (!user) return;
 
-          if (!text){
-            formMsg.textContent = "Please write a comment.";
-            return;
-          }
+        const rating = parseInt(ratingSel.value, 10) || 0;
+        const text = commentText.value.trim();
+        const displayName = displayNameInput.value.trim();
 
-          formMsg.textContent = "Posting…";
+        if (!text) {
+          formMsg.textContent = "Please write a comment.";
+          return;
+        }
+        if (text.length > 2000) {
+          formMsg.textContent = "Comment is too long (max 2000 chars).";
+          return;
+        }
+        if (rating < 1 || rating > 5) {
+          formMsg.textContent = "Please select a rating 1–5.";
+          return;
+        }
 
-          try{
-            await addDoc(collection(db, "comments"), {
-              productId: String(item.id),
-              rating: rating,
-              text: text,
-              userId: user.uid,
-              displayName: displayName || null,
-              timestamp: serverTimestamp()
-            });
+        formMsg.textContent = "Posting…";
 
-            commentText.value = "";
-            formMsg.textContent = "Posted";
-            setTimeout(() => formMsg.textContent = "", 1200);
-          } catch(err){
-            console.error(err);
-            formMsg.textContent = "Failed to post. Check Firestore rules.";
-          }
-        });
-      }
+        try {
+          await addDoc(collection(db, "products", String(item.id), "comments"), {
+            userId: user.uid,
+            rating,
+            text,
+            displayName: displayName || user.displayName || "Anonymous",
+            photoURL: user.photoURL || "",
+            createdAt: serverTimestamp()
+          });
+
+          commentText.value = "";
+          formMsg.textContent = "Posted";
+          setTimeout(() => (formMsg.textContent = ""), 1200);
+        } catch (err) {
+          console.error(err);
+          formMsg.textContent = "Failed to post.";
+        }
+      });
     }
+  }
 
-    // footer
-    const y = new Date().getFullYear();
-    $("footerText").innerHTML = `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
-  </script>
+  // footer
+  const y = new Date().getFullYear();
+  $("footerText").innerHTML = `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+</script>
+
 </body>
 </html>
