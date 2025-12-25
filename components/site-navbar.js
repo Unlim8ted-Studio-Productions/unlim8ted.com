@@ -10,6 +10,9 @@ class SiteNavbar extends HTMLElement {
     this.unsubCart = null;
     this.currentUser = null;
     this.cartItems = [];
+
+    this._resizeObs = null;
+    this._onWinResize = null;
   }
 
   connectedCallback() {
@@ -34,7 +37,10 @@ class SiteNavbar extends HTMLElement {
 
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display:block; }
+        :host{
+          display:block;
+          --nav-h: 52px; /* default desktop height */
+        }
 
         /* Navbar shell */
         .navbar{
@@ -44,6 +50,7 @@ class SiteNavbar extends HTMLElement {
           justify-content:center;
           background-color:#333333d0;
           z-index:3;
+          height: var(--nav-h);
         }
 
         /* This container is the key: centered links, right icons, without shifting */
@@ -54,7 +61,7 @@ class SiteNavbar extends HTMLElement {
           display:flex;
           justify-content:center; /* center nav list */
           align-items:center;
-          height: 52px;
+          height: var(--nav-h);
         }
 
         .navbar-toggle{
@@ -265,6 +272,8 @@ class SiteNavbar extends HTMLElement {
         }
 
         @media (max-width:768px){
+          :host{ --nav-h: 52px; } /* keep fixed height for the bar itself */
+
           .navbar-header{
             justify-content:flex-start;
             height:auto;
@@ -323,7 +332,11 @@ class SiteNavbar extends HTMLElement {
               </div>
             </li>
 
-            <li><a href="${base}/old"><button style="border:none;border-radius:10px;padding:8px 12px;cursor:pointer;">Old site</button></a></li>
+            <li>
+              <a href="${base}/old">
+                <button style="border:none;border-radius:10px;padding:8px 12px;cursor:pointer;">Old site</button>
+              </a>
+            </li>
           </ul>
 
           <!-- Right icons (don’t affect centering) -->
@@ -361,14 +374,19 @@ class SiteNavbar extends HTMLElement {
       </nav>
     `;
 
+    // Ensure page content is pushed below fixed navbar
+    this.syncSpacer();
+
     // Mobile toggle
     this.shadowRoot.getElementById("toggleBtn").addEventListener("click", () => {
       this.shadowRoot.getElementById("links").classList.toggle("show");
+      // in case mobile layout changes height, re-sync spacer
+      this.ensureSpacer();
     });
 
     // Active link outline
     const path = window.location.pathname.replace(/\/$/, "");
-    this.shadowRoot.querySelectorAll('a[href]').forEach(a => {
+    this.shadowRoot.querySelectorAll("a[href]").forEach((a) => {
       try {
         const href = new URL(a.getAttribute("href"), window.location.origin).pathname.replace(/\/$/, "");
         if (href === path) a.style.outline = "2px solid rgba(0,255,153,.5)";
@@ -430,8 +448,48 @@ class SiteNavbar extends HTMLElement {
   disconnectedCallback() {
     if (this.unsubCart) this.unsubCart();
     this.unsubCart = null;
+
+    if (this._resizeObs) this._resizeObs.disconnect();
+    this._resizeObs = null;
+
+    if (this._onWinResize) window.removeEventListener("resize", this._onWinResize);
+    this._onWinResize = null;
   }
 
+  // ----- spacer logic: pushes page content below fixed navbar -----
+  ensureSpacer() {
+    // Insert a spacer right after <site-navbar> (light DOM)
+    let spacer = this.nextElementSibling;
+    if (!spacer || !spacer.classList.contains("site-navbar-spacer")) {
+      spacer = document.createElement("div");
+      spacer.className = "site-navbar-spacer";
+      this.insertAdjacentElement("afterend", spacer);
+    }
+    spacer.style.height = this.getNavbarHeight() + "px";
+  }
+
+  getNavbarHeight() {
+    const nav = this.shadowRoot?.querySelector(".navbar");
+    if (!nav) return 52;
+    const rect = nav.getBoundingClientRect();
+    return Math.max(40, Math.round(rect.height || 52));
+  }
+
+  syncSpacer() {
+    this.ensureSpacer();
+
+    if (this._resizeObs) this._resizeObs.disconnect();
+    const nav = this.shadowRoot?.querySelector(".navbar");
+    if (nav && "ResizeObserver" in window) {
+      this._resizeObs = new ResizeObserver(() => this.ensureSpacer());
+      this._resizeObs.observe(nav);
+    }
+
+    this._onWinResize = () => this.ensureSpacer();
+    window.addEventListener("resize", this._onWinResize, { passive: true });
+  }
+
+  // ----- account menu -----
   updateAccountMenu({ user, signInHref, profileHref }) {
     const meta = this.shadowRoot.getElementById("menuMeta");
     const primary = this.shadowRoot.getElementById("menuPrimary");
@@ -451,6 +509,7 @@ class SiteNavbar extends HTMLElement {
     signOutBtn.style.display = "block";
   }
 
+  // ----- cart listener -----
   bindCartListener({ db, user }) {
     if (this.unsubCart) this.unsubCart();
     this.unsubCart = null;
@@ -466,28 +525,32 @@ class SiteNavbar extends HTMLElement {
     const itemsRef = collection(db, "users", user.uid, "cartItems");
     const q = query(itemsRef);
 
-    this.unsubCart = onSnapshot(q, (snap) => {
-      const items = [];
-      snap.forEach((d) => {
-        const data = d.data() || {};
-        items.push({
-          id: d.id,
-          title: data.title || data.name || data.productName || d.id,
-          qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
-          price: data.price ?? null,
-          image: data.image ?? data.imageUrl ?? null,
+    this.unsubCart = onSnapshot(
+      q,
+      (snap) => {
+        const items = [];
+        snap.forEach((d) => {
+          const data = d.data() || {};
+          items.push({
+            id: d.id,
+            title: data.title || data.name || data.productName || d.id,
+            qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
+            price: data.price ?? null,
+            image: data.image ?? data.imageUrl ?? null,
+          });
         });
-      });
 
-      this.cartItems = items;
-      this.renderCartMenu();
-      this.updateCartBadge(this.countCart(items));
-    }, (err) => {
-      console.error("Cart listener error:", err);
-      this.cartItems = this.getLocalCartItems();
-      this.renderCartMenu();
-      this.updateCartBadge(this.countCart(this.cartItems));
-    });
+        this.cartItems = items;
+        this.renderCartMenu();
+        this.updateCartBadge(this.countCart(items));
+      },
+      (err) => {
+        console.error("Cart listener error:", err);
+        this.cartItems = this.getLocalCartItems();
+        this.renderCartMenu();
+        this.updateCartBadge(this.countCart(this.cartItems));
+      }
+    );
   }
 
   countCart(items) {
@@ -522,7 +585,9 @@ class SiteNavbar extends HTMLElement {
     }
 
     const show = items.slice(0, 5); // show first 5 items
-    list.innerHTML = show.map(it => `
+    list.innerHTML = show
+      .map(
+        (it) => `
       <div class="cart-item">
         <div class="thumb">
           ${it.image ? `<img src="${this.escapeHtml(it.image)}" alt="">` : "Item"}
@@ -535,7 +600,9 @@ class SiteNavbar extends HTMLElement {
           </div>
         </div>
       </div>
-    `).join("");
+    `
+      )
+      .join("");
 
     if (items.length > show.length) {
       list.innerHTML += `
@@ -566,7 +633,11 @@ class SiteNavbar extends HTMLElement {
 
   escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, (c) => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
     }[c]));
   }
 
