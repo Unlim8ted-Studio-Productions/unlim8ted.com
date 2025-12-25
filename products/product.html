@@ -293,6 +293,7 @@
     .when{
       color: rgba(255,255,255,.45);
       font-size: 12px;
+      white-space: nowrap;
     }
     .commentText{
       margin: 0;
@@ -313,6 +314,41 @@
       color: rgba(255,255,255,.55);
       font-size: 13px;
     }
+
+    .mineBadge{
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,255,153,.35);
+      color: rgba(0,255,153,.95);
+      background: rgba(0,255,153,.10);
+      margin-left: 8px;
+      font-weight: 800;
+    }
+
+    .formActions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content: space-between;
+    }
+    .smallBtn{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-weight: 800;
+      cursor:pointer;
+    }
+    .smallBtn:hover{ border-color: rgba(0,255,153,.30); }
+    .dangerBtn{
+      border: 1px solid rgba(255,0,119,.35);
+      background: rgba(255,0,119,.12);
+      color: rgba(255,255,255,.92);
+    }
+    .dangerBtn:hover{ border-color: rgba(255,0,119,.55); }
   </style>
 </head>
 
@@ -390,7 +426,7 @@
                 </div>
                 <div>
                   <label for="displayName">Name (optional)</label>
-                  <input id="displayName" type="text" placeholder="Your name" />
+                  <input id="displayName" type="text" placeholder="Anonymous" />
                 </div>
               </div>
 
@@ -399,7 +435,11 @@
                 <textarea id="commentText" placeholder="Write a review…" required></textarea>
               </div>
 
-              <button class="btn" type="submit">Post Review</button>
+              <div class="formActions">
+                <button class="btn" id="postBtn" type="submit">Post Review</button>
+                <button class="smallBtn dangerBtn" id="deleteMyReviewBtn" type="button" style="display:none;">Delete my review</button>
+              </div>
+
               <div id="formMsg" class="empty" style="text-align:left;"></div>
             </form>
 
@@ -417,13 +457,12 @@
 <script type="module">
   import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
   import {
-    collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp,
-    doc, setDoc, getDocs, limit
+    collection, query, orderBy, onSnapshot, doc, setDoc, getDoc, deleteDoc,
+    serverTimestamp
   } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
   import { getFirebase } from "/components/firebase-init.js";
 
   const { auth, db } = getFirebase();
-
   const $ = (id) => document.getElementById(id);
 
   const hero = $("hero");
@@ -448,6 +487,8 @@
   const displayNameInput = $("displayName");
   const commentText = $("commentText");
   const formMsg = $("formMsg");
+  const deleteMyReviewBtn = $("deleteMyReviewBtn");
+  const postBtn = $("postBtn");
 
   const productId = (window.location.hash || "").replace("#", "").trim();
 
@@ -589,7 +630,7 @@
     }
   }
 
-  function renderComments(docs) {
+  function renderComments(docs, currentUid) {
     commentList.innerHTML = "";
 
     if (!docs.length) {
@@ -618,8 +659,15 @@
 
       const whoEl = document.createElement("div");
       whoEl.className = "who";
-      whoEl.textContent = `${who} • ${starsText(rating)}`;
       whoEl.style.color = "#ffcc66";
+      whoEl.textContent = `${who} • ${starsText(rating)}`;
+
+      if (currentUid && d.id === currentUid) {
+        const badge = document.createElement("span");
+        badge.className = "mineBadge";
+        badge.textContent = "Yours";
+        whoEl.appendChild(badge);
+      }
 
       const whenEl = document.createElement("div");
       whenEl.className = "when";
@@ -627,7 +675,7 @@
 
       const p = document.createElement("p");
       p.className = "commentText";
-      p.textContent = text; // ✅ safe render (no HTML injection)
+      p.textContent = text;
 
       top.appendChild(whoEl);
       top.appendChild(whenEl);
@@ -694,6 +742,19 @@
     notifyCartChanged();
   }
 
+  function setFormBusy(busy) {
+    postBtn.disabled = busy;
+    deleteMyReviewBtn.disabled = busy;
+    ratingSel.disabled = busy;
+    displayNameInput.disabled = busy;
+    commentText.disabled = busy;
+  }
+
+  function showFormMessage(msg, isError=false) {
+    formMsg.textContent = msg || "";
+    formMsg.style.color = isError ? "rgba(255,120,120,.95)" : "rgba(255,255,255,.65)";
+  }
+
   // ----------------------------
   // MAIN
   // ----------------------------
@@ -732,12 +793,59 @@
       });
 
       // -----------------------------------
-      // COMMENTS LIVE QUERY (NEW PATH)
+      // COMMENTS LIVE QUERY
       // products/{productId}/comments
       // -----------------------------------
       const commentsRef = collection(db, "products", String(item.id), "comments");
       const commentsQ = query(commentsRef, orderBy("createdAt", "desc"));
 
+      let currentUid = null;
+      let myReviewCache = null; // store my review doc data for edit prefilling
+
+      // Auth controls: show/hide review form + prefill if user's review exists
+      onAuthStateChanged(auth, async (user) => {
+        currentUid = user ? user.uid : null;
+
+        if (user) {
+          mustSignIn.style.display = "none";
+          commentForm.style.display = "grid";
+
+          // Try to load user's existing review doc (docId == uid)
+          try {
+            const myRef = doc(db, "products", String(item.id), "comments", user.uid);
+            const mySnap = await getDoc(myRef);
+            if (mySnap.exists()) {
+              myReviewCache = mySnap.data();
+              ratingSel.value = String(myReviewCache.rating || "5");
+              displayNameInput.value = (myReviewCache.displayName || "").trim();
+              commentText.value = (myReviewCache.text || "").trim();
+              deleteMyReviewBtn.style.display = "inline-block";
+              showFormMessage("Editing your review.");
+            } else {
+              myReviewCache = null;
+              ratingSel.value = "5";
+              displayNameInput.value = ""; // blank => Anonymous
+              commentText.value = "";
+              deleteMyReviewBtn.style.display = "none";
+              showFormMessage("");
+            }
+          } catch (e) {
+            console.error(e);
+            myReviewCache = null;
+            deleteMyReviewBtn.style.display = "none";
+            showFormMessage("");
+          }
+
+        } else {
+          myReviewCache = null;
+          commentForm.style.display = "none";
+          mustSignIn.style.display = "block";
+          deleteMyReviewBtn.style.display = "none";
+          showFormMessage("");
+        }
+      });
+
+      // Live comments listener (for everyone)
       onSnapshot(
         commentsQ,
         (snap) => {
@@ -765,28 +873,15 @@
           avgStarsBig.textContent = starsText(avg);
 
           renderBars(counts, total);
-          renderComments(docs);
+          renderComments(docs, currentUid);
         },
         (err) => {
           console.error("Comments listener error:", err);
-          // If rules deny reads, show friendly message
           commentList.innerHTML = `<div class="empty">Reviews unavailable.</div>`;
         }
       );
 
-      // auth -> show/hide review form
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          mustSignIn.style.display = "none";
-          commentForm.style.display = "grid";
-          displayNameInput.value = user.displayName || "";
-        } else {
-          commentForm.style.display = "none";
-          mustSignIn.style.display = "block";
-        }
-      });
-
-      // submit review (NEW PATH)
+      // Submit: create OR edit (same doc id = uid)
       commentForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -795,39 +890,75 @@
 
         const rating = parseInt(ratingSel.value, 10) || 0;
         const text = commentText.value.trim();
-        const displayName = displayNameInput.value.trim();
 
-        if (!text) {
-          formMsg.textContent = "Please write a comment.";
-          return;
-        }
-        if (text.length > 2000) {
-          formMsg.textContent = "Comment is too long (max 2000 chars).";
-          return;
-        }
-        if (rating < 1 || rating > 5) {
-          formMsg.textContent = "Please select a rating 1–5.";
-          return;
-        }
+        // IMPORTANT: blank input => Anonymous (even if Firebase displayName exists)
+        const raw = displayNameInput.value.trim();
+        const finalName = raw ? raw : "Anonymous";
 
-        formMsg.textContent = "Posting…";
+        if (!text) { showFormMessage("Please write a comment.", true); return; }
+        if (text.length > 2000) { showFormMessage("Comment is too long (max 2000 chars).", true); return; }
+        if (rating < 1 || rating > 5) { showFormMessage("Please select a rating 1–5.", true); return; }
+        if (finalName.length > 80) { showFormMessage("Name too long (max 80 chars).", true); return; }
+
+        showFormMessage("Saving…");
+        setFormBusy(true);
 
         try {
-          await addDoc(collection(db, "products", String(item.id), "comments"), {
+          const myRef = doc(db, "products", String(item.id), "comments", user.uid);
+
+          // If it exists, preserve createdAt (rules lock it). If new, set it.
+          const createdAt = (myReviewCache && myReviewCache.createdAt) ? myReviewCache.createdAt : serverTimestamp();
+
+          await setDoc(myRef, {
             userId: user.uid,
             rating,
             text,
-            displayName: displayName || user.displayName || "Anonymous",
+            displayName: finalName,
             photoURL: user.photoURL || "",
-            createdAt: serverTimestamp()
+            createdAt
           });
 
-          commentText.value = "";
-          formMsg.textContent = "Posted";
-          setTimeout(() => (formMsg.textContent = ""), 1200);
+          // Refresh cache
+          const snap = await getDoc(myRef);
+          myReviewCache = snap.exists() ? snap.data() : null;
+
+          deleteMyReviewBtn.style.display = myReviewCache ? "inline-block" : "none";
+          showFormMessage("Saved");
+          setTimeout(() => showFormMessage(myReviewCache ? "Editing your review." : ""), 900);
         } catch (err) {
           console.error(err);
-          formMsg.textContent = "Failed to post.";
+          showFormMessage("Failed to save review.", true);
+        } finally {
+          setFormBusy(false);
+        }
+      });
+
+      // Delete my review
+      deleteMyReviewBtn.addEventListener("click", async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        if (!confirm("Delete your review?")) return;
+
+        showFormMessage("Deleting…");
+        setFormBusy(true);
+
+        try {
+          const myRef = doc(db, "products", String(item.id), "comments", user.uid);
+          await deleteDoc(myRef);
+
+          myReviewCache = null;
+          ratingSel.value = "5";
+          displayNameInput.value = "";
+          commentText.value = "";
+          deleteMyReviewBtn.style.display = "none";
+          showFormMessage("Deleted");
+          setTimeout(() => showFormMessage(""), 900);
+        } catch (err) {
+          console.error(err);
+          showFormMessage("Failed to delete.", true);
+        } finally {
+          setFormBusy(false);
         }
       });
     }
