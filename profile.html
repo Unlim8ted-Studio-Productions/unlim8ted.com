@@ -206,9 +206,6 @@
 
         <label for="photoUrl">Profile photo URL (optional)</label>
         <input id="photoUrl" type="url" placeholder="https://…" />
-        <div style="margin-top:8px;color:rgba(255,255,255,.55);font-size:12px;">
-          Note: File upload needs Firebase Storage. This field works now.
-        </div>
       </div>
 
       <div class="actions">
@@ -323,7 +320,7 @@
         // Refresh UI from Firestore
         const snap = await getDoc(doc(db, "users", user.uid));
         fillUI(user, snap.data());
-        setStatus("Saved ✅");
+        setStatus("Saved");
         setTimeout(() => setStatus(""), 1200);
       } catch (e){
         console.error(e);
