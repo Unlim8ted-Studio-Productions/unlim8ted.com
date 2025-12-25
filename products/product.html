@@ -805,6 +805,7 @@
       // Auth controls: show/hide review form + prefill if user's review exists
       onAuthStateChanged(auth, async (user) => {
         currentUid = user ? user.uid : null;
+        displayNameInput.value = user.displayName || "";
 
         if (user) {
           mustSignIn.style.display = "none";
