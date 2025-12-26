@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Primary Meta Tags -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Unlim8ted - About</title>
   <meta name="title" content="Unlim8ted" />
   <meta name="description"
@@ -31,16 +31,10 @@
   <meta property="og:image" content="https://www.youtube.com/img/desktop/yt_1200.png" />
   <meta property="og:description" content="Watch videos from Unlim8ted Studio Productions on YouTube." />
 
-  <!-- Reddit 
-    <meta property="og:profile" content="Reddit" />
-    <meta property="og:url" content="https://www.reddit.com/user/Unlim8tedStudios/" />
-    <meta property="og:image" content="https://www.redditinc.com/assets/images/site/reddit-logo.png" />
-    <meta property="og:description" content="Join the conversation on Reddit with Unlim8ted Studios!" />-->
-
-  <!-- Optional Meta Tags for other platforms -->
   <meta name="keywords"
     content="films, music, books, games, software, AI products, entertainment, unlim8ted, Unlim8ted Studio Productions" />
   <meta name="author" content="Unlim8ted Studio Productions" />
+
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -50,80 +44,19 @@
   "logo": "https://unlim8ted.com/images/logo/logo.png",
   "description": "Unlim8ted Studio Productions is a dynamic entertainment company creating innovative experiences across films, games, music, books, software, and AI products.",
   "foundingDate": "2019",
-  "founder": {
-    "@type": "Person",
-    "name": "Anonymous Programmer"
-  },
+  "founder": { "@type": "Person", "name": "Anonymous Programmer" },
   "contactPoint": [
-        {
-      "@type": "ContactPoint",
-      "email": "contact@unlim8ted.com",
-      "contactType": "General Inquiry",
-      "description": "Contact for general inquiries about Unlim8ted Studio Productions."
-    },
-        {
-      "@type": "ContactPoint",
-      "email": "support@unlim8ted.com",
-      "contactType": "Customer Support",
-      "description": "Contact for customer support and assistance."
-    }
+    { "@type": "ContactPoint", "email": "contact@unlim8ted.com", "contactType": "General Inquiry" },
+    { "@type": "ContactPoint", "email": "support@unlim8ted.com", "contactType": "Customer Support" }
   ],
   "sameAs": [
     "https://www.youtube.com/@unlim8tedstudioproductions",
     "https://github.com/Unlim8ted-Studio-Productions",
     "https://www.reddit.com/r/Unlim8ted/",
     "https://discord.gg/Unlim8ted"
-  ],
-  "department": [
-    {
-      "@type": "Movie",
-      "name": "The Life of a Meatball",
-      "description": "An animated film that follows the adventures of a meatball, exploring themes of identity and belonging in a humorous and thought-provoking way.",
-      "image": "https://unlim8ted.com/images/products/films/The Life of a Meatball.jpg",
-      "datePublished": "2024-01-05",
-      "director": {
-        "@type": "Person",
-        "name": "Anonymous"
-      },
-      "voiceActors": [
-        {
-          "@type": "Person",
-          "name": "Anonymous"
-        },
-        {
-          "@type": "Person",
-          "name": "Anonymous"
-        }
-      ],
-      "genre": "Animation, Comedy",
-      "url": "https://m.youtube.com/watch?v=FiDwWp7ZteE"
-    },
-    {
-      "@type": "VideoGame",
-      "name": "Square Pixels",
-      "description": "A 2D pixelated sandbox adventure inspired by Terraria, offering a rich world filled with exploration, crafting, and action-packed adventures.",
-      "image": "https://unlim8ted.com/images/products/software/Screenshot 2023-09-21 181742(1).png",
-      "datePublished": "2025-06-15",
-      "operatingSystem": [
-        "Windows",
-        "Linux",
-        "macOS"
-      ],
-      "applicationCategory": "Game",
-      "genre": "Adventure, Sandbox",
-      "url": "https://unlim8ted.com/square-pixels",
-      "offers": {
-        "@type": "Offer",
-        "price": "19.99",
-        "priceCurrency": "USD",
-        "availability": "https://schema.org/PreOrder",
-        "url": "https://store.steampowered.com/app/123456/Square_Pixels/"
-      }
-    }
   ]
 }
 </script>
-
 
   <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
   <style media="screen" type="text/css">
@@ -144,9 +77,7 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      /* To stack spinner and text vertically */
       height: 100vh;
-      /* Full viewport height to ensure vertical centering */
     }
 
     .loaderr {
@@ -181,47 +112,9 @@
       animation: spin-reverse 1.5s linear infinite;
     }
 
-    @-webkit-keyframes spin {
-      0% {
-        -webkit-transform: rotate(0deg);
-      }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes spin-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
 
-      100% {
-        -webkit-transform: rotate(360deg);
-      }
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    @-webkit-keyframes spin-reverse {
-      0% {
-        -webkit-transform: rotate(360deg);
-      }
-
-      100% {
-        -webkit-transform: rotate(0deg);
-      }
-    }
-
-    @keyframes spin-reverse {
-      0% {
-        transform: rotate(360deg);
-      }
-
-      100% {
-        transform: rotate(0deg);
-      }
-    }
-
-    /* Loading text animation */
     .loading-text {
       margin-top: 20px;
       font-size: 18px;
@@ -231,42 +124,11 @@
       animation: pulse 1.5s infinite ease-in-out;
     }
 
-    @keyframes pulse {
-      0% {
-        opacity: 1;
-      }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-      50% {
-        opacity: 0.5;
-      }
-
-      100% {
-        opacity: 1;
-      }
-    }
-
-
-    @-webkit-keyframes load-out {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0;
-      }
-    }
-
-    @keyframes load-out {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0;
-      }
-    }
+    @keyframes load-out { from { opacity: 1; } to { opacity: 0; } }
   </style>
-  <!-- Styles for the No-JavaScript message -->
+
   <style>
     .no-js-message {
       background: #2c4762;
@@ -274,63 +136,120 @@
       font-size: 20px;
       text-align: center;
       padding: 20px;
-      z-index: 999999999999999999999999999999999999999999999;
+      z-index: 999999999999999999;
       position: fixed;
       width: 100%;
       top: 0;
     }
   </style>
 
-  <!-- No-JavaScript message -->
   <noscript>
-    <div class="no-js-message">
-      Please enable JavaScript to use this website properly.
-    </div>
+    <div class="no-js-message">Please enable JavaScript to use this website properly.</div>
   </noscript>
+
   <div class="loader">
     <div class="loaderr-container">
       <div class="loaderr"></div>
       <div class="loading-text">Loading...</div>
     </div>
   </div>
+
   <script>
-    // This function will execute after the full page has finished loading
     window.onload = function () {
-      // Trigger fade-out animation for the loader spinner
       const loaderSpinner = document.querySelector('.loaderr');
       const loadingText = document.querySelector('.loading-text');
       const loaderContainer = document.querySelector('.loader');
 
-      // Apply animations
       loaderSpinner.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-      loaderSpinner.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
-
-      loadingText.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-      loadingText.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
-
-      loaderContainer.style.animation = 'load-out 4s forwards';
-      loaderContainer.style.webkitAnimation = 'load-out 4s forwards';
-
-
+      loadingText.style.animation = 'load-out 1.5s forwards';
+      loaderContainer.style.animation = 'load-out 0.8s forwards';
     };
-
   </script>
   <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
 
-  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
-</head>
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
 
-<body>
+  <!-- =========================
+       MODERNIZED PAGE STYLES
+  ========================== -->
   <style>
-    /* Navigation Bar Styles */
+    :root {
+      --bg0: #07070c;
+      --bg1: #0a0b12;
+      --card: rgba(255, 255, 255, 0.06);
+      --card2: rgba(255, 255, 255, 0.09);
+      --line: rgba(255, 255, 255, 0.10);
+      --ink: rgba(233, 231, 255, 0.92);
+      --muted: rgba(233, 231, 255, 0.68);
+      --accent: #00ffc6;
+      --accent2: #ff00ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 500px at 20% 10%, rgba(0,255,198,.18), transparent 60%),
+        radial-gradient(900px 500px at 80% 25%, rgba(255,0,255,.14), transparent 60%),
+        radial-gradient(900px 500px at 50% 90%, rgba(0,140,255,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+    }
+
+    /* Top bar (glassy) */
     .navbar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 50;
       display: flex;
       justify-content: center;
-      background-color: #333333d0;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 3;
+      padding: 12px 14px;
+      background: rgba(10, 10, 16, 0.55);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .nav-inner {
+      width: min(1100px, 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 16px rgba(0,255,198,.65);
+    }
+
+    .navbar-toggle {
+      display: none;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
     }
 
     .nav-links {
@@ -338,115 +257,266 @@
       padding: 0;
       margin: 0;
       display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .nav-item {
-      position: relative;
-    }
+    .nav-item { position: relative; }
 
-    .nav-item a {
-      display: block;
-      color: white;
-      padding: 14px 20px;
+    .nav-item > a,
+    .nav-item > button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--ink);
       text-decoration: none;
-      text-align: center;
-    }
-
-    .nav-item a:hover {
-      background-color: #15131f;
-      color: rgb(51, 207, 103);
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      min-width: 160px;
-      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-      z-index: 3;
-    }
-
-    .dropdown-content a {
-      color: black;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-      text-align: left;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #1c1d38;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-      z-index: 3;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    .dropdown-content a {
-      color: rgb(255, 255, 255);
-      text-decoration: none;
-      padding: 12px 16px;
-      display: block;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #2d2849;
-    }
-
-    .navbar-toggle {
-      display: none;
-      background-color: #333;
-      color: white;
-      padding: 14px 20px;
-      border: none;
+      border: 1px solid transparent;
+      background: transparent;
       cursor: pointer;
-      font-size: 18px;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      user-select: none;
+      font: inherit;
     }
 
-    /* Responsive styles */
-    @media (max-width: 768px) {
+    .nav-item > a:hover,
+    .nav-item > button:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.12);
+      transform: translateY(-1px);
+    }
+
+    /* Dropdown */
+    .dropdown-content {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      min-width: 220px;
+      padding: 8px;
+      border-radius: 14px;
+      background: rgba(18, 18, 26, 0.92);
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 10px 10px;
+      border-radius: 12px;
+      color: var(--ink);
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: background .15s ease, border-color .15s ease;
+    }
+
+    .dropdown-content a:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.10);
+    }
+
+    .dropdown:hover .dropdown-content { display: block; }
+
+    /* “Old site” as a real nav button */
+    .nav-cta {
+      margin-left: 6px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,255,198,0.35);
+      background: rgba(0,255,198,0.10);
+      color: var(--ink);
+      text-decoration: none;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      white-space: nowrap;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      background: rgba(0,255,198,0.16);
+      border-color: rgba(0,255,198,0.55);
+    }
+
+    /* Mobile nav */
+    @media (max-width: 820px) {
+      .navbar-toggle { display: inline-flex; }
       .nav-links {
-        flex-direction: column;
+        position: absolute;
+        top: 64px;
+        left: 12px;
+        right: 12px;
         display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 10px;
+        border-radius: 16px;
+        background: rgba(18, 18, 26, 0.92);
+        border: 1px solid rgba(255,255,255,0.10);
+        box-shadow: var(--shadow);
       }
-
-      .nav-links.show {
-        display: flex;
+      .nav-links.show { display: flex; }
+      .dropdown-content {
+        position: static;
+        display: none;
+        min-width: 100%;
+        margin-top: 6px;
       }
-
-      .navbar-toggle {
-        display: block;
-      }
+      .dropdown.open .dropdown-content { display: block; }
     }
+
+    /* Floating cart */
+    .cart-btn {
+      position: fixed;
+      top: 84px;
+      right: 18px;
+      z-index: 60;
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--ink);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+    .cart-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(0,255,198,0.30);
+    }
+
+    /* Layout */
+    .page {
+      width: min(1100px, 92vw);
+      margin: 0 auto;
+      padding: 130px 0 70px; /* space for fixed nav */
+    }
+
+    .hero {
+      border: 1px solid rgba(255,255,255,0.10);
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      border-radius: 24px;
+      padding: clamp(24px, 4vw, 44px);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero:before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background:
+        radial-gradient(400px 240px at 15% 20%, rgba(0,255,198,.18), transparent 60%),
+        radial-gradient(400px 240px at 85% 30%, rgba(255,0,255,.14), transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero > * { position: relative; }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 4vw, 54px);
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      color: var(--ink);
+      text-shadow: 0 0 14px rgba(0,255,198,.18);
+    }
+
+    .sub {
+      max-width: 70ch;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 1.06rem;
+      line-height: 1.75;
+    }
+
+    .cta-row {
+      margin-top: 22px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--ink);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+      font-weight: 650;
+      letter-spacing: .2px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.10);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .btn.primary {
+      border-color: rgba(0,255,198,0.40);
+      background: rgba(0,255,198,0.12);
+    }
+    .btn.primary:hover {
+      border-color: rgba(0,255,198,0.60);
+      background: rgba(0,255,198,0.18);
+    }
+
+    .divider {
+      margin: 34px auto 0;
+      width: min(760px, 96%);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+    }
+
+    footer {
+      margin-top: 26px;
+      text-align: center;
+      color: rgba(233,231,255,0.55);
+      font-size: 0.95rem;
+    }
+
+    footer a { color: rgba(233,231,255,0.78); }
+    footer a:hover { color: var(--accent); }
   </style>
-  <script>
-    function toggleMenu() {
-      const navLinks = document.getElementById("navbarLinks");
-      navLinks.classList.toggle("show");
-    }
-  </script>
+</head>
+
+<body>
+
   <nav class="navbar">
-    <div class="navbar-header">
-      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <span class="brand-dot"></span>
+        <span>Unlim8ted</span>
+      </a>
+
+      <button class="navbar-toggle" aria-label="Toggle navigation" onclick="toggleMenu()">☰</button>
+
       <ul class="nav-links" id="navbarLinks">
         <li class="nav-item"><a href="/">Home</a></li>
         <li class="nav-item"><a href="products">Products</a></li>
         <li class="nav-item"><a href="help">Help</a></li>
         <li class="nav-item"><a href="about">About</a></li>
-        <li class="nav-item dropdown">
-          <a href="javascript:void(0)" class="dropbtn">More</a>
+
+        <li class="nav-item dropdown" id="moreDropdown">
+          <button type="button" onclick="toggleDropdown(event)">More ▾</button>
           <div class="dropdown-content">
             <a href="portfolio">Portfolio</a>
             <a href="contact">Contact</a>
@@ -456,177 +526,64 @@
             <a href="puzzle-squares">Puzzle Squares</a>
           </div>
         </li>
-        <a href="old"><button>Old site</button></a>
+
+        <li class="nav-item">
+          <a class="nav-cta" href="old">Old site</a>
+        </li>
       </ul>
     </div>
   </nav>
-  <style>
-    /* logo */
-    .logo {
-      position: absolute;
-      z-index: 1;
-      top: 5%;
-      /* Adjust top position relative to viewport height */
-      left: 5%;
-      /* Adjust left position relative to viewport width */
-      display: block;
+
+  <a class="cart-btn" href="cart" title="Cart" aria-label="Cart">🛍️</a>
+
+  <main class="page">
+    <section class="hero" id="about">
+      <h1>About Us</h1>
+      <p class="sub">
+        Unlim8ted Studio Productions is an entertainment company dedicated to producing innovative and creative media
+        content—from film and animation to digital experiences and beyond.
+      </p>
+      <p class="sub">
+        Our mission is to bring stories to life and deliver unique entertainment experiences for audiences around the world.
+      </p>
+
+      <div class="cta-row">
+        <a class="btn primary" href="/about-us">Find Out More</a>
+        <a class="btn" href="/portfolio">See Work</a>
+      </div>
+
+      <div class="divider"></div>
+
+      <footer>
+        <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("navbarLinks").classList.toggle("show");
     }
 
-    .logo img {
-      height: 10vw;
-      /* Adjust height relative to viewport width */
-      max-height: 140px;
-      /* Set a maximum height to prevent the logo from getting too large on larger screens */
-      width: auto;
-      /* Maintain aspect ratio */
+    // Mobile dropdown open/close + click-outside
+    function toggleDropdown(e) {
+      e.stopPropagation();
+      const dd = document.getElementById("moreDropdown");
+      dd.classList.toggle("open");
     }
 
-    /* Media query for small devices */
-    @media (max-width: 600px) {
-      .logo img {
-        height: 20vw;
-        /* Larger logo for smaller devices */
-      }
-    }
+    window.addEventListener("click", () => {
+      const dd = document.getElementById("moreDropdown");
+      if (dd) dd.classList.remove("open");
+    });
 
-    button {
-      padding: 10px;
-      font-size: 1em;
-      background-color: #000000;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+      const currentYear = new Date().getFullYear();
+      const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
+      const el = document.getElementById("footer-text");
+      if (el) el.innerHTML = footerText;
+    });
+  </script>
 
-    button:hover {
-      background-color: rgb(57, 200, 145);
-    }
-
-    .image {
-      max-width: 300px;
-    }
-
-    /* Cart button and notification styles */
-    .cart-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: #0056b3;
-      color: #fff;
-      padding: 5px 5px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 1000;
-      display: block;
-      /* Initially hidden */
-    }
-
-    .cart-btn:hover {
-      background-color: #4179b5;
-    }
-  </style>
-
-  <style>
-    /* General styles */
-    body {
-      background-color: #0a0a0a;
-      color: #e0e0e0;
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    .content-section {
-      padding: 40px;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      color: #00ffc6;
-      /* Neon turquoise */
-      text-shadow: 0 0 10px #00ffc6, 0 0 20px #00ffc6;
-      margin-bottom: 30px;
-    }
-
-    p {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #cccccc;
-    }
-
-    /* Portfolio grid */
-    .portfolio-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
-
-    .portfolio-item {
-      background-color: #121212;
-      border: 2px solid transparent;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-      padding: 20px;
-      max-width: 300px;
-      text-align: left;
-      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-    }
-
-    .portfolio-item:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 0 20px rgba(0, 255, 198, 0.8);
-      border-color: #00ffc6;
-      /* Neon turquoise */
-    }
-
-    .portfolio-item h2 {
-      color: #ff00ff;
-      /* Neon magenta */
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-    }
-
-    .portfolio-item p {
-      font-size: 1rem;
-      color: #e0e0e0;
-    }
-
-    /* Footer */
-    .content-section>div p {
-      font-size: 0.9rem;
-      color: #666666;
-    }
-
-    .content-section>div p:hover {
-      color: #00ffc6;
-      text-shadow: 0 0 10px #00ffc6;
-    }
-  </style>
-  <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
-
-
-  <!-- Rest of the content -->
-  <!-- About Section -->
-  <div id="about" class="content-section">
-    <h1>About Us</h1>
-    <p>Unlim8ted Studio Productions is an entertainment company dedicated to producing innovative and creative media
-      content. We specialize in a wide range of productions, from film and animation to digital art and beyond.</p>
-    <p>Our mission is to bring stories to life and provide unique entertainment experiences for audiences around the
-      world.</p>
-    <a class="button" href="/about-us">Find Out More</a>
-    <!-- Copyright -->
-    <div style="margin-top: 100px;">
-      <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
-      <script>document.addEventListener("DOMContentLoaded", function () {
-          const currentYear = new Date().getFullYear();
-          const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
-          document.getElementById("footer-text").innerHTML = footerText;
-      });
-      </script>
-    </div>
-  </div>
+</body>
+</html>
