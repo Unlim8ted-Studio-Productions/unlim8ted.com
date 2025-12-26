@@ -13,6 +13,9 @@ class SiteNavbar extends HTMLElement {
 
     this._resizeObs = null;
     this._onWinResize = null;
+
+    this._isMobile = false;
+    this._focusTrapHandler = null;
   }
 
   connectedCallback() {
@@ -21,7 +24,6 @@ class SiteNavbar extends HTMLElement {
     const signInHref = this.getAttribute("signin-href") || "https://unlim8ted.com/sign-in";
     const profileHref = this.getAttribute("profile-href") || "https://unlim8ted.com/profile";
 
-    // Firebase config (same as your sign-in page)
     const firebaseConfig = {
       apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
       authDomain: "unlim8ted-db.firebaseapp.com",
@@ -39,44 +41,80 @@ class SiteNavbar extends HTMLElement {
       <style>
         :host{
           display:block;
-          --nav-h: 52px; /* default desktop height */
+          --nav-h: 56px;
+          --maxw: 1180px;
+
+          /* “Modern” palette hooks (safe defaults) */
+          --nav-bg: rgba(10, 8, 18, .55);
+          --nav-bg2: rgba(10, 8, 18, .30);
+          --nav-stroke: rgba(255,255,255,.10);
+          --nav-ink: rgba(233,231,255,.92);
+          --nav-muted: rgba(233,231,255,.72);
+          --nav-accent: rgba(184,107,255,.95);
+          --nav-accent2: rgba(103,213,255,.85);
+          --nav-hover: rgba(255,255,255,.07);
+          --nav-radius: 16px;
         }
 
-        /* Navbar shell */
         .navbar{
           position: fixed;
           top:0; left:0; right:0;
-          display:flex;
-          justify-content:center;
-          background-color:#333333d0;
-          z-index:3;
+          z-index: 9999;
           height: var(--nav-h);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          background: linear-gradient(180deg, var(--nav-bg), var(--nav-bg2));
+          border-bottom: 1px solid var(--nav-stroke);
         }
 
-        /* This container is the key: centered links, right icons, without shifting */
         .navbar-header{
           width:100%;
-          max-width:1100px;
+          max-width: var(--maxw);
+          margin: 0 auto;
           position:relative;
-          display:flex;
-          justify-content:center; /* center nav list */
-          align-items:center;
           height: var(--nav-h);
+          display:flex;
+          align-items:center;
+          justify-content:center; /* keep links centered */
+          padding: 0 12px;
+        }
+
+        .brand{
+          position:absolute;
+          left: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          display:flex;
+          align-items:center;
+          gap:10px;
+          text-decoration:none;
+          color: var(--nav-ink);
+          font-weight: 900;
+          letter-spacing: .04em;
+          user-select:none;
+        }
+
+        .brand-dot{
+          width:10px;height:10px;border-radius:50%;
+          background: linear-gradient(135deg, var(--nav-accent), var(--nav-accent2));
+          box-shadow: 0 0 16px rgba(184,107,255,.35);
         }
 
         .navbar-toggle{
           display:none;
-          background:#333;
-          color:#fff;
-          padding:10px 14px;
-          border:none;
+          position:absolute;
+          left: 12px;
+          top: 8px;
+          padding: 10px 12px;
+          border-radius: 14px;
+          border: 1px solid var(--nav-stroke);
+          background: rgba(255,255,255,.06);
+          color: var(--nav-ink);
           cursor:pointer;
           font-size:18px;
-          position:absolute;
-          top:6px;
-          left:10px;
-          border-radius:8px;
+          line-height: 1;
         }
+        .navbar-toggle:hover{ background: var(--nav-hover); }
 
         /* Center links */
         ul#links{
@@ -86,46 +124,72 @@ class SiteNavbar extends HTMLElement {
           display:flex;
           justify-content:center;
           align-items:center;
-          gap:0;
+          gap: 6px;
         }
+
+        li{ position:relative; }
 
         li a{
-          display:block;
-          color:#fff;
-          padding:14px 18px;
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+          color: var(--nav-ink);
+          padding: 10px 12px;
           text-decoration:none;
-          text-align:center;
+          border-radius: 14px;
+          border: 1px solid transparent;
           white-space:nowrap;
+          font-weight: 700;
+          transition: transform .18s ease, background .18s ease, border-color .18s ease;
         }
         li a:hover{
-          background:#15131f;
-          color:rgb(51,207,103);
+          background: var(--nav-hover);
+          border-color: rgba(180,130,255,.18);
+          transform: translateY(-1px);
         }
 
-        /* More dropdown (hover) */
+        .active{
+          border-color: rgba(184,107,255,.35) !important;
+          background: rgba(184,107,255,.10) !important;
+        }
+
+        /* More dropdown */
         .dropdown{ position:relative; }
         .dropdown-content{
           display:none;
           position:absolute;
-          left:0;
-          background:#251f1f;
-          box-shadow:0 8px 16px rgba(0,0,0,.2);
-          min-width:180px;
-          z-index:5;
+          left: 0;
+          top: calc(100% + 8px);
+          min-width: 210px;
+          padding: 8px;
+          border-radius: 18px;
+          background: rgba(10,8,18,.92);
+          border: 1px solid var(--nav-stroke);
+          box-shadow: 0 18px 60px rgba(0,0,0,.55);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          z-index: 10001;
         }
         .dropdown-content a{
-          color:#fff;
-          padding:12px 16px;
-          display:block;
-          text-align:left;
+          display:flex;
+          padding: 10px 12px;
+          border-radius: 14px;
+          border: 1px solid transparent;
         }
-        .dropdown-content a:hover{ background:#2d2849; }
-        .dropdown:hover .dropdown-content{ display:block; }
+        .dropdown-content a:hover{
+          background: var(--nav-hover);
+          border-color: rgba(255,255,255,.10);
+          transform:none;
+        }
 
-        /* Right-side icons (ABSOLUTE so they don't affect centering) */
+        /* hover on desktop, click on mobile */
+        .dropdown:hover .dropdown-content{ display:block; }
+        .dropdown.open .dropdown-content{ display:block; }
+
+        /* Right icons */
         .right-icons{
           position:absolute;
-          right:10px;
+          right:12px;
           top:50%;
           transform: translateY(-50%);
           display:flex;
@@ -137,213 +201,230 @@ class SiteNavbar extends HTMLElement {
           display:flex;
           align-items:center;
           justify-content:center;
-          width:42px;
-          height:42px;
-          border-radius:12px;
-          border:none;
-          background:transparent;
+          width:44px;
+          height:44px;
+          border-radius: 14px;
+          border: 1px solid var(--nav-stroke);
+          background: rgba(255,255,255,.05);
           cursor:pointer;
-          color:white;
+          color: var(--nav-ink);
           padding:0;
+          transition: transform .18s ease, background .18s ease, border-color .18s ease;
         }
         .icon-btn:hover{
-          background:#15131f;
-          color:rgb(51,207,103);
+          transform: translateY(-1px);
+          background: var(--nav-hover);
+          border-color: rgba(180,130,255,.18);
         }
 
-        .icon{
-          width:22px;
-          height:22px;
-          display:block;
-        }
+        .icon{ width:22px; height:22px; display:block; }
 
-        /* Cart badge */
-        .cart-wrap{
-          position:relative;
-        }
+        .cart-wrap{ position:relative; }
         .badge{
           position:absolute;
-          top:6px;
-          right:6px;
-          min-width:18px;
-          height:18px;
-          padding:0 5px;
-          border-radius:999px;
-          background:rgba(0,255,153,.95);
-          color:#15131f;
-          font-size:12px;
-          font-weight:700;
+          top: 6px;
+          right: 6px;
+          min-width: 18px;
+          height: 18px;
+          padding: 0 6px;
+          border-radius: 999px;
+          background: linear-gradient(135deg, var(--nav-accent), var(--nav-accent2));
+          color: rgba(10,8,18,.95);
+          font-size: 12px;
+          font-weight: 900;
           display:flex;
           align-items:center;
           justify-content:center;
-          line-height:18px;
+          line-height: 18px;
+          box-shadow: 0 10px 22px rgba(0,0,0,.45);
           transform: translate(20%, -20%);
-          box-shadow: 0 2px 8px rgba(0,0,0,.35);
         }
         .badge.hidden{ display:none; }
 
-        /* Menus (cart + profile) */
         .menu{
           display:none;
           position:absolute;
           right:0;
-          top:48px;
-          background:#251f1f;
-          box-shadow:0 8px 16px rgba(0,0,0,.2);
-          min-width:260px;
-          border-radius:12px;
+          top: 54px;
+          min-width: 280px;
+          border-radius: 18px;
           overflow:hidden;
-          z-index:10;
+          border: 1px solid rgba(255,255,255,.10);
+          background: rgba(10,8,18,.92);
+          box-shadow: 0 18px 70px rgba(0,0,0,.58);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          z-index: 10002;
         }
         .menu.open{ display:block; }
 
         .menu .meta{
-          padding:10px 14px;
-          font-size:12px;
-          color:rgba(255,255,255,.75);
-          border-bottom:1px solid rgba(255,255,255,.08);
+          padding: 10px 14px;
+          font-size: 12px;
+          color: var(--nav-muted);
+          border-bottom: 1px solid rgba(255,255,255,.08);
+          letter-spacing: .08em;
+          text-transform: uppercase;
         }
+
         .menu a, .menu button{
           width:100%;
           border:none;
           background:none;
-          color:#fff;
-          padding:12px 14px;
+          color: var(--nav-ink);
+          padding: 12px 14px;
           text-decoration:none;
           display:block;
           text-align:left;
           cursor:pointer;
-          font-size:14px;
+          font-size: 14px;
+          font-weight: 700;
         }
-        .menu a:hover, .menu button:hover{ background:#2d2849; }
+        .menu a:hover, .menu button:hover{ background: var(--nav-hover); }
 
-        /* Cart item list */
-        .cart-items{
-          max-height: 320px;
-          overflow:auto;
-        }
+        .cart-items{ max-height: 320px; overflow:auto; }
         .cart-item{
           display:flex;
           gap:10px;
-          padding:10px 14px;
+          padding: 10px 14px;
           border-bottom:1px solid rgba(255,255,255,.06);
         }
         .cart-item:last-child{ border-bottom:none; }
 
         .thumb{
-          width:42px; height:42px;
-          border-radius:10px;
-          background:rgba(255,255,255,.08);
-          flex:0 0 auto;
+          width:44px; height:44px;
+          border-radius: 14px;
+          background: rgba(255,255,255,.07);
           overflow:hidden;
+          flex:0 0 auto;
           display:flex;
           align-items:center;
           justify-content:center;
-          color:rgba(255,255,255,.65);
-          font-size:12px;
+          color: var(--nav-muted);
+          font-size: 12px;
+          border: 1px solid rgba(255,255,255,.08);
         }
         .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
 
         .ci-main{ flex:1; min-width:0; }
         .ci-title{
-          font-size:13px;
-          color:#fff;
+          font-size: 13px;
+          color: var(--nav-ink);
           white-space:nowrap;
           overflow:hidden;
           text-overflow:ellipsis;
+          font-weight: 800;
         }
         .ci-sub{
           margin-top:4px;
           font-size:12px;
-          color:rgba(255,255,255,.7);
+          color: var(--nav-muted);
           display:flex;
           justify-content:space-between;
           gap:10px;
         }
 
         .cart-actions{
-          border-top:1px solid rgba(255,255,255,.08);
+          border-top: 1px solid rgba(255,255,255,.08);
           display:flex;
         }
         .cart-actions a{
           flex:1;
           text-align:center;
-          padding:12px 10px;
+          padding: 12px 10px;
+          font-weight: 900;
         }
 
-        @media (max-width:768px){
-          :host{ --nav-h: 52px; } /* keep fixed height for the bar itself */
+        /* Mobile */
+        @media (max-width: 820px){
+          :host{ --nav-h: 56px; }
+
+          .brand{ display:none; } /* keeps layout clean on mobile */
 
           .navbar-header{
             justify-content:flex-start;
+            align-items:stretch;
             height:auto;
-            align-items:flex-start;
           }
+
           .navbar-toggle{ display:block; }
 
           ul#links{
+            display:none;
             flex-direction:column;
             align-items:stretch;
-            display:none;
-            background-color:#333333f2;
-            padding-top:48px;
-            width:100%;
+            width: 100%;
+            padding: 64px 10px 10px;
+            background: rgba(10,8,18,.88);
+            border-top: 1px solid rgba(255,255,255,.08);
           }
           ul#links.show{ display:flex; }
 
           .right-icons{
             position:fixed;
-            right:10px;
+            right:12px;
             top:6px;
             transform:none;
-            z-index:11;
+            z-index: 10010;
           }
 
           .menu{
-            right:10px;
-            top:52px;
+            right:12px;
+            top: 56px;
             min-width: 92vw;
-            max-width: 360px;
+            max-width: 380px;
           }
 
-          .dropdown-content{ position:relative; box-shadow:none; }
+          /* disable hover dropdown; click toggles .open */
+          .dropdown:hover .dropdown-content{ display:none; }
+        }
+
+        /* reduced motion */
+        @media (prefers-reduced-motion: reduce){
+          *{ transition:none !important; animation:none !important; }
         }
       </style>
 
-      <nav class="navbar">
+      <nav class="navbar" role="navigation" aria-label="Primary">
         <div class="navbar-header">
-          <button class="navbar-toggle" id="toggleBtn">☰</button>
+          <a class="brand" href="${base}/" aria-label="Unlim8ted Home">
+            <span class="brand-dot" aria-hidden="true"></span>
+            <span>Unlim8ted</span>
+          </a>
 
-          <ul id="links">
-            <li><a href="${base}/">Home</a></li>
-            <li><a href="${base}/products">Products</a></li>
-            <li><a href="${base}/help">Help</a></li>
-            <li><a href="${base}/about">About</a></li>
+          <button class="navbar-toggle" id="toggleBtn" aria-label="Toggle menu" aria-expanded="false">☰</button>
 
-            <li class="dropdown">
-              <a href="javascript:void(0)">More</a>
-              <div class="dropdown-content">
-                <a href="${base}/portfolio">Portfolio</a>
-                <a href="${base}/contact">Contact</a>
-                <a href="${base}/blog">Blog</a>
-                <a href="${base}/live-chat">Live Chat</a>
-                <a href="${base}/live-game">Live Chat and Game</a>
-                <a href="${base}/puzzle-squares">Puzzle Squares</a>
+          <ul id="links" role="menubar">
+            <li><a href="${base}/" role="menuitem">Home</a></li>
+            <li><a href="${base}/products" role="menuitem">Products</a></li>
+            <li><a href="${base}/help" role="menuitem">Help</a></li>
+            <li><a href="${base}/about" role="menuitem">About</a></li>
+
+            <li class="dropdown" id="moreDropdown">
+              <a href="javascript:void(0)" id="moreBtn" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                More <span aria-hidden="true">▾</span>
+              </a>
+              <div class="dropdown-content" id="moreMenu" role="menu" aria-label="More links">
+                <a href="${base}/portfolio" role="menuitem">Portfolio</a>
+                <a href="${base}/contact" role="menuitem">Contact</a>
+                <a href="${base}/blog" role="menuitem">Blog</a>
+                <a href="${base}/live-chat" role="menuitem">Live Chat</a>
+                <a href="${base}/live-game" role="menuitem">Live Chat and Game</a>
+                <a href="${base}/puzzle-squares" role="menuitem">Puzzle Squares</a>
               </div>
             </li>
 
             <li>
-              <a href="${base}/old">
-                <button style="border:none;border-radius:10px;padding:8px 12px;cursor:pointer;">Old site</button>
+              <a href="${base}/old" role="menuitem"
+                style="font-weight:900;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.06);">
+                Old site
               </a>
             </li>
           </ul>
 
-          <!-- Right icons (don’t affect centering) -->
-          <div class="right-icons">
-            <!-- Cart -->
+          <div class="right-icons" aria-label="Account controls">
             <div class="cart-wrap">
-              <button class="icon-btn" id="cartBtn" type="button" title="Cart" aria-label="Cart">
+              <button class="icon-btn" id="cartBtn" type="button" title="Cart" aria-label="Cart" aria-expanded="false">
                 ${this.cartSvg()}
                 <span id="cartBadge" class="badge hidden">0</span>
               </button>
@@ -357,9 +438,8 @@ class SiteNavbar extends HTMLElement {
               </div>
             </div>
 
-            <!-- Profile -->
             <div class="profile-wrap" style="position:relative;">
-              <button class="icon-btn" id="profileBtn" type="button" title="Account" aria-label="Account">
+              <button class="icon-btn" id="profileBtn" type="button" title="Account" aria-label="Account" aria-expanded="false">
                 ${this.userSvg()}
               </button>
 
@@ -374,51 +454,84 @@ class SiteNavbar extends HTMLElement {
       </nav>
     `;
 
-    // Ensure page content is pushed below fixed navbar
+    // ---- spacer below fixed nav ----
     this.syncSpacer();
 
+    // ---- state ----
+    this._isMobile = window.matchMedia("(max-width: 820px)").matches;
+
     // Mobile toggle
-    this.shadowRoot.getElementById("toggleBtn").addEventListener("click", () => {
-      this.shadowRoot.getElementById("links").classList.toggle("show");
-      // in case mobile layout changes height, re-sync spacer
+    const toggleBtn = this.shadowRoot.getElementById("toggleBtn");
+    const links = this.shadowRoot.getElementById("links");
+    toggleBtn.addEventListener("click", () => {
+      const open = links.classList.toggle("show");
+      toggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
       this.ensureSpacer();
     });
 
-    // Active link outline
+    // “More” dropdown click on mobile
+    const moreDropdown = this.shadowRoot.getElementById("moreDropdown");
+    const moreBtn = this.shadowRoot.getElementById("moreBtn");
+    moreBtn.addEventListener("click", (e) => {
+      if (!window.matchMedia("(max-width: 820px)").matches) return; // desktop hover handles it
+      e.preventDefault();
+      const open = moreDropdown.classList.toggle("open");
+      moreBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    // Active link styling
     const path = window.location.pathname.replace(/\/$/, "");
     this.shadowRoot.querySelectorAll("a[href]").forEach((a) => {
       try {
         const href = new URL(a.getAttribute("href"), window.location.origin).pathname.replace(/\/$/, "");
-        if (href === path) a.style.outline = "2px solid rgba(0,255,153,.5)";
+        if (href === path) a.classList.add("active");
       } catch {}
     });
 
+    // Menus
     const cartBtn = this.shadowRoot.getElementById("cartBtn");
     const cartMenu = this.shadowRoot.getElementById("cartMenu");
     const profileBtn = this.shadowRoot.getElementById("profileBtn");
     const profileMenu = this.shadowRoot.getElementById("profileMenu");
 
+    const setExpanded = (btn, isOpen) => btn?.setAttribute("aria-expanded", isOpen ? "true" : "false");
+
     const closeMenus = () => {
       cartMenu.classList.remove("open");
       profileMenu.classList.remove("open");
+      setExpanded(cartBtn, false);
+      setExpanded(profileBtn, false);
     };
 
-    // Cart dropdown toggle
+    // Cart toggle
     cartBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       profileMenu.classList.remove("open");
-      cartMenu.classList.toggle("open");
+      setExpanded(profileBtn, false);
+      const open = cartMenu.classList.toggle("open");
+      setExpanded(cartBtn, open);
     });
 
-    // Profile dropdown toggle
+    // Profile toggle
     profileBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       cartMenu.classList.remove("open");
-      profileMenu.classList.toggle("open");
+      setExpanded(cartBtn, false);
+      const open = profileMenu.classList.toggle("open");
+      setExpanded(profileBtn, open);
     });
 
-    // Click outside closes
+    // Outside click / ESC close
+    const onDocClick = (e) => {
+      if (!this.shadowRoot) return;
+      if (!this.contains(e.target) && !this.shadowRoot.contains(e.target)) closeMenus();
+    };
+    const onEsc = (e) => {
+      if (e.key === "Escape") closeMenus();
+    };
+
     window.addEventListener("click", closeMenus);
+    document.addEventListener("keydown", onEsc);
     cartMenu.addEventListener("click", (e) => e.stopPropagation());
     profileMenu.addEventListener("click", (e) => e.stopPropagation());
 
@@ -439,7 +552,7 @@ class SiteNavbar extends HTMLElement {
       this.bindCartListener({ db, user });
     });
 
-    // Logged-out cart fallback initially
+    // Logged-out cart initial
     this.cartItems = this.getLocalCartItems();
     this.renderCartMenu();
     this.updateCartBadge(this.countCart(this.cartItems));
@@ -454,11 +567,12 @@ class SiteNavbar extends HTMLElement {
 
     if (this._onWinResize) window.removeEventListener("resize", this._onWinResize);
     this._onWinResize = null;
+
+    document.removeEventListener("keydown", this._onEsc);
   }
 
-  // ----- spacer logic: pushes page content below fixed navbar -----
+  // ----- spacer logic -----
   ensureSpacer() {
-    // Insert a spacer right after <site-navbar> (light DOM)
     let spacer = this.nextElementSibling;
     if (!spacer || !spacer.classList.contains("site-navbar-spacer")) {
       spacer = document.createElement("div");
@@ -470,9 +584,9 @@ class SiteNavbar extends HTMLElement {
 
   getNavbarHeight() {
     const nav = this.shadowRoot?.querySelector(".navbar");
-    if (!nav) return 52;
+    if (!nav) return 56;
     const rect = nav.getBoundingClientRect();
-    return Math.max(40, Math.round(rect.height || 52));
+    return Math.max(44, Math.round(rect.height || 56));
   }
 
   syncSpacer() {
@@ -521,7 +635,6 @@ class SiteNavbar extends HTMLElement {
       return;
     }
 
-    // Default schema: users/{uid}/cartItems (one doc per item)
     const itemsRef = collection(db, "users", user.uid, "cartItems");
     const q = query(itemsRef);
 
@@ -577,14 +690,14 @@ class SiteNavbar extends HTMLElement {
 
     if (!items.length) {
       list.innerHTML = `
-        <div style="padding:12px 14px; color:rgba(255,255,255,.75); font-size:13px;">
+        <div style="padding:12px 14px; color:rgba(233,231,255,.72); font-size:13px;">
           Your cart is empty.
         </div>
       `;
       return;
     }
 
-    const show = items.slice(0, 5); // show first 5 items
+    const show = items.slice(0, 5);
     list.innerHTML = show
       .map(
         (it) => `
@@ -606,7 +719,7 @@ class SiteNavbar extends HTMLElement {
 
     if (items.length > show.length) {
       list.innerHTML += `
-        <div style="padding:10px 14px; font-size:12px; color:rgba(255,255,255,.7); border-top:1px solid rgba(255,255,255,.06);">
+        <div style="padding:10px 14px; font-size:12px; color:rgba(233,231,255,.72); border-top:1px solid rgba(255,255,255,.06);">
           + ${items.length - show.length} more item(s)
         </div>
       `;
