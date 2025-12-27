@@ -504,14 +504,18 @@
     .dangerBtn:hover {
       border-color: rgba(255, 0, 119, .55);
     }
-    .btn{
-  display: inline-flex;
-  align-items: center;     /* vertical centering */
-  justify-content: center; /* horizontal centering */
-  line-height: 1;          /* prevents baseline drift */
-  min-height: 44px;        /* consistent height */
-}
 
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      /* vertical centering */
+      justify-content: center;
+      /* horizontal centering */
+      line-height: 1;
+      /* prevents baseline drift */
+      min-height: 44px;
+      /* consistent height */
+    }
   </style>
 </head>
 
@@ -623,10 +627,10 @@
 
   <script type="module">
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import {
-  collection, query, orderBy, onSnapshot, doc, setDoc, getDoc, deleteDoc,
-  Timestamp
-} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import {
+      collection, query, orderBy, onSnapshot, doc, setDoc, getDoc, deleteDoc,
+      Timestamp
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
     import { getFirebase } from "/components/firebase-init.js";
 
     const { auth, db } = getFirebase();
@@ -898,81 +902,106 @@ import {
     // CART: merge by product + chosen variant parts
     // ----------------------------
     function cartDocId(productId, parts) {
-      const norm = (s) => safeStr(String(s || "").trim().toLowerCase(), 80).replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "");
+      const norm = (s) =>
+        safeStr(String(s || "").trim().toLowerCase(), 80)
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9\-]/g, "");
       const base = norm(productId);
       const tail = (parts || []).map(norm).filter(Boolean).join("__");
       return tail ? `${base}__${tail}` : base;
     }
+async function addToCartMerged(payload) {
+  const user = auth.currentUser;
 
-    async function addToCartMerged(payload) {
-      // payload: { productId, name, image, qty, price, productType, variantId, variantLabel, optionParts, buyLink }
-      const user = auth.currentUser;
+  const clampInt = (n, min, max) =>
+    Math.max(min, Math.min(max, Math.trunc(Number(n) || 0)));
 
-      if (user) {
-        const id = cartDocId(payload.productId, payload.optionParts);
-        const ref = doc(db, "users", user.uid, "cartItems", id);
+  const addQty = clampInt(payload.qty, 1, 99);
 
-        // merge qty
-        const existing = await getDoc(ref);
-        const prevQty = existing.exists() ? Number(existing.data().qty || 0) : 0;
+  const buildCartData = (base) => ({
+    productId: safeStr(base.productId, 200),
+    name: safeStr(base.name, 160),
+    qty: base.qty,
 
-        const now = Timestamp.now();
-        const createdAt = existing.exists() && existing.data().createdAt
-          ? existing.data().createdAt
-          : now;
+    price: Math.max(0, Math.min(100000, Number(base.price || 0))),
 
-        await setDoc(ref, {
-          productId: safeStr(payload.productId, 200),
-          name: safeStr(payload.name, 160),
-          image: payload.image ? safeStr(payload.image, 600) : null,
-          qty: prevQty + (Number(payload.qty) || 1),
+    ...(base.productType ? { productType: safeStr(base.productType, 40) } : {}),
+    ...(base.variantId ? { variantId: safeStr(base.variantId, 200) } : {}),
+    ...(base.variantLabel ? { variantLabel: safeStr(base.variantLabel, 220) } : {}),
+    ...(base.buyLink ? { buyLink: safeStr(base.buyLink, 1200) } : {}),
 
-          productType: safeStr(payload.productType, 40),
-          variantId: safeStr(payload.variantId, 200),
-          variantLabel: safeStr(payload.variantLabel, 220),
-          optionParts: Array.isArray(payload.optionParts) ? payload.optionParts.map(x => safeStr(x, 80)) : [],
-          buyLink: safeStr(payload.buyLink, 1200),
+    optionParts: Array.isArray(base.optionParts)
+      ? base.optionParts.map(x => safeStr(x, 80)).slice(0, 6)
+      : []
+  });
 
-          price: Number(payload.price || 0),
+  // ----------------------------
+  // SIGNED-IN USER (Firestore)
+  // ----------------------------
+  if (user) {
+    const id = cartDocId(payload.productId, payload.optionParts);
+    const ref = doc(db, "users", user.uid, "cartItems", id);
 
-          updatedAt: now,
-          createdAt: createdAt
-        }, { merge: true });
+    const existing = await getDoc(ref);
+    const prevQty = existing.exists()
+      ? clampInt(existing.data().qty, 0, 99)
+      : 0;
 
-        notifyCartChanged();
-        return;
-      }
+    const nextQty = clampInt(prevQty + addQty, 1, 99);
 
-      // signed-out localStorage fallback with merge
-      const key = "unlim8ted-cart";
-      const arr = JSON.parse(localStorage.getItem(key) || "[]");
-      const id = cartDocId(payload.productId, payload.optionParts);
-      const idx = arr.findIndex(x => x && x._id === id);
+    const now = Timestamp.now();
+    const createdAt =
+      existing.exists() && existing.data().createdAt
+        ? existing.data().createdAt
+        : now;
 
-      if (idx >= 0) {
-        arr[idx].qty = (Number(arr[idx].qty) || 0) + (Number(payload.qty) || 1);
-      } else {
-        arr.push({
-          _id: id,
-          productId: safeStr(payload.productId, 200),
-          name: safeStr(payload.name, 160),
-          image: payload.image ? safeStr(payload.image, 600) : null,
-          qty: Number(payload.qty || 1),
+    const data = buildCartData({
+      ...payload,
+      qty: nextQty
+    });
 
-          productType: safeStr(payload.productType, 40),
-          variantId: safeStr(payload.variantId, 200),
-          variantLabel: safeStr(payload.variantLabel, 220),
-          optionParts: Array.isArray(payload.optionParts) ? payload.optionParts.map(x => safeStr(x, 80)) : [],
-          buyLink: safeStr(payload.buyLink, 1200),
+    await setDoc(
+      ref,
+      {
+        ...data,
+        updatedAt: now,
+        createdAt
+      },
+      { merge: true }
+    );
 
-          price: Number(payload.price || 0),
-          addedAt: Date.now()
-        });
-      }
+    notifyCartChanged();
+    return;
+  }
 
-      localStorage.setItem(key, JSON.stringify(arr));
-      notifyCartChanged();
-    }
+  // ----------------------------
+  // SIGNED-OUT (localStorage)
+  // ----------------------------
+  const key = "unlim8ted-cart";
+  const arr = JSON.parse(localStorage.getItem(key) || "[]");
+
+  const id = cartDocId(payload.productId, payload.optionParts);
+  const idx = arr.findIndex(x => x && x._id === id);
+
+  if (idx >= 0) {
+    const prev = clampInt(arr[idx].qty, 0, 99);
+    arr[idx].qty = clampInt(prev + addQty, 1, 99);
+  } else {
+    const data = buildCartData({
+      ...payload,
+      qty: addQty
+    });
+
+    arr.push({
+      _id: id,
+      ...data,
+      addedAt: Date.now()
+    });
+  }
+
+  localStorage.setItem(key, JSON.stringify(arr));
+  notifyCartChanged();
+}
 
     // ----------------------------
     // Reviews helpers
@@ -1275,262 +1304,294 @@ import {
     let commentsUnsub = null; // store unsubscribe if you later switch to manual listeners; onSnapshot returns function (not used here)
     let currentUid = null;
     let myReviewCache = null;
-
+// IMPORTANT: avoid stacking auth listeners on every hash change
+let unsubAuth = null;
+// OPTIONAL: avoid stacking comments listeners too
+let unsubComments = null;
     function teardownComments() {
       // We used onSnapshot without keeping the unsubscribe in the original code.
       // We'll keep it simple: reload page lifecycle handles it. If you want strict cleanup,
       // we can store and call unsub. (Optional improvement)
     }
 
-    async function renderCurrentProduct(force = false) {
-      const pid = getProductIdFromUrl();
-      if (!force && pid === lastRenderedPid) return; // prevents double-run duplicates
-      lastRenderedPid = pid;
+async function renderCurrentProduct(force = false) {
+  const pid = getProductIdFromUrl();
+  if (!force && pid === lastRenderedPid) return;
+  lastRenderedPid = pid;
 
-      resetUI();
+  resetUI();
 
-      if (!pid) {
-        pageTitle.textContent = "Product Not Found";
-        pName.textContent = "No product selected";
-        pDesc.textContent = "Open a product using a URL like /product#some-id";
-        return;
+  // clean up previous listeners
+  if (unsubAuth) {
+    unsubAuth();
+    unsubAuth = null;
+  }
+  if (unsubComments) {
+    unsubComments();
+    unsubComments = null;
+  }
+
+  if (!pid) {
+    pageTitle.textContent = "Product Not Found";
+    pName.textContent = "No product selected";
+    pDesc.textContent = "Open a product using a URL like /product#some-id";
+    return;
+  }
+
+  const products = await getProductsOnce();
+  const raw = products.find((p) => String(p.id) === String(pid));
+  const item = raw ? normalizeItemForPage(raw) : null;
+
+  if (!item) {
+    pageTitle.textContent = "Product Not Found";
+    pName.textContent = "Product not found";
+    pDesc.textContent = "That product ID doesn't exist.";
+    return;
+  }
+
+  pageTitle.textContent = item.name || "Product";
+  pName.textContent = item.name || "Untitled";
+  pDesc.textContent = item.description || "";
+
+  const isPhysical =
+    item.productType === "physical" ||
+    (Array.isArray(item.varients) && item.varients.length > 0);
+
+  if (isPhysical) {
+    pPrice.textContent = "$—";
+    buyBtn.href = "#";
+    buyBtn.removeAttribute("target");
+    buyBtn.removeAttribute("rel");
+
+    addBtn.style.display = "inline-flex";
+    addBtn.disabled = true;
+
+    renderVariantUI(item);
+  } else {
+    pPrice.textContent = toMoney(Number(item.price || 0));
+    buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
+    buyBtn.removeAttribute("target");
+    buyBtn.removeAttribute("rel");
+
+    const sources = [];
+    if (item.image) sources.push({ type: "img", src: item.image });
+    (item.additional_images || []).forEach((src) => sources.push({ type: "img", src }));
+    if (item.video) sources.push({ type: "video", src: item.video });
+    (item.additional_videos || []).forEach((src) => sources.push({ type: "video", src }));
+
+    buildThumbsFromSources(item.name, sources);
+
+    addBtn.disabled = false;
+    addBtn.onclick = async () => {
+      try {
+        await addToCartMerged({
+          productId: item.id,
+          name: item.name,
+          image: item.image || null,
+          qty: 1,
+          price: Number(item.price || 0),
+          productType: "digital",
+          variantId: "",
+          variantLabel: "",
+          optionParts: [],
+          buyLink: "",
+        });
+        toast("Added to cart");
+      } catch (e) {
+        console.error("addToCartMerged error:", e?.code, e?.message, e);
+        toast("Could not add to cart");
       }
+    };
+  }
 
-      const products = await getProductsOnce();
-      const raw = products.find(p => String(p.id) === String(pid));
-      const item = raw ? normalizeItemForPage(raw) : null;
+  // -----------------------------------
+  // COMMENTS LIVE QUERY
+  // products/{productId}/comments
+  // -----------------------------------
+  const commentsRef = collection(db, "products", String(item.id), "comments");
+  const commentsQ = query(commentsRef, orderBy("createdAt", "desc"));
 
-      if (!item) {
-        pageTitle.textContent = "Product Not Found";
-        pName.textContent = "Product not found";
-        pDesc.textContent = "That product ID doesn't exist.";
-        return;
-      }
+  // Auth controls: show/hide review form + prefill if user's review exists
+  unsubAuth = onAuthStateChanged(auth, async (user) => {
+    currentUid = user ? user.uid : null;
 
-      pageTitle.textContent = item.name || "Product";
-      pName.textContent = item.name || "Untitled";
-      pDesc.textContent = item.description || "";
+    if (user) {
+      mustSignIn.style.display = "none";
+      commentForm.style.display = "grid";
+      displayNameInput.value = user.displayName || "";
 
-      // Decide physical vs digital by presence of varients or explicit product-type
-      const isPhysical = (item.productType === "physical") || (Array.isArray(item.varients) && item.varients.length > 0);
+      // Always check the doc; don't rely on stale cache
+      try {
+        const myRef = doc(db, "products", String(item.id), "comments", user.uid);
+        const mySnap = await getDoc(myRef);
 
-      if (isPhysical) {
-        // price shown from selected variant
-        pPrice.textContent = "$—";
-
-        // buy button will become variant buy link when selected
-        buyBtn.href = "#";
-        buyBtn.removeAttribute("target");
-        buyBtn.removeAttribute("rel");
-
-        // show add button (same button), but behavior is bound inside renderVariantUI
-        addBtn.style.display = "inline-flex";
-        addBtn.disabled = true;
-
-        renderVariantUI(item);
-
-      } else {
-        // digital/normal product behavior
-        pPrice.textContent = toMoney(Number(item.price || 0));
-        buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
-        buyBtn.removeAttribute("target");
-        buyBtn.removeAttribute("rel");
-
-        const sources = [];
-        if (item.image) sources.push({ type: "img", src: item.image });
-        (item.additional_images || []).forEach(src => sources.push({ type: "img", src }));
-        if (item.video) sources.push({ type: "video", src: item.video });
-        (item.additional_videos || []).forEach(src => sources.push({ type: "video", src }));
-
-        buildThumbsFromSources(item.name, sources);
-
-        addBtn.disabled = false;
-        addBtn.onclick = async () => {
-          try {
-            await addToCartMerged({
-              productId: item.id,
-              name: item.name,
-              image: item.image || null,
-              qty: 1,
-              price: Number(item.price || 0),
-              productType: "digital",
-              variantId: "",
-              variantLabel: "",
-              optionParts: [],
-              buyLink: ""
-            });
-            toast("Added to cart");
-          } catch (e) {
-            console.error(e);
-            toast("Could not add to cart");
-          }
-        };
-      }
-
-      // -----------------------------------
-      // COMMENTS LIVE QUERY
-      // products/{productId}/comments
-      // -----------------------------------
-      const commentsRef = collection(db, "products", String(item.id), "comments");
-      const commentsQ = query(commentsRef, orderBy("createdAt", "desc"));
-
-      // Auth controls: show/hide review form + prefill if user's review exists
-      onAuthStateChanged(auth, async (user) => {
-        currentUid = user ? user.uid : null;
-        displayNameInput.value = user?.displayName || "";
-
-        if (user) {
-          mustSignIn.style.display = "none";
-          commentForm.style.display = "grid";
-
-          // Try to load user's existing review doc (docId == uid)
-          try {
-            const myRef = doc(db, "products", String(item.id), "comments", user.uid);
-            const mySnap = await getDoc(myRef);
-            if (mySnap.exists()) {
-              myReviewCache = mySnap.data();
-              ratingSel.value = String(myReviewCache.rating || "5");
-              displayNameInput.value = (myReviewCache.displayName || "").trim();
-              commentText.value = (myReviewCache.text || "").trim();
-              deleteMyReviewBtn.style.display = "inline-block";
-              showFormMessage("Editing your review.");
-            } else {
-              myReviewCache = null;
-              ratingSel.value = "5";
-              displayNameInput.value = "";
-              commentText.value = "";
-              deleteMyReviewBtn.style.display = "none";
-              showFormMessage("");
-            }
-          } catch (e) {
-            console.error(e);
-            myReviewCache = null;
-            deleteMyReviewBtn.style.display = "none";
-            showFormMessage("");
-          }
-
+        if (mySnap.exists()) {
+          myReviewCache = mySnap.data();
+          ratingSel.value = String(myReviewCache.rating || "5");
+          displayNameInput.value = (myReviewCache.displayName || "").trim();
+          commentText.value = (myReviewCache.text || "").trim();
+          deleteMyReviewBtn.style.display = "inline-block";
+          showFormMessage("Editing your review.");
         } else {
-          myReviewCache = null;
-          commentForm.style.display = "none";
-          mustSignIn.style.display = "block";
-          deleteMyReviewBtn.style.display = "none";
-          showFormMessage("");
-        }
-      });
-
-      onSnapshot(
-        commentsQ,
-        (snap) => {
-          const docs = snap.docs;
-
-          const total = docs.length;
-          let sum = 0;
-          const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-
-          for (const d of docs) {
-            const r = Number(d.data().rating || 0);
-            if (r >= 1 && r <= 5) {
-              sum += r;
-              counts[r] = (counts[r] || 0) + 1;
-            }
-          }
-
-          const avg = total ? (sum / total) : 0;
-
-          avgNum.textContent = total ? avg.toFixed(1) : "—";
-          avgLabel.textContent = total ? "Average rating" : "No ratings yet";
-          countLabel.textContent = `${total} review${total === 1 ? "" : "s"}`;
-          avgStars.textContent = starsText(avg);
-          avgStarsBig.textContent = starsText(avg);
-
-          renderBars(counts, total);
-          renderComments(docs, currentUid);
-        },
-        (err) => {
-          console.error("Comments listener error:", err);
-          commentList.innerHTML = `<div class="empty">Reviews unavailable.</div>`;
-        }
-      );
-
-      // Submit: create OR edit (same doc id = uid)
-      commentForm.onsubmit = async (e) => {
-        e.preventDefault();
-
-        const user = auth.currentUser;
-        if (!user) return;
-
-        const rating = parseInt(ratingSel.value, 10) || 0;
-        const text = commentText.value.trim();
-
-        const rawName = displayNameInput.value.trim();
-        const finalName = rawName ? rawName : "Anonymous";
-
-        if (!text) { showFormMessage("Please write a comment.", true); return; }
-        if (text.length > 2000) { showFormMessage("Comment is too long (max 2000 chars).", true); return; }
-        if (rating < 1 || rating > 5) { showFormMessage("Please select a rating 1–5.", true); return; }
-        if (finalName.length > 80) { showFormMessage("Name too long (max 80 chars).", true); return; }
-
-        showFormMessage("Saving…");
-        setFormBusy(true);
-
-        try {
-          const myRef = doc(db, "products", String(item.id), "comments", user.uid);
-          const createdAt = (myReviewCache && myReviewCache.createdAt)
-  ? myReviewCache.createdAt
-  : Timestamp.now();
-
-          await setDoc(myRef, {
-            userId: user.uid,
-            rating,
-            text,
-            displayName: finalName,
-            photoURL: user.photoURL || "",
-            createdAt
-          });
-
-          const snap = await getDoc(myRef);
-          myReviewCache = snap.exists() ? snap.data() : null;
-
-          deleteMyReviewBtn.style.display = myReviewCache ? "inline-block" : "none";
-          showFormMessage("Saved");
-          setTimeout(() => showFormMessage(myReviewCache ? "Editing your review." : ""), 900);
-        } catch (err) {
-          console.error(err);
-          showFormMessage("Failed to save review.", true);
-        } finally {
-          setFormBusy(false);
-        }
-      };
-
-      deleteMyReviewBtn.onclick = async () => {
-        const user = auth.currentUser;
-        if (!user) return;
-
-        if (!confirm("Delete your review?")) return;
-
-        showFormMessage("Deleting…");
-        setFormBusy(true);
-
-        try {
-          const myRef = doc(db, "products", String(item.id), "comments", user.uid);
-          await deleteDoc(myRef);
-
           myReviewCache = null;
           ratingSel.value = "5";
           displayNameInput.value = "";
           commentText.value = "";
           deleteMyReviewBtn.style.display = "none";
-          showFormMessage("Deleted");
-          setTimeout(() => showFormMessage(""), 900);
-        } catch (err) {
-          console.error(err);
-          showFormMessage("Failed to delete.", true);
-        } finally {
-          setFormBusy(false);
+          showFormMessage("");
         }
-      };
+      } catch (e) {
+        console.error("load my review error:", e?.code, e?.message, e);
+        myReviewCache = null;
+        deleteMyReviewBtn.style.display = "none";
+        showFormMessage("");
+      }
+    } else {
+      myReviewCache = null;
+      commentForm.style.display = "none";
+      mustSignIn.style.display = "block";
+      deleteMyReviewBtn.style.display = "none";
+      showFormMessage("");
+    }
+  });
+
+  // Live ratings + list
+  unsubComments = onSnapshot(
+    commentsQ,
+    (snap) => {
+      const docs = snap.docs;
+
+      const total = docs.length;
+      let sum = 0;
+      const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+      for (const d of docs) {
+        const r = Number(d.data().rating || 0);
+        if (r >= 1 && r <= 5) {
+          sum += r;
+          counts[r] = (counts[r] || 0) + 1;
+        }
+      }
+
+      const avg = total ? sum / total : 0;
+
+      avgNum.textContent = total ? avg.toFixed(1) : "—";
+      avgLabel.textContent = total ? "Average rating" : "No ratings yet";
+      countLabel.textContent = `${total} review${total === 1 ? "" : "s"}`;
+      avgStars.textContent = starsText(avg);
+      avgStarsBig.textContent = starsText(avg);
+
+      renderBars(counts, total);
+      renderComments(docs, currentUid);
+    },
+    (err) => {
+      console.error("Comments listener error:", err?.code, err?.message, err);
+      commentList.innerHTML = `<div class="empty">Reviews unavailable.</div>`;
+    }
+  );
+
+  // Submit: create OR edit (doc id = uid)
+  commentForm.onsubmit = async (e) => {
+    e.preventDefault();
+
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const rating = Math.trunc(parseInt(ratingSel.value, 10) || 0);
+    const text = commentText.value.trim();
+    const rawName = displayNameInput.value.trim();
+    const finalName = rawName ? rawName : "Anonymous";
+
+    if (!text) {
+      showFormMessage("Please write a comment.", true);
+      return;
+    }
+    if (text.length > 2000) {
+      showFormMessage("Comment is too long (max 2000 chars).", true);
+      return;
+    }
+    if (rating < 1 || rating > 5) {
+      showFormMessage("Please select a rating 1–5.", true);
+      return;
+    }
+    if (finalName.length > 80) {
+      showFormMessage("Name too long (max 80 chars).", true);
+      return;
     }
 
+    showFormMessage("Saving…");
+    setFormBusy(true);
+
+    try {
+      const myRef = doc(db, "products", String(item.id), "comments", user.uid);
+      const existing = await getDoc(myRef);
+
+      if (existing.exists()) {
+        // UPDATE: do NOT send createdAt or userId (avoids your rule lock failure)
+        await setDoc(
+          myRef,
+          {
+            rating,
+            text,
+            displayName: finalName,
+            photoURL: user.photoURL || "",
+          },
+          { merge: true }
+        );
+      } else {
+        // CREATE: must include userId + createdAt (required by your rules)
+        await setDoc(myRef, {
+          userId: user.uid,
+          rating,
+          text,
+          displayName: finalName,
+          photoURL: user.photoURL || "",
+          createdAt: Timestamp.now(),
+        });
+      }
+
+      const snap = await getDoc(myRef);
+      myReviewCache = snap.exists() ? snap.data() : null;
+
+      deleteMyReviewBtn.style.display = myReviewCache ? "inline-block" : "none";
+      showFormMessage("Saved");
+      setTimeout(() => showFormMessage(myReviewCache ? "Editing your review." : ""), 900);
+    } catch (err) {
+      console.error("save review error:", err?.code, err?.message, err);
+      showFormMessage("Failed to save review.", true);
+    } finally {
+      setFormBusy(false);
+    }
+  };
+
+  deleteMyReviewBtn.onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    if (!confirm("Delete your review?")) return;
+
+    showFormMessage("Deleting…");
+    setFormBusy(true);
+
+    try {
+      const myRef = doc(db, "products", String(item.id), "comments", user.uid);
+      await deleteDoc(myRef);
+
+      myReviewCache = null;
+      ratingSel.value = "5";
+      displayNameInput.value = "";
+      commentText.value = "";
+      deleteMyReviewBtn.style.display = "none";
+      showFormMessage("Deleted");
+      setTimeout(() => showFormMessage(""), 900);
+    } catch (err) {
+      console.error("delete review error:", err?.code, err?.message, err);
+      showFormMessage("Failed to delete.", true);
+    } finally {
+      setFormBusy(false);
+    }
+  };
+}
     // Initial render
     await renderCurrentProduct(true);
 
