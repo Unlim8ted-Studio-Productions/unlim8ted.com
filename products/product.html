@@ -777,7 +777,7 @@
       pName.textContent = item.name || "Untitled";
       pDesc.textContent = item.description || "";
       pPrice.textContent = toMoney(item.price);
-      buyBtn.href = `/buy#${encodeURIComponent(item.id)}`;
+      buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
 
       setHeroMedia(item);
       buildThumbs(item);
