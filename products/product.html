@@ -623,10 +623,10 @@
 
   <script type="module">
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import {
-      collection, query, orderBy, onSnapshot, doc, setDoc, getDoc, deleteDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import {
+  collection, query, orderBy, onSnapshot, doc, setDoc, getDoc, deleteDoc,
+  Timestamp
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
     import { getFirebase } from "/components/firebase-init.js";
 
     const { auth, db } = getFirebase();
@@ -916,24 +916,27 @@
         const existing = await getDoc(ref);
         const prevQty = existing.exists() ? Number(existing.data().qty || 0) : 0;
 
+        const now = Timestamp.now();
+        const createdAt = existing.exists() && existing.data().createdAt
+          ? existing.data().createdAt
+          : now;
+
         await setDoc(ref, {
           productId: safeStr(payload.productId, 200),
           name: safeStr(payload.name, 160),
           image: payload.image ? safeStr(payload.image, 600) : null,
           qty: prevQty + (Number(payload.qty) || 1),
 
-          // variant fields
           productType: safeStr(payload.productType, 40),
           variantId: safeStr(payload.variantId, 200),
           variantLabel: safeStr(payload.variantLabel, 220),
           optionParts: Array.isArray(payload.optionParts) ? payload.optionParts.map(x => safeStr(x, 80)) : [],
           buyLink: safeStr(payload.buyLink, 1200),
 
-          // pricing
           price: Number(payload.price || 0),
 
-          updatedAt: serverTimestamp(),
-          createdAt: existing.exists() ? (existing.data().createdAt || serverTimestamp()) : serverTimestamp()
+          updatedAt: now,
+          createdAt: createdAt
         }, { merge: true });
 
         notifyCartChanged();
@@ -1472,7 +1475,9 @@
 
         try {
           const myRef = doc(db, "products", String(item.id), "comments", user.uid);
-          const createdAt = (myReviewCache && myReviewCache.createdAt) ? myReviewCache.createdAt : serverTimestamp();
+          const createdAt = (myReviewCache && myReviewCache.createdAt)
+  ? myReviewCache.createdAt
+  : Timestamp.now();
 
           await setDoc(myRef, {
             userId: user.uid,
