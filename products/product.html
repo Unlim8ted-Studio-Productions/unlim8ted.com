@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,349 +13,512 @@
   <script type="module" src="/components/site-loader.js"></script>
 
   <style>
-    :root{
-      --bg:#0b0b0f;
-      --panel:#14141b;
-      --panel2:#101017;
-      --stroke: rgba(255,255,255,.10);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.62);
-      --accent:#00ff99;
-      --accent2:#ff0077;
-      --shadow: 0 16px 40px rgba(0,0,0,.45);
+    :root {
+      --bg: #0b0b0f;
+      --panel: #14141b;
+      --panel2: #101017;
+      --stroke: rgba(255, 255, 255, .10);
+      --text: rgba(255, 255, 255, .92);
+      --muted: rgba(255, 255, 255, .62);
+      --accent: #00ff99;
+      --accent2: #ff0077;
+      --shadow: 0 16px 40px rgba(0, 0, 0, .45);
       --r: 18px;
     }
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(1000px 600px at 20% 10%, rgba(0,255,153,.10), transparent 55%),
-                  radial-gradient(900px 600px at 80% 0%, rgba(255,0,119,.10), transparent 55%),
-                  var(--bg);
+      background: radial-gradient(1000px 600px at 20% 10%, rgba(0, 255, 153, .10), transparent 55%),
+        radial-gradient(900px 600px at 80% 0%, rgba(255, 0, 119, .10), transparent 55%),
+        var(--bg);
       color: var(--text);
-      padding-top: 56px; /* navbar space */
+      padding-top: 56px;
+      /* navbar space */
       min-height: 100vh;
     }
 
-    .page{
+    .page {
       width: min(1100px, 92vw);
       margin: 26px auto 60px;
     }
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 12px;
       margin-bottom: 14px;
     }
-    .title{
+
+    .title {
       font-size: 28px;
       letter-spacing: .2px;
       margin: 0;
     }
-    .back{
+
+    .back {
       color: var(--muted);
-      text-decoration:none;
+      text-decoration: none;
       border: 1px solid var(--stroke);
       padding: 10px 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,.03);
+      background: rgba(255, 255, 255, .03);
     }
-    .back:hover{ border-color: rgba(0,255,153,.35); color: var(--text); }
 
-    .grid{
-      display:grid;
+    .back:hover {
+      border-color: rgba(0, 255, 153, .35);
+      color: var(--text);
+    }
+
+    .grid {
+      display: grid;
       grid-template-columns: 1.2fr .8fr;
       gap: 16px;
     }
 
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    .card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
       border: 1px solid var(--stroke);
       border-radius: var(--r);
       box-shadow: var(--shadow);
-      overflow:hidden;
+      overflow: hidden;
     }
-    .card-inner{ padding: 18px; }
 
-    .media{
-      display:grid;
+    .card-inner {
+      padding: 18px;
+    }
+
+    .media {
+      display: grid;
       grid-template-columns: 1fr;
       gap: 10px;
     }
-    .hero{
-      width:100%;
+
+    .hero {
+      width: 100%;
       aspect-ratio: 16/10;
       border-radius: 14px;
-      background: rgba(255,255,255,.06);
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.10);
-    }
-    .hero img, .hero video, .hero iframe{
-      width:100%;
-      height:100%;
-      object-fit: cover;
-      border:0;
-      display:block;
+      background: rgba(255, 255, 255, .06);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .10);
     }
 
-    .thumbs{
-      display:flex;
+    .hero img,
+    .hero video,
+    .hero iframe {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: 0;
+      display: block;
+    }
+
+    .thumbs {
+      display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
-    .thumb{
+
+    .thumb {
       width: 74px;
       height: 54px;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      overflow:hidden;
-      cursor:pointer;
-      opacity:.9;
-    }
-    .thumb:hover{ opacity: 1; border-color: rgba(0,255,153,.35); }
-    .thumb img, .thumb video{
-      width:100%; height:100%; object-fit: cover; display:block;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .05);
+      overflow: hidden;
+      cursor: pointer;
+      opacity: .9;
     }
 
-    .product{
-      display:flex;
-      flex-direction:column;
+    .thumb:hover {
+      opacity: 1;
+      border-color: rgba(0, 255, 153, .35);
+    }
+
+    .thumb img,
+    .thumb video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .product {
+      display: flex;
+      flex-direction: column;
       gap: 10px;
     }
-    .product h2{
+
+    .product h2 {
       margin: 0;
       font-size: 26px;
       line-height: 1.15;
     }
-    .desc{
-      margin:0;
+
+    .desc {
+      margin: 0;
       color: var(--muted);
       line-height: 1.55;
+      white-space: pre-wrap;
     }
-    .price-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+
+    .price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 10px;
       margin-top: 6px;
+      flex-wrap: wrap;
     }
-    .price{
+
+    .price {
       font-size: 22px;
       font-weight: 800;
       color: var(--accent);
-      text-shadow: 0 0 16px rgba(0,255,153,.22);
+      text-shadow: 0 0 16px rgba(0, 255, 153, .22);
     }
 
-    .btns{
-      display:flex;
+    .variantRow {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 8px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .03);
+    }
+
+    .variantRow label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .70);
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    .variantRow select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 153, .30);
+      background: rgba(16, 16, 23, .88);
+      color: var(--text);
+      outline: none;
+      font-weight: 800;
+    }
+
+    .variantMeta {
+      display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 8px;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, .72);
+      font-size: 13px;
+      margin-top: 2px;
     }
-    .btn{
-      border:none;
+
+    .pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .04);
+      font-weight: 800;
+    }
+
+    .pill.ok {
+      border-color: rgba(0, 255, 153, .30);
+      background: rgba(0, 255, 153, .10);
+      color: rgba(0, 255, 153, .95);
+    }
+
+    .pill.bad {
+      border-color: rgba(255, 0, 119, .35);
+      background: rgba(255, 0, 119, .10);
+      color: rgba(255, 170, 200, .95);
+    }
+
+    .btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .btn {
+      border: none;
       border-radius: 999px;
       padding: 11px 14px;
       font-weight: 800;
-      cursor:pointer;
-      color:#0b0b0f;
+      cursor: pointer;
+      color: #0b0b0f;
       background: linear-gradient(45deg, var(--accent), #2bffd5);
-      box-shadow: 0 0 0 3px rgba(0,255,153,.12);
+      box-shadow: 0 0 0 3px rgba(0, 255, 153, .12);
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
     }
-    .btn:hover{ filter: brightness(1.05); }
-    .btn.secondary{
-      background: rgba(255,255,255,.06);
+
+    .btn:hover {
+      filter: brightness(1.05);
+    }
+
+    .btn.secondary {
+      background: rgba(255, 255, 255, .06);
       color: var(--text);
-      border: 1px solid rgba(255,255,255,.14);
-      box-shadow:none;
+      border: 1px solid rgba(255, 255, 255, .14);
+      box-shadow: none;
     }
-    .btn.secondary:hover{ border-color: rgba(0,255,153,.30); }
+
+    .btn.secondary:hover {
+      border-color: rgba(0, 255, 153, .30);
+    }
+
+    .btn[aria-disabled="true"],
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      filter: none;
+    }
 
     /* ratings */
-    .ratingBox{
-      display:grid;
+    .ratingBox {
+      display: grid;
       grid-template-columns: 1fr;
       gap: 12px;
     }
-    .avgRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+
+    .avgRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 12px;
     }
-    .avg{
-      display:flex;
-      align-items:baseline;
+
+    .avg {
+      display: flex;
+      align-items: baseline;
       gap: 10px;
     }
-    .avgNum{
+
+    .avgNum {
       font-size: 40px;
       font-weight: 900;
-      line-height:1;
+      line-height: 1;
     }
-    .avgMeta{
+
+    .avgMeta {
       color: var(--muted);
       font-size: 13px;
     }
-    .stars{
-      display:flex;
+
+    .stars {
+      display: flex;
       gap: 4px;
       color: #ffcc66;
-      text-shadow: 0 0 10px rgba(255,204,102,.18);
+      text-shadow: 0 0 10px rgba(255, 204, 102, .18);
       font-size: 18px;
     }
 
-    .bars{
-      display:grid;
+    .bars {
+      display: grid;
       gap: 8px;
     }
-    .barRow{
-      display:grid;
+
+    .barRow {
+      display: grid;
       grid-template-columns: 50px 1fr 44px;
       gap: 10px;
-      align-items:center;
+      align-items: center;
       color: var(--muted);
       font-size: 13px;
     }
-    .barTrack{
+
+    .barTrack {
       height: 10px;
-      background: rgba(255,255,255,.08);
+      background: rgba(255, 255, 255, .08);
       border-radius: 999px;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.08);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .08);
     }
-    .barFill{
+
+    .barFill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, rgba(0,255,153,.9), rgba(255,0,119,.85));
+      background: linear-gradient(90deg, rgba(0, 255, 153, .9), rgba(255, 0, 119, .85));
     }
 
     /* comments */
-    .commentsCard h3{ margin: 0 0 10px; }
-    .commentForm{
-      display:grid;
+    .commentsCard h3 {
+      margin: 0 0 10px;
+    }
+
+    .commentForm {
+      display: grid;
       gap: 10px;
       padding: 12px;
       border-radius: 14px;
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid rgba(255, 255, 255, .10);
       margin-bottom: 12px;
     }
-    .row2{
-      display:grid;
+
+    .row2 {
+      display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-    @media (max-width: 720px){
-      .grid{ grid-template-columns: 1fr; }
-      .row2{ grid-template-columns: 1fr; }
+
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .row2 {
+        grid-template-columns: 1fr;
+      }
     }
 
-    label{ font-size: 12px; color: rgba(255,255,255,.70); }
-    select, textarea, input{
-      width:100%;
+    label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .70);
+    }
+
+    textarea,
+    input {
+      width: 100%;
       padding: 10px 12px;
       border-radius: 12px;
-      border: 1px solid rgba(0,255,153,.30);
-      background: rgba(16,16,23,.88);
+      border: 1px solid rgba(0, 255, 153, .30);
+      background: rgba(16, 16, 23, .88);
       color: var(--text);
-      outline:none;
-    }
-    textarea{ min-height: 90px; resize: vertical; }
-    select:focus, textarea:focus, input:focus{
-      border-color: rgba(0,255,153,.65);
-      box-shadow: 0 0 0 3px rgba(0,255,153,.10);
+      outline: none;
     }
 
-    .commentList{
-      display:grid;
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    textarea:focus,
+    input:focus {
+      border-color: rgba(0, 255, 153, .65);
+      box-shadow: 0 0 0 3px rgba(0, 255, 153, .10);
+    }
+
+    .commentList {
+      display: grid;
       gap: 10px;
     }
-    .comment{
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
+
+    .comment {
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .03);
       border-radius: 14px;
       padding: 12px;
     }
-    .commentTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+
+    .commentTop {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 10px;
       margin-bottom: 6px;
     }
-    .who{
-      color: rgba(255,255,255,.75);
+
+    .who {
+      color: rgba(255, 255, 255, .75);
       font-size: 13px;
     }
-    .when{
-      color: rgba(255,255,255,.45);
+
+    .when {
+      color: rgba(255, 255, 255, .45);
       font-size: 12px;
       white-space: nowrap;
     }
-    .commentText{
+
+    .commentText {
       margin: 0;
-      color: rgba(255,255,255,.86);
+      color: rgba(255, 255, 255, .86);
       line-height: 1.5;
       white-space: pre-wrap;
     }
 
-    .empty{
-      color: rgba(255,255,255,.55);
+    .empty {
+      color: rgba(255, 255, 255, .55);
       padding: 10px 0;
-      text-align:center;
+      text-align: center;
     }
 
-    .footer{
+    .footer {
       margin-top: 18px;
-      text-align:center;
-      color: rgba(255,255,255,.55);
+      text-align: center;
+      color: rgba(255, 255, 255, .55);
       font-size: 13px;
     }
 
-    .mineBadge{
+    .mineBadge {
       font-size: 11px;
       padding: 3px 8px;
       border-radius: 999px;
-      border: 1px solid rgba(0,255,153,.35);
-      color: rgba(0,255,153,.95);
-      background: rgba(0,255,153,.10);
+      border: 1px solid rgba(0, 255, 153, .35);
+      color: rgba(0, 255, 153, .95);
+      background: rgba(0, 255, 153, .10);
       margin-left: 8px;
       font-weight: 800;
     }
 
-    .formActions{
-      display:flex;
+    .formActions {
+      display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      align-items:center;
+      align-items: center;
       justify-content: space-between;
     }
-    .smallBtn{
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
+
+    .smallBtn {
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .06);
       color: var(--text);
       border-radius: 999px;
       padding: 10px 12px;
       font-weight: 800;
-      cursor:pointer;
+      cursor: pointer;
     }
-    .smallBtn:hover{ border-color: rgba(0,255,153,.30); }
-    .dangerBtn{
-      border: 1px solid rgba(255,0,119,.35);
-      background: rgba(255,0,119,.12);
-      color: rgba(255,255,255,.92);
+
+    .smallBtn:hover {
+      border-color: rgba(0, 255, 153, .30);
     }
-    .dangerBtn:hover{ border-color: rgba(255,0,119,.55); }
+
+    .dangerBtn {
+      border: 1px solid rgba(255, 0, 119, .35);
+      background: rgba(255, 0, 119, .12);
+      color: rgba(255, 255, 255, .92);
+    }
+
+    .dangerBtn:hover {
+      border-color: rgba(255, 0, 119, .55);
+    }
+    .btn{
+  display: inline-flex;
+  align-items: center;     /* vertical centering */
+  justify-content: center; /* horizontal centering */
+  line-height: 1;          /* prevents baseline drift */
+  min-height: 44px;        /* consistent height */
+}
+
   </style>
 </head>
 
 <body>
   <site-loader text="Loading..."></site-loader>
-  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile"></site-navbar>
 
   <div class="page">
     <div class="topbar">
@@ -381,8 +545,10 @@
               <div class="stars" id="avgStars" aria-label="Average rating stars"></div>
             </div>
 
+
+
             <div class="btns">
-              <a class="btn secondary" id="buyBtn" href="#">Buy Now</a>
+              <a class="btn secondary" id="buyBtn" href="#" target="_blank" rel="noopener">Buy Now</a>
               <button class="btn" id="addBtn">Add to Cart</button>
             </div>
           </div>
@@ -437,7 +603,8 @@
 
               <div class="formActions">
                 <button class="btn" id="postBtn" type="submit">Post Review</button>
-                <button class="smallBtn dangerBtn" id="deleteMyReviewBtn" type="button" style="display:none;">Delete my review</button>
+                <button class="smallBtn dangerBtn" id="deleteMyReviewBtn" type="button" style="display:none;">Delete my
+                  review</button>
               </div>
 
               <div id="formMsg" class="empty" style="text-align:left;"></div>
@@ -454,79 +621,121 @@
     </div>
   </div>
 
-<script type="module">
-  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-  import {
-    collection, query, orderBy, onSnapshot, doc, setDoc, getDoc, deleteDoc,
-    serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-  import { getFirebase } from "/components/firebase-init.js";
+  <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import {
+      collection, query, orderBy, onSnapshot, doc, setDoc, getDoc, deleteDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
 
-  const { auth, db } = getFirebase();
-  const $ = (id) => document.getElementById(id);
+    const { auth, db } = getFirebase();
+    const $ = (id) => document.getElementById(id);
 
-  const hero = $("hero");
-  const thumbs = $("thumbs");
-  const pName = $("pName");
-  const pDesc = $("pDesc");
-  const pPrice = $("pPrice");
-  const buyBtn = $("buyBtn");
-  const addBtn = $("addBtn");
+    // --- DOM
+    const hero = $("hero");
+    const thumbs = $("thumbs");
+    const pName = $("pName");
+    const pDesc = $("pDesc");
+    const pPrice = $("pPrice");
+    const buyBtn = $("buyBtn");
+    const addBtn = $("addBtn");
 
-  const avgNum = $("avgNum");
-  const avgLabel = $("avgLabel");
-  const countLabel = $("countLabel");
-  const avgStars = $("avgStars");
-  const avgStarsBig = $("avgStarsBig");
-  const bars = $("bars");
+    const avgNum = $("avgNum");
+    const avgLabel = $("avgLabel");
+    const countLabel = $("countLabel");
+    const avgStars = $("avgStars");
+    const avgStarsBig = $("avgStarsBig");
+    const bars = $("bars");
 
-  const commentList = $("commentList");
-  const commentForm = $("commentForm");
-  const mustSignIn = $("mustSignIn");
-  const ratingSel = $("ratingSel");
-  const displayNameInput = $("displayName");
-  const commentText = $("commentText");
-  const formMsg = $("formMsg");
-  const deleteMyReviewBtn = $("deleteMyReviewBtn");
-  const postBtn = $("postBtn");
+    const commentList = $("commentList");
+    const commentForm = $("commentForm");
+    const mustSignIn = $("mustSignIn");
+    const ratingSel = $("ratingSel");
+    const displayNameInput = $("displayName");
+    const commentText = $("commentText");
+    const formMsg = $("formMsg");
+    const deleteMyReviewBtn = $("deleteMyReviewBtn");
+    const postBtn = $("postBtn");
 
-  const productId = (window.location.hash || "").replace("#", "").trim();
+    const pageTitle = document.querySelector(".title");
 
-  // ----------------------------
-  // Utils
-  // ----------------------------
-  function starsText(value) {
-    const v = Math.max(0, Math.min(5, value));
-    let out = "";
-    for (let i = 1; i <= 5; i++) out += (i <= Math.round(v)) ? "★" : "☆";
-    return out;
-  }
-
-  function toMoney(n) {
-    if (typeof n !== "number" || Number.isNaN(n)) return "$—";
-    return "$" + n.toFixed(2);
-  }
-
-  function extractYouTubeID(url) {
-    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|embed)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-    const m = (url || "").match(regex);
-    return m ? m[1] : null;
-  }
-
-  function setHeroMedia(item) {
-    hero.innerHTML = "";
-
-    if (item.image) {
-      const img = document.createElement("img");
-      img.src = item.image;
-      img.alt = item.name || "Product";
-      hero.appendChild(img);
-      return;
+    // ----------------------------
+    // Utils
+    // ----------------------------
+    function starsText(value) {
+      const v = Math.max(0, Math.min(5, value));
+      let out = "";
+      for (let i = 1; i <= 5; i++) out += (i <= Math.round(v)) ? "★" : "☆";
+      return out;
     }
 
-    if (item.video) {
-      if (item.video.includes("youtube.com") || item.video.includes("youtu.be")) {
-        const id = extractYouTubeID(item.video);
+    function toMoney(n) {
+      if (typeof n !== "number" || Number.isNaN(n)) return "$—";
+      return "$" + n.toFixed(2);
+    }
+
+    function extractYouTubeID(url) {
+      const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|embed)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+      const m = (url || "").match(regex);
+      return m ? m[1] : null;
+    }
+
+    function toast(msg) {
+      const t = document.createElement("div");
+      t.textContent = msg;
+      t.style.position = "fixed";
+      t.style.right = "18px";
+      t.style.bottom = "18px";
+      t.style.padding = "12px 14px";
+      t.style.borderRadius = "14px";
+      t.style.background = "rgba(0,255,153,.92)";
+      t.style.color = "#0b0b0f";
+      t.style.fontWeight = "900";
+      t.style.boxShadow = "0 12px 30px rgba(0,0,0,.35)";
+      t.style.zIndex = "99999";
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 1600);
+    }
+
+    // Dispatch event so navbar/cart dropdown can refresh immediately
+    function notifyCartChanged() {
+      window.dispatchEvent(new CustomEvent("cart-changed"));
+    }
+
+    function safeStr(v, max = 600) {
+      return (v == null) ? "" : String(v).slice(0, max);
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+    }
+
+    // ----------------------------
+    // Media rendering
+    // ----------------------------
+    function setHeroMediaFromSource(itemName, source) {
+      hero.innerHTML = "";
+
+      if (!source) {
+        hero.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,.55);">No media</div>`;
+        return;
+      }
+
+      if (source.type === "img") {
+        const img = document.createElement("img");
+        img.src = source.src;
+        img.alt = itemName || "Product";
+        hero.appendChild(img);
+        return;
+      }
+
+      // video
+      const url = source.src || "";
+      if (url.includes("youtube.com") || url.includes("youtu.be")) {
+        const id = extractYouTubeID(url);
         const iframe = document.createElement("iframe");
         iframe.src = `https://www.youtube.com/embed/${id}`;
         iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
@@ -535,262 +744,625 @@
       } else {
         const v = document.createElement("video");
         v.controls = true;
-        v.src = item.video;
+        v.src = url;
         hero.appendChild(v);
       }
-    } else {
-      hero.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,.55);">No media</div>`;
     }
-  }
 
-  function buildThumbs(item) {
-    thumbs.innerHTML = "";
+    function buildThumbsFromSources(itemName, sources) {
+      thumbs.innerHTML = "";
 
-    const sources = [];
-    if (item.image) sources.push({ type: "img", src: item.image });
-    (item.additional_images || []).forEach(src => sources.push({ type: "img", src }));
-    if (item.video) sources.push({ type: "video", src: item.video });
-    (item.additional_videos || []).forEach(src => sources.push({ type: "video", src }));
-
-    sources.slice(0, 10).forEach(s => {
-      const t = document.createElement("div");
-      t.className = "thumb";
-
-      if (s.type === "img") {
-        const img = document.createElement("img");
-        img.src = s.src;
-        t.appendChild(img);
-
-        t.addEventListener("click", () => {
-          hero.innerHTML = "";
-          const big = document.createElement("img");
-          big.src = s.src;
-          big.alt = item.name || "Product";
-          hero.appendChild(big);
-        });
-      } else {
-        t.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.75);font-weight:800;">▶</div>`;
-
-        t.addEventListener("click", () => {
-          hero.innerHTML = "";
-          if (s.src.includes("youtube.com") || s.src.includes("youtu.be")) {
-            const id = extractYouTubeID(s.src);
-            const iframe = document.createElement("iframe");
-            iframe.src = `https://www.youtube.com/embed/${id}`;
-            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-            iframe.allowFullscreen = true;
-            hero.appendChild(iframe);
-          } else {
-            const v = document.createElement("video");
-            v.controls = true;
-            v.src = s.src;
-            hero.appendChild(v);
-          }
-        });
+      const list = (sources || []).filter(Boolean).slice(0, 12);
+      if (!list.length) {
+        setHeroMediaFromSource(itemName, null);
+        return;
       }
 
-      thumbs.appendChild(t);
-    });
-  }
+      // set default hero
+      setHeroMediaFromSource(itemName, list[0]);
 
-  async function loadProducts() {
-    const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache: "no-store" });
-    if (!r.ok) throw new Error("Failed to load products.json");
-    return await r.json();
-  }
+      list.forEach(s => {
+        const t = document.createElement("div");
+        t.className = "thumb";
 
-  function renderBars(counts, total) {
-    bars.innerHTML = "";
-    for (let star = 5; star >= 1; star--) {
-      const n = counts[star] || 0;
-      const pct = total > 0 ? (n / total) * 100 : 0;
+        if (s.type === "img") {
+          const img = document.createElement("img");
+          img.src = s.src;
+          img.alt = itemName || "Product";
+          t.appendChild(img);
+        } else {
+          t.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.75);font-weight:800;">▶</div>`;
+        }
 
-      const row = document.createElement("div");
-      row.className = "barRow";
-
-      const left = document.createElement("div");
-      left.textContent = `${star} star`;
-
-      const track = document.createElement("div");
-      track.className = "barTrack";
-
-      const fill = document.createElement("div");
-      fill.className = "barFill";
-      fill.style.width = `${pct.toFixed(1)}%`;
-
-      const right = document.createElement("div");
-      right.style.textAlign = "right";
-      right.textContent = String(n);
-
-      track.appendChild(fill);
-      row.appendChild(left);
-      row.appendChild(track);
-      row.appendChild(right);
-      bars.appendChild(row);
-    }
-  }
-
-  function renderComments(docs, currentUid) {
-    commentList.innerHTML = "";
-
-    if (!docs.length) {
-      const empty = document.createElement("div");
-      empty.className = "empty";
-      empty.textContent = "No reviews yet. Be the first.";
-      commentList.appendChild(empty);
-      return;
-    }
-
-    docs.forEach(d => {
-      const data = d.data();
-      const rating = Number(data.rating || 0);
-      const text = (data.text || "").trim();
-      const who = (data.displayName || "").trim() || "Anonymous";
-
-      let when = "";
-      const ts = data.createdAt;
-      if (ts && typeof ts.toDate === "function") when = ts.toDate().toLocaleString();
-
-      const el = document.createElement("div");
-      el.className = "comment";
-
-      const top = document.createElement("div");
-      top.className = "commentTop";
-
-      const whoEl = document.createElement("div");
-      whoEl.className = "who";
-      whoEl.style.color = "#ffcc66";
-      whoEl.textContent = `${who} • ${starsText(rating)}`;
-
-      if (currentUid && d.id === currentUid) {
-        const badge = document.createElement("span");
-        badge.className = "mineBadge";
-        badge.textContent = "Yours";
-        whoEl.appendChild(badge);
-      }
-
-      const whenEl = document.createElement("div");
-      whenEl.className = "when";
-      whenEl.textContent = when;
-
-      const p = document.createElement("p");
-      p.className = "commentText";
-      p.textContent = text;
-
-      top.appendChild(whoEl);
-      top.appendChild(whenEl);
-
-      el.appendChild(top);
-      el.appendChild(p);
-
-      commentList.appendChild(el);
-    });
-  }
-
-  function toast(msg) {
-    const t = document.createElement("div");
-    t.textContent = msg;
-    t.style.position = "fixed";
-    t.style.right = "18px";
-    t.style.bottom = "18px";
-    t.style.padding = "12px 14px";
-    t.style.borderRadius = "14px";
-    t.style.background = "rgba(0,255,153,.92)";
-    t.style.color = "#0b0b0f";
-    t.style.fontWeight = "900";
-    t.style.boxShadow = "0 12px 30px rgba(0,0,0,.35)";
-    t.style.zIndex = "99999";
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 1600);
-  }
-
-  // Dispatch event so navbar/cart dropdown can refresh immediately
-  function notifyCartChanged() {
-    window.dispatchEvent(new CustomEvent("cart-changed"));
-  }
-
-  // --- CART: signed-in -> Firestore, signed-out -> localStorage fallback
-  async function addToCart(item) {
-    const user = auth.currentUser;
-
-    if (user) {
-      // put items under: users/{uid}/cartItems/{autoId}
-      const cartItemRef = doc(collection(db, "users", user.uid, "cartItems"));
-      await setDoc(cartItemRef, {
-        productId: String(item.id),
-        name: String(item.name || "").slice(0, 120),
-        price: Number(item.price || 0),
-        image: item.image ? String(item.image).slice(0, 600) : null,
-        qty: 1,
-        addedAt: serverTimestamp()
+        t.addEventListener("click", () => setHeroMediaFromSource(itemName, s));
+        thumbs.appendChild(t);
       });
-      notifyCartChanged();
-      return;
     }
 
-    const key = "unlim8ted-cart";
-    const existing = JSON.parse(localStorage.getItem(key) || "[]");
-    existing.push({
-      productId: String(item.id),
-      name: String(item.name || "").slice(0, 120),
-      price: Number(item.price || 0),
-      image: item.image ? String(item.image).slice(0, 600) : null,
-      qty: 1,
-      addedAt: Date.now()
-    });
-    localStorage.setItem(key, JSON.stringify(existing));
-    notifyCartChanged();
-  }
+    // ----------------------------
+    // Products loading + normalization
+    // ----------------------------
+    let productsCache = null;
+    async function loadProducts() {
+      const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache: "no-store" });
+      if (!r.ok) throw new Error("Failed to load products.json");
+      return await r.json();
+    }
+    async function getProductsOnce() {
+      if (productsCache) return productsCache;
+      productsCache = await loadProducts();
+      return productsCache;
+    }
 
-  function setFormBusy(busy) {
-    postBtn.disabled = busy;
-    deleteMyReviewBtn.disabled = busy;
-    ratingSel.disabled = busy;
-    displayNameInput.disabled = busy;
-    commentText.disabled = busy;
-  }
+    function normalizeItemForPage(raw) {
+      // Supports your old JSON and your new physical JSON shape.
+      // New physical example:
+      // {
+      //   id, image, varients:[{id,name,images,price,buy link}], additional_images, video, additional_videos, name, description, "product-type":"physical"
+      // }
+      const item = { ...raw };
 
-  function showFormMessage(msg, isError=false) {
-    formMsg.textContent = msg || "";
-    formMsg.style.color = isError ? "rgba(255,120,120,.95)" : "rgba(255,255,255,.65)";
-  }
+      // unify fields
+      item.id = safeStr(item.id, 200);
+      item.name = item.name ?? item.title ?? "";
+      item.description = item.description ?? item.desc ?? "";
+      item.image = item.image ?? item.main_image ?? "";
+      item.additional_images = item.additional_images ?? [];
+      item.video = item.video ?? null;
+      item.additional_videos = item.additional_videos ?? [];
 
-  // ----------------------------
-  // MAIN
-  // ----------------------------
-  if (!productId) {
-    document.querySelector(".title").textContent = "Product Not Found";
-    pName.textContent = "No product selected";
-    pDesc.textContent = "Open a product using a URL like /product#some-id";
-    addBtn.disabled = true;
-  } else {
-    const products = await loadProducts();
-    const item = products.find(p => String(p.id) === String(productId));
+      // product-type can be "physical" or "digital"
+      item.productType = item["product-type"] || item.productType || item.type || "";
+      item.productType = String(item.productType || "").toLowerCase();
 
-    if (!item) {
-      document.querySelector(".title").textContent = "Product Not Found";
-      pName.textContent = "Product not found";
-      pDesc.textContent = "That product ID doesn't exist in products.json.";
+      // normalize variants key
+      item.varients = item.varients ?? item.variants ?? [];
+      if (!Array.isArray(item.varients)) item.varients = [];
+
+      // numeric price fallback (digital)
+      if (typeof item.price !== "number") {
+        const p = Number(item.price);
+        item.price = Number.isFinite(p) ? p : 0;
+      }
+
+      // normalize variant objects
+      item.varients = item.varients.map(v => {
+        const vv = { ...v };
+        vv.id = safeStr(vv.id || vv.variant_id || "", 200);
+        vv.name = vv.name ?? vv.title ?? "";
+        vv.images = Array.isArray(vv.images) ? vv.images : (vv.image ? [vv.image] : []);
+        const pn = Number(vv.price);
+        vv.price = Number.isFinite(pn) ? pn : 0;
+        vv.buyLink = vv["buy link"] || vv.buy_link || vv.buyLink || vv.url || "";
+        return vv;
+      });
+
+      return item;
+    }
+
+    // ----------------------------
+    // Variant parsing: "Black, S" => [ "Black", "S" ]
+    // also supports "Black / S" or "Black - S"
+    // ----------------------------
+    function splitVariantName(name) {
+      const s = String(name || "").trim();
+
+      // prefer comma split if present
+      if (s.includes(",")) return s.split(",").map(x => x.trim()).filter(Boolean);
+
+      // then slash
+      if (s.includes(" / ")) return s.split(" / ").map(x => x.trim()).filter(Boolean);
+      if (s.includes("/")) return s.split("/").map(x => x.trim()).filter(Boolean);
+
+      // then dash (guard so we don't split "XXL - Tall" too aggressively)
+      if (s.includes(" - ")) return s.split(" - ").map(x => x.trim()).filter(Boolean);
+
+      return [s].filter(Boolean);
+    }
+
+    function buildVariantGroups(varients) {
+      // Returns groups by position:
+      // groups = [{ label:"Option 1", values:[...]} , {label:"Option 2", values:[...]}]
+      const partsList = varients.map(v => splitVariantName(v.name));
+      const maxLen = Math.max(0, ...partsList.map(a => a.length));
+
+      const groups = [];
+      for (let i = 0; i < maxLen; i++) {
+        const vals = new Set();
+        for (const parts of partsList) {
+          if (parts[i]) vals.add(parts[i]);
+        }
+        groups.push({
+          index: i,
+          label: i === 0 ? "Color" : (i === 1 ? "Size" : `Option ${i + 1}`),
+          values: Array.from(vals)
+        });
+      }
+      return groups;
+    }
+
+    function findVariantBySelection(varients, selectionParts) {
+      // match by splitVariantName(v.name) === selectionParts (same length, same order)
+      const target = selectionParts.map(x => String(x || "").trim());
+      return varients.find(v => {
+        const parts = splitVariantName(v.name);
+        if (parts.length !== target.length) return false;
+        for (let i = 0; i < parts.length; i++) {
+          if (parts[i] !== target[i]) return false;
+        }
+        return true;
+      }) || null;
+    }
+
+    // ----------------------------
+    // CART: merge by product + chosen variant parts
+    // ----------------------------
+    function cartDocId(productId, parts) {
+      const norm = (s) => safeStr(String(s || "").trim().toLowerCase(), 80).replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "");
+      const base = norm(productId);
+      const tail = (parts || []).map(norm).filter(Boolean).join("__");
+      return tail ? `${base}__${tail}` : base;
+    }
+
+    async function addToCartMerged(payload) {
+      // payload: { productId, name, image, qty, price, productType, variantId, variantLabel, optionParts, buyLink }
+      const user = auth.currentUser;
+
+      if (user) {
+        const id = cartDocId(payload.productId, payload.optionParts);
+        const ref = doc(db, "users", user.uid, "cartItems", id);
+
+        // merge qty
+        const existing = await getDoc(ref);
+        const prevQty = existing.exists() ? Number(existing.data().qty || 0) : 0;
+
+        await setDoc(ref, {
+          productId: safeStr(payload.productId, 200),
+          name: safeStr(payload.name, 160),
+          image: payload.image ? safeStr(payload.image, 600) : null,
+          qty: prevQty + (Number(payload.qty) || 1),
+
+          // variant fields
+          productType: safeStr(payload.productType, 40),
+          variantId: safeStr(payload.variantId, 200),
+          variantLabel: safeStr(payload.variantLabel, 220),
+          optionParts: Array.isArray(payload.optionParts) ? payload.optionParts.map(x => safeStr(x, 80)) : [],
+          buyLink: safeStr(payload.buyLink, 1200),
+
+          // pricing
+          price: Number(payload.price || 0),
+
+          updatedAt: serverTimestamp(),
+          createdAt: existing.exists() ? (existing.data().createdAt || serverTimestamp()) : serverTimestamp()
+        }, { merge: true });
+
+        notifyCartChanged();
+        return;
+      }
+
+      // signed-out localStorage fallback with merge
+      const key = "unlim8ted-cart";
+      const arr = JSON.parse(localStorage.getItem(key) || "[]");
+      const id = cartDocId(payload.productId, payload.optionParts);
+      const idx = arr.findIndex(x => x && x._id === id);
+
+      if (idx >= 0) {
+        arr[idx].qty = (Number(arr[idx].qty) || 0) + (Number(payload.qty) || 1);
+      } else {
+        arr.push({
+          _id: id,
+          productId: safeStr(payload.productId, 200),
+          name: safeStr(payload.name, 160),
+          image: payload.image ? safeStr(payload.image, 600) : null,
+          qty: Number(payload.qty || 1),
+
+          productType: safeStr(payload.productType, 40),
+          variantId: safeStr(payload.variantId, 200),
+          variantLabel: safeStr(payload.variantLabel, 220),
+          optionParts: Array.isArray(payload.optionParts) ? payload.optionParts.map(x => safeStr(x, 80)) : [],
+          buyLink: safeStr(payload.buyLink, 1200),
+
+          price: Number(payload.price || 0),
+          addedAt: Date.now()
+        });
+      }
+
+      localStorage.setItem(key, JSON.stringify(arr));
+      notifyCartChanged();
+    }
+
+    // ----------------------------
+    // Reviews helpers
+    // ----------------------------
+    function renderBars(counts, total) {
+      bars.innerHTML = "";
+      for (let star = 5; star >= 1; star--) {
+        const n = counts[star] || 0;
+        const pct = total > 0 ? (n / total) * 100 : 0;
+
+        const row = document.createElement("div");
+        row.className = "barRow";
+
+        const left = document.createElement("div");
+        left.textContent = `${star} star`;
+
+        const track = document.createElement("div");
+        track.className = "barTrack";
+
+        const fill = document.createElement("div");
+        fill.className = "barFill";
+        fill.style.width = `${pct.toFixed(1)}%`;
+
+        const right = document.createElement("div");
+        right.style.textAlign = "right";
+        right.textContent = String(n);
+
+        track.appendChild(fill);
+        row.appendChild(left);
+        row.appendChild(track);
+        row.appendChild(right);
+        bars.appendChild(row);
+      }
+    }
+
+    function renderComments(docs, currentUid) {
+      commentList.innerHTML = "";
+
+      if (!docs.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No reviews yet. Be the first.";
+        commentList.appendChild(empty);
+        return;
+      }
+
+      docs.forEach(d => {
+        const data = d.data();
+        const rating = Number(data.rating || 0);
+        const text = (data.text || "").trim();
+        const who = (data.displayName || "").trim() || "Anonymous";
+
+        let when = "";
+        const ts = data.createdAt;
+        if (ts && typeof ts.toDate === "function") when = ts.toDate().toLocaleString();
+
+        const el = document.createElement("div");
+        el.className = "comment";
+
+        const top = document.createElement("div");
+        top.className = "commentTop";
+
+        const whoEl = document.createElement("div");
+        whoEl.className = "who";
+        whoEl.style.color = "#ffcc66";
+        whoEl.textContent = `${who} • ${starsText(rating)}`;
+
+        if (currentUid && d.id === currentUid) {
+          const badge = document.createElement("span");
+          badge.className = "mineBadge";
+          badge.textContent = "Yours";
+          whoEl.appendChild(badge);
+        }
+
+        const whenEl = document.createElement("div");
+        whenEl.className = "when";
+        whenEl.textContent = when;
+
+        const p = document.createElement("p");
+        p.className = "commentText";
+        p.textContent = text;
+
+        top.appendChild(whoEl);
+        top.appendChild(whenEl);
+
+        el.appendChild(top);
+        el.appendChild(p);
+
+        commentList.appendChild(el);
+      });
+    }
+
+    function setFormBusy(busy) {
+      postBtn.disabled = busy;
+      deleteMyReviewBtn.disabled = busy;
+      ratingSel.disabled = busy;
+      displayNameInput.disabled = busy;
+      commentText.disabled = busy;
+    }
+
+    function showFormMessage(msg, isError = false) {
+      formMsg.textContent = msg || "";
+      formMsg.style.color = isError ? "rgba(255,120,120,.95)" : "rgba(255,255,255,.65)";
+    }
+
+    // ----------------------------
+    // Variant UI (no duplicates)
+    // ----------------------------
+    function removeVariantUI() {
+      document.querySelectorAll("#variantWrap, [data-variant-ui='1']").forEach(el => el.remove());
+    }
+
+    function renderVariantUI(item) {
+      removeVariantUI();
+
+      const variants = Array.isArray(item.varients) ? item.varients : [];
+      const groups = buildVariantGroups(variants);
+
+      const wrap = document.createElement("div");
+      wrap.id = "variantWrap";
+      wrap.setAttribute("data-variant-ui", "1");
+      wrap.style.marginTop = "12px";
+      wrap.style.display = "grid";
+      wrap.style.gap = "10px";
+
+      wrap.innerHTML = `
+    <div style="display:grid;gap:10px;grid-template-columns: 1fr 1fr;">
+      ${groups.map(g => `
+        <div>
+          <label style="font-size:12px;color:rgba(255,255,255,.70);display:block;margin-bottom:6px;">${escapeHtml(g.label)}</label>
+          <select data-variant-group="${g.index}" style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,255,153,.30);background:rgba(16,16,23,.88);color:rgba(255,255,255,.92);outline:none;"></select>
+        </div>
+      `).join("")}
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <div style="color:rgba(255,255,255,.62);font-size:13px;">
+        Selected: <span id="selectedVariantLabel" style="color:rgba(255,255,255,.92);font-weight:800;"></span>
+      </div>
+      <div style="color:rgba(0,255,153,.95);font-weight:900;font-size:16px;text-shadow:0 0 16px rgba(0,255,153,.22);">
+        <span id="variantPrice">$—</span>
+      </div>
+    </div>
+  `;
+
+      pDesc.insertAdjacentElement("afterend", wrap);
+
+      // Robust price parsing (supports number, "19.99", {"amount":1999,"currency":"USD"}, {"amount_money":{"amount":1999}})
+      function parsePriceAny(v) {
+        if (v == null) return NaN;
+        if (typeof v === "number") return v;
+        if (typeof v === "string") {
+          const n = Number(v.replace(/[^0-9.\-]/g, ""));
+          return Number.isFinite(n) ? n : NaN;
+        }
+        // common Square-ish shapes (just in case you stored it)
+        if (typeof v === "object") {
+          if (typeof v.amount === "number") return v.amount / 100; // cents
+          if (v.amount_money && typeof v.amount_money.amount === "number") return v.amount_money.amount / 100;
+          if (typeof v.price === "number") return v.price;
+        }
+        return NaN;
+      }
+
+      // fill selects + force default selection
+      const selects = Array.from(wrap.querySelectorAll("select[data-variant-group]"));
+      selects.forEach(sel => {
+        const idx = Number(sel.getAttribute("data-variant-group"));
+        const g = groups.find(x => x.index === idx);
+        sel.innerHTML = "";
+
+        const values = (g?.values || []);
+        values.forEach((val, i) => {
+          const opt = document.createElement("option");
+          opt.value = val;
+          opt.textContent = val;
+          sel.appendChild(opt);
+        });
+
+        // IMPORTANT: ensure something is selected
+        if (values.length) sel.value = values[0];
+      });
+
+      const selectedVariantLabelEl = wrap.querySelector("#selectedVariantLabel");
+      const variantPriceEl = wrap.querySelector("#variantPrice");
+
+      const getSelectionParts = () => selects.map(s => s.value).filter(Boolean);
+
+      function syncVariant() {
+        const parts = getSelectionParts();
+        const v = findVariantBySelection(variants, parts);
+
+        // If exact match failed, fall back to "starts with" match for safety
+        const vv = v || variants.find(x => {
+          const p = splitVariantName(x.name);
+          if (p.length < parts.length) return false;
+          for (let i = 0; i < parts.length; i++) if (p[i] !== parts[i]) return false;
+          return true;
+        }) || null;
+
+        if (vv) {
+          const priceNum = parsePriceAny(vv.price);
+          selectedVariantLabelEl.textContent = vv.name || parts.join(", ");
+          variantPriceEl.textContent = Number.isFinite(priceNum) ? toMoney(priceNum) : "$—";
+
+          // ALSO keep the main price row updated (this is what you called "total price")
+          pPrice.textContent = Number.isFinite(priceNum) ? toMoney(priceNum) : "$—";
+
+          const vImgs = Array.isArray(vv.images) ? vv.images : [];
+          const sources = [];
+          vImgs.forEach(src => sources.push({ type: "img", src }));
+          if (!sources.length) {
+            if (item.image) sources.push({ type: "img", src: item.image });
+            (item.additional_images || []).forEach(src => sources.push({ type: "img", src }));
+            if (item.video) sources.push({ type: "video", src: item.video });
+            (item.additional_videos || []).forEach(src => sources.push({ type: "video", src }));
+          }
+          buildThumbsFromSources(item.name, sources);
+
+          if (vv.buyLink) {
+            buyBtn.href = vv.buyLink;
+            buyBtn.target = "_blank";
+            buyBtn.rel = "noopener";
+          } else {
+            buyBtn.href = "#";
+            buyBtn.removeAttribute("target");
+            buyBtn.removeAttribute("rel");
+          }
+
+          addBtn.disabled = false;
+          addBtn.onclick = async () => {
+            try {
+              await addToCartMerged({
+                productId: item.id,
+                name: item.name,
+                image: (vImgs[0] || item.image || null),
+                qty: 1,
+                price: Number.isFinite(priceNum) ? priceNum : 0,
+                productType: "physical",
+                variantId: vv.id,
+                variantLabel: vv.name || parts.join(", "),
+                optionParts: parts,
+                buyLink: vv.buyLink || ""
+              });
+              toast("Added to cart");
+            } catch (e) {
+              console.error(e);
+              toast("Could not add to cart");
+            }
+          };
+        } else {
+          selectedVariantLabelEl.textContent = parts.join(", ");
+          variantPriceEl.textContent = "$—";
+          pPrice.textContent = "$—";
+          addBtn.disabled = true;
+          buyBtn.href = "#";
+          buyBtn.removeAttribute("target");
+          buyBtn.removeAttribute("rel");
+        }
+      }
+
+      selects.forEach(sel => sel.addEventListener("change", syncVariant));
+
+      // initial
+      syncVariant();
+
+      return { wrap, selects, syncVariant };
+    }
+
+    // ----------------------------
+    // Page render (react to hash)
+    // ----------------------------
+    function getProductIdFromUrl() {
+      return (window.location.hash || "").replace("#", "").trim();
+    }
+
+    function resetUI() {
+      removeVariantUI();
+
+      pageTitle.textContent = "Product";
+      pName.textContent = "Loading…";
+      pDesc.textContent = "";
+      pPrice.textContent = "$—";
+
+      buyBtn.href = "#";
+      buyBtn.removeAttribute("target");
+      buyBtn.removeAttribute("rel");
+
+      hero.innerHTML = "";
+      thumbs.innerHTML = "";
+
+      addBtn.style.display = "inline-flex";
       addBtn.disabled = true;
-    } else {
-      document.querySelector(".title").textContent = item.name || "Product";
+      addBtn.onclick = null;
+
+      // keep reviews UI as-is (it will be re-bound per product)
+    }
+
+    let lastRenderedPid = null;
+    let commentsUnsub = null; // store unsubscribe if you later switch to manual listeners; onSnapshot returns function (not used here)
+    let currentUid = null;
+    let myReviewCache = null;
+
+    function teardownComments() {
+      // We used onSnapshot without keeping the unsubscribe in the original code.
+      // We'll keep it simple: reload page lifecycle handles it. If you want strict cleanup,
+      // we can store and call unsub. (Optional improvement)
+    }
+
+    async function renderCurrentProduct(force = false) {
+      const pid = getProductIdFromUrl();
+      if (!force && pid === lastRenderedPid) return; // prevents double-run duplicates
+      lastRenderedPid = pid;
+
+      resetUI();
+
+      if (!pid) {
+        pageTitle.textContent = "Product Not Found";
+        pName.textContent = "No product selected";
+        pDesc.textContent = "Open a product using a URL like /product#some-id";
+        return;
+      }
+
+      const products = await getProductsOnce();
+      const raw = products.find(p => String(p.id) === String(pid));
+      const item = raw ? normalizeItemForPage(raw) : null;
+
+      if (!item) {
+        pageTitle.textContent = "Product Not Found";
+        pName.textContent = "Product not found";
+        pDesc.textContent = "That product ID doesn't exist.";
+        return;
+      }
+
+      pageTitle.textContent = item.name || "Product";
       pName.textContent = item.name || "Untitled";
       pDesc.textContent = item.description || "";
-      pPrice.textContent = toMoney(item.price);
-      buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
 
-      setHeroMedia(item);
-      buildThumbs(item);
+      // Decide physical vs digital by presence of varients or explicit product-type
+      const isPhysical = (item.productType === "physical") || (Array.isArray(item.varients) && item.varients.length > 0);
 
-      addBtn.addEventListener("click", async () => {
-        try {
-          await addToCart(item);
-          toast("Added to cart");
-        } catch (e) {
-          console.error(e);
-          toast("Could not add to cart");
-        }
-      });
+      if (isPhysical) {
+        // price shown from selected variant
+        pPrice.textContent = "$—";
+
+        // buy button will become variant buy link when selected
+        buyBtn.href = "#";
+        buyBtn.removeAttribute("target");
+        buyBtn.removeAttribute("rel");
+
+        // show add button (same button), but behavior is bound inside renderVariantUI
+        addBtn.style.display = "inline-flex";
+        addBtn.disabled = true;
+
+        renderVariantUI(item);
+
+      } else {
+        // digital/normal product behavior
+        pPrice.textContent = toMoney(Number(item.price || 0));
+        buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
+        buyBtn.removeAttribute("target");
+        buyBtn.removeAttribute("rel");
+
+        const sources = [];
+        if (item.image) sources.push({ type: "img", src: item.image });
+        (item.additional_images || []).forEach(src => sources.push({ type: "img", src }));
+        if (item.video) sources.push({ type: "video", src: item.video });
+        (item.additional_videos || []).forEach(src => sources.push({ type: "video", src }));
+
+        buildThumbsFromSources(item.name, sources);
+
+        addBtn.disabled = false;
+        addBtn.onclick = async () => {
+          try {
+            await addToCartMerged({
+              productId: item.id,
+              name: item.name,
+              image: item.image || null,
+              qty: 1,
+              price: Number(item.price || 0),
+              productType: "digital",
+              variantId: "",
+              variantLabel: "",
+              optionParts: [],
+              buyLink: ""
+            });
+            toast("Added to cart");
+          } catch (e) {
+            console.error(e);
+            toast("Could not add to cart");
+          }
+        };
+      }
 
       // -----------------------------------
       // COMMENTS LIVE QUERY
@@ -799,13 +1371,10 @@
       const commentsRef = collection(db, "products", String(item.id), "comments");
       const commentsQ = query(commentsRef, orderBy("createdAt", "desc"));
 
-      let currentUid = null;
-      let myReviewCache = null; // store my review doc data for edit prefilling
-
       // Auth controls: show/hide review form + prefill if user's review exists
       onAuthStateChanged(auth, async (user) => {
         currentUid = user ? user.uid : null;
-        displayNameInput.value = user.displayName || "";
+        displayNameInput.value = user?.displayName || "";
 
         if (user) {
           mustSignIn.style.display = "none";
@@ -825,7 +1394,7 @@
             } else {
               myReviewCache = null;
               ratingSel.value = "5";
-              displayNameInput.value = ""; // blank => Anonymous
+              displayNameInput.value = "";
               commentText.value = "";
               deleteMyReviewBtn.style.display = "none";
               showFormMessage("");
@@ -846,13 +1415,11 @@
         }
       });
 
-      // Live comments listener (for everyone)
       onSnapshot(
         commentsQ,
         (snap) => {
           const docs = snap.docs;
 
-          // compute rating stats
           const total = docs.length;
           let sum = 0;
           const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -883,7 +1450,7 @@
       );
 
       // Submit: create OR edit (same doc id = uid)
-      commentForm.addEventListener("submit", async (e) => {
+      commentForm.onsubmit = async (e) => {
         e.preventDefault();
 
         const user = auth.currentUser;
@@ -892,9 +1459,8 @@
         const rating = parseInt(ratingSel.value, 10) || 0;
         const text = commentText.value.trim();
 
-        // IMPORTANT: blank input => Anonymous (even if Firebase displayName exists)
-        const raw = displayNameInput.value.trim();
-        const finalName = raw ? raw : "Anonymous";
+        const rawName = displayNameInput.value.trim();
+        const finalName = rawName ? rawName : "Anonymous";
 
         if (!text) { showFormMessage("Please write a comment.", true); return; }
         if (text.length > 2000) { showFormMessage("Comment is too long (max 2000 chars).", true); return; }
@@ -906,8 +1472,6 @@
 
         try {
           const myRef = doc(db, "products", String(item.id), "comments", user.uid);
-
-          // If it exists, preserve createdAt (rules lock it). If new, set it.
           const createdAt = (myReviewCache && myReviewCache.createdAt) ? myReviewCache.createdAt : serverTimestamp();
 
           await setDoc(myRef, {
@@ -919,7 +1483,6 @@
             createdAt
           });
 
-          // Refresh cache
           const snap = await getDoc(myRef);
           myReviewCache = snap.exists() ? snap.data() : null;
 
@@ -932,10 +1495,9 @@
         } finally {
           setFormBusy(false);
         }
-      });
+      };
 
-      // Delete my review
-      deleteMyReviewBtn.addEventListener("click", async () => {
+      deleteMyReviewBtn.onclick = async () => {
         const user = auth.currentUser;
         if (!user) return;
 
@@ -961,14 +1523,26 @@
         } finally {
           setFormBusy(false);
         }
-      });
+      };
     }
-  }
 
-  // footer
-  const y = new Date().getFullYear();
-  $("footerText").innerHTML = `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
-</script>
+    // Initial render
+    await renderCurrentProduct(true);
 
+    // Re-render when hash changes (no reload needed)
+    window.addEventListener("hashchange", () => {
+      renderCurrentProduct(true).catch(console.error);
+    });
+
+    // Back/forward cache friendliness
+    window.addEventListener("pageshow", () => {
+      renderCurrentProduct(false).catch(console.error);
+    });
+
+    // footer
+    const y = new Date().getFullYear();
+    $("footerText").innerHTML = `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+  </script>
 </body>
+
 </html>

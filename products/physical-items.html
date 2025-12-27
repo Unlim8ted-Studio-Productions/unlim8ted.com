@@ -48,6 +48,8 @@
       --r2: 22px;
     }
 
+    *{ box-sizing:border-box; }
+
     body{
       margin:0;
       font-family: Arial, sans-serif;
@@ -89,7 +91,7 @@
       font-size: 14px;
       color: var(--muted);
       line-height:1.4;
-      max-width: 720px;
+      max-width: 760px;
     }
 
     .toolbar{
@@ -99,25 +101,23 @@
       flex-wrap:wrap;
       margin: 18px 0 10px;
     }
-/* Dark selects */
-select{
-  background: rgba(10,10,16,.92) !important;
-  color: rgba(255,255,255,.92) !important;
-  border: 1px solid rgba(255,255,255,.14);
-}
 
-/* Dark option list (works in many browsers, but not all OS-native UIs) */
-select option{
-  background: #0b0a12 !important;
-  color: rgba(255,255,255,.92) !important;
-}
+    /* Dark selects */
+    select{
+      background: rgba(10,10,16,.92) !important;
+      color: rgba(255,255,255,.92) !important;
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    select option{
+      background: #0b0a12 !important;
+      color: rgba(255,255,255,.92) !important;
+    }
+    select:focus{
+      outline: none;
+      border-color: rgba(0,255,153,.45);
+      box-shadow: 0 0 0 3px rgba(0,255,153,.12);
+    }
 
-/* For focus */
-select:focus{
-  outline: none;
-  border-color: rgba(0,255,153,.45);
-  box-shadow: 0 0 0 3px rgba(0,255,153,.12);
-}
     .tool{
       flex: 1 1 260px;
       min-width: 220px;
@@ -144,7 +144,8 @@ select:focus{
       appearance: none;
       cursor:pointer;
     }
-    .tool .icon{
+
+    .icon{
       width: 34px;
       height: 34px;
       border-radius: 12px;
@@ -157,6 +158,7 @@ select:focus{
       user-select:none;
       flex: 0 0 auto;
     }
+    .icon svg{ width: 18px; height: 18px; fill: currentColor; }
 
     .grid{
       display:grid;
@@ -246,39 +248,14 @@ select:focus{
       color: var(--accent);
       font-weight: 900;
       font-size: 12px;
+      text-transform: capitalize;
     }
 
-    .cart-fab{
-      position: fixed;
-      right: 18px;
-      top: 76px;
-      z-index: 20;
-      border-radius: 16px;
-      background: rgba(0,0,0,.45);
-      border: 1px solid rgba(255,255,255,.12);
-      backdrop-filter: blur(10px);
-      padding: 10px 12px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      box-shadow: 0 12px 28px rgba(0,0,0,.40);
-      text-decoration:none;
-      color: var(--text);
-      font-weight: 900;
-    }
-    .cart-fab:hover{
-      border-color: rgba(0,255,198,.28);
-    }
-    .cart-count{
-      background: rgba(0,255,198,.16);
-      border: 1px solid rgba(0,255,198,.22);
-      color: var(--accent);
-      border-radius: 999px;
-      padding: 3px 8px;
-      font-size: 12px;
-      font-weight: 900;
-      min-width: 26px;
+    .foot{
+      margin-top: 22px;
       text-align:center;
+      color: rgba(255,255,255,.60);
+      font-size: 13px;
     }
 
     /* MODAL */
@@ -461,6 +438,7 @@ select:focus{
       user-select:none;
       z-index: 2;
     }
+    .x svg{ width: 18px; height: 18px; fill: currentColor; }
     .x:hover{
       border-color: rgba(255,77,77,.30);
       color: var(--danger);
@@ -485,18 +463,10 @@ select:focus{
     }
     .toast.show{ display:block; }
 
-    .foot{
-      margin-top: 22px;
-      text-align:center;
-      color: rgba(255,255,255,.60);
-      font-size: 13px;
-    }
-
     @media (max-width: 900px){
       .sheet{ grid-template-columns: 1fr; }
       .sheet .img{ min-height: 260px; }
       .formgrid{ grid-template-columns: 1fr; }
-      .cart-fab{ top: 70px; }
     }
   </style>
 </head>
@@ -505,16 +475,13 @@ select:focus{
   <site-loader text="Loading..."></site-loader>
   <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
 
-  <a class="cart-fab" href="/cart" aria-label="Go to cart">
-    🛍️ Cart <span id="cartCount" class="cart-count">0</span>
-  </a>
-
   <div class="wrap">
     <div class="hero">
       <div>
         <h1>Physical Items</h1>
         <p class="sub">
-          Browse merch and physical items. Click any item to choose variants and add it to your cart.
+          Browse merch and physical items. Click a card to open its product page.
+          If you want to choose variants (size/color/etc), use “Quick add” from the product page or add here via the options modal.
           Checkout happens via Square links (each physical item purchased separately).
         </p>
       </div>
@@ -522,12 +489,18 @@ select:focus{
 
     <div class="toolbar">
       <div class="tool" title="Search">
-        <div class="icon">⌕</div>
+        <div class="icon" aria-hidden="true">
+          <!-- search icon -->
+          <svg viewBox="0 0 24 24"><path d="M10 4a6 6 0 104.472 10.01l4.759 4.758a1 1 0 001.414-1.414l-4.758-4.759A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z"/></svg>
+        </div>
         <input type="text" id="search" placeholder="Search items…">
       </div>
 
       <div class="tool" title="Filter">
-        <div class="icon">⛭</div>
+        <div class="icon" aria-hidden="true">
+          <!-- sliders icon -->
+          <svg viewBox="0 0 24 24"><path d="M4 7h10a2 2 0 104 0h2v2h-2a2 2 0 11-4 0H4V7zm0 8h2a2 2 0 104 0h10v2H10a2 2 0 11-4 0H4v-2z"/></svg>
+        </div>
         <select id="filter">
           <option value="all">All categories</option>
           <option value="t-shirts">T-Shirts</option>
@@ -546,11 +519,13 @@ select:focus{
     </div>
   </div>
 
-  <!-- MODAL -->
+  <!-- MODAL (variants + qty + add to cart) -->
   <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Product options">
     <div class="sheet">
       <div class="img">
-        <div id="closeBtn" class="x" aria-label="Close">✕</div>
+        <div id="closeBtn" class="x" aria-label="Close">
+          <svg viewBox="0 0 24 24"><path d="M18.3 5.71a1 1 0 00-1.41 0L12 10.59 7.11 5.7A1 1 0 105.7 7.11L10.59 12 5.7 16.89a1 1 0 101.41 1.41L12 13.41l4.89 4.89a1 1 0 001.41-1.41L13.41 12l4.89-4.89a1 1 0 000-1.4z"/></svg>
+        </div>
         <img id="mImg" src="" alt="">
       </div>
       <div class="content">
@@ -583,7 +558,7 @@ select:focus{
                 <button id="qtyInc" type="button" aria-label="Increase quantity">+</button>
               </div>
               <div class="p" style="margin:0;">
-                Cart stores your chosen variants so you can come back later.
+                Added items will show up in your navbar cart immediately.
               </div>
             </div>
           </div>
@@ -591,6 +566,7 @@ select:focus{
 
         <div class="btns">
           <button id="addToCartBtn" class="btn btn-primary" type="button">Add to cart</button>
+          <button id="goToProductBtn" class="btn btn-ghost" type="button">View product page</button>
           <button id="closeBtn2" class="btn btn-ghost" type="button">Cancel</button>
         </div>
 
@@ -605,9 +581,7 @@ select:focus{
 
   <script type="module">
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import {
-      doc, setDoc, serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
     import { getFirebase } from "/components/firebase-init.js";
 
     const { auth, db } = getFirebase();
@@ -615,11 +589,9 @@ select:focus{
     // -----------------------------
     // PRODUCT DATA
     // -----------------------------
-    // IMPORTANT: Put each product's Square product link into `squareLink`.
-    // This is what your cart page will use as the per-item "Buy now (Square)" link.
-    //
-    // Variants here are for selecting/remembering in cart.
-    // (Square link is still the same, unless you want different links per variant.)
+    // IMPORTANT:
+    // - `id` should match products.json IDs so /product#id works.
+    // - `squareLink` is used by /cart to let users checkout each physical item separately.
     const PRODUCTS = [
       {
         id: "unlim8ted-hoodie",
@@ -629,10 +601,7 @@ select:focus{
         priceLabel: "$35.50 – $47.00",
         image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/Z73O3JCBDLCW5PGZTREXE3GR.jpeg?width=2560&optimize=medium",
         squareLink: "https://unlim8ted.com/products/squareproduct#unlim8ted-t-shirt/1?cp=true&sa=true&sbp=false&q=false",
-        variants: {
-          variant: ["Black", "Navy", "Heather Grey"],
-          option: ["S", "M", "L", "XL", "2XL"]
-        }
+        variants: { variant: ["Black", "Navy", "Heather Grey"], option: ["S", "M", "L", "XL", "2XL"] }
       },
       {
         id: "unlim8ted-tshirt",
@@ -642,10 +611,7 @@ select:focus{
         priceLabel: "$13.50",
         image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p1_i5_w2000.jpeg?width=2400&optimize=medium",
         squareLink: "https://unlim8ted.com/products/squareproduct#unlim8ted-t-shirt/1?cp=true&sa=true&sbp=false&q=false",
-        variants: {
-          variant: ["Black", "White", "Navy"],
-          option: ["S", "M", "L", "XL", "2XL"]
-        }
+        variants: { variant: ["Black", "White", "Navy"], option: ["S", "M", "L", "XL", "2XL"] }
       },
       {
         id: "meatball-tshirt",
@@ -655,10 +621,7 @@ select:focus{
         priceLabel: "$23.00",
         image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p52_i1_w2000.jpeg?width=2400&optimize=medium",
         squareLink: "https://unlim8ted.com/products/squareproduct#the-life-of-a-meatball-unisex-t-shirt/52?cp=true&sa=true&sbp=false&q=false",
-        variants: {
-          variant: ["Black", "White"],
-          option: ["S", "M", "L", "XL", "2XL"]
-        }
+        variants: { variant: ["Black", "White"], option: ["S", "M", "L", "XL", "2XL"] }
       },
       {
         id: "meatball-slides",
@@ -668,10 +631,7 @@ select:focus{
         priceLabel: "$31.44",
         image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p37_i3_w2000.jpeg?width=2400&optimize=medium",
         squareLink: "https://unlim8ted.com/products/squareproduct#the-life-of-a-meatball-men-s-slides/37?cp=true&sa=true&sbp=false&q=false",
-        variants: {
-          variant: ["Black", "White"],
-          option: ["8", "9", "10", "11", "12"]
-        }
+        variants: { variant: ["Black", "White"], option: ["8", "9", "10", "11", "12"] }
       },
       {
         id: "meatball-puzzle",
@@ -681,10 +641,7 @@ select:focus{
         priceLabel: "$17.80",
         image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p20_i1_w2000.jpeg?width=2400&optimize=medium",
         squareLink: "https://unlim8ted.com/products/squareproduct#the-life-of-a-meatball-jigsaw-puzzle/20?cp=true&sa=true&sbp=false&q=false",
-        variants: {
-          variant: ["Standard"],
-          option: ["One size"]
-        }
+        variants: { variant: ["Standard"], option: ["One size"] }
       },
       {
         id: "unlim8ted-stickers",
@@ -694,10 +651,7 @@ select:focus{
         priceLabel: "$5.35",
         image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p23_i3_w1000.jpeg?width=2400&optimize=medium",
         squareLink: "https://unlim8ted.com/products/squareproduct#unlim8ted-bubble-free-stickers/23?cp=true&sa=true&sbp=false&q=false",
-        variants: {
-          variant: ["Matte", "Gloss"],
-          option: ["Small", "Medium", "Large"]
-        }
+        variants: { variant: ["Matte", "Gloss"], option: ["Small", "Medium", "Large"] }
       },
       {
         id: "windbreaker",
@@ -707,10 +661,7 @@ select:focus{
         priceLabel: "$51.50",
         image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p29_i1_w2000.jpeg?width=2400&optimize=medium",
         squareLink: "https://unlim8ted.com/products/squareproduct#unisex-lightweight-zip-up-windbreaker/29?cp=true&sa=true&sbp=false&q=false",
-        variants: {
-          variant: ["Black", "Navy"],
-          option: ["S", "M", "L", "XL", "2XL"]
-        }
+        variants: { variant: ["Black", "Navy"], option: ["S", "M", "L", "XL", "2XL"] }
       },
       {
         id: "unlim8ted-slides",
@@ -720,10 +671,7 @@ select:focus{
         priceLabel: "$31.41",
         image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p36_i1_w2000.jpeg?width=2400&optimize=medium",
         squareLink: "https://unlim8ted.com/products/squareproduct#unlim8ted-men-s-slides/36?cp=true&sa=true&sbp=false&q=false",
-        variants: {
-          variant: ["Black", "White"],
-          option: ["8", "9", "10", "11", "12"]
-        }
+        variants: { variant: ["Black", "White"], option: ["8", "9", "10", "11", "12"] }
       },
       {
         id: "meatball-glass",
@@ -793,11 +741,11 @@ select:focus{
     const grid = document.getElementById("grid");
     const searchEl = document.getElementById("search");
     const filterEl = document.getElementById("filter");
-    const cartCountEl = document.getElementById("cartCount");
 
     const modal = document.getElementById("modal");
     const closeBtn = document.getElementById("closeBtn");
     const closeBtn2 = document.getElementById("closeBtn2");
+    const goToProductBtn = document.getElementById("goToProductBtn");
 
     const mImg = document.getElementById("mImg");
     const mTitle = document.getElementById("mTitle");
@@ -810,7 +758,7 @@ select:focus{
     const qtyInc = document.getElementById("qtyInc");
     const addToCartBtn = document.getElementById("addToCartBtn");
 
-    const toast = document.getElementById("toast");
+    const toastEl = document.getElementById("toast");
 
     let currentUser = null;
     let openProduct = null;
@@ -825,10 +773,10 @@ select:focus{
     }
 
     function toastShow(msg){
-      toast.textContent = msg;
-      toast.classList.add("show");
-      clearTimeout(toast._t);
-      toast._t = setTimeout(()=> toast.classList.remove("show"), 1200);
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      clearTimeout(toastEl._t);
+      toastEl._t = setTimeout(()=> toastEl.classList.remove("show"), 1200);
     }
 
     function clampInt(v, min, max){
@@ -837,74 +785,56 @@ select:focus{
       return Math.max(min, Math.min(max, v));
     }
 
-    function cartKeyFor(uid, item){
-      // stable id per product + selected variants so quantities "merge" naturally
-      const v1 = (item.variant || "").trim().toLowerCase();
-      const v2 = (item.option || "").trim().toLowerCase();
-      return `${item.productId}__${v1}__${v2}`;
+    // Dispatch event so site-navbar/cart dropdown can refresh immediately
+    function notifyCartChanged() {
+      window.dispatchEvent(new CustomEvent("cart-changed"));
     }
 
-    function loadLocalCart(){
-      try{
-        const raw = localStorage.getItem("unlim8ted-cart");
-        const arr = raw ? JSON.parse(raw) : [];
-        return Array.isArray(arr) ? arr : [];
-      }catch{
-        return [];
+    // -----------------------------
+    // CART (MATCHES YOUR PRODUCT PAGE)
+    // signed-in -> Firestore users/{uid}/cartItems/{autoId}
+    // signed-out -> localStorage "unlim8ted-cart" array
+    // -----------------------------
+    async function addToCartUnified(p, qty, variant, option){
+      const user = auth.currentUser;
+
+      const payload = {
+        productId: String(p.id),
+        name: String(p.title || "").slice(0, 120),
+        price: Number(p.price || 0), // optional numeric
+        image: p.image ? String(p.image).slice(0, 600) : null,
+        qty: Number(qty || 1),
+
+        // extra fields (safe to keep; your /cart can use these)
+        variant: String(variant || ""),
+        option: String(option || ""),
+        squareLink: String(p.squareLink || ""),
+
+        addedAt: serverTimestamp()
+      };
+
+      if (user) {
+        const cartItemRef = doc(collection(db, "users", user.uid, "cartItems"));
+        await setDoc(cartItemRef, payload);
+        notifyCartChanged();
+        return;
       }
-    }
 
-    function saveLocalCart(arr){
-      localStorage.setItem("unlim8ted-cart", JSON.stringify(arr));
-    }
-
-    function computeCartCountFromLocal(){
-      const arr = loadLocalCart();
-      return arr.reduce((s,it)=> s + (Number(it.qty)||1), 0);
-    }
-
-    async function addToFirestoreCart(uid, cartItem){
-      // Write to: users/{uid}/cartItems/{cartDocId}
-      const cartDocId = cartKeyFor(uid, cartItem);
-      await setDoc(doc(db, "users", uid, "cartItems", cartDocId), {
-        productId: cartItem.productId,
-        title: cartItem.title,
-        image: cartItem.image || null,
-        price: cartItem.price ?? 0,               // optional; keep if you have it
-        qty: cartItem.qty,
-        variant: cartItem.variant || "",
-        option: cartItem.option || "",
-        // KEY: this is what your cart page uses for per-item Square checkout
-        squareLink: cartItem.squareLink || "",
-        updatedAt: serverTimestamp(),
-        createdAt: serverTimestamp()
-      }, { merge: true });
-    }
-
-    function addToLocalCart(cartItem){
-      const arr = loadLocalCart();
-      const key = cartKeyFor("local", cartItem);
-      const idx = arr.findIndex(x => (x._key || "") === key);
-      if (idx >= 0){
-        arr[idx].qty = (Number(arr[idx].qty)||1) + cartItem.qty;
-      }else{
-        arr.push({
-          _key: key,
-          productId: cartItem.productId,
-          title: cartItem.title,
-          image: cartItem.image || null,
-          price: cartItem.price ?? 0,
-          qty: cartItem.qty,
-          variant: cartItem.variant || "",
-          option: cartItem.option || "",
-          squareLink: cartItem.squareLink || ""
-        });
-      }
-      saveLocalCart(arr);
-    }
-
-    function setCartCount(n){
-      cartCountEl.textContent = String(n);
+      const key = "unlim8ted-cart";
+      const existing = JSON.parse(localStorage.getItem(key) || "[]");
+      existing.push({
+        productId: payload.productId,
+        name: payload.name,
+        price: payload.price,
+        image: payload.image,
+        qty: payload.qty,
+        variant: payload.variant,
+        option: payload.option,
+        squareLink: payload.squareLink,
+        addedAt: Date.now()
+      });
+      localStorage.setItem(key, JSON.stringify(existing));
+      notifyCartChanged();
     }
 
     // -----------------------------
@@ -920,6 +850,11 @@ select:focus{
       return true;
     }
 
+    function goToProductPage(p){
+      // integrates with /product page (hash = product id)
+      window.location.href = `/product#${encodeURIComponent(p.id)}`;
+    }
+
     function renderGrid(){
       grid.innerHTML = "";
       const shown = PRODUCTS.filter(passesFilters);
@@ -930,6 +865,7 @@ select:focus{
         el.setAttribute("tabindex","0");
         el.setAttribute("role","button");
         el.setAttribute("aria-label", `Open ${p.title}`);
+
         el.innerHTML = `
           <div class="thumb">
             <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.title)}">
@@ -943,13 +879,22 @@ select:focus{
             </div>
           </div>
         `;
-        el.addEventListener("click", ()=> openModal(p));
+
+        // Click opens product page (requested)
+        el.addEventListener("click", ()=> goToProductPage(p));
         el.addEventListener("keydown", (e)=> {
           if (e.key === "Enter" || e.key === " "){
             e.preventDefault();
-            openModal(p);
+            goToProductPage(p);
           }
         });
+
+        // Right click / long press style: still allow variant modal via context menu
+        el.addEventListener("contextmenu", (e) => {
+          e.preventDefault();
+          openModal(p);
+        });
+
         grid.appendChild(el);
       }
 
@@ -968,7 +913,7 @@ select:focus{
     }
 
     // -----------------------------
-    // MODAL
+    // MODAL (optional quick add)
     // -----------------------------
     function fillSelect(selectEl, arr){
       selectEl.innerHTML = "";
@@ -1017,7 +962,8 @@ select:focus{
     });
 
     qtyDec.addEventListener("click", ()=> {
-      mQty.value = String(clampInt(mQty.value, 1, 99) - 1 <= 0 ? 1 : clampInt(mQty.value, 1, 99) - 1);
+      const next = clampInt(mQty.value, 1, 99) - 1;
+      mQty.value = String(next <= 0 ? 1 : next);
     });
     qtyInc.addEventListener("click", ()=> {
       mQty.value = String(Math.min(99, clampInt(mQty.value, 1, 99) + 1));
@@ -1033,37 +979,9 @@ select:focus{
       const variant = mVariant1.value || "";
       const option = mVariant2.value || "";
 
-      // NOTE: since Square checkout is per-item, this cart entry is mainly for “remembering”
-      // and showing the Square link in /cart.
-      const cartItem = {
-        productId: openProduct.id,
-        title: openProduct.title,
-        image: openProduct.image,
-        price: 0, // optional: you can store a numeric price if you want; your cart page supports it
-        qty,
-        variant,
-        option,
-        squareLink: openProduct.squareLink
-      };
-
       try{
-        if (currentUser){
-          await addToFirestoreCart(currentUser.uid, cartItem);
-          toastShow("Added to cart");
-        }else{
-          addToLocalCart(cartItem);
-          toastShow("Added to cart (local)");
-        }
-
-        // update badge
-        if (currentUser){
-          // without reading Firestore here, just bump the local badge roughly
-          // (your navbar cart in site-navbar probably also updates via Firestore)
-          setCartCount(Math.max(0, Number(cartCountEl.textContent)||0) + qty);
-        }else{
-          setCartCount(computeCartCountFromLocal());
-        }
-
+        await addToCartUnified(openProduct, qty, variant, option);
+        toastShow("Added to cart");
         closeModal();
       }catch(err){
         console.error(err);
@@ -1071,23 +989,17 @@ select:focus{
       }
     });
 
+    goToProductBtn.addEventListener("click", ()=>{
+      if (!openProduct) return;
+      goToProductPage(openProduct);
+    });
+
     // -----------------------------
-    // AUTH -> badge behavior
+    // AUTH (kept for parity)
     // -----------------------------
     onAuthStateChanged(auth, (user)=>{
       currentUser = user || null;
-
-      // For signed-in users, your site-navbar likely shows cart state.
-      // This page badge will:
-      // - show local count when signed out
-      // - show a lightweight placeholder when signed in (we increment optimistically on add)
-      if (!currentUser){
-        setCartCount(computeCartCountFromLocal());
-      }else{
-        // Keep it simple: start at 0 (or keep current), and it will increase when adding.
-        // If you want true Firestore count here too, tell me and I’ll wire an onSnapshot safely.
-        setCartCount(Number(cartCountEl.textContent) || 0);
-      }
+      // Navbar handles cart count UI. Nothing else needed here.
     });
 
     // -----------------------------
@@ -1102,7 +1014,6 @@ select:focus{
     const y = new Date().getFullYear();
     document.getElementById("footer-text").innerHTML =
       `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
-
   </script>
 
   <!-- Drop-in Smooth Scroll (wheel + touch) -->
