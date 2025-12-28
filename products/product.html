@@ -69,52 +69,53 @@
       border-radius: 999px;
       background: rgba(255, 255, 255, .03);
     }
-select{
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 
-  width: 100%;
-  padding: 10px 36px 10px 12px;
-  border-radius: 12px;
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
 
-  border: 1px solid rgba(0, 255, 153, .30);
-  background: rgba(16, 16, 23, .88);
-  color: var(--text);
+      width: 100%;
+      padding: 10px 36px 10px 12px;
+      border-radius: 12px;
 
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: .2px;
+      border: 1px solid rgba(0, 255, 153, .30);
+      background: rgba(16, 16, 23, .88);
+      color: var(--text);
 
-  outline: none;
-  cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: .2px;
 
-  /* dropdown arrow */
-  background-image:
-    url("data:image/svg+xml;utf8,\<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,.75)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>\<path d='M6 9l6 6 6-6'/>\</svg>");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 14px;
-}
+      outline: none;
+      cursor: pointer;
 
-/* Focus — identical to input/textarea */
-select:focus{
-  border-color: rgba(0, 255, 153, .65);
-  box-shadow: 0 0 0 3px rgba(0, 255, 153, .10);
-}
+      /* dropdown arrow */
+      background-image:
+        url("data:image/svg+xml;utf8,\<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,.75)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>\<path d='M6 9l6 6 6-6'/>\</svg>");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 14px;
+    }
 
-/* Disabled */
-select:disabled{
-  opacity: .6;
-  cursor: not-allowed;
-}
+    /* Focus — identical to input/textarea */
+    select:focus {
+      border-color: rgba(0, 255, 153, .65);
+      box-shadow: 0 0 0 3px rgba(0, 255, 153, .10);
+    }
 
-/* Dropdown list */
-select option{
-  background: rgba(16, 16, 23, .98);
-  color: var(--text);
-  font-weight: 600;
-}
+    /* Disabled */
+    select:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    /* Dropdown list */
+    select option {
+      background: rgba(16, 16, 23, .98);
+      color: var(--text);
+      font-weight: 600;
+    }
 
     .back:hover {
       border-color: rgba(0, 255, 153, .35);
@@ -562,6 +563,90 @@ select option{
       min-height: 44px;
       /* consistent height */
     }
+
+    /* Collapsible info dropdowns (Details / Notes) */
+    .infoAccordions {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    details.infoDrop {
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .03);
+      overflow: hidden;
+    }
+
+    details.infoDrop>summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 12px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: .2px;
+      color: rgba(255, 255, 255, .92);
+    }
+
+    details.infoDrop>summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .infoDrop .sumLeft {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .infoDrop .sumHint {
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(255, 255, 255, .60);
+    }
+
+    .infoDrop .chev {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      opacity: .8;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+
+    details.infoDrop[open] .chev {
+      transform: rotate(180deg);
+      opacity: 1;
+    }
+
+    .infoDrop .content {
+      padding: 0 12px 12px;
+      color: rgba(255, 255, 255, .82);
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    /* IMPORTANT Notes styling */
+    details.infoDrop.important {
+      border-color: rgba(255, 0, 119, .30);
+      background: rgba(255, 0, 119, .06);
+      box-shadow: 0 0 0 3px rgba(255, 0, 119, .08);
+    }
+
+    details.infoDrop.important>summary {
+      color: rgba(255, 255, 255, .95);
+    }
+
+    .badgeImportant {
+      font-size: 11px;
+      font-weight: 1000;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 0, 119, .40);
+      background: rgba(255, 0, 119, .14);
+      color: rgba(255, 190, 215, .98);
+    }
   </style>
 </head>
 
@@ -747,6 +832,72 @@ select option{
       document.body.appendChild(t);
       setTimeout(() => t.remove(), 1600);
     }
+    function hasContent(v) {
+      return typeof v === "string" && v.trim().length > 0;
+    }
+
+    function chevronSvg() {
+      return `
+    <svg class="chev" viewBox="0 0 24 24" fill="none"
+      stroke="rgba(255,255,255,.75)" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M6 9l6 6 6-6"></path>
+    </svg>
+  `;
+    }
+
+    function removeInfoAccordions() {
+      document.querySelectorAll("#infoAccordions").forEach(el => el.remove());
+    }
+
+    function renderInfoAccordions(item) {
+      removeInfoAccordions();
+
+      const detailsText = hasContent(item.details) ? item.details.trim() : "";
+      const notesText = hasContent(item.notes) ? item.notes.trim() : "";
+
+      if (!detailsText && !notesText) return; // nothing to show
+
+      const wrap = document.createElement("div");
+      wrap.id = "infoAccordions";
+      wrap.className = "infoAccordions";
+
+      if (detailsText) {
+        const d = document.createElement("details");
+        d.className = "infoDrop";
+        d.innerHTML = `
+      <summary>
+        <span class="sumLeft">
+          <span>Details</span>
+          <span class="sumHint">More info</span>
+        </span>
+        ${chevronSvg()}
+      </summary>
+      <div class="content">${escapeHtml(detailsText)}</div>
+    `;
+        wrap.appendChild(d);
+      }
+
+      if (notesText) {
+        const n = document.createElement("details");
+        n.className = "infoDrop important";
+        n.open = true; // open by default so it's clearly important
+        n.innerHTML = `
+      <summary>
+        <span class="sumLeft">
+          <span>Notes</span>
+          <span class="badgeImportant" aria-label="Important notes">IMPORTANT</span>
+        </span>
+        ${chevronSvg()}
+      </summary>
+      <div class="content">${escapeHtml(notesText)}</div>
+    `;
+        wrap.appendChild(n);
+      }
+
+      // Put them directly under description (and above buttons/variants area)
+      pDesc.insertAdjacentElement("afterend", wrap);
+    }
 
     // Dispatch event so navbar/cart dropdown can refresh immediately
     function notifyCartChanged() {
@@ -856,6 +1007,8 @@ select option{
       item.id = safeStr(item.id, 200);
       item.name = item.name ?? item.title ?? "";
       item.description = item.description ?? item.desc ?? "";
+      item.details = item.details ?? "";
+      item.notes = item.notes ?? "";
       item.image = item.image ?? item.main_image ?? "";
       item.additional_images = item.additional_images ?? [];
       item.video = item.video ?? null;
@@ -956,98 +1109,98 @@ select option{
       const tail = (parts || []).map(norm).filter(Boolean).join("__");
       return tail ? `${base}__${tail}` : base;
     }
-async function addToCartMerged(payload) {
-  const user = auth.currentUser;
+    async function addToCartMerged(payload) {
+      const user = auth.currentUser;
 
-  const clampInt = (n, min, max) =>
-    Math.max(min, Math.min(max, Math.trunc(Number(n) || 0)));
+      const clampInt = (n, min, max) =>
+        Math.max(min, Math.min(max, Math.trunc(Number(n) || 0)));
 
-  const addQty = clampInt(payload.qty, 1, 99);
+      const addQty = clampInt(payload.qty, 1, 99);
 
-  const buildCartData = (base) => ({
-    productId: safeStr(base.productId, 200),
-    name: safeStr(base.name, 160),
-    qty: base.qty,
+      const buildCartData = (base) => ({
+        productId: safeStr(base.productId, 200),
+        name: safeStr(base.name, 160),
+        qty: base.qty,
 
-    price: Math.max(0, Math.min(100000, Number(base.price || 0))),
+        price: Math.max(0, Math.min(100000, Number(base.price || 0))),
 
-    ...(base.productType ? { productType: safeStr(base.productType, 40) } : {}),
-    ...(base.variantId ? { variantId: safeStr(base.variantId, 200) } : {}),
-    ...(base.variantLabel ? { variantLabel: safeStr(base.variantLabel, 220) } : {}),
-    ...(base.buyLink ? { buyLink: safeStr(base.buyLink, 1200) } : {}),
+        ...(base.productType ? { productType: safeStr(base.productType, 40) } : {}),
+        ...(base.variantId ? { variantId: safeStr(base.variantId, 200) } : {}),
+        ...(base.variantLabel ? { variantLabel: safeStr(base.variantLabel, 220) } : {}),
+        ...(base.buyLink ? { buyLink: safeStr(base.buyLink, 1200) } : {}),
 
-    optionParts: Array.isArray(base.optionParts)
-      ? base.optionParts.map(x => safeStr(x, 80)).slice(0, 6)
-      : []
-  });
+        optionParts: Array.isArray(base.optionParts)
+          ? base.optionParts.map(x => safeStr(x, 80)).slice(0, 6)
+          : []
+      });
 
-  // ----------------------------
-  // SIGNED-IN USER (Firestore)
-  // ----------------------------
-  if (user) {
-    const id = cartDocId(payload.productId, payload.optionParts);
-    const ref = doc(db, "users", user.uid, "cartItems", id);
+      // ----------------------------
+      // SIGNED-IN USER (Firestore)
+      // ----------------------------
+      if (user) {
+        const id = cartDocId(payload.productId, payload.optionParts);
+        const ref = doc(db, "users", user.uid, "cartItems", id);
 
-    const existing = await getDoc(ref);
-    const prevQty = existing.exists()
-      ? clampInt(existing.data().qty, 0, 99)
-      : 0;
+        const existing = await getDoc(ref);
+        const prevQty = existing.exists()
+          ? clampInt(existing.data().qty, 0, 99)
+          : 0;
 
-    const nextQty = clampInt(prevQty + addQty, 1, 99);
+        const nextQty = clampInt(prevQty + addQty, 1, 99);
 
-    const now = Timestamp.now();
-    const createdAt =
-      existing.exists() && existing.data().createdAt
-        ? existing.data().createdAt
-        : now;
+        const now = Timestamp.now();
+        const createdAt =
+          existing.exists() && existing.data().createdAt
+            ? existing.data().createdAt
+            : now;
 
-    const data = buildCartData({
-      ...payload,
-      qty: nextQty
-    });
+        const data = buildCartData({
+          ...payload,
+          qty: nextQty
+        });
 
-    await setDoc(
-      ref,
-      {
-        ...data,
-        updatedAt: now,
-        createdAt
-      },
-      { merge: true }
-    );
+        await setDoc(
+          ref,
+          {
+            ...data,
+            updatedAt: now,
+            createdAt
+          },
+          { merge: true }
+        );
 
-    notifyCartChanged();
-    return;
-  }
+        notifyCartChanged();
+        return;
+      }
 
-  // ----------------------------
-  // SIGNED-OUT (localStorage)
-  // ----------------------------
-  const key = "unlim8ted-cart";
-  const arr = JSON.parse(localStorage.getItem(key) || "[]");
+      // ----------------------------
+      // SIGNED-OUT (localStorage)
+      // ----------------------------
+      const key = "unlim8ted-cart";
+      const arr = JSON.parse(localStorage.getItem(key) || "[]");
 
-  const id = cartDocId(payload.productId, payload.optionParts);
-  const idx = arr.findIndex(x => x && x._id === id);
+      const id = cartDocId(payload.productId, payload.optionParts);
+      const idx = arr.findIndex(x => x && x._id === id);
 
-  if (idx >= 0) {
-    const prev = clampInt(arr[idx].qty, 0, 99);
-    arr[idx].qty = clampInt(prev + addQty, 1, 99);
-  } else {
-    const data = buildCartData({
-      ...payload,
-      qty: addQty
-    });
+      if (idx >= 0) {
+        const prev = clampInt(arr[idx].qty, 0, 99);
+        arr[idx].qty = clampInt(prev + addQty, 1, 99);
+      } else {
+        const data = buildCartData({
+          ...payload,
+          qty: addQty
+        });
 
-    arr.push({
-      _id: id,
-      ...data,
-      addedAt: Date.now()
-    });
-  }
+        arr.push({
+          _id: id,
+          ...data,
+          addedAt: Date.now()
+        });
+      }
 
-  localStorage.setItem(key, JSON.stringify(arr));
-  notifyCartChanged();
-}
+      localStorage.setItem(key, JSON.stringify(arr));
+      notifyCartChanged();
+    }
 
     // ----------------------------
     // Reviews helpers
@@ -1267,15 +1420,15 @@ async function addToCartMerged(payload) {
           }
           buildThumbsFromSources(item.name, sources);
 
-        // if (vv.buyLink) {
-        //   buyBtn.href = vv.buyLink;
-        //   buyBtn.target = "_blank";
-        //   buyBtn.rel = "noopener";
-        // } else {
-        //   buyBtn.href = "#";
-        //   buyBtn.removeAttribute("target");
-        //   buyBtn.removeAttribute("rel");
-        // }
+          // if (vv.buyLink) {
+          //   buyBtn.href = vv.buyLink;
+          //   buyBtn.target = "_blank";
+          //   buyBtn.rel = "noopener";
+          // } else {
+          //   buyBtn.href = "#";
+          //   buyBtn.removeAttribute("target");
+          //   buyBtn.removeAttribute("rel");
+          // }
 
           addBtn.disabled = false;
           addBtn.onclick = async () => {
@@ -1295,9 +1448,9 @@ async function addToCartMerged(payload) {
               toast("Added to cart");
             } catch (e) {
               console.log("UID", auth.currentUser?.uid);
-console.log("WRITE PAYLOAD", payload);
-console.log("qty type", typeof payload.qty, payload.qty);
-console.log("price type", typeof payload.price, payload.price);
+              console.log("WRITE PAYLOAD", payload);
+              console.log("qty type", typeof payload.qty, payload.qty);
+              console.log("price type", typeof payload.price, payload.price);
 
               console.error(e);
               toast("Could not add to cart");
@@ -1331,6 +1484,7 @@ console.log("price type", typeof payload.price, payload.price);
 
     function resetUI() {
       removeVariantUI();
+      removeInfoAccordions();
 
       pageTitle.textContent = "Product";
       pName.textContent = "Loading…";
@@ -1355,302 +1509,304 @@ console.log("price type", typeof payload.price, payload.price);
     let commentsUnsub = null; // store unsubscribe if you later switch to manual listeners; onSnapshot returns function (not used here)
     let currentUid = null;
     let myReviewCache = null;
-// IMPORTANT: avoid stacking auth listeners on every hash change
-let unsubAuth = null;
-// OPTIONAL: avoid stacking comments listeners too
-let unsubComments = null;
+    // IMPORTANT: avoid stacking auth listeners on every hash change
+    let unsubAuth = null;
+    // OPTIONAL: avoid stacking comments listeners too
+    let unsubComments = null;
     function teardownComments() {
       // We used onSnapshot without keeping the unsubscribe in the original code.
       // We'll keep it simple: reload page lifecycle handles it. If you want strict cleanup,
       // we can store and call unsub. (Optional improvement)
     }
 
-async function renderCurrentProduct(force = false) {
-  const pid = getProductIdFromUrl();
-  if (!force && pid === lastRenderedPid) return;
-  lastRenderedPid = pid;
+    async function renderCurrentProduct(force = false) {
+      const pid = getProductIdFromUrl();
+      if (!force && pid === lastRenderedPid) return;
+      lastRenderedPid = pid;
 
-  resetUI();
+      resetUI();
 
-  // clean up previous listeners
-  if (unsubAuth) {
-    unsubAuth();
-    unsubAuth = null;
-  }
-  if (unsubComments) {
-    unsubComments();
-    unsubComments = null;
-  }
-
-  if (!pid) {
-    pageTitle.textContent = "Product Not Found";
-    pName.textContent = "No product selected";
-    pDesc.textContent = "Open a product using a URL like /product#some-id";
-    return;
-  }
-
-  const products = await getProductsOnce();
-  const raw = products.find((p) => String(p.id) === String(pid));
-  const item = raw ? normalizeItemForPage(raw) : null;
-
-  if (!item) {
-    pageTitle.textContent = "Product Not Found";
-    pName.textContent = "Product not found";
-    pDesc.textContent = "That product ID doesn't exist.";
-    return;
-  }
-
-  pageTitle.textContent = item.name || "Product";
-  pName.textContent = item.name || "Untitled";
-  pDesc.textContent = item.description || "";
-
-  const isPhysical =
-    item.productType === "physical" ||
-    (Array.isArray(item.varients) && item.varients.length > 0);
-
-  if (isPhysical) {
-    pPrice.textContent = "$—";
-    buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
-    buyBtn.removeAttribute("target");
-    buyBtn.removeAttribute("rel");
-
-    addBtn.style.display = "inline-flex";
-    addBtn.disabled = true;
-
-    renderVariantUI(item);
-  } else {
-    pPrice.textContent = toMoney(Number(item.price || 0));
-    buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
-    buyBtn.removeAttribute("target");
-    buyBtn.removeAttribute("rel");
-
-    const sources = [];
-    if (item.image) sources.push({ type: "img", src: item.image });
-    (item.additional_images || []).forEach((src) => sources.push({ type: "img", src }));
-    if (item.video) sources.push({ type: "video", src: item.video });
-    (item.additional_videos || []).forEach((src) => sources.push({ type: "video", src }));
-
-    buildThumbsFromSources(item.name, sources);
-
-    addBtn.disabled = false;
-    addBtn.onclick = async () => {
-      try {
-        await addToCartMerged({
-          productId: item.id,
-          name: item.name,
-          image: item.image || null,
-          qty: 1,
-          price: Number(item.price || 0),
-          productType: "digital",
-          variantId: "",
-          variantLabel: "",
-          optionParts: [],
-          buyLink: "",
-        });
-        toast("Added to cart");
-      } catch (e) {
-        console.error("addToCartMerged error:", e?.code, e?.message, e);
-        toast("Could not add to cart");
+      // clean up previous listeners
+      if (unsubAuth) {
+        unsubAuth();
+        unsubAuth = null;
       }
-    };
-  }
+      if (unsubComments) {
+        unsubComments();
+        unsubComments = null;
+      }
 
-  // -----------------------------------
-  // COMMENTS LIVE QUERY
-  // products/{productId}/comments
-  // -----------------------------------
-  const commentsRef = collection(db, "products", String(item.id), "comments");
-  const commentsQ = query(commentsRef, orderBy("createdAt", "desc"));
+      if (!pid) {
+        pageTitle.textContent = "Product Not Found";
+        pName.textContent = "No product selected";
+        pDesc.textContent = "Open a product using a URL like /product#some-id";
+        return;
+      }
 
-  // Auth controls: show/hide review form + prefill if user's review exists
-  unsubAuth = onAuthStateChanged(auth, async (user) => {
-    currentUid = user ? user.uid : null;
+      const products = await getProductsOnce();
+      const raw = products.find((p) => String(p.id) === String(pid));
+      const item = raw ? normalizeItemForPage(raw) : null;
 
-    if (user) {
-      mustSignIn.style.display = "none";
-      commentForm.style.display = "grid";
-      displayNameInput.value = user.displayName || "";
+      if (!item) {
+        pageTitle.textContent = "Product Not Found";
+        pName.textContent = "Product not found";
+        pDesc.textContent = "That product ID doesn't exist.";
+        return;
+      }
 
-      // Always check the doc; don't rely on stale cache
-      try {
-        const myRef = doc(db, "products", String(item.id), "comments", user.uid);
-        const mySnap = await getDoc(myRef);
+      pageTitle.textContent = item.name || "Product";
+      pName.textContent = item.name || "Untitled";
+      pDesc.textContent = item.description || "";
+      renderInfoAccordions(item);
 
-        if (mySnap.exists()) {
-          myReviewCache = mySnap.data();
-          ratingSel.value = String(myReviewCache.rating || "5");
-          displayNameInput.value = (myReviewCache.displayName || "").trim();
-          commentText.value = (myReviewCache.text || "").trim();
-          deleteMyReviewBtn.style.display = "inline-block";
-          showFormMessage("Editing your review.");
+      const isPhysical =
+        item.productType === "physical" ||
+        (Array.isArray(item.varients) && item.varients.length > 0);
+
+      if (isPhysical) {
+        pPrice.textContent = "$—";
+        buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
+        buyBtn.removeAttribute("target");
+        buyBtn.removeAttribute("rel");
+
+        addBtn.style.display = "inline-flex";
+        addBtn.disabled = true;
+
+        renderVariantUI(item);
+      } else {
+        pPrice.textContent = toMoney(Number(item.price || 0));
+        buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
+        buyBtn.removeAttribute("target");
+        buyBtn.removeAttribute("rel");
+
+        const sources = [];
+        if (item.image) sources.push({ type: "img", src: item.image });
+        (item.additional_images || []).forEach((src) => sources.push({ type: "img", src }));
+        if (item.video) sources.push({ type: "video", src: item.video });
+        (item.additional_videos || []).forEach((src) => sources.push({ type: "video", src }));
+
+        buildThumbsFromSources(item.name, sources);
+
+        addBtn.disabled = false;
+        addBtn.onclick = async () => {
+          try {
+            await addToCartMerged({
+              productId: item.id,
+              name: item.name,
+              image: item.image || null,
+              qty: 1,
+              price: Number(item.price || 0),
+              productType: "digital",
+              variantId: "",
+              variantLabel: "",
+              optionParts: [],
+              buyLink: "",
+            });
+            toast("Added to cart");
+          } catch (e) {
+            console.error("addToCartMerged error:", e?.code, e?.message, e);
+            toast("Could not add to cart");
+          }
+        };
+      }
+
+      // -----------------------------------
+      // COMMENTS LIVE QUERY
+      // products/{productId}/comments
+      // -----------------------------------
+      const commentsRef = collection(db, "products", String(item.id), "comments");
+      const commentsQ = query(commentsRef, orderBy("createdAt", "desc"));
+
+      // Auth controls: show/hide review form + prefill if user's review exists
+      unsubAuth = onAuthStateChanged(auth, async (user) => {
+        currentUid = user ? user.uid : null;
+
+        if (user) {
+          mustSignIn.style.display = "none";
+          commentForm.style.display = "grid";
+          displayNameInput.value = user.displayName || "";
+
+          // Always check the doc; don't rely on stale cache
+          try {
+            const myRef = doc(db, "products", String(item.id), "comments", user.uid);
+            const mySnap = await getDoc(myRef);
+
+            if (mySnap.exists()) {
+              myReviewCache = mySnap.data();
+              ratingSel.value = String(myReviewCache.rating || "5");
+              displayNameInput.value = (myReviewCache.displayName || "").trim();
+              commentText.value = (myReviewCache.text || "").trim();
+              deleteMyReviewBtn.style.display = "inline-block";
+              showFormMessage("Editing your review.");
+            } else {
+              myReviewCache = null;
+              ratingSel.value = "5";
+              displayNameInput.value = "";
+              commentText.value = "";
+              deleteMyReviewBtn.style.display = "none";
+              showFormMessage("");
+            }
+          } catch (e) {
+            console.log("UID", auth.currentUser?.uid);
+            console.log("WRITE PAYLOAD", payload);
+
+            console.error("load my review error:", e?.code, e?.message, e);
+            myReviewCache = null;
+            deleteMyReviewBtn.style.display = "none";
+            showFormMessage("");
+          }
         } else {
+          myReviewCache = null;
+          commentForm.style.display = "none";
+          mustSignIn.style.display = "block";
+          deleteMyReviewBtn.style.display = "none";
+          showFormMessage("");
+        }
+      });
+
+      // Live ratings + list
+      unsubComments = onSnapshot(
+        commentsQ,
+        (snap) => {
+          const docs = snap.docs;
+
+          const total = docs.length;
+          let sum = 0;
+          const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+          for (const d of docs) {
+            const r = Number(d.data().rating || 0);
+            if (r >= 1 && r <= 5) {
+              sum += r;
+              counts[r] = (counts[r] || 0) + 1;
+            }
+          }
+
+          const avg = total ? sum / total : 0;
+
+          avgNum.textContent = total ? avg.toFixed(1) : "—";
+          avgLabel.textContent = total ? "Average rating" : "No ratings yet";
+          countLabel.textContent = `${total} review${total === 1 ? "" : "s"}`;
+          avgStars.textContent = starsText(avg);
+          avgStarsBig.textContent = starsText(avg);
+
+          renderBars(counts, total);
+          renderComments(docs, currentUid);
+        },
+        (err) => {
+          console.error("Comments listener error:", err?.code, err?.message, err);
+          commentList.innerHTML = `<div class="empty">Reviews unavailable.</div>`;
+        }
+      );
+
+      // Submit: create OR edit (doc id = uid)
+      commentForm.onsubmit = async (e) => {
+        e.preventDefault();
+
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const rating = Math.trunc(parseInt(ratingSel.value, 10) || 0);
+        const text = commentText.value.trim();
+        const rawName = displayNameInput.value.trim();
+        const finalName = rawName ? rawName : "Anonymous";
+
+        if (!text) {
+          showFormMessage("Please write a comment.", true);
+          return;
+        }
+        if (text.length > 2000) {
+          showFormMessage("Comment is too long (max 2000 chars).", true);
+          return;
+        }
+        if (rating < 1 || rating > 5) {
+          showFormMessage("Please select a rating 1–5.", true);
+          return;
+        }
+        if (finalName.length > 80) {
+          showFormMessage("Name too long (max 80 chars).", true);
+          return;
+        }
+
+        showFormMessage("Saving…");
+        setFormBusy(true);
+
+        try {
+          const myRef = doc(db, "products", String(item.id), "comments", user.uid);
+          const existing = await getDoc(myRef);
+
+          if (existing.exists()) {
+            // UPDATE: do NOT send createdAt or userId (avoids your rule lock failure)
+            await setDoc(
+              myRef,
+              {
+                rating,
+                text,
+                displayName: finalName,
+                photoURL: user.photoURL || "",
+              },
+              { merge: true }
+            );
+          } else {
+            // CREATE: must include userId + createdAt (required by your rules)
+            await setDoc(myRef, {
+              userId: user.uid,
+              rating,
+              text,
+              displayName: finalName,
+              photoURL: user.photoURL || "",
+              createdAt: Timestamp.now(),
+            });
+          }
+
+          const snap = await getDoc(myRef);
+          myReviewCache = snap.exists() ? snap.data() : null;
+
+          deleteMyReviewBtn.style.display = myReviewCache ? "inline-block" : "none";
+          showFormMessage("Saved");
+          setTimeout(() => showFormMessage(myReviewCache ? "Editing your review." : ""), 900);
+        } catch (err) {
+          console.log("UID", auth.currentUser?.uid);
+          console.log("WRITE PAYLOAD", payload);
+
+          console.error("save review error:", err?.code, err?.message, err);
+          showFormMessage("Failed to save review.", true);
+        } finally {
+          setFormBusy(false);
+        }
+      };
+
+      deleteMyReviewBtn.onclick = async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        if (!confirm("Delete your review?")) return;
+
+        showFormMessage("Deleting…");
+        setFormBusy(true);
+
+        try {
+          const myRef = doc(db, "products", String(item.id), "comments", user.uid);
+          await deleteDoc(myRef);
+
           myReviewCache = null;
           ratingSel.value = "5";
           displayNameInput.value = "";
           commentText.value = "";
           deleteMyReviewBtn.style.display = "none";
-          showFormMessage("");
+          showFormMessage("Deleted");
+          setTimeout(() => showFormMessage(""), 900);
+        } catch (err) {
+          console.log("UID", auth.currentUser?.uid);
+          console.log("WRITE PAYLOAD", payload);
+
+          console.error("delete review error:", err?.code, err?.message, err);
+          showFormMessage("Failed to delete.", true);
+        } finally {
+          setFormBusy(false);
         }
-      } catch (e) {
-        console.log("UID", auth.currentUser?.uid);
-console.log("WRITE PAYLOAD", payload);
-
-        console.error("load my review error:", e?.code, e?.message, e);
-        myReviewCache = null;
-        deleteMyReviewBtn.style.display = "none";
-        showFormMessage("");
-      }
-    } else {
-      myReviewCache = null;
-      commentForm.style.display = "none";
-      mustSignIn.style.display = "block";
-      deleteMyReviewBtn.style.display = "none";
-      showFormMessage("");
+      };
     }
-  });
-
-  // Live ratings + list
-  unsubComments = onSnapshot(
-    commentsQ,
-    (snap) => {
-      const docs = snap.docs;
-
-      const total = docs.length;
-      let sum = 0;
-      const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-
-      for (const d of docs) {
-        const r = Number(d.data().rating || 0);
-        if (r >= 1 && r <= 5) {
-          sum += r;
-          counts[r] = (counts[r] || 0) + 1;
-        }
-      }
-
-      const avg = total ? sum / total : 0;
-
-      avgNum.textContent = total ? avg.toFixed(1) : "—";
-      avgLabel.textContent = total ? "Average rating" : "No ratings yet";
-      countLabel.textContent = `${total} review${total === 1 ? "" : "s"}`;
-      avgStars.textContent = starsText(avg);
-      avgStarsBig.textContent = starsText(avg);
-
-      renderBars(counts, total);
-      renderComments(docs, currentUid);
-    },
-    (err) => {
-      console.error("Comments listener error:", err?.code, err?.message, err);
-      commentList.innerHTML = `<div class="empty">Reviews unavailable.</div>`;
-    }
-  );
-
-  // Submit: create OR edit (doc id = uid)
-  commentForm.onsubmit = async (e) => {
-    e.preventDefault();
-
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const rating = Math.trunc(parseInt(ratingSel.value, 10) || 0);
-    const text = commentText.value.trim();
-    const rawName = displayNameInput.value.trim();
-    const finalName = rawName ? rawName : "Anonymous";
-
-    if (!text) {
-      showFormMessage("Please write a comment.", true);
-      return;
-    }
-    if (text.length > 2000) {
-      showFormMessage("Comment is too long (max 2000 chars).", true);
-      return;
-    }
-    if (rating < 1 || rating > 5) {
-      showFormMessage("Please select a rating 1–5.", true);
-      return;
-    }
-    if (finalName.length > 80) {
-      showFormMessage("Name too long (max 80 chars).", true);
-      return;
-    }
-
-    showFormMessage("Saving…");
-    setFormBusy(true);
-
-    try {
-      const myRef = doc(db, "products", String(item.id), "comments", user.uid);
-      const existing = await getDoc(myRef);
-
-      if (existing.exists()) {
-        // UPDATE: do NOT send createdAt or userId (avoids your rule lock failure)
-        await setDoc(
-          myRef,
-          {
-            rating,
-            text,
-            displayName: finalName,
-            photoURL: user.photoURL || "",
-          },
-          { merge: true }
-        );
-      } else {
-        // CREATE: must include userId + createdAt (required by your rules)
-        await setDoc(myRef, {
-          userId: user.uid,
-          rating,
-          text,
-          displayName: finalName,
-          photoURL: user.photoURL || "",
-          createdAt: Timestamp.now(),
-        });
-      }
-
-      const snap = await getDoc(myRef);
-      myReviewCache = snap.exists() ? snap.data() : null;
-
-      deleteMyReviewBtn.style.display = myReviewCache ? "inline-block" : "none";
-      showFormMessage("Saved");
-      setTimeout(() => showFormMessage(myReviewCache ? "Editing your review." : ""), 900);
-    } catch (err) {console.log("UID", auth.currentUser?.uid);
-console.log("WRITE PAYLOAD", payload);
-
-      console.error("save review error:", err?.code, err?.message, err);
-      showFormMessage("Failed to save review.", true);
-    } finally {
-      setFormBusy(false);
-    }
-  };
-
-  deleteMyReviewBtn.onclick = async () => {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    if (!confirm("Delete your review?")) return;
-
-    showFormMessage("Deleting…");
-    setFormBusy(true);
-
-    try {
-      const myRef = doc(db, "products", String(item.id), "comments", user.uid);
-      await deleteDoc(myRef);
-
-      myReviewCache = null;
-      ratingSel.value = "5";
-      displayNameInput.value = "";
-      commentText.value = "";
-      deleteMyReviewBtn.style.display = "none";
-      showFormMessage("Deleted");
-      setTimeout(() => showFormMessage(""), 900);
-    } catch (err) {
-      console.log("UID", auth.currentUser?.uid);
-console.log("WRITE PAYLOAD", payload);
-
-      console.error("delete review error:", err?.code, err?.message, err);
-      showFormMessage("Failed to delete.", true);
-    } finally {
-      setFormBusy(false);
-    }
-  };
-}
     // Initial render
     await renderCurrentProduct(true);
 
