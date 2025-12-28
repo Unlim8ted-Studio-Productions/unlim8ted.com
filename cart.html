@@ -997,36 +997,24 @@
       return PRODUCTS_CACHE;
     }
 
-    function indexProducts(products) {
-      PRODUCT_BY_ID = new Map();
-      VARIANT_BY_KEY = new Map();
+function indexProducts(products) {
+  PRODUCT_BY_ID = new Map();
+  VARIANT_BY_KEY = new Map();
 
-      for (const p of (products || [])) {
-        const pid = String(p.id ?? p.productId ?? "");
-        if (pid) PRODUCT_BY_ID.set(pid, p);
+  for (const p of (products || [])) {
+    const pid = String(p.id ?? p.productId ?? "");
+    if (pid) PRODUCT_BY_ID.set(pid, p);
 
-        // Common variant formats:
-        // 1) p.variants = [{id, name, squareUrl/buyLink/squareLink/url, image/imageUrl}]
-        if (Array.isArray(p.variants)) {
-          for (const v of p.variants) {
-            const vid = String(v.id ?? v.variantId ?? "");
-            if (!pid || !vid) continue;
-            const key = `${pid}::${vid}`;
-            VARIANT_BY_KEY.set(key, v);
-          }
-        }
-
-        // 2) p.variantBuyLinks = { [variantId]: "https://..." }
-        if (p.variantBuyLinks && typeof p.variantBuyLinks === "object") {
-          for (const [vidRaw, url] of Object.entries(p.variantBuyLinks)) {
-            const vid = String(vidRaw);
-            if (!pid || !vid) continue;
-            const key = `${pid}::${vid}`;
-            VARIANT_BY_KEY.set(key, { id: vid, buyLink: url });
-          }
-        }
-      }
+    // NOTE: your json uses "varients" (typo) not "variants"
+    const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
+    for (const v of vars) {
+      const vid = String(v.id ?? v.variantId ?? "");
+      if (!pid || !vid) continue;
+      VARIANT_BY_KEY.set(`${pid}::${vid}`, v);
     }
+  }
+}
+
 
     function safeUrl(u) {
       const s = String(u || "").trim();
@@ -1084,92 +1072,72 @@
 
     // Resolve square/buy link + access + image for an item (variant-aware)
 async function resolveItemData(it) {
-  const existingSquare =
-    safeUrl(it.buyLink) ||
-    safeUrl(it.squareUrl) ||
-    safeUrl(it.squareLink) ||
-    safeUrl(it.square) ||
-    "";
-
-  const existingAccess =
-    safeUrl(it.downloadUrl) ||
-    safeUrl(it.accessUrl) ||
-    safeUrl(it.url) ||
-    safeUrl(it.link) ||
-    "";
-
-  const productId = String(it.productId ?? it.pid ?? it.product ?? "");
-  const variantId = String(it.variantId ?? it.vid ?? it.variant ?? "");
+  const productId = String(it.productId ?? it.pid ?? it.product ?? "").trim();
+  const variantId = String(it.variantId ?? it.vid ?? it.variant ?? "").trim();
 
   if (productId) {
     try { await loadProducts(); } catch { /* ignore */ }
   }
 
-  // Image resolve (your existing logic)
-  const imgFromProducts = productId ? resolveProductImage(productId, variantId) : "";
-  const resolvedImage = imgFromProducts || safeUrl(it.image) || safeUrl(it.imageUrl) || "";
+  const p = productId ? (PRODUCT_BY_ID.get(productId) || null) : null;
+  const v = (productId && variantId) ? (VARIANT_BY_KEY.get(`${productId}::${variantId}`) || null) : null;
 
-  // NEW: access URL from products.json (variant first, then product)
-  let accessFromProducts = "";
-  if (productId) {
-    const pid = productId.trim();
-    const vid = variantId.trim();
-    if (vid) {
-      const v = VARIANT_BY_KEY.get(`${pid}::${vid}`) || null;
-      accessFromProducts =
-        safeUrl(v?.accessUrl) || safeUrl(v?.downloadUrl) || safeUrl(v?.url) || safeUrl(v?.link) || "";
-    }
-    if (!accessFromProducts) {
-      const p = PRODUCT_BY_ID.get(pid) || null;
-      accessFromProducts =
-        safeUrl(p?.accessUrl) || safeUrl(p?.downloadUrl) || safeUrl(p?.url) || safeUrl(p?.link) || "";
-    }
-  }
+  // Title
+  const title =
+    String(it.title || it.name || it.productName || "").trim() ||
+    String(p?.name || p?.title || productId || "Item").trim();
 
-  const resolvedAccess = existingAccess || accessFromProducts;
+  // Product type (your json: "product-type")
+  const productType =
+    String(it.productType || it["product-type"] || "").trim() ||
+    String(p?.["product-type"] || p?.productType || "").trim();
 
-  // If square link exists already, still return resolved access + image
-  if (existingSquare) {
-    return {
-      squareUrl: existingSquare,
-      accessUrl: resolvedAccess,
-      variantLabel: it.variantLabel || it.variant || it.optionLabel || "",
-      imageUrl: resolvedImage
-    };
-  }
+  // Price: variant price first, then product price if you ever add one
+  const price =
+    (Number(it.price) || Number(it.priceNum) || null) ??
+    (v && Number(v.price)) ??
+    (p && Number(p.price)) ??
+    0;
 
-  if (!productId) {
-    return {
-      squareUrl: "",
-      accessUrl: resolvedAccess,
-      variantLabel: it.variantLabel || "",
-      imageUrl: resolvedImage
-    };
-  }
+  // Variant label/name
+  const variantLabel =
+    String(it.variantLabel || "").trim() ||
+    String(v?.name || "").trim();
 
-  // Variant resolution first
-  if (variantId) {
-    const key = `${productId}::${variantId}`;
-    const v = VARIANT_BY_KEY.get(key) || null;
+  // Square link: variant buy_link first
+  const squareUrl =
+    safeUrl(it.buyLink) ||
+    safeUrl(it.squareUrl) ||
+    safeUrl(it.squareLink) ||
+    safeUrl(it.square) ||
+    safeUrl(v?.buy_link) ||            // your json key
+    safeUrl(v?.buyLink) ||
+    safeUrl(p?.buy_link) ||
+    safeUrl(p?.buyLink) ||
+    "";
 
-    const vSquare = v
-      ? (safeUrl(v.buyLink) || safeUrl(v.squareUrl) || safeUrl(v.squareLink) || safeUrl(v.url) || "")
+  // Image: variant images array first (if you ever populate), then product image
+  let imageUrl =
+    safeUrl(it.image) || safeUrl(it.imageUrl) || "";
+
+  if (!imageUrl) {
+    const vImg = Array.isArray(v?.images) && v.images.length
+      ? (typeof v.images[0] === "string" ? safeUrl(v.images[0]) : safeUrl(v.images[0]?.url || v.images[0]?.src))
       : "";
-
-    const vName = v?.name || v?.title || it.variantLabel || "";
-
-    if (vSquare) {
-      return { squareUrl: vSquare, accessUrl: resolvedAccess, variantLabel: vName, imageUrl: resolvedImage };
-    }
-
-    const p = PRODUCT_BY_ID.get(productId) || null;
-    const pSquare = p ? (safeUrl(p.squareUrl) || safeUrl(p.squareLink) || safeUrl(p.buyLink) || safeUrl(p.square) || "") : "";
-    return { squareUrl: pSquare, accessUrl: resolvedAccess, variantLabel: vName, imageUrl: resolvedImage };
+    imageUrl = vImg || safeUrl(p?.image) || "";
   }
 
-  const p = PRODUCT_BY_ID.get(productId) || null;
-  const pSquare = p ? (safeUrl(p.squareUrl) || safeUrl(p.squareLink) || safeUrl(p.buyLink) || safeUrl(p.square) || "") : "";
-  return { squareUrl: pSquare, accessUrl: resolvedAccess, variantLabel: it.variantLabel || "", imageUrl: resolvedImage };
+  // Access URL (your products.json doesn’t show these yet, but keep logic)
+  const accessUrl =
+    safeUrl(it.downloadUrl) ||
+    safeUrl(it.accessUrl) ||
+    safeUrl(it.url) ||
+    safeUrl(it.link) ||
+    safeUrl(v?.accessUrl) ||
+    safeUrl(p?.accessUrl) ||
+    "";
+
+  return { title, price, productType, variantLabel, squareUrl, imageUrl, accessUrl };
 }
     // ===============================================
 
@@ -1398,16 +1366,20 @@ async function resolveItemData(it) {
       if (buyMode && buyItem) items = [buyItem];
 
       // Resolve square/access/image (image from products.json)
-      const enriched = await Promise.all((items || []).map(async (it) => {
-        const resolved = await resolveItemData(it);
-        return {
-          ...it,
-          squareUrl: resolved.squareUrl || "",
-          accessUrl: resolved.accessUrl || "",
-          variantLabel: resolved.variantLabel || it.variantLabel || "",
-          image: resolved.imageUrl || it.image || it.imageUrl || null
-        };
-      }));
+const enriched = await Promise.all((items || []).map(async (it) => {
+  const r = await resolveItemData(it);
+  return {
+    ...it,
+    title: it.title || r.title,
+    price: Number(it.price ?? r.price ?? 0),
+    productType: it.productType || r.productType || "",
+    variantLabel: r.variantLabel || it.variantLabel || "",
+    squareUrl: r.squareUrl || "",
+    accessUrl: r.accessUrl || "",
+    image: r.imageUrl || it.image || it.imageUrl || null,
+  };
+}));
+
 
       const { paid, free } = splitItems(enriched);
       lastRendered = { paid, free };
