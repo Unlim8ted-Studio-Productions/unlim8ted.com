@@ -69,6 +69,52 @@
       border-radius: 999px;
       background: rgba(255, 255, 255, .03);
     }
+select{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 100%;
+  padding: 10px 36px 10px 12px;
+  border-radius: 12px;
+
+  border: 1px solid rgba(0, 255, 153, .30);
+  background: rgba(16, 16, 23, .88);
+  color: var(--text);
+
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: .2px;
+
+  outline: none;
+  cursor: pointer;
+
+  /* dropdown arrow */
+  background-image:
+    url("data:image/svg+xml;utf8,\<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,.75)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>\<path d='M6 9l6 6 6-6'/>\</svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+}
+
+/* Focus — identical to input/textarea */
+select:focus{
+  border-color: rgba(0, 255, 153, .65);
+  box-shadow: 0 0 0 3px rgba(0, 255, 153, .10);
+}
+
+/* Disabled */
+select:disabled{
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* Dropdown list */
+select option{
+  background: rgba(16, 16, 23, .98);
+  color: var(--text);
+  font-weight: 600;
+}
 
     .back:hover {
       border-color: rgba(0, 255, 153, .35);
