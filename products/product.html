@@ -1294,6 +1294,11 @@ async function addToCartMerged(payload) {
               });
               toast("Added to cart");
             } catch (e) {
+              console.log("UID", auth.currentUser?.uid);
+console.log("WRITE PAYLOAD", payload);
+console.log("qty type", typeof payload.qty, payload.qty);
+console.log("price type", typeof payload.price, payload.price);
+
               console.error(e);
               toast("Could not add to cart");
             }
@@ -1487,6 +1492,9 @@ async function renderCurrentProduct(force = false) {
           showFormMessage("");
         }
       } catch (e) {
+        console.log("UID", auth.currentUser?.uid);
+console.log("WRITE PAYLOAD", payload);
+
         console.error("load my review error:", e?.code, e?.message, e);
         myReviewCache = null;
         deleteMyReviewBtn.style.display = "none";
@@ -1602,7 +1610,9 @@ async function renderCurrentProduct(force = false) {
       deleteMyReviewBtn.style.display = myReviewCache ? "inline-block" : "none";
       showFormMessage("Saved");
       setTimeout(() => showFormMessage(myReviewCache ? "Editing your review." : ""), 900);
-    } catch (err) {
+    } catch (err) {console.log("UID", auth.currentUser?.uid);
+console.log("WRITE PAYLOAD", payload);
+
       console.error("save review error:", err?.code, err?.message, err);
       showFormMessage("Failed to save review.", true);
     } finally {
@@ -1631,6 +1641,9 @@ async function renderCurrentProduct(force = false) {
       showFormMessage("Deleted");
       setTimeout(() => showFormMessage(""), 900);
     } catch (err) {
+      console.log("UID", auth.currentUser?.uid);
+console.log("WRITE PAYLOAD", payload);
+
       console.error("delete review error:", err?.code, err?.message, err);
       showFormMessage("Failed to delete.", true);
     } finally {
