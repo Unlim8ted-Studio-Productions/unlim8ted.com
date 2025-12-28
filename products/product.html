@@ -1448,13 +1448,18 @@
               toast("Added to cart");
             } catch (e) {
               console.log("UID", auth.currentUser?.uid);
-              console.log("WRITE PAYLOAD", payload);
-              console.log("qty type", typeof payload.qty, payload.qty);
-              console.log("price type", typeof payload.price, payload.price);
-
-              console.error(e);
+              console.log("ADD TO CART (variant) CONTEXT", {
+                productId: item?.id,
+                productName: item?.name,
+                variantId: vv?.id,
+                variantLabel: vv?.name,
+                optionParts: parts,
+                priceNum,
+              });
+              console.error("addToCartMerged (variant) error:", e?.code, e?.message, e);
               toast("Could not add to cart");
             }
+
           };
         } else {
           selectedVariantLabelEl.textContent = parts.join(", ");
@@ -1648,13 +1653,13 @@
             }
           } catch (e) {
             console.log("UID", auth.currentUser?.uid);
-            console.log("WRITE PAYLOAD", payload);
-
+            console.log("LOAD MY REVIEW CONTEXT", { productId: item?.id });
             console.error("load my review error:", e?.code, e?.message, e);
             myReviewCache = null;
             deleteMyReviewBtn.style.display = "none";
             showFormMessage("");
           }
+
         } else {
           myReviewCache = null;
           commentForm.style.display = "none";
@@ -1767,11 +1772,11 @@
           setTimeout(() => showFormMessage(myReviewCache ? "Editing your review." : ""), 900);
         } catch (err) {
           console.log("UID", auth.currentUser?.uid);
-          console.log("WRITE PAYLOAD", payload);
-
+          console.log("SAVE REVIEW CONTEXT", { productId: item?.id });
           console.error("save review error:", err?.code, err?.message, err);
           showFormMessage("Failed to save review.", true);
         } finally {
+
           setFormBusy(false);
         }
       };
@@ -1798,11 +1803,11 @@
           setTimeout(() => showFormMessage(""), 900);
         } catch (err) {
           console.log("UID", auth.currentUser?.uid);
-          console.log("WRITE PAYLOAD", payload);
-
+          console.log("DELETE REVIEW CONTEXT", { productId: item?.id });
           console.error("delete review error:", err?.code, err?.message, err);
           showFormMessage("Failed to delete.", true);
         } finally {
+
           setFormBusy(false);
         }
       };
