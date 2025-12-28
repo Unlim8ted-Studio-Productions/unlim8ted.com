@@ -16,6 +16,12 @@ class SiteNavbar extends HTMLElement {
 
     this._isMobile = false;
     this._focusTrapHandler = null;
+
+    // products.json cache/index
+    this._productsLoaded = false;
+    this._productsLoading = null;
+    this._productById = new Map();
+    this._variantByKey = new Map(); // `${productId}::${variantId}` -> variant
   }
 
   connectedCallback() {
@@ -460,6 +466,11 @@ class SiteNavbar extends HTMLElement {
     // ---- state ----
     this._isMobile = window.matchMedia("(max-width: 820px)").matches;
 
+    // Preload products.json (cart display will re-render when ready)
+    this.loadProducts().then(() => {
+      this.renderCartMenu();
+    }).catch(() => {});
+
     // Mobile toggle
     const toggleBtn = this.shadowRoot.getElementById("toggleBtn");
     const links = this.shadowRoot.getElementById("links");
@@ -522,10 +533,6 @@ class SiteNavbar extends HTMLElement {
     });
 
     // Outside click / ESC close
-    const onDocClick = (e) => {
-      if (!this.shadowRoot) return;
-      if (!this.contains(e.target) && !this.shadowRoot.contains(e.target)) closeMenus();
-    };
     const onEsc = (e) => {
       if (e.key === "Escape") closeMenus();
     };
@@ -567,8 +574,85 @@ class SiteNavbar extends HTMLElement {
 
     if (this._onWinResize) window.removeEventListener("resize", this._onWinResize);
     this._onWinResize = null;
+  }
 
-    document.removeEventListener("keydown", this._onEsc);
+  // ===== products.json =====
+  safeUrl(u) {
+    const s = String(u || "").trim();
+    if (!s) return "";
+    if (s.startsWith("https://") || s.startsWith("http://") || s.startsWith("/")) return s;
+    return "";
+  }
+
+  async loadProducts() {
+    if (this._productsLoaded) return;
+    if (this._productsLoading) return this._productsLoading;
+
+    this._productsLoading = (async () => {
+      try {
+        const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache: "no-store" });
+        if (!r.ok) throw new Error("Failed to load products.json");
+        const data = await r.json();
+        const products = Array.isArray(data) ? data : (data?.products || []);
+        this.indexProducts(products);
+        this._productsLoaded = true;
+      } catch (e) {
+        console.warn("Navbar products.json load failed:", e);
+      } finally {
+        this._productsLoading = null;
+      }
+    })();
+
+    return this._productsLoading;
+  }
+
+  indexProducts(products) {
+    this._productById = new Map();
+    this._variantByKey = new Map();
+
+    for (const p of (products || [])) {
+      const pid = String(p.id ?? p.productId ?? "").trim();
+      if (!pid) continue;
+
+      this._productById.set(pid, p);
+
+      // your json uses "varients" (typo); support both
+      const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
+      for (const v of vars) {
+        const vid = String(v.id ?? v.variantId ?? "").trim();
+        if (!vid) continue;
+        this._variantByKey.set(`${pid}::${vid}`, v);
+      }
+    }
+  }
+
+  resolveCartDisplay(it) {
+    const productId = String(it.productId || "").trim();
+    const variantId = String(it.variantId || "").trim();
+
+    const p = productId ? (this._productById.get(productId) || null) : null;
+    const v = (productId && variantId) ? (this._variantByKey.get(`${productId}::${variantId}`) || null) : null;
+
+    const title =
+      String(it.title || it.name || "").trim() ||
+      String(p?.name || p?.title || productId || it.id || "Item").trim();
+
+    const variantLabel =
+      String(it.variantLabel || "").trim() ||
+      String(v?.name || "").trim();
+
+    const price =
+      (Number.isFinite(Number(it.price)) ? Number(it.price) : null) ??
+      (v && Number.isFinite(Number(v.price)) ? Number(v.price) : null) ??
+      null;
+
+    let image = this.safeUrl(it.image || it.imageUrl || "");
+    if (!image && Array.isArray(v?.images) && v.images.length) {
+      image = this.safeUrl(v.images[0]);
+    }
+    if (!image) image = this.safeUrl(p?.image || "");
+
+    return { title, variantLabel, price, image };
   }
 
   // ----- spacer logic -----
@@ -630,6 +714,7 @@ class SiteNavbar extends HTMLElement {
 
     if (!user) {
       this.cartItems = this.getLocalCartItems();
+      this.loadProducts().then(() => this.renderCartMenu()).catch(() => {});
       this.renderCartMenu();
       this.updateCartBadge(this.countCart(this.cartItems));
       return;
@@ -640,26 +725,27 @@ class SiteNavbar extends HTMLElement {
 
     this.unsubCart = onSnapshot(
       q,
-      (snap) => {
+      async (snap) => {
         const items = [];
         snap.forEach((d) => {
           const data = d.data() || {};
           items.push({
             id: d.id,
-            title: data.title || data.name || data.productName || d.id,
+            productId: data.productId ?? null,
+            variantId: data.variantId ?? null,
             qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
-            price: data.price ?? null,
-            image: data.image ?? data.imageUrl ?? null,
           });
         });
 
         this.cartItems = items;
+        await this.loadProducts();
         this.renderCartMenu();
         this.updateCartBadge(this.countCart(items));
       },
       (err) => {
         console.error("Cart listener error:", err);
         this.cartItems = this.getLocalCartItems();
+        this.loadProducts().then(() => this.renderCartMenu()).catch(() => {});
         this.renderCartMenu();
         this.updateCartBadge(this.countCart(this.cartItems));
       }
@@ -699,22 +785,28 @@ class SiteNavbar extends HTMLElement {
 
     const show = items.slice(0, 5);
     list.innerHTML = show
-      .map(
-        (it) => `
-      <div class="cart-item">
-        <div class="thumb">
-          ${it.image ? `<img src="${this.escapeHtml(it.image)}" alt="">` : "Item"}
-        </div>
-        <div class="ci-main">
-          <div class="ci-title">${this.escapeHtml(it.title)}</div>
-          <div class="ci-sub">
-            <span>Qty: ${Number(it.qty) || 1}</span>
-            ${it.price != null ? `<span>$${this.escapeHtml(String(it.price))}</span>` : `<span></span>`}
+      .map((it) => {
+        const r = this.resolveCartDisplay(it);
+        const qty = Number(it.qty) || 1;
+
+        const subLeft = r.variantLabel ? `Qty: ${qty} • ${this.escapeHtml(r.variantLabel)}` : `Qty: ${qty}`;
+        const subRight = (r.price != null) ? `$${this.escapeHtml(String(r.price))}` : "";
+
+        return `
+          <div class="cart-item">
+            <div class="thumb">
+              ${r.image ? `<img src="${this.escapeHtml(r.image)}" alt="">` : "Item"}
+            </div>
+            <div class="ci-main">
+              <div class="ci-title">${this.escapeHtml(r.title)}</div>
+              <div class="ci-sub">
+                <span>${subLeft}</span>
+                <span>${subRight}</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    `
-      )
+        `;
+      })
       .join("");
 
     if (items.length > show.length) {
@@ -732,10 +824,16 @@ class SiteNavbar extends HTMLElement {
       if (!raw) return [];
       const arr = JSON.parse(raw);
       if (!Array.isArray(arr)) return [];
+
       return arr.map((it, idx) => ({
-        id: it.id || `local-${idx}`,
-        title: it.title || it.name || it.productName || `Item ${idx + 1}`,
+        id: it.id || it._id || `local-${idx}`,
+        productId: it.productId || it.pid || null,
+        variantId: it.variantId || it.vid || null,
         qty: Number(it.qty) || 1,
+
+        // legacy optional fields (if present, ok)
+        title: it.title || it.name || it.productName || "",
+        variantLabel: it.variantLabel || "",
         price: it.price ?? null,
         image: it.image ?? it.imageUrl ?? null,
       }));
