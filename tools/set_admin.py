@@ -2,8 +2,9 @@ import firebase_admin
 from firebase_admin import credentials, auth
 
 # Initialize the Firebase Admin SDK
-cred = credentials.Certificate(r"C:\Users\Gus\Downloads\unlim8ted-db-firebase-adminsdk-nhsr0-bc1ffdf8a5.json")
+cred = credentials.Certificate(r"")
 firebase_admin.initialize_app(cred)
+
 
 # Function to set a user as admin
 def set_admin(uid):
@@ -14,7 +15,8 @@ def set_admin(uid):
     except Exception as e:
         print(f"Error setting admin: {e}")
 
-user_uids = ["hNkx9ZfbfaZA7bspDnzhoIf1AEG3", "mSCsH8TGW4QgyO6c2p4tzUhx6xa2","mSCsH8TGW4QgyO6c2p4tzUhx6xa2"] #example fake user accounts
+
+user_uids = ["", "", ""]
 for id in user_uids:
     set_admin(id)
 

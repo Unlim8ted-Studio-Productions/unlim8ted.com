@@ -1741,14 +1741,12 @@
           const existing = await getDoc(myRef);
 
           if (existing.exists()) {
-            // UPDATE: do NOT send createdAt or userId (avoids your rule lock failure)
             await setDoc(
               myRef,
               {
                 rating,
                 text,
                 displayName: finalName,
-                photoURL: user.photoURL || "",
               },
               { merge: true }
             );
@@ -1759,7 +1757,6 @@
               rating,
               text,
               displayName: finalName,
-              photoURL: user.photoURL || "",
               createdAt: Timestamp.now(),
             });
           }
