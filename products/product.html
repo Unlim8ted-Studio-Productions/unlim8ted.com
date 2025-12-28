@@ -1221,15 +1221,15 @@ async function addToCartMerged(payload) {
           }
           buildThumbsFromSources(item.name, sources);
 
-          if (vv.buyLink) {
-            buyBtn.href = vv.buyLink;
-            buyBtn.target = "_blank";
-            buyBtn.rel = "noopener";
-          } else {
-            buyBtn.href = "#";
-            buyBtn.removeAttribute("target");
-            buyBtn.removeAttribute("rel");
-          }
+        // if (vv.buyLink) {
+        //   buyBtn.href = vv.buyLink;
+        //   buyBtn.target = "_blank";
+        //   buyBtn.rel = "noopener";
+        // } else {
+        //   buyBtn.href = "#";
+        //   buyBtn.removeAttribute("target");
+        //   buyBtn.removeAttribute("rel");
+        // }
 
           addBtn.disabled = false;
           addBtn.onclick = async () => {
@@ -1257,7 +1257,7 @@ async function addToCartMerged(payload) {
           variantPriceEl.textContent = "$—";
           pPrice.textContent = "$—";
           addBtn.disabled = true;
-          buyBtn.href = "#";
+          buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
           buyBtn.removeAttribute("target");
           buyBtn.removeAttribute("rel");
         }
@@ -1359,7 +1359,7 @@ async function renderCurrentProduct(force = false) {
 
   if (isPhysical) {
     pPrice.textContent = "$—";
-    buyBtn.href = "#";
+    buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
     buyBtn.removeAttribute("target");
     buyBtn.removeAttribute("rel");
 
