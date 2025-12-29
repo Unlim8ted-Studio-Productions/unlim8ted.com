@@ -11,7 +11,12 @@
 
   <!-- Modern navbar web component -->
   <script type="module" src="/components/site-navbar.js"></script>
+    <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
 
+    const { auth, db } = getFirebase();</script>
   <!-- MIDI parser -->
   <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
 
