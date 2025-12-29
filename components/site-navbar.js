@@ -414,9 +414,6 @@ class SiteNavbar extends HTMLElement {
                 <a href="${base}/portfolio" role="menuitem">Portfolio</a>
                 <a href="${base}/contact" role="menuitem">Contact</a>
                 <a href="${base}/blog" role="menuitem">Blog</a>
-                <a href="${base}/live-chat" role="menuitem">Live Chat</a>
-                <a href="${base}/live-game" role="menuitem">Live Chat and Game</a>
-                <a href="${base}/puzzle-squares" role="menuitem">Puzzle Squares</a>
               </div>
             </li>
 

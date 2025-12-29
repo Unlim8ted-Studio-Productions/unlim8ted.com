@@ -914,7 +914,7 @@
   // Return handling:
   // - Donation: /cart?source=donation
   // - Purchase:  /cart?source=purchase&itemId=...
-  // - Buy Now:   /cart?source=buy&product=<productId>  (single-item flow; starts at Review with only one item)
+  // - Buy Now:   /cart?source=buy&product=<productId>
 
   const signedOut = document.getElementById("signedOut");
   const flowNotice = document.getElementById("flowNotice");
@@ -985,7 +985,59 @@
   let PRODUCT_BY_ID = new Map();
   let VARIANT_BY_KEY = new Map(); // key: `${productId}::${variantId}` -> variant obj
 
-  const money = (n) => (Math.round((Number(n) || 0) * 100) / 100).toFixed(2);
+  // =========================
+  // ✅ PRICE / MONEY FIXES
+  // =========================
+  function parsePrice(val) {
+    if (val == null) return null;
+
+    if (typeof val === "number") {
+      return Number.isFinite(val) ? val : null;
+    }
+
+    const s = String(val).trim();
+    if (!s) return null;
+
+    // remove currency symbols/commas/etc, keep digits, minus, dot
+    const cleaned = s.replace(/[^0-9.\-]/g, "");
+    if (!cleaned) return null;
+
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  // If something looks like cents (e.g., 5150) convert to dollars.
+  function normalizePriceNumber(n) {
+    if (!Number.isFinite(n)) return null;
+    if (n >= 1000 && Math.abs(n - Math.round(n)) < 1e-9) return n / 100;
+    return n;
+  }
+
+  const money = (n) => {
+    const v = normalizePriceNumber(Number(n));
+    return (v == null ? 0 : v).toFixed(2);
+  };
+
+  function hasOwn(obj, key) {
+    return Object.prototype.hasOwnProperty.call(obj || {}, key);
+  }
+
+  function numOrNull(v) {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  // Reads price from various possible fields (supports strings/numbers)
+  function readPrice(obj) {
+    if (!obj) return null;
+    return (
+      parsePrice(obj.price) ??
+      parsePrice(obj.priceNum) ??
+      parsePrice(obj.amount) ??
+      parsePrice(obj.value) ??
+      null
+    );
+  }
 
   async function loadProducts() {
     if (PRODUCTS_CACHE) return PRODUCTS_CACHE;
@@ -1015,29 +1067,23 @@
     }
   }
 
-  // ====== CRITICAL: normalize your cart item shape ======
-  // Fixes:
-  // - productId accidentally stored as "productId__variantId" (your current issue)
-  // - title showing as "unlim8ted-hoodie__A35B..." because title fallback used productId
+  // ====== normalize cart item shape ======
   function normalizeCartItem(raw) {
     const it = { ...(raw || {}) };
 
-    // Pull potential combined id from productId / pid / product
     const pidRaw = String(it.productId ?? it.pid ?? it.product ?? "").trim();
     const vidRaw = String(it.variantId ?? it.vid ?? it.variant ?? "").trim();
 
-    // If productId is actually "productId__variantId", split it.
     if (pidRaw.includes("__") && !vidRaw) {
       const [basePid, ...rest] = pidRaw.split("__");
       const base = String(basePid || "").trim();
-      const v = rest.join("__").trim(); // keep safe if variantId ever contains "__"
+      const v = rest.join("__").trim();
       if (base && v) {
         it.productId = base;
         it.variantId = v;
       }
     }
 
-    // Sometimes combined id might be shoved into `id` (rare but safe)
     const idStr = String(it.id ?? "").trim();
     if ((!it.productId || !String(it.productId).trim()) && idStr.includes("__")) {
       const [basePid, ...rest] = idStr.split("__");
@@ -1047,7 +1093,6 @@
       if (v && !it.variantId) it.variantId = v;
     }
 
-    // Always ensure strings are trimmed
     if (it.productId != null) it.productId = String(it.productId).trim();
     if (it.variantId != null) it.variantId = String(it.variantId).trim();
 
@@ -1129,13 +1174,11 @@
       String(it.productType || it["product-type"] || "").trim() ||
       String(p?.["product-type"] || p?.productType || "").trim();
 
-    // Price: saved price first, then variant price, then product price
-    const priceFromItem = Number(it.price ?? it.priceNum);
-    const price =
-      (Number.isFinite(priceFromItem) ? priceFromItem : null) ??
-      (v && Number.isFinite(Number(v.price)) ? Number(v.price) : null) ??
-      (p && Number.isFinite(Number(p.price)) ? Number(p.price) : null) ??
-      0;
+    // ✅ Price: robust + cents-safe
+    const priceFromItem = readPrice(it);
+    const priceFromVariant = readPrice(v);
+    const priceFromProduct = readPrice(p);
+    const price = normalizePriceNumber(priceFromItem ?? priceFromVariant ?? priceFromProduct ?? 0) || 0;
 
     // Variant label/name
     const variantLabel =
@@ -1148,7 +1191,7 @@
       safeUrl(it.squareUrl) ||
       safeUrl(it.squareLink) ||
       safeUrl(it.square) ||
-      safeUrl(v?.buy_link) ||      // your products.json key
+      safeUrl(v?.buy_link) ||
       safeUrl(v?.buyLink) ||
       safeUrl(p?.buy_link) ||
       safeUrl(p?.buyLink) ||
@@ -1273,9 +1316,9 @@
     const paid = [];
     const free = [];
     for (const it of items) {
-      const price = Number(it.price) || 0;
-      if (price > 0) paid.push(it);
-      else free.push(it);
+      const price = normalizePriceNumber(parsePrice(it.price)) || 0;
+      if (price > 0) paid.push({ ...it, price });
+      else free.push({ ...it, price: 0 });
     }
     return { paid, free };
   }
@@ -1283,7 +1326,12 @@
   function recomputeSummary(paid, free) {
     const paidQty = paid.reduce((s, it) => s + (Number(it.qty) || 1), 0);
     const freeQty = free.reduce((s, it) => s + (Number(it.qty) || 1), 0);
-    const paidSubtotal = paid.reduce((s, it) => s + (Number(it.price) || 0) * (Number(it.qty) || 1), 0);
+
+    const paidSubtotal = paid.reduce((s, it) => {
+      const price = normalizePriceNumber(parsePrice(it.price)) || 0;
+      const qty = Number(it.qty) || 1;
+      return s + price * qty;
+    }, 0);
 
     paidQtyEl.textContent = String(paidQty);
     freeQtyEl.textContent = String(freeQty);
@@ -1304,7 +1352,7 @@
 
   function itemCardHTML(it, kind, view = "review") {
     const qty = Math.max(1, Number(it.qty) || 1);
-    const price = Number(it.price) || 0;
+    const price = normalizePriceNumber(parsePrice(it.price)) || 0;
 
     const title = escapeHtml(it.title || it.name || "Item");
 
@@ -1398,18 +1446,19 @@
     // BUY MODE: show ONLY the buy item (do not touch cart)
     if (buyMode && buyItem) items = [buyItem];
 
-    // IMPORTANT: normalize + enrich everything BEFORE splitItems (fixes "free" bug)
+    // IMPORTANT: normalize + enrich everything BEFORE splitItems
     const enriched = await Promise.all((items || []).map(async (raw) => {
       const r = await resolveItemData(raw);
+      const price = normalizePriceNumber(parsePrice(r.price)) || 0;
+
       return {
         ...r,
         id: raw.id || r.id,
         qty: Number(raw.qty ?? r.qty ?? 1) || 1,
-        // ensure these are present for UI
         squareUrl: r.squareUrl || safeUrl(raw.squareUrl) || safeUrl(raw.buyLink) || "",
         accessUrl: r.accessUrl || safeUrl(raw.accessUrl) || safeUrl(raw.downloadUrl) || "",
         image: r.imageUrl || safeUrl(raw.image) || safeUrl(raw.imageUrl) || "",
-        price: Number(r.price ?? 0) || 0,
+        price,
         title: r.title || raw.title || raw.name || "Item",
         variantLabel: r.variantLabel || raw.variantLabel || "",
       };
@@ -1597,23 +1646,20 @@
         });
         if (changed) localStorage.setItem("unlim8ted-cart", JSON.stringify(arr));
 
-        items = arr.map((rawItem) => {
-          const base = normalizeCartItem({
-            id: rawItem.id,
-            productId: rawItem.productId || rawItem.pid || null,
-            variantId: rawItem.variantId || rawItem.vid || null,
-            variantLabel: rawItem.variantLabel || "",
-            title: rawItem.title || rawItem.name || "Item",
-            price: rawItem.price ?? rawItem.priceNum ?? 0,
-            qty: rawItem.qty || 1,
-            image: rawItem.image || null,
-            buyLink: rawItem.buyLink || null,
-            squareUrl: rawItem.squareUrl || null,
-            downloadUrl: rawItem.downloadUrl || rawItem.accessUrl || rawItem.url || rawItem.link || null,
-            accessUrl: rawItem.accessUrl || null,
-          });
-          return base;
-        });
+        items = arr.map((rawItem) => normalizeCartItem({
+          id: rawItem.id,
+          productId: rawItem.productId || rawItem.pid || null,
+          variantId: rawItem.variantId || rawItem.vid || null,
+          variantLabel: rawItem.variantLabel || "",
+          title: rawItem.title || rawItem.name || "Item",
+          price: rawItem.price ?? rawItem.priceNum ?? 0,
+          qty: rawItem.qty || 1,
+          image: rawItem.image || null,
+          buyLink: rawItem.buyLink || null,
+          squareUrl: rawItem.squareUrl || null,
+          downloadUrl: rawItem.downloadUrl || rawItem.accessUrl || rawItem.url || rawItem.link || null,
+          accessUrl: rawItem.accessUrl || null,
+        }));
       }
     } catch { }
 
@@ -1808,7 +1854,7 @@
           title: item?.title || item?.name || String(itemId),
           accessUrl: safeUrl(item?.accessUrl || item?.downloadUrl || item?.url || item?.link || ""),
           qty: item?.qty ? Number(item.qty) : 1,
-          price: item?.price ? Number(item.price) : null,
+          price: item?.price != null ? (normalizePriceNumber(parsePrice(item.price)) ?? null) : null,
           orderId: orderId || null,
           transactionId: transactionId || null
         };
@@ -1849,7 +1895,9 @@
 
         const title = pObj?.title || pObj?.name || pid;
         const image = resolveProductImage(pid, "");
-        const price = Number(pObj?.price ?? pObj?.amount ?? 0) || 0;
+
+        // ✅ price fixed for buy mode too
+        const price = normalizePriceNumber(readPrice(pObj) ?? 0) || 0;
 
         const buyLink =
           safeUrl(pObj?.buyLink) ||
@@ -1944,9 +1992,12 @@
           buyLink: data.buyLink ?? null,
 
           title: data.title || data.name || data.productName || "",
-          price: data.price ?? data.priceNum ?? 0,
-          qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
 
+          // ✅ Keep raw values; we normalize later in resolveItemData/render
+          price: data.price ?? data.priceNum ?? 0,
+          priceNum: data.priceNum ?? null,
+
+          qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
           image: data.image ?? data.imageUrl ?? null,
 
           squareUrl: data.squareUrl ?? data.squareLink ?? null,
@@ -1992,6 +2043,7 @@
 
   setStep(0);
 </script>
+
 
 
 </body>
