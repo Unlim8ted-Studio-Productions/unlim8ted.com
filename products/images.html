@@ -28,10 +28,9 @@
     content="Explore our collection of stunning images showcasing the creativity and innovation of Unlim8ted Studio Productions.">
   <meta name="twitter:image" content="https://unlim8ted.com/images/gallery-preview.jpg">
   <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
-  <script type="module" src="/components/site-navbar.js"></script>
-  <script type="module" src="/components/site-loader.js"></script>
+  <script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
+     <script type="module" src="/components/site-loader.js"></script>
     <site-loader text="Loading..."></site-loader>
-  <site-navbar cart-href="https://unlim8ted.com/sign-in/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
   <!-- Schema.org JSON-LD Structured Data -->
   <script type="application/ld+json">
   {
@@ -210,7 +209,14 @@
     }
   </style>
 
-<body>
+<body>   <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
+
+    const { auth, db } = getFirebase();</script>
+    <site-navbar cart-href="https://unlim8ted.com/sign-in/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+
   <h1>Unlim8ted Image Gallery</h1>
   <div class="gallery" id="gallery"></div>
 

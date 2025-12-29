@@ -26,6 +26,12 @@
         content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
     <meta property="twitter:image" content="https://unlim8ted.com/images/products-meta-image.jpg">
   <script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
+      <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
+
+    const { auth, db } = getFirebase();</script>
   <script type="module" src="https://unlim8ted.com/components/site-loader.js"></script>
     <style>
         /* General body styles */

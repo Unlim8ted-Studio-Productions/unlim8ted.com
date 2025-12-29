@@ -443,7 +443,13 @@
       .player-inner{gap:10px}
       .volume{min-width:150px}
     }
-  </style>
+  </style><script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
+      <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
+
+    const { auth, db } = getFirebase();</script>
 </head>
 
 <body>
@@ -456,12 +462,8 @@
   </div>
 
   <!-- Nav -->
-<site-navbar base=""
-  cart-href="/cart"
-  signin-href="https://unlim8ted.com/sign-in"
-  profile-href="https://unlim8ted.com/profile">
-</site-navbar>
-<script type="module" src="/components/site-navbar.js"></script>
+  <site-navbar cart-href="https://unlim8ted.com/sign-in/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+
 
 
   <main class="page">

@@ -539,35 +539,14 @@
         }
     }
 </style>
-<script>
-    function toggleMenu() {
-        const navLinks = document.getElementById("navbarLinks");
-        navLinks.classList.toggle("show");
-    }
-</script>
-<nav class="navbar">
-    <div class="navbar-header">
-        <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-        <ul class="nav-links" id="navbarLinks">
-            <li class="nav-item"><a href="/">Home</a></li>
-            <li class="nav-item"><a href="products">Products</a></li>
-            <li class="nav-item"><a href="help">Help</a></li>
-            <li class="nav-item"><a href="about">About</a></li>
-            <li class="nav-item dropdown">
-                <a href="javascript:void(0)" class="dropbtn">More</a>
-                <div class="dropdown-content">
-                    <a href="portfolio">Portfolio</a>
-                    <a href="contact">Contact</a>
-                    <a href="blog">Blog</a>
-                    <a href="live-chat">Live Chat</a>
-                    <a href="live-game">Live Chat and Game</a>
-                    <a href="puzzle-squares">Puzzle Squares</a>
-                </div>
-            </li>
-            <a href="old"><button>Old site</button></a>
-        </ul>
-    </div>
-</nav>
+<script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
+      <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
+
+    const { auth, db } = getFirebase();</script>
+   <site-navbar cart-href="https://unlim8ted.com/sign-in/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
 
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">

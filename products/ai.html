@@ -333,26 +333,7 @@
             navLinks.classList.toggle("show");
         }
     </script>
-    <nav class="navbar">
-        <div class="navbar-header">
-            <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-            <ul class="nav-links" id="navbarLinks">
-                <li class="nav-item"><a href="/">Home</a></li>
-                <li class="nav-item"><a href="/products">Products</a></li>
-                <li class="nav-item"><a href="/help">Help</a></li>
-                <li class="nav-item"><a href="/about">About</a></li>
-                <li class="nav-item dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">More</a>
-                    <div class="dropdown-content">
-                        <a href="/portfolio">Portfolio</a>
-                        <a href="/contact">Contact</a>
-                        <a href="/blog">Blog</a>
-                    </div>
-                </li>
-                <a href="old"><button>Old site</button></a>
-            </ul>
-        </div>
-    </nav>
+
     <style>
         /* logo */
         .logo {
@@ -420,7 +401,6 @@
             background-color: #4179b5;
         }
     </style>
-    <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
     <style>
         /* General body styles */
         body {
@@ -556,9 +536,16 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-    </style>
+    </style><script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
+      <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
+
+    const { auth, db } = getFirebase();</script>
 </head>
-<body>
+<body>   <site-navbar cart-href="https://unlim8ted.com/sign-in/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+
     <div id="AI" class="content-section">
         <h1>AI</h1>
         <strong style="color:red">Note:</strong><a style="color:red"> Running the AI may consume a lot of device
