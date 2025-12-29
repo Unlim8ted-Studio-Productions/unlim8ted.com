@@ -612,13 +612,7 @@
       .stepdesc {
         display: none;
       }
-    }.rightControls{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
+    }
   </style>
 </head>
 
@@ -1619,7 +1613,8 @@
     `;
 
       // Hide action buttons ONLY on Review
-      const showActions = (view !== "review");
+      const showActions = (view !== "review" && view !== "pay");
+
 
       const actionRow = showActions ? `
       <div class="row2" style="justify-content:flex-end; margin-top:2px;">
@@ -1638,20 +1633,13 @@
           <div class="title">${title}</div>
           ${variantLine}
 
-<div class="row2">
-  <div>
-    ${priceLabel}
-    ${hint}
-  </div>
-
-  ${
-    (view === "pay" && kind === "paid")
-      ? `<div class="rightControls">${qtyControls}${primaryAction}</div>`
-      : `${qtyControls}`
-  }
-</div>
-
-${(view === "pay" && kind === "paid") ? `` : actionRow}
+          <div class="row2">
+            <div>
+              ${priceLabel}
+              ${hint}
+            </div>
+            ${qtyControls}
+          </div>
 
           ${actionRow}
         </div>

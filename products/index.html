@@ -25,10 +25,8 @@
     <meta property="twitter:description"
         content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
     <meta property="twitter:image" content="https://unlim8ted.com/images/products-meta-image.jpg">
-  <script type="module" src="/components/site-navbar.js"></script>
-  <script type="module" src="/components/site-loader.js"></script>
-    <site-loader text="Loading..."></site-loader>
-  <site-navbar cart-href="https://unlim8ted.com/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+  <script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
+  <script type="module" src="https://unlim8ted.com/components/site-loader.js"></script>
     <style>
         /* General body styles */
         body {
@@ -243,6 +241,35 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+            :root {
+      --bg0: #07070c;
+      --bg1: #0a0b12;
+      --card: rgba(255, 255, 255, 0.06);
+      --card2: rgba(255, 255, 255, 0.09);
+      --line: rgba(255, 255, 255, 0.10);
+      --ink: rgba(233, 231, 255, 0.92);
+      --muted: rgba(233, 231, 255, 0.68);
+      --accent: #00ffc6;
+      --accent2: #ff00ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 500px at 20% 10%, rgba(0,255,198,.18), transparent 60%),
+        radial-gradient(900px 500px at 80% 25%, rgba(255,0,255,.14), transparent 60%),
+        radial-gradient(900px 500px at 50% 90%, rgba(0, 255, 217, 0.1), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+    }
+
     </style>
 </head>
 <script>
@@ -343,6 +370,8 @@
 
 
 <body>
+        <site-loader text="Loading..."></site-loader>
+  <site-navbar cart-href="https://unlim8ted.com/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
     <div id="products" class="content-section">
         <h1>Our Products</h1>
         <p>Discover our amazing products.</p>

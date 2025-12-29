@@ -57,6 +57,7 @@
   ]
 }
 </script>
+  <script type="module" src="/components/site-navbar.js"></script>
 
   <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
   <style media="screen" type="text/css">
@@ -500,41 +501,8 @@
 
 <body>
 
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a class="brand" href="/">
-        <span class="brand-dot"></span>
-        <span>Unlim8ted</span>
-      </a>
+    <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
 
-      <button class="navbar-toggle" aria-label="Toggle navigation" onclick="toggleMenu()">☰</button>
-
-      <ul class="nav-links" id="navbarLinks">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="products">Products</a></li>
-        <li class="nav-item"><a href="help">Help</a></li>
-        <li class="nav-item"><a href="about">About</a></li>
-
-        <li class="nav-item dropdown" id="moreDropdown">
-          <button type="button" onclick="toggleDropdown(event)">More ▾</button>
-          <div class="dropdown-content">
-            <a href="portfolio">Portfolio</a>
-            <a href="contact">Contact</a>
-            <a href="blog">Blog</a>
-            <a href="live-chat">Live Chat</a>
-            <a href="live-game">Live Chat and Game</a>
-            <a href="puzzle-squares">Puzzle Squares</a>
-          </div>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-cta" href="old">Old site</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
-  <a class="cart-btn" href="cart" title="Cart" aria-label="Cart">🛍️</a>
 
   <main class="page">
     <section class="hero" id="about">
