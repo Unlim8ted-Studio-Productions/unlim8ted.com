@@ -211,8 +211,8 @@
       margin-bottom: 10px;
     }
 
-    .kicker span{
-      font-size:x-large;
+    .kicker span {
+      font-size: x-large;
     }
 
     .dot {
@@ -836,179 +836,233 @@
     /* Inner wrapper holds padding (so zero-height is truly zero) */
     .end-inner {
       padding: 16px 16px 14px;
-    }/* Make nav behave like a centered pill with an absolute right cluster */
-.nav{
-  position:absolute; /* keep your existing placement */
-  top:20px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:60;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:14px;
-  padding:10px 12px;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:999px;
-  background:rgba(0,0,0,.28);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+    }
 
-  /* NEW: allow right side without pushing center */
-  position:absolute;
-  min-height:44px;
-  padding-right:110px; /* room for 2 icon buttons + gap */
-}
+    /* Make nav behave like a centered pill with an absolute right cluster */
+    .nav {
+      position: absolute;
+      /* keep your existing placement */
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, .28);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
 
-.nav-center{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
+      /* NEW: allow right side without pushing center */
+      position: absolute;
+      min-height: 44px;
+      padding-right: 110px;
+      /* room for 2 icon buttons + gap */
+    }
 
-.nav-right{
-  position:absolute;
-  right:10px;
-  top:50%;
-  transform:translateY(-50%);
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-.nav-wrap{ position:relative; }
+    .nav-right {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-/* icon buttons */
-.icon-btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:40px;
-  height:40px;
-  border-radius:12px;
-  border:none;
-  background:transparent;
-  cursor:pointer;
-  color:rgba(233,231,255,.92);
-  padding:0;
-}
-.icon-btn:hover{
-  background:rgba(184,107,255,.14);
-  color:var(--ink);
-}
+    .nav-wrap {
+      position: relative;
+    }
 
-.icon{ width:20px; height:20px; display:block; }
+    /* icon buttons */
+    .icon-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: rgba(233, 231, 255, .92);
+      padding: 0;
+    }
 
-/* badge */
-.badge{
-  position:absolute;
-  top:6px;
-  right:6px;
-  min-width:18px;
-  height:18px;
-  padding:0 5px;
-  border-radius:999px;
-  background:rgba(0,255,153,.95);
-  color:#15131f;
-  font-size:12px;
-  font-weight:700;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  line-height:18px;
-  transform: translate(20%, -20%);
-  box-shadow:0 2px 8px rgba(0,0,0,.35);
-}
-.badge.hidden{ display:none; }
+    .icon-btn:hover {
+      background: rgba(184, 107, 255, .14);
+      color: var(--ink);
+    }
 
-/* menus */
-.menu{
-  display:none;
-  position:absolute;
-  right:0;
-  top:46px;
-  background:#251f1f;
-  box-shadow:0 8px 16px rgba(0,0,0,.2);
-  min-width:260px;
-  border-radius:12px;
-  overflow:hidden;
-  z-index:70; /* above your stage overlays */
-}
-.menu.open{ display:block; }
+    .icon {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
 
-.menu .meta{
-  padding:10px 14px;
-  font-size:12px;
-  color:rgba(255,255,255,.75);
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-.menu a, .menu button{
-  width:100%;
-  border:none;
-  background:none;
-  color:#fff;
-  padding:12px 14px;
-  text-decoration:none;
-  display:block;
-  text-align:left;
-  cursor:pointer;
-  font-size:14px;
-}
-.menu a:hover, .menu button:hover{ background:#2d2849; }
+    /* badge */
+    .badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: rgba(0, 255, 153, .95);
+      color: #15131f;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 18px;
+      transform: translate(20%, -20%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+    }
 
-/* cart list */
-.cart-items{ max-height:320px; overflow:auto; }
-.cart-item{
-  display:flex;
-  gap:10px;
-  padding:10px 14px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-}
-.cart-item:last-child{ border-bottom:none; }
+    .badge.hidden {
+      display: none;
+    }
 
-.thumb{
-  width:42px; height:42px;
-  border-radius:10px;
-  background:rgba(255,255,255,.08);
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:rgba(255,255,255,.65);
-  font-size:12px;
-  flex:0 0 auto;
-}
-.thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+    /* menus */
+    .menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 46px;
+      background: #251f1f;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, .2);
+      min-width: 260px;
+      border-radius: 12px;
+      overflow: hidden;
+      z-index: 70;
+      /* above your stage overlays */
+    }
 
-.ci-main{ flex:1; min-width:0; }
-.ci-title{
-  font-size:13px;
-  color:#fff;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.ci-sub{
-  margin-top:4px;
-  font-size:12px;
-  color:rgba(255,255,255,.7);
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-}
+    .menu.open {
+      display: block;
+    }
 
-.cart-actions{
-  border-top:1px solid rgba(255,255,255,.08);
-  display:flex;
-}
-.cart-actions a{ flex:1; text-align:center; padding:12px 10px; }
+    .menu .meta {
+      padding: 10px 14px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, .75);
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+    }
 
-/* mobile: keep it simple */
-@media (max-width: 700px){
-  .nav{ padding-right:104px; }
-  .menu{ right:0; min-width: 86vw; max-width: 360px; }
-}
+    .menu a,
+    .menu button {
+      width: 100%;
+      border: none;
+      background: none;
+      color: #fff;
+      padding: 12px 14px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+    }
 
+    .menu a:hover,
+    .menu button:hover {
+      background: #2d2849;
+    }
+
+    /* cart list */
+    .cart-items {
+      max-height: 320px;
+      overflow: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .thumb {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .08);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, .65);
+      font-size: 12px;
+      flex: 0 0 auto;
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .ci-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ci-title {
+      font-size: 13px;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ci-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, .7);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .cart-actions {
+      border-top: 1px solid rgba(255, 255, 255, .08);
+      display: flex;
+    }
+
+    .cart-actions a {
+      flex: 1;
+      text-align: center;
+      padding: 12px 10px;
+    }
+
+    /* mobile: keep it simple */
+    @media (max-width: 700px) {
+      .nav {
+        padding-right: 104px;
+      }
+
+      .menu {
+        right: 0;
+        min-width: 86vw;
+        max-width: 360px;
+      }
+    }
   </style>
 </head>
 
@@ -1024,55 +1078,55 @@
       <div class="fadeTop"></div>
       <div class="grain"></div>
 
-<nav class="nav" aria-label="Primary">
-  <div class="nav-center">
-    <a href="/">Home</a>
-    <a href="/products/">Products</a>
-    <a href="/portfolio">Portfolio</a>
-    <a href="/blog">Blog</a>
-    <a href="/contact">Contact</a>
-  </div>
-
-  <div class="nav-right">
-    <!-- Cart -->
-    <div class="nav-wrap">
-      <button class="icon-btn" id="cartBtn" type="button" title="Cart" aria-label="Cart">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="9" cy="21" r="1"></circle>
-          <circle cx="20" cy="21" r="1"></circle>
-          <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"></path>
-        </svg>
-        <span id="cartBadge" class="badge hidden">0</span>
-      </button>
-
-      <div class="menu" id="cartMenu" aria-label="Cart menu">
-        <div class="meta" id="cartMeta">Cart</div>
-        <div class="cart-items" id="cartItems"></div>
-        <div class="cart-actions">
-          <a href="/cart">View cart</a>
+      <nav class="nav" aria-label="Primary">
+        <div class="nav-center">
+          <a href="/">Home</a>
+          <a href="/products/">Products</a>
+          <a href="/portfolio">Portfolio</a>
+          <a href="/blog">Blog</a>
+          <a href="/contact">Contact</a>
         </div>
-      </div>
-    </div>
 
-    <!-- Profile -->
-    <div class="nav-wrap">
-      <button class="icon-btn" id="profileBtn" type="button" title="Account" aria-label="Account">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M20 21a8 8 0 0 0-16 0"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-      </button>
+        <div class="nav-right">
+          <!-- Cart -->
+          <div class="nav-wrap">
+            <button class="icon-btn" id="cartBtn" type="button" title="Cart" aria-label="Cart">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"></path>
+              </svg>
+              <span id="cartBadge" class="badge hidden">0</span>
+            </button>
 
-      <div class="menu" id="profileMenu" role="menu" aria-label="Account menu">
-        <div class="meta" id="menuMeta">Not signed in</div>
-        <a id="menuPrimary" href="/sign-in" role="menuitem">Sign In</a>
-        <button id="menuSignOut" type="button" role="menuitem" style="display:none;">Sign out</button>
-      </div>
-    </div>
-  </div>
-</nav>
+            <div class="menu" id="cartMenu" aria-label="Cart menu">
+              <div class="meta" id="cartMeta">Cart</div>
+              <div class="cart-items" id="cartItems"></div>
+              <div class="cart-actions">
+                <a href="/cart">View cart</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile -->
+          <div class="nav-wrap">
+            <button class="icon-btn" id="profileBtn" type="button" title="Account" aria-label="Account">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 21a8 8 0 0 0-16 0"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </button>
+
+            <div class="menu" id="profileMenu" role="menu" aria-label="Account menu">
+              <div class="meta" id="menuMeta">Not signed in</div>
+              <a id="menuPrimary" href="/sign-in" role="menuitem">Sign In</a>
+              <button id="menuSignOut" type="button" role="menuitem" style="display:none;">Sign out</button>
+            </div>
+          </div>
+        </div>
+      </nav>
 
 
       <div class="camera" id="camera">
@@ -1377,122 +1431,112 @@ Z
     </div>
   </div>
 
-<script type="module">
-  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-  import { getFirestore, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  <script type="module">
+    import { getFirebase } from "/components/firebase-init.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
-    authDomain: "unlim8ted-db.firebaseapp.com",
-    projectId: "unlim8ted-db",
-    storageBucket: "unlim8ted-db.appspot.com",
-    messagingSenderId: "1059428499872",
-    appId: "1:1059428499872:web:855308683718237de6e4c5",
-  };
+    const { auth, db } = getFirebase();
 
-  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
 
-  const cartBtn = document.getElementById("cartBtn");
-  const cartMenu = document.getElementById("cartMenu");
-  const cartBadge = document.getElementById("cartBadge");
-  const cartMeta = document.getElementById("cartMeta");
-  const cartItemsEl = document.getElementById("cartItems");
+    const cartBtn = document.getElementById("cartBtn");
+    const cartMenu = document.getElementById("cartMenu");
+    const cartBadge = document.getElementById("cartBadge");
+    const cartMeta = document.getElementById("cartMeta");
+    const cartItemsEl = document.getElementById("cartItems");
 
-  const profileBtn = document.getElementById("profileBtn");
-  const profileMenu = document.getElementById("profileMenu");
-  const menuMeta = document.getElementById("menuMeta");
-  const menuPrimary = document.getElementById("menuPrimary");
-  const menuSignOut = document.getElementById("menuSignOut");
+    const profileBtn = document.getElementById("profileBtn");
+    const profileMenu = document.getElementById("profileMenu");
+    const menuMeta = document.getElementById("menuMeta");
+    const menuPrimary = document.getElementById("menuPrimary");
+    const menuSignOut = document.getElementById("menuSignOut");
 
-  let unsubCart = null;
-  let cartItems = [];
+    let unsubCart = null;
+    let cartItems = [];
 
-  const closeMenus = () => {
-    cartMenu?.classList.remove("open");
-    profileMenu?.classList.remove("open");
-  };
+    const closeMenus = () => {
+      cartMenu?.classList.remove("open");
+      profileMenu?.classList.remove("open");
+    };
 
-  cartBtn?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    profileMenu?.classList.remove("open");
-    cartMenu?.classList.toggle("open");
-  });
+    cartBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      profileMenu?.classList.remove("open");
+      cartMenu?.classList.toggle("open");
+    });
 
-  profileBtn?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    cartMenu?.classList.remove("open");
-    profileMenu?.classList.toggle("open");
-  });
+    profileBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      cartMenu?.classList.remove("open");
+      profileMenu?.classList.toggle("open");
+    });
 
-  window.addEventListener("click", closeMenus);
-  cartMenu?.addEventListener("click", (e) => e.stopPropagation());
-  profileMenu?.addEventListener("click", (e) => e.stopPropagation());
+    window.addEventListener("click", closeMenus);
+    cartMenu?.addEventListener("click", (e) => e.stopPropagation());
+    profileMenu?.addEventListener("click", (e) => e.stopPropagation());
 
-  menuSignOut?.addEventListener("click", async () => {
-    try {
-      await signOut(auth);
-      closeMenus();
-    } catch (e) {
-      console.error("Sign out failed:", e);
-    }
-  });
+    menuSignOut?.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        closeMenus();
+      } catch (e) {
+        console.error("Sign out failed:", e);
+      }
+    });
 
-  const escapeHtml = (s) =>
-    String(s).replace(/[&<>"']/g, (c) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;",
-    }[c]));
+    const escapeHtml = (s) =>
+      String(s).replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      }[c]));
 
-  const countCart = (items) => (items || []).reduce((sum, it) => sum + (Number(it.qty) || 1), 0);
+    const countCart = (items) => (items || []).reduce((sum, it) => sum + (Number(it.qty) || 1), 0);
 
-  const updateBadge = (count) => {
-    if (!cartBadge) return;
-    const n = Math.max(0, Number(count) || 0);
-    cartBadge.textContent = n > 99 ? "99+" : String(n);
-    cartBadge.classList.toggle("hidden", n === 0);
-  };
+    const updateBadge = (count) => {
+      if (!cartBadge) return;
+      const n = Math.max(0, Number(count) || 0);
+      cartBadge.textContent = n > 99 ? "99+" : String(n);
+      cartBadge.classList.toggle("hidden", n === 0);
+    };
 
-  const getLocalCartItems = () => {
-    try {
-      const raw = localStorage.getItem("unlim8ted-cart");
-      if (!raw) return [];
-      const arr = JSON.parse(raw);
-      if (!Array.isArray(arr)) return [];
-      return arr.map((it, idx) => ({
-        id: it.id || `local-${idx}`,
-        title: it.title || it.name || it.productName || `Item ${idx + 1}`,
-        qty: Number(it.qty) || 1,
-        price: it.price ?? null,
-        image: it.image ?? it.imageUrl ?? null,
-      }));
-    } catch {
-      return [];
-    }
-  };
+    const getLocalCartItems = () => {
+      try {
+        const raw = localStorage.getItem("unlim8ted-cart");
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        if (!Array.isArray(arr)) return [];
+        return arr.map((it, idx) => ({
+          id: it.id || `local-${idx}`,
+          title: it.title || it.name || it.productName || `Item ${idx + 1}`,
+          qty: Number(it.qty) || 1,
+          price: it.price ?? null,
+          image: it.image ?? it.imageUrl ?? null,
+        }));
+      } catch {
+        return [];
+      }
+    };
 
-  const renderCartMenu = () => {
-    if (!cartMeta || !cartItemsEl) return;
+    const renderCartMenu = () => {
+      if (!cartMeta || !cartItemsEl) return;
 
-    const totalCount = countCart(cartItems);
-    cartMeta.textContent = totalCount ? `Cart (${totalCount})` : "Cart (empty)";
+      const totalCount = countCart(cartItems);
+      cartMeta.textContent = totalCount ? `Cart (${totalCount})` : "Cart (empty)";
 
-    if (!cartItems.length) {
-      cartItemsEl.innerHTML = `
+      if (!cartItems.length) {
+        cartItemsEl.innerHTML = `
         <div style="padding:12px 14px; color:rgba(255,255,255,.75); font-size:13px;">
           Your cart is empty.
         </div>
       `;
-      return;
-    }
+        return;
+      }
 
-    const show = cartItems.slice(0, 5);
-    cartItemsEl.innerHTML = show.map((it) => `
+      const show = cartItems.slice(0, 5);
+      cartItemsEl.innerHTML = show.map((it) => `
       <div class="cart-item">
         <div class="thumb">
           ${it.image ? `<img src="${escapeHtml(it.image)}" alt="">` : "Item"}
@@ -1507,86 +1551,86 @@ Z
       </div>
     `).join("");
 
-    if (cartItems.length > show.length) {
-      cartItemsEl.innerHTML += `
+      if (cartItems.length > show.length) {
+        cartItemsEl.innerHTML += `
         <div style="padding:10px 14px; font-size:12px; color:rgba(255,255,255,.7); border-top:1px solid rgba(255,255,255,.06);">
           + ${cartItems.length - show.length} more item(s)
         </div>
       `;
-    }
-  };
+      }
+    };
 
-  const bindCartListener = (user) => {
-    if (unsubCart) unsubCart();
-    unsubCart = null;
+    const bindCartListener = (user) => {
+      if (unsubCart) unsubCart();
+      unsubCart = null;
 
-    if (!user) {
-      cartItems = getLocalCartItems();
-      renderCartMenu();
-      updateBadge(countCart(cartItems));
-      return;
-    }
-
-    const itemsRef = collection(db, "users", user.uid, "cartItems");
-    const q = query(itemsRef);
-
-    unsubCart = onSnapshot(
-      q,
-      (snap) => {
-        const items = [];
-        snap.forEach((d) => {
-          const data = d.data() || {};
-          items.push({
-            id: d.id,
-            title: data.title || data.name || data.productName || d.id,
-            qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
-            price: data.price ?? null,
-            image: data.image ?? data.imageUrl ?? null,
-          });
-        });
-        cartItems = items;
-        renderCartMenu();
-        updateBadge(countCart(items));
-      },
-      (err) => {
-        console.error("Cart listener error:", err);
+      if (!user) {
         cartItems = getLocalCartItems();
         renderCartMenu();
         updateBadge(countCart(cartItems));
+        return;
       }
-    );
-  };
 
-  const updateAccountMenu = (user) => {
-    if (!menuMeta || !menuPrimary || !menuSignOut) return;
+      const itemsRef = collection(db, "users", user.uid, "cartItems");
+      const q = query(itemsRef);
 
-    if (!user) {
-      menuMeta.textContent = "Not signed in";
-      menuPrimary.textContent = "Sign In";
-      menuPrimary.href = "/sign-in";
-      menuSignOut.style.display = "none";
-      return;
-    }
+      unsubCart = onSnapshot(
+        q,
+        (snap) => {
+          const items = [];
+          snap.forEach((d) => {
+            const data = d.data() || {};
+            items.push({
+              id: d.id,
+              title: data.title || data.name || data.productName || d.id,
+              qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
+              price: data.price ?? null,
+              image: data.image ?? data.imageUrl ?? null,
+            });
+          });
+          cartItems = items;
+          renderCartMenu();
+          updateBadge(countCart(items));
+        },
+        (err) => {
+          console.error("Cart listener error:", err);
+          cartItems = getLocalCartItems();
+          renderCartMenu();
+          updateBadge(countCart(cartItems));
+        }
+      );
+    };
 
-    menuMeta.textContent = user.email || "Signed in";
-    menuPrimary.textContent = "Profile";
-    menuPrimary.href = "/profile";
-    menuSignOut.style.display = "block";
-  };
+    const updateAccountMenu = (user) => {
+      if (!menuMeta || !menuPrimary || !menuSignOut) return;
 
-  // Initial render (logged-out fallback)
-  cartItems = getLocalCartItems();
-  renderCartMenu();
-  updateBadge(countCart(cartItems));
+      if (!user) {
+        menuMeta.textContent = "Not signed in";
+        menuPrimary.textContent = "Sign In";
+        menuPrimary.href = "/sign-in";
+        menuSignOut.style.display = "none";
+        return;
+      }
 
-  onAuthStateChanged(auth, (user) => {
-    updateAccountMenu(user || null);
-    bindCartListener(user || null);
-  });
-</script>
+      menuMeta.textContent = user.email || "Signed in";
+      menuPrimary.textContent = "Profile";
+      menuPrimary.href = "/profile";
+      menuSignOut.style.display = "block";
+    };
+
+    // Initial render (logged-out fallback)
+    cartItems = getLocalCartItems();
+    renderCartMenu();
+    updateBadge(countCart(cartItems));
+
+    onAuthStateChanged(auth, (user) => {
+      updateAccountMenu(user || null);
+      bindCartListener(user || null);
+    });
+  </script>
 
   <script>
-    
+
     (function () {
       const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 

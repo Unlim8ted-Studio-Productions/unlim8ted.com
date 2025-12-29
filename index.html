@@ -264,23 +264,26 @@
       justify-content: center;
       gap: 10px;
     }
-.hero-cta {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
 
-.hero-cta a {
-  pointer-events: auto;
-  text-decoration: none;
-}.hero-bg,
-.hero-overlay,
-canvas,
-video {
-  pointer-events: none;
-}
+    .hero-cta {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .hero-cta a {
+      pointer-events: auto;
+      text-decoration: none;
+    }
+
+    .hero-bg,
+    .hero-overlay,
+    canvas,
+    video {
+      pointer-events: none;
+    }
 
 
     .btn:hover {
@@ -1068,133 +1071,144 @@ video {
       text-align: center;
       padding: 12px 10px;
     }
-/* =========================
+
+    /* =========================
    MOBILE DROPDOWN NAV
    (CSS-only: uses :has() if supported)
    ========================= */
 
-/* Hide toggle/overlay by default (desktop) */
-#navToggle,
-.nav-overlay {
-  display: none;
-}
+    /* Hide toggle/overlay by default (desktop) */
+    #navToggle,
+    .nav-overlay {
+      display: none;
+    }
 
-/* Mobile breakpoint */
-@media (max-width: 820px) {
-  /* Convert your nav pill into a compact bar */
-  .nav {
-    left: 50%;
-    top: 16px;
-    transform: translateX(-50%);
-    width: min(92vw, 560px);
-    justify-content: space-between;
-    gap: 10px;
-    padding: 8px 10px;
-    padding-right: 10px; /* override your desktop reserved space */
-  }
+    /* Mobile breakpoint */
+    @media (max-width: 820px) {
 
-  /* Make the center links a dropdown panel (hidden by default) */
-  .nav-center {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: calc(100% + 10px);
-    display: grid;
-    gap: 8px;
-    padding: 10px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, .10);
-    background: rgba(0, 0, 0, .55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 18px 60px rgba(0, 0, 0, .55);
-    transform: translateY(-6px) scale(.98);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
-    z-index: 80;
-  }
+      /* Convert your nav pill into a compact bar */
+      .nav {
+        left: 50%;
+        top: 16px;
+        transform: translateX(-50%);
+        width: min(92vw, 560px);
+        justify-content: space-between;
+        gap: 10px;
+        padding: 8px 10px;
+        padding-right: 10px;
+        /* override your desktop reserved space */
+      }
 
-  /* Turn links into button-y rows */
-  .nav-center a {
-    padding: 12px 12px;
-    border-radius: 14px;
-    font-size: 13px;
-    letter-spacing: .08em;
-    border: 1px solid rgba(255, 255, 255, .10);
-    background: rgba(255, 255, 255, .04);
-  }
-  .nav-center a:hover {
-    background: rgba(184, 107, 255, .16);
-    border-color: rgba(184, 107, 255, .35);
-  }
+      /* Make the center links a dropdown panel (hidden by default) */
+      .nav-center {
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        top: calc(100% + 10px);
+        display: grid;
+        gap: 8px;
+        padding: 10px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, .10);
+        background: rgba(0, 0, 0, .55);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, .55);
+        transform: translateY(-6px) scale(.98);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+        z-index: 80;
+      }
 
-  /* Right cluster stays visible */
-  .nav-right {
-    position: static;
-    transform: none;
-    gap: 6px;
-  }
+      /* Turn links into button-y rows */
+      .nav-center a {
+        padding: 12px 12px;
+        border-radius: 14px;
+        font-size: 13px;
+        letter-spacing: .08em;
+        border: 1px solid rgba(255, 255, 255, .10);
+        background: rgba(255, 255, 255, .04);
+      }
 
-  /* Add a hamburger button (you'll add the HTML below) */
-  #navToggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    border: none;
-    background: transparent;
-    color: rgba(233, 231, 255, .92);
-    cursor: pointer;
-  }
-  #navToggle:hover {
-    background: rgba(184, 107, 255, .14);
-    color: var(--ink);
-  }
-  #navToggle svg {
-    width: 20px;
-    height: 20px;
-    display: block;
-  }
+      .nav-center a:hover {
+        background: rgba(184, 107, 255, .16);
+        border-color: rgba(184, 107, 255, .35);
+      }
 
-  /* Fullscreen click-away overlay */
-  .nav-overlay {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.35);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .18s ease;
-    z-index: 75;
-  }
+      /* Right cluster stays visible */
+      .nav-right {
+        position: static;
+        transform: none;
+        gap: 6px;
+      }
 
-  /* --- OPEN STATE (CSS-only) ---
+      /* Add a hamburger button (you'll add the HTML below) */
+      #navToggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        border: none;
+        background: transparent;
+        color: rgba(233, 231, 255, .92);
+        cursor: pointer;
+      }
+
+      #navToggle:hover {
+        background: rgba(184, 107, 255, .14);
+        color: var(--ink);
+      }
+
+      #navToggle svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+      }
+
+      /* Fullscreen click-away overlay */
+      .nav-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, .35);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .18s ease;
+        z-index: 75;
+      }
+
+      /* --- OPEN STATE (CSS-only) ---
      Uses :has() (supported in modern Chrome/Edge/Safari; Firefox currently limited)
      If :has() isn't available, use the small JS snippet below.
   */
-  body:has(.nav[data-open="1"]) .nav-center {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translateY(0) scale(1);
-  }
-  body:has(.nav[data-open="1"]) .nav-overlay {
-    opacity: 1;
-    pointer-events: auto;
-  }
+      body:has(.nav[data-open="1"]) .nav-center {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+      }
 
-  /* When dropdown open, don't let menus get clipped */
-  .stage { overflow: visible; }
+      body:has(.nav[data-open="1"]) .nav-overlay {
+        opacity: 1;
+        pointer-events: auto;
+      }
 
-  /* Make sure cart/profile menus drop on top of mobile panel */
-  .menu { z-index: 90; }
-}
+      /* When dropdown open, don't let menus get clipped */
+      .stage {
+        overflow: visible;
+      }
+
+      /* Make sure cart/profile menus drop on top of mobile panel */
+      .menu {
+        z-index: 90;
+      }
+    }
 
     /* mobile: keep it simple */
     @media (max-width: 700px) {
@@ -1207,51 +1221,72 @@ video {
         min-width: 86vw;
         max-width: 360px;
       }
-    }/* --- CLICK FIX: prevent invisible layers in .camera from blocking buttons --- */
-.camera { pointer-events: none; }
+    }
 
-/* re-enable interaction for actual UI */
-.nav,
-.nav * ,
-.hero,
-.hero * ,
-.menu,
-.menu * ,
-.end-box,
-.end-box * ,
-.hsection,
-.hsection * {
-  pointer-events: auto;
-}
+    /* --- CLICK FIX: prevent invisible layers in .camera from blocking buttons --- */
+    .camera {
+      pointer-events: none;
+    }
 
-/* make sure hero is above other sections */
-.hero { z-index: 120; }
-.hero-inner { position: relative; z-index: 121; }
-.hero-cta { position: relative; z-index: 122; }
-.neon-arrow{
-  position: fixed;
-  left: 50%;
-  bottom: 22px;
-  transform: translateX(-50%);
-  z-index: 200;
-  pointer-events: none;
-  opacity: 1;
-  transition: opacity .35s ease, transform .35s ease;
-  filter: drop-shadow(0 0 18px rgba(0,255,204,.35));
-  animation: bounce 1.25s ease-in-out infinite;
-}
+    /* re-enable interaction for actual UI */
+    .nav,
+    .nav *,
+    .hero,
+    .hero *,
+    .menu,
+    .menu *,
+    .end-box,
+    .end-box *,
+    .hsection,
+    .hsection * {
+      pointer-events: auto;
+    }
 
-.neon-arrow.hide{
-  opacity: 0;
-  transform: translateX(-50%) translateY(10px);
-  animation: none;
-}
+    /* make sure hero is above other sections */
+    .hero {
+      z-index: 120;
+    }
 
-@keyframes bounce{
-  0%,100%{ transform: translateX(-50%) translateY(0); }
-  50%{ transform: translateX(-50%) translateY(8px); }
-}
+    .hero-inner {
+      position: relative;
+      z-index: 121;
+    }
 
+    .hero-cta {
+      position: relative;
+      z-index: 122;
+    }
+
+    .neon-arrow {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      z-index: 200;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity .35s ease, transform .35s ease;
+      filter: drop-shadow(0 0 18px rgba(0, 255, 204, .35));
+      animation: bounce 1.25s ease-in-out infinite;
+    }
+
+    .neon-arrow.hide {
+      opacity: 0;
+      transform: translateX(-50%) translateY(10px);
+      animation: none;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      50% {
+        transform: translateX(-50%) translateY(8px);
+      }
+    }
   </style>
 </head>
 
@@ -1275,13 +1310,13 @@ video {
           <a href="/blog">Blog</a>
           <a href="/contact">Contact</a>
         </div>
-<button id="navToggle" type="button" aria-label="Menu" title="Menu">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-    <path d="M4 6h16"></path>
-    <path d="M4 12h16"></path>
-    <path d="M4 18h16"></path>
-  </svg>
-</button>
+        <button id="navToggle" type="button" aria-label="Menu" title="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M4 6h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 18h16"></path>
+          </svg>
+        </button>
 
         <div class="nav-right">
           <!-- Cart -->
@@ -1323,7 +1358,7 @@ video {
           </div>
         </div>
       </nav>
-<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+      <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
 
 
       <div class="camera" id="camera">
@@ -1348,10 +1383,11 @@ video {
             </div>
           </div>
         </section>
-  <div class="neon-arrow"><svg style="fill:#00ffcc;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 330"
-      width="100" height="100">
-      <path d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393 c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393 s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"/>
-    </svg></div>
+        <div class="neon-arrow"><svg style="fill:#00ffcc;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 330"
+            width="100" height="100">
+            <path
+              d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393 c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393 s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z" />
+          </svg></div>
         <!-- BEAT: “What we make” -->
         <div class="beat" id="beat1" style="top: 18vh;">
           <h3>We make worlds across mediums.</h3>
@@ -1631,307 +1667,298 @@ Z
     </div>
   </div>
 
-<script type="module">
-  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-  import { getFirestore, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  <script type="module">
+    import { getFirebase } from "/components/firebase-init.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
-    authDomain: "unlim8ted-db.firebaseapp.com",
-    projectId: "unlim8ted-db",
-    storageBucket: "unlim8ted-db.appspot.com",
-    messagingSenderId: "1059428499872",
-    appId: "1:1059428499872:web:855308683718237de6e4c5",
-  };
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const { auth, db } = getFirebase();
 
-  const cartBtn = document.getElementById("cartBtn");
-  const cartMenu = document.getElementById("cartMenu");
-  const cartBadge = document.getElementById("cartBadge");
-  const cartMeta = document.getElementById("cartMeta");
-  const cartItemsEl = document.getElementById("cartItems");
 
-  const profileBtn = document.getElementById("profileBtn");
-  const profileMenu = document.getElementById("profileMenu");
-  const menuMeta = document.getElementById("menuMeta");
-  const menuPrimary = document.getElementById("menuPrimary");
-  const menuSignOut = document.getElementById("menuSignOut");
+    const cartBtn = document.getElementById("cartBtn");
+    const cartMenu = document.getElementById("cartMenu");
+    const cartBadge = document.getElementById("cartBadge");
+    const cartMeta = document.getElementById("cartMeta");
+    const cartItemsEl = document.getElementById("cartItems");
 
-  let unsubCart = null;
-  let cartItems = [];
+    const profileBtn = document.getElementById("profileBtn");
+    const profileMenu = document.getElementById("profileMenu");
+    const menuMeta = document.getElementById("menuMeta");
+    const menuPrimary = document.getElementById("menuPrimary");
+    const menuSignOut = document.getElementById("menuSignOut");
 
-  // ===== products.json cache/index =====
-  let PRODUCTS_LOADED = false;
-  let PRODUCTS_LOADING = null;
-  let PRODUCT_BY_ID = new Map();
-  let VARIANT_BY_KEY = new Map(); // `${productId}::${variantId}` -> variant
+    let unsubCart = null;
+    let cartItems = [];
 
-  const safeUrl = (u) => {
-    const s = String(u || "").trim();
-    if (!s) return "";
-    if (s.startsWith("https://") || s.startsWith("http://") || s.startsWith("/")) return s;
-    return "";
-  };
+    // ===== products.json cache/index =====
+    let PRODUCTS_LOADED = false;
+    let PRODUCTS_LOADING = null;
+    let PRODUCT_BY_ID = new Map();
+    let VARIANT_BY_KEY = new Map(); // `${productId}::${variantId}` -> variant
 
-  // ✅ Robust price parsing (supports numbers, "51.5", "$51.50", etc.)
-  function parsePrice(val) {
-    if (val == null) return null;
+    const safeUrl = (u) => {
+      const s = String(u || "").trim();
+      if (!s) return "";
+      if (s.startsWith("https://") || s.startsWith("http://") || s.startsWith("/")) return s;
+      return "";
+    };
 
-    if (typeof val === "number") {
-      return Number.isFinite(val) ? val : null;
+    // ✅ Robust price parsing (supports numbers, "51.5", "$51.50", etc.)
+    function parsePrice(val) {
+      if (val == null) return null;
+
+      if (typeof val === "number") {
+        return Number.isFinite(val) ? val : null;
+      }
+
+      const s = String(val).trim();
+      if (!s) return null;
+
+      // remove currency + commas, keep digits, minus, dot
+      const cleaned = s.replace(/[^0-9.\-]/g, "");
+      if (!cleaned) return null;
+
+      const n = Number(cleaned);
+      return Number.isFinite(n) ? n : null;
     }
 
-    const s = String(val).trim();
-    if (!s) return null;
+    // ✅ Decide if a number looks like cents (e.g., 5150) vs dollars (51.5)
+    function normalizePriceNumber(n) {
+      if (!Number.isFinite(n)) return null;
+      // if it’s a big integer-ish number, treat as cents (common pattern)
+      if (n >= 1000 && Math.abs(n - Math.round(n)) < 1e-9) return n / 100;
+      return n;
+    }
 
-    // remove currency + commas, keep digits, minus, dot
-    const cleaned = s.replace(/[^0-9.\-]/g, "");
-    if (!cleaned) return null;
+    function formatMoney(n) {
+      const v = normalizePriceNumber(n);
+      if (v == null) return "";
+      return `$${v.toFixed(2)}`;
+    }
 
-    const n = Number(cleaned);
-    return Number.isFinite(n) ? n : null;
-  }
+    async function loadProducts() {
+      if (PRODUCTS_LOADED) return;
+      if (PRODUCTS_LOADING) return PRODUCTS_LOADING;
 
-  // ✅ Decide if a number looks like cents (e.g., 5150) vs dollars (51.5)
-  function normalizePriceNumber(n) {
-    if (!Number.isFinite(n)) return null;
-    // if it’s a big integer-ish number, treat as cents (common pattern)
-    if (n >= 1000 && Math.abs(n - Math.round(n)) < 1e-9) return n / 100;
-    return n;
-  }
+      PRODUCTS_LOADING = (async () => {
+        try {
+          const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache: "no-store" });
+          if (!r.ok) throw new Error("Failed to load products.json");
+          const data = await r.json();
+          const products = Array.isArray(data) ? data : (data?.products || []);
+          indexProducts(products);
+          PRODUCTS_LOADED = true;
+        } catch (e) {
+          console.warn("products.json load failed:", e);
+        } finally {
+          PRODUCTS_LOADING = null;
+        }
+      })();
 
-  function formatMoney(n) {
-    const v = normalizePriceNumber(n);
-    if (v == null) return "";
-    return `$${v.toFixed(2)}`;
-  }
+      return PRODUCTS_LOADING;
+    }
 
-  async function loadProducts() {
-    if (PRODUCTS_LOADED) return;
-    if (PRODUCTS_LOADING) return PRODUCTS_LOADING;
+    function indexProducts(products) {
+      PRODUCT_BY_ID = new Map();
+      VARIANT_BY_KEY = new Map();
 
-    PRODUCTS_LOADING = (async () => {
+      for (const p of (products || [])) {
+        const pid = String(p.id ?? p.productId ?? "").trim();
+        if (!pid) continue;
+
+        PRODUCT_BY_ID.set(pid, p);
+
+        // support typo key "varients" + normal "variants"
+        const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
+        for (const v of vars) {
+          const vid = String(v.id ?? v.variantId ?? "").trim();
+          if (!vid) continue;
+          VARIANT_BY_KEY.set(`${pid}::${vid}`, v);
+        }
+      }
+    }
+
+    // ✅ Fix your data shape:
+    // - sometimes productId is stored like "unlim8ted-hoodie__A35BIS..."
+    // - if so, split into productId + variantId so title/image/price resolve correctly
+    function normalizeCartItem(raw) {
+      const it = { ...(raw || {}) };
+
+      const pidRaw = String(it.productId ?? it.pid ?? "").trim();
+      const vidRaw = String(it.variantId ?? it.vid ?? "").trim();
+
+      if (pidRaw.includes("__") && !vidRaw) {
+        const [basePid, ...rest] = pidRaw.split("__");
+        const base = String(basePid || "").trim();
+        const v = rest.join("__").trim();
+        if (base && v) {
+          it.productId = base;
+          it.variantId = v;
+        }
+      }
+
+      if (it.productId != null) it.productId = String(it.productId).trim();
+      if (it.variantId != null) it.variantId = String(it.variantId).trim();
+
+      // ensure qty is sane
+      it.qty = Number(it.qty);
+      if (!Number.isFinite(it.qty) || it.qty <= 0) it.qty = 1;
+
+      return it;
+    }
+
+    const escapeHtml = (s) =>
+      String(s).replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      }[c]));
+
+    const closeMenus = () => {
+      cartMenu?.classList.remove("open");
+      profileMenu?.classList.remove("open");
+      cartBtn?.setAttribute("aria-expanded", "false");
+      profileBtn?.setAttribute("aria-expanded", "false");
+    };
+
+    cartBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      profileMenu?.classList.remove("open");
+      profileBtn?.setAttribute("aria-expanded", "false");
+      const open = cartMenu?.classList.toggle("open");
+      cartBtn?.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    profileBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      cartMenu?.classList.remove("open");
+      cartBtn?.setAttribute("aria-expanded", "false");
+      const open = profileMenu?.classList.toggle("open");
+      profileBtn?.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    window.addEventListener("click", closeMenus);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenus(); });
+    cartMenu?.addEventListener("click", (e) => e.stopPropagation());
+    profileMenu?.addEventListener("click", (e) => e.stopPropagation());
+
+    menuSignOut?.addEventListener("click", async () => {
       try {
-        const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache: "no-store" });
-        if (!r.ok) throw new Error("Failed to load products.json");
-        const data = await r.json();
-        const products = Array.isArray(data) ? data : (data?.products || []);
-        indexProducts(products);
-        PRODUCTS_LOADED = true;
+        await signOut(auth);
+        closeMenus();
       } catch (e) {
-        console.warn("products.json load failed:", e);
-      } finally {
-        PRODUCTS_LOADING = null;
+        console.error("Sign out failed:", e);
       }
-    })();
+    });
 
-    return PRODUCTS_LOADING;
-  }
+    const countCart = (items) => (items || []).reduce((sum, it) => sum + (Number(it.qty) || 1), 0);
 
-  function indexProducts(products) {
-    PRODUCT_BY_ID = new Map();
-    VARIANT_BY_KEY = new Map();
+    const updateBadge = (count) => {
+      if (!cartBadge) return;
+      const n = Math.max(0, Number(count) || 0);
+      cartBadge.textContent = n > 99 ? "99+" : String(n);
+      cartBadge.classList.toggle("hidden", n === 0);
+    };
 
-    for (const p of (products || [])) {
-      const pid = String(p.id ?? p.productId ?? "").trim();
-      if (!pid) continue;
+    // ✅ Correct price resolution:
+    // Prefer (in order):
+    // 1) item.price / item.priceNum (explicit cart item payload)
+    // 2) variant.price / variant.priceNum
+    // 3) product.price / product.priceNum
+    function resolveCartDisplay(raw) {
+      const it = normalizeCartItem(raw);
 
-      PRODUCT_BY_ID.set(pid, p);
+      const productId = String(it.productId || "").trim();
+      const variantId = String(it.variantId || "").trim();
 
-      // support typo key "varients" + normal "variants"
-      const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
-      for (const v of vars) {
-        const vid = String(v.id ?? v.variantId ?? "").trim();
-        if (!vid) continue;
-        VARIANT_BY_KEY.set(`${pid}::${vid}`, v);
+      const p = productId ? (PRODUCT_BY_ID.get(productId) || null) : null;
+      const v = (productId && variantId) ? (VARIANT_BY_KEY.get(`${productId}::${variantId}`) || null) : null;
+
+      const title =
+        String(it.title || it.name || it.productName || "").trim() ||
+        String(p?.name || p?.title || productId || "Item").trim();
+
+      const variantLabel =
+        String(it.variantLabel || "").trim() ||
+        String(v?.name || v?.label || "").trim();
+
+      // 🔥 price resolution (handles string/number + priceNum)
+      const itemPrice = parsePrice(it.price ?? it.priceNum);
+      const variantPrice = parsePrice(v?.price ?? v?.priceNum);
+      const productPrice = parsePrice(p?.price ?? p?.priceNum);
+
+      const price = normalizePriceNumber(
+        itemPrice ?? variantPrice ?? productPrice ?? null
+      );
+
+      let image = safeUrl(it.image || it.imageUrl || "");
+      if (!image && v) {
+        image =
+          safeUrl(v.image || v.imageUrl || "") ||
+          (Array.isArray(v.images) && v.images.length ? safeUrl(v.images[0]) : "");
       }
-    }
-  }
-
-  // ✅ Fix your data shape:
-  // - sometimes productId is stored like "unlim8ted-hoodie__A35BIS..."
-  // - if so, split into productId + variantId so title/image/price resolve correctly
-  function normalizeCartItem(raw) {
-    const it = { ...(raw || {}) };
-
-    const pidRaw = String(it.productId ?? it.pid ?? "").trim();
-    const vidRaw = String(it.variantId ?? it.vid ?? "").trim();
-
-    if (pidRaw.includes("__") && !vidRaw) {
-      const [basePid, ...rest] = pidRaw.split("__");
-      const base = String(basePid || "").trim();
-      const v = rest.join("__").trim();
-      if (base && v) {
-        it.productId = base;
-        it.variantId = v;
+      if (!image && p) {
+        image =
+          safeUrl(p.image || p.imageUrl || "") ||
+          (Array.isArray(p.images) && p.images.length ? safeUrl(p.images[0]) : "");
       }
+
+      return { title, variantLabel, price, image };
     }
 
-    if (it.productId != null) it.productId = String(it.productId).trim();
-    if (it.variantId != null) it.variantId = String(it.variantId).trim();
+    const getLocalCartItems = () => {
+      try {
+        const raw = localStorage.getItem("unlim8ted-cart");
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        if (!Array.isArray(arr)) return [];
 
-    // ensure qty is sane
-    it.qty = Number(it.qty);
-    if (!Number.isFinite(it.qty) || it.qty <= 0) it.qty = 1;
+        return arr.map((it, idx) => normalizeCartItem({
+          id: it.id || it._id || `local-${idx}`,
+          productId: it.productId || it.pid || null,
+          variantId: it.variantId || it.vid || null,
+          qty: it.qty,
 
-    return it;
-  }
+          // optional legacy fields (if present)
+          title: it.title || it.name || it.productName || "",
+          variantLabel: it.variantLabel || "",
+          price: it.price ?? it.priceNum ?? null,
+          priceNum: it.priceNum ?? null,
+          image: it.image ?? it.imageUrl ?? null,
+        }));
+      } catch {
+        return [];
+      }
+    };
 
-  const escapeHtml = (s) =>
-    String(s).replace(/[&<>"']/g, (c) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;",
-    }[c]));
+    const renderCartMenu = () => {
+      if (!cartMeta || !cartItemsEl) return;
 
-  const closeMenus = () => {
-    cartMenu?.classList.remove("open");
-    profileMenu?.classList.remove("open");
-    cartBtn?.setAttribute("aria-expanded", "false");
-    profileBtn?.setAttribute("aria-expanded", "false");
-  };
+      const totalCount = countCart(cartItems);
+      cartMeta.textContent = totalCount ? `Cart (${totalCount})` : "Cart (empty)";
 
-  cartBtn?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    profileMenu?.classList.remove("open");
-    profileBtn?.setAttribute("aria-expanded", "false");
-    const open = cartMenu?.classList.toggle("open");
-    cartBtn?.setAttribute("aria-expanded", open ? "true" : "false");
-  });
-
-  profileBtn?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    cartMenu?.classList.remove("open");
-    cartBtn?.setAttribute("aria-expanded", "false");
-    const open = profileMenu?.classList.toggle("open");
-    profileBtn?.setAttribute("aria-expanded", open ? "true" : "false");
-  });
-
-  window.addEventListener("click", closeMenus);
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenus(); });
-  cartMenu?.addEventListener("click", (e) => e.stopPropagation());
-  profileMenu?.addEventListener("click", (e) => e.stopPropagation());
-
-  menuSignOut?.addEventListener("click", async () => {
-    try {
-      await signOut(auth);
-      closeMenus();
-    } catch (e) {
-      console.error("Sign out failed:", e);
-    }
-  });
-
-  const countCart = (items) => (items || []).reduce((sum, it) => sum + (Number(it.qty) || 1), 0);
-
-  const updateBadge = (count) => {
-    if (!cartBadge) return;
-    const n = Math.max(0, Number(count) || 0);
-    cartBadge.textContent = n > 99 ? "99+" : String(n);
-    cartBadge.classList.toggle("hidden", n === 0);
-  };
-
-  // ✅ Correct price resolution:
-  // Prefer (in order):
-  // 1) item.price / item.priceNum (explicit cart item payload)
-  // 2) variant.price / variant.priceNum
-  // 3) product.price / product.priceNum
-  function resolveCartDisplay(raw) {
-    const it = normalizeCartItem(raw);
-
-    const productId = String(it.productId || "").trim();
-    const variantId = String(it.variantId || "").trim();
-
-    const p = productId ? (PRODUCT_BY_ID.get(productId) || null) : null;
-    const v = (productId && variantId) ? (VARIANT_BY_KEY.get(`${productId}::${variantId}`) || null) : null;
-
-    const title =
-      String(it.title || it.name || it.productName || "").trim() ||
-      String(p?.name || p?.title || productId || "Item").trim();
-
-    const variantLabel =
-      String(it.variantLabel || "").trim() ||
-      String(v?.name || v?.label || "").trim();
-
-    // 🔥 price resolution (handles string/number + priceNum)
-    const itemPrice = parsePrice(it.price ?? it.priceNum);
-    const variantPrice = parsePrice(v?.price ?? v?.priceNum);
-    const productPrice = parsePrice(p?.price ?? p?.priceNum);
-
-    const price = normalizePriceNumber(
-      itemPrice ?? variantPrice ?? productPrice ?? null
-    );
-
-    let image = safeUrl(it.image || it.imageUrl || "");
-    if (!image && v) {
-      image =
-        safeUrl(v.image || v.imageUrl || "") ||
-        (Array.isArray(v.images) && v.images.length ? safeUrl(v.images[0]) : "");
-    }
-    if (!image && p) {
-      image =
-        safeUrl(p.image || p.imageUrl || "") ||
-        (Array.isArray(p.images) && p.images.length ? safeUrl(p.images[0]) : "");
-    }
-
-    return { title, variantLabel, price, image };
-  }
-
-  const getLocalCartItems = () => {
-    try {
-      const raw = localStorage.getItem("unlim8ted-cart");
-      if (!raw) return [];
-      const arr = JSON.parse(raw);
-      if (!Array.isArray(arr)) return [];
-
-      return arr.map((it, idx) => normalizeCartItem({
-        id: it.id || it._id || `local-${idx}`,
-        productId: it.productId || it.pid || null,
-        variantId: it.variantId || it.vid || null,
-        qty: it.qty,
-
-        // optional legacy fields (if present)
-        title: it.title || it.name || it.productName || "",
-        variantLabel: it.variantLabel || "",
-        price: it.price ?? it.priceNum ?? null,
-        priceNum: it.priceNum ?? null,
-        image: it.image ?? it.imageUrl ?? null,
-      }));
-    } catch {
-      return [];
-    }
-  };
-
-  const renderCartMenu = () => {
-    if (!cartMeta || !cartItemsEl) return;
-
-    const totalCount = countCart(cartItems);
-    cartMeta.textContent = totalCount ? `Cart (${totalCount})` : "Cart (empty)";
-
-    if (!cartItems.length) {
-      cartItemsEl.innerHTML = `
+      if (!cartItems.length) {
+        cartItemsEl.innerHTML = `
         <div style="padding:12px 14px; color:rgba(255,255,255,.75); font-size:13px;">
           Your cart is empty.
         </div>
       `;
-      return;
-    }
+        return;
+      }
 
-    const show = cartItems.slice(0, 5);
+      const show = cartItems.slice(0, 5);
 
-    cartItemsEl.innerHTML = show.map((raw) => {
-      const r = resolveCartDisplay(raw);
-      const qty = Number(raw.qty) || 1;
+      cartItemsEl.innerHTML = show.map((raw) => {
+        const r = resolveCartDisplay(raw);
+        const qty = Number(raw.qty) || 1;
 
-      const subLeft = r.variantLabel ? `Qty: ${qty} • ${escapeHtml(r.variantLabel)}` : `Qty: ${qty}`;
-      const subRight = (r.price != null) ? escapeHtml(formatMoney(r.price)) : "";
+        const subLeft = r.variantLabel ? `Qty: ${qty} • ${escapeHtml(r.variantLabel)}` : `Qty: ${qty}`;
+        const subRight = (r.price != null) ? escapeHtml(formatMoney(r.price)) : "";
 
-      return `
+        return `
         <div class="cart-item">
           <div class="thumb">
             ${r.image ? `<img src="${escapeHtml(r.image)}" alt="">` : "Item"}
@@ -1945,167 +1972,167 @@ Z
           </div>
         </div>
       `;
-    }).join("");
+      }).join("");
 
-    if (cartItems.length > show.length) {
-      cartItemsEl.innerHTML += `
+      if (cartItems.length > show.length) {
+        cartItemsEl.innerHTML += `
         <div style="padding:10px 14px; font-size:12px; color:rgba(255,255,255,.7); border-top:1px solid rgba(255,255,255,.06);">
           + ${cartItems.length - show.length} more item(s)
         </div>
       `;
-    }
-  };
+      }
+    };
 
-  const bindCartListener = async (user) => {
-    if (unsubCart) unsubCart();
-    unsubCart = null;
+    const bindCartListener = async (user) => {
+      if (unsubCart) unsubCart();
+      unsubCart = null;
 
-    await loadProducts();
+      await loadProducts();
 
-    if (!user) {
-      cartItems = getLocalCartItems();
-      renderCartMenu();
-      updateBadge(countCart(cartItems));
-      return;
-    }
-
-    const itemsRef = collection(db, "users", user.uid, "cartItems");
-    const qy = query(itemsRef);
-
-    unsubCart = onSnapshot(
-      qy,
-      async (snap) => {
-        const items = [];
-        snap.forEach((d) => {
-          const data = d.data() || {};
-          items.push(normalizeCartItem({
-            id: d.id,
-            productId: data.productId ?? null,
-            variantId: data.variantId ?? null,
-            qty: data.qty,
-
-            // optional (if you ever store them)
-            title: data.title || data.name || data.productName || "",
-            variantLabel: data.variantLabel || "",
-            price: data.price ?? data.priceNum ?? null,
-            priceNum: data.priceNum ?? null,
-            image: data.image ?? data.imageUrl ?? null,
-          }));
-        });
-
-        cartItems = items;
-        await loadProducts();
-        renderCartMenu();
-        updateBadge(countCart(items));
-      },
-      (err) => {
-        console.error("Cart listener error:", err);
+      if (!user) {
         cartItems = getLocalCartItems();
         renderCartMenu();
         updateBadge(countCart(cartItems));
+        return;
       }
-    );
-  };
 
-  const updateAccountMenu = (user) => {
-    if (!menuMeta || !menuPrimary || !menuSignOut) return;
+      const itemsRef = collection(db, "users", user.uid, "cartItems");
+      const qy = query(itemsRef);
 
-    if (!user) {
-      menuMeta.textContent = "Not signed in";
-      menuPrimary.textContent = "Sign In";
-      menuPrimary.href = "/sign-in";
-      menuSignOut.style.display = "none";
-      return;
-    }
+      unsubCart = onSnapshot(
+        qy,
+        async (snap) => {
+          const items = [];
+          snap.forEach((d) => {
+            const data = d.data() || {};
+            items.push(normalizeCartItem({
+              id: d.id,
+              productId: data.productId ?? null,
+              variantId: data.variantId ?? null,
+              qty: data.qty,
 
-    menuMeta.textContent = user.email || "Signed in";
-    menuPrimary.textContent = "Profile";
-    menuPrimary.href = "/profile";
-    menuSignOut.style.display = "block";
-  };
+              // optional (if you ever store them)
+              title: data.title || data.name || data.productName || "",
+              variantLabel: data.variantLabel || "",
+              price: data.price ?? data.priceNum ?? null,
+              priceNum: data.priceNum ?? null,
+              image: data.image ?? data.imageUrl ?? null,
+            }));
+          });
 
-  // Preload products and render ASAP
-  loadProducts().then(() => renderCartMenu()).catch(() => {});
+          cartItems = items;
+          await loadProducts();
+          renderCartMenu();
+          updateBadge(countCart(items));
+        },
+        (err) => {
+          console.error("Cart listener error:", err);
+          cartItems = getLocalCartItems();
+          renderCartMenu();
+          updateBadge(countCart(cartItems));
+        }
+      );
+    };
 
-  // Initial render (logged-out fallback)
-  cartItems = getLocalCartItems();
-  renderCartMenu();
-  updateBadge(countCart(cartItems));
+    const updateAccountMenu = (user) => {
+      if (!menuMeta || !menuPrimary || !menuSignOut) return;
 
-  onAuthStateChanged(auth, (user) => {
-    updateAccountMenu(user || null);
-    bindCartListener(user || null);
-  });
-</script>
-
-
-
-<script>
-  (function () {
-    const arrow = document.querySelector(".neon-arrow");
-    if (!arrow) return;
-
-    const HIDE_AFTER_PX = 700;
-
-    let hidden = false;
-
-    function checkScroll() {
-      if (hidden) return;
-
-      const y = window.scrollY || window.pageYOffset || 0;
-      if (y >= HIDE_AFTER_PX) {
-        arrow.classList.add("hide");
-        hidden = true;
+      if (!user) {
+        menuMeta.textContent = "Not signed in";
+        menuPrimary.textContent = "Sign In";
+        menuPrimary.href = "/sign-in";
+        menuSignOut.style.display = "none";
+        return;
       }
-    }
 
-    // Listen to real scroll position (works with your smooth-scroll system)
-    addEventListener("scroll", checkScroll, { passive: true });
-    addEventListener("wheel", checkScroll, { passive: true });
-    addEventListener("touchmove", checkScroll, { passive: true });
+      menuMeta.textContent = user.email || "Signed in";
+      menuPrimary.textContent = "Profile";
+      menuPrimary.href = "/profile";
+      menuSignOut.style.display = "block";
+    };
 
-    // Keyboard scroll
-    addEventListener("keydown", (e) => {
-      if (["ArrowDown","PageDown","Space","End"].includes(e.code)) {
-        requestAnimationFrame(checkScroll);
-      }
+    // Preload products and render ASAP
+    loadProducts().then(() => renderCartMenu()).catch(() => { });
+
+    // Initial render (logged-out fallback)
+    cartItems = getLocalCartItems();
+    renderCartMenu();
+    updateBadge(countCart(cartItems));
+
+    onAuthStateChanged(auth, (user) => {
+      updateAccountMenu(user || null);
+      bindCartListener(user || null);
     });
-  })();
-</script>
-<script>
-  (function(){
-    const nav = document.querySelector(".nav");
-    const toggle = document.getElementById("navToggle");
-    const overlay = document.getElementById("navOverlay");
-    if(!nav || !toggle || !overlay) return;
+  </script>
 
-    const close = () => nav.dataset.open = "0";
-    const open  = () => nav.dataset.open = "1";
-    const isOpen = () => nav.dataset.open === "1";
 
-    toggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      isOpen() ? close() : open();
-      // close other menus
-      document.getElementById("cartMenu")?.classList.remove("open");
-      document.getElementById("profileMenu")?.classList.remove("open");
-    });
-
-    overlay.addEventListener("click", close);
-
-    // Close if you tap a link
-    nav.querySelectorAll(".nav-center a").forEach(a => a.addEventListener("click", close));
-
-    // Escape closes
-    addEventListener("keydown", (e) => { if(e.key === "Escape") close(); });
-
-    // default
-    close();
-  })();
-</script>
 
   <script>
- 
+    (function () {
+      const arrow = document.querySelector(".neon-arrow");
+      if (!arrow) return;
+
+      const HIDE_AFTER_PX = 700;
+
+      let hidden = false;
+
+      function checkScroll() {
+        if (hidden) return;
+
+        const y = window.scrollY || window.pageYOffset || 0;
+        if (y >= HIDE_AFTER_PX) {
+          arrow.classList.add("hide");
+          hidden = true;
+        }
+      }
+
+      // Listen to real scroll position (works with your smooth-scroll system)
+      addEventListener("scroll", checkScroll, { passive: true });
+      addEventListener("wheel", checkScroll, { passive: true });
+      addEventListener("touchmove", checkScroll, { passive: true });
+
+      // Keyboard scroll
+      addEventListener("keydown", (e) => {
+        if (["ArrowDown", "PageDown", "Space", "End"].includes(e.code)) {
+          requestAnimationFrame(checkScroll);
+        }
+      });
+    })();
+  </script>
+  <script>
+    (function () {
+      const nav = document.querySelector(".nav");
+      const toggle = document.getElementById("navToggle");
+      const overlay = document.getElementById("navOverlay");
+      if (!nav || !toggle || !overlay) return;
+
+      const close = () => nav.dataset.open = "0";
+      const open = () => nav.dataset.open = "1";
+      const isOpen = () => nav.dataset.open === "1";
+
+      toggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        isOpen() ? close() : open();
+        // close other menus
+        document.getElementById("cartMenu")?.classList.remove("open");
+        document.getElementById("profileMenu")?.classList.remove("open");
+      });
+
+      overlay.addEventListener("click", close);
+
+      // Close if you tap a link
+      nav.querySelectorAll(".nav-center a").forEach(a => a.addEventListener("click", close));
+
+      // Escape closes
+      addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+
+      // default
+      close();
+    })();
+  </script>
+
+  <script>
+
     (function () {
       const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
