@@ -403,7 +403,7 @@ class SiteNavbar extends HTMLElement {
           <ul id="links" role="menubar">
             <li><a href="${base}/" role="menuitem">Home</a></li>
             <li><a href="${base}/products" role="menuitem">Products</a></li>
-            <li><a href="${base}/help" role="menuitem">Help</a></li>
+            <li><a href="${base}/contact" role="menuitem">Contact</a></li>
             <li><a href="${base}/about" role="menuitem">About</a></li>
 
             <li class="dropdown" id="moreDropdown">
@@ -412,7 +412,6 @@ class SiteNavbar extends HTMLElement {
               </a>
               <div class="dropdown-content" id="moreMenu" role="menu" aria-label="More links">
                 <a href="${base}/portfolio" role="menuitem">Portfolio</a>
-                <a href="${base}/contact" role="menuitem">Contact</a>
                 <a href="${base}/blog" role="menuitem">Blog</a>
               </div>
             </li>

@@ -2,557 +2,573 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Primary Meta Tags -->
-    <title>Contact Us - Unlim8ted</title>
-    <meta name="title" content="Contact Us - Unlim8ted Studio Productions" />
-    <meta name="description"
-        content="Get in touch with Unlim8ted Studio Productions for inquiries, support, or collaboration opportunities. We're here to help!" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://unlim8ted.com/contact/">
-    <meta property="og:title" content="Contact Us - Unlim8ted Studio Productions">
-    <meta property="og:description"
-        content="Get in touch with Unlim8ted Studio Productions for inquiries, support, or collaboration opportunities. We're here to help!">
-    <meta property="og:image" content="https://unlim8ted.com/images/contact-meta-image.jpg">
+  <!-- Primary Meta Tags -->
+  <title>Contact - Unlim8ted Studio Productions</title>
+  <meta name="title" content="Contact - Unlim8ted Studio Productions" />
+  <meta name="description"
+    content="Get in touch with Unlim8ted Studio Productions for inquiries, support, or collaboration opportunities." />
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://unlim8ted.com/contact/">
-    <meta property="twitter:title" content="Contact Us - Unlim8ted Studio Productions">
-    <meta property="twitter:description"
-        content="Get in touch with Unlim8ted Studio Productions for inquiries, support, or collaboration opportunities. We're here to help!">
-    <meta property="twitter:image" content="https://unlim8ted.com/images/contact-meta-image.jpg">
-    <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
-    <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
-    <style media="screen" type="text/css">
-        .loader {
-            position: fixed;
-            background-color: black;
-            opacity: 1;
-            height: 100%;
-            width: 100%;
-            top: 0;
-            left: 0%;
-            z-index: 999999988;
-            pointer-events: none;
-        }
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://unlim8ted.com/contact/" />
+  <meta property="og:title" content="Contact - Unlim8ted Studio Productions" />
+  <meta property="og:description"
+    content="Get in touch with Unlim8ted Studio Productions for inquiries, support, or collaboration opportunities." />
+  <meta property="og:image" content="https://unlim8ted.com/images/contact-meta-image.jpg" />
 
-        .loaderr-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            /* To stack spinner and text vertically */
-            height: 100vh;
-            /* Full viewport height to ensure vertical centering */
-        }
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://unlim8ted.com/contact/" />
+  <meta property="twitter:title" content="Contact - Unlim8ted Studio Productions" />
+  <meta property="twitter:description"
+    content="Get in touch with Unlim8ted Studio Productions for inquiries, support, or collaboration opportunities." />
+  <meta property="twitter:image" content="https://unlim8ted.com/images/contact-meta-image.jpg" />
 
-        .loaderr {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 8px solid transparent;
-            border-top: 8px solid #3498db;
-            border-right: 8px solid #e74c3c;
-            border-bottom: 8px solid #f1c40f;
-            border-left: 8px solid #9b59b6;
-            -webkit-animation: spin 1.5s linear infinite;
-            animation: spin 1.5s linear infinite;
-            box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
-            position: relative;
-        }
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
 
-        .loaderr:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 8px solid transparent;
-            border-top: 8px solid rgba(52, 152, 219, 0.7);
-            border-right: 8px solid rgba(231, 76, 60, 0.7);
-            border-bottom: 8px solid rgba(241, 196, 15, 0.7);
-            border-left: 8px solid rgba(155, 89, 182, 0.7);
-            -webkit-animation: spin-reverse 1.5s linear infinite;
-            animation: spin-reverse 1.5s linear infinite;
-        }
+  <!-- Components -->
+  <script type="module" src="/components/site-navbar.js"></script>
+  <script type="module" src="/components/site-loader.js"></script>
 
-        @-webkit-keyframes spin {
-            0% {
-                -webkit-transform: rotate(0deg);
-            }
-
-            100% {
-                -webkit-transform: rotate(360deg);
-            }
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @-webkit-keyframes spin-reverse {
-            0% {
-                -webkit-transform: rotate(360deg);
-            }
-
-            100% {
-                -webkit-transform: rotate(0deg);
-            }
-        }
-
-        @keyframes spin-reverse {
-            0% {
-                transform: rotate(360deg);
-            }
-
-            100% {
-                transform: rotate(0deg);
-            }
-        }
-
-        /* Loading text animation */
-        .loading-text {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #3498db;
-            font-family: Arial, sans-serif;
-            letter-spacing: 2px;
-            animation: pulse 1.5s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
-
-        @-webkit-keyframes load-out {
-            from {
-                opacity: 1;
-            }
-
-            to {
-                opacity: 0;
-            }
-        }
-
-        @keyframes load-out {
-            from {
-                opacity: 1;
-            }
-
-            to {
-                opacity: 0;
-            }
-        }
-    </style>
-    <!-- Styles for the No-JavaScript message -->
+  <noscript>
     <style>
-        .no-js-message {
-            background: #2c4762;
-            color: red;
-            font-size: 20px;
-            text-align: center;
-            padding: 20px;
-            z-index: 999999999999999999999999999999999999999999999;
-            position: fixed;
-            width: 100%;
-            top: 0;
-        }
+      .no-js-message {
+        background: #2c4762;
+        color: #ff4d4d;
+        font-size: 18px;
+        text-align: center;
+        padding: 16px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 999999999;
+      }
     </style>
+    <div class="no-js-message">Please enable JavaScript to use this website properly.</div>
+  </noscript>
 
-    <!-- No-JavaScript message -->
-    <noscript>
-        <div class="no-js-message">
-            Please enable JavaScript to use this website properly.
-        </div>
-    </noscript>
-    <div class="loader">
-        <div class="loaderr-container">
-            <div class="loaderr"></div>
-            <div class="loading-text">Loading...</div>
-        </div>
-    </div>
-    <script>
-        // This function will execute after the full page has finished loading
-        window.onload = function () {
-            // Trigger fade-out animation for the loader spinner
-            const loaderSpinner = document.querySelector('.loaderr');
-            const loadingText = document.querySelector('.loading-text');
-            const loaderContainer = document.querySelector('.loader');
+  <style>
+    :root {
+      /* Match your newer pages (cart/products vibe) */
+      --bg: #0e0b16;
+      --panel: rgba(20, 18, 30, .88);
+      --panel2: rgba(28, 26, 42, .92);
+      --text: rgba(255, 255, 255, .92);
+      --muted: rgba(255, 255, 255, .65);
+      --stroke: rgba(255, 255, 255, .10);
+      --accent: #00ff99;
+      --accent2: #63d6ff;
+      --hot: #ff4d2d;
+      --shadow: 0 18px 40px rgba(0, 0, 0, .45);
+      --radius: 18px;
+    }
 
-            // Apply animations
-            loaderSpinner.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-            loaderSpinner.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+    * {
+      box-sizing: border-box;
+    }
 
-            loadingText.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-            loadingText.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1000px 700px at 18% 10%, rgba(0, 255, 153, .10), transparent 60%),
+        radial-gradient(900px 600px at 82% 25%, rgba(99, 214, 255, .10), transparent 55%),
+        linear-gradient(180deg, #06040b, var(--bg));
+      min-height: 100vh;
+    }
 
-            loaderContainer.style.animation = 'load-out 4s forwards';
-            loaderContainer.style.webkitAnimation = 'load-out 4s forwards';
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 110px 18px 70px;
+    }
 
+    .hero {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
 
-        };
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 3.6vw, 44px);
+      letter-spacing: .2px;
+      text-shadow: 0 0 18px rgba(0, 255, 153, .12);
+    }
 
-    </script>
-    <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-    <style>
-        /* Navigation Bar Styles */
-        .navbar {
-            display: flex;
-            justify-content: center;
-            background-color: #333333d0;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 3;
-        }
+    .sub {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 72ch;
+    }
 
-        .nav-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-        }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
 
-        .nav-item {
-            position: relative;
-        }
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
-        .nav-item a {
-            display: block;
-            color: white;
-            padding: 14px 20px;
-            text-decoration: none;
-            text-align: center;
-        }
+    .card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .03));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
 
-        .nav-item a:hover {
-            background-color: #15131f;
-            color: rgb(51, 207, 103);
-        }
+    .card-head {
+      padding: 16px 16px 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .05), transparent);
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 3;
-        }
+    .card-head h2 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: .4px;
+      color: rgba(255, 255, 255, .92);
+    }
 
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-        }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, .78);
+      padding: 8px 10px;
+      border: 1px solid rgba(0, 255, 153, .25);
+      border-radius: 999px;
+      background: rgba(0, 255, 153, .06);
+      white-space: nowrap;
+    }
 
-        .dropdown-content a:hover {
-            background-color: #1c1d38;
-        }
+    .badge svg {
+      width: 14px;
+      height: 14px;
+      opacity: .95;
+    }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
-            z-index: 3;
-        }
+    .card-body {
+      padding: 16px;
+    }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #251f1f;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        }
+    .rows {
+      display: grid;
+      gap: 10px;
+    }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
+    .line {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
 
-        .dropdown-content a {
-            color: rgb(255, 255, 255);
-            text-decoration: none;
-            padding: 12px 16px;
-            display: block;
-        }
+    .line svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      margin-top: 2px;
+      color: rgba(255, 255, 255, .85);
+    }
 
-        .dropdown-content a:hover {
-            background-color: #2d2849;
-        }
+    .line a {
+      color: rgba(255, 255, 255, .92);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0, 255, 153, .28);
+    }
 
-        .navbar-toggle {
-            display: none;
-            background-color: #333;
-            color: white;
-            padding: 14px 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-        }
+    .line a:hover {
+      border-bottom-color: rgba(99, 214, 255, .40);
+    }
 
-        /* Responsive styles */
-        @media (max-width: 768px) {
-            .nav-links {
-                flex-direction: column;
-                display: none;
-            }
+    form {
+      display: grid;
+      gap: 12px;
+    }
 
-            .nav-links.show {
-                display: flex;
-            }
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
 
-            .navbar-toggle {
-                display: block;
-            }
-        }
-    </style>
-    <script>
-        function toggleMenu() {
-            const navLinks = document.getElementById("navbarLinks");
-            navLinks.classList.toggle("show");
-        }
-    </script>
-  <nav class="navbar">
-    <div class="navbar-header">
-      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-      <ul class="nav-links" id="navbarLinks">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="products">Products</a></li>
-        <li class="nav-item"><a href="help">Help</a></li>
-        <li class="nav-item"><a href="about">About</a></li>
-        <li class="nav-item dropdown">
-          <a href="javascript:void(0)" class="dropbtn">More</a>
-          <div class="dropdown-content">
-            <a href="portfolio">Portfolio</a>
-            <a href="contact">Contact</a>
-            <a href="blog">Blog</a>
-            <a href="producsts/games/live-chat">Live Chat</a>
-            <a href="producsts/games/live-game">Live Chat and Game</a>
-            <a href="producsts/games/puzzle-squares">Puzzle Squares</a>
-          </div>
-        </li>
-        <a href="old"><button>Old site</button></a>
-      </ul>
-    </div>
-  </nav>
-    <style>
-        /* logo */
-        .logo {
-            position: absolute;
-            z-index: 1;
-            top: 5%;
-            /* Adjust top position relative to viewport height */
-            left: 5%;
-            /* Adjust left position relative to viewport width */
-            display: block;
-        }
+    @media (max-width: 560px) {
+      .two {
+        grid-template-columns: 1fr;
+      }
+    }
 
-        .logo img {
-            height: 10vw;
-            /* Adjust height relative to viewport width */
-            max-height: 140px;
-            /* Set a maximum height to prevent the logo from getting too large on larger screens */
-            width: auto;
-            /* Maintain aspect ratio */
-        }
+    label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .78);
+      display: block;
+      margin-bottom: 6px;
+    }
 
-        /* Media query for small devices */
-        @media (max-width: 600px) {
-            .logo img {
-                height: 20vw;
-                /* Larger logo for smaller devices */
-            }
-        }
+    input,
+    textarea {
+      width: 100%;
+      font-size: 14px;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(0, 0, 0, .25);
+      color: var(--text);
+      outline: none;
+    }
 
-        button {
-            padding: 10px;
-            font-size: 1em;
-            background-color: #000000;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    textarea {
+      resize: vertical;
+      min-height: 130px;
+    }
 
-        button:hover {
-            background-color: rgb(57, 200, 145);
-        }
+    input:focus,
+    textarea:focus {
+      border-color: rgba(0, 255, 153, .45);
+      box-shadow: 0 0 0 3px rgba(0, 255, 153, .10);
+    }
 
-        .image {
-            max-width: 300px;
-        }
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 4px;
+    }
 
-        /* Cart button and notification styles */
-        .cart-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #0056b3;
-            color: #fff;
-            padding: 5px 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1000;
-            display: block;
-            /* Initially hidden */
-        }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      cursor: pointer;
+      color: rgba(255, 255, 255, .95);
+      background: linear-gradient(135deg, rgba(0, 255, 153, .92), rgba(99, 214, 255, .78));
+      font-weight: 900;
+      letter-spacing: .2px;
+      transition: transform .15s ease, filter .15s ease, opacity .15s ease;
+      user-select: none;
+    }
 
-        .cart-btn:hover {
-            background-color: #4179b5;
-        }
-    </style>
-    <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
 
-    <style>
-        /* General body styles */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #0a0a0a;
-            color: #e0e0e0;
-        }
+    .btn:active {
+      transform: translateY(0px) scale(.99);
+    }
 
-        .content-section {
-            padding: 40px;
-            text-align: center;
-        }
+    .btn[disabled] {
+      opacity: .6;
+      cursor: not-allowed;
+      filter: none;
+      transform: none;
+    }
 
-        h1 {
-            font-size: 2.5rem;
-            color: #00ffc6;
-            text-shadow: 0 0 10px #00ffc6, 0 0 20px #00ffc6;
-            margin-bottom: 30px;
-        }
+    .btn svg {
+      width: 18px;
+      height: 18px;
+    }
 
-        p {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #cccccc;
-        }
+    .note {
+      color: rgba(255, 255, 255, .55);
+      font-size: 13px;
+      line-height: 1.5;
+    }
 
-        a {
-            color: #00ffc6;
-            text-decoration: none;
-        }
+    .status {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 12px;
+      color: rgba(255, 255, 255, .70);
+      min-height: 22px;
+    }
 
-        a:hover {
-            text-shadow: 0 0 10px #00ffc6;
-        }
+    .status svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-width: 400px;
-            margin: 0 auto;
-            background-color: #121212;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
+    .status.ok {
+      color: rgba(0, 255, 153, .95);
+    }
 
-        label {
-            font-size: 1rem;
-            color: #e0e0e0;
-            text-align: left;
-        }
+    .status.err {
+      color: rgba(255, 77, 77, .95);
+    }
 
-        input,
-        textarea,
-        button {
-            font-size: 1rem;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-        }
+    .status.info {
+      color: rgba(99, 214, 255, .90);
+    }
 
-        input,
-        textarea {
-            background-color: #1c1c1c;
-            color: #e0e0e0;
-            border: 1px solid #333;
-        }
+    .footer {
+      margin-top: 28px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, .10);
+      color: rgba(255, 255, 255, .62);
+      text-align: center;
+      font-size: 14px;
+    }
 
-        input:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #00ffc6;
-            box-shadow: 0 0 10px #00ffc6;
-        }
-
-        button {
-            background-color: #00ffc6;
-            color: #0a0a0a;
-            cursor: pointer;
-            transition: background-color 0.3s, box-shadow 0.3s;
-        }
-
-        button:hover {
-            background-color: #00cc9e;
-            box-shadow: 0 0 10px #00ffc6;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        /* Footer styles */
-        .content-section>div p {
-            font-size: 0.9rem;
-            color: #666666;
-        }
-
-        .content-section>div p:hover {
-            color: #00ffc6;
-            text-shadow: 0 0 10px #00ffc6;
-        }
-    </style>
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      color: rgba(255, 255, 255, .80);
+    }
+  </style>
 </head>
 
 <body>
-    <!-- Contact Section -->
-    <div id="contact" class="content-section">
-        <h1>Contact Us</h1>
-        <p>For any inquiries or support, feel free to reach out to us.</p>
-        <p>Email: <a href="mailto:support@unlim8ted.com">support@unlim8ted.com</a></p>
-        <form action="/submit_form" method="post">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="message">Message:</label>
-            <textarea id="message" name="message" rows="4" required></textarea>
-            <button type="submit">Submit</button>
-        </form>
+  <site-loader text="Loading..."></site-loader>
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile">
+  </site-navbar>
 
-        <!-- Copyright -->
-        <div style="margin-top: 100px;">
-            <p>&copy; 2024 Unlim8ted Studio Productions. All rights reserved.</p>
-        </div>
+  <main class="page">
+    <div class="hero">
+      <div>
+        <h1>Contact</h1>
+        <p class="sub">For inquiries, support, or collaboration—send a message or email us directly.</p>
+      </div>
     </div>
+
+    <div class="grid">
+      <!-- Form -->
+      <section class="card">
+        <div class="card-head">
+          <h2>Send a message</h2>
+          <span class="badge">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 2l7 4v6c0 5-3.5 9-7 10-3.5-1-7-5-7-10V6l7-4Z" stroke="currentColor"
+                stroke-width="2" />
+              <path d="M9 12l2 2 4-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            Processed Securely
+          </span>
+        </div>
+        <div class="card-body">
+          <form id="contactForm" novalidate>
+            <div class="two">
+              <div>
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" autocomplete="name" required />
+              </div>
+              <div>
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required />
+              </div>
+            </div>
+
+            <div>
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+
+            <!-- Honeypot -->
+            <input id="website" name="website" type="text" autocomplete="off" tabindex="-1"
+              style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
+
+            <div class="actions">
+              <button id="submitBtn" class="btn" type="submit">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M4 12l16-8-6 16-2.6-6.2L4 12Z" stroke="currentColor" stroke-width="2"
+                    stroke-linejoin="round" />
+                  <path d="M20 4L11.4 13.8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Submit
+              </button>
+              <div class="note">We reply via email. Please double-check your address.</div>
+            </div>
+
+            <div id="status" class="status" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Direct info -->
+      <aside class="card">
+        <div class="card-head">
+          <h2>Direct contact</h2>
+        </div>
+        <div class="card-body">
+          <div class="rows">
+            <div class="line">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 7.5A3.5 3.5 0 0 1 7.5 4h9A3.5 3.5 0 0 1 20 7.5v9A3.5 3.5 0 0 1 16.5 20h-9A3.5 3.5 0 0 1 4 16.5v-9Z"
+                  stroke="currentColor" stroke-width="2" />
+                <path d="M6.5 8l5.5 4 5.5-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <div>Email: <a href="mailto:support@unlim8ted.com">support@unlim8ted.com</a></div>
+            </div>
+
+            <div class="line">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6.5 3h11A2.5 2.5 0 0 1 20 5.5v13A2.5 2.5 0 0 1 17.5 21h-11A2.5 2.5 0 0 1 4 18.5v-13A2.5 2.5 0 0 1 6.5 3Z"
+                  stroke="currentColor" stroke-width="2" />
+                <path d="M8 7h8M8 11h8M8 15h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <div>Good for: support, orders, collaboration, licensing.</div>
+            </div>
+
+            <div class="line">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z"
+                  stroke="currentColor" stroke-width="2" />
+                <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <div>Typical response: 1–2 business days.</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      <div id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</div>
+    </footer>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const y = new Date().getFullYear();
+      document.getElementById("footer-text").innerHTML =
+        `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+    });
+  </script>
+
+  <!-- Firebase submit -->
+  <script type="module">
+    import { getFirebase } from "/components/firebase-init.js";
+    import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+    const { db, auth } = getFirebase();
+
+    const form = document.getElementById("contactForm");
+    const btn = document.getElementById("submitBtn");
+    const status = document.getElementById("status");
+
+    const ICONS = {
+      ok: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`,
+      err: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 9v5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M12 17h.01" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M10.3 4.7l-7 12.1A2 2 0 0 0 5 20h14a2 2 0 0 0 1.7-3.2l-7-12.1a2 2 0 0 0-3.4 0Z"
+          stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      </svg>`,
+      info: `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 8h.01" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M11 12h1v6h1" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z"
+          stroke="currentColor" stroke-width="2"/>
+      </svg>`
+    };
+
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function setStatus(kind, html) {
+      status.className = `status ${kind || ""}`;
+      status.innerHTML = html ? `${ICONS[kind] || ""}<div>${html}</div>` : "";
+    }
+
+    let cooldownUntil = 0;
+    function startCooldown(ms) {
+      cooldownUntil = Date.now() + ms;
+      btn.disabled = true;
+
+      const base = "Submit";
+      const t = setInterval(() => {
+        const left = cooldownUntil - Date.now();
+        if (left <= 0) {
+          clearInterval(t);
+          btn.disabled = false;
+          btn.innerHTML = `${ICONS.info.replace('aria-hidden="true"', 'aria-hidden="true" style="display:none"')}${base}`;
+          btn.textContent = base;
+          return;
+        }
+        btn.textContent = `Submit (${Math.ceil(left / 1000)}s)`;
+      }, 250);
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // honeypot
+      const hp = (document.getElementById("website").value || "").trim();
+      if (hp) return;
+
+      if (Date.now() < cooldownUntil) return;
+
+      const name = (document.getElementById("name").value || "").trim();
+      const email = (document.getElementById("email").value || "").trim().toLowerCase();
+      const message = (document.getElementById("message").value || "").trim();
+
+      if (name.length < 2) {
+        setStatus("err", "<strong>Name required.</strong> Please enter your name.");
+        return;
+      }
+      if (!EMAIL_RE.test(email)) {
+        setStatus("err", "<strong>Invalid email.</strong> Please check your address.");
+        return;
+      }
+      if (message.length < 5) {
+        setStatus("err", "<strong>Message required.</strong> Please add a bit more detail.");
+        return;
+      }
+
+      try {
+        setStatus("info", "Sending…");
+        btn.disabled = true;
+        btn.textContent = "Sending…";
+
+        await addDoc(collection(db, "contact_messages"), {
+          name,
+          email,
+          message,
+          createdAt: serverTimestamp(),
+          source: location.pathname,
+          uid: auth?.currentUser?.uid || null
+        });
+
+        form.reset();
+        setStatus("ok", "<strong>Sent.</strong> We’ll get back to you via email.");
+        startCooldown(8000);
+      } catch (err) {
+        console.error(err);
+        setStatus("err", "<strong>Couldn’t send.</strong> Please try again in a moment.");
+        startCooldown(4000);
+      }
+    });
+  </script>
 </body>
 
 </html>
