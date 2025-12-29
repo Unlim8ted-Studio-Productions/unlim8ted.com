@@ -100,11 +100,14 @@ class SiteNavbar extends HTMLElement {
           user-select:none;
         }
 
-        .brand-dot{
-          width:10px;height:10px;border-radius:50%;
-          background: linear-gradient(135deg, var(--nav-accent), var(--nav-accent2));
-          box-shadow: 0 0 16px rgba(184,107,255,.35);
-        }
+      .brand-logo{
+  width:26px;
+  height:26px;
+  display:block;
+  flex:0 0 auto;
+  filter: drop-shadow(0 0 14px rgba(184,107,255,.25));
+}
+
 
         .navbar-toggle{
           display:none;
@@ -393,10 +396,58 @@ class SiteNavbar extends HTMLElement {
 
       <nav class="navbar" role="navigation" aria-label="Primary">
         <div class="navbar-header">
-          <a class="brand" href="${base}/" aria-label="Unlim8ted Home">
-            <span class="brand-dot" aria-hidden="true"></span>
-            <span>Unlim8ted</span>
-          </a>
+       <a class="brand" href="${base}/" aria-label="Unlim8ted Home">
+  <svg class="brand-logo" viewBox="0 0 960 720" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <clipPath id="p.0">
+      <path d="m0 0l960 0l0 720l-960 0l0 -720z" clip-rule="nonzero"></path>
+    </clipPath>
+    <g clip-path="url(#p.0)">
+      <path fill="#000000" fill-opacity="0.0" d="m0 0l960 0l0 720l-960 0z" fill-rule="evenodd"></path>
+
+      <path fill="#f22632" d="m502.70752 74.00787l1.7294617 1.9808502l-171.06903 153.4367l-63.916504 -54.968704l113.68451 -99.98256z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m502.70752 74.00787l1.7294617 1.9808502l-171.06903 153.4367l-63.916504 -54.968704l113.68451 -99.98256z" fill-rule="evenodd"></path>
+
+      <path fill="#febd29" d="m613.6493 175.20947l-61.49231 54.221115l-109.47186 -96.60121l62.181396 -56.327393z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m613.6493 175.20947l-61.49231 54.221115l-109.47186 -96.60121l62.181396 -56.327393z" fill-rule="evenodd"></path>
+
+      <path fill="#2a47aa" d="m519.24677 341.0839l96.66144 86.29483l-57.24939 49.61026l-95.90024 -85.46564z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m519.24677 341.0839l96.66144 86.29483l-57.24939 49.61026l-95.90024 -85.46564z" fill-rule="evenodd"></path>
+
+      <path fill="#69ba40" d="m613.6493 176.00478l0.07550049 108.24129l-109.4718 96.48282l-60.699524 -54.47946z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m613.6493 176.00478l0.07550049 108.24129l-109.4718 96.48282l-60.699524 -54.47946z" fill-rule="evenodd"></path>
+
+      <path fill="#ef3da7" d="m615.6588 427.50406l-0.37530518 111.92465l-45.398926 40.016296l-129.62732 1.4278564z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m615.6588 427.50406l-0.37530518 111.92465l-45.398926 40.016296l-129.62732 1.4278564z" fill-rule="evenodd"></path>
+
+      <path fill="#2a46aa" d="m569.32025 580.18134l-66.8504 58.009827l-62.299194 -56.554993z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m569.32025 580.18134l-66.8504 58.009827l-62.299194 -56.554993z" fill-rule="evenodd"></path>
+
+      <path fill="#211f83" d="m502.084 639.04425l-127.03937 -0.89801025l64.76376 -56.65381z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m502.084 639.04425l-127.03937 -0.89801025l64.76376 -56.65381z" fill-rule="evenodd"></path>
+
+      <path fill="#8031a6" d="m373.72177 638.9666l-112.66403 -100.28021l-0.43569946 -113.576996l178.93701 155.87729z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m373.72177 638.9666l-112.66403 -100.28021l-0.43569946 -113.576996l178.93701 155.87729z" fill-rule="evenodd"></path>
+
+      <path fill="#fea226" d="m320.99475 477.1177l95.50131 -82.75659l-59.275604 -53.1904l-96.375305 83.741425z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m320.99475 477.1177l95.50131 -82.75659l-59.275604 -53.1904l-96.375305 83.741425z" fill-rule="evenodd"></path>
+
+      <path fill="#2746ab" d="m359.01837 341.86877l55.989502 1.0452881l-26.641876 26.007477z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m359.01837 341.86877l55.989502 1.0452881l-26.641876 26.007477z" fill-rule="evenodd"></path>
+
+      <path fill="#0e2767" d="m415.90817 342.4668l50.362183 45.123108l-3.8110046 3.918396l2.312317 2.2810059l-48.624664 -0.35620117l-27.776886 -25.162842z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m415.90817 342.4668l50.362183 45.123108l-3.8110046 3.918396l2.312317 2.2810059l-48.624664 -0.35620117l-27.776886 -25.162842z" fill-rule="evenodd"></path>
+
+      <path fill="#176030" d="m415.00787 349.85483l28.407196 -25.051636l61.01953 54.375183l-27.981598 25.037415z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m415.00787 349.85483l28.407196 -25.051636l61.01953 54.375183l-27.981598 25.037415z" fill-rule="evenodd"></path>
+
+      <path fill="#f4388c" d="m414.09113 351.08453l-68.079315 -0.59664917l-76.18378 -67.51694l-0.3765869 -108.62448l173.80118 150.51797z" fill-rule="evenodd"></path>
+      <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m414.09113 351.08453l-68.079315 -0.59664917l-76.18378 -67.51694l-0.3765869 -108.62448l173.80118 150.51797z" fill-rule="evenodd"></path>
+    </g>
+  </svg>
+
+  <span>Unlim8ted</span>
+</a>
+
 
           <button class="navbar-toggle" id="toggleBtn" aria-label="Toggle menu" aria-expanded="false">☰</button>
 
@@ -465,7 +516,7 @@ class SiteNavbar extends HTMLElement {
     // Preload products.json (cart display will re-render when ready)
     this.loadProducts().then(() => {
       this.renderCartMenu();
-    }).catch(() => {});
+    }).catch(() => { });
 
     // Mobile toggle
     const toggleBtn = this.shadowRoot.getElementById("toggleBtn");
@@ -492,7 +543,7 @@ class SiteNavbar extends HTMLElement {
       try {
         const href = new URL(a.getAttribute("href"), window.location.origin).pathname.replace(/\/$/, "");
         if (href === path) a.classList.add("active");
-      } catch {}
+      } catch { }
     });
 
     // Menus
@@ -710,7 +761,7 @@ class SiteNavbar extends HTMLElement {
 
     if (!user) {
       this.cartItems = this.getLocalCartItems();
-      this.loadProducts().then(() => this.renderCartMenu()).catch(() => {});
+      this.loadProducts().then(() => this.renderCartMenu()).catch(() => { });
       this.renderCartMenu();
       this.updateCartBadge(this.countCart(this.cartItems));
       return;
@@ -741,7 +792,7 @@ class SiteNavbar extends HTMLElement {
       (err) => {
         console.error("Cart listener error:", err);
         this.cartItems = this.getLocalCartItems();
-        this.loadProducts().then(() => this.renderCartMenu()).catch(() => {});
+        this.loadProducts().then(() => this.renderCartMenu()).catch(() => { });
         this.renderCartMenu();
         this.updateCartBadge(this.countCart(this.cartItems));
       }

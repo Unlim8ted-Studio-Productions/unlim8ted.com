@@ -612,7 +612,13 @@
       .stepdesc {
         display: none;
       }
-    }
+    }.rightControls{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
   </style>
 </head>
 
@@ -1632,13 +1638,20 @@
           <div class="title">${title}</div>
           ${variantLine}
 
-          <div class="row2">
-            <div>
-              ${priceLabel}
-              ${hint}
-            </div>
-            ${qtyControls}
-          </div>
+<div class="row2">
+  <div>
+    ${priceLabel}
+    ${hint}
+  </div>
+
+  ${
+    (view === "pay" && kind === "paid")
+      ? `<div class="rightControls">${qtyControls}${primaryAction}</div>`
+      : `${qtyControls}`
+  }
+</div>
+
+${(view === "pay" && kind === "paid") ? `` : actionRow}
 
           ${actionRow}
         </div>
