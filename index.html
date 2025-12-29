@@ -1068,6 +1068,133 @@ video {
       text-align: center;
       padding: 12px 10px;
     }
+/* =========================
+   MOBILE DROPDOWN NAV
+   (CSS-only: uses :has() if supported)
+   ========================= */
+
+/* Hide toggle/overlay by default (desktop) */
+#navToggle,
+.nav-overlay {
+  display: none;
+}
+
+/* Mobile breakpoint */
+@media (max-width: 820px) {
+  /* Convert your nav pill into a compact bar */
+  .nav {
+    left: 50%;
+    top: 16px;
+    transform: translateX(-50%);
+    width: min(92vw, 560px);
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    padding-right: 10px; /* override your desktop reserved space */
+  }
+
+  /* Make the center links a dropdown panel (hidden by default) */
+  .nav-center {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: calc(100% + 10px);
+    display: grid;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    background: rgba(0, 0, 0, .55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, .55);
+    transform: translateY(-6px) scale(.98);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+    z-index: 80;
+  }
+
+  /* Turn links into button-y rows */
+  .nav-center a {
+    padding: 12px 12px;
+    border-radius: 14px;
+    font-size: 13px;
+    letter-spacing: .08em;
+    border: 1px solid rgba(255, 255, 255, .10);
+    background: rgba(255, 255, 255, .04);
+  }
+  .nav-center a:hover {
+    background: rgba(184, 107, 255, .16);
+    border-color: rgba(184, 107, 255, .35);
+  }
+
+  /* Right cluster stays visible */
+  .nav-right {
+    position: static;
+    transform: none;
+    gap: 6px;
+  }
+
+  /* Add a hamburger button (you'll add the HTML below) */
+  #navToggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    color: rgba(233, 231, 255, .92);
+    cursor: pointer;
+  }
+  #navToggle:hover {
+    background: rgba(184, 107, 255, .14);
+    color: var(--ink);
+  }
+  #navToggle svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  /* Fullscreen click-away overlay */
+  .nav-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease;
+    z-index: 75;
+  }
+
+  /* --- OPEN STATE (CSS-only) ---
+     Uses :has() (supported in modern Chrome/Edge/Safari; Firefox currently limited)
+     If :has() isn't available, use the small JS snippet below.
+  */
+  body:has(.nav[data-open="1"]) .nav-center {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+  body:has(.nav[data-open="1"]) .nav-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* When dropdown open, don't let menus get clipped */
+  .stage { overflow: visible; }
+
+  /* Make sure cart/profile menus drop on top of mobile panel */
+  .menu { z-index: 90; }
+}
 
     /* mobile: keep it simple */
     @media (max-width: 700px) {
@@ -1148,6 +1275,13 @@ video {
           <a href="/blog">Blog</a>
           <a href="/contact">Contact</a>
         </div>
+<button id="navToggle" type="button" aria-label="Menu" title="Menu">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <path d="M4 6h16"></path>
+    <path d="M4 12h16"></path>
+    <path d="M4 18h16"></path>
+  </svg>
+</button>
 
         <div class="nav-right">
           <!-- Cart -->
@@ -1189,6 +1323,7 @@ video {
           </div>
         </div>
       </nav>
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
 
 
       <div class="camera" id="camera">
@@ -1496,213 +1631,323 @@ Z
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import { getFirestore, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+<script type="module">
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  import { getFirestore, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
-      authDomain: "unlim8ted-db.firebaseapp.com",
-      projectId: "unlim8ted-db",
-      storageBucket: "unlim8ted-db.appspot.com",
-      messagingSenderId: "1059428499872",
-      appId: "1:1059428499872:web:855308683718237de6e4c5",
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
+    authDomain: "unlim8ted-db.firebaseapp.com",
+    projectId: "unlim8ted-db",
+    storageBucket: "unlim8ted-db.appspot.com",
+    messagingSenderId: "1059428499872",
+    appId: "1:1059428499872:web:855308683718237de6e4c5",
+  };
 
-    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    const cartBtn = document.getElementById("cartBtn");
-    const cartMenu = document.getElementById("cartMenu");
-    const cartBadge = document.getElementById("cartBadge");
-    const cartMeta = document.getElementById("cartMeta");
-    const cartItemsEl = document.getElementById("cartItems");
+  const cartBtn = document.getElementById("cartBtn");
+  const cartMenu = document.getElementById("cartMenu");
+  const cartBadge = document.getElementById("cartBadge");
+  const cartMeta = document.getElementById("cartMeta");
+  const cartItemsEl = document.getElementById("cartItems");
 
-    const profileBtn = document.getElementById("profileBtn");
-    const profileMenu = document.getElementById("profileMenu");
-    const menuMeta = document.getElementById("menuMeta");
-    const menuPrimary = document.getElementById("menuPrimary");
-    const menuSignOut = document.getElementById("menuSignOut");
+  const profileBtn = document.getElementById("profileBtn");
+  const profileMenu = document.getElementById("profileMenu");
+  const menuMeta = document.getElementById("menuMeta");
+  const menuPrimary = document.getElementById("menuPrimary");
+  const menuSignOut = document.getElementById("menuSignOut");
 
-    let unsubCart = null;
-    let cartItems = [];
+  let unsubCart = null;
+  let cartItems = [];
 
-    const closeMenus = () => {
-      cartMenu?.classList.remove("open");
-      profileMenu?.classList.remove("open");
-    };
+  // ===== products.json cache/index (match SiteNavbar logic) =====
+  let PRODUCTS_LOADED = false;
+  let PRODUCTS_LOADING = null;
+  let PRODUCT_BY_ID = new Map();
+  let VARIANT_BY_KEY = new Map(); // `${productId}::${variantId}` -> variant
 
-    cartBtn?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      profileMenu?.classList.remove("open");
-      cartMenu?.classList.toggle("open");
-    });
+  const safeUrl = (u) => {
+    const s = String(u || "").trim();
+    if (!s) return "";
+    if (s.startsWith("https://") || s.startsWith("http://") || s.startsWith("/")) return s;
+    return "";
+  };
 
-    profileBtn?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      cartMenu?.classList.remove("open");
-      profileMenu?.classList.toggle("open");
-    });
+  async function loadProducts() {
+    if (PRODUCTS_LOADED) return;
+    if (PRODUCTS_LOADING) return PRODUCTS_LOADING;
 
-    window.addEventListener("click", closeMenus);
-    cartMenu?.addEventListener("click", (e) => e.stopPropagation());
-    profileMenu?.addEventListener("click", (e) => e.stopPropagation());
-
-    menuSignOut?.addEventListener("click", async () => {
+    PRODUCTS_LOADING = (async () => {
       try {
-        await signOut(auth);
-        closeMenus();
+        const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache: "no-store" });
+        if (!r.ok) throw new Error("Failed to load products.json");
+        const data = await r.json();
+        const products = Array.isArray(data) ? data : (data?.products || []);
+        indexProducts(products);
+        PRODUCTS_LOADED = true;
       } catch (e) {
-        console.error("Sign out failed:", e);
+        console.warn("products.json load failed:", e);
+      } finally {
+        PRODUCTS_LOADING = null;
       }
-    });
+    })();
 
-    const escapeHtml = (s) =>
-      String(s).replace(/[&<>"']/g, (c) => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-      }[c]));
+    return PRODUCTS_LOADING;
+  }
 
-    const countCart = (items) => (items || []).reduce((sum, it) => sum + (Number(it.qty) || 1), 0);
+  function indexProducts(products) {
+    PRODUCT_BY_ID = new Map();
+    VARIANT_BY_KEY = new Map();
 
-    const updateBadge = (count) => {
-      if (!cartBadge) return;
-      const n = Math.max(0, Number(count) || 0);
-      cartBadge.textContent = n > 99 ? "99+" : String(n);
-      cartBadge.classList.toggle("hidden", n === 0);
-    };
+    for (const p of (products || [])) {
+      const pid = String(p.id ?? p.productId ?? "").trim();
+      if (!pid) continue;
 
-    const getLocalCartItems = () => {
-      try {
-        const raw = localStorage.getItem("unlim8ted-cart");
-        if (!raw) return [];
-        const arr = JSON.parse(raw);
-        if (!Array.isArray(arr)) return [];
-        return arr.map((it, idx) => ({
-          id: it.id || `local-${idx}`,
-          title: it.title || it.name || it.productName || `Item ${idx + 1}`,
-          qty: Number(it.qty) || 1,
-          price: it.price ?? null,
-          image: it.image ?? it.imageUrl ?? null,
-        }));
-      } catch {
-        return [];
+      PRODUCT_BY_ID.set(pid, p);
+
+      // support your typo key "varients" + normal "variants"
+      const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
+      for (const v of vars) {
+        const vid = String(v.id ?? v.variantId ?? "").trim();
+        if (!vid) continue;
+        VARIANT_BY_KEY.set(`${pid}::${vid}`, v);
       }
-    };
+    }
+  }
 
-    const renderCartMenu = () => {
-      if (!cartMeta || !cartItemsEl) return;
+  const escapeHtml = (s) =>
+    String(s).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    }[c]));
 
-      const totalCount = countCart(cartItems);
-      cartMeta.textContent = totalCount ? `Cart (${totalCount})` : "Cart (empty)";
+  const closeMenus = () => {
+    cartMenu?.classList.remove("open");
+    profileMenu?.classList.remove("open");
+  };
 
-      if (!cartItems.length) {
-        cartItemsEl.innerHTML = `
+  cartBtn?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    profileMenu?.classList.remove("open");
+    cartMenu?.classList.toggle("open");
+  });
+
+  profileBtn?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    cartMenu?.classList.remove("open");
+    profileMenu?.classList.toggle("open");
+  });
+
+  window.addEventListener("click", closeMenus);
+  cartMenu?.addEventListener("click", (e) => e.stopPropagation());
+  profileMenu?.addEventListener("click", (e) => e.stopPropagation());
+
+  menuSignOut?.addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+      closeMenus();
+    } catch (e) {
+      console.error("Sign out failed:", e);
+    }
+  });
+
+  const countCart = (items) => (items || []).reduce((sum, it) => sum + (Number(it.qty) || 1), 0);
+
+  const updateBadge = (count) => {
+    if (!cartBadge) return;
+    const n = Math.max(0, Number(count) || 0);
+    cartBadge.textContent = n > 99 ? "99+" : String(n);
+    cartBadge.classList.toggle("hidden", n === 0);
+  };
+
+  function resolveCartDisplay(it) {
+    const productId = String(it.productId || "").trim();
+    const variantId = String(it.variantId || "").trim();
+
+    const p = productId ? (PRODUCT_BY_ID.get(productId) || null) : null;
+    const v = (productId && variantId) ? (VARIANT_BY_KEY.get(`${productId}::${variantId}`) || null) : null;
+
+    const title =
+      String(it.title || it.name || "").trim() ||
+      String(p?.name || p?.title || productId || it.id || "Item").trim();
+
+    const variantLabel =
+      String(it.variantLabel || "").trim() ||
+      String(v?.name || "").trim();
+
+    const price =
+      (Number.isFinite(Number(it.price)) ? Number(it.price) : null) ??
+      (v && Number.isFinite(Number(v.price)) ? Number(v.price) : null) ??
+      null;
+
+    let image = safeUrl(it.image || it.imageUrl || "");
+    if (!image && Array.isArray(v?.images) && v.images.length) image = safeUrl(v.images[0]);
+    if (!image) image = safeUrl(p?.image || "");
+
+    return { title, variantLabel, price, image };
+  }
+
+  const getLocalCartItems = () => {
+    try {
+      const raw = localStorage.getItem("unlim8ted-cart");
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      if (!Array.isArray(arr)) return [];
+
+      return arr.map((it, idx) => ({
+        id: it.id || it._id || `local-${idx}`,
+        productId: it.productId || it.pid || null,
+        variantId: it.variantId || it.vid || null,
+        qty: Number(it.qty) || 1,
+
+        // optional legacy fields (if present)
+        title: it.title || it.name || it.productName || "",
+        variantLabel: it.variantLabel || "",
+        price: it.price ?? null,
+        image: it.image ?? it.imageUrl ?? null,
+      }));
+    } catch {
+      return [];
+    }
+  };
+
+  const renderCartMenu = () => {
+    if (!cartMeta || !cartItemsEl) return;
+
+    const totalCount = countCart(cartItems);
+    cartMeta.textContent = totalCount ? `Cart (${totalCount})` : "Cart (empty)";
+
+    if (!cartItems.length) {
+      cartItemsEl.innerHTML = `
         <div style="padding:12px 14px; color:rgba(255,255,255,.75); font-size:13px;">
           Your cart is empty.
         </div>
       `;
-        return;
-      }
+      return;
+    }
 
-      const show = cartItems.slice(0, 5);
-      cartItemsEl.innerHTML = show.map((it) => `
-      <div class="cart-item">
-        <div class="thumb">
-          ${it.image ? `<img src="${escapeHtml(it.image)}" alt="">` : "Item"}
-        </div>
-        <div class="ci-main">
-          <div class="ci-title">${escapeHtml(it.title)}</div>
-          <div class="ci-sub">
-            <span>Qty: ${Number(it.qty) || 1}</span>
-            ${it.price != null ? `<span>$${escapeHtml(String(it.price))}</span>` : `<span></span>`}
+    const show = cartItems.slice(0, 5);
+    cartItemsEl.innerHTML = show.map((it) => {
+      const r = resolveCartDisplay(it);
+      const qty = Number(it.qty) || 1;
+
+      const subLeft = r.variantLabel ? `Qty: ${qty} • ${escapeHtml(r.variantLabel)}` : `Qty: ${qty}`;
+      const subRight = (r.price != null) ? `$${escapeHtml(String(r.price))}` : "";
+
+      return `
+        <div class="cart-item">
+          <div class="thumb">
+            ${r.image ? `<img src="${escapeHtml(r.image)}" alt="">` : "Item"}
+          </div>
+          <div class="ci-main">
+            <div class="ci-title">${escapeHtml(r.title)}</div>
+            <div class="ci-sub">
+              <span>${subLeft}</span>
+              <span>${subRight}</span>
+            </div>
           </div>
         </div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
 
-      if (cartItems.length > show.length) {
-        cartItemsEl.innerHTML += `
+    if (cartItems.length > show.length) {
+      cartItemsEl.innerHTML += `
         <div style="padding:10px 14px; font-size:12px; color:rgba(255,255,255,.7); border-top:1px solid rgba(255,255,255,.06);">
           + ${cartItems.length - show.length} more item(s)
         </div>
       `;
-      }
-    };
+    }
+  };
 
-    const bindCartListener = (user) => {
-      if (unsubCart) unsubCart();
-      unsubCart = null;
+  const bindCartListener = async (user) => {
+    if (unsubCart) unsubCart();
+    unsubCart = null;
 
-      if (!user) {
+    // Make sure products are available (non-fatal if it fails)
+    await loadProducts();
+
+    if (!user) {
+      cartItems = getLocalCartItems();
+      renderCartMenu();
+      updateBadge(countCart(cartItems));
+      return;
+    }
+
+    const itemsRef = collection(db, "users", user.uid, "cartItems");
+    const q = query(itemsRef);
+
+    unsubCart = onSnapshot(
+      q,
+      async (snap) => {
+        const items = [];
+        snap.forEach((d) => {
+          const data = d.data() || {};
+          items.push({
+            id: d.id,
+            productId: data.productId ?? null,
+            variantId: data.variantId ?? null,
+            qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
+
+            // optional if present (fine)
+            title: data.title || data.name || data.productName || "",
+            variantLabel: data.variantLabel || "",
+            price: data.price ?? null,
+            image: data.image ?? data.imageUrl ?? null,
+          });
+        });
+
+        cartItems = items;
+        await loadProducts();
+        renderCartMenu();
+        updateBadge(countCart(items));
+      },
+      (err) => {
+        console.error("Cart listener error:", err);
         cartItems = getLocalCartItems();
         renderCartMenu();
         updateBadge(countCart(cartItems));
-        return;
       }
+    );
+  };
 
-      const itemsRef = collection(db, "users", user.uid, "cartItems");
-      const q = query(itemsRef);
+  const updateAccountMenu = (user) => {
+    if (!menuMeta || !menuPrimary || !menuSignOut) return;
 
-      unsubCart = onSnapshot(
-        q,
-        (snap) => {
-          const items = [];
-          snap.forEach((d) => {
-            const data = d.data() || {};
-            items.push({
-              id: d.id,
-              title: data.title || data.name || data.productName || d.id,
-              qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
-              price: data.price ?? null,
-              image: data.image ?? data.imageUrl ?? null,
-            });
-          });
-          cartItems = items;
-          renderCartMenu();
-          updateBadge(countCart(items));
-        },
-        (err) => {
-          console.error("Cart listener error:", err);
-          cartItems = getLocalCartItems();
-          renderCartMenu();
-          updateBadge(countCart(cartItems));
-        }
-      );
-    };
+    if (!user) {
+      menuMeta.textContent = "Not signed in";
+      menuPrimary.textContent = "Sign In";
+      menuPrimary.href = "/sign-in";
+      menuSignOut.style.display = "none";
+      return;
+    }
 
-    const updateAccountMenu = (user) => {
-      if (!menuMeta || !menuPrimary || !menuSignOut) return;
+    menuMeta.textContent = user.email || "Signed in";
+    menuPrimary.textContent = "Profile";
+    menuPrimary.href = "/profile";
+    menuSignOut.style.display = "block";
+  };
 
-      if (!user) {
-        menuMeta.textContent = "Not signed in";
-        menuPrimary.textContent = "Sign In";
-        menuPrimary.href = "/sign-in";
-        menuSignOut.style.display = "none";
-        return;
-      }
+  // Preload products and render ASAP
+  loadProducts().then(() => renderCartMenu()).catch(() => {});
 
-      menuMeta.textContent = user.email || "Signed in";
-      menuPrimary.textContent = "Profile";
-      menuPrimary.href = "/profile";
-      menuSignOut.style.display = "block";
-    };
+  // Initial render (logged-out fallback)
+  cartItems = getLocalCartItems();
+  renderCartMenu();
+  updateBadge(countCart(cartItems));
 
-    // Initial render (logged-out fallback)
-    cartItems = getLocalCartItems();
-    renderCartMenu();
-    updateBadge(countCart(cartItems));
+  onAuthStateChanged(auth, (user) => {
+    updateAccountMenu(user || null);
+    bindCartListener(user || null);
+  });
+</script>
 
-    onAuthStateChanged(auth, (user) => {
-      updateAccountMenu(user || null);
-      bindCartListener(user || null);
-    });
-  </script>
 <script>
   (function () {
     const arrow = document.querySelector(".neon-arrow");
@@ -1733,6 +1978,37 @@ Z
         requestAnimationFrame(checkScroll);
       }
     });
+  })();
+</script>
+<script>
+  (function(){
+    const nav = document.querySelector(".nav");
+    const toggle = document.getElementById("navToggle");
+    const overlay = document.getElementById("navOverlay");
+    if(!nav || !toggle || !overlay) return;
+
+    const close = () => nav.dataset.open = "0";
+    const open  = () => nav.dataset.open = "1";
+    const isOpen = () => nav.dataset.open === "1";
+
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      isOpen() ? close() : open();
+      // close other menus
+      document.getElementById("cartMenu")?.classList.remove("open");
+      document.getElementById("profileMenu")?.classList.remove("open");
+    });
+
+    overlay.addEventListener("click", close);
+
+    // Close if you tap a link
+    nav.querySelectorAll(".nav-center a").forEach(a => a.addEventListener("click", close));
+
+    // Escape closes
+    addEventListener("keydown", (e) => { if(e.key === "Escape") close(); });
+
+    // default
+    close();
   })();
 </script>
 
