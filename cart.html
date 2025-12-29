@@ -1355,12 +1355,7 @@ function normalizePriceNumber(n) {
 }
 const money = (n) => (normalizePriceNumber(Number(n)) ?? 0).toFixed(2);
 
-function safeUrl(u) {
-  const s = String(u || "").trim();
-  if (!s) return "";
-  if (s.startsWith("https://") || s.startsWith("http://") || s.startsWith("/")) return s;
-  return "";
-}
+
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -1400,32 +1395,7 @@ function readPrice(obj) {
   );
 }
 
-async function loadProducts() {
-  if (PRODUCTS_CACHE) return PRODUCTS_CACHE;
-  const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache: "no-store" });
-  if (!r.ok) throw new Error("Failed to load products.json");
-  const data = await r.json();
-  PRODUCTS_CACHE = Array.isArray(data) ? data : (data?.products || []);
-  indexProducts(PRODUCTS_CACHE);
-  return PRODUCTS_CACHE;
-}
 
-function indexProducts(products) {
-  PRODUCT_BY_ID = new Map();
-  VARIANT_BY_KEY = new Map();
-
-  for (const p of (products || [])) {
-    const pid = String(p.id ?? p.productId ?? "").trim();
-    if (pid) PRODUCT_BY_ID.set(pid, p);
-
-    const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
-    for (const v of vars) {
-      const vid = String(v.id ?? v.variantId ?? "").trim();
-      if (!pid || !vid) continue;
-      VARIANT_BY_KEY.set(`${pid}::${vid}`, v);
-    }
-  }
-}
 
 function resolveProductImage(productId, variantId) {
   const pid = String(productId || "").trim();
