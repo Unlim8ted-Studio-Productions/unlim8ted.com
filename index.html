@@ -1677,6 +1677,39 @@ Z
     return "";
   };
 
+  // ✅ Robust price parsing (supports numbers, "51.5", "$51.50", etc.)
+  function parsePrice(val) {
+    if (val == null) return null;
+
+    if (typeof val === "number") {
+      return Number.isFinite(val) ? val : null;
+    }
+
+    const s = String(val).trim();
+    if (!s) return null;
+
+    // remove currency + commas, keep digits, minus, dot
+    const cleaned = s.replace(/[^0-9.\-]/g, "");
+    if (!cleaned) return null;
+
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  // ✅ Decide if a number looks like cents (e.g., 5150) vs dollars (51.5)
+  function normalizePriceNumber(n) {
+    if (!Number.isFinite(n)) return null;
+    // if it’s a big integer-ish number, treat as cents (common pattern)
+    if (n >= 1000 && Math.abs(n - Math.round(n)) < 1e-9) return n / 100;
+    return n;
+  }
+
+  function formatMoney(n) {
+    const v = normalizePriceNumber(n);
+    if (v == null) return "";
+    return `$${v.toFixed(2)}`;
+  }
+
   async function loadProducts() {
     if (PRODUCTS_LOADED) return;
     if (PRODUCTS_LOADING) return PRODUCTS_LOADING;
@@ -1741,6 +1774,10 @@ Z
     if (it.productId != null) it.productId = String(it.productId).trim();
     if (it.variantId != null) it.variantId = String(it.variantId).trim();
 
+    // ensure qty is sane
+    it.qty = Number(it.qty);
+    if (!Number.isFinite(it.qty) || it.qty <= 0) it.qty = 1;
+
     return it;
   }
 
@@ -1756,21 +1793,28 @@ Z
   const closeMenus = () => {
     cartMenu?.classList.remove("open");
     profileMenu?.classList.remove("open");
+    cartBtn?.setAttribute("aria-expanded", "false");
+    profileBtn?.setAttribute("aria-expanded", "false");
   };
 
   cartBtn?.addEventListener("click", (e) => {
     e.stopPropagation();
     profileMenu?.classList.remove("open");
-    cartMenu?.classList.toggle("open");
+    profileBtn?.setAttribute("aria-expanded", "false");
+    const open = cartMenu?.classList.toggle("open");
+    cartBtn?.setAttribute("aria-expanded", open ? "true" : "false");
   });
 
   profileBtn?.addEventListener("click", (e) => {
     e.stopPropagation();
     cartMenu?.classList.remove("open");
-    profileMenu?.classList.toggle("open");
+    cartBtn?.setAttribute("aria-expanded", "false");
+    const open = profileMenu?.classList.toggle("open");
+    profileBtn?.setAttribute("aria-expanded", open ? "true" : "false");
   });
 
   window.addEventListener("click", closeMenus);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenus(); });
   cartMenu?.addEventListener("click", (e) => e.stopPropagation());
   profileMenu?.addEventListener("click", (e) => e.stopPropagation());
 
@@ -1792,6 +1836,11 @@ Z
     cartBadge.classList.toggle("hidden", n === 0);
   };
 
+  // ✅ Correct price resolution:
+  // Prefer (in order):
+  // 1) item.price / item.priceNum (explicit cart item payload)
+  // 2) variant.price / variant.priceNum
+  // 3) product.price / product.priceNum
   function resolveCartDisplay(raw) {
     const it = normalizeCartItem(raw);
 
@@ -1801,22 +1850,23 @@ Z
     const p = productId ? (PRODUCT_BY_ID.get(productId) || null) : null;
     const v = (productId && variantId) ? (VARIANT_BY_KEY.get(`${productId}::${variantId}`) || null) : null;
 
-    // ✅ Title priority: explicit title/name -> product name/title -> fallback (never combined id)
     const title =
       String(it.title || it.name || it.productName || "").trim() ||
       String(p?.name || p?.title || productId || "Item").trim();
 
     const variantLabel =
       String(it.variantLabel || "").trim() ||
-      String(v?.name || "").trim();
+      String(v?.name || v?.label || "").trim();
 
-    const price =
-      (Number.isFinite(Number(it.price)) ? Number(it.price) : null) ??
-      (v && Number.isFinite(Number(v.price)) ? Number(v.price) : null) ??
-      (p && Number.isFinite(Number(p.price)) ? Number(p.price) : null) ??
-      null;
+    // 🔥 price resolution (handles string/number + priceNum)
+    const itemPrice = parsePrice(it.price ?? it.priceNum);
+    const variantPrice = parsePrice(v?.price ?? v?.priceNum);
+    const productPrice = parsePrice(p?.price ?? p?.priceNum);
 
-    // ✅ Better image resolution: prefer item image -> variant image -> product image
+    const price = normalizePriceNumber(
+      itemPrice ?? variantPrice ?? productPrice ?? null
+    );
+
     let image = safeUrl(it.image || it.imageUrl || "");
     if (!image && v) {
       image =
@@ -1839,21 +1889,19 @@ Z
       const arr = JSON.parse(raw);
       if (!Array.isArray(arr)) return [];
 
-      return arr.map((it, idx) => {
-        const norm = normalizeCartItem({
-          id: it.id || it._id || `local-${idx}`,
-          productId: it.productId || it.pid || null,
-          variantId: it.variantId || it.vid || null,
-          qty: Number(it.qty) || 1,
+      return arr.map((it, idx) => normalizeCartItem({
+        id: it.id || it._id || `local-${idx}`,
+        productId: it.productId || it.pid || null,
+        variantId: it.variantId || it.vid || null,
+        qty: it.qty,
 
-          // optional legacy fields (if present)
-          title: it.title || it.name || it.productName || "",
-          variantLabel: it.variantLabel || "",
-          price: it.price ?? it.priceNum ?? null,
-          image: it.image ?? it.imageUrl ?? null,
-        });
-        return norm;
-      });
+        // optional legacy fields (if present)
+        title: it.title || it.name || it.productName || "",
+        variantLabel: it.variantLabel || "",
+        price: it.price ?? it.priceNum ?? null,
+        priceNum: it.priceNum ?? null,
+        image: it.image ?? it.imageUrl ?? null,
+      }));
     } catch {
       return [];
     }
@@ -1875,12 +1923,13 @@ Z
     }
 
     const show = cartItems.slice(0, 5);
+
     cartItemsEl.innerHTML = show.map((raw) => {
       const r = resolveCartDisplay(raw);
       const qty = Number(raw.qty) || 1;
 
       const subLeft = r.variantLabel ? `Qty: ${qty} • ${escapeHtml(r.variantLabel)}` : `Qty: ${qty}`;
-      const subRight = (r.price != null) ? `$${escapeHtml(String(r.price))}` : "";
+      const subRight = (r.price != null) ? escapeHtml(formatMoney(r.price)) : "";
 
       return `
         <div class="cart-item">
@@ -1921,25 +1970,25 @@ Z
     }
 
     const itemsRef = collection(db, "users", user.uid, "cartItems");
-    const q = query(itemsRef);
+    const qy = query(itemsRef);
 
     unsubCart = onSnapshot(
-      q,
+      qy,
       async (snap) => {
         const items = [];
         snap.forEach((d) => {
           const data = d.data() || {};
-
           items.push(normalizeCartItem({
             id: d.id,
             productId: data.productId ?? null,
             variantId: data.variantId ?? null,
-            qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
+            qty: data.qty,
 
-            // optional if present (fine)
+            // optional (if you ever store them)
             title: data.title || data.name || data.productName || "",
             variantLabel: data.variantLabel || "",
             price: data.price ?? data.priceNum ?? null,
+            priceNum: data.priceNum ?? null,
             image: data.image ?? data.imageUrl ?? null,
           }));
         });
@@ -1988,6 +2037,7 @@ Z
     bindCartListener(user || null);
   });
 </script>
+
 
 
 <script>
