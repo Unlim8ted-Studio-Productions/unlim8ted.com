@@ -2104,6 +2104,29 @@
     document.getElementById("footer-text").innerHTML =
       `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
   </script>
+<script>
+  function removeDuplicateBuyButtons() {
+    document.querySelectorAll('#paidListPay .item').forEach(item => {
+      const buyButtons = item.querySelectorAll('a.btn-primary');
+
+      // If more than one Buy button exists, keep the first (inline one)
+      if (buyButtons.length > 1) {
+        for (let i = 1; i < buyButtons.length; i++) {
+          const row = buyButtons[i].closest('.row2');
+          if (row) row.remove();
+          else buyButtons[i].remove();
+        }
+      }
+    });
+  }
+
+  // Run after each pay-pane render
+  const originalRenderPaidPayPane = window.renderPaidPayPane;
+  window.renderPaidPayPane = function () {
+    originalRenderPaidPayPane.apply(this, arguments);
+    removeDuplicateBuyButtons();
+  };
+</script>
 
 
 </body>
