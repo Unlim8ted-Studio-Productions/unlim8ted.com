@@ -189,17 +189,6 @@
 </head>
 
 <body>
-  <site-loader text="Loading..."></site-loader>
-  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
-
-  <div class="background">
-    <span style="top: 20%; left: 10%; animation-delay: 0s;"></span>
-    <span style="top: 40%; left: 70%; animation-delay: 2s;"></span>
-    <span style="top: 70%; left: 30%; animation-delay: 4s;"></span>
-    <span style="top: 50%; left: 90%; animation-delay: 1.5s;"></span>
-    <span style="top: 80%; left: 50%; animation-delay: 3s;"></span>
-  </div>
-
   <div class="wrap">
     <div class="container">
       <img id="profilePic" class="profile-pic" src="https://via.placeholder.com/110" alt="Profile picture" />
@@ -242,9 +231,9 @@
     const { auth, db } = getFirebase();
     const $ = (id) => document.getElementById(id);
 
-    // MUST MATCH YOUR RULES LIMITS
-    const MAX_NAME_LEN = 24;      // change if your rules use a different max
-    const MAX_URL_LEN  = 300;     // change if your rules use a different max
+    // MUST MATCH YOUR RULES
+    const MAX_USERNAME_LEN = 80;
+    const MAX_PIC_LEN = 600;
 
     const SIGNIN_URL = "https://unlim8ted.com/sign-in";
     const PROFILE_DEFAULT = "https://via.placeholder.com/110";
@@ -258,20 +247,24 @@
     const nameHintEl = $("nameHint");
     const urlHintEl = $("urlHint");
 
-    function setStatus(msg, isError=false){
+    function setStatus(msg, isError = false) {
       statusEl.textContent = msg || "";
       statusEl.style.color = isError ? "rgba(255,120,120,.95)" : "rgba(255,255,255,.75)";
     }
 
-    function basicSanitizeName(s){
-      // keep it simple: trim + collapse whitespace
+    function basicSanitize(s) {
       return (s || "").trim().replace(/\s+/g, " ");
     }
 
-    function isValidHttpUrl(url){
+    function clampText(s, max) {
+      s = (s || "").trim();
+      return s.length > max ? s.slice(0, max) : s;
+    }
+
+    function isValidHttpUrl(url) {
       if (!url) return true; // optional
-      if (url.length > MAX_URL_LEN) return false;
-      try{
+      if (url.length > MAX_PIC_LEN) return false;
+      try {
         const u = new URL(url);
         return u.protocol === "https:" || u.protocol === "http:";
       } catch {
@@ -279,83 +272,82 @@
       }
     }
 
-    function clampText(s, max){
-      s = (s || "").trim();
-      return s.length > max ? s.slice(0, max) : s;
-    }
-
-    function updateHints(){
-      const n = (usernameEl.value || "").length;
-      const u = (photoUrlEl.value || "").length;
-      nameHintEl.textContent = `${n}/${MAX_NAME_LEN}`;
-      urlHintEl.textContent = `${u}/${MAX_URL_LEN}`;
+    function updateHints() {
+      nameHintEl.textContent = `${(usernameEl.value || "").length}/${MAX_USERNAME_LEN}`;
+      urlHintEl.textContent = `${(photoUrlEl.value || "").length}/${MAX_PIC_LEN}`;
     }
 
     usernameEl.addEventListener("input", () => {
-      usernameEl.value = clampText(basicSanitizeName(usernameEl.value), MAX_NAME_LEN);
+      usernameEl.value = clampText(basicSanitize(usernameEl.value), MAX_USERNAME_LEN);
       updateHints();
     });
+
     photoUrlEl.addEventListener("input", () => {
-      photoUrlEl.value = clampText(photoUrlEl.value, MAX_URL_LEN);
+      photoUrlEl.value = clampText(photoUrlEl.value.trim(), MAX_PIC_LEN);
       updateHints();
-      // live preview if valid
       const url = photoUrlEl.value.trim();
-      if (isValidHttpUrl(url) && url) profilePicEl.src = url;
+      if (url && isValidHttpUrl(url)) profilePicEl.src = url;
       if (!url) profilePicEl.src = PROFILE_DEFAULT;
     });
 
-    function fillUI(user, data){
-      // Only use allowed fields from Firestore:
-      const name = data?.name || user.displayName || "User";
-      const email = data?.email || user.email || "—";
-      const pic = data?.profilePicture || user.photoURL || PROFILE_DEFAULT;
+    function fillUI(user, data) {
+      const username = (data?.username || "").toString().trim();
+      const name = (data?.name || "").toString().trim();
 
-      displayNameEl.textContent = name;
+      // Display name preference: username -> name -> auth displayName -> fallback
+      const title = username || name || user.displayName || "User";
+
+      // Email should be read-only in your rules, so just show auth email
+      const email = user.email || data?.email || "—";
+
+      // Picture preference: profilePicture -> auth photo -> placeholder
+      const pic = (data?.profilePicture || user.photoURL || PROFILE_DEFAULT).toString().trim();
+
+      displayNameEl.textContent = title;
       emailEl.textContent = email;
 
-      usernameEl.value = (data?.name || "").toString();
+      usernameEl.value = username; // input edits `username` field
       photoUrlEl.value = (data?.profilePicture || "").toString();
 
       profilePicEl.src = pic || PROFILE_DEFAULT;
-
       updateHints();
     }
 
-    async function ensureUserDoc(user){
+    async function ensureUserDocExists(user) {
       const ref = doc(db, "users", user.uid);
       const snap = await getDoc(ref);
 
-      // IMPORTANT: ONLY WRITE FIELDS ALLOWED BY YOUR RULES
-      const payload = {
-        name: (snap.exists() && snap.data()?.name) ? snap.data().name : (user.displayName || ""),
-        email: user.email || "",
-        profilePicture: (snap.exists() && snap.data()?.profilePicture) ? snap.data().profilePicture : (user.photoURL || "")
-      };
+      // If no doc yet, CREATE it using ONLY fields allowed by your CREATE rule:
+      // hasOnly(["name","email","profilePicture"])
+      if (!snap.exists()) {
+        const payload = {
+          name: clampText(basicSanitize(user.displayName || ""), 80),
+          email: (user.email || "").trim().slice(0, 254),
+          profilePicture: clampText((user.photoURL || "").trim(), MAX_PIC_LEN),
+        };
 
-      // Clamp to your limits so we never write invalid data
-      payload.name = clampText(basicSanitizeName(payload.name), MAX_NAME_LEN);
-      payload.email = (payload.email || "").trim();
-      payload.profilePicture = clampText((payload.profilePicture || "").trim(), MAX_URL_LEN);
+        // Create (no merge) so Firestore evaluates it as a CREATE.
+        await setDoc(ref, payload);
+      }
 
-      // This is safe under your rule: keys are only name/email/profilePicture
-      await setDoc(ref, payload, { merge: true });
-
-      return (await getDoc(ref)).data();
+      // Now read fresh
+      const snap2 = await getDoc(ref);
+      return snap2.data() || {};
     }
 
     onAuthStateChanged(auth, async (user) => {
-      if (!user){
+      if (!user) {
         window.location.href = SIGNIN_URL;
         return;
       }
 
-      try{
+      try {
         setStatus("Loading profile…");
-        const data = await ensureUserDoc(user);
+        const data = await ensureUserDocExists(user);
         fillUI(user, data);
         setStatus("");
-      } catch (e){
-        console.error(e);
+      } catch (e) {
+        console.error("Profile load error:", e);
         setStatus("Could not load profile (permissions/rules mismatch).", true);
       }
     });
@@ -364,34 +356,35 @@
       const user = auth.currentUser;
       if (!user) return;
 
-      const name = clampText(basicSanitizeName(usernameEl.value), MAX_NAME_LEN);
-      const profilePicture = clampText(photoUrlEl.value.trim(), MAX_URL_LEN);
+      const username = clampText(basicSanitize(usernameEl.value), MAX_USERNAME_LEN);
+      const profilePicture = clampText(photoUrlEl.value.trim(), MAX_PIC_LEN);
 
-      if (name && name.length > MAX_NAME_LEN){
-        setStatus(`Username too long (max ${MAX_NAME_LEN}).`, true);
-        return;
-      }
-      if (!isValidHttpUrl(profilePicture)){
+      if (!isValidHttpUrl(profilePicture)) {
         setStatus("Profile photo URL must be http(s) and within limits.", true);
         return;
       }
 
-      try{
+      try {
         setStatus("Saving…");
 
-        // ONLY fields allowed by your rules
-        await setDoc(doc(db, "users", user.uid), {
-          name: name || "",
-          email: (user.email || "").trim(),
-          profilePicture: profilePicture || ""
-        }, { merge: true });
+        // IMPORTANT:
+        // Your current UPDATE rule only allows ["username","profilePicture"],
+        // so ONLY write those fields here. Do NOT write name/email on update.
+        await setDoc(
+          doc(db, "users", user.uid),
+          {
+            username: username || "",
+            profilePicture: profilePicture || "",
+          },
+          { merge: true }
+        );
 
         const snap = await getDoc(doc(db, "users", user.uid));
         fillUI(user, snap.data());
         setStatus("Saved");
         setTimeout(() => setStatus(""), 1200);
-      } catch (e){
-        console.error(e);
+      } catch (e) {
+        console.error("Profile save error:", e);
         setStatus("Failed to save profile (permissions/rules mismatch).", true);
       }
     });
@@ -401,10 +394,10 @@
     });
 
     $("logoutBtn").addEventListener("click", async () => {
-      try{
+      try {
         await signOut(auth);
         window.location.href = "https://unlim8ted.com";
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Logout failed.", true);
       }
@@ -414,5 +407,4 @@
     const y = new Date().getFullYear();
     $("footerText").innerHTML = `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
   </script>
-</body>
 </html>
