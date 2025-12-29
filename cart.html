@@ -888,1074 +888,1110 @@
   </div>
 
 
-  <script type="module">
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import {
-      collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp,
-      addDoc, query, orderBy, getDocs
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+<script type="module">
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  import {
+    collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp,
+    addDoc, query, orderBy, getDocs
+  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-    import { getFirebase } from "/components/firebase-init.js";
-    const { auth, db } = getFirebase();
+  import { getFirebase } from "/components/firebase-init.js";
+  const { auth, db } = getFirebase();
 
-    // --- Square donation payment links ---
-    const SQUARE_DONATION = {
-      one_time: {
-        custom: "https://square.link/u/h4bY1vEF",
-        "1": "https://square.link/u/bWytGN4p",
-        "5": "https://square.link/u/4XBSzfLg",
-        "10": "https://square.link/u/AvF6x51S",
-      },
-      weekly: { custom: "https://square.link/u/FkJZDx1R" },
-      monthly: { custom: "https://square.link/u/ZK2wPwwU" },
-      annual: { custom: "https://square.link/u/RSb94DzN" },
-    };
+  // --- Square donation payment links ---
+  const SQUARE_DONATION = {
+    one_time: {
+      custom: "https://square.link/u/h4bY1vEF",
+      "1": "https://square.link/u/bWytGN4p",
+      "5": "https://square.link/u/4XBSzfLg",
+      "10": "https://square.link/u/AvF6x51S",
+    },
+    weekly: { custom: "https://square.link/u/FkJZDx1R" },
+    monthly: { custom: "https://square.link/u/ZK2wPwwU" },
+    annual: { custom: "https://square.link/u/RSb94DzN" },
+  };
 
-    // Return handling:
-    // - Donation: /cart?source=donation
-    // - Purchase:  /cart?source=purchase&itemId=...
-    // - Buy Now:   /cart?source=buy&product=<productId>  (single-item flow; starts at Review with only one item)
+  // Return handling:
+  // - Donation: /cart?source=donation
+  // - Purchase:  /cart?source=purchase&itemId=...
+  // - Buy Now:   /cart?source=buy&product=<productId>  (single-item flow; starts at Review with only one item)
 
-    const signedOut = document.getElementById("signedOut");
-    const flowNotice = document.getElementById("flowNotice");
+  const signedOut = document.getElementById("signedOut");
+  const flowNotice = document.getElementById("flowNotice");
 
-    const paidList = document.getElementById("paidList");
-    const freeList = document.getElementById("freeList");
-    const paidListPay = document.getElementById("paidListPay");
+  const paidList = document.getElementById("paidList");
+  const freeList = document.getElementById("freeList");
+  const paidListPay = document.getElementById("paidListPay");
 
-    const paidEmpty = document.getElementById("paidEmpty");
-    const freeEmpty = document.getElementById("freeEmpty");
-    const allEmpty = document.getElementById("allEmpty");
-    const paidEmptyPay = document.getElementById("paidEmptyPay");
+  const paidEmpty = document.getElementById("paidEmpty");
+  const freeEmpty = document.getElementById("freeEmpty");
+  const allEmpty = document.getElementById("allEmpty");
+  const paidEmptyPay = document.getElementById("paidEmptyPay");
 
-    const paidCountPill = document.getElementById("paidCountPill");
-    const freeCountPill = document.getElementById("freeCountPill");
+  const paidCountPill = document.getElementById("paidCountPill");
+  const freeCountPill = document.getElementById("freeCountPill");
 
-    const paidQtyEl = document.getElementById("paidQty");
-    const freeQtyEl = document.getElementById("freeQty");
-    const paidSubtotalEl = document.getElementById("paidSubtotal");
-    const dueNowEl = document.getElementById("dueNow");
+  const paidQtyEl = document.getElementById("paidQty");
+  const freeQtyEl = document.getElementById("freeQty");
+  const paidSubtotalEl = document.getElementById("paidSubtotal");
+  const dueNowEl = document.getElementById("dueNow");
 
-    // panes / nav
-    const panes = [
-      document.getElementById("pane-review"),
-      document.getElementById("pane-support"),
-      document.getElementById("pane-pay"),
-      document.getElementById("pane-success"),
-    ];
-    const stepEls = [
-      document.getElementById("step-1"),
-      document.getElementById("step-2"),
-      document.getElementById("step-3"),
-      document.getElementById("step-4"),
-    ];
-    const backBtn = document.getElementById("backBtn");
-    const nextBtn = document.getElementById("nextBtn");
+  // panes / nav
+  const panes = [
+    document.getElementById("pane-review"),
+    document.getElementById("pane-support"),
+    document.getElementById("pane-pay"),
+    document.getElementById("pane-success"),
+  ];
+  const stepEls = [
+    document.getElementById("step-1"),
+    document.getElementById("step-2"),
+    document.getElementById("step-3"),
+    document.getElementById("step-4"),
+  ];
+  const backBtn = document.getElementById("backBtn");
+  const nextBtn = document.getElementById("nextBtn");
 
-    const successGrid = document.getElementById("successGrid");
-    const successEmpty = document.getElementById("successEmpty");
+  const successGrid = document.getElementById("successGrid");
+  const successEmpty = document.getElementById("successEmpty");
 
-    // Donation controls
-    const donationFreq = document.getElementById("donationFreq");
-    const donationAmountPreset = document.getElementById("donationAmountPreset");
-    const oneTimeOptions = [...donationAmountPreset.querySelectorAll('option[data-one-time="1"]')];
-    const donateBtn = document.getElementById("donateBtn");
-    const clearDonationBtn = document.getElementById("clearDonationBtn");
-    const donationHint = document.getElementById("donationHint");
+  // Donation controls
+  const donationFreq = document.getElementById("donationFreq");
+  const donationAmountPreset = document.getElementById("donationAmountPreset");
+  const oneTimeOptions = [...donationAmountPreset.querySelectorAll('option[data-one-time="1"]')];
+  const donateBtn = document.getElementById("donateBtn");
+  const clearDonationBtn = document.getElementById("clearDonationBtn");
+  const donationHint = document.getElementById("donationHint");
 
-    let unsubCart = null;
-    let unsubPurchases = null;
-    let wired = false;
-    let currentUser = null;
-    let lastRendered = { paid: [], free: [] };
+  let unsubCart = null;
+  let unsubPurchases = null;
+  let wired = false;
+  let currentUser = null;
+  let lastRendered = { paid: [], free: [] };
 
-    // Purchase history (for Success pane)
-    let purchaseRows = []; // { itemId, title, accessUrl, createdAt, type }
+  // Purchase history (for Success pane)
+  let purchaseRows = []; // { itemId, title, accessUrl, createdAt, type }
 
-    // current step state
-    let stepIndex = 0; // 0..3
+  // current step state
+  let stepIndex = 0; // 0..3
 
-    // --- BUY FLOW state (single-item checkout view, does NOT modify cart) ---
-    let buyMode = false;
-    let buyItem = null;
-    // ----------------------------------------------------------------
+  // --- BUY FLOW state (single-item checkout view, does NOT modify cart) ---
+  let buyMode = false;
+  let buyItem = null;
+  // ----------------------------------------------------------------
 
-    // ===== Products cache / resolution =====
-    let PRODUCTS_CACHE = null;
-    let PRODUCT_BY_ID = new Map();
-    let VARIANT_BY_KEY = new Map(); // key: `${productId}::${variantId}` -> { squareUrl, name, image, ... }
+  // ===== Products cache / resolution =====
+  let PRODUCTS_CACHE = null;
+  let PRODUCT_BY_ID = new Map();
+  let VARIANT_BY_KEY = new Map(); // key: `${productId}::${variantId}` -> variant obj
 
-    const money = (n) => (Math.round((Number(n) || 0) * 100) / 100).toFixed(2);
+  const money = (n) => (Math.round((Number(n) || 0) * 100) / 100).toFixed(2);
 
-    async function loadProducts() {
-      if (PRODUCTS_CACHE) return PRODUCTS_CACHE;
-      const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache: "no-store" });
-      if (!r.ok) throw new Error("Failed to load products.json");
-      const data = await r.json();
-      PRODUCTS_CACHE = Array.isArray(data) ? data : (data?.products || []);
-      indexProducts(PRODUCTS_CACHE);
-      return PRODUCTS_CACHE;
-    }
-
-function indexProducts(products) {
-  PRODUCT_BY_ID = new Map();
-  VARIANT_BY_KEY = new Map();
-
-  for (const p of (products || [])) {
-    const pid = String(p.id ?? p.productId ?? "");
-    if (pid) PRODUCT_BY_ID.set(pid, p);
-
-    // NOTE: your json uses "varients" (typo) not "variants"
-    const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
-    for (const v of vars) {
-      const vid = String(v.id ?? v.variantId ?? "");
-      if (!pid || !vid) continue;
-      VARIANT_BY_KEY.set(`${pid}::${vid}`, v);
-    }
-  }
-}
-
-
-    function safeUrl(u) {
-      const s = String(u || "").trim();
-      if (!s) return "";
-      if (s.startsWith("https://") || s.startsWith("http://") || s.startsWith("/")) return s;
-      return "";
-    }
-
-    function buildSquareRedirectUrl(baseUrl, redirectTo) {
-      const u = String(baseUrl);
-      const join = u.includes("?") ? "&" : "?";
-      return u + join + "redirect_url=" + encodeURIComponent(redirectTo);
-    }
-
-    function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, (c) => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-      }[c]));
-    }
-
-    function resolveProductImage(productId, variantId) {
-      const pid = String(productId || "").trim();
-      if (!pid) return "";
-
-      const p = PRODUCT_BY_ID.get(pid) || null;
-      if (!p) return "";
-
-      // Variant image first (if variantId present and exists)
-      const vid = String(variantId || "").trim();
-      if (vid) {
-        const v = VARIANT_BY_KEY.get(`${pid}::${vid}`) || null;
-        const vImg = v ? (safeUrl(v.image) || safeUrl(v.imageUrl) || safeUrl(v.thumbnail) || "") : "";
-        if (vImg) return vImg;
-      }
-
-      // Product-level image fallbacks
-      const pImg =
-        safeUrl(p.image) ||
-        safeUrl(p.imageUrl) ||
-        safeUrl(p.thumbnail) ||
-        safeUrl(p.thumb) ||
-        "";
-
-      if (pImg) return pImg;
-
-      // Array-style images
-      if (Array.isArray(p.images) && p.images.length) {
-        const first = p.images[0];
-        if (typeof first === "string") return safeUrl(first);
-        if (first && typeof first === "object") return safeUrl(first.url || first.src || first.imageUrl || first.image);
-      }
-
-      return "";
-    }
-
-    // Resolve square/buy link + access + image for an item (variant-aware)
-async function resolveItemData(it) {
-  const productId = String(it.productId ?? it.pid ?? it.product ?? "").trim();
-  const variantId = String(it.variantId ?? it.vid ?? it.variant ?? "").trim();
-
-  if (productId) {
-    try { await loadProducts(); } catch { /* ignore */ }
+  async function loadProducts() {
+    if (PRODUCTS_CACHE) return PRODUCTS_CACHE;
+    const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache: "no-store" });
+    if (!r.ok) throw new Error("Failed to load products.json");
+    const data = await r.json();
+    PRODUCTS_CACHE = Array.isArray(data) ? data : (data?.products || []);
+    indexProducts(PRODUCTS_CACHE);
+    return PRODUCTS_CACHE;
   }
 
-  const p = productId ? (PRODUCT_BY_ID.get(productId) || null) : null;
-  const v = (productId && variantId) ? (VARIANT_BY_KEY.get(`${productId}::${variantId}`) || null) : null;
+  function indexProducts(products) {
+    PRODUCT_BY_ID = new Map();
+    VARIANT_BY_KEY = new Map();
 
-  // Title
-  const title =
-    String(it.title || it.name || it.productName || "").trim() ||
-    String(p?.name || p?.title || productId || "Item").trim();
+    for (const p of (products || [])) {
+      const pid = String(p.id ?? p.productId ?? "").trim();
+      if (pid) PRODUCT_BY_ID.set(pid, p);
 
-  // Product type (your json: "product-type")
-  const productType =
-    String(it.productType || it["product-type"] || "").trim() ||
-    String(p?.["product-type"] || p?.productType || "").trim();
-
-  // Price: variant price first, then product price if you ever add one
-  const price =
-    (Number(it.price) || Number(it.priceNum) || null) ??
-    (v && Number(v.price)) ??
-    (p && Number(p.price)) ??
-    0;
-
-  // Variant label/name
-  const variantLabel =
-    String(it.variantLabel || "").trim() ||
-    String(v?.name || "").trim();
-
-  // Square link: variant buy_link first
-  const squareUrl =
-    safeUrl(it.buyLink) ||
-    safeUrl(it.squareUrl) ||
-    safeUrl(it.squareLink) ||
-    safeUrl(it.square) ||
-    safeUrl(v?.buy_link) ||            // your json key
-    safeUrl(v?.buyLink) ||
-    safeUrl(p?.buy_link) ||
-    safeUrl(p?.buyLink) ||
-    "";
-
-  // Image: variant images array first (if you ever populate), then product image
-  let imageUrl =
-    safeUrl(it.image) || safeUrl(it.imageUrl) || "";
-
-  if (!imageUrl) {
-    const vImg = Array.isArray(v?.images) && v.images.length
-      ? (typeof v.images[0] === "string" ? safeUrl(v.images[0]) : safeUrl(v.images[0]?.url || v.images[0]?.src))
-      : "";
-    imageUrl = vImg || safeUrl(p?.image) || "";
+      // NOTE: your json uses "varients" (typo) not "variants"
+      const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
+      for (const v of vars) {
+        const vid = String(v.id ?? v.variantId ?? "").trim();
+        if (!pid || !vid) continue;
+        VARIANT_BY_KEY.set(`${pid}::${vid}`, v);
+      }
+    }
   }
 
-  // Access URL (your products.json doesn’t show these yet, but keep logic)
-  const accessUrl =
-    safeUrl(it.downloadUrl) ||
-    safeUrl(it.accessUrl) ||
-    safeUrl(it.url) ||
-    safeUrl(it.link) ||
-    safeUrl(v?.accessUrl) ||
-    safeUrl(p?.accessUrl) ||
-    "";
+  // ====== CRITICAL: normalize your cart item shape ======
+  // Fixes:
+  // - productId accidentally stored as "productId__variantId" (your current issue)
+  // - title showing as "unlim8ted-hoodie__A35B..." because title fallback used productId
+  function normalizeCartItem(raw) {
+    const it = { ...(raw || {}) };
 
-  return { title, price, productType, variantLabel, squareUrl, imageUrl, accessUrl };
-}
-    // ===============================================
+    // Pull potential combined id from productId / pid / product
+    const pidRaw = String(it.productId ?? it.pid ?? it.product ?? "").trim();
+    const vidRaw = String(it.variantId ?? it.vid ?? it.variant ?? "").trim();
 
-    // Local purchase history (signed out fallback)
-    function getLocalPurchases() {
-      try {
-        const raw = localStorage.getItem("unlim8ted-purchases");
-        const arr = raw ? JSON.parse(raw) : [];
-        return Array.isArray(arr) ? arr : [];
-      } catch {
-        return [];
+    // If productId is actually "productId__variantId", split it.
+    if (pidRaw.includes("__") && !vidRaw) {
+      const [basePid, ...rest] = pidRaw.split("__");
+      const base = String(basePid || "").trim();
+      const v = rest.join("__").trim(); // keep safe if variantId ever contains "__"
+      if (base && v) {
+        it.productId = base;
+        it.variantId = v;
       }
     }
 
-    function addLocalPurchase(row) {
-      try {
-        const arr = getLocalPurchases();
-        arr.unshift(row);
-        localStorage.setItem("unlim8ted-purchases", JSON.stringify(arr.slice(0, 200)));
-      } catch { }
+    // Sometimes combined id might be shoved into `id` (rare but safe)
+    const idStr = String(it.id ?? "").trim();
+    if ((!it.productId || !String(it.productId).trim()) && idStr.includes("__")) {
+      const [basePid, ...rest] = idStr.split("__");
+      const base = String(basePid || "").trim();
+      const v = rest.join("__").trim();
+      if (base) it.productId = base;
+      if (v && !it.variantId) it.variantId = v;
     }
 
-    // --- UI helpers ---
-    function setFlowNotice(kind, msg) {
-      flowNotice.style.display = "block";
-      flowNotice.className = "notice " + (kind || "");
-      flowNotice.innerHTML = msg;
+    // Always ensure strings are trimmed
+    if (it.productId != null) it.productId = String(it.productId).trim();
+    if (it.variantId != null) it.variantId = String(it.variantId).trim();
+
+    return it;
+  }
+
+  function safeUrl(u) {
+    const s = String(u || "").trim();
+    if (!s) return "";
+    if (s.startsWith("https://") || s.startsWith("http://") || s.startsWith("/")) return s;
+    return "";
+  }
+
+  function buildSquareRedirectUrl(baseUrl, redirectTo) {
+    const u = String(baseUrl);
+    const join = u.includes("?") ? "&" : "?";
+    return u + join + "redirect_url=" + encodeURIComponent(redirectTo);
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  function resolveProductImage(productId, variantId) {
+    const pid = String(productId || "").trim();
+    if (!pid) return "";
+
+    const p = PRODUCT_BY_ID.get(pid) || null;
+    if (!p) return "";
+
+    const vid = String(variantId || "").trim();
+    if (vid) {
+      const v = VARIANT_BY_KEY.get(`${pid}::${vid}`) || null;
+      const vImg = v ? (safeUrl(v.image) || safeUrl(v.imageUrl) || safeUrl(v.thumbnail) || "") : "";
+      if (vImg) return vImg;
     }
 
-    function clearFlowNotice() {
-      flowNotice.style.display = "none";
-      flowNotice.innerHTML = "";
-      flowNotice.className = "notice";
+    const pImg =
+      safeUrl(p.image) ||
+      safeUrl(p.imageUrl) ||
+      safeUrl(p.thumbnail) ||
+      safeUrl(p.thumb) ||
+      "";
+
+    if (pImg) return pImg;
+
+    if (Array.isArray(p.images) && p.images.length) {
+      const first = p.images[0];
+      if (typeof first === "string") return safeUrl(first);
+      if (first && typeof first === "object") return safeUrl(first.url || first.src || first.imageUrl || first.image);
     }
 
-    function setStep(idx) {
-      stepIndex = Math.max(0, Math.min(3, idx));
+    return "";
+  }
 
-      panes.forEach((p, i) => p.classList.toggle("active", i === stepIndex));
-      stepEls.forEach((s, i) => s.classList.toggle("active", i === stepIndex));
+  // Resolve square/buy link + access + image for an item (variant-aware)
+  async function resolveItemData(raw) {
+    const it = normalizeCartItem(raw);
 
-      backBtn.disabled = (stepIndex === 0);
-      nextBtn.textContent = (stepIndex === 3) ? "Done" : "Continue";
+    const productId = String(it.productId ?? it.pid ?? it.product ?? "").trim();
+    const variantId = String(it.variantId ?? it.vid ?? it.variant ?? "").trim();
 
-      if (stepIndex === 3) renderSuccess();
-      if (stepIndex === 2) renderPaidPayPane();
-
-      try {
-        document.querySelector(".card.list")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      } catch { }
+    if (productId) {
+      try { await loadProducts(); } catch { /* ignore */ }
     }
 
-    backBtn.addEventListener("click", () => setStep(stepIndex - 1));
+    const p = productId ? (PRODUCT_BY_ID.get(productId) || null) : null;
+    const v = (productId && variantId) ? (VARIANT_BY_KEY.get(`${productId}::${variantId}`) || null) : null;
 
-    nextBtn.addEventListener("click", async () => {
-      const uid = currentUser?.uid || null;
+    // Title: prefer explicit saved title, then product name/title, never the raw combined id
+    const title =
+      String(it.title || it.name || it.productName || "").trim() ||
+      String(p?.name || p?.title || productId || "Item").trim();
 
-      if (stepIndex < 3) {
-        setStep(stepIndex + 1);
-        return;
-      }
+    // Product type (your json: "product-type")
+    const productType =
+      String(it.productType || it["product-type"] || "").trim() ||
+      String(p?.["product-type"] || p?.productType || "").trim();
 
-      // Done on Success
-      if (buyMode) {
-        buyMode = false;
-        buyItem = null;
-        clearFlowNotice();
-        setStep(0);
-        if (!currentUser) refreshLoggedOutCartView();
-        return;
-      }
+    // Price: saved price first, then variant price, then product price
+    const priceFromItem = Number(it.price ?? it.priceNum);
+    const price =
+      (Number.isFinite(priceFromItem) ? priceFromItem : null) ??
+      (v && Number.isFinite(Number(v.price)) ? Number(v.price) : null) ??
+      (p && Number.isFinite(Number(p.price)) ? Number(p.price) : null) ??
+      0;
 
-      await clearEntireCart(uid);
+    // Variant label/name
+    const variantLabel =
+      String(it.variantLabel || "").trim() ||
+      String(v?.name || "").trim();
+
+    // Square link: variant buy_link first
+    const squareUrl =
+      safeUrl(it.buyLink) ||
+      safeUrl(it.squareUrl) ||
+      safeUrl(it.squareLink) ||
+      safeUrl(it.square) ||
+      safeUrl(v?.buy_link) ||      // your products.json key
+      safeUrl(v?.buyLink) ||
+      safeUrl(p?.buy_link) ||
+      safeUrl(p?.buyLink) ||
+      "";
+
+    // Image: prefer variant image if present, then product image
+    let imageUrl =
+      safeUrl(it.image) || safeUrl(it.imageUrl) || "";
+
+    if (!imageUrl) {
+      const vImg =
+        safeUrl(v?.image) ||
+        safeUrl(v?.imageUrl) ||
+        (Array.isArray(v?.images) && v.images.length
+          ? (typeof v.images[0] === "string" ? safeUrl(v.images[0]) : safeUrl(v.images[0]?.url || v.images[0]?.src))
+          : "");
+      imageUrl = vImg || safeUrl(p?.image) || safeUrl(p?.imageUrl) || "";
+      if (!imageUrl) imageUrl = resolveProductImage(productId, variantId);
+    }
+
+    // Access URL (optional)
+    const accessUrl =
+      safeUrl(it.downloadUrl) ||
+      safeUrl(it.accessUrl) ||
+      safeUrl(it.url) ||
+      safeUrl(it.link) ||
+      safeUrl(v?.accessUrl) ||
+      safeUrl(p?.accessUrl) ||
+      "";
+
+    return { ...it, title, price, productType, variantLabel, squareUrl, imageUrl, accessUrl };
+  }
+
+  // Local purchase history (signed out fallback)
+  function getLocalPurchases() {
+    try {
+      const raw = localStorage.getItem("unlim8ted-purchases");
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function addLocalPurchase(row) {
+    try {
+      const arr = getLocalPurchases();
+      arr.unshift(row);
+      localStorage.setItem("unlim8ted-purchases", JSON.stringify(arr.slice(0, 200)));
+    } catch { }
+  }
+
+  // --- UI helpers ---
+  function setFlowNotice(kind, msg) {
+    flowNotice.style.display = "block";
+    flowNotice.className = "notice " + (kind || "");
+    flowNotice.innerHTML = msg;
+  }
+
+  function clearFlowNotice() {
+    flowNotice.style.display = "none";
+    flowNotice.innerHTML = "";
+    flowNotice.className = "notice";
+  }
+
+  function setStep(idx) {
+    stepIndex = Math.max(0, Math.min(3, idx));
+
+    panes.forEach((p, i) => p.classList.toggle("active", i === stepIndex));
+    stepEls.forEach((s, i) => s.classList.toggle("active", i === stepIndex));
+
+    backBtn.disabled = (stepIndex === 0);
+    nextBtn.textContent = (stepIndex === 3) ? "Done" : "Continue";
+
+    if (stepIndex === 3) renderSuccess();
+    if (stepIndex === 2) renderPaidPayPane();
+
+    try {
+      document.querySelector(".card.list")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch { }
+  }
+
+  backBtn.addEventListener("click", () => setStep(stepIndex - 1));
+
+  nextBtn.addEventListener("click", async () => {
+    const uid = currentUser?.uid || null;
+
+    if (stepIndex < 3) {
+      setStep(stepIndex + 1);
+      return;
+    }
+
+    // Done on Success
+    if (buyMode) {
+      buyMode = false;
+      buyItem = null;
       clearFlowNotice();
       setStep(0);
-
-      setFlowNotice(
-        "ok",
-`<div style="display:flex;gap:10px;align-items:flex-start">
-  <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-    <path
-      d="M20 6 9 17l-5-5"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-  <div>
-    <strong>Checkout complete.</strong><br/>
-    Your cart has been cleared.
-  </div>
-</div>`
-
-      );
-    });
-
-    function splitItems(items) {
-      const paid = [];
-      const free = [];
-      for (const it of items) {
-        const price = Number(it.price) || 0;
-        if (price > 0) paid.push(it);
-        else free.push(it);
-      }
-      return { paid, free };
+      if (!currentUser) refreshLoggedOutCartView();
+      return;
     }
 
-    function recomputeSummary(paid, free) {
-      const paidQty = paid.reduce((s, it) => s + (Number(it.qty) || 1), 0);
-      const freeQty = free.reduce((s, it) => s + (Number(it.qty) || 1), 0);
-      const paidSubtotal = paid.reduce((s, it) => s + (Number(it.price) || 0) * (Number(it.qty) || 1), 0);
+    await clearEntireCart(uid);
+    clearFlowNotice();
+    setStep(0);
 
-      paidQtyEl.textContent = String(paidQty);
-      freeQtyEl.textContent = String(freeQty);
-      paidSubtotalEl.textContent = money(paidSubtotal);
-      dueNowEl.textContent = money(paidSubtotal);
-
-      paidCountPill.textContent = String(paid.length);
-      freeCountPill.textContent = String(free.length);
-
-      paidEmpty.style.display = paid.length ? "none" : "block";
-      freeEmpty.style.display = free.length ? "none" : "block";
-      allEmpty.style.display = (paid.length === 0 && free.length === 0) ? "block" : "none";
-      paidEmptyPay.style.display = paid.length ? "none" : "block";
-
-      nextBtn.disabled = (paid.length === 0 && free.length === 0);
-      nextBtn.textContent = nextBtn.disabled ? "Add items first" : (stepIndex === 3 ? "Done" : "Continue");
-    }
-
-    function itemCardHTML(it, kind, view = "review") {
-  const qty = Math.max(1, Number(it.qty) || 1);
-  const price = Number(it.price) || 0;
-
-  const title = escapeHtml(it.title || it.name || "Item");
-
-  // Image is resolved upstream from products.json (variant-aware), but fallback still works.
-  const imgUrl = safeUrl(it.image || it.imageUrl || "");
-  const img = imgUrl ? `<img src="${escapeHtml(imgUrl)}" alt="">` : "No image";
-
-  const accessUrl = safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link);
-  const squareUrl = safeUrl(it.squareUrl);
-
-  const variantLabel = String(it.variantLabel || "").trim();
-  const variantLine = variantLabel
-    ? `<div class="mini" style="margin-top:2px;">Variant: <strong>${escapeHtml(variantLabel)}</strong></div>`
-    : ``;
-
-  const purchaseReturn = `https://unlim8ted.com/cart?source=purchase&itemId=${encodeURIComponent(it.id)}`;
-  const squareWithRedirect = squareUrl ? buildSquareRedirectUrl(squareUrl, purchaseReturn) : "";
-
-  const priceLabel = (kind === "free")
-    ? `<div class="price">FREE</div>`
-    : `<div class="price">$${money(price)}</div>`;
-
-  const hint = (kind === "paid")
-    ? `<div class="mini">Purchased individually via Square. Returning here will clear it from your cart.</div>`
-    : `<div class="mini">This item is completely free!</div>`;
-
-  const primaryAction = (kind === "free")
-    ? (accessUrl
-      ? `<a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>`
-      : ``
-    )
-    : (squareUrl
-      ? `<a class="btn btn-primary btn-small" href="${escapeHtml(squareWithRedirect)}" target="_blank" rel="noopener">Buy on Square</a>`
-      : `<button class="btn btn-ghost btn-small" type="button" data-missinglink="${escapeHtml(it.id)}">Square link needed</button>`
+    setFlowNotice(
+      "ok",
+      `<div style="display:flex;gap:10px;align-items:flex-start">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
+          <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <strong>Checkout complete.</strong><br/>
+          Your cart has been cleared.
+        </div>
+      </div>`
     );
+  });
 
-  const qtyControls = `
-    <div class="qty" aria-label="Quantity">
-      <button type="button" data-dec="${escapeHtml(it.id)}" aria-label="Decrease quantity">−</button>
-      <input type="text" inputmode="numeric" value="${qty}" data-qty="${escapeHtml(it.id)}" aria-label="Quantity value">
-      <button type="button" data-inc="${escapeHtml(it.id)}" aria-label="Increase quantity">+</button>
-    </div>
-  `;
+  function splitItems(items) {
+    const paid = [];
+    const free = [];
+    for (const it of items) {
+      const price = Number(it.price) || 0;
+      if (price > 0) paid.push(it);
+      else free.push(it);
+    }
+    return { paid, free };
+  }
 
-  // ✅ Hide action buttons ONLY on the first page (Review)
-  const showActions = (view !== "review");
+  function recomputeSummary(paid, free) {
+    const paidQty = paid.reduce((s, it) => s + (Number(it.qty) || 1), 0);
+    const freeQty = free.reduce((s, it) => s + (Number(it.qty) || 1), 0);
+    const paidSubtotal = paid.reduce((s, it) => s + (Number(it.price) || 0) * (Number(it.qty) || 1), 0);
 
-  const actionRow = showActions ? `
-    <div class="row2" style="justify-content:flex-end; margin-top:2px;">
-      ${primaryAction}
-      ${accessUrl && kind === "paid" ? `
-        <a class="btn btn-ghost btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">View details</a>
-      ` : ``}
-    </div>
-  ` : ``;
+    paidQtyEl.textContent = String(paidQty);
+    freeQtyEl.textContent = String(freeQty);
+    paidSubtotalEl.textContent = money(paidSubtotal);
+    dueNowEl.textContent = money(paidSubtotal);
 
-  return `
-    <div class="item">
-      <div class="thumb">${img}</div>
+    paidCountPill.textContent = String(paid.length);
+    freeCountPill.textContent = String(free.length);
 
-      <div class="meta">
-        <div class="title">${title}</div>
-        ${variantLine}
+    paidEmpty.style.display = paid.length ? "none" : "block";
+    freeEmpty.style.display = free.length ? "none" : "block";
+    allEmpty.style.display = (paid.length === 0 && free.length === 0) ? "block" : "none";
+    paidEmptyPay.style.display = paid.length ? "none" : "block";
 
-        <div class="row2">
-          <div>
-            ${priceLabel}
-            ${hint}
+    nextBtn.disabled = (paid.length === 0 && free.length === 0);
+    nextBtn.textContent = nextBtn.disabled ? "Add items first" : (stepIndex === 3 ? "Done" : "Continue");
+  }
+
+  function itemCardHTML(it, kind, view = "review") {
+    const qty = Math.max(1, Number(it.qty) || 1);
+    const price = Number(it.price) || 0;
+
+    const title = escapeHtml(it.title || it.name || "Item");
+
+    const imgUrl = safeUrl(it.image || it.imageUrl || "");
+    const img = imgUrl ? `<img src="${escapeHtml(imgUrl)}" alt="">` : "No image";
+
+    const accessUrl = safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link);
+    const squareUrl = safeUrl(it.squareUrl);
+
+    const variantLabel = String(it.variantLabel || "").trim();
+    const variantLine = variantLabel
+      ? `<div class="mini" style="margin-top:2px;">Variant: <strong>${escapeHtml(variantLabel)}</strong></div>`
+      : ``;
+
+    const purchaseReturn = `https://unlim8ted.com/cart?source=purchase&itemId=${encodeURIComponent(it.id)}`;
+    const squareWithRedirect = squareUrl ? buildSquareRedirectUrl(squareUrl, purchaseReturn) : "";
+
+    const priceLabel = (kind === "free")
+      ? `<div class="price">FREE</div>`
+      : `<div class="price">$${money(price)}</div>`;
+
+    const hint = (kind === "paid")
+      ? `<div class="mini">Purchased individually via Square. Returning here will clear it from your cart.</div>`
+      : `<div class="mini">This item is completely free!</div>`;
+
+    const primaryAction = (kind === "free")
+      ? (accessUrl
+        ? `<a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>`
+        : ``
+      )
+      : (squareUrl
+        ? `<a class="btn btn-primary btn-small" href="${escapeHtml(squareWithRedirect)}" target="_blank" rel="noopener">Buy on Square</a>`
+        : `<button class="btn btn-ghost btn-small" type="button" data-missinglink="${escapeHtml(it.id)}">Square link needed</button>`
+      );
+
+    const qtyControls = `
+      <div class="qty" aria-label="Quantity">
+        <button type="button" data-dec="${escapeHtml(it.id)}" aria-label="Decrease quantity">−</button>
+        <input type="text" inputmode="numeric" value="${qty}" data-qty="${escapeHtml(it.id)}" aria-label="Quantity value">
+        <button type="button" data-inc="${escapeHtml(it.id)}" aria-label="Increase quantity">+</button>
+      </div>
+    `;
+
+    // Hide action buttons ONLY on Review
+    const showActions = (view !== "review");
+
+    const actionRow = showActions ? `
+      <div class="row2" style="justify-content:flex-end; margin-top:2px;">
+        ${primaryAction}
+        ${accessUrl && kind === "paid" ? `
+          <a class="btn btn-ghost btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">View details</a>
+        ` : ``}
+      </div>
+    ` : ``;
+
+    return `
+      <div class="item">
+        <div class="thumb">${img}</div>
+
+        <div class="meta">
+          <div class="title">${title}</div>
+          ${variantLine}
+
+          <div class="row2">
+            <div>
+              ${priceLabel}
+              ${hint}
+            </div>
+            ${qtyControls}
           </div>
-          ${qtyControls}
+
+          ${actionRow}
         </div>
 
-        ${actionRow}
+        <div class="actions">
+          <button class="iconbtn" type="button" data-remove="${escapeHtml(it.id)}" title="Remove" aria-label="Remove">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <path d="M6 7l1 14h10l1-14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <path d="M9 7V4h6v3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
       </div>
+    `;
+  }
 
-      <div class="actions">
-        <button class="iconbtn" type="button" data-remove="${escapeHtml(it.id)}" title="Remove" aria-label="Remove">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <path d="M6 7l1 14h10l1-14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <path d="M9 7V4h6v3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  `;
-}
+  async function render(items) {
+    // BUY MODE: show ONLY the buy item (do not touch cart)
+    if (buyMode && buyItem) items = [buyItem];
 
-    async function render(items) {
-      // BUY MODE: show ONLY the buy item (do not touch cart)
-      if (buyMode && buyItem) items = [buyItem];
+    // IMPORTANT: normalize + enrich everything BEFORE splitItems (fixes "free" bug)
+    const enriched = await Promise.all((items || []).map(async (raw) => {
+      const r = await resolveItemData(raw);
+      return {
+        ...r,
+        id: raw.id || r.id,
+        qty: Number(raw.qty ?? r.qty ?? 1) || 1,
+        // ensure these are present for UI
+        squareUrl: r.squareUrl || safeUrl(raw.squareUrl) || safeUrl(raw.buyLink) || "",
+        accessUrl: r.accessUrl || safeUrl(raw.accessUrl) || safeUrl(raw.downloadUrl) || "",
+        image: r.imageUrl || safeUrl(raw.image) || safeUrl(raw.imageUrl) || "",
+        price: Number(r.price ?? 0) || 0,
+        title: r.title || raw.title || raw.name || "Item",
+        variantLabel: r.variantLabel || raw.variantLabel || "",
+      };
+    }));
 
-      // Resolve square/access/image (image from products.json)
-const enriched = await Promise.all((items || []).map(async (it) => {
-  const r = await resolveItemData(it);
-  return {
-    ...it,
-    title: it.title || r.title,
-    price: Number(it.price ?? r.price ?? 0),
-    productType: it.productType || r.productType || "",
-    variantLabel: r.variantLabel || it.variantLabel || "",
-    squareUrl: r.squareUrl || "",
-    accessUrl: r.accessUrl || "",
-    image: r.imageUrl || it.image || it.imageUrl || null,
-  };
-}));
+    const { paid, free } = splitItems(enriched);
+    lastRendered = { paid, free };
 
+    paidList.innerHTML = "";
+    freeList.innerHTML = "";
 
-      const { paid, free } = splitItems(enriched);
-      lastRendered = { paid, free };
-
-      paidList.innerHTML = "";
-      freeList.innerHTML = "";
-
-      for (const it of free) {
-        const wrap = document.createElement("div");
-        wrap.innerHTML = itemCardHTML(it, "free", "review");
-        freeList.appendChild(wrap.firstElementChild);
-      }
-      for (const it of paid) {
-        const wrap = document.createElement("div");
-        wrap.innerHTML = itemCardHTML(it, "paid", "review");
-        paidList.appendChild(wrap.firstElementChild);
-      }
-
-      renderPaidPayPane();
-      recomputeSummary(paid, free);
-      if (stepIndex === 3) renderSuccess();
+    for (const it of free) {
+      const wrap = document.createElement("div");
+      wrap.innerHTML = itemCardHTML(it, "free", "review");
+      freeList.appendChild(wrap.firstElementChild);
+    }
+    for (const it of paid) {
+      const wrap = document.createElement("div");
+      wrap.innerHTML = itemCardHTML(it, "paid", "review");
+      paidList.appendChild(wrap.firstElementChild);
     }
 
-    function renderPaidPayPane() {
-      const paid = lastRendered.paid || [];
-      paidListPay.innerHTML = "";
-      for (const it of paid) {
-        const wrap = document.createElement("div");
-        wrap.innerHTML = itemCardHTML(it, "paid", "pay");
-        paidListPay.appendChild(wrap.firstElementChild);
-      }
-      paidEmptyPay.style.display = paid.length ? "none" : "block";
+    renderPaidPayPane();
+    recomputeSummary(paid, free);
+    if (stepIndex === 3) renderSuccess();
+  }
+
+  function renderPaidPayPane() {
+    const paid = lastRendered.paid || [];
+    paidListPay.innerHTML = "";
+    for (const it of paid) {
+      const wrap = document.createElement("div");
+      wrap.innerHTML = itemCardHTML(it, "paid", "pay");
+      paidListPay.appendChild(wrap.firstElementChild);
     }
+    paidEmptyPay.style.display = paid.length ? "none" : "block";
+  }
 
-    async function setQty(uid, id, qty) {
-      qty = Math.max(1, qty | 0);
-      if (!uid) {
-        try {
-          const raw = localStorage.getItem("unlim8ted-cart");
-          const arr = raw ? JSON.parse(raw) : [];
-          if (Array.isArray(arr)) {
-            const idx = arr.findIndex(x => String(x.id) === String(id));
-            if (idx >= 0) {
-              arr[idx].qty = qty;
-              localStorage.setItem("unlim8ted-cart", JSON.stringify(arr));
-              window.dispatchEvent(new CustomEvent("cart-changed"));
-            }
-          }
-        } catch { }
-        return;
-      }
-
-      await updateDoc(doc(db, "users", uid, "cartItems", id), {
-        qty,
-        updatedAt: serverTimestamp()
-      });
-      window.dispatchEvent(new CustomEvent("cart-changed"));
-    }
-
-    async function clearEntireCart(uid) {
-      if (!uid) {
-        try {
-          localStorage.setItem("unlim8ted-cart", JSON.stringify([]));
-          window.dispatchEvent(new CustomEvent("cart-changed"));
-        } catch { }
-        return;
-      }
-      const snap = await getDocs(collection(db, "users", uid, "cartItems"));
-      await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
-      window.dispatchEvent(new CustomEvent("cart-changed"));
-    }
-
-    async function removeItem(uid, id) {
-      if (!uid) {
-        try {
-          const raw = localStorage.getItem("unlim8ted-cart");
-          const arr = raw ? JSON.parse(raw) : [];
-          const next = arr.filter(x => String(x.id) !== String(id));
-          localStorage.setItem("unlim8ted-cart", JSON.stringify(next));
-          window.dispatchEvent(new CustomEvent("cart-changed"));
-        } catch { }
-        return;
-      }
-      await deleteDoc(doc(db, "users", uid, "cartItems", id));
-      window.dispatchEvent(new CustomEvent("cart-changed"));
-    }
-
-    async function writePurchase(uid, payload) {
-      if (!uid) return;
-      try {
-        await addDoc(collection(db, "users", uid, "purchases"), {
-          ...payload,
-          createdAt: serverTimestamp()
-        });
-      } catch (err) {
-        console.error("writePurchase failed", err);
-      }
-    }
-
-    function findItemById(id) {
-      const all = [...(lastRendered.paid || []), ...(lastRendered.free || [])];
-      return all.find(x => String(x.id) === String(id)) || null;
-    }
-
-    function wireEvents() {
-      if (wired) return;
-      wired = true;
-
-      document.addEventListener("click", async (e) => {
-        const uid = currentUser?.uid || null;
-
-        const rm = e.target.closest("[data-remove]");
-        if (rm) {
-          if (buyMode) { setFlowNotice("warn", `<strong>Buy Now mode:</strong> this item isn’t in your cart.`); return; }
-          const id = rm.getAttribute("data-remove");
-          try { await removeItem(uid, id); } catch (err) { console.error(err); }
-          return;
-        }
-
-        const inc = e.target.closest("[data-inc]");
-        if (inc) {
-          const id = inc.getAttribute("data-inc");
-          const input = document.querySelector(`[data-qty="${CSS.escape(id)}"]`);
-          const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
-          input.value = String(current + 1);
-          try { await setQty(uid, id, current + 1); } catch (err) { console.error(err); }
-          return;
-        }
-
-        const dec = e.target.closest("[data-dec]");
-        if (dec) {
-          const id = dec.getAttribute("data-dec");
-          const input = document.querySelector(`[data-qty="${CSS.escape(id)}"]`);
-          const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
-          const next = Math.max(1, current - 1);
-          input.value = String(next);
-          try { await setQty(uid, id, next); } catch (err) { console.error(err); }
-          return;
-        }
-
-        const missing = e.target.closest("[data-missinglink]");
-        if (missing) {
-          setFlowNotice(
-            "warn",
-            `<strong>Square link missing.</strong> This item needs a variant link in <code>products.json</code> or a <code>buyLink</code> saved in cart.`
-          );
-          return;
-        }
-      });
-
-      let t = null;
-      document.addEventListener("input", (e) => {
-        const inp = e.target.closest("[data-qty]");
-        if (!inp) return;
-
-        const uid = currentUser?.uid || null;
-        const id = inp.getAttribute("data-qty");
-        let qty = parseInt(inp.value, 10);
-        if (!Number.isFinite(qty) || qty < 1) qty = 1;
-
-        clearTimeout(t);
-        t = setTimeout(async () => {
-          try { await setQty(uid, id, qty); } catch (err) { console.error(err); }
-        }, 300);
-      });
-    }
-
-    function refreshLoggedOutCartView() {
-      let items = [];
+  async function setQty(uid, id, qty) {
+    qty = Math.max(1, qty | 0);
+    if (!uid) {
       try {
         const raw = localStorage.getItem("unlim8ted-cart");
         const arr = raw ? JSON.parse(raw) : [];
-
         if (Array.isArray(arr)) {
-          let changed = false;
-          arr.forEach((it, i) => {
-            if (!it.id) {
-              it.id = `local-${Date.now()}-${i}-${Math.random().toString(16).slice(2)}`;
-              changed = true;
-            }
-          });
-          if (changed) localStorage.setItem("unlim8ted-cart", JSON.stringify(arr));
-
-          items = arr.map((it) => ({
-            id: it.id,
-            productId: it.productId || it.pid || null,
-            variantId: it.variantId || it.vid || null,
-            variantLabel: it.variantLabel || "",
-            title: it.title || it.name || "Item",
-            price: it.price || 0,
-            qty: it.qty || 1,
-            // image is resolved from products.json; keep fallback if present
-            image: it.image || null,
-            buyLink: it.buyLink || null,
-            squareUrl: it.squareUrl || null,
-            downloadUrl: it.downloadUrl || it.accessUrl || it.url || it.link || null
-          }));
+          const idx = arr.findIndex(x => String(x.id) === String(id));
+          if (idx >= 0) {
+            arr[idx].qty = qty;
+            localStorage.setItem("unlim8ted-cart", JSON.stringify(arr));
+            window.dispatchEvent(new CustomEvent("cart-changed"));
+          }
         }
       } catch { }
-
-      render(items);
+      return;
     }
 
-    window.addEventListener("cart-changed", () => {
-      if (!currentUser) refreshLoggedOutCartView();
+    await updateDoc(doc(db, "users", uid, "cartItems", id), {
+      qty,
+      updatedAt: serverTimestamp()
     });
+    window.dispatchEvent(new CustomEvent("cart-changed"));
+  }
 
-    // --- Donation UI logic ---
-    function syncDonationUI() {
-      const freq = donationFreq.value;
-      const preset = donationAmountPreset.value;
-      const isOneTime = (freq === "one_time");
-
-      for (const opt of oneTimeOptions) opt.hidden = !isOneTime;
-      if (!isOneTime && donationAmountPreset.value !== "custom") donationAmountPreset.value = "custom";
-
-      if (!isOneTime) {
-        donationHint.innerHTML = `Recurring donations are currently supported as <strong>Custom</strong> only.`;
-      } else if (preset !== "custom") {
-        donationHint.innerHTML = `You’ll be sent to Square for a <strong>one-time $${escapeHtml(preset)}</strong> donation.`;
-      } else {
-        donationHint.innerHTML = `You’ll be sent to Square for a <strong>${escapeHtml(freq.replace("_", " "))}</strong> custom donation.`;
-      }
+  async function clearEntireCart(uid) {
+    if (!uid) {
+      try {
+        localStorage.setItem("unlim8ted-cart", JSON.stringify([]));
+        window.dispatchEvent(new CustomEvent("cart-changed"));
+      } catch { }
+      return;
     }
+    const snap = await getDocs(collection(db, "users", uid, "cartItems"));
+    await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+    window.dispatchEvent(new CustomEvent("cart-changed"));
+  }
 
-    function getDonationLink() {
-      const freq = donationFreq.value;
-      const preset = donationAmountPreset.value;
-
-      if (freq === "one_time") {
-        if (preset === "1" || preset === "5" || preset === "10") return SQUARE_DONATION.one_time[preset];
-        return SQUARE_DONATION.one_time.custom;
-      }
-      return (SQUARE_DONATION[freq] && SQUARE_DONATION[freq].custom) ? SQUARE_DONATION[freq].custom : "";
+  async function removeItem(uid, id) {
+    if (!uid) {
+      try {
+        const raw = localStorage.getItem("unlim8ted-cart");
+        const arr = raw ? JSON.parse(raw) : [];
+        const next = arr.filter(x => String(x.id) !== String(id));
+        localStorage.setItem("unlim8ted-cart", JSON.stringify(next));
+        window.dispatchEvent(new CustomEvent("cart-changed"));
+      } catch { }
+      return;
     }
+    await deleteDoc(doc(db, "users", uid, "cartItems", id));
+    window.dispatchEvent(new CustomEvent("cart-changed"));
+  }
 
-    donateBtn.addEventListener("click", () => {
-      const link = getDonationLink();
-      if (!link) {
-        setFlowNotice("warn", `<strong>Donation link unavailable.</strong> Please try again later.`);
+  async function writePurchase(uid, payload) {
+    if (!uid) return;
+    try {
+      await addDoc(collection(db, "users", uid, "purchases"), {
+        ...payload,
+        createdAt: serverTimestamp()
+      });
+    } catch (err) {
+      console.error("writePurchase failed", err);
+    }
+  }
+
+  function findItemById(id) {
+    const all = [...(lastRendered.paid || []), ...(lastRendered.free || [])];
+    return all.find(x => String(x.id) === String(id)) || null;
+  }
+
+  function wireEvents() {
+    if (wired) return;
+    wired = true;
+
+    document.addEventListener("click", async (e) => {
+      const uid = currentUser?.uid || null;
+
+      const rm = e.target.closest("[data-remove]");
+      if (rm) {
+        if (buyMode) { setFlowNotice("warn", `<strong>Buy Now mode:</strong> this item isn’t in your cart.`); return; }
+        const id = rm.getAttribute("data-remove");
+        try { await removeItem(uid, id); } catch (err) { console.error(err); }
         return;
       }
 
-      const redirectBack = "https://unlim8ted.com/cart?source=donation";
-      const go = buildSquareRedirectUrl(link, redirectBack);
-      window.location.href = go;
-    });
-
-    clearDonationBtn.addEventListener("click", () => {
-      donationFreq.value = "one_time";
-      donationAmountPreset.value = "custom";
-      clearFlowNotice();
-      syncDonationUI();
-    });
-
-    donationFreq.addEventListener("change", () => {
-      if (donationFreq.value !== "one_time") donationAmountPreset.value = "custom";
-      syncDonationUI();
-    });
-
-    donationAmountPreset.addEventListener("change", syncDonationUI);
-    syncDonationUI();
-
-    // --- SUCCESS rendering ---
-    function renderSuccess() {
-      const rows = currentUser?.uid ? purchaseRows : getLocalPurchases();
-      successGrid.innerHTML = "";
-
-      const header = document.createElement("div");
-      header.className = "successRow";
-      header.innerHTML = `
-        <div style="display:flex;gap:12px;align-items:flex-start;min-width:0;">
-          <div style="font-size:22px;line-height:1">🎉</div>
-          <div style="min-width:0;">
-            <div style="font-weight:900;letter-spacing:.2px;">Success</div>
-            <div class="mini">Your purchases and donations are recorded below.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
-          <span class="tag">Recorded</span>
-        </div>
-      `;
-      successGrid.appendChild(header);
-
-      let count = 0;
-
-      for (const r of rows) {
-        const title = escapeHtml(r.title || r.itemId || "Purchase");
-        const accessUrl = safeUrl(r.accessUrl || "");
-        const type = escapeHtml(r.type || "purchase");
-
-        const tag = accessUrl ? `<span class="tag">Link ready</span>` : `<span class="tag dim">${type}</span>`;
-        const btn = accessUrl
-          ? `<a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>`
-          : `<button class="btn btn-ghost btn-small" type="button" disabled>No link</button>`;
-
-        const row = document.createElement("div");
-        row.className = "successRow";
-        row.innerHTML = `
-          <div style="min-width:0;">
-            <div style="font-weight:900; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div>
-            <div class="mini">Item ID: ${escapeHtml(r.itemId || "")}</div>
-          </div>
-          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-            ${tag}
-            ${btn}
-          </div>
-        `;
-        successGrid.appendChild(row);
-        count++;
+      const inc = e.target.closest("[data-inc]");
+      if (inc) {
+        const id = inc.getAttribute("data-inc");
+        const input = document.querySelector(`[data-qty="${CSS.escape(id)}"]`);
+        const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
+        input.value = String(current + 1);
+        try { await setQty(uid, id, current + 1); } catch (err) { console.error(err); }
+        return;
       }
 
-      const freeWithLinks = (lastRendered.free || [])
-        .filter(it => safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link));
-
-      for (const it of freeWithLinks) {
-        const title = escapeHtml(it.title || it.name || it.id);
-        const accessUrl = safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link);
-
-        const row = document.createElement("div");
-        row.className = "successRow";
-        row.innerHTML = `
-          <div style="min-width:0;">
-            <div style="font-weight:900; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div>
-            <div class="mini">Free item link</div>
-          </div>
-          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-            <span class="tag">Link ready</span>
-            <a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>
-          </div>
-        `;
-        successGrid.appendChild(row);
-        count++;
+      const dec = e.target.closest("[data-dec]");
+      if (dec) {
+        const id = dec.getAttribute("data-dec");
+        const input = document.querySelector(`[data-qty="${CSS.escape(id)}"]`);
+        const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
+        const next = Math.max(1, current - 1);
+        input.value = String(next);
+        try { await setQty(uid, id, next); } catch (err) { console.error(err); }
+        return;
       }
 
-      successEmpty.style.display = (count === 0) ? "block" : "none";
+      const missing = e.target.closest("[data-missinglink]");
+      if (missing) {
+        setFlowNotice(
+          "warn",
+          `<strong>Square link missing.</strong> This item needs a variant link in <code>products.json</code> or a <code>buyLink</code> saved in cart.`
+        );
+        return;
+      }
+    });
+
+    let t = null;
+    document.addEventListener("input", (e) => {
+      const inp = e.target.closest("[data-qty]");
+      if (!inp) return;
+
+      const uid = currentUser?.uid || null;
+      const id = inp.getAttribute("data-qty");
+      let qty = parseInt(inp.value, 10);
+      if (!Number.isFinite(qty) || qty < 1) qty = 1;
+
+      clearTimeout(t);
+      t = setTimeout(async () => {
+        try { await setQty(uid, id, qty); } catch (err) { console.error(err); }
+      }, 300);
+    });
+  }
+
+  function refreshLoggedOutCartView() {
+    let items = [];
+    try {
+      const raw = localStorage.getItem("unlim8ted-cart");
+      const arr = raw ? JSON.parse(raw) : [];
+
+      if (Array.isArray(arr)) {
+        let changed = false;
+        arr.forEach((it, i) => {
+          if (!it.id) {
+            it.id = `local-${Date.now()}-${i}-${Math.random().toString(16).slice(2)}`;
+            changed = true;
+          }
+        });
+        if (changed) localStorage.setItem("unlim8ted-cart", JSON.stringify(arr));
+
+        items = arr.map((rawItem) => {
+          const base = normalizeCartItem({
+            id: rawItem.id,
+            productId: rawItem.productId || rawItem.pid || null,
+            variantId: rawItem.variantId || rawItem.vid || null,
+            variantLabel: rawItem.variantLabel || "",
+            title: rawItem.title || rawItem.name || "Item",
+            price: rawItem.price ?? rawItem.priceNum ?? 0,
+            qty: rawItem.qty || 1,
+            image: rawItem.image || null,
+            buyLink: rawItem.buyLink || null,
+            squareUrl: rawItem.squareUrl || null,
+            downloadUrl: rawItem.downloadUrl || rawItem.accessUrl || rawItem.url || rawItem.link || null,
+            accessUrl: rawItem.accessUrl || null,
+          });
+          return base;
+        });
+      }
+    } catch { }
+
+    render(items);
+  }
+
+  window.addEventListener("cart-changed", () => {
+    if (!currentUser) refreshLoggedOutCartView();
+  });
+
+  // --- Donation UI logic ---
+  function syncDonationUI() {
+    const freq = donationFreq.value;
+    const preset = donationAmountPreset.value;
+    const isOneTime = (freq === "one_time");
+
+    for (const opt of oneTimeOptions) opt.hidden = !isOneTime;
+    if (!isOneTime && donationAmountPreset.value !== "custom") donationAmountPreset.value = "custom";
+
+    if (!isOneTime) {
+      donationHint.innerHTML = `Recurring donations are currently supported as <strong>Custom</strong> only.`;
+    } else if (preset !== "custom") {
+      donationHint.innerHTML = `You’ll be sent to Square for a <strong>one-time $${escapeHtml(preset)}</strong> donation.`;
+    } else {
+      donationHint.innerHTML = `You’ll be sent to Square for a <strong>${escapeHtml(freq.replace("_", " "))}</strong> custom donation.`;
+    }
+  }
+
+  function getDonationLink() {
+    const freq = donationFreq.value;
+    const preset = donationAmountPreset.value;
+
+    if (freq === "one_time") {
+      if (preset === "1" || preset === "5" || preset === "10") return SQUARE_DONATION.one_time[preset];
+      return SQUARE_DONATION.one_time.custom;
+    }
+    return (SQUARE_DONATION[freq] && SQUARE_DONATION[freq].custom) ? SQUARE_DONATION[freq].custom : "";
+  }
+
+  donateBtn.addEventListener("click", () => {
+    const link = getDonationLink();
+    if (!link) {
+      setFlowNotice("warn", `<strong>Donation link unavailable.</strong> Please try again later.`);
+      return;
     }
 
-    // --- Return flow handling ---
-    async function handleReturnFlow(user) {
-      const p = new URLSearchParams(window.location.search);
-      const source = p.get("source");
-      const itemId = p.get("itemId");
-      const productParam = p.get("product");
-      const orderId = p.get("orderId");
-      const transactionId = p.get("transactionId");
+    const redirectBack = "https://unlim8ted.com/cart?source=donation";
+    const go = buildSquareRedirectUrl(link, redirectBack);
+    window.location.href = go;
+  });
 
-      if (!source) return;
+  clearDonationBtn.addEventListener("click", () => {
+    donationFreq.value = "one_time";
+    donationAmountPreset.value = "custom";
+    clearFlowNotice();
+    syncDonationUI();
+  });
 
-      if (source === "donation") {
-        const row = {
-          type: "donation",
-          itemId: "donation",
-          title: "Donation",
-          accessUrl: null,
+  donationFreq.addEventListener("change", () => {
+    if (donationFreq.value !== "one_time") donationAmountPreset.value = "custom";
+    syncDonationUI();
+  });
+
+  donationAmountPreset.addEventListener("change", syncDonationUI);
+  syncDonationUI();
+
+  // --- SUCCESS rendering ---
+  function renderSuccess() {
+    const rows = currentUser?.uid ? purchaseRows : getLocalPurchases();
+    successGrid.innerHTML = "";
+
+    const header = document.createElement("div");
+    header.className = "successRow";
+    header.innerHTML = `
+      <div style="display:flex;gap:12px;align-items:flex-start;min-width:0;">
+        <div style="font-size:22px;line-height:1">🎉</div>
+        <div style="min-width:0;">
+          <div style="font-weight:900;letter-spacing:.2px;">Success</div>
+          <div class="mini">Your purchases and donations are recorded below.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
+        <span class="tag">Recorded</span>
+      </div>
+    `;
+    successGrid.appendChild(header);
+
+    let count = 0;
+
+    for (const r of rows) {
+      const title = escapeHtml(r.title || r.itemId || "Purchase");
+      const accessUrl = safeUrl(r.accessUrl || "");
+      const type = escapeHtml(r.type || "purchase");
+
+      const tag = accessUrl ? `<span class="tag">Link ready</span>` : `<span class="tag dim">${type}</span>`;
+      const btn = accessUrl
+        ? `<a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>`
+        : `<button class="btn btn-ghost btn-small" type="button" disabled>No link</button>`;
+
+      const row = document.createElement("div");
+      row.className = "successRow";
+      row.innerHTML = `
+        <div style="min-width:0;">
+          <div style="font-weight:900; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div>
+          <div class="mini">Item ID: ${escapeHtml(r.itemId || "")}</div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+          ${tag}
+          ${btn}
+        </div>
+      `;
+      successGrid.appendChild(row);
+      count++;
+    }
+
+    const freeWithLinks = (lastRendered.free || [])
+      .filter(it => safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link));
+
+    for (const it of freeWithLinks) {
+      const title = escapeHtml(it.title || it.name || it.id);
+      const accessUrl = safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link);
+
+      const row = document.createElement("div");
+      row.className = "successRow";
+      row.innerHTML = `
+        <div style="min-width:0;">
+          <div style="font-weight:900; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div>
+          <div class="mini">Free item link</div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+          <span class="tag">Link ready</span>
+          <a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>
+        </div>
+      `;
+      successGrid.appendChild(row);
+      count++;
+    }
+
+    successEmpty.style.display = (count === 0) ? "block" : "none";
+  }
+
+  // --- Return flow handling ---
+  async function handleReturnFlow(user) {
+    const p = new URLSearchParams(window.location.search);
+    const source = p.get("source");
+    const itemId = p.get("itemId");
+    const productParam = p.get("product");
+    const orderId = p.get("orderId");
+    const transactionId = p.get("transactionId");
+
+    if (!source) return;
+
+    if (source === "donation") {
+      const row = {
+        type: "donation",
+        itemId: "donation",
+        title: "Donation",
+        accessUrl: null,
+        orderId: orderId || null,
+        transactionId: transactionId || null
+      };
+
+      if (user?.uid) await writePurchase(user.uid, row);
+      else addLocalPurchase({ ...row, createdAt: Date.now() });
+
+      setFlowNotice(
+        "ok",
+        `<div style="display:flex;gap:10px;align-items:flex-start">
+          <svg class="icon-2x" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 21s-7-4.35-9.33-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.33 6c-2.33 4.65-9.33 9-9.33 9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <div>
+            <strong>Donation received.</strong><br/>
+            Thank you for supporting Unlim8ted.
+          </div>
+        </div>`
+      );
+
+      setStep(2);
+    }
+
+    if (source === "purchase") {
+      if (!itemId) {
+        setFlowNotice("warn", `<strong>Purchase return received</strong> but no item was identified.`);
+      } else {
+        const uid = user?.uid || null;
+        const item = findItemById(itemId);
+
+        const purchaseRow = {
+          type: "paid_item",
+          itemId: String(itemId),
+          title: item?.title || item?.name || String(itemId),
+          accessUrl: safeUrl(item?.accessUrl || item?.downloadUrl || item?.url || item?.link || ""),
+          qty: item?.qty ? Number(item.qty) : 1,
+          price: item?.price ? Number(item.price) : null,
           orderId: orderId || null,
           transactionId: transactionId || null
         };
 
-        if (user?.uid) await writePurchase(user.uid, row);
-        else addLocalPurchase({ ...row, createdAt: Date.now() });
+        if (uid) await writePurchase(uid, purchaseRow);
+        else addLocalPurchase({ ...purchaseRow, createdAt: Date.now() });
+
+        try { await removeItem(uid, itemId); } catch (err) { console.error(err); }
 
         setFlowNotice(
           "ok",
           `<div style="display:flex;gap:10px;align-items:flex-start">
-            <svg class="icon-2x" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 21s-7-4.35-9.33-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.33 6c-2.33 4.65-9.33 9-9.33 9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
+              <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <div>
-              <strong>Donation received.</strong><br/>
-              Thank you for supporting Unlim8ted.
+              <strong>Purchase received.</strong><br/>
+              That item has been removed from your cart.
             </div>
           </div>`
         );
 
         setStep(2);
+        if (!uid) refreshLoggedOutCartView();
       }
-
-      if (source === "purchase") {
-        if (!itemId) {
-          setFlowNotice("warn", `<strong>Purchase return received</strong> but no item was identified.`);
-        } else {
-          const uid = user?.uid || null;
-          const item = findItemById(itemId);
-
-          const purchaseRow = {
-            type: "paid_item",
-            itemId: String(itemId),
-            title: item?.title || item?.name || String(itemId),
-            accessUrl: safeUrl(item?.accessUrl || item?.downloadUrl || item?.url || item?.link || ""),
-            qty: item?.qty ? Number(item.qty) : 1,
-            price: item?.price ? Number(item.price) : null,
-            orderId: orderId || null,
-            transactionId: transactionId || null
-          };
-
-          if (uid) await writePurchase(uid, purchaseRow);
-          else addLocalPurchase({ ...purchaseRow, createdAt: Date.now() });
-
-          try { await removeItem(uid, itemId); } catch (err) { console.error(err); }
-
-          setFlowNotice(
-            "ok",
-`<div style="display:flex;gap:10px;align-items:flex-start">
-  <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-    <path
-      d="M20 6 9 17l-5-5"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-  <div>
-    <strong>Purchase received.</strong><br/>
-    That item has been removed from your cart.
-  </div>
-</div>`
-
-          );
-
-          setStep(2);
-          if (!uid) refreshLoggedOutCartView();
-        }
-      }
-
-      if (source === "buy") {
-        const pid = String(productParam || "").trim();
-        if (!pid) {
-          setFlowNotice("warn", `<strong>Buy Now:</strong> missing <code>product</code> parameter.`);
-          setStep(0);
-        } else {
-          buyMode = true;
-
-          // Pull product details from products.json
-          try { await loadProducts(); } catch { /* ignore */ }
-          const pObj = PRODUCT_BY_ID.get(pid) || null;
-
-          // Use product-level info to build a single checkout item
-          const title = pObj?.title || pObj?.name || pid;
-          const image = resolveProductImage(pid, "");
-          const price = Number(pObj?.price ?? pObj?.amount ?? 0) || 0;
-
-          // If your products.json includes a buy link at product-level, use it
-          const buyLink = safeUrl(pObj?.buyLink) || safeUrl(pObj?.squareUrl) || safeUrl(pObj?.squareLink) || safeUrl(pObj?.square) || "";
-
-          // Access URL if applicable
-          const accessUrl = safeUrl(pObj?.accessUrl) || safeUrl(pObj?.downloadUrl) || safeUrl(pObj?.url) || safeUrl(pObj?.link) || "";
-
-          buyItem = {
-            id: `buy-${pid}`,
-            productId: pid,
-            variantId: null,
-            variantLabel: "",
-            title,
-            price,
-            qty: 1,
-            image,
-            buyLink,
-            squareUrl: buyLink,
-            accessUrl
-          };
-
-          await render([buyItem]);
-
-          setFlowNotice(
-            "ok",
-`<div style="display:flex;gap:10px;align-items:flex-start">
-  <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-    <path d="M6 6h15l-2 8H8L6 6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M6 6 5 3H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    <circle cx="9" cy="19" r="1.8" stroke="currentColor" stroke-width="2"/>
-    <circle cx="17" cy="19" r="1.8" stroke="currentColor" stroke-width="2"/>
-  </svg>
-  <div>
-    <strong>Buy Now mode.</strong><br/>
-    You’re checking out a single item. Hit <strong>Done</strong> on Success to return to your full cart.
-  </div>
-</div>`
-
-          );
-
-          // Start on Overview/Review with only the one item
-          setStep(0);
-        }
-      }
-
-      try {
-        const clean = window.location.origin + window.location.pathname;
-        window.history.replaceState({}, "", clean);
-      } catch { }
     }
 
-    // --- Auth / listeners ---
-    onAuthStateChanged(auth, async (user) => {
-      currentUser = user || null;
+    if (source === "buy") {
+      const pid = String(productParam || "").trim();
+      if (!pid) {
+        setFlowNotice("warn", `<strong>Buy Now:</strong> missing <code>product</code> parameter.`);
+        setStep(0);
+      } else {
+        buyMode = true;
 
-      if (unsubCart) { unsubCart(); unsubCart = null; }
-      if (unsubPurchases) { unsubPurchases(); unsubPurchases = null; }
+        try { await loadProducts(); } catch { /* ignore */ }
+        const pObj = PRODUCT_BY_ID.get(pid) || null;
 
-      wireEvents();
+        const title = pObj?.title || pObj?.name || pid;
+        const image = resolveProductImage(pid, "");
+        const price = Number(pObj?.price ?? pObj?.amount ?? 0) || 0;
 
-      // Make sure products are indexed early (non-blocking)
-      loadProducts().catch(() => { });
+        const buyLink =
+          safeUrl(pObj?.buyLink) ||
+          safeUrl(pObj?.squareUrl) ||
+          safeUrl(pObj?.squareLink) ||
+          safeUrl(pObj?.square) ||
+          safeUrl(pObj?.buy_link) ||
+          "";
 
-      if (!user) {
-        signedOut.style.display = "block";
-        refreshLoggedOutCartView();
-        await handleReturnFlow(null);
-        return;
+        const accessUrl =
+          safeUrl(pObj?.accessUrl) ||
+          safeUrl(pObj?.downloadUrl) ||
+          safeUrl(pObj?.url) ||
+          safeUrl(pObj?.link) ||
+          "";
+
+        buyItem = normalizeCartItem({
+          id: `buy-${pid}`,
+          productId: pid,
+          variantId: null,
+          variantLabel: "",
+          title,
+          price,
+          qty: 1,
+          image,
+          buyLink,
+          squareUrl: buyLink,
+          accessUrl
+        });
+
+        await render([buyItem]);
+
+        setFlowNotice(
+          "ok",
+          `<div style="display:flex;gap:10px;align-items:flex-start">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
+              <path d="M6 6h15l-2 8H8L6 6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M6 6 5 3H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="9" cy="19" r="1.8" stroke="currentColor" stroke-width="2"/>
+              <circle cx="17" cy="19" r="1.8" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <div>
+              <strong>Buy Now mode.</strong><br/>
+              You’re checking out a single item. Hit <strong>Done</strong> on Success to return to your full cart.
+            </div>
+          </div>`
+        );
+
+        setStep(0);
       }
+    }
 
-      signedOut.style.display = "none";
+    try {
+      const clean = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, "", clean);
+    } catch { }
+  }
 
-      // Cart listener
-      const cartRef = collection(db, "users", user.uid, "cartItems");
-      unsubCart = onSnapshot(cartRef, (snap) => {
-        const items = [];
-        snap.forEach(d => {
-          const data = d.data() || {};
-          items.push({
-            id: d.id,
-            productId: data.productId ?? null,
-            variantId: data.variantId ?? null,
-            variantLabel: data.variantLabel ?? "",
-            buyLink: data.buyLink ?? null,
+  // --- Auth / listeners ---
+  onAuthStateChanged(auth, async (user) => {
+    currentUser = user || null;
 
-            title: data.title || data.name || data.productName || d.id,
-            price: data.price ?? 0,
-            qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
+    if (unsubCart) { unsubCart(); unsubCart = null; }
+    if (unsubPurchases) { unsubPurchases(); unsubPurchases = null; }
 
-            // image now resolved via products.json; keep fallback in case
-            image: data.image ?? data.imageUrl ?? null,
+    wireEvents();
 
-            // legacy / existing fields
-            squareUrl: data.squareUrl ?? data.squareLink ?? null,
-            downloadUrl: data.downloadUrl ?? data.accessUrl ?? data.url ?? data.link ?? null,
-            accessUrl: data.accessUrl ?? null,
-          });
+    // Index products early (non-blocking)
+    loadProducts().catch(() => { });
+
+    if (!user) {
+      signedOut.style.display = "block";
+      refreshLoggedOutCartView();
+      await handleReturnFlow(null);
+      return;
+    }
+
+    signedOut.style.display = "none";
+
+    // Cart listener
+    const cartRef = collection(db, "users", user.uid, "cartItems");
+    unsubCart = onSnapshot(cartRef, (snap) => {
+      const items = [];
+      snap.forEach(d => {
+        const data = d.data() || {};
+
+        const base = normalizeCartItem({
+          id: d.id,
+          productId: data.productId ?? null,
+          variantId: data.variantId ?? null,
+          variantLabel: data.variantLabel ?? "",
+          buyLink: data.buyLink ?? null,
+
+          title: data.title || data.name || data.productName || "",
+          price: data.price ?? data.priceNum ?? 0,
+          qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
+
+          image: data.image ?? data.imageUrl ?? null,
+
+          squareUrl: data.squareUrl ?? data.squareLink ?? null,
+          downloadUrl: data.downloadUrl ?? data.accessUrl ?? data.url ?? data.link ?? null,
+          accessUrl: data.accessUrl ?? null,
         });
 
-        render(items);
+        items.push(base);
       });
 
-      // Purchases listener (for Success)
-      const purchasesRef = query(
-        collection(db, "users", user.uid, "purchases"),
-        orderBy("createdAt", "desc")
-      );
-
-      unsubPurchases = onSnapshot(purchasesRef, (snap) => {
-        const rows = [];
-        snap.forEach(d => {
-          const x = d.data() || {};
-          rows.push({
-            type: x.type || "purchase",
-            itemId: String(x.itemId || ""),
-            title: x.title || x.itemId || "Purchase",
-            accessUrl: x.accessUrl || x.downloadUrl || null,
-            createdAt: x.createdAt || null
-          });
-        });
-        purchaseRows = rows;
-        if (stepIndex === 3) renderSuccess();
-      });
-
-      await handleReturnFlow(user);
+      render(items);
     });
 
-    // Footer year
-    const y = new Date().getFullYear();
-    document.getElementById("footer-text").innerHTML =
-      `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+    // Purchases listener (for Success)
+    const purchasesRef = query(
+      collection(db, "users", user.uid, "purchases"),
+      orderBy("createdAt", "desc")
+    );
 
-    setStep(0);
-  </script>
+    unsubPurchases = onSnapshot(purchasesRef, (snap) => {
+      const rows = [];
+      snap.forEach(d => {
+        const x = d.data() || {};
+        rows.push({
+          type: x.type || "purchase",
+          itemId: String(x.itemId || ""),
+          title: x.title || x.itemId || "Purchase",
+          accessUrl: x.accessUrl || x.downloadUrl || null,
+          createdAt: x.createdAt || null
+        });
+      });
+      purchaseRows = rows;
+      if (stepIndex === 3) renderSuccess();
+    });
+
+    await handleReturnFlow(user);
+  });
+
+  // Footer year
+  const y = new Date().getFullYear();
+  document.getElementById("footer-text").innerHTML =
+    `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+
+  setStep(0);
+</script>
 
 
 </body>

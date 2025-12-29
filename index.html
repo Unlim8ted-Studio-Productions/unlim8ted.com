@@ -1664,7 +1664,7 @@ Z
   let unsubCart = null;
   let cartItems = [];
 
-  // ===== products.json cache/index (match SiteNavbar logic) =====
+  // ===== products.json cache/index =====
   let PRODUCTS_LOADED = false;
   let PRODUCTS_LOADING = null;
   let PRODUCT_BY_ID = new Map();
@@ -1709,7 +1709,7 @@ Z
 
       PRODUCT_BY_ID.set(pid, p);
 
-      // support your typo key "varients" + normal "variants"
+      // support typo key "varients" + normal "variants"
       const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
       for (const v of vars) {
         const vid = String(v.id ?? v.variantId ?? "").trim();
@@ -1717,6 +1717,31 @@ Z
         VARIANT_BY_KEY.set(`${pid}::${vid}`, v);
       }
     }
+  }
+
+  // ✅ Fix your data shape:
+  // - sometimes productId is stored like "unlim8ted-hoodie__A35BIS..."
+  // - if so, split into productId + variantId so title/image/price resolve correctly
+  function normalizeCartItem(raw) {
+    const it = { ...(raw || {}) };
+
+    const pidRaw = String(it.productId ?? it.pid ?? "").trim();
+    const vidRaw = String(it.variantId ?? it.vid ?? "").trim();
+
+    if (pidRaw.includes("__") && !vidRaw) {
+      const [basePid, ...rest] = pidRaw.split("__");
+      const base = String(basePid || "").trim();
+      const v = rest.join("__").trim();
+      if (base && v) {
+        it.productId = base;
+        it.variantId = v;
+      }
+    }
+
+    if (it.productId != null) it.productId = String(it.productId).trim();
+    if (it.variantId != null) it.variantId = String(it.variantId).trim();
+
+    return it;
   }
 
   const escapeHtml = (s) =>
@@ -1767,16 +1792,19 @@ Z
     cartBadge.classList.toggle("hidden", n === 0);
   };
 
-  function resolveCartDisplay(it) {
+  function resolveCartDisplay(raw) {
+    const it = normalizeCartItem(raw);
+
     const productId = String(it.productId || "").trim();
     const variantId = String(it.variantId || "").trim();
 
     const p = productId ? (PRODUCT_BY_ID.get(productId) || null) : null;
     const v = (productId && variantId) ? (VARIANT_BY_KEY.get(`${productId}::${variantId}`) || null) : null;
 
+    // ✅ Title priority: explicit title/name -> product name/title -> fallback (never combined id)
     const title =
-      String(it.title || it.name || "").trim() ||
-      String(p?.name || p?.title || productId || it.id || "Item").trim();
+      String(it.title || it.name || it.productName || "").trim() ||
+      String(p?.name || p?.title || productId || "Item").trim();
 
     const variantLabel =
       String(it.variantLabel || "").trim() ||
@@ -1785,11 +1813,21 @@ Z
     const price =
       (Number.isFinite(Number(it.price)) ? Number(it.price) : null) ??
       (v && Number.isFinite(Number(v.price)) ? Number(v.price) : null) ??
+      (p && Number.isFinite(Number(p.price)) ? Number(p.price) : null) ??
       null;
 
+    // ✅ Better image resolution: prefer item image -> variant image -> product image
     let image = safeUrl(it.image || it.imageUrl || "");
-    if (!image && Array.isArray(v?.images) && v.images.length) image = safeUrl(v.images[0]);
-    if (!image) image = safeUrl(p?.image || "");
+    if (!image && v) {
+      image =
+        safeUrl(v.image || v.imageUrl || "") ||
+        (Array.isArray(v.images) && v.images.length ? safeUrl(v.images[0]) : "");
+    }
+    if (!image && p) {
+      image =
+        safeUrl(p.image || p.imageUrl || "") ||
+        (Array.isArray(p.images) && p.images.length ? safeUrl(p.images[0]) : "");
+    }
 
     return { title, variantLabel, price, image };
   }
@@ -1801,18 +1839,21 @@ Z
       const arr = JSON.parse(raw);
       if (!Array.isArray(arr)) return [];
 
-      return arr.map((it, idx) => ({
-        id: it.id || it._id || `local-${idx}`,
-        productId: it.productId || it.pid || null,
-        variantId: it.variantId || it.vid || null,
-        qty: Number(it.qty) || 1,
+      return arr.map((it, idx) => {
+        const norm = normalizeCartItem({
+          id: it.id || it._id || `local-${idx}`,
+          productId: it.productId || it.pid || null,
+          variantId: it.variantId || it.vid || null,
+          qty: Number(it.qty) || 1,
 
-        // optional legacy fields (if present)
-        title: it.title || it.name || it.productName || "",
-        variantLabel: it.variantLabel || "",
-        price: it.price ?? null,
-        image: it.image ?? it.imageUrl ?? null,
-      }));
+          // optional legacy fields (if present)
+          title: it.title || it.name || it.productName || "",
+          variantLabel: it.variantLabel || "",
+          price: it.price ?? it.priceNum ?? null,
+          image: it.image ?? it.imageUrl ?? null,
+        });
+        return norm;
+      });
     } catch {
       return [];
     }
@@ -1834,9 +1875,9 @@ Z
     }
 
     const show = cartItems.slice(0, 5);
-    cartItemsEl.innerHTML = show.map((it) => {
-      const r = resolveCartDisplay(it);
-      const qty = Number(it.qty) || 1;
+    cartItemsEl.innerHTML = show.map((raw) => {
+      const r = resolveCartDisplay(raw);
+      const qty = Number(raw.qty) || 1;
 
       const subLeft = r.variantLabel ? `Qty: ${qty} • ${escapeHtml(r.variantLabel)}` : `Qty: ${qty}`;
       const subRight = (r.price != null) ? `$${escapeHtml(String(r.price))}` : "";
@@ -1870,7 +1911,6 @@ Z
     if (unsubCart) unsubCart();
     unsubCart = null;
 
-    // Make sure products are available (non-fatal if it fails)
     await loadProducts();
 
     if (!user) {
@@ -1889,7 +1929,8 @@ Z
         const items = [];
         snap.forEach((d) => {
           const data = d.data() || {};
-          items.push({
+
+          items.push(normalizeCartItem({
             id: d.id,
             productId: data.productId ?? null,
             variantId: data.variantId ?? null,
@@ -1898,9 +1939,9 @@ Z
             // optional if present (fine)
             title: data.title || data.name || data.productName || "",
             variantLabel: data.variantLabel || "",
-            price: data.price ?? null,
+            price: data.price ?? data.priceNum ?? null,
             image: data.image ?? data.imageUrl ?? null,
-          });
+          }));
         });
 
         cartItems = items;
@@ -1947,6 +1988,7 @@ Z
     bindCartListener(user || null);
   });
 </script>
+
 
 <script>
   (function () {
