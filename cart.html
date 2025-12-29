@@ -879,7 +879,30 @@
   </div>
 
 
-  <script type="module">
+  <script type="module">function removeDuplicateBuyButtons() {
+  document.querySelectorAll("#paidListPay .item").forEach(item => {
+    // Find all Buy-on-Square links in this item
+    const buyLinks = [...item.querySelectorAll('a.btn.btn-primary')]
+      .filter(a => /square\.link\/u\//.test(a.href) && /buy on square/i.test(a.textContent));
+
+    if (buyLinks.length <= 1) return;
+
+    // Keep the one in the same row/container as the qty controls
+    const keep =
+      buyLinks.find(a => a.closest(".row2")?.querySelector(".qty")) ||
+      buyLinks[0];
+
+    buyLinks.forEach(a => {
+      if (a === keep) return;
+
+      // Remove the whole row if it's that "extra row2"
+      const row = a.closest(".row2");
+      if (row && !row.querySelector(".qty")) row.remove();
+      else a.remove();
+    });
+  });
+}
+
     // /js/cart-data.js
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import {
@@ -1495,6 +1518,7 @@
 
       if (stepIndex === 3) renderSuccess();
       if (stepIndex === 2) renderPaidPayPane();
+      if (stepIndex === 2) removeDuplicateBuyButtons();
 
       try { document.querySelector(".card.list")?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch { }
     }
