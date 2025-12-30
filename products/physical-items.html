@@ -583,7 +583,7 @@
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
     import { getFirebase } from "/components/firebase-init.js";
-
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     const { auth, db } = getFirebase();
  // Init Firebase (safe if already initialized)
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
