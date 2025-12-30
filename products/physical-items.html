@@ -587,7 +587,6 @@
     const { auth, db } = getFirebase();
  // Init Firebase (safe if already initialized)
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-  const db = getFirestore(app);
 
   async function checkExternalStore() {
     try {
