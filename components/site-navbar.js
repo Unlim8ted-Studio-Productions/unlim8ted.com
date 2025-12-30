@@ -391,7 +391,28 @@ class SiteNavbar extends HTMLElement {
         /* reduced motion */
         @media (prefers-reduced-motion: reduce){
           *{ transition:none !important; animation:none !important; }
-        }
+        }/* Keep your existing positioning */
+.dropdown-content{
+  top: calc(100% + 8px);
+}
+
+/* Add an invisible hover bridge filling the gap */
+.dropdown::after{
+  content:"";
+  position:absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 12px;          /* >= your gap (8px) */
+  background: transparent;
+}
+
+/* Also keep it open when hovering the menu itself */
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content{
+  display:block;
+}
+
       </style>
 
       <nav class="navbar" role="navigation" aria-label="Primary">
