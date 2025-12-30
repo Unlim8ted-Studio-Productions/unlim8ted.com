@@ -578,33 +578,14 @@
   </div>
 
   <div id="toast" class="toast">Added to cart</div>
-<script type="module">
-  import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-  import { getFirebase } from "/components/firebase-init.js";
-
-  const { auth, db } = getFirebase();
-
-  async function checkExternalStore() {
-    try {
-      const snap = await getDoc(doc(db, "external_store", "value"));
-      if (snap.exists() && snap.data().enabled === true) {
-        location.replace("https://unlim8ted-studio-productions.square.site/s/shop");
-      }
-    } catch (e) {
-      console.error("External store check failed:", e);
-    }
-  }
-
-  checkExternalStore();
-</script>
 
   <script type="module">
-  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-  import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-  import { getFirebase } from "/components/firebase-init.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
 
-  const { auth, db } = getFirebase();
- // Init Firebase (safe if already initialized)
+    const { auth, db } = getFirebase();
+
     // -----------------------------
     // PRODUCT DATA
     // -----------------------------
