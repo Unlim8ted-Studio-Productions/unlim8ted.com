@@ -585,7 +585,25 @@
     import { getFirebase } from "/components/firebase-init.js";
 
     const { auth, db } = getFirebase();
+ // Init Firebase (safe if already initialized)
+  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
+  async function checkExternalStore() {
+    try {
+      const ref = doc(db, "external_store", "value");
+      const snap = await getDoc(ref);
+
+      if (snap.exists() && snap.data().enabled === true) {
+        window.location.href =
+          "https://unlim8ted-studio-productions.square.site/s/shop";
+      }
+    } catch (err) {
+      console.error("External store check failed:", err);
+    }
+  }
+
+  checkExternalStore();
     // -----------------------------
     // PRODUCT DATA
     // -----------------------------
