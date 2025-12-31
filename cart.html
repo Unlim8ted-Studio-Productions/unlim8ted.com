@@ -81,7 +81,6 @@
       backdrop-filter: blur(12px);
     }
 
-    /* Left */
     .list {
       padding: 14px;
     }
@@ -118,7 +117,6 @@
       color: var(--muted);
     }
 
-    /* Item */
     .item {
       display: grid;
       grid-template-columns: 88px 1fr auto;
@@ -191,7 +189,6 @@
       letter-spacing: .3px;
     }
 
-    /* Qty */
     .qty {
       display: inline-flex;
       align-items: center;
@@ -230,7 +227,6 @@
       font-size: 14px;
     }
 
-    /* Actions */
     .actions {
       display: flex;
       flex-direction: column;
@@ -299,7 +295,6 @@
       background: rgba(255, 255, 255, .08);
     }
 
-    /* Right / Summary */
     .summary {
       padding: 16px;
       position: sticky;
@@ -340,22 +335,6 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-    }
-
-    select,
-    input[type="text"] {
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, .12);
-      background: rgba(10, 8, 18, .72);
-      color: rgba(255, 255, 255, .92);
-      padding: 10px 12px;
-      outline: none;
-      font-weight: 850;
-    }
-
-    select option {
-      background: #0b0a12;
-      color: rgba(255, 255, 255, .92);
     }
 
     .helper {
@@ -405,8 +384,8 @@
   <div class="wrap">
     <div class="topbar">
       <div>
-        <h1>Your Cart</h1>
-        <p class="sub">Everything in one list. Adjust quantities, then checkout.</p>
+        <h1 id="pageTitle">Your Cart</h1>
+        <p id="pageSub" class="sub">Everything in one list. Adjust quantities, then checkout.</p>
       </div>
     </div>
 
@@ -443,7 +422,7 @@
         <div class="cta">
           <button id="checkoutBtn" class="btn btn-primary" type="button">Checkout</button>
           <button id="clearBtn" class="btn btn-ghost" type="button">Clear cart</button>
-          <a class="btn btn-ghost" href="/products">Continue shopping</a>
+          <a id="continueBtn" class="btn btn-ghost" href="/products">Continue shopping</a>
         </div>
 
         <div class="helper" style="margin-top:12px;">
@@ -467,12 +446,21 @@
     const { auth, db } = getFirebase();
 
     /* =============================
+       URL mode: single-item checkout
+       /cart?source=buy&product=theglitch
+    ============================= */
+    const QS = new URLSearchParams(location.search);
+    const BUY_MODE = (QS.get("source") || "").toLowerCase() === "buy";
+    const BUY_PRODUCT = String(QS.get("product") || "").trim();
+
+    /* =============================
        products.json cache/index
     ============================= */
     let _productsLoaded = false;
     let _productsLoading = null;
     let _productById = new Map();
     let _variantByKey = new Map(); // `${productId}::${variantId}` -> variant
+    let _productsArray = [];
 
     function safeUrl(u) {
       const s = String(u || "").trim();
@@ -491,7 +479,8 @@
           if (!r.ok) throw new Error("Failed to load products.json");
           const data = await r.json();
           const products = Array.isArray(data) ? data : (data?.products || []);
-          indexProducts(products);
+          _productsArray = Array.isArray(products) ? products : [];
+          indexProducts(_productsArray);
           _productsLoaded = true;
         } catch (e) {
           console.warn("products.json load failed:", e);
@@ -632,6 +621,44 @@
       return it;
     }
 
+    function getProductByQueryKey(keyRaw) {
+      const key = String(keyRaw || "").trim().toLowerCase();
+      if (!key) return null;
+
+      // Try exact id match first
+      for (const [pid, p] of _productById.entries()) {
+        if (String(pid).toLowerCase() === key) return p;
+      }
+
+      // Try common fields
+      for (const p of (_productsArray || [])) {
+        const candidates = [
+          p.id, p.productId, p.slug, p.handle, p.key, p.shortId,
+          p?.meta?.slug, p?.meta?.handle
+        ].filter(Boolean).map(x => String(x).trim().toLowerCase());
+        if (candidates.includes(key)) return p;
+      }
+
+      // Try loose "contains"
+      for (const p of (_productsArray || [])) {
+        const name = String(p.name || p.title || "").trim().toLowerCase();
+        if (name && name.replace(/\s+/g, "") === key.replace(/\s+/g, "")) return p;
+      }
+
+      return null;
+    }
+
+    function pickDefaultVariant(product) {
+      const vars = Array.isArray(product?.varients) ? product.varients : (Array.isArray(product?.variants) ? product.variants : []);
+      if (!vars.length) return null;
+      // Prefer first that has an id
+      for (const v of vars) {
+        const vid = String(v?.id ?? v?.variantId ?? "").trim();
+        if (vid) return v;
+      }
+      return vars[0] || null;
+    }
+
     /* =============================
        Local cart helpers (signed-out)
     ============================= */
@@ -663,11 +690,19 @@
       renderCart();
     }
 
+    // Only attach once (your previous version attached inside onAuthStateChanged)
+    window.addEventListener("cart-changed", () => {
+      if (BUY_MODE) return;
+      if (!currentUser) emitCart(getLocalCart());
+    });
+
     function startCartData() {
       onAuthStateChanged(auth, (user) => {
         currentUser = user || null;
 
         if (unsubCart) { unsubCart(); unsubCart = null; }
+
+        if (BUY_MODE) return; // buy-mode ignores Firestore/local cart
 
         if (!user) {
           emitCart(getLocalCart());
@@ -693,10 +728,6 @@
           });
           emitCart(raw);
         });
-
-        window.addEventListener("cart-changed", () => {
-          if (!currentUser) emitCart(getLocalCart());
-        });
       });
     }
 
@@ -705,6 +736,16 @@
     ============================= */
     async function setQty(id, qty) {
       qty = Math.max(1, qty | 0);
+      if (BUY_MODE) {
+        // Single-item buy mode: just update in-memory
+        const idx = cartItems.findIndex(x => String(x.id) === String(id));
+        if (idx >= 0) {
+          cartItems[idx].qty = qty;
+          renderCart();
+        }
+        return;
+      }
+
       if (!currentUser?.uid) {
         const arr = getLocalCart();
         const idx = arr.findIndex(x => String(x.id) === String(id));
@@ -714,6 +755,7 @@
         }
         return;
       }
+
       await updateDoc(doc(db, "users", currentUser.uid, "cartItems", id), {
         qty,
         updatedAt: serverTimestamp(),
@@ -721,6 +763,12 @@
     }
 
     async function removeItem(id) {
+      if (BUY_MODE) {
+        cartItems = cartItems.filter(x => String(x.id) !== String(id));
+        renderCart();
+        return;
+      }
+
       if (!currentUser?.uid) {
         setLocalCart(getLocalCart().filter(x => String(x.id) !== String(id)));
         return;
@@ -729,6 +777,12 @@
     }
 
     async function clearCart() {
+      if (BUY_MODE) {
+        cartItems = [];
+        renderCart();
+        return;
+      }
+
       if (!currentUser?.uid) {
         setLocalCart([]);
         return;
@@ -738,10 +792,7 @@
     }
 
     /* =============================
-       Square checkout (popup, auto-confirm)
-       - no manual "Check payment"
-       - just open popup and we assume Square handles completion
-       - you can optionally plug in your worker/webhook later
+       Square checkout (popup)
     ============================= */
     const WORKER_BASE = "https://checkout.unlim8ted.workers.dev";
     const POPUP_FEATURES = "width=520,height=760,noopener,noreferrer";
@@ -788,7 +839,6 @@
       const items = buildWorkerItemsFromCart(cartItems);
 
       if (!items.length) {
-        // If everything is free or missing variant IDs, we can treat as "complete"
         setNotice("ok", `<strong>No paid items.</strong> Nothing to pay for. Your free items are ready.`);
         return;
       }
@@ -799,10 +849,16 @@
 
       try {
         const payload = {
-          cartId: `cart-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+          cartId: (BUY_MODE && BUY_PRODUCT)
+            ? `buy-${BUY_PRODUCT}-${Date.now()}-${Math.random().toString(16).slice(2)}`
+            : `cart-${Date.now()}-${Math.random().toString(16).slice(2)}`,
           currency: "USD",
           items: items.map(x => ({ variationId: x.variationId, quantity: x.quantity })),
-          context: { uid: currentUser?.uid || null }
+          context: {
+            uid: currentUser?.uid || null,
+            mode: BUY_MODE ? "buy" : "cart",
+            product: BUY_MODE ? BUY_PRODUCT : null
+          }
         };
 
         const { checkoutUrl } = await workerCreateCheckout(payload);
@@ -816,8 +872,6 @@
 
         await waitForPopupClose(popup);
 
-        // "regular cart" behavior: we don't force a manual check button.
-        // If you later want strict verification, wire your webhook and poll server-side.
         setNotice("ok",
           `<div style="display:flex;gap:10px;align-items:flex-start">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
@@ -826,11 +880,6 @@
             <div><strong>Checkout closed.</strong><br/>If payment completed, your order will be processed by Square.</div>
           </div>`
         );
-
-        // Optional "regular cart" behavior:
-        // You can choose NOT to clear cart automatically.
-        // If you want to clear paid items after checkout closes, uncomment:
-        // await clearCart();
 
       } catch (err) {
         console.error(err);
@@ -916,7 +965,6 @@
         }
       }
 
-      // Summary
       const itemsCount = cartItems.reduce((s, it) => s + (Number(it.qty) || 1), 0);
       const subtotal = cartItems.reduce((s, it) => {
         const price = normalizePriceNumber(parsePrice(it.price)) || 0;
@@ -928,7 +976,10 @@
       document.getElementById("total").textContent = money(subtotal);
 
       document.getElementById("checkoutBtn").disabled = cartItems.length === 0;
-      document.getElementById("clearBtn").disabled = cartItems.length === 0;
+
+      const clearBtn = document.getElementById("clearBtn");
+      clearBtn.disabled = cartItems.length === 0 || BUY_MODE;
+      clearBtn.style.display = BUY_MODE ? "none" : "inline-flex";
     }
 
     /* =============================
@@ -969,6 +1020,7 @@
       }
 
       if (e.target.closest("#clearBtn")) {
+        if (BUY_MODE) return;
         clearNotice();
         if (!cartItems.length) return;
         if (!confirm("Clear your cart?")) return;
@@ -993,16 +1045,100 @@
     });
 
     /* =============================
+       BUY MODE bootstrap
+    ============================= */
+    async function startBuyMode(productKey) {
+      await loadProducts();
+
+      const p = getProductByQueryKey(productKey);
+      if (!p) {
+        cartItems = [];
+        renderCart();
+        setNotice("warn",
+          `<strong>Product not found:</strong> ${escapeHtml(productKey)}<br/>
+           <a href="/products" style="color:rgba(99,214,255,.95);text-decoration:none;font-weight:900;">Go to products</a>`
+        );
+        return;
+      }
+
+      const pid = String(p.id ?? p.productId ?? "").trim();
+      const v = pickDefaultVariant(p);
+      const vid = String(v?.id ?? v?.variantId ?? "").trim();
+
+      // IMPORTANT: paid checkout requires a Square variation id
+      if (!vid) {
+        cartItems = [];
+        renderCart();
+        setNotice("warn",
+          `<strong>This product can't be purchased yet.</strong><br/>
+           Missing Square variant (variationId) in products.json for <strong>${escapeHtml(pid || productKey)}</strong>.`
+        );
+        return;
+      }
+
+      const price = normalizePriceNumber(parsePrice(v?.price ?? p?.price)) || 0;
+      const image = resolveProductImage(pid, vid) || safeUrl(p.image || p.imageUrl || "");
+      const title = String(p.name || p.title || pid || productKey || "Item").trim();
+      const variantLabel = String(v?.name || "").trim();
+
+      cartItems = [
+        resolveFromCatalog({
+          id: `buy-${pid}-${vid}`,
+          productId: pid,
+          variantId: vid,
+          title,
+          variantLabel,
+          price,
+          qty: 1,
+          image: image || null,
+          accessUrl: p.accessUrl ?? p.downloadUrl ?? p.url ?? p.link ?? null,
+        })
+      ];
+
+      renderCart();
+      clearNotice();
+    }
+
+    /* =============================
        Start
     ============================= */
-    loadProducts().catch(() => { });
-    startCartData();
-    renderCart();
-
     // Footer year
     const y = new Date().getFullYear();
     document.getElementById("footer-text").innerHTML =
       `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+
+    // Buy mode UI tweaks
+    if (BUY_MODE) {
+      document.getElementById("pageTitle").textContent = "Checkout";
+      document.getElementById("pageSub").textContent = "One item. Adjust quantity, then checkout.";
+      document.getElementById("continueBtn").textContent = "Back to products";
+      document.getElementById("continueBtn").setAttribute("href", "/products");
+      document.title = "Unlim8ted - Checkout";
+    }
+
+    // Load products early
+    loadProducts().catch(() => { });
+
+    // Always watch auth (needed for context.uid) but cart listeners are disabled in BUY_MODE
+    startCartData();
+
+    // Init data
+    if (BUY_MODE) {
+      if (!BUY_PRODUCT) {
+        setNotice("warn",
+          `<strong>Missing product.</strong> Use <code>?source=buy&amp;product=theglitch</code><br/>
+           <a href="/products" style="color:rgba(99,214,255,.95);text-decoration:none;font-weight:900;">Go to products</a>`
+        );
+      } else {
+        startBuyMode(BUY_PRODUCT).catch(err => {
+          console.error(err);
+          setNotice("warn", `<strong>Error:</strong> ${escapeHtml(err?.message || String(err))}`);
+        });
+      }
+    } else {
+      // regular cart will be rendered via snapshot/local emit
+      renderCart();
+    }
   </script>
 </body>
 
