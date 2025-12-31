@@ -14,34 +14,34 @@
 
   <style>
     :root {
-      --bg: #0e0b16;
-      --panel: rgba(20, 18, 30, .88);
-      --panel2: rgba(28, 26, 42, .92);
-      --text: rgba(255, 255, 255, .92);
-      --muted: rgba(255, 255, 255, .65);
-      --stroke: rgba(255, 255, 255, .10);
-      --accent: #00ff99;
+      --bg0: #05040a;
+      --bg1: #0c0620;
+      --ink: rgba(233, 231, 255, .92);
+      --muted: rgba(233, 231, 255, .72);
+      --glass: rgba(0, 0, 0, .38);
+      --stroke: rgba(180, 130, 255, .24);
+      --accent: #b86bff;
+      --accent2: #63d6ff;
       --danger: #ff4d4d;
-      --warn: #ffd166;
-      --shadow: 0 12px 30px rgba(0, 0, 0, .35);
+      --shadow: 0 18px 40px rgba(0, 0, 0, .45);
       --r: 18px;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      color: var(--text);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background:
-        radial-gradient(circle at 20% 20%, rgba(0, 255, 153, .12), transparent 40%),
-        radial-gradient(circle at 80% 30%, rgba(255, 0, 119, .10), transparent 45%),
-        radial-gradient(circle at 50% 90%, rgba(52, 152, 219, .10), transparent 45%),
-        #07060b;
-      padding-top: 56px;
+        radial-gradient(900px 600px at 20% 15%, rgba(184, 107, 255, .16), transparent 55%),
+        radial-gradient(900px 650px at 80% 25%, rgba(99, 214, 255, .14), transparent 60%),
+        radial-gradient(900px 700px at 55% 95%, rgba(255, 77, 45, .08), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
       min-height: 100vh;
+      padding-top: 56px;
     }
 
     .wrap {
-      max-width: 1080px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 28px 16px 70px;
     }
@@ -50,7 +50,7 @@
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      gap: 12px;
+      gap: 14px;
       margin-bottom: 14px;
     }
 
@@ -68,41 +68,22 @@
 
     .grid {
       display: grid;
-      grid-template-columns: 1.6fr .9fr;
+      grid-template-columns: 1.55fr .85fr;
       gap: 16px;
       align-items: start;
     }
 
     .card {
-      background: var(--panel);
+      background: var(--glass);
       border: 1px solid var(--stroke);
       border-radius: var(--r);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
     }
 
+    /* Left */
     .list {
       padding: 14px;
-    }
-
-    .empty {
-      padding: 18px;
-      color: var(--muted);
-    }
-
-    .signedout {
-      padding: 14px 16px;
-      margin-bottom: 12px;
-      background: rgba(255, 255, 255, .06);
-      border: 1px solid var(--stroke);
-      border-radius: 14px;
-      color: var(--muted);
-    }
-
-    .signedout a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 700;
     }
 
     .notice {
@@ -121,9 +102,9 @@
     }
 
     .notice.ok {
-      border-color: rgba(0, 255, 153, .28);
-      background: rgba(0, 255, 153, .08);
-      color: rgba(255, 255, 255, .80);
+      border-color: rgba(99, 214, 255, .22);
+      background: rgba(99, 214, 255, .08);
+      color: rgba(255, 255, 255, .82);
     }
 
     .notice.warn {
@@ -132,160 +113,29 @@
       color: rgba(255, 255, 255, .78);
     }
 
-    /* Dark selects */
-    select {
-      background: rgba(10, 10, 16, .92) !important;
-      color: rgba(255, 255, 255, .92) !important;
-      border: 1px solid rgba(255, 255, 255, .14);
+    .empty {
+      padding: 18px;
+      color: var(--muted);
     }
 
-    select option {
-      background: #0b0a12 !important;
-      color: rgba(255, 255, 255, .92) !important;
-    }
-
-    select:focus {
-      outline: none;
-      border-color: rgba(0, 255, 153, .45);
-      box-shadow: 0 0 0 3px rgba(0, 255, 153, .12);
-    }
-
-    .section {
-      margin-bottom: 14px;
-    }
-
-    .sectionhead {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin: 6px 2px 10px;
-    }
-
-    .sectiontitle {
-      font-weight: 900;
-      letter-spacing: .2px;
-      font-size: 14px;
-      color: rgba(255, 255, 255, .92);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .icon {
-      width: 18px;
-      height: 18px;
-      display: inline-block;
-      color: rgba(255, 255, 255, .88);
-    }
-
-    .icon-2x {
-      width: 40px;
-      height: 40px;
-      display: inline-block;
-      color: rgba(211, 27, 27, 0.88);
-    }
-
-    .pill {
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, .10);
-      background: rgba(255, 255, 255, .06);
-      color: rgba(255, 255, 255, .75);
-      font-weight: 800;
-    }
-
-    /* Progress / stepper */
-    .stepper {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      padding: 12px 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, .10);
-      background: rgba(255, 255, 255, .05);
-      margin-bottom: 12px;
-    }
-
-    .step {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
-      min-width: 0;
-      opacity: .72;
-    }
-
-    .step.active {
-      opacity: 1;
-    }
-
-    .dot {
-      width: 26px;
-      height: 26px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 12px;
-      border: 1px solid rgba(255, 255, 255, .14);
-      background: rgba(255, 255, 255, .06);
-      color: rgba(255, 255, 255, .85);
-      flex: 0 0 auto;
-    }
-
-    .step.active .dot {
-      border-color: rgba(0, 255, 153, .32);
-      background: rgba(0, 255, 153, .10);
-      color: rgba(255, 255, 255, .92);
-    }
-
-    .stepname {
-      font-size: 13px;
-      font-weight: 900;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .stepdesc {
-      font-size: 12px;
-      color: rgba(255, 255, 255, .65);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .steptext {
-      min-width: 0;
-    }
-
-    .divider {
-      height: 1px;
-      background: rgba(255, 255, 255, .10);
-      flex: 0 0 18px;
-      opacity: .4;
-    }
-
-    /* Item row */
+    /* Item */
     .item {
-      display: flex;
+      display: grid;
+      grid-template-columns: 88px 1fr auto;
       gap: 14px;
       padding: 12px;
       border-radius: 16px;
       background: rgba(255, 255, 255, .04);
       border: 1px solid rgba(255, 255, 255, .06);
       margin-bottom: 10px;
+      align-items: center;
     }
 
     .thumb {
-      width: 90px;
-      height: 90px;
+      width: 88px;
+      height: 88px;
       border-radius: 16px;
       overflow: hidden;
-      flex: 0 0 auto;
       background: rgba(255, 255, 255, .07);
       display: flex;
       align-items: center;
@@ -303,20 +153,24 @@
     }
 
     .meta {
-      flex: 1;
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
 
     .title {
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 850;
+      letter-spacing: .2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      letter-spacing: .2px;
+    }
+
+    .mini {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .64);
     }
 
     .row2 {
@@ -325,23 +179,21 @@
       justify-content: space-between;
       gap: 10px;
       flex-wrap: wrap;
-      color: var(--muted);
-      font-size: 13px;
     }
 
     .price {
-      color: rgba(255, 255, 255, .85);
-      font-weight: 700;
+      font-weight: 900;
+      color: rgba(255, 255, 255, .92);
     }
 
-    .mini {
-      font-size: 12px;
-      color: rgba(255, 255, 255, .62);
+    .price .free {
+      color: rgba(99, 214, 255, .95);
+      letter-spacing: .3px;
     }
 
-    /* Qty stepper */
+    /* Qty */
     .qty {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
       background: rgba(255, 255, 255, .06);
@@ -357,31 +209,34 @@
       border: none;
       cursor: pointer;
       background: rgba(255, 255, 255, .08);
-      color: var(--text);
+      color: var(--ink);
       font-size: 18px;
       line-height: 0;
     }
 
     .qty button:hover {
-      background: rgba(0, 255, 153, .16);
-      color: var(--accent);
+      background: rgba(184, 107, 255, .16);
+      color: rgba(184, 107, 255, 1);
     }
 
     .qty input {
       width: 42px;
       border: none;
       background: transparent;
-      color: var(--text);
+      color: var(--ink);
       text-align: center;
       outline: none;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 14px;
     }
 
+    /* Actions */
     .actions {
       display: flex;
-      align-items: flex-start;
+      flex-direction: column;
       gap: 10px;
+      align-items: flex-end;
+      justify-content: center;
     }
 
     .iconbtn {
@@ -390,7 +245,7 @@
       border-radius: 14px;
       border: 1px solid rgba(255, 255, 255, .10);
       background: rgba(255, 255, 255, .05);
-      color: rgba(255, 255, 255, .85);
+      color: rgba(255, 255, 255, .88);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -407,7 +262,7 @@
       border: none;
       border-radius: 14px;
       padding: 12px 14px;
-      font-weight: 900;
+      font-weight: 950;
       cursor: pointer;
       text-decoration: none;
       text-align: center;
@@ -425,18 +280,18 @@
     }
 
     .btn-primary {
-      background: var(--accent);
-      color: #0b1020;
-      box-shadow: 0 10px 22px rgba(0, 255, 153, .18);
+      background: linear-gradient(90deg, rgba(184, 107, 255, 1), rgba(99, 214, 255, 1));
+      color: #071022;
+      box-shadow: 0 12px 26px rgba(184, 107, 255, .16);
     }
 
     .btn-primary:hover {
-      filter: brightness(.95);
+      filter: brightness(.98);
     }
 
     .btn-ghost {
       background: rgba(255, 255, 255, .05);
-      color: var(--text);
+      color: var(--ink);
       border: 1px solid rgba(255, 255, 255, .10);
     }
 
@@ -444,13 +299,7 @@
       background: rgba(255, 255, 255, .08);
     }
 
-    .btn-small {
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-size: 13px;
-    }
-
-    /* Summary */
+    /* Right / Summary */
     .summary {
       padding: 16px;
       position: sticky;
@@ -458,7 +307,7 @@
     }
 
     .sum-title {
-      font-weight: 900;
+      font-weight: 950;
       letter-spacing: .2px;
       margin-bottom: 10px;
     }
@@ -483,7 +332,7 @@
       gap: 12px;
       padding: 14px 0 6px;
       font-size: 16px;
-      font-weight: 900;
+      font-weight: 950;
     }
 
     .cta {
@@ -493,37 +342,20 @@
       gap: 10px;
     }
 
-    .donationBox {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, .08);
-    }
-
-    .formrow {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
     select,
     input[type="text"] {
       border-radius: 14px;
       border: 1px solid rgba(255, 255, 255, .12);
-      background: rgba(255, 255, 255, .06);
+      background: rgba(10, 8, 18, .72);
       color: rgba(255, 255, 255, .92);
       padding: 10px 12px;
       outline: none;
-      font-weight: 800;
+      font-weight: 850;
     }
 
-    select {
-      cursor: pointer;
-    }
-
-    input::placeholder {
-      color: rgba(255, 255, 255, .45);
+    select option {
+      background: #0b0a12;
+      color: rgba(255, 255, 255, .92);
     }
 
     .helper {
@@ -540,66 +372,6 @@
       font-size: 13px;
     }
 
-    /* “Checkout sections” */
-    .checkoutPane {
-      display: none;
-      animation: fadeIn .18s ease-out;
-    }
-
-    .checkoutPane.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(6px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .successCard {
-      padding: 14px;
-    }
-
-    .successGrid {
-      display: grid;
-      gap: 10px;
-    }
-
-    .successRow {
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, .10);
-      background: rgba(255, 255, 255, .05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .tag {
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(0, 255, 153, .28);
-      background: rgba(0, 255, 153, .10);
-      color: rgba(255, 255, 255, .85);
-      font-weight: 900;
-      white-space: nowrap;
-    }
-
-    .tag.dim {
-      border-color: rgba(255, 255, 255, .12);
-      background: rgba(255, 255, 255, .06);
-      color: rgba(255, 255, 255, .72);
-    }
-
     @media (max-width: 900px) {
       .grid {
         grid-template-columns: 1fr;
@@ -609,17 +381,18 @@
         position: static;
       }
 
-      .stepdesc {
-        display: none;
+      .item {
+        grid-template-columns: 74px 1fr;
+        grid-template-rows: auto auto;
+        align-items: start;
       }
-    }
 
-    .rightControls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
+      .actions {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
     }
   </style>
 </head>
@@ -632,262 +405,49 @@
   <div class="wrap">
     <div class="topbar">
       <div>
-        <h1>Checkout</h1>
-        <p class="sub">
-          Paid items (digital or physical) are purchased in a single popup via Square. Free digital items can include
-          access links.
-        </p>
+        <h1>Your Cart</h1>
+        <p class="sub">Everything in one list. Adjust quantities, then checkout.</p>
       </div>
     </div>
 
-    <div id="flowNotice" class="notice" style="display:none;"></div>
-
-    <div id="signedOut" class="signedout" style="display:none;">
-      You’re not signed in. <a href="https://unlim8ted.com/sign-in">Sign in</a> to sync your cart and purchase history
-      across devices.
-    </div>
-
-    <!-- Stepper -->
-    <div class="stepper" role="navigation" aria-label="Checkout steps">
-      <div class="step" id="step-1">
-        <div class="dot">1</div>
-        <div class="steptext">
-          <div class="stepname">Review</div>
-          <div class="stepdesc">Check items & variants</div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="step" id="step-2">
-        <div class="dot">2</div>
-        <div class="steptext">
-          <div class="stepname">Support</div>
-          <div class="stepdesc">Optional donation</div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="step" id="step-3">
-        <div class="dot">3</div>
-        <div class="steptext">
-          <div class="stepname">Pay</div>
-          <div class="stepdesc">Popup + webhook verify</div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="step" id="step-4">
-        <div class="dot">4</div>
-        <div class="steptext">
-          <div class="stepname">Success</div>
-          <div class="stepdesc">Open links / history</div>
-        </div>
-      </div>
-    </div>
+    <div id="notice" class="notice" style="display:none;"></div>
 
     <div class="grid">
-      <!-- LEFT: panes -->
+      <!-- LEFT -->
       <div class="card list">
-        <!-- PANE 1: REVIEW -->
-        <div class="checkoutPane active" id="pane-review">
-
-          <!-- Buy Now bar (only visible in buy mode) -->
-          <div id="buyNowBar" class="notice warn" style="display:none;margin-bottom:12px;">
-            <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;">
-              <div><strong>Buy Now:</strong> This item isn’t in your cart. You can pay in a popup on the Pay step.</div>
-              <div class="row">
-                <button id="buyNowPayBtn" class="btn btn-primary btn-small" type="button">Pay with Square (popup)</button>
-                <button id="buyNowCheckBtn" class="btn btn-ghost btn-small" type="button" disabled>Check payment</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="section">
-            <div class="sectionhead">
-              <div class="sectiontitle">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path
-                    d="M7 21h10a2 2 0 0 0 2-2V7.5a2 2 0 0 0-.59-1.41l-3.5-3.5A2 2 0 0 0 13.5 2H7a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                  <path d="M14 2v5a2 2 0 0 0 2 2h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-                Free Digital <span class="pill" id="freeCountPill">0</span>
-              </div>
-            </div>
-            <div id="freeList"></div>
-            <div id="freeEmpty" class="empty" style="display:none;">No free items in your cart.</div>
-          </div>
-
-          <div class="section">
-            <div class="sectionhead">
-              <div class="sectiontitle">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M3 7h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" />
-                  <path d="M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                  <path d="M7 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-                Paid Items <span class="pill" id="paidCountPill">0</span>
-              </div>
-            </div>
-            <div id="paidList"></div>
-            <div id="paidEmpty" class="empty" style="display:none;">No paid items in your cart.</div>
-          </div>
-
-          <div id="allEmpty" class="empty" style="display:none;">Your cart is empty.</div>
-        </div>
-
-        <!-- PANE 2: SUPPORT -->
-        <div class="checkoutPane" id="pane-support">
-          <div class="section">
-            <div class="sectionhead">
-              <div class="sectiontitle">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M12 21s-7-4.35-9.33-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.33 6c-2.33 4.65-9.33 9-9.33 9Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                Support Unlim8ted <span class="pill">Optional</span>
-              </div>
-              <div class="mini">Donations use Square Payment Links.</div>
-            </div>
-
-            <div class="notice" style="margin-bottom:10px;">
-              After donating, you’ll return to this page automatically so you can continue checkout.
-            </div>
-
-            <div class="formrow">
-              <label class="mini" style="min-width:78px;">Frequency</label>
-              <select id="donationFreq" aria-label="Donation frequency">
-                <option value="one_time" selected>One-time</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-                <option value="annual">Annual</option>
-              </select>
-            </div>
-
-            <div class="formrow">
-              <label class="mini" style="min-width:78px;">Amount</label>
-              <select id="donationAmountPreset" aria-label="Donation amount">
-                <option value="1" data-one-time="1">$1</option>
-                <option value="5" data-one-time="1">$5</option>
-                <option value="10" data-one-time="1">$10</option>
-                <option value="custom" selected>Custom</option>
-              </select>
-            </div>
-
-            <div class="formrow" style="margin-top:12px;">
-              <button id="donateBtn" class="btn btn-primary btn-small" type="button">Donate via Square</button>
-              <button id="clearDonationBtn" class="btn btn-ghost btn-small" type="button">Reset</button>
-            </div>
-
-            <div id="donationHint" class="helper" style="margin-top:10px;"></div>
-            <div class="helper">
-              You can skip this step at any time. Donation is never required.
-            </div>
-          </div>
-        </div>
-
-        <!-- PANE 3: PAY -->
-        <div class="checkoutPane" id="pane-pay">
-          <div class="section">
-            <div class="sectionhead">
-              <div class="sectiontitle">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M3 7h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" />
-                  <path d="M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                  <path d="M7 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-                Purchase Paid Items <span class="pill">Square</span>
-              </div>
-              <div class="mini">One popup checkout. After you close it, we verify via webhook and then clear paid items.</div>
-            </div>
-
-            <div class="notice warn" style="margin-bottom:10px;">
-              This step uses a popup window (no reload). Webhooks are the source of truth.
-            </div>
-
-            <div class="formrow" style="margin-bottom:10px;">
-              <button id="payAllBtn" class="btn btn-primary btn-small" type="button">Pay with Square (popup)</button>
-              <button id="checkPayBtn" class="btn btn-ghost btn-small" type="button" disabled>Check payment</button>
-            </div>
-
-            <div id="paidListPay"></div>
-            <div id="paidEmptyPay" class="empty" style="display:none;">No paid items to purchase.</div>
-
-            <div class="helper" style="margin-top:12px;">
-              When you’re done purchasing, continue to Success to open available links and view your purchase history.
-            </div>
-          </div>
-        </div>
-
-        <!-- PANE 4: SUCCESS -->
-        <div class="checkoutPane" id="pane-success">
-          <div class="successCard">
-            <div class="sectionhead">
-              <div class="sectiontitle">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg>
-                Success
-              </div>
-              <div class="mini">Your links appear here (and in your account if signed in).</div>
-            </div>
-
-            <div class="notice ok" style="margin-bottom:10px;">
-              Purchased items (and any free items with access links) are listed below.
-            </div>
-
-            <div class="successGrid" id="successGrid"></div>
-            <div id="successEmpty" class="empty" style="display:none;">
-              Nothing to show yet. Complete checkout or keep shopping.
-            </div>
-
-            <div class="helper" style="margin-top:12px;">
-              If you’re signed out, purchase history is stored locally in this browser. Sign in to sync it to your
-              account.
-            </div>
-          </div>
-        </div>
+        <div id="cartList"></div>
+        <div id="cartEmpty" class="empty" style="display:none;">Your cart is empty.</div>
       </div>
 
-      <!-- RIGHT: summary + nav -->
+      <!-- RIGHT -->
       <div class="card summary">
-        <div class="sum-title">Summary</div>
+        <div class="sum-title">Order summary</div>
 
         <div class="sumline">
-          <span>Free digital (qty)</span>
-          <strong><span id="freeQty">0</span></strong>
+          <span>Items</span>
+          <strong><span id="itemsCount">0</span></strong>
         </div>
 
         <div class="sumline">
-          <span>Paid items (qty)</span>
-          <strong><span id="paidQty">0</span></strong>
-        </div>
-
-        <div class="sumline">
-          <span>Paid subtotal</span>
-          <strong>$<span id="paidSubtotal">0.00</span></strong>
+          <span>Subtotal</span>
+          <strong>$<span id="subtotal">0.00</span></strong>
         </div>
 
         <div class="total">
-          <span>Due now</span>
-          <span>$<span id="dueNow">0.00</span></span>
+          <span>Total</span>
+          <span>$<span id="total">0.00</span></span>
         </div>
-        <div class="mini">Estimate--Taxes and shipping fees not included.</div>
+
+        <div class="helper">Taxes and shipping (if any) are calculated in Square checkout.</div>
 
         <div class="cta">
-          <button id="backBtn" class="btn btn-ghost" type="button" disabled>Back</button>
-          <button id="nextBtn" class="btn btn-primary" type="button">Continue</button>
+          <button id="checkoutBtn" class="btn btn-primary" type="button">Checkout</button>
+          <button id="clearBtn" class="btn btn-ghost" type="button">Clear cart</button>
           <a class="btn btn-ghost" href="/products">Continue shopping</a>
         </div>
 
-        <div class="donationBox">
-          <div class="sum-title" style="margin:0;">How checkout works</div>
-          <div class="helper" style="margin-top:10px;">
-            <strong>1)</strong> Review items + variants.<br />
-            <strong>2)</strong> Optional donation (Square link).<br />
-            <strong>3)</strong> Pay paid items in one popup (Square) + webhook verify.<br />
-            <strong>4)</strong> Success: view purchase history and open links.
-          </div>
+        <div class="helper" style="margin-top:12px;">
+          Free items show as <strong>FREE</strong>. If Square requires a paid checkout, only paid items will be charged.
         </div>
       </div>
     </div>
@@ -897,73 +457,18 @@
     </div>
   </div>
 
-
   <script type="module">
-
-    // /js/cart-data.js
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import {
-      collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp,
-      addDoc, query, orderBy, getDocs
+      collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp, getDocs
     } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
     import { getFirebase } from "/components/firebase-init.js";
     const { auth, db } = getFirebase();
 
-    /**
-     * Tiny event bus so UI can subscribe without tight coupling.
-     * Events:
-     * - "auth": { user }
-     * - "cart": { user, items }
-     * - "purchases": { user, rows }
-     */
-    const listeners = new Map(); // event -> Set(fn)
-    function emit(event, payload) {
-      const set = listeners.get(event);
-      if (!set) return;
-      for (const fn of set) {
-        try { fn(payload); } catch (e) { console.error(e); }
-      }
-    }
-    export function on(event, fn) {
-      if (!listeners.has(event)) listeners.set(event, new Set());
-      listeners.get(event).add(fn);
-      return () => listeners.get(event)?.delete(fn);
-    }
-
-    // ---------- Local storage helpers ----------
-    export function getLocalCart() {
-      try {
-        const raw = localStorage.getItem("unlim8ted-cart");
-        const arr = raw ? JSON.parse(raw) : [];
-        return Array.isArray(arr) ? arr : [];
-      } catch { return []; }
-    }
-
-    export function setLocalCart(items) {
-      try {
-        localStorage.setItem("unlim8ted-cart", JSON.stringify(items || []));
-        window.dispatchEvent(new CustomEvent("cart-changed"));
-      } catch { }
-    }
-
-    export function getLocalPurchases() {
-      try {
-        const raw = localStorage.getItem("unlim8ted-purchases");
-        const arr = raw ? JSON.parse(raw) : [];
-        return Array.isArray(arr) ? arr : [];
-      } catch { return []; }
-    }
-
-    export function addLocalPurchase(row) {
-      try {
-        const arr = getLocalPurchases();
-        arr.unshift(row);
-        localStorage.setItem("unlim8ted-purchases", JSON.stringify(arr.slice(0, 200)));
-      } catch { }
-    }
-
-    // ---------- products.json cache/index ----------
+    /* =============================
+       products.json cache/index
+    ============================= */
     let _productsLoaded = false;
     let _productsLoading = null;
     let _productById = new Map();
@@ -989,7 +494,7 @@
           indexProducts(products);
           _productsLoaded = true;
         } catch (e) {
-          console.warn("cart-data products.json load failed:", e);
+          console.warn("products.json load failed:", e);
         } finally {
           _productsLoading = null;
         }
@@ -1005,7 +510,6 @@
       for (const p of (products || [])) {
         const pid = String(p.id ?? p.productId ?? "").trim();
         if (!pid) continue;
-
         _productById.set(pid, p);
 
         const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
@@ -1017,397 +521,6 @@
       }
     }
 
-    function resolveFromCatalog(item) {
-      const it = { ...(item || {}) };
-      const productId = String(it.productId || "").trim();
-      const variantId = String(it.variantId || "").trim();
-
-      const p = productId ? (_productById.get(productId) || null) : null;
-      const v = (productId && variantId) ? (_variantByKey.get(`${productId}::${variantId}`) || null) : null;
-
-      if (!String(it.title || it.name || "").trim()) {
-        it.title = String(p?.name || p?.title || productId || it.id || "Item").trim();
-      }
-
-      if (!String(it.variantLabel || "").trim()) {
-        it.variantLabel = String(v?.name || "").trim();
-      }
-
-      const hasPrice =
-        it.price !== null &&
-        it.price !== undefined &&
-        Number.isFinite(Number(it.price));
-
-      if (!hasPrice) {
-        const catalogPrice =
-          (v && Number.isFinite(Number(v.price)) ? Number(v.price) : null) ??
-          (p && Number.isFinite(Number(p.price)) ? Number(p.price) : null) ??
-          null;
-
-        if (catalogPrice !== null) it.price = catalogPrice;
-      }
-
-      const hasImage = !!safeUrl(it.image || it.imageUrl || "");
-      if (!hasImage) {
-        let img = "";
-        if (Array.isArray(v?.images) && v.images.length) img = safeUrl(v.images[0]);
-        if (!img) img = safeUrl(p?.image || "");
-        if (img) it.image = img;
-      }
-
-      return it;
-    }
-
-    // ---------- Normalization ----------
-    function normalizeCartItem(raw) {
-      const it = { ...(raw || {}) };
-
-      const pidRaw = String(it.productId ?? it.pid ?? it.product ?? "").trim();
-      const vidRaw = String(it.variantId ?? it.vid ?? it.variant ?? "").trim();
-
-      if (pidRaw.includes("__") && !vidRaw) {
-        const [basePid, ...rest] = pidRaw.split("__");
-        const base = String(basePid || "").trim();
-        const v = rest.join("__").trim();
-        if (base && v) {
-          it.productId = base;
-          it.variantId = v;
-        }
-      }
-
-      const idStr = String(it.id ?? "").trim();
-      if ((!it.productId || !String(it.productId).trim()) && idStr.includes("__")) {
-        const [basePid, ...rest] = idStr.split("__");
-        const base = String(basePid || "").trim();
-        const v = rest.join("__").trim();
-        if (base) it.productId = base;
-        if (v && !it.variantId) it.variantId = v;
-      }
-
-      if (it.productId != null) it.productId = String(it.productId).trim();
-      if (it.variantId != null) it.variantId = String(it.variantId).trim();
-
-      return it;
-    }
-
-    // ---------- Public API: cart mutations ----------
-    export async function setQty(user, id, qty) {
-      qty = Math.max(1, qty | 0);
-      const uid = user?.uid || null;
-
-      if (!uid) {
-        const arr = getLocalCart();
-        const idx = arr.findIndex(x => String(x.id) === String(id));
-        if (idx >= 0) {
-          arr[idx].qty = qty;
-          setLocalCart(arr);
-        }
-        return;
-      }
-
-      await updateDoc(doc(db, "users", uid, "cartItems", id), {
-        qty,
-        updatedAt: serverTimestamp(),
-      });
-      window.dispatchEvent(new CustomEvent("cart-changed"));
-    }
-
-    export async function removeItem(user, id) {
-      const uid = user?.uid || null;
-
-      if (!uid) {
-        const arr = getLocalCart().filter(x => String(x.id) !== String(id));
-        setLocalCart(arr);
-        return;
-      }
-
-      await deleteDoc(doc(db, "users", uid, "cartItems", id));
-      window.dispatchEvent(new CustomEvent("cart-changed"));
-    }
-
-    export async function clearEntireCart(user) {
-      const uid = user?.uid || null;
-
-      if (!uid) {
-        setLocalCart([]);
-        return;
-      }
-
-      const snap = await getDocs(collection(db, "users", uid, "cartItems"));
-      await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
-      window.dispatchEvent(new CustomEvent("cart-changed"));
-    }
-
-    export async function writePurchase(user, payload) {
-      const uid = user?.uid || null;
-      if (!uid) return;
-
-      try {
-        await addDoc(collection(db, "users", uid, "purchases"), {
-          ...payload,
-          createdAt: serverTimestamp(),
-        });
-      } catch (err) {
-        console.error("writePurchase failed", err);
-      }
-    }
-
-    // ---------- Emission helper ----------
-    async function emitResolvedCart(user, rawItems) {
-      await loadProducts();
-
-      const items = (rawItems || []).map(x => {
-        const n = normalizeCartItem(x);
-        return _productsLoaded ? resolveFromCatalog(n) : n;
-      });
-
-      emit("cart", { user: user || null, items });
-    }
-
-    // ---------- Start listeners ----------
-    let unsubCart = null;
-    let unsubPurchases = null;
-
-    export function startCartData() {
-      onAuthStateChanged(auth, (user) => {
-        emit("auth", { user: user || null });
-
-        if (unsubCart) { unsubCart(); unsubCart = null; }
-        if (unsubPurchases) { unsubPurchases(); unsubPurchases = null; }
-
-        if (!user) {
-          const localRaw = getLocalCart();
-          const local = localRaw.map((rawItem, i) => {
-            const id = rawItem.id || `local-${Date.now()}-${i}-${Math.random().toString(16).slice(2)}`;
-            return normalizeCartItem({
-              id,
-              productId: rawItem.productId || rawItem.pid || null,
-              variantId: rawItem.variantId || rawItem.vid || null,
-              variantLabel: rawItem.variantLabel || "",
-              title: rawItem.title || rawItem.name || rawItem.productName || "",
-              price: (rawItem.price ?? rawItem.priceNum ?? null),
-              qty: rawItem.qty || 1,
-              image: rawItem.image || rawItem.imageUrl || null,
-              downloadUrl: rawItem.downloadUrl || rawItem.accessUrl || rawItem.url || rawItem.link || null,
-              accessUrl: rawItem.accessUrl || null,
-            });
-          });
-
-          setLocalCart(local.map(x => ({
-            id: x.id,
-            productId: x.productId,
-            variantId: x.variantId,
-            variantLabel: x.variantLabel,
-            title: x.title,
-            price: x.price,
-            qty: x.qty,
-            image: x.image,
-            downloadUrl: x.downloadUrl,
-            accessUrl: x.accessUrl,
-          })));
-
-          emitResolvedCart(null, local);
-          emit("purchases", { user: null, rows: getLocalPurchases() });
-          return;
-        }
-
-        const cartRef = collection(db, "users", user.uid, "cartItems");
-        unsubCart = onSnapshot(cartRef, (snap) => {
-          const raw = [];
-          snap.forEach(d => {
-            const data = d.data() || {};
-            raw.push({
-              id: d.id,
-              productId: data.productId ?? null,
-              variantId: data.variantId ?? null,
-              variantLabel: data.variantLabel ?? "",
-              title: data.title || data.name || data.productName || "",
-              price: (data.price ?? data.priceNum ?? null),
-              priceNum: data.priceNum ?? null,
-              qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
-              image: data.image ?? data.imageUrl ?? null,
-              downloadUrl: data.downloadUrl ?? data.accessUrl ?? data.url ?? data.link ?? null,
-              accessUrl: data.accessUrl ?? null,
-            });
-          });
-
-          emitResolvedCart(user, raw);
-        });
-
-        const purchasesRef = query(
-          collection(db, "users", user.uid, "purchases"),
-          orderBy("createdAt", "desc")
-        );
-
-        unsubPurchases = onSnapshot(purchasesRef, (snap) => {
-          const rows = [];
-          snap.forEach(d => {
-            const x = d.data() || {};
-            rows.push({
-              type: x.type || "purchase",
-              itemId: String(x.itemId || ""),
-              title: x.title || x.itemId || "Purchase",
-              accessUrl: x.accessUrl || x.downloadUrl || null,
-              createdAt: x.createdAt || null,
-            });
-          });
-          emit("purchases", { user, rows });
-        });
-      });
-
-      window.addEventListener("cart-changed", () => {
-        const localRaw = getLocalCart();
-        emitResolvedCart(null, localRaw);
-      });
-    }
-
-    /* =============================
-       Square donation payment links
-    ============================= */
-    const SQUARE_DONATION = {
-      one_time: {
-        custom: "https://square.link/u/h4bY1vEF",
-        "1": "https://square.link/u/bWytGN4p",
-        "5": "https://square.link/u/4XBSzfLg",
-        "10": "https://square.link/u/AvF6x51S",
-      },
-      weekly: { custom: "https://square.link/u/FkJZDx1R" },
-      monthly: { custom: "https://square.link/u/ZK2wPwwU" },
-      annual: { custom: "https://square.link/u/RSb94DzN" },
-    };
-
-    /* =============================
-       Worker checkout (popup + webhook verify)
-    ============================= */
-    const WORKER_BASE = "https://checkout.unlim8ted.workers.dev";
-    const POPUP_FEATURES = "width=520,height=760,noopener,noreferrer";
-    const POLL_ATTEMPTS = 24;
-    const POLL_DELAY_MS = 1500;
-
-    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-    function waitForPopupClose(popup) {
-      return new Promise(resolve => {
-        const t = setInterval(() => {
-          if (!popup || popup.closed) { clearInterval(t); resolve(); }
-        }, 400);
-      });
-    }
-
-    async function workerCreateCheckout(payload) {
-      const res = await fetch(`${WORKER_BASE}/create-checkout`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const j = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(j?.error ? `${j.error}: ${JSON.stringify(j.details || j)}` : `HTTP ${res.status}`);
-      if (!j.checkoutUrl || !j.sid) throw new Error("Worker did not return checkoutUrl/sid");
-      return j;
-    }
-
-    async function workerGetStatus(sid) {
-      const res = await fetch(`${WORKER_BASE}/checkout-status?sid=${encodeURIComponent(sid)}`, { method: "GET" });
-      const j = await res.json().catch(() => ({}));
-      return { ok: res.ok, http: res.status, body: j };
-    }
-
-    async function pollPaid(sid, attempts = POLL_ATTEMPTS, delayMs = POLL_DELAY_MS) {
-      for (let i = 0; i < attempts; i++) {
-        const r = await workerGetStatus(sid);
-        if (r.ok && r.body?.status === "paid") return { ok: true, data: r.body };
-        await sleep(delayMs);
-      }
-      return { ok: false };
-    }
-
-    function buildWorkerItemsFromPaid(paidItems) {
-      return (paidItems || []).map(it => ({
-        variationId: String(it.variantId || "").trim(),
-        quantity: Math.max(1, Number(it.qty) || 1)
-      })).filter(x => x.variationId);
-    }
-
-    function uniqueId(prefix = "sid") {
-      return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-    }
-
-    /* =============================
-       DOM refs
-    ============================= */
-    const signedOut = document.getElementById("signedOut");
-    const flowNotice = document.getElementById("flowNotice");
-
-    const paidList = document.getElementById("paidList");
-    const freeList = document.getElementById("freeList");
-    const paidListPay = document.getElementById("paidListPay");
-
-    const paidEmpty = document.getElementById("paidEmpty");
-    const freeEmpty = document.getElementById("freeEmpty");
-    const allEmpty = document.getElementById("allEmpty");
-    const paidEmptyPay = document.getElementById("paidEmptyPay");
-
-    const paidCountPill = document.getElementById("paidCountPill");
-    const freeCountPill = document.getElementById("freeCountPill");
-
-    const paidQtyEl = document.getElementById("paidQty");
-    const freeQtyEl = document.getElementById("freeQty");
-    const paidSubtotalEl = document.getElementById("paidSubtotal");
-    const dueNowEl = document.getElementById("dueNow");
-
-    const payAllBtn = document.getElementById("payAllBtn");
-    const checkPayBtn = document.getElementById("checkPayBtn");
-
-    const buyNowBar = document.getElementById("buyNowBar");
-    const buyNowPayBtn = document.getElementById("buyNowPayBtn");
-    const buyNowCheckBtn = document.getElementById("buyNowCheckBtn");
-
-    // panes / nav
-    const panes = [
-      document.getElementById("pane-review"),
-      document.getElementById("pane-support"),
-      document.getElementById("pane-pay"),
-      document.getElementById("pane-success"),
-    ];
-    const stepEls = [
-      document.getElementById("step-1"),
-      document.getElementById("step-2"),
-      document.getElementById("step-3"),
-      document.getElementById("step-4"),
-    ];
-    const backBtn = document.getElementById("backBtn");
-    const nextBtn = document.getElementById("nextBtn");
-
-    const successGrid = document.getElementById("successGrid");
-    const successEmpty = document.getElementById("successEmpty");
-
-    // Donation controls
-    const donationFreq = document.getElementById("donationFreq");
-    const donationAmountPreset = document.getElementById("donationAmountPreset");
-    const oneTimeOptions = [...donationAmountPreset.querySelectorAll('option[data-one-time="1"]')];
-    const donateBtn = document.getElementById("donateBtn");
-    const clearDonationBtn = document.getElementById("clearDonationBtn");
-    const donationHint = document.getElementById("donationHint");
-
-    /* =============================
-       State
-    ============================= */
-    let currentUser = null;
-    let lastRendered = { paid: [], free: [] };
-    let purchaseRows = [];
-    let stepIndex = 0;
-
-    // Buy mode
-    let buyMode = false;
-    let buyItem = null;
-
-    // Worker checkout state
-    let activeSid = null;
-    let activeCheckoutContext = null; // { mode:"cart"|"buy", cartItemIds?:[], buyItemId?:string, productId?:string }
-
-    /* =============================
-       Helpers
-    ============================= */
     function parsePrice(val) {
       if (val == null) return null;
       if (typeof val === "number") return Number.isFinite(val) ? val : null;
@@ -1418,11 +531,13 @@
       const n = Number(cleaned);
       return Number.isFinite(n) ? n : null;
     }
+
     function normalizePriceNumber(n) {
       if (!Number.isFinite(n)) return null;
       if (n >= 1000 && Math.abs(n - Math.round(n)) < 1e-9) return n / 100;
       return n;
     }
+
     const money = (n) => (normalizePriceNumber(Number(n)) ?? 0).toFixed(2);
 
     function escapeHtml(s) {
@@ -1431,38 +546,18 @@
       }[c]));
     }
 
-    function setFlowNotice(kind, msg) {
-      flowNotice.style.display = "block";
-      flowNotice.className = "notice " + (kind || "");
-      flowNotice.innerHTML = msg;
-    }
-    function clearFlowNotice() {
-      flowNotice.style.display = "none";
-      flowNotice.innerHTML = "";
-      flowNotice.className = "notice";
+    function setNotice(kind, msgHtml) {
+      const el = document.getElementById("notice");
+      el.style.display = "block";
+      el.className = "notice " + (kind || "");
+      el.innerHTML = msgHtml;
     }
 
-    function showPayPending(msg) {
-      setFlowNotice("warn", `<strong>Payment:</strong> ${escapeHtml(msg)}`);
-    }
-    function showPayOk(htmlMsg) {
-      setFlowNotice("ok", htmlMsg);
-    }
-    function showPayErr(msg) {
-      setFlowNotice("warn", `<strong>Error:</strong> ${escapeHtml(msg)}`);
-    }
-
-    function removeDuplicateBuyButtons() { /* legacy no-op */ }
-
-    function readPrice(obj) {
-      if (!obj) return null;
-      return (
-        parsePrice(obj.price) ??
-        parsePrice(obj.priceNum) ??
-        parsePrice(obj.amount) ??
-        parsePrice(obj.value) ??
-        null
-      );
+    function clearNotice() {
+      const el = document.getElementById("notice");
+      el.style.display = "none";
+      el.className = "notice";
+      el.innerHTML = "";
     }
 
     function resolveProductImage(productId, variantId) {
@@ -1499,180 +594,271 @@
       return "";
     }
 
-    async function resolveItemData(raw) {
-      const productId = String(raw?.productId ?? raw?.pid ?? raw?.product ?? "").trim();
-      const variantId = String(raw?.variantId ?? raw?.vid ?? raw?.variant ?? "").trim();
-
-      if (productId) { try { await loadProducts(); } catch { } }
+    function resolveFromCatalog(item) {
+      const it = { ...(item || {}) };
+      const productId = String(it.productId || "").trim();
+      const variantId = String(it.variantId || "").trim();
 
       const p = productId ? (_productById.get(productId) || null) : null;
       const v = (productId && variantId) ? (_variantByKey.get(`${productId}::${variantId}`) || null) : null;
 
-      const title =
-        String(raw?.title || raw?.name || raw?.productName || "").trim() ||
-        String(p?.name || p?.title || productId || "Item").trim();
+      if (!String(it.title || it.name || "").trim()) {
+        it.title = String(p?.name || p?.title || productId || it.id || "Item").trim();
+      }
 
-      const price = normalizePriceNumber(readPrice(raw) ?? readPrice(v) ?? readPrice(p) ?? 0) || 0;
+      if (!String(it.variantLabel || "").trim()) {
+        it.variantLabel = String(v?.name || "").trim();
+      }
 
-      const variantLabel =
-        String(raw?.variantLabel || "").trim() ||
-        String(v?.name || "").trim();
+      const hasPrice =
+        it.price !== null &&
+        it.price !== undefined &&
+        Number.isFinite(Number(it.price));
 
-      let imageUrl = safeUrl(raw?.image) || safeUrl(raw?.imageUrl) || "";
-      if (!imageUrl) imageUrl = resolveProductImage(productId, variantId);
+      if (!hasPrice) {
+        const catalogPrice =
+          (v && Number.isFinite(Number(v.price)) ? Number(v.price) : null) ??
+          (p && Number.isFinite(Number(p.price)) ? Number(p.price) : null) ??
+          null;
+        if (catalogPrice !== null) it.price = catalogPrice;
+      }
 
-      const accessUrl =
-        safeUrl(raw?.downloadUrl) ||
-        safeUrl(raw?.accessUrl) ||
-        safeUrl(raw?.url) ||
-        safeUrl(raw?.link) ||
-        safeUrl(v?.accessUrl) ||
-        safeUrl(p?.accessUrl) ||
-        "";
+      const hasImage = !!safeUrl(it.image || it.imageUrl || "");
+      if (!hasImage) {
+        const img = resolveProductImage(productId, variantId);
+        if (img) it.image = img;
+      }
 
-      return { ...raw, title, price, variantLabel, imageUrl, accessUrl };
+      return it;
     }
 
     /* =============================
-       Stepper
+       Local cart helpers (signed-out)
     ============================= */
-    function setStep(idx) {
-      stepIndex = Math.max(0, Math.min(3, idx));
-      panes.forEach((p, i) => p.classList.toggle("active", i === stepIndex));
-      stepEls.forEach((s, i) => s.classList.toggle("active", i === stepIndex));
-
-      backBtn.disabled = (stepIndex === 0);
-      nextBtn.textContent = (stepIndex === 3) ? "Done" : "Continue";
-
-      if (stepIndex === 3) renderSuccess();
-      if (stepIndex === 2) renderPaidPayPane();
-      if (stepIndex === 2) removeDuplicateBuyButtons();
-
-      try { document.querySelector(".card.list")?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch { }
+    function getLocalCart() {
+      try {
+        const raw = localStorage.getItem("unlim8ted-cart");
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      } catch { return []; }
     }
 
-    backBtn.addEventListener("click", () => setStep(stepIndex - 1));
+    function setLocalCart(items) {
+      try {
+        localStorage.setItem("unlim8ted-cart", JSON.stringify(items || []));
+        window.dispatchEvent(new CustomEvent("cart-changed"));
+      } catch { }
+    }
 
-    nextBtn.addEventListener("click", async () => {
-      if (stepIndex < 3) { setStep(stepIndex + 1); return; }
+    /* =============================
+       Cart state + listeners
+    ============================= */
+    let currentUser = null;
+    let cartItems = [];
+    let unsubCart = null;
 
-      // Done on Success
-      if (buyMode) {
-        buyMode = false;
-        buyItem = null;
-        activeSid = null;
-        activeCheckoutContext = null;
-        clearFlowNotice();
-        if (buyNowBar) buyNowBar.style.display = "none";
-        setStep(0);
+    async function emitCart(items) {
+      await loadProducts();
+      cartItems = (items || []).map(x => resolveFromCatalog(x));
+      renderCart();
+    }
+
+    function startCartData() {
+      onAuthStateChanged(auth, (user) => {
+        currentUser = user || null;
+
+        if (unsubCart) { unsubCart(); unsubCart = null; }
+
+        if (!user) {
+          emitCart(getLocalCart());
+          return;
+        }
+
+        const cartRef = collection(db, "users", user.uid, "cartItems");
+        unsubCart = onSnapshot(cartRef, (snap) => {
+          const raw = [];
+          snap.forEach(d => {
+            const data = d.data() || {};
+            raw.push({
+              id: d.id,
+              productId: data.productId ?? null,
+              variantId: data.variantId ?? null,
+              variantLabel: data.variantLabel ?? "",
+              title: data.title || data.name || data.productName || "",
+              price: (data.price ?? data.priceNum ?? null),
+              qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
+              image: data.image ?? data.imageUrl ?? null,
+              accessUrl: data.accessUrl ?? data.downloadUrl ?? data.url ?? data.link ?? null,
+            });
+          });
+          emitCart(raw);
+        });
+
+        window.addEventListener("cart-changed", () => {
+          if (!currentUser) emitCart(getLocalCart());
+        });
+      });
+    }
+
+    /* =============================
+       Cart mutations
+    ============================= */
+    async function setQty(id, qty) {
+      qty = Math.max(1, qty | 0);
+      if (!currentUser?.uid) {
+        const arr = getLocalCart();
+        const idx = arr.findIndex(x => String(x.id) === String(id));
+        if (idx >= 0) {
+          arr[idx].qty = qty;
+          setLocalCart(arr);
+        }
+        return;
+      }
+      await updateDoc(doc(db, "users", currentUser.uid, "cartItems", id), {
+        qty,
+        updatedAt: serverTimestamp(),
+      });
+    }
+
+    async function removeItem(id) {
+      if (!currentUser?.uid) {
+        setLocalCart(getLocalCart().filter(x => String(x.id) !== String(id)));
+        return;
+      }
+      await deleteDoc(doc(db, "users", currentUser.uid, "cartItems", id));
+    }
+
+    async function clearCart() {
+      if (!currentUser?.uid) {
+        setLocalCart([]);
+        return;
+      }
+      const snap = await getDocs(collection(db, "users", currentUser.uid, "cartItems"));
+      await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+    }
+
+    /* =============================
+       Square checkout (popup, auto-confirm)
+       - no manual "Check payment"
+       - just open popup and we assume Square handles completion
+       - you can optionally plug in your worker/webhook later
+    ============================= */
+    const WORKER_BASE = "https://checkout.unlim8ted.workers.dev";
+    const POPUP_FEATURES = "width=520,height=760,noopener,noreferrer";
+
+    function waitForPopupClose(popup) {
+      return new Promise(resolve => {
+        const t = setInterval(() => {
+          if (!popup || popup.closed) { clearInterval(t); resolve(); }
+        }, 400);
+      });
+    }
+
+    function buildWorkerItemsFromCart(allItems) {
+      // Only paid items with a Square variationId (variantId)
+      return (allItems || [])
+        .map(it => ({
+          variationId: String(it.variantId || "").trim(),
+          quantity: Math.max(1, Number(it.qty) || 1),
+          price: normalizePriceNumber(parsePrice(it.price)) || 0
+        }))
+        .filter(x => x.variationId && (x.price > 0));
+    }
+
+    async function workerCreateCheckout(payload) {
+      const res = await fetch(`${WORKER_BASE}/create-checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(j?.error ? `${j.error}: ${JSON.stringify(j.details || j)}` : `HTTP ${res.status}`);
+      if (!j.checkoutUrl) throw new Error("Worker did not return checkoutUrl");
+      return j;
+    }
+
+    async function beginCheckout() {
+      clearNotice();
+
+      if (!cartItems.length) {
+        setNotice("warn", `<strong>Your cart is empty.</strong> Add something first.`);
         return;
       }
 
-      // Optional: clear entire cart (free items too) after success "Done"
-      await clearEntireCart(currentUser);
-      clearFlowNotice();
-      setStep(0);
+      const items = buildWorkerItemsFromCart(cartItems);
 
-      showPayOk(
-        `<div style="display:flex;gap:10px;align-items:flex-start">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-            <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div>
-            <strong>Checkout complete.</strong><br/>
-            Your cart has been cleared.
-          </div>
-        </div>`
-      );
-    });
+      if (!items.length) {
+        // If everything is free or missing variant IDs, we can treat as "complete"
+        setNotice("ok", `<strong>No paid items.</strong> Nothing to pay for. Your free items are ready.`);
+        return;
+      }
+
+      const checkoutBtn = document.getElementById("checkoutBtn");
+      checkoutBtn.disabled = true;
+      setNotice("warn", `<strong>Opening checkout…</strong> Complete payment in the popup.`);
+
+      try {
+        const payload = {
+          cartId: `cart-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+          currency: "USD",
+          items: items.map(x => ({ variationId: x.variationId, quantity: x.quantity })),
+          context: { uid: currentUser?.uid || null }
+        };
+
+        const { checkoutUrl } = await workerCreateCheckout(payload);
+
+        const popup = window.open(checkoutUrl, "squareCheckout", POPUP_FEATURES);
+        if (!popup) {
+          setNotice("warn", `<strong>Popup blocked.</strong> Allow popups and try again.`);
+          checkoutBtn.disabled = false;
+          return;
+        }
+
+        await waitForPopupClose(popup);
+
+        // "regular cart" behavior: we don't force a manual check button.
+        // If you later want strict verification, wire your webhook and poll server-side.
+        setNotice("ok",
+          `<div style="display:flex;gap:10px;align-items:flex-start">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
+              <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div><strong>Checkout closed.</strong><br/>If payment completed, your order will be processed by Square.</div>
+          </div>`
+        );
+
+        // Optional "regular cart" behavior:
+        // You can choose NOT to clear cart automatically.
+        // If you want to clear paid items after checkout closes, uncomment:
+        // await clearCart();
+
+      } catch (err) {
+        console.error(err);
+        setNotice("warn", `<strong>Checkout error:</strong> ${escapeHtml(err?.message || String(err))}`);
+      } finally {
+        document.getElementById("checkoutBtn").disabled = false;
+      }
+    }
 
     /* =============================
-       Render helpers
+       Render
     ============================= */
-    function splitItems(items) {
-      const paid = [];
-      const free = [];
-      for (const it of items) {
-        const price = normalizePriceNumber(parsePrice(it.price)) || 0;
-        if (price > 0) paid.push({ ...it, price });
-        else free.push({ ...it, price: 0 });
-      }
-      return { paid, free };
-    }
-
-    function recomputeSummary(paid, free) {
-      const paidQty = paid.reduce((s, it) => s + (Number(it.qty) || 1), 0);
-      const freeQty = free.reduce((s, it) => s + (Number(it.qty) || 1), 0);
-
-      const paidSubtotal = paid.reduce((s, it) => {
-        const price = normalizePriceNumber(parsePrice(it.price)) || 0;
-        const qty = Number(it.qty) || 1;
-        return s + price * qty;
-      }, 0);
-
-      paidQtyEl.textContent = String(paidQty);
-      freeQtyEl.textContent = String(freeQty);
-      paidSubtotalEl.textContent = money(paidSubtotal);
-      dueNowEl.textContent = money(paidSubtotal);
-
-      paidCountPill.textContent = String(paid.length);
-      freeCountPill.textContent = String(free.length);
-
-      paidEmpty.style.display = paid.length ? "none" : "block";
-      freeEmpty.style.display = free.length ? "none" : "block";
-      allEmpty.style.display = (paid.length === 0 && free.length === 0) ? "block" : "none";
-      paidEmptyPay.style.display = paid.length ? "none" : "block";
-
-      nextBtn.disabled = (paid.length === 0 && free.length === 0);
-      nextBtn.textContent = nextBtn.disabled ? "Add items first" : (stepIndex === 3 ? "Done" : "Continue");
-
-      // Pay buttons state
-      if (payAllBtn) payAllBtn.disabled = (paid.length === 0) || !!activeSid;
-      if (checkPayBtn) checkPayBtn.disabled = !activeSid;
-    }
-
-    function itemCardHTML(it, kind, view = "review") {
+    function itemHTML(it) {
       const qty = Math.max(1, Number(it.qty) || 1);
       const price = normalizePriceNumber(parsePrice(it.price)) || 0;
 
       const title = escapeHtml(it.title || it.name || "Item");
+      const variantLabel = String(it.variantLabel || "").trim();
+      const variantLine = variantLabel
+        ? `<div class="mini">Variant: <strong>${escapeHtml(variantLabel)}</strong></div>`
+        : ``;
 
       const imgUrl = safeUrl(it.image || it.imageUrl || "");
       const img = imgUrl ? `<img src="${escapeHtml(imgUrl)}" alt="">` : "No image";
 
-      const accessUrl = safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link);
-
-      const variantLabel = String(it.variantLabel || "").trim();
-      const variantLine = variantLabel
-        ? `<div class="mini" style="margin-top:2px;">Variant: <strong>${escapeHtml(variantLabel)}</strong></div>`
-        : ``;
-
-      const priceLabel = (kind === "free")
-        ? `<div class="price">FREE</div>`
-        : `<div class="price">$${money(price)}</div>`;
-
-      const hint = (kind === "paid")
-        ? `<div class="mini">Paid items are purchased in the Pay step via popup + webhook verification.</div>`
-        : `<div class="mini">This item is completely free!</div>`;
-
-      const primaryActionFree = (kind === "free" && accessUrl)
-        ? `<a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>`
-        : ``;
-
-      const qtyControls = `
-        <div class="qty" aria-label="Quantity">
-          <button type="button" data-dec="${escapeHtml(it.id)}" aria-label="Decrease quantity">−</button>
-          <input type="text" inputmode="numeric" value="${qty}" data-qty="${escapeHtml(it.id)}" aria-label="Quantity value">
-          <button type="button" data-inc="${escapeHtml(it.id)}" aria-label="Increase quantity">+</button>
-        </div>
-      `;
-
-      const showActions = (view !== "review");
-      const actionRow = (showActions && kind === "free" && primaryActionFree) ? `
-        <div class="row2" style="justify-content:flex-end; margin-top:2px;">
-          ${primaryActionFree}
-        </div>
-      ` : ``;
+      const priceHtml = price > 0
+        ? `$${money(price)}`
+        : `<span class="free">FREE</span>`;
 
       return `
         <div class="item">
@@ -1683,24 +869,25 @@
             ${variantLine}
 
             <div class="row2">
-              <div>
-                ${priceLabel}
-                ${hint}
-              </div>
+              <div class="price">${priceHtml}</div>
 
-              ${
-                (view === "pay" && kind === "paid")
-                  ? `<div class="rightControls">${qtyControls}</div>`
-                  : `${qtyControls}`
-              }
+              <div class="qty" aria-label="Quantity">
+                <button type="button" data-dec="${escapeHtml(it.id)}" aria-label="Decrease quantity">−</button>
+                <input type="text" inputmode="numeric" value="${qty}" data-qty="${escapeHtml(it.id)}" aria-label="Quantity value">
+                <button type="button" data-inc="${escapeHtml(it.id)}" aria-label="Increase quantity">+</button>
+              </div>
             </div>
 
-            ${actionRow}
+            ${
+              safeUrl(it.accessUrl) && price <= 0
+                ? `<div class="mini">Free access: <a href="${escapeHtml(it.accessUrl)}" target="_blank" rel="noopener" style="color:rgba(99,214,255,.95);text-decoration:none;font-weight:900;">Open link</a></div>`
+                : ``
+            }
           </div>
 
           <div class="actions">
             <button class="iconbtn" type="button" data-remove="${escapeHtml(it.id)}" title="Remove" aria-label="Remove">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
                 <path d="M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 <path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 <path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -1713,660 +900,110 @@
       `;
     }
 
-    async function render(items) {
-      // Buy mode: show only buyItem (not the full cart)
-      if (buyMode && buyItem) items = [buyItem];
+    function renderCart() {
+      const list = document.getElementById("cartList");
+      const empty = document.getElementById("cartEmpty");
 
-      const enriched = await Promise.all((items || []).map(async (raw) => {
-        const r = await resolveItemData(raw);
-        const price = normalizePriceNumber(parsePrice(r.price)) || 0;
-        return {
-          ...r,
-          id: raw.id || r.id,
-          qty: Number(raw.qty ?? r.qty ?? 1) || 1,
-          accessUrl: r.accessUrl || safeUrl(raw.accessUrl) || safeUrl(raw.downloadUrl) || "",
-          image: r.imageUrl || safeUrl(raw.image) || safeUrl(raw.imageUrl) || "",
-          price,
-          title: r.title || raw.title || raw.name || "Item",
-          variantLabel: r.variantLabel || raw.variantLabel || "",
-          productId: raw.productId || r.productId,
-          variantId: raw.variantId || r.variantId
-        };
-      }));
-
-      const { paid, free } = splitItems(enriched);
-      lastRendered = { paid, free };
-
-      paidList.innerHTML = "";
-      freeList.innerHTML = "";
-
-      for (const it of free) {
-        const wrap = document.createElement("div");
-        wrap.innerHTML = itemCardHTML(it, "free", "review");
-        freeList.appendChild(wrap.firstElementChild);
-      }
-      for (const it of paid) {
-        const wrap = document.createElement("div");
-        wrap.innerHTML = itemCardHTML(it, "paid", "review");
-        paidList.appendChild(wrap.firstElementChild);
-      }
-
-      renderPaidPayPane();
-      recomputeSummary(paid, free);
-      if (stepIndex === 3) renderSuccess();
-    }
-
-    function renderPaidPayPane() {
-      const paid = lastRendered.paid || [];
-      paidListPay.innerHTML = "";
-      for (const it of paid) {
-        const wrap = document.createElement("div");
-        wrap.innerHTML = itemCardHTML(it, "paid", "pay");
-        paidListPay.appendChild(wrap.firstElementChild);
-      }
-      paidEmptyPay.style.display = paid.length ? "none" : "block";
-
-      if (payAllBtn) payAllBtn.disabled = (paid.length === 0) || !!activeSid;
-      if (checkPayBtn) checkPayBtn.disabled = !activeSid;
-    }
-
-    function findItemById(id) {
-      const all = [...(lastRendered.paid || []), ...(lastRendered.free || [])];
-      return all.find(x => String(x.id) === String(id)) || null;
-    }
-
-    /* =============================
-       UI events (qty/remove)
-    ============================= */
-    let wired = false;
-    function wireEvents() {
-      if (wired) return;
-      wired = true;
-
-      document.addEventListener("click", async (e) => {
-        const rm = e.target.closest("[data-remove]");
-        if (rm) {
-          if (buyMode) { setFlowNotice("warn", `<strong>Buy Now mode:</strong> this item isn’t in your cart.`); return; }
-          const id = rm.getAttribute("data-remove");
-          try { await removeItem(currentUser, id); } catch (err) { console.error(err); }
-          return;
-        }
-
-        const inc = e.target.closest("[data-inc]");
-        if (inc) {
-          const id = inc.getAttribute("data-inc");
-          const input = document.querySelector(`[data-qty="${CSS.escape(id)}"]`);
-          const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
-          input.value = String(current + 1);
-          try { await setQty(currentUser, id, current + 1); } catch (err) { console.error(err); }
-          return;
-        }
-
-        const dec = e.target.closest("[data-dec]");
-        if (dec) {
-          const id = dec.getAttribute("data-dec");
-          const input = document.querySelector(`[data-qty="${CSS.escape(id)}"]`);
-          const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
-          const next = Math.max(1, current - 1);
-          input.value = String(next);
-          try { await setQty(currentUser, id, next); } catch (err) { console.error(err); }
-          return;
-        }
-      });
-
-      let t = null;
-      document.addEventListener("input", (e) => {
-        const inp = e.target.closest("[data-qty]");
-        if (!inp) return;
-
-        const id = inp.getAttribute("data-qty");
-        let qty = parseInt(inp.value, 10);
-        if (!Number.isFinite(qty) || qty < 1) qty = 1;
-
-        clearTimeout(t);
-        t = setTimeout(async () => {
-          try { await setQty(currentUser, id, qty); } catch (err) { console.error(err); }
-        }, 300);
-      });
-    }
-
-    /* =============================
-       Donation UI logic
-    ============================= */
-    function buildSquareRedirectUrl(baseUrl, redirectTo) {
-      const u = String(baseUrl);
-      const join = u.includes("?") ? "&" : "?";
-      return u + join + "redirect_url=" + encodeURIComponent(redirectTo);
-    }
-
-    function syncDonationUI() {
-      const freq = donationFreq.value;
-      const preset = donationAmountPreset.value;
-      const isOneTime = (freq === "one_time");
-
-      for (const opt of oneTimeOptions) opt.hidden = !isOneTime;
-      if (!isOneTime && donationAmountPreset.value !== "custom") donationAmountPreset.value = "custom";
-
-      if (!isOneTime) {
-        donationHint.innerHTML = `Recurring donations are currently supported as <strong>Custom</strong> only.`;
-      } else if (preset !== "custom") {
-        donationHint.innerHTML = `You’ll be sent to Square for a <strong>one-time $${escapeHtml(preset)}</strong> donation.`;
+      list.innerHTML = "";
+      if (!cartItems.length) {
+        empty.style.display = "block";
       } else {
-        donationHint.innerHTML = `You’ll be sent to Square for a <strong>${escapeHtml(freq.replace("_", " "))}</strong> custom donation.`;
-      }
-    }
-
-    function getDonationLink() {
-      const freq = donationFreq.value;
-      const preset = donationAmountPreset.value;
-
-      if (freq === "one_time") {
-        if (preset === "1" || preset === "5" || preset === "10") return SQUARE_DONATION.one_time[preset];
-        return SQUARE_DONATION.one_time.custom;
-      }
-      return (SQUARE_DONATION[freq] && SQUARE_DONATION[freq].custom) ? SQUARE_DONATION[freq].custom : "";
-    }
-
-    donateBtn.addEventListener("click", () => {
-      const link = getDonationLink();
-      if (!link) {
-        setFlowNotice("warn", `<strong>Donation link unavailable.</strong> Please try again later.`);
-        return;
-      }
-      const redirectBack = "https://unlim8ted.com/cart?source=donation";
-      window.location.href = buildSquareRedirectUrl(link, redirectBack);
-    });
-
-    clearDonationBtn.addEventListener("click", () => {
-      donationFreq.value = "one_time";
-      donationAmountPreset.value = "custom";
-      clearFlowNotice();
-      syncDonationUI();
-    });
-
-    donationFreq.addEventListener("change", () => {
-      if (donationFreq.value !== "one_time") donationAmountPreset.value = "custom";
-      syncDonationUI();
-    });
-    donationAmountPreset.addEventListener("change", syncDonationUI);
-    syncDonationUI();
-
-    /* =============================
-       Worker payment flows
-    ============================= */
-    async function finalizeCartPaidCheckout(statusPayload) {
-      const ctx = activeCheckoutContext;
-      if (!ctx || ctx.mode !== "cart") {
-        showPayOk(`<div><strong>Paid confirmed.</strong></div>`);
-        return;
-      }
-
-      const paid = lastRendered.paid || [];
-      const byId = new Map(paid.map(it => [String(it.id), it]));
-
-      for (const itemId of (ctx.cartItemIds || [])) {
-        const it = byId.get(String(itemId));
-        if (!it) continue;
-
-        const purchaseRow = {
-          type: "paid_item",
-          itemId: String(it.id),
-          title: it.title || it.name || String(it.id),
-          accessUrl: safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link || ""),
-          qty: Number(it.qty) || 1,
-          sid: activeSid,
-          orderId: statusPayload?.orderId || statusPayload?.order_id || null,
-          paymentId: statusPayload?.paymentId || statusPayload?.payment_id || null
-        };
-
-        if (currentUser?.uid) await writePurchase(currentUser, purchaseRow);
-        else addLocalPurchase({ ...purchaseRow, createdAt: Date.now() });
-
-        if (!buyMode) {
-          try { await removeItem(currentUser, it.id); } catch (e) { console.error(e); }
+        empty.style.display = "none";
+        for (const it of cartItems) {
+          const d = document.createElement("div");
+          d.innerHTML = itemHTML(it);
+          list.appendChild(d.firstElementChild);
         }
       }
 
-      showPayOk(
-        `<div style="display:flex;gap:10px;align-items:flex-start">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-            <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div>
-            <strong>Payment confirmed.</strong><br/>
-            Paid items were recorded and removed from your cart.
-          </div>
-        </div>`
-      );
+      // Summary
+      const itemsCount = cartItems.reduce((s, it) => s + (Number(it.qty) || 1), 0);
+      const subtotal = cartItems.reduce((s, it) => {
+        const price = normalizePriceNumber(parsePrice(it.price)) || 0;
+        return s + price * (Number(it.qty) || 1);
+      }, 0);
 
-      activeSid = null;
-      activeCheckoutContext = null;
-      if (checkPayBtn) checkPayBtn.disabled = true;
-      if (payAllBtn) payAllBtn.disabled = false;
+      document.getElementById("itemsCount").textContent = String(itemsCount);
+      document.getElementById("subtotal").textContent = money(subtotal);
+      document.getElementById("total").textContent = money(subtotal);
 
-      setStep(3);
-    }
-
-    async function beginCartPaymentPopup() {
-      const paid = lastRendered.paid || [];
-      if (!paid.length) {
-        setFlowNotice("warn", `<strong>No paid items.</strong> Nothing to purchase.`);
-        return;
-      }
-
-      const workerItems = buildWorkerItemsFromPaid(paid);
-      if (!workerItems.length) {
-        setFlowNotice("warn", `<strong>Missing variation IDs.</strong> Paid items must include a Square <code>variantId</code>.`);
-        return;
-      }
-
-      const cartItemIds = paid.map(it => String(it.id));
-
-      showPayPending("Creating checkout…");
-      payAllBtn.disabled = true;
-      checkPayBtn.disabled = true;
-
-      const payload = {
-        cartId: uniqueId("cart"),
-        currency: "USD",
-        items: workerItems,
-        context: {
-          mode: "cart",
-          uid: currentUser?.uid || null,
-          cartItemIds
-        }
-      };
-
-      const { checkoutUrl, sid } = await workerCreateCheckout(payload);
-      activeSid = sid;
-      activeCheckoutContext = { mode: "cart", cartItemIds };
-      checkPayBtn.disabled = false;
-
-      showPayPending("Complete payment in the popup. Close it when finished.");
-      const popup = window.open(checkoutUrl, "squareCheckout", POPUP_FEATURES);
-      if (!popup) {
-        payAllBtn.disabled = false;
-        showPayErr("Popup blocked. Allow popups and try again.");
-        return;
-      }
-
-      await waitForPopupClose(popup);
-      showPayPending("Popup closed. Verifying (webhook)…");
-
-      const result = await pollPaid(activeSid);
-      if (result.ok) {
-        await finalizeCartPaidCheckout(result.data);
-      } else {
-        showPayPending("Not confirmed yet. Webhooks can take a moment. Click “Check payment”.");
-        payAllBtn.disabled = false;
-      }
-    }
-
-    async function checkActivePayment() {
-      if (!activeSid) return;
-      showPayPending("Checking payment status…");
-
-      const r = await workerGetStatus(activeSid);
-      if (r.ok && r.body?.status === "paid") {
-        if (activeCheckoutContext?.mode === "cart") {
-          await finalizeCartPaidCheckout(r.body);
-        } else if (activeCheckoutContext?.mode === "buy") {
-          await finalizeBuyNowCheckout(r.body);
-        }
-      } else if (r.http === 404) {
-        showPayErr("Session not found (expired or wrong sid).");
-      } else {
-        showPayPending(`Still ${String(r.body?.status || "pending")} — try again soon.`);
-      }
-    }
-
-    payAllBtn?.addEventListener("click", () => {
-      beginCartPaymentPopup().catch(err => {
-        console.error(err);
-        payAllBtn.disabled = false;
-        showPayErr(err?.message || String(err));
-      });
-    });
-
-    checkPayBtn?.addEventListener("click", () => {
-      checkActivePayment().catch(err => {
-        console.error(err);
-        showPayErr(err?.message || String(err));
-      });
-    });
-
-    // Buy Now: build variationId (require variantId or use first variant)
-    async function beginBuyNowPaymentPopup() {
-      if (!buyMode || !buyItem) return;
-
-      const pid = String(buyItem.productId || "").trim();
-      let variationId = String(buyItem.variantId || "").trim();
-
-      if (!variationId && pid) {
-        try { await loadProducts(); } catch { }
-        const p = _productById.get(pid) || null;
-        const vars = Array.isArray(p?.varients) ? p.varients : (Array.isArray(p?.variants) ? p.variants : []);
-        variationId = String(vars?.[0]?.id || "").trim();
-        if (variationId) buyItem.variantId = variationId; // cache for UI
-      }
-
-      if (!variationId) {
-        showPayErr("Buy Now item has no variationId. Ensure products.json has varients[0].id or pass a variant in the URL/cart.");
-        return;
-      }
-
-      showPayPending("Creating checkout…");
-      buyNowPayBtn.disabled = true;
-      buyNowCheckBtn.disabled = true;
-
-      const payload = {
-        cartId: uniqueId("buy"),
-        currency: "USD",
-        items: [{ variationId, quantity: 1 }],
-        context: {
-          mode: "buy",
-          uid: currentUser?.uid || null,
-          productId: pid,
-          buyItemId: String(buyItem.id || "")
-        }
-      };
-
-      const { checkoutUrl, sid } = await workerCreateCheckout(payload);
-      activeSid = sid;
-      activeCheckoutContext = { mode: "buy", productId: pid, buyItemId: String(buyItem.id || "") };
-      buyNowCheckBtn.disabled = false;
-
-      showPayPending("Complete payment in the popup. Close it when finished.");
-      const popup = window.open(checkoutUrl, "squareCheckout", POPUP_FEATURES);
-      if (!popup) {
-        buyNowPayBtn.disabled = false;
-        showPayErr("Popup blocked. Allow popups and try again.");
-        return;
-      }
-
-      await waitForPopupClose(popup);
-      showPayPending("Popup closed. Verifying (webhook)…");
-
-      const result = await pollPaid(activeSid);
-      if (result.ok) {
-        await finalizeBuyNowCheckout(result.data);
-      } else {
-        showPayPending("Not confirmed yet. Click “Check payment”.");
-      }
-
-      buyNowPayBtn.disabled = false;
-    }
-
-    async function finalizeBuyNowCheckout(statusPayload) {
-      const pid = activeCheckoutContext?.productId || buyItem?.productId || "";
-      const title = buyItem?.title || pid || "Purchase";
-
-      const row = {
-        type: "paid_item",
-        itemId: String(buyItem?.id || `buy-${pid}`),
-        title,
-        accessUrl: safeUrl(buyItem?.accessUrl || ""),
-        qty: 1,
-        sid: activeSid,
-        orderId: statusPayload?.orderId || statusPayload?.order_id || null,
-        paymentId: statusPayload?.paymentId || statusPayload?.payment_id || null
-      };
-
-      if (currentUser?.uid) await writePurchase(currentUser, row);
-      else addLocalPurchase({ ...row, createdAt: Date.now() });
-
-      showPayOk(
-        `<div style="display:flex;gap:10px;align-items:flex-start">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-            <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div>
-            <strong>Payment confirmed.</strong><br/>
-            Your purchase has been recorded.
-          </div>
-        </div>`
-      );
-
-      activeSid = null;
-      activeCheckoutContext = null;
-      if (buyNowCheckBtn) buyNowCheckBtn.disabled = true;
-
-      setStep(3);
-    }
-
-    buyNowPayBtn?.addEventListener("click", () => {
-      beginBuyNowPaymentPopup().catch(err => {
-        console.error(err);
-        buyNowPayBtn.disabled = false;
-        showPayErr(err?.message || String(err));
-      });
-    });
-
-    buyNowCheckBtn?.addEventListener("click", () => {
-      checkActivePayment().catch(err => {
-        console.error(err);
-        showPayErr(err?.message || String(err));
-      });
-    });
-
-    /* =============================
-       Success pane rendering
-    ============================= */
-    function renderSuccess() {
-      const rows = currentUser?.uid ? purchaseRows : getLocalPurchases();
-      successGrid.innerHTML = "";
-
-      const header = document.createElement("div");
-      header.className = "successRow";
-      header.innerHTML = `
-        <div style="display:flex;gap:12px;align-items:flex-start;min-width:0;">
-          <div style="min-width:0;">
-            <div style="font-weight:900;letter-spacing:.2px;">Success</div>
-            <div class="mini">Your purchases and donations are recorded below.</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
-          <span class="tag">Recorded</span>
-        </div>
-      `;
-      successGrid.appendChild(header);
-
-      let count = 0;
-
-      for (const r of rows) {
-        const title = escapeHtml(r.title || r.itemId || "Purchase");
-        const accessUrl = safeUrl(r.accessUrl || "");
-        const type = escapeHtml(r.type || "purchase");
-
-        const tag = accessUrl ? `<span class="tag">Link ready</span>` : `<span class="tag dim">${type}</span>`;
-        const btn = accessUrl
-          ? `<a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>`
-          : `<button class="btn btn-ghost btn-small" type="button" disabled>No link</button>`;
-
-        const row = document.createElement("div");
-        row.className = "successRow";
-        row.innerHTML = `
-          <div style="min-width:0;">
-            <div style="font-weight:900; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div>
-            <div class="mini">Item ID: ${escapeHtml(r.itemId || "")}</div>
-          </div>
-          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-            ${tag}
-            ${btn}
-          </div>
-        `;
-        successGrid.appendChild(row);
-        count++;
-      }
-
-      // Free items with links (current cart view)
-      const freeWithLinks = (lastRendered.free || [])
-        .filter(it => safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link));
-
-      for (const it of freeWithLinks) {
-        const title = escapeHtml(it.title || it.name || it.id);
-        const accessUrl = safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link);
-
-        const row = document.createElement("div");
-        row.className = "successRow";
-        row.innerHTML = `
-          <div style="min-width:0;">
-            <div style="font-weight:900; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div>
-            <div class="mini">Free item link</div>
-          </div>
-          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-            <span class="tag">Link ready</span>
-            <a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>
-          </div>
-        `;
-        successGrid.appendChild(row);
-        count++;
-      }
-
-      successEmpty.style.display = (count === 0) ? "block" : "none";
+      document.getElementById("checkoutBtn").disabled = cartItems.length === 0;
+      document.getElementById("clearBtn").disabled = cartItems.length === 0;
     }
 
     /* =============================
-       Return flow handling (donation + buy mode)
-       NOTE: Paid purchases no longer rely on Square redirects.
+       UI events
     ============================= */
-    async function handleReturnFlow(user) {
-      const p = new URLSearchParams(window.location.search);
-      const source = p.get("source");
-      const productParam = p.get("product");
-      if (!source) return;
-
-      if (source === "donation") {
-        const row = {
-          type: "donation",
-          itemId: "donation",
-          title: "Donation",
-          accessUrl: null
-        };
-
-        if (user?.uid) await writePurchase(user, row);
-        else addLocalPurchase({ ...row, createdAt: Date.now() });
-
-        showPayOk(
-          `<div style="display:flex;gap:10px;align-items:flex-start">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-              <path d="M12 21s-7-4.35-9.33-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.33 6c-2.33 4.65-9.33 9-9.33 9Z"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            <div>
-              <strong>Donation received.</strong><br/>
-              Thank you for supporting Unlim8ted.
-            </div>
-          </div>`
-        );
-
-        setStep(2);
+    document.addEventListener("click", async (e) => {
+      const rm = e.target.closest("[data-remove]");
+      if (rm) {
+        const id = rm.getAttribute("data-remove");
+        try { await removeItem(id); } catch (err) { console.error(err); }
+        return;
       }
 
-      if (source === "buy") {
-        const pid = String(productParam || "").trim();
-        if (!pid) {
-          setFlowNotice("warn", `<strong>Buy Now:</strong> missing <code>product</code> parameter.`);
-          setStep(0);
-        } else {
-          buyMode = true;
-          if (buyNowBar) buyNowBar.style.display = "block";
-
-          try { await loadProducts(); } catch { }
-          const pObj = _productById.get(pid) || null;
-
-          const title = pObj?.title || pObj?.name || pid;
-          const image = resolveProductImage(pid, "");
-          const price = normalizePriceNumber(readPrice(pObj) ?? 0) || 0;
-
-          // Default: first variant as the buyNow target
-          const vars = Array.isArray(pObj?.varients) ? pObj.varients : (Array.isArray(pObj?.variants) ? pObj.variants : []);
-          const firstVarId = String(vars?.[0]?.id || "").trim();
-
-          const accessUrl =
-            safeUrl(pObj?.accessUrl) ||
-            safeUrl(pObj?.downloadUrl) ||
-            safeUrl(pObj?.url) ||
-            safeUrl(pObj?.link) ||
-            "";
-
-          buyItem = {
-            id: `buy-${pid}`,
-            productId: pid,
-            variantId: firstVarId || null,
-            variantLabel: "",
-            title,
-            price,
-            qty: 1,
-            image,
-            accessUrl
-          };
-
-          await render([buyItem]);
-
-          setFlowNotice(
-            "ok",
-            `<div style="display:flex;gap:10px;align-items:flex-start">
-              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-                <path d="M6 6h15l-2 8H8L6 6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                <path d="M6 6 5 3H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <circle cx="9" cy="19" r="1.8" stroke="currentColor" stroke-width="2"/>
-                <circle cx="17" cy="19" r="1.8" stroke="currentColor" stroke-width="2"/>
-              </svg>
-              <div>
-                <strong>Buy Now mode.</strong><br/>
-                Go to <strong>Pay</strong> or use the Buy Now button above to complete purchase in a popup.
-              </div>
-            </div>`
-          );
-
-          setStep(0);
-        }
+      const inc = e.target.closest("[data-inc]");
+      if (inc) {
+        const id = inc.getAttribute("data-inc");
+        const input = document.querySelector(`[data-qty="${CSS.escape(id)}"]`);
+        const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
+        input.value = String(current + 1);
+        try { await setQty(id, current + 1); } catch (err) { console.error(err); }
+        return;
       }
 
-      // Clean URL
-      try {
-        const clean = window.location.origin + window.location.pathname;
-        window.history.replaceState({}, "", clean);
-      } catch { }
-    }
+      const dec = e.target.closest("[data-dec]");
+      if (dec) {
+        const id = dec.getAttribute("data-dec");
+        const input = document.querySelector(`[data-qty="${CSS.escape(id)}"]`);
+        const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
+        const next = Math.max(1, current - 1);
+        input.value = String(next);
+        try { await setQty(id, next); } catch (err) { console.error(err); }
+        return;
+      }
+
+      if (e.target.closest("#checkoutBtn")) {
+        beginCheckout();
+        return;
+      }
+
+      if (e.target.closest("#clearBtn")) {
+        clearNotice();
+        if (!cartItems.length) return;
+        if (!confirm("Clear your cart?")) return;
+        try { await clearCart(); } catch (err) { console.error(err); }
+        return;
+      }
+    });
+
+    let t = null;
+    document.addEventListener("input", (e) => {
+      const inp = e.target.closest("[data-qty]");
+      if (!inp) return;
+
+      const id = inp.getAttribute("data-qty");
+      let qty = parseInt(inp.value, 10);
+      if (!Number.isFinite(qty) || qty < 1) qty = 1;
+
+      clearTimeout(t);
+      t = setTimeout(async () => {
+        try { await setQty(id, qty); } catch (err) { console.error(err); }
+      }, 300);
+    });
 
     /* =============================
-       Wire data module → UI updates
+       Start
     ============================= */
-    wireEvents();
     loadProducts().catch(() => { });
-
-    on("auth", async ({ user }) => {
-      currentUser = user || null;
-      signedOut.style.display = user ? "none" : "block";
-
-      if (!buyMode && buyNowBar) buyNowBar.style.display = "none";
-
-      await handleReturnFlow(user);
-    });
-
-    on("cart", async ({ user, items }) => {
-      if (!buyMode) await render(items || []);
-    });
-
-    on("purchases", ({ user, rows }) => {
-      purchaseRows = rows || [];
-      if (stepIndex === 3) renderSuccess();
-    });
-
-    /* =============================
-       Start it all
-    ============================= */
     startCartData();
-    setStep(0);
+    renderCart();
 
     // Footer year
     const y = new Date().getFullYear();
     document.getElementById("footer-text").innerHTML =
       `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
   </script>
-
 </body>
 
 </html>
