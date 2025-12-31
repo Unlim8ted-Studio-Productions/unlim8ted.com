@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unlim8ted - Cart</title>
+  <meta name="description" content="View your Unlim8ted cart, powered by Unlim8ted Studio Productions" />
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+
+  <!-- ✅ Your existing Web Components (unchanged) -->
+  <script type="module" src="/components/site-navbar.js"></script>
+  <script type="module" src="/components/site-loader.js"></script>
+
+  <style>
+    :root {
+      --bg: #0e0b16;
+      --panel: rgba(20, 18, 30, .88);
+      --panel2: rgba(28, 26, 42, .92);
+      --text: rgba(255, 255, 255, .92);
+      --muted: rgba(255, 255, 255, .65);
+      --stroke: rgba(255, 255, 255, .10);
+      --accent: #00ff99;
+      --danger: #ff4d4d;
+      --warn: #ffd166;
+      --shadow: 0 12px 30px rgba(0, 0, 0, .35);
+      --r: 18px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0, 255, 153, .12), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(255, 0, 119, .10), transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(52, 152, 219, .10), transparent 45%),
+        #07060b;
+      padding-top: 56px;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 16px 70px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: .2px;
+    }
+
+    .sub {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.6fr .9fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .list {
+      padding: 14px;
+    }
+
+    .empty {
+      padding: 18px;
+      color: var(--muted);
+    }
+
+    .signedout {
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      color: var(--muted);
+    }
+
+    .signedout a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .notice {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .06);
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .notice strong {
+      color: rgba(255, 255, 255, .92);
+    }
+
+    .notice.ok {
+      border-color: rgba(0, 255, 153, .28);
+      background: rgba(0, 255, 153, .08);
+      color: rgba(255, 255, 255, .80);
+    }
+
+    .notice.warn {
+      border-color: rgba(255, 209, 102, .22);
+      background: rgba(255, 209, 102, .08);
+      color: rgba(255, 255, 255, .78);
+    }
+
+    /* Dark selects */
+    select {
+      background: rgba(10, 10, 16, .92) !important;
+      color: rgba(255, 255, 255, .92) !important;
+      border: 1px solid rgba(255, 255, 255, .14);
+    }
+
+    select option {
+      background: #0b0a12 !important;
+      color: rgba(255, 255, 255, .92) !important;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: rgba(0, 255, 153, .45);
+      box-shadow: 0 0 0 3px rgba(0, 255, 153, .12);
+    }
+
+    .section {
+      margin-bottom: 14px;
+    }
+
+    .sectionhead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 6px 2px 10px;
+    }
+
+    .sectiontitle {
+      font-weight: 900;
+      letter-spacing: .2px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, .92);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      color: rgba(255, 255, 255, .88);
+    }
+
+    .pill {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .75);
+      font-weight: 800;
+    }
+
+    /* Progress / stepper */
+    .stepper {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .05);
+      margin-bottom: 12px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+      opacity: .72;
+    }
+
+    .step.active {
+      opacity: 1;
+    }
+
+    .dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 12px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .85);
+      flex: 0 0 auto;
+    }
+
+    .step.active .dot {
+      border-color: rgba(0, 255, 153, .32);
+      background: rgba(0, 255, 153, .10);
+      color: rgba(255, 255, 255, .92);
+    }
+
+    .stepname {
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stepdesc {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .65);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .steptext {
+      min-width: 0;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255, 255, 255, .10);
+      flex: 0 0 18px;
+      opacity: .4;
+    }
+
+    /* Item row */
+    .item {
+      display: flex;
+      gap: 14px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .06);
+      margin-bottom: 10px;
+    }
+
+    .thumb {
+      width: 90px;
+      height: 90px;
+      border-radius: 16px;
+      overflow: hidden;
+      flex: 0 0 auto;
+      background: rgba(255, 255, 255, .07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, .55);
+      font-size: 12px;
+      border: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .meta {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .title {
+      font-size: 15px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: .2px;
+    }
+
+    .row2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .price {
+      color: rgba(255, 255, 255, .85);
+      font-weight: 700;
+    }
+
+    .mini {
+      font-size: 12px;
+      color: rgba(255, 255, 255, .62);
+    }
+
+    /* Qty stepper */
+    .qty {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .10);
+      border-radius: 999px;
+      padding: 6px 10px;
+    }
+
+    .qty button {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: rgba(255, 255, 255, .08);
+      color: var(--text);
+      font-size: 18px;
+      line-height: 0;
+    }
+
+    .qty button:hover {
+      background: rgba(0, 255, 153, .16);
+      color: var(--accent);
+    }
+
+    .qty input {
+      width: 42px;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      text-align: center;
+      outline: none;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .iconbtn {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .05);
+      color: rgba(255, 255, 255, .85);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .iconbtn:hover {
+      border-color: rgba(255, 77, 77, .35);
+      background: rgba(255, 77, 77, .12);
+      color: var(--danger);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-weight: 900;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      filter: grayscale(.2);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0b1020;
+      box-shadow: 0 10px 22px rgba(0, 255, 153, .18);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(.95);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, .05);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, .10);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .btn-small {
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+
+    /* Summary */
+    .summary {
+      padding: 16px;
+      position: sticky;
+      top: 76px;
+    }
+
+    .sum-title {
+      font-weight: 900;
+      letter-spacing: .2px;
+      margin-bottom: 10px;
+    }
+
+    .sumline {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      font-size: 14px;
+    }
+
+    .sumline strong {
+      color: rgba(255, 255, 255, .92);
+    }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 0 6px;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .cta {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .donationBox {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .formrow {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    select,
+    input[type="text"] {
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .92);
+      padding: 10px 12px;
+      outline: none;
+      font-weight: 800;
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, .45);
+    }
+
+    .helper {
+      margin-top: 10px;
+      color: rgba(255, 255, 255, .62);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .foot {
+      margin-top: 20px;
+      text-align: center;
+      color: rgba(255, 255, 255, .6);
+      font-size: 13px;
+    }
+
+    /* “Checkout sections” */
+    .checkoutPane {
+      display: none;
+      animation: fadeIn .18s ease-out;
+    }
+
+    .checkoutPane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .successCard {
+      padding: 14px;
+    }
+
+    .successGrid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .successRow {
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 255, 153, .28);
+      background: rgba(0, 255, 153, .10);
+      color: rgba(255, 255, 255, .85);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .tag.dim {
+      border-color: rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .72);
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary {
+        position: static;
+      }
+
+      .stepdesc {
+        display: none;
+      }
+    }
+
+    .rightControls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ✅ Your existing loader component -->
+  <site-loader text="Loading..."></site-loader>
+
+  <!-- ✅ Your existing navbar component -->
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile"></site-navbar>
+
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <h1>Checkout</h1>
+        <p class="sub">
+          Paid items (digital or physical) are purchased individually via Square. Free digital items can include access
+          links.
+        </p>
+      </div>
+    </div>
+
+    <div id="flowNotice" class="notice" style="display:none;"></div>
+
+    <div id="signedOut" class="signedout" style="display:none;">
+      You’re not signed in. <a href="https://unlim8ted.com/sign-in">Sign in</a> to sync your cart and purchase history
+      across devices.
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper" role="navigation" aria-label="Checkout steps">
+      <div class="step" id="step-1">
+        <div class="dot">1</div>
+        <div class="steptext">
+          <div class="stepname">Review</div>
+          <div class="stepdesc">Check items & variants</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="step" id="step-2">
+        <div class="dot">2</div>
+        <div class="steptext">
+          <div class="stepname">Support</div>
+          <div class="stepdesc">Optional donation</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="step" id="step-3">
+        <div class="dot">3</div>
+        <div class="steptext">
+          <div class="stepname">Pay</div>
+          <div class="stepdesc">Square per item</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="step" id="step-4">
+        <div class="dot">4</div>
+        <div class="steptext">
+          <div class="stepname">Success</div>
+          <div class="stepdesc">Open links / history</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: panes -->
+      <div class="card list">
+        <!-- PANE 1: REVIEW -->
+        <div class="checkoutPane active" id="pane-review">
+          <div class="section">
+            <div class="sectionhead">
+              <div class="sectiontitle">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M7 21h10a2 2 0 0 0 2-2V7.5a2 2 0 0 0-.59-1.41l-3.5-3.5A2 2 0 0 0 13.5 2H7a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2Z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <path d="M14 2v5a2 2 0 0 0 2 2h5" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+                </svg>
+                Free Digital <span class="pill" id="freeCountPill">0</span>
+              </div>
+            </div>
+            <div id="freeList"></div>
+            <div id="freeEmpty" class="empty" style="display:none;">No free items in your cart.</div>
+          </div>
+
+          <div class="section">
+            <div class="sectionhead">
+              <div class="sectiontitle">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3 7h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+                  <path d="M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <path d="M7 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Paid Items <span class="pill" id="paidCountPill">0</span>
+              </div>
+            </div>
+            <div id="paidList"></div>
+            <div id="paidEmpty" class="empty" style="display:none;">No paid items in your cart.</div>
+          </div>
+
+          <div id="allEmpty" class="empty" style="display:none;">Your cart is empty.</div>
+        </div>
+
+        <!-- PANE 2: SUPPORT -->
+        <div class="checkoutPane" id="pane-support">
+          <div class="section">
+            <div class="sectionhead">
+              <div class="sectiontitle">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 21s-7-4.35-9.33-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.33 6c-2.33 4.65-9.33 9-9.33 9Z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Support Unlim8ted <span class="pill">Optional</span>
+              </div>
+              <div class="mini">Donations use Square Payment Links.</div>
+            </div>
+
+            <div class="notice" style="margin-bottom:10px;">
+              After donating, you’ll return to this page automatically so you can continue checkout.
+            </div>
+
+            <div class="formrow">
+              <label class="mini" style="min-width:78px;">Frequency</label>
+              <select id="donationFreq" aria-label="Donation frequency">
+                <option value="one_time" selected>One-time</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="annual">Annual</option>
+              </select>
+            </div>
+
+            <div class="formrow">
+              <label class="mini" style="min-width:78px;">Amount</label>
+              <select id="donationAmountPreset" aria-label="Donation amount">
+                <option value="1" data-one-time="1">$1</option>
+                <option value="5" data-one-time="1">$5</option>
+                <option value="10" data-one-time="1">$10</option>
+                <option value="custom" selected>Custom</option>
+              </select>
+            </div>
+
+            <div class="formrow" style="margin-top:12px;">
+              <button id="donateBtn" class="btn btn-primary btn-small" type="button">Donate via Square</button>
+              <button id="clearDonationBtn" class="btn btn-ghost btn-small" type="button">Reset</button>
+            </div>
+
+            <div id="donationHint" class="helper" style="margin-top:10px;"></div>
+            <div class="helper">
+              You can skip this step at any time. Donation is never required.
+            </div>
+          </div>
+        </div>
+
+        <!-- PANE 3: PAY -->
+        <div class="checkoutPane" id="pane-pay">
+          <div class="section">
+            <div class="sectionhead">
+              <div class="sectiontitle">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3 7h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+                  <path d="M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <path d="M7 15h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Purchase Paid Items <span class="pill">Square</span>
+              </div>
+              <div class="mini">You’ll return here after each purchase and we’ll clear that item from your cart.</div>
+            </div>
+
+            <div class="notice warn" style="margin-bottom:10px;">
+              Each payment is processed separately by Square (in a popup). </div>
+
+            <div id="paidListPay"></div>
+            <div id="paidEmptyPay" class="empty" style="display:none;">No paid items to purchase.</div>
+
+            <div class="helper" style="margin-top:12px;">
+              When you’re done purchasing, continue to Success to open available links and view your purchase history.
+            </div>
+          </div>
+        </div>
+
+        <!-- PANE 4: SUCCESS -->
+        <div class="checkoutPane" id="pane-success">
+          <div class="successCard">
+            <div class="sectionhead">
+              <div class="sectiontitle">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+                Success
+              </div>
+              <div class="mini">Your links appear here (and in your account if signed in).</div>
+            </div>
+
+            <div class="notice ok" style="margin-bottom:10px;">
+              Purchased items (and any free items with access links) are listed below.
+            </div>
+
+            <div class="successGrid" id="successGrid"></div>
+            <div id="successEmpty" class="empty" style="display:none;">
+              Nothing to show yet. Complete a purchase return or keep shopping.
+            </div>
+
+            <div class="helper" style="margin-top:12px;">
+              If you’re signed out, purchase history is stored locally in this browser. Sign in to sync it to your
+              account.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: summary + nav -->
+      <div class="card summary">
+        <div class="sum-title">Summary</div>
+
+        <div class="sumline">
+          <span>Free digital (qty)</span>
+          <strong><span id="freeQty">0</span></strong>
+        </div>
+
+        <div class="sumline">
+          <span>Paid items (qty)</span>
+          <strong><span id="paidQty">0</span></strong>
+        </div>
+
+        <div class="sumline">
+          <span>Paid subtotal</span>
+          <strong>$<span id="paidSubtotal">0.00</span></strong>
+        </div>
+
+        <div class="total">
+          <span>Due now</span>
+          <span>$<span id="dueNow">0.00</span></span>
+        </div>
+        <div class="mini">Estimate—Taxes and shipping fees not included.</div>
+
+        <div class="cta">
+          <button id="backBtn" class="btn btn-ghost" type="button" disabled>Back</button>
+          <button id="nextBtn" class="btn btn-primary" type="button">Continue</button>
+          <a class="btn btn-ghost" href="/products">Continue shopping</a>
+        </div>
+
+        <div class="donationBox">
+          <div class="sum-title" style="margin:0;">How checkout works</div>
+          <div class="helper" style="margin-top:10px;">
+            <strong>1)</strong> Review items + variants.<br />
+            <strong>2)</strong> Optional donation (Square).<br />
+            <strong>3)</strong> Buy paid items one by one (Square popup).<br />
+            <strong>4)</strong> Success: view purchase history and open links.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span id="footer-text"></span>
+    </div>
+  </div>
+
+  <!-- ✅ New modular scripts -->
+  <!-- Order matters: data first, then popup helper, then UI -->
+  <script type="module" src="js/cart-data.js"></script>
+  <script type="module" src="js/popup-checkout.js"></script>
+  <script type="module" src="js/cart-ui.js"></script>
+
+</body>
+
+</html>
