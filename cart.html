@@ -612,13 +612,15 @@
       .stepdesc {
         display: none;
       }
-    }.rightControls{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
+    }
+
+    .rightControls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
   </style>
 </head>
 
@@ -632,8 +634,8 @@
       <div>
         <h1>Checkout</h1>
         <p class="sub">
-          Paid items (digital or physical) are purchased individually via Square. Free digital items can include access
-          links.
+          Paid items (digital or physical) are purchased in a single popup via Square. Free digital items can include
+          access links.
         </p>
       </div>
     </div>
@@ -667,7 +669,7 @@
         <div class="dot">3</div>
         <div class="steptext">
           <div class="stepname">Pay</div>
-          <div class="stepdesc">Square per item</div>
+          <div class="stepdesc">Popup + webhook verify</div>
         </div>
       </div>
       <div class="divider"></div>
@@ -685,6 +687,17 @@
       <div class="card list">
         <!-- PANE 1: REVIEW -->
         <div class="checkoutPane active" id="pane-review">
+
+          <!-- Buy Now bar (only visible in buy mode) -->
+          <div id="buyNowBar" class="notice warn" style="display:none;margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;">
+              <div><strong>Buy Now:</strong> This item isn’t in your cart. You can pay in a popup on the Pay step.</div>
+              <div class="row">
+                <button id="buyNowPayBtn" class="btn btn-primary btn-small" type="button">Pay with Square (popup)</button>
+                <button id="buyNowCheckBtn" class="btn btn-ghost btn-small" type="button" disabled>Check payment</button>
+              </div>
+            </div>
+          </div>
 
           <div class="section">
             <div class="sectionhead">
@@ -784,11 +797,17 @@
                 </svg>
                 Purchase Paid Items <span class="pill">Square</span>
               </div>
-              <div class="mini">You’ll return here after each purchase and we’ll clear that item from your cart.</div>
+              <div class="mini">One popup checkout. After you close it, we verify via webhook and then clear paid items.</div>
             </div>
 
             <div class="notice warn" style="margin-bottom:10px;">
-              Each payment is processed seperately by Square. </div>
+              This step uses a popup window (no reload). Webhooks are the source of truth.
+            </div>
+
+            <div class="formrow" style="margin-bottom:10px;">
+              <button id="payAllBtn" class="btn btn-primary btn-small" type="button">Pay with Square (popup)</button>
+              <button id="checkPayBtn" class="btn btn-ghost btn-small" type="button" disabled>Check payment</button>
+            </div>
 
             <div id="paidListPay"></div>
             <div id="paidEmptyPay" class="empty" style="display:none;">No paid items to purchase.</div>
@@ -819,7 +838,7 @@
 
             <div class="successGrid" id="successGrid"></div>
             <div id="successEmpty" class="empty" style="display:none;">
-              Nothing to show yet. Complete a purchase return or keep shopping.
+              Nothing to show yet. Complete checkout or keep shopping.
             </div>
 
             <div class="helper" style="margin-top:12px;">
@@ -865,8 +884,8 @@
           <div class="sum-title" style="margin:0;">How checkout works</div>
           <div class="helper" style="margin-top:10px;">
             <strong>1)</strong> Review items + variants.<br />
-            <strong>2)</strong> Optional donation (Square).<br />
-            <strong>3)</strong> Buy paid items one by one (Square).<br />
+            <strong>2)</strong> Optional donation (Square link).<br />
+            <strong>3)</strong> Pay paid items in one popup (Square) + webhook verify.<br />
             <strong>4)</strong> Success: view purchase history and open links.
           </div>
         </div>
@@ -879,29 +898,7 @@
   </div>
 
 
-  <script type="module">function removeDuplicateBuyButtons() {
-  document.querySelectorAll("#paidListPay .item").forEach(item => {
-    // Find all Buy-on-Square links in this item
-    const buyLinks = [...item.querySelectorAll('a.btn.btn-primary')]
-      .filter(a => /square\.link\/u\//.test(a.href) && /buy on square/i.test(a.textContent));
-
-    if (buyLinks.length <= 1) return;
-
-    // Keep the one in the same row/container as the qty controls
-    const keep =
-      buyLinks.find(a => a.closest(".row2")?.querySelector(".qty")) ||
-      buyLinks[0];
-
-    buyLinks.forEach(a => {
-      if (a === keep) return;
-
-      // Remove the whole row if it's that "extra row2"
-      const row = a.closest(".row2");
-      if (row && !row.querySelector(".qty")) row.remove();
-      else a.remove();
-    });
-  });
-}
+  <script type="module">
 
     // /js/cart-data.js
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
@@ -917,7 +914,7 @@
      * Tiny event bus so UI can subscribe without tight coupling.
      * Events:
      * - "auth": { user }
-     * - "cart": { user, items }   // items include resolved price/title/variant/image when possible
+     * - "cart": { user, items }
      * - "purchases": { user, rows }
      */
     const listeners = new Map(); // event -> Set(fn)
@@ -934,7 +931,7 @@
       return () => listeners.get(event)?.delete(fn);
     }
 
-    // ---------- Local storage helpers (signed-out cart + purchases) ----------
+    // ---------- Local storage helpers ----------
     export function getLocalCart() {
       try {
         const raw = localStorage.getItem("unlim8ted-cart");
@@ -966,7 +963,7 @@
       } catch { }
     }
 
-    // ---------- products.json cache/index (single source of truth) ----------
+    // ---------- products.json cache/index ----------
     let _productsLoaded = false;
     let _productsLoading = null;
     let _productById = new Map();
@@ -1011,7 +1008,6 @@
 
         _productById.set(pid, p);
 
-        // your json uses "varients" (typo); support both
         const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
         for (const v of vars) {
           const vid = String(v.id ?? v.variantId ?? "").trim();
@@ -1029,17 +1025,14 @@
       const p = productId ? (_productById.get(productId) || null) : null;
       const v = (productId && variantId) ? (_variantByKey.get(`${productId}::${variantId}`) || null) : null;
 
-      // Title
       if (!String(it.title || it.name || "").trim()) {
         it.title = String(p?.name || p?.title || productId || it.id || "Item").trim();
       }
 
-      // Variant label
       if (!String(it.variantLabel || "").trim()) {
         it.variantLabel = String(v?.name || "").trim();
       }
 
-      // Price: fill only if missing/invalid, NOT when explicitly 0 (free items).
       const hasPrice =
         it.price !== null &&
         it.price !== undefined &&
@@ -1054,7 +1047,6 @@
         if (catalogPrice !== null) it.price = catalogPrice;
       }
 
-      // Image
       const hasImage = !!safeUrl(it.image || it.imageUrl || "");
       if (!hasImage) {
         let img = "";
@@ -1063,26 +1055,16 @@
         if (img) it.image = img;
       }
 
-      // Square link (variant first)
-      if (!safeUrl(it.squareUrl || it.buyLink || "")) {
-        const link =
-          safeUrl(v?.buy_link) || safeUrl(v?.buyLink) ||
-          safeUrl(p?.buy_link) || safeUrl(p?.buyLink) ||
-          "";
-        if (link) it.squareUrl = link;
-      }
-
       return it;
     }
 
-    // ---------- Normalization (data-layer only; no DOM) ----------
+    // ---------- Normalization ----------
     function normalizeCartItem(raw) {
       const it = { ...(raw || {}) };
 
       const pidRaw = String(it.productId ?? it.pid ?? it.product ?? "").trim();
       const vidRaw = String(it.variantId ?? it.vid ?? it.variant ?? "").trim();
 
-      // If productId is like "pid__variant" and no variantId
       if (pidRaw.includes("__") && !vidRaw) {
         const [basePid, ...rest] = pidRaw.split("__");
         const base = String(basePid || "").trim();
@@ -1093,7 +1075,6 @@
         }
       }
 
-      // If missing productId but id is like "pid__variant"
       const idStr = String(it.id ?? "").trim();
       if ((!it.productId || !String(it.productId).trim()) && idStr.includes("__")) {
         const [basePid, ...rest] = idStr.split("__");
@@ -1171,7 +1152,7 @@
       }
     }
 
-    // ---------- Emission helper (ensures products loaded, resolves prices) ----------
+    // ---------- Emission helper ----------
     async function emitResolvedCart(user, rawItems) {
       await loadProducts();
 
@@ -1183,7 +1164,7 @@
       emit("cart", { user: user || null, items });
     }
 
-    // ---------- Start listeners (auth -> cart + purchases) ----------
+    // ---------- Start listeners ----------
     let unsubCart = null;
     let unsubPurchases = null;
 
@@ -1195,7 +1176,6 @@
         if (unsubPurchases) { unsubPurchases(); unsubPurchases = null; }
 
         if (!user) {
-          // Signed out: build normalized items from local cart
           const localRaw = getLocalCart();
           const local = localRaw.map((rawItem, i) => {
             const id = rawItem.id || `local-${Date.now()}-${i}-${Math.random().toString(16).slice(2)}`;
@@ -1208,14 +1188,11 @@
               price: (rawItem.price ?? rawItem.priceNum ?? null),
               qty: rawItem.qty || 1,
               image: rawItem.image || rawItem.imageUrl || null,
-              buyLink: rawItem.buyLink || null,
-              squareUrl: rawItem.squareUrl || rawItem.squareLink || null,
               downloadUrl: rawItem.downloadUrl || rawItem.accessUrl || rawItem.url || rawItem.link || null,
               accessUrl: rawItem.accessUrl || null,
             });
           });
 
-          // Persist ids if we added any (store what we have; resolver is for display)
           setLocalCart(local.map(x => ({
             id: x.id,
             productId: x.productId,
@@ -1225,8 +1202,6 @@
             price: x.price,
             qty: x.qty,
             image: x.image,
-            buyLink: x.buyLink,
-            squareUrl: x.squareUrl,
             downloadUrl: x.downloadUrl,
             accessUrl: x.accessUrl,
           })));
@@ -1236,7 +1211,6 @@
           return;
         }
 
-        // Signed in: Firestore cart listener
         const cartRef = collection(db, "users", user.uid, "cartItems");
         unsubCart = onSnapshot(cartRef, (snap) => {
           const raw = [];
@@ -1247,13 +1221,11 @@
               productId: data.productId ?? null,
               variantId: data.variantId ?? null,
               variantLabel: data.variantLabel ?? "",
-              buyLink: data.buyLink ?? null,
               title: data.title || data.name || data.productName || "",
               price: (data.price ?? data.priceNum ?? null),
               priceNum: data.priceNum ?? null,
               qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
               image: data.image ?? data.imageUrl ?? null,
-              squareUrl: data.squareUrl ?? data.squareLink ?? null,
               downloadUrl: data.downloadUrl ?? data.accessUrl ?? data.url ?? data.link ?? null,
               accessUrl: data.accessUrl ?? null,
             });
@@ -1262,7 +1234,6 @@
           emitResolvedCart(user, raw);
         });
 
-        // Signed in: purchases listener
         const purchasesRef = query(
           collection(db, "users", user.uid, "purchases"),
           orderBy("createdAt", "desc")
@@ -1284,7 +1255,6 @@
         });
       });
 
-      // If cart changes while signed out
       window.addEventListener("cart-changed", () => {
         const localRaw = getLocalCart();
         emitResolvedCart(null, localRaw);
@@ -1307,7 +1277,63 @@
     };
 
     /* =============================
-       DOM refs (same ids you have)
+       Worker checkout (popup + webhook verify)
+    ============================= */
+    const WORKER_BASE = "https://checkout.unlim8ted.workers.dev";
+    const POPUP_FEATURES = "width=520,height=760,noopener,noreferrer";
+    const POLL_ATTEMPTS = 24;
+    const POLL_DELAY_MS = 1500;
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function waitForPopupClose(popup) {
+      return new Promise(resolve => {
+        const t = setInterval(() => {
+          if (!popup || popup.closed) { clearInterval(t); resolve(); }
+        }, 400);
+      });
+    }
+
+    async function workerCreateCheckout(payload) {
+      const res = await fetch(`${WORKER_BASE}/create-checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(j?.error ? `${j.error}: ${JSON.stringify(j.details || j)}` : `HTTP ${res.status}`);
+      if (!j.checkoutUrl || !j.sid) throw new Error("Worker did not return checkoutUrl/sid");
+      return j;
+    }
+
+    async function workerGetStatus(sid) {
+      const res = await fetch(`${WORKER_BASE}/checkout-status?sid=${encodeURIComponent(sid)}`, { method: "GET" });
+      const j = await res.json().catch(() => ({}));
+      return { ok: res.ok, http: res.status, body: j };
+    }
+
+    async function pollPaid(sid, attempts = POLL_ATTEMPTS, delayMs = POLL_DELAY_MS) {
+      for (let i = 0; i < attempts; i++) {
+        const r = await workerGetStatus(sid);
+        if (r.ok && r.body?.status === "paid") return { ok: true, data: r.body };
+        await sleep(delayMs);
+      }
+      return { ok: false };
+    }
+
+    function buildWorkerItemsFromPaid(paidItems) {
+      return (paidItems || []).map(it => ({
+        variationId: String(it.variantId || "").trim(),
+        quantity: Math.max(1, Number(it.qty) || 1)
+      })).filter(x => x.variationId);
+    }
+
+    function uniqueId(prefix = "sid") {
+      return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    /* =============================
+       DOM refs
     ============================= */
     const signedOut = document.getElementById("signedOut");
     const flowNotice = document.getElementById("flowNotice");
@@ -1328,6 +1354,13 @@
     const freeQtyEl = document.getElementById("freeQty");
     const paidSubtotalEl = document.getElementById("paidSubtotal");
     const dueNowEl = document.getElementById("dueNow");
+
+    const payAllBtn = document.getElementById("payAllBtn");
+    const checkPayBtn = document.getElementById("checkPayBtn");
+
+    const buyNowBar = document.getElementById("buyNowBar");
+    const buyNowPayBtn = document.getElementById("buyNowPayBtn");
+    const buyNowCheckBtn = document.getElementById("buyNowCheckBtn");
 
     // panes / nav
     const panes = [
@@ -1364,12 +1397,16 @@
     let purchaseRows = [];
     let stepIndex = 0;
 
-    // BUY FLOW state (single item)
+    // Buy mode
     let buyMode = false;
     let buyItem = null;
 
+    // Worker checkout state
+    let activeSid = null;
+    let activeCheckoutContext = null; // { mode:"cart"|"buy", cartItemIds?:[], buyItemId?:string, productId?:string }
+
     /* =============================
-       Money + safety helpers
+       Helpers
     ============================= */
     function parsePrice(val) {
       if (val == null) return null;
@@ -1393,11 +1430,7 @@
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
       }[c]));
     }
-    function buildSquareRedirectUrl(baseUrl, redirectTo) {
-      const u = String(baseUrl);
-      const join = u.includes("?") ? "&" : "?";
-      return u + join + "redirect_url=" + encodeURIComponent(redirectTo);
-    }
+
     function setFlowNotice(kind, msg) {
       flowNotice.style.display = "block";
       flowNotice.className = "notice " + (kind || "");
@@ -1409,9 +1442,18 @@
       flowNotice.className = "notice";
     }
 
-    /* =============================
-       Product resolution (USES _productById/_variantByKey)
-    ============================= */
+    function showPayPending(msg) {
+      setFlowNotice("warn", `<strong>Payment:</strong> ${escapeHtml(msg)}`);
+    }
+    function showPayOk(htmlMsg) {
+      setFlowNotice("ok", htmlMsg);
+    }
+    function showPayErr(msg) {
+      setFlowNotice("warn", `<strong>Error:</strong> ${escapeHtml(msg)}`);
+    }
+
+    function removeDuplicateBuyButtons() { /* legacy no-op */ }
+
     function readPrice(obj) {
       if (!obj) return null;
       return (
@@ -1461,9 +1503,7 @@
       const productId = String(raw?.productId ?? raw?.pid ?? raw?.product ?? "").trim();
       const variantId = String(raw?.variantId ?? raw?.vid ?? raw?.variant ?? "").trim();
 
-      if (productId) {
-        try { await loadProducts(); } catch { /* ignore */ }
-      }
+      if (productId) { try { await loadProducts(); } catch { } }
 
       const p = productId ? (_productById.get(productId) || null) : null;
       const v = (productId && variantId) ? (_variantByKey.get(`${productId}::${variantId}`) || null) : null;
@@ -1478,18 +1518,6 @@
         String(raw?.variantLabel || "").trim() ||
         String(v?.name || "").trim();
 
-      // ✅ Variant buy_link first (your products.json uses buy_link)
-      const squareUrl =
-        safeUrl(raw?.buyLink) ||
-        safeUrl(raw?.squareUrl) ||
-        safeUrl(raw?.squareLink) ||
-        safeUrl(raw?.square) ||
-        safeUrl(v?.buy_link) ||
-        safeUrl(v?.buyLink) ||
-        safeUrl(p?.buy_link) ||
-        safeUrl(p?.buyLink) ||
-        "";
-
       let imageUrl = safeUrl(raw?.image) || safeUrl(raw?.imageUrl) || "";
       if (!imageUrl) imageUrl = resolveProductImage(productId, variantId);
 
@@ -1502,7 +1530,7 @@
         safeUrl(p?.accessUrl) ||
         "";
 
-      return { ...raw, title, price, variantLabel, squareUrl, imageUrl, accessUrl };
+      return { ...raw, title, price, variantLabel, imageUrl, accessUrl };
     }
 
     /* =============================
@@ -1532,26 +1560,29 @@
       if (buyMode) {
         buyMode = false;
         buyItem = null;
+        activeSid = null;
+        activeCheckoutContext = null;
         clearFlowNotice();
+        if (buyNowBar) buyNowBar.style.display = "none";
         setStep(0);
         return;
       }
 
+      // Optional: clear entire cart (free items too) after success "Done"
       await clearEntireCart(currentUser);
       clearFlowNotice();
       setStep(0);
 
-      setFlowNotice(
-        "ok",
+      showPayOk(
         `<div style="display:flex;gap:10px;align-items:flex-start">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-          <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <strong>Checkout complete.</strong><br/>
-          Your cart has been cleared.
-        </div>
-      </div>`
+          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
+            <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>
+            <strong>Checkout complete.</strong><br/>
+            Your cart has been cleared.
+          </div>
+        </div>`
       );
     });
 
@@ -1594,6 +1625,10 @@
 
       nextBtn.disabled = (paid.length === 0 && free.length === 0);
       nextBtn.textContent = nextBtn.disabled ? "Add items first" : (stepIndex === 3 ? "Done" : "Continue");
+
+      // Pay buttons state
+      if (payAllBtn) payAllBtn.disabled = (paid.length === 0) || !!activeSid;
+      if (checkPayBtn) checkPayBtn.disabled = !activeSid;
     }
 
     function itemCardHTML(it, kind, view = "review") {
@@ -1606,97 +1641,80 @@
       const img = imgUrl ? `<img src="${escapeHtml(imgUrl)}" alt="">` : "No image";
 
       const accessUrl = safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link);
-      const squareUrl = safeUrl(it.squareUrl || it.buyLink);
 
       const variantLabel = String(it.variantLabel || "").trim();
       const variantLine = variantLabel
         ? `<div class="mini" style="margin-top:2px;">Variant: <strong>${escapeHtml(variantLabel)}</strong></div>`
         : ``;
 
-      const purchaseReturn = `https://unlim8ted.com/cart?source=purchase&itemId=${encodeURIComponent(it.id)}`;
-      const squareWithRedirect = squareUrl ? buildSquareRedirectUrl(squareUrl, purchaseReturn) : "";
-
       const priceLabel = (kind === "free")
         ? `<div class="price">FREE</div>`
         : `<div class="price">$${money(price)}</div>`;
 
       const hint = (kind === "paid")
-        ? `<div class="mini">Purchased individually via Square. Returning here will clear it from your cart.</div>`
+        ? `<div class="mini">Paid items are purchased in the Pay step via popup + webhook verification.</div>`
         : `<div class="mini">This item is completely free!</div>`;
 
-      const primaryAction = (kind === "free")
-        ? (accessUrl
-          ? `<a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>`
-          : ``
-        )
-        : (squareUrl
-          ? `<a class="btn btn-primary btn-small" href="${escapeHtml(squareWithRedirect)}" target="_blank" rel="noopener">Buy on Square</a>`
-          : `<button class="btn btn-ghost btn-small" type="button" data-missinglink="${escapeHtml(it.id)}">Square link needed</button>`
-        );
+      const primaryActionFree = (kind === "free" && accessUrl)
+        ? `<a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>`
+        : ``;
 
       const qtyControls = `
-      <div class="qty" aria-label="Quantity">
-        <button type="button" data-dec="${escapeHtml(it.id)}" aria-label="Decrease quantity">−</button>
-        <input type="text" inputmode="numeric" value="${qty}" data-qty="${escapeHtml(it.id)}" aria-label="Quantity value">
-        <button type="button" data-inc="${escapeHtml(it.id)}" aria-label="Increase quantity">+</button>
-      </div>
-    `;
+        <div class="qty" aria-label="Quantity">
+          <button type="button" data-dec="${escapeHtml(it.id)}" aria-label="Decrease quantity">−</button>
+          <input type="text" inputmode="numeric" value="${qty}" data-qty="${escapeHtml(it.id)}" aria-label="Quantity value">
+          <button type="button" data-inc="${escapeHtml(it.id)}" aria-label="Increase quantity">+</button>
+        </div>
+      `;
 
-      // Hide action buttons ONLY on Review
       const showActions = (view !== "review");
-
-      const actionRow = showActions ? `
-      <div class="row2" style="justify-content:flex-end; margin-top:2px;">
-        ${primaryAction}
-        ${accessUrl && kind === "paid" ? `
-          <a class="btn btn-ghost btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">View details</a>
-        ` : ``}
-      </div>
-    ` : ``;
+      const actionRow = (showActions && kind === "free" && primaryActionFree) ? `
+        <div class="row2" style="justify-content:flex-end; margin-top:2px;">
+          ${primaryActionFree}
+        </div>
+      ` : ``;
 
       return `
-      <div class="item">
-        <div class="thumb">${img}</div>
+        <div class="item">
+          <div class="thumb">${img}</div>
 
-        <div class="meta">
-          <div class="title">${title}</div>
-          ${variantLine}
+          <div class="meta">
+            <div class="title">${title}</div>
+            ${variantLine}
 
-<div class="row2">
-  <div>
-    ${priceLabel}
-    ${hint}
-  </div>
+            <div class="row2">
+              <div>
+                ${priceLabel}
+                ${hint}
+              </div>
 
-  ${
-    (view === "pay" && kind === "paid")
-      ? `<div class="rightControls">${qtyControls}${primaryAction}</div>`
-      : `${qtyControls}`
-  }
-</div>
+              ${
+                (view === "pay" && kind === "paid")
+                  ? `<div class="rightControls">${qtyControls}</div>`
+                  : `${qtyControls}`
+              }
+            </div>
 
-${(view === "pay" && kind === "paid") ? `` : actionRow}
+            ${actionRow}
+          </div>
 
-          ${actionRow}
+          <div class="actions">
+            <button class="iconbtn" type="button" data-remove="${escapeHtml(it.id)}" title="Remove" aria-label="Remove">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M6 7l1 14h10l1-14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M9 7V4h6v3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
         </div>
-
-        <div class="actions">
-          <button class="iconbtn" type="button" data-remove="${escapeHtml(it.id)}" title="Remove" aria-label="Remove">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-              <path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-              <path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-              <path d="M6 7l1 14h10l1-14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-              <path d="M9 7V4h6v3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    `;
+      `;
     }
 
     async function render(items) {
-      // BUY MODE: show ONLY the buy item (do not touch cart)
+      // Buy mode: show only buyItem (not the full cart)
       if (buyMode && buyItem) items = [buyItem];
 
       const enriched = await Promise.all((items || []).map(async (raw) => {
@@ -1706,12 +1724,13 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
           ...r,
           id: raw.id || r.id,
           qty: Number(raw.qty ?? r.qty ?? 1) || 1,
-          squareUrl: r.squareUrl || safeUrl(raw.squareUrl) || safeUrl(raw.buyLink) || "",
           accessUrl: r.accessUrl || safeUrl(raw.accessUrl) || safeUrl(raw.downloadUrl) || "",
           image: r.imageUrl || safeUrl(raw.image) || safeUrl(raw.imageUrl) || "",
           price,
           title: r.title || raw.title || raw.name || "Item",
           variantLabel: r.variantLabel || raw.variantLabel || "",
+          productId: raw.productId || r.productId,
+          variantId: raw.variantId || r.variantId
         };
       }));
 
@@ -1746,6 +1765,9 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
         paidListPay.appendChild(wrap.firstElementChild);
       }
       paidEmptyPay.style.display = paid.length ? "none" : "block";
+
+      if (payAllBtn) payAllBtn.disabled = (paid.length === 0) || !!activeSid;
+      if (checkPayBtn) checkPayBtn.disabled = !activeSid;
     }
 
     function findItemById(id) {
@@ -1754,7 +1776,7 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
     }
 
     /* =============================
-       UI events (qty/remove/missing)
+       UI events (qty/remove)
     ============================= */
     let wired = false;
     function wireEvents() {
@@ -1790,15 +1812,6 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
           try { await setQty(currentUser, id, next); } catch (err) { console.error(err); }
           return;
         }
-
-        const missing = e.target.closest("[data-missinglink]");
-        if (missing) {
-          setFlowNotice(
-            "warn",
-            `<strong>Square link missing.</strong> This item needs a variant link in <code>products.json</code> or a <code>buyLink</code> saved in cart.`
-          );
-          return;
-        }
       });
 
       let t = null;
@@ -1820,6 +1833,12 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
     /* =============================
        Donation UI logic
     ============================= */
+    function buildSquareRedirectUrl(baseUrl, redirectTo) {
+      const u = String(baseUrl);
+      const join = u.includes("?") ? "&" : "?";
+      return u + join + "redirect_url=" + encodeURIComponent(redirectTo);
+    }
+
     function syncDonationUI() {
       const freq = donationFreq.value;
       const preset = donationAmountPreset.value;
@@ -1873,6 +1892,264 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
     syncDonationUI();
 
     /* =============================
+       Worker payment flows
+    ============================= */
+    async function finalizeCartPaidCheckout(statusPayload) {
+      const ctx = activeCheckoutContext;
+      if (!ctx || ctx.mode !== "cart") {
+        showPayOk(`<div><strong>Paid confirmed.</strong></div>`);
+        return;
+      }
+
+      const paid = lastRendered.paid || [];
+      const byId = new Map(paid.map(it => [String(it.id), it]));
+
+      for (const itemId of (ctx.cartItemIds || [])) {
+        const it = byId.get(String(itemId));
+        if (!it) continue;
+
+        const purchaseRow = {
+          type: "paid_item",
+          itemId: String(it.id),
+          title: it.title || it.name || String(it.id),
+          accessUrl: safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link || ""),
+          qty: Number(it.qty) || 1,
+          sid: activeSid,
+          orderId: statusPayload?.orderId || statusPayload?.order_id || null,
+          paymentId: statusPayload?.paymentId || statusPayload?.payment_id || null
+        };
+
+        if (currentUser?.uid) await writePurchase(currentUser, purchaseRow);
+        else addLocalPurchase({ ...purchaseRow, createdAt: Date.now() });
+
+        if (!buyMode) {
+          try { await removeItem(currentUser, it.id); } catch (e) { console.error(e); }
+        }
+      }
+
+      showPayOk(
+        `<div style="display:flex;gap:10px;align-items:flex-start">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
+            <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>
+            <strong>Payment confirmed.</strong><br/>
+            Paid items were recorded and removed from your cart.
+          </div>
+        </div>`
+      );
+
+      activeSid = null;
+      activeCheckoutContext = null;
+      if (checkPayBtn) checkPayBtn.disabled = true;
+      if (payAllBtn) payAllBtn.disabled = false;
+
+      setStep(3);
+    }
+
+    async function beginCartPaymentPopup() {
+      const paid = lastRendered.paid || [];
+      if (!paid.length) {
+        setFlowNotice("warn", `<strong>No paid items.</strong> Nothing to purchase.`);
+        return;
+      }
+
+      const workerItems = buildWorkerItemsFromPaid(paid);
+      if (!workerItems.length) {
+        setFlowNotice("warn", `<strong>Missing variation IDs.</strong> Paid items must include a Square <code>variantId</code>.`);
+        return;
+      }
+
+      const cartItemIds = paid.map(it => String(it.id));
+
+      showPayPending("Creating checkout…");
+      payAllBtn.disabled = true;
+      checkPayBtn.disabled = true;
+
+      const payload = {
+        cartId: uniqueId("cart"),
+        currency: "USD",
+        items: workerItems,
+        context: {
+          mode: "cart",
+          uid: currentUser?.uid || null,
+          cartItemIds
+        }
+      };
+
+      const { checkoutUrl, sid } = await workerCreateCheckout(payload);
+      activeSid = sid;
+      activeCheckoutContext = { mode: "cart", cartItemIds };
+      checkPayBtn.disabled = false;
+
+      showPayPending("Complete payment in the popup. Close it when finished.");
+      const popup = window.open(checkoutUrl, "squareCheckout", POPUP_FEATURES);
+      if (!popup) {
+        payAllBtn.disabled = false;
+        showPayErr("Popup blocked. Allow popups and try again.");
+        return;
+      }
+
+      await waitForPopupClose(popup);
+      showPayPending("Popup closed. Verifying (webhook)…");
+
+      const result = await pollPaid(activeSid);
+      if (result.ok) {
+        await finalizeCartPaidCheckout(result.data);
+      } else {
+        showPayPending("Not confirmed yet. Webhooks can take a moment. Click “Check payment”.");
+        payAllBtn.disabled = false;
+      }
+    }
+
+    async function checkActivePayment() {
+      if (!activeSid) return;
+      showPayPending("Checking payment status…");
+
+      const r = await workerGetStatus(activeSid);
+      if (r.ok && r.body?.status === "paid") {
+        if (activeCheckoutContext?.mode === "cart") {
+          await finalizeCartPaidCheckout(r.body);
+        } else if (activeCheckoutContext?.mode === "buy") {
+          await finalizeBuyNowCheckout(r.body);
+        }
+      } else if (r.http === 404) {
+        showPayErr("Session not found (expired or wrong sid).");
+      } else {
+        showPayPending(`Still ${String(r.body?.status || "pending")} — try again soon.`);
+      }
+    }
+
+    payAllBtn?.addEventListener("click", () => {
+      beginCartPaymentPopup().catch(err => {
+        console.error(err);
+        payAllBtn.disabled = false;
+        showPayErr(err?.message || String(err));
+      });
+    });
+
+    checkPayBtn?.addEventListener("click", () => {
+      checkActivePayment().catch(err => {
+        console.error(err);
+        showPayErr(err?.message || String(err));
+      });
+    });
+
+    // Buy Now: build variationId (require variantId or use first variant)
+    async function beginBuyNowPaymentPopup() {
+      if (!buyMode || !buyItem) return;
+
+      const pid = String(buyItem.productId || "").trim();
+      let variationId = String(buyItem.variantId || "").trim();
+
+      if (!variationId && pid) {
+        try { await loadProducts(); } catch { }
+        const p = _productById.get(pid) || null;
+        const vars = Array.isArray(p?.varients) ? p.varients : (Array.isArray(p?.variants) ? p.variants : []);
+        variationId = String(vars?.[0]?.id || "").trim();
+        if (variationId) buyItem.variantId = variationId; // cache for UI
+      }
+
+      if (!variationId) {
+        showPayErr("Buy Now item has no variationId. Ensure products.json has varients[0].id or pass a variant in the URL/cart.");
+        return;
+      }
+
+      showPayPending("Creating checkout…");
+      buyNowPayBtn.disabled = true;
+      buyNowCheckBtn.disabled = true;
+
+      const payload = {
+        cartId: uniqueId("buy"),
+        currency: "USD",
+        items: [{ variationId, quantity: 1 }],
+        context: {
+          mode: "buy",
+          uid: currentUser?.uid || null,
+          productId: pid,
+          buyItemId: String(buyItem.id || "")
+        }
+      };
+
+      const { checkoutUrl, sid } = await workerCreateCheckout(payload);
+      activeSid = sid;
+      activeCheckoutContext = { mode: "buy", productId: pid, buyItemId: String(buyItem.id || "") };
+      buyNowCheckBtn.disabled = false;
+
+      showPayPending("Complete payment in the popup. Close it when finished.");
+      const popup = window.open(checkoutUrl, "squareCheckout", POPUP_FEATURES);
+      if (!popup) {
+        buyNowPayBtn.disabled = false;
+        showPayErr("Popup blocked. Allow popups and try again.");
+        return;
+      }
+
+      await waitForPopupClose(popup);
+      showPayPending("Popup closed. Verifying (webhook)…");
+
+      const result = await pollPaid(activeSid);
+      if (result.ok) {
+        await finalizeBuyNowCheckout(result.data);
+      } else {
+        showPayPending("Not confirmed yet. Click “Check payment”.");
+      }
+
+      buyNowPayBtn.disabled = false;
+    }
+
+    async function finalizeBuyNowCheckout(statusPayload) {
+      const pid = activeCheckoutContext?.productId || buyItem?.productId || "";
+      const title = buyItem?.title || pid || "Purchase";
+
+      const row = {
+        type: "paid_item",
+        itemId: String(buyItem?.id || `buy-${pid}`),
+        title,
+        accessUrl: safeUrl(buyItem?.accessUrl || ""),
+        qty: 1,
+        sid: activeSid,
+        orderId: statusPayload?.orderId || statusPayload?.order_id || null,
+        paymentId: statusPayload?.paymentId || statusPayload?.payment_id || null
+      };
+
+      if (currentUser?.uid) await writePurchase(currentUser, row);
+      else addLocalPurchase({ ...row, createdAt: Date.now() });
+
+      showPayOk(
+        `<div style="display:flex;gap:10px;align-items:flex-start">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
+            <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>
+            <strong>Payment confirmed.</strong><br/>
+            Your purchase has been recorded.
+          </div>
+        </div>`
+      );
+
+      activeSid = null;
+      activeCheckoutContext = null;
+      if (buyNowCheckBtn) buyNowCheckBtn.disabled = true;
+
+      setStep(3);
+    }
+
+    buyNowPayBtn?.addEventListener("click", () => {
+      beginBuyNowPaymentPopup().catch(err => {
+        console.error(err);
+        buyNowPayBtn.disabled = false;
+        showPayErr(err?.message || String(err));
+      });
+    });
+
+    buyNowCheckBtn?.addEventListener("click", () => {
+      checkActivePayment().catch(err => {
+        console.error(err);
+        showPayErr(err?.message || String(err));
+      });
+    });
+
+    /* =============================
        Success pane rendering
     ============================= */
     function renderSuccess() {
@@ -1882,16 +2159,16 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
       const header = document.createElement("div");
       header.className = "successRow";
       header.innerHTML = `
-      <div style="display:flex;gap:12px;align-items:flex-start;min-width:0;">
-        <div style="min-width:0;">
-          <div style="font-weight:900;letter-spacing:.2px;">Success</div>
-          <div class="mini">Your purchases and donations are recorded below.</div>
+        <div style="display:flex;gap:12px;align-items:flex-start;min-width:0;">
+          <div style="min-width:0;">
+            <div style="font-weight:900;letter-spacing:.2px;">Success</div>
+            <div class="mini">Your purchases and donations are recorded below.</div>
+          </div>
         </div>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
-        <span class="tag">Recorded</span>
-      </div>
-    `;
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
+          <span class="tag">Recorded</span>
+        </div>
+      `;
       successGrid.appendChild(header);
 
       let count = 0;
@@ -1909,15 +2186,15 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
         const row = document.createElement("div");
         row.className = "successRow";
         row.innerHTML = `
-        <div style="min-width:0;">
-          <div style="font-weight:900; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div>
-          <div class="mini">Item ID: ${escapeHtml(r.itemId || "")}</div>
-        </div>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-          ${tag}
-          ${btn}
-        </div>
-      `;
+          <div style="min-width:0;">
+            <div style="font-weight:900; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div>
+            <div class="mini">Item ID: ${escapeHtml(r.itemId || "")}</div>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+            ${tag}
+            ${btn}
+          </div>
+        `;
         successGrid.appendChild(row);
         count++;
       }
@@ -1933,15 +2210,15 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
         const row = document.createElement("div");
         row.className = "successRow";
         row.innerHTML = `
-        <div style="min-width:0;">
-          <div style="font-weight:900; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div>
-          <div class="mini">Free item link</div>
-        </div>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-          <span class="tag">Link ready</span>
-          <a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>
-        </div>
-      `;
+          <div style="min-width:0;">
+            <div style="font-weight:900; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div>
+            <div class="mini">Free item link</div>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+            <span class="tag">Link ready</span>
+            <a class="btn btn-primary btn-small" href="${escapeHtml(accessUrl)}" target="_blank" rel="noopener">Open</a>
+          </div>
+        `;
         successGrid.appendChild(row);
         count++;
       }
@@ -1950,15 +2227,13 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
     }
 
     /* =============================
-       Return flow handling (donation/purchase/buy)
+       Return flow handling (donation + buy mode)
+       NOTE: Paid purchases no longer rely on Square redirects.
     ============================= */
     async function handleReturnFlow(user) {
       const p = new URLSearchParams(window.location.search);
       const source = p.get("source");
-      const itemId = p.get("itemId");
       const productParam = p.get("product");
-      const orderId = p.get("orderId");
-      const transactionId = p.get("transactionId");
       if (!source) return;
 
       if (source === "donation") {
@@ -1966,69 +2241,26 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
           type: "donation",
           itemId: "donation",
           title: "Donation",
-          accessUrl: null,
-          orderId: orderId || null,
-          transactionId: transactionId || null
+          accessUrl: null
         };
 
         if (user?.uid) await writePurchase(user, row);
         else addLocalPurchase({ ...row, createdAt: Date.now() });
 
-        setFlowNotice(
-          "ok",
+        showPayOk(
           `<div style="display:flex;gap:10px;align-items:flex-start">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-            <path d="M12 21s-7-4.35-9.33-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.33 6c-2.33 4.65-9.33 9-9.33 9Z"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          <div>
-            <strong>Donation received.</strong><br/>
-            Thank you for supporting Unlim8ted.
-          </div>
-        </div>`
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
+              <path d="M12 21s-7-4.35-9.33-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.33 6c-2.33 4.65-9.33 9-9.33 9Z"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <div>
+              <strong>Donation received.</strong><br/>
+              Thank you for supporting Unlim8ted.
+            </div>
+          </div>`
         );
 
         setStep(2);
-      }
-
-      if (source === "purchase") {
-        if (!itemId) {
-          setFlowNotice("warn", `<strong>Purchase return received</strong> but no item was identified.`);
-        } else {
-          const item = findItemById(itemId);
-
-          const purchaseRow = {
-            type: "paid_item",
-            itemId: String(itemId),
-            title: item?.title || item?.name || String(itemId),
-            accessUrl: safeUrl(item?.accessUrl || item?.downloadUrl || item?.url || item?.link || ""),
-            qty: item?.qty ? Number(item.qty) : 1,
-            price: item?.price != null ? (normalizePriceNumber(parsePrice(item.price)) ?? null) : null,
-            orderId: orderId || null,
-            transactionId: transactionId || null
-          };
-
-          if (user?.uid) await writePurchase(user, purchaseRow);
-          else addLocalPurchase({ ...purchaseRow, createdAt: Date.now() });
-
-          // Clear from cart
-          try { await removeItem(user, itemId); } catch (err) { console.error(err); }
-
-          setFlowNotice(
-            "ok",
-            `<div style="display:flex;gap:10px;align-items:flex-start">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-              <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <div>
-              <strong>Purchase received.</strong><br/>
-              That item has been removed from your cart.
-            </div>
-          </div>`
-          );
-
-          setStep(2);
-        }
       }
 
       if (source === "buy") {
@@ -2038,22 +2270,18 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
           setStep(0);
         } else {
           buyMode = true;
+          if (buyNowBar) buyNowBar.style.display = "block";
 
-          try { await loadProducts(); } catch { /* ignore */ }
-          // ✅ FIX: use the same product map that loadProducts() fills
+          try { await loadProducts(); } catch { }
           const pObj = _productById.get(pid) || null;
 
           const title = pObj?.title || pObj?.name || pid;
           const image = resolveProductImage(pid, "");
           const price = normalizePriceNumber(readPrice(pObj) ?? 0) || 0;
 
-          const buyLink =
-            safeUrl(pObj?.buyLink) ||
-            safeUrl(pObj?.squareUrl) ||
-            safeUrl(pObj?.squareLink) ||
-            safeUrl(pObj?.square) ||
-            safeUrl(pObj?.buy_link) ||
-            "";
+          // Default: first variant as the buyNow target
+          const vars = Array.isArray(pObj?.varients) ? pObj.varients : (Array.isArray(pObj?.variants) ? pObj.variants : []);
+          const firstVarId = String(vars?.[0]?.id || "").trim();
 
           const accessUrl =
             safeUrl(pObj?.accessUrl) ||
@@ -2065,14 +2293,12 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
           buyItem = {
             id: `buy-${pid}`,
             productId: pid,
-            variantId: null,
+            variantId: firstVarId || null,
             variantLabel: "",
             title,
             price,
             qty: 1,
             image,
-            buyLink,
-            squareUrl: buyLink,
             accessUrl
           };
 
@@ -2081,17 +2307,17 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
           setFlowNotice(
             "ok",
             `<div style="display:flex;gap:10px;align-items:flex-start">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
-              <path d="M6 6h15l-2 8H8L6 6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-              <path d="M6 6 5 3H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <circle cx="9" cy="19" r="1.8" stroke="currentColor" stroke-width="2"/>
-              <circle cx="17" cy="19" r="1.8" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            <div>
-              <strong>Buy Now mode.</strong><br/>
-              You’re checking out a single item. Hit <strong>Done</strong> on Success to return to your full cart.
-            </div>
-          </div>`
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-top:2px;">
+                <path d="M6 6h15l-2 8H8L6 6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M6 6 5 3H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="9" cy="19" r="1.8" stroke="currentColor" stroke-width="2"/>
+                <circle cx="17" cy="19" r="1.8" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <div>
+                <strong>Buy Now mode.</strong><br/>
+                Go to <strong>Pay</strong> or use the Buy Now button above to complete purchase in a popup.
+              </div>
+            </div>`
           );
 
           setStep(0);
@@ -2111,19 +2337,19 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
     wireEvents();
     loadProducts().catch(() => { });
 
-    // Auth updates
     on("auth", async ({ user }) => {
       currentUser = user || null;
       signedOut.style.display = user ? "none" : "block";
+
+      if (!buyMode && buyNowBar) buyNowBar.style.display = "none";
+
       await handleReturnFlow(user);
     });
 
-    // Cart updates
     on("cart", async ({ user, items }) => {
       if (!buyMode) await render(items || []);
     });
 
-    // Purchases updates
     on("purchases", ({ user, rows }) => {
       purchaseRows = rows || [];
       if (stepIndex === 3) renderSuccess();
@@ -2140,7 +2366,6 @@ ${(view === "pay" && kind === "paid") ? `` : actionRow}
     document.getElementById("footer-text").innerHTML =
       `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
   </script>
-
 
 </body>
 

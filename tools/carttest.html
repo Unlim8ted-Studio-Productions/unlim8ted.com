@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Unlim8ted Cart Test (Multi-item Popup + Webhook Verify)</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 20px; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .card { border:1px solid #ddd; border-radius:12px; padding:14px; width: 420px; }
+    .muted { color:#666; font-size: 13px; }
+    button { padding:10px 12px; border-radius:10px; border:1px solid #333; background:#111; color:#fff; cursor:pointer; }
+    button:disabled { opacity:.5; cursor:not-allowed; }
+    pre { background:#f6f6f6; padding:12px; border-radius:10px; overflow:auto; }
+    .pill { font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid #ddd; }
+    .pill.pending { background:#fff7e6; }
+    .pill.paid { background:#e9fff2; }
+    .pill.error { background:#ffe9e9; }
+    code { background: #f3f3f3; padding: 1px 6px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Cart Test: 3 items → ONE Square popup → webhook verify</h1>
+  <p class="muted">
+    This test uses the production-ready API shape:
+    <code>{ items: [{ variationId, quantity }] }</code>.
+    Pricing is pulled server-side from Square Catalog (sandbox).
+  </p>
+
+  <div class="row" style="margin: 14px 0;">
+    <button id="buyCartBtn">Buy Cart (one popup)</button>
+    <button id="resetBtn" style="background:#fff;color:#111;">Reset</button>
+    <span id="globalStatus" class="pill pending">idle</span>
+  </div>
+
+  <div id="cartCard" class="card"></div>
+
+  <h3>Log</h3>
+  <pre id="log"></pre>
+
+<script>
+(() => {
+  const WORKER_BASE = "https://checkout.unlim8ted.workers.dev";
+
+  // ✅ Put REAL Square VARIATION IDs here (these are your products.json varients[].id)
+  // Example IDs from your hoodie snippet:
+  const cart = [
+    { title: "Unlim8ted Hoodie (S)",  variationId: "LQQIWOJ74KCCKTKVOHMN3FHW", quantity: 1 },
+    { title: "Unlim8ted Hoodie (M)",  variationId: "2SLQNIKX5ZTLLYYPX5IJHAUC", quantity: 2 },
+    { title: "Unlim8ted Hoodie (2XL)", variationId: "UFVSUN4AFKXVQKM3EY3HBYJB", quantity: 1 },
+  ];
+
+  const state = {
+    sid: null,
+    status: "idle", // idle | pending | paid | error
+    lastMsg: "",
+    lastServer: null,
+  };
+
+  const $log = document.getElementById("log");
+  const $buy = document.getElementById("buyCartBtn");
+  const $reset = document.getElementById("resetBtn");
+  const $global = document.getElementById("globalStatus");
+  const $card = document.getElementById("cartCard");
+
+  function log(...args) {
+    const line = args.map(a => (typeof a === "string" ? a : JSON.stringify(a, null, 2))).join(" ");
+    $log.textContent = (new Date().toLocaleTimeString()) + "  " + line + "\n" + $log.textContent;
+  }
+
+  function setGlobal(text, kind="pending") {
+    $global.textContent = text;
+    $global.className = `pill ${kind}`;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+  }
+
+  function render() {
+    const lines = cart.map(it =>
+      `<li><strong>${escapeHtml(it.title)}</strong><br/><span class="muted">variationId: <code>${escapeHtml(it.variationId)}</code> • qty ${it.quantity}</span></li>`
+    ).join("");
+
+    $card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+        <div>
+          <div><strong>Cart (3 items)</strong></div>
+          <div class="muted" style="margin-top:6px">
+            sid: <code>${state.sid ? escapeHtml(state.sid) : "-"}</code>
+          </div>
+        </div>
+        <span class="pill ${state.status === "paid" ? "paid" : (state.status === "error" ? "error" : "pending")}">${state.status}</span>
+      </div>
+
+      <div class="muted" style="margin-top:10px">${escapeHtml(state.lastMsg || "")}</div>
+
+      <ul style="margin:10px 0 0 18px; padding:0;">
+        ${lines}
+      </ul>
+
+      <div class="row" style="margin-top:12px">
+        <button id="checkBtn" style="background:#fff;color:#111;" ${!state.sid ? "disabled" : ""}>Check status</button>
+      </div>
+
+      ${state.lastServer ? `<div class="muted" style="margin-top:10px">Last server response:</div><pre style="margin-top:6px">${escapeHtml(JSON.stringify(state.lastServer, null, 2))}</pre>` : ``}
+    `;
+
+    const checkBtn = document.getElementById("checkBtn");
+    if (checkBtn) checkBtn.addEventListener("click", checkStatus);
+  }
+
+  async function createCheckoutForCart() {
+    // No price/title in payload — Worker pulls price/name from Square catalog
+    const payload = {
+      cartId: "local-test-cart",
+      currency: "USD",
+      items: cart.map(it => ({ variationId: it.variationId, quantity: it.quantity }))
+    };
+
+    const res = await fetch(`${WORKER_BASE}/create-checkout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(j?.error ? `${j.error}: ${JSON.stringify(j.details || j)}` : `HTTP ${res.status}`);
+    if (!j.checkoutUrl || !j.sid) throw new Error("Worker did not return checkoutUrl/sid");
+    return j;
+  }
+
+  function waitForPopupClose(popup) {
+    return new Promise(resolve => {
+      const t = setInterval(() => {
+        if (!popup || popup.closed) {
+          clearInterval(t);
+          resolve();
+        }
+      }, 400);
+    });
+  }
+
+  async function pollPaid(sid, attempts = 20, delayMs = 1500) {
+    for (let i = 0; i < attempts; i++) {
+      const res = await fetch(`${WORKER_BASE}/checkout-status?sid=${encodeURIComponent(sid)}`);
+      const j = await res.json().catch(() => ({}));
+      state.lastServer = { http: res.status, body: j };
+      render();
+
+      if (res.ok && j.status === "paid") return { ok: true, data: j };
+      await new Promise(r => setTimeout(r, delayMs));
+    }
+    return { ok: false };
+  }
+
+  async function buyCart() {
+    try {
+      $buy.disabled = true;
+      state.status = "pending";
+      state.lastMsg = "Creating cart checkout…";
+      render();
+      setGlobal("creating checkout…", "pending");
+
+      const { checkoutUrl, sid } = await createCheckoutForCart();
+      state.sid = sid;
+      state.lastMsg = "Checkout created. Opening popup…";
+      render();
+      log("Created cart checkout:", { sid, checkoutUrl });
+
+      const popup = window.open(checkoutUrl, "squareCheckout", "width=520,height=760,noopener,noreferrer");
+      if (!popup) {
+        state.status = "error";
+        state.lastMsg = "Popup blocked. Allow popups and try again.";
+        setGlobal("popup blocked", "error");
+        render();
+        return;
+      }
+
+      setGlobal("complete payment in popup…", "pending");
+      state.lastMsg = "Complete payment in the popup. Close it when finished.";
+      render();
+
+      await waitForPopupClose(popup);
+
+      setGlobal("verifying payment…", "pending");
+      state.lastMsg = "Popup closed. Verifying via webhook status…";
+      render();
+
+      const result = await pollPaid(sid);
+      if (result.ok) {
+        state.status = "paid";
+        state.lastMsg = "✅ Paid confirmed by webhook.";
+        setGlobal("paid confirmed", "paid");
+      } else {
+        state.status = "pending";
+        state.lastMsg = "Not confirmed yet. Webhooks can take a bit—click 'Check status'.";
+        setGlobal("not confirmed yet", "pending");
+      }
+
+      render();
+    } catch (e) {
+      state.status = "error";
+      state.lastMsg = `Error: ${e.message || e}`;
+      setGlobal("error", "error");
+      render();
+      log("ERROR:", e.message || e);
+    } finally {
+      $buy.disabled = false;
+    }
+  }
+
+  async function checkStatus() {
+    if (!state.sid) return;
+    try {
+      state.lastMsg = "Checking status…";
+      render();
+
+      const res = await fetch(`${WORKER_BASE}/checkout-status?sid=${encodeURIComponent(state.sid)}`);
+      const j = await res.json().catch(() => ({}));
+      state.lastServer = { http: res.status, body: j };
+
+      if (res.ok && j.status === "paid") {
+        state.status = "paid";
+        state.lastMsg = "✅ Paid confirmed by webhook.";
+        setGlobal("paid confirmed", "paid");
+      } else if (res.status === 404) {
+        state.status = "error";
+        state.lastMsg = "Session not found (expired or wrong sid).";
+        setGlobal("session not found", "error");
+      } else {
+        state.status = "pending";
+        state.lastMsg = `Still ${j.status || "pending"} — check again soon.`;
+        setGlobal("still pending", "pending");
+      }
+
+      render();
+      log("Status check:", { sid: state.sid, http: res.status, response: j });
+    } catch (e) {
+      state.status = "error";
+      state.lastMsg = `Status check error: ${e.message || e}`;
+      setGlobal("status check error", "error");
+      render();
+      log("ERROR:", e.message || e);
+    }
+  }
+
+  function reset() {
+    state.sid = null;
+    state.status = "idle";
+    state.lastMsg = "";
+    state.lastServer = null;
+    $log.textContent = "";
+    setGlobal("idle", "pending");
+    render();
+  }
+
+  // Wire
+  $buy.addEventListener("click", buyCart);
+  $reset.addEventListener("click", reset);
+
+  // Init
+  render();
+  setGlobal("idle", "pending");
+  log("Ready. If file://, set Worker ALLOWED_ORIGIN='*' temporarily for testing.");
+})();
+</script>
+</body>
+</html>
