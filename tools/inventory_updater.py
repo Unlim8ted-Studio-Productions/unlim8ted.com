@@ -1,29 +1,40 @@
 #!/usr/bin/env python3
 """
-Square production: fetch inventory for varients[].id and write into products.json.
+Update products.json with Square Online style availability:
 
-Adds:
-  variant["stock"] (sum of IN_STOCK across locations)
-  variant["stock_debug"] (states seen, per location)
+available = (not deleted) AND sellable AND present_at_location AND (
+              if stockable: IN_STOCK > 0
+              else: True
+           )
 
-This version debugs why you're getting 0s:
-- queries ALL locations by default (unless --location is set)
-- retrieves counts WITHOUT states filter so we can see returned states
-- optional: verifies IDs are ITEM_VARIATION via Catalog API
+Input JSON shape:
+[
+  {
+    "id": "...",
+    "varients": [
+      {"id": "SQUARE_VARIATION_ID", ...}
+    ]
+  }
+]
 
-pip install requests
+Requires:
+  pip install requests
+
 Env:
-  SQUARE_ACCESS_TOKEN (required)
+  SQUARE_ACCESS_TOKEN (required)  production token
+  SQUARE_LOCATION_ID (optional)   fulfillment location id (recommended)
+                                 If omitted, uses the first Square location.
 
 Usage:
-  python square_write_stock_to_json.py --in products.json --write-inplace
-  python square_write_stock_to_json.py --in products.json --out products_with_stock.json
-  python square_write_stock_to_json.py --in products.json --location YOUR_LOCATION_ID --write-inplace
-  python square_write_stock_to_json.py --in products.json --verify-catalog
+  python tools/inventory_updater.py --in tools/data/products.json --write-inplace
+  python tools/inventory_updater.py --in tools/data/products.json --write-inplace --location L4KPR2BE0PAA4
 """
 
-import os, json, argparse
-from typing import Dict, List, Any, Tuple
+import os
+import json
+import argparse
+from typing import Dict, List, Any
+
 import requests
 
 SQUARE_BASE = "https://connect.squareup.com/v2"
@@ -43,12 +54,25 @@ def get_locations(token: str) -> List[Dict[str, Any]]:
     return r.json().get("locations") or []
 
 
+def get_first_location_id(token: str) -> str:
+    locs = get_locations(token)
+    if not locs:
+        raise RuntimeError("No Square locations found.")
+    return locs[0]["id"]
+
+
 def load_products(path: str) -> List[Dict[str, Any]]:
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, list):
         raise ValueError("Expected top-level JSON to be a list of products.")
     return data
+
+
+def write_products(path: str, data: List[Dict[str, Any]]) -> None:
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.write("\n")
 
 
 def collect_variation_ids(products: List[Dict[str, Any]]) -> List[str]:
@@ -62,9 +86,9 @@ def collect_variation_ids(products: List[Dict[str, Any]]) -> List[str]:
             if vid:
                 ids.append(vid)
 
-    # de-dupe keep order
+    # de-dupe while preserving order
     seen = set()
-    uniq = []
+    uniq: List[str] = []
     for vid in ids:
         if vid not in seen:
             seen.add(vid)
@@ -72,25 +96,75 @@ def collect_variation_ids(products: List[Dict[str, Any]]) -> List[str]:
     return uniq
 
 
-def chunk(lst: List[str], n: int):
+def chunk(lst: List[str], n: int = 200):
     for i in range(0, len(lst), n):
         yield lst[i : i + n]
 
 
-def batch_retrieve_counts(
-    token: str, location_ids: List[str], variation_ids: List[str]
-) -> List[Dict[str, Any]]:
+def fetch_variations(token: str, ids: List[str]) -> Dict[str, Dict[str, Any]]:
+    """
+    POST /v2/catalog/batch-retrieve
+    Returns map: variation_id -> ITEM_VARIATION object
+    """
+    out: Dict[str, Dict[str, Any]] = {}
+    for part in chunk(ids, 200):
+        r = requests.post(
+            f"{SQUARE_BASE}/catalog/batch-retrieve",
+            headers=headers(token),
+            json={"object_ids": part, "include_related_objects": False},
+            timeout=60,
+        )
+        r.raise_for_status()
+        for obj in r.json().get("objects") or []:
+            if obj.get("type") == "ITEM_VARIATION" and obj.get("id"):
+                out[obj["id"]] = obj
+    return out
+
+
+def present_in_location(obj: Dict[str, Any], location_id: str) -> bool:
+    """
+    Square presence logic:
+    - If present_at_all_locations == True:
+        present unless absent_at_location_ids contains location
+    - If present_at_all_locations == False:
+        if present_at_location_ids exists -> MUST include location
+        else if absent_at_location_ids exists -> MUST NOT include location
+        else assume present
+    """
+    if not location_id:
+        return True
+
+    pal = obj.get("present_at_all_locations", True)
+    present_ids = obj.get("present_at_location_ids") or []
+    absent_ids = obj.get("absent_at_location_ids") or []
+
+    if pal is True:
+        return location_id not in absent_ids
+
+    # pal is False
+    if present_ids:
+        return location_id in present_ids
+
+    if absent_ids:
+        return location_id not in absent_ids
+
+    return True
+
+
+def fetch_instock_counts(
+    token: str, location_id: str, variation_ids: List[str]
+) -> Dict[str, int]:
     """
     POST /v2/inventory/counts/batch-retrieve
-    Return raw counts list entries.
-    We do NOT filter states so we can see what Square returns.
+    Returns map: variation_id -> sum(IN_STOCK) at that location.
+    If inventory tracking is OFF, Square commonly returns no entry for that id.
     """
-    all_counts: List[Dict[str, Any]] = []
+    stock: Dict[str, int] = {}
     for part in chunk(variation_ids, 200):
         payload = {
             "catalog_object_ids": part,
-            "location_ids": location_ids,
-            # intentionally omit "states" for debugging
+            "location_ids": [location_id],
+            "states": ["IN_STOCK"],
         }
         r = requests.post(
             f"{SQUARE_BASE}/inventory/counts/batch-retrieve",
@@ -99,180 +173,122 @@ def batch_retrieve_counts(
             timeout=60,
         )
         r.raise_for_status()
-        all_counts.extend(r.json().get("counts") or [])
-    return all_counts
-
-
-def parse_counts(
-    counts: List[Dict[str, Any]],
-) -> Tuple[Dict[str, int], Dict[str, Any], set]:
-    """
-    Build:
-      stock_map[variation_id] = sum(IN_STOCK quantities)
-      debug_map[variation_id] = { location_id: {state: qty, ...}, ... }
-      seen_ids = set of variation ids that returned any count entry
-    """
-    stock_map: Dict[str, int] = {}
-    debug_map: Dict[str, Any] = {}
-    seen_ids = set()
-
-    for c in counts:
-        vid = c.get("catalog_object_id")
-        loc = c.get("location_id")
-        state = c.get("state")
-        qty_str = c.get("quantity", "0")
-
-        try:
-            qty = int(float(qty_str))
-        except ValueError:
-            qty = 0
-
-        if not vid or not loc or not state:
-            continue
-
-        seen_ids.add(vid)
-        debug_map.setdefault(vid, {}).setdefault(loc, {})
-        debug_map[vid][loc][state] = debug_map[vid][loc].get(state, 0) + qty
-
-        if state == "IN_STOCK":
-            stock_map[vid] = stock_map.get(vid, 0) + qty
-
-    return stock_map, debug_map, seen_ids
-
-
-def catalog_verify_variations(token: str, variation_ids: List[str]) -> Dict[str, str]:
-    """
-    Uses Catalog batch-retrieve to confirm object types.
-    POST /v2/catalog/batch-retrieve
-    Returns map: id -> type (or 'MISSING')
-    """
-    out: Dict[str, str] = {}
-    for part in chunk(variation_ids, 200):
-        payload = {"object_ids": part, "include_related_objects": False}
-        r = requests.post(
-            f"{SQUARE_BASE}/catalog/batch-retrieve",
-            headers=headers(token),
-            json=payload,
-            timeout=60,
-        )
-        r.raise_for_status()
-        objs = r.json().get("objects") or []
-        found = {o.get("id"): o.get("type") for o in objs if o.get("id")}
-        for vid in part:
-            out[vid] = found.get(vid, "MISSING")
-    return out
-
-
-def apply_to_products(
-    products: List[Dict[str, Any]], stock_map: Dict[str, int], debug_map: Dict[str, Any]
-) -> int:
-    updated = 0
-    for p in products:
-        vars_ = p.get("varients") or []
-        if not isinstance(vars_, list):
-            continue
-        for v in vars_:
-            vid = (v.get("id") or "").strip()
+        for c in r.json().get("counts") or []:
+            vid = c.get("catalog_object_id")
             if not vid:
                 continue
-            v["stock"] = int(stock_map.get(vid, 0))
-            v["stock_debug"] = debug_map.get(vid, {})
-            updated += 1
-    return updated
-
-
-def write_products(path: str, products: List[Dict[str, Any]]):
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(products, f, ensure_ascii=False, indent=2)
-        f.write("\n")
+            try:
+                qty = int(float(c.get("quantity", "0")))
+            except ValueError:
+                qty = 0
+            stock[vid] = stock.get(vid, 0) + qty
+    return stock
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--in", dest="in_path", required=True)
-    ap.add_argument("--out", dest="out_path", default=None)
     ap.add_argument("--write-inplace", action="store_true")
+    ap.add_argument("--out", default=None)
     ap.add_argument(
-        "--location", default=None, help="If set, query ONLY this location id"
-    )
-    ap.add_argument(
-        "--verify-catalog",
-        action="store_true",
-        help="Verify IDs are ITEM_VARIATION via Catalog API",
+        "--location", default=None, help="Square location ID (fulfillment origin)"
     )
     args = ap.parse_args()
 
-    token = ""
+    token = (os.environ.get("SQUARE_ACCESS_TOKEN") or "").strip()
     if not token:
-        raise SystemExit("Missing env var SQUARE_ACCESS_TOKEN (production token).")
+        raise SystemExit("Missing SQUARE_ACCESS_TOKEN (set env var).")
 
-    if args.write_inplace and args.out_path:
-        raise SystemExit("Use either --out or --write-inplace, not both.")
+    # pick location
+    location_id = (args.location or os.environ.get("SQUARE_LOCATION_ID") or "").strip()
+    if not location_id:
+        location_id = get_first_location_id(token)
 
     products = load_products(args.in_path)
-    variation_ids = collect_variation_ids(products)
-    if not variation_ids:
+    var_ids = collect_variation_ids(products)
+    if not var_ids:
         raise SystemExit("No varients[].id found in JSON.")
 
-    locs = get_locations(token)
-    if not locs:
-        raise SystemExit("No Square locations found.")
+    catalog = fetch_variations(token, var_ids)
 
-    if args.location:
-        location_ids = [args.location.strip()]
-        loc_name = next(
-            (l.get("name") for l in locs if l.get("id") == location_ids[0]), None
-        )
-        print(f"Using location: {location_ids[0]} ({loc_name or 'unknown'})")
-    else:
-        location_ids = [l["id"] for l in locs if l.get("id")]
-        print(
-            f"Using ALL locations ({len(location_ids)}): "
-            + ", ".join([l.get("name", "?") for l in locs])
-        )
+    # We only need inventory counts for stockable variations,
+    # but easiest is to fetch once for all ids and then use conditionally.
+    instock_map = fetch_instock_counts(token, location_id, var_ids)
 
-    # Inventory counts
-    raw_counts = batch_retrieve_counts(token, location_ids, variation_ids)
-    stock_map, debug_map, seen_ids = parse_counts(raw_counts)
+    checked = 0
+    unavailable = 0
+    missing_in_catalog = 0
+    stockable_count = 0
 
-    # Report missing counts (this is your 'everything is 0' smoking gun)
-    missing = [vid for vid in variation_ids if vid not in seen_ids]
-    if missing:
-        print(
-            f"\nWARNING: {len(missing)} variation IDs returned NO inventory counts at queried location(s)."
-        )
-        print(
-            "This usually means inventory tracking is OFF for those items, or these IDs are not catalog variation IDs."
-        )
-        print("First 20 missing IDs:\n  " + "\n  ".join(missing[:20]))
+    for p in products:
+        vars_ = p.get("varients") or []
+        if not isinstance(vars_, list):
+            continue
 
-    # Optional catalog verify
-    if args.verify_catalog:
-        types = catalog_verify_variations(token, variation_ids)
-        bad = [(vid, t) for vid, t in types.items() if t != "ITEM_VARIATION"]
-        if bad:
-            print(
-                f"\nCatalog verify: {len(bad)} IDs are not ITEM_VARIATION (or missing). First 20:"
-            )
-            for vid, t in bad[:20]:
-                print(f"  {vid}: {t}")
-        else:
-            print("\nCatalog verify: all IDs are ITEM_VARIATION ✅")
+        for v in vars_:
+            vid = (v.get("id") or "").strip()
+            if not vid:
+                continue
 
-    # Apply + write
-    updated = apply_to_products(products, stock_map, debug_map)
+            obj = catalog.get(vid)
+
+            # annotate
+            v["available_location_id"] = location_id
+            v["availability_source"] = "square_catalog_plus_inventory"
+
+            if not obj:
+                # Not found in catalog => treat unavailable (or keep old value)
+                v["available"] = False
+                v["stock"] = None
+                v["stockable"] = False
+                missing_in_catalog += 1
+                unavailable += 1
+                checked += 1
+                continue
+
+            if obj.get("is_deleted"):
+                v["available"] = False
+                v["stock"] = None
+                v["stockable"] = False
+                unavailable += 1
+                checked += 1
+                continue
+
+            iv = obj.get("item_variation_data", {}) or {}
+            sellable = bool(iv.get("sellable", True))
+            stockable = bool(iv.get("stockable", False))
+            loc_ok = present_in_location(obj, location_id)
+
+            # stock handling
+            if stockable:
+                stockable_count += 1
+                stock = int(instock_map.get(vid, 0))
+                v["stock"] = stock
+                v["stockable"] = True
+                v["available"] = bool(sellable and loc_ok and stock > 0)
+            else:
+                # Printful commonly lands here
+                v["stock"] = None
+                v["stockable"] = False
+                v["available"] = bool(sellable and loc_ok)
+
+            if not v["available"]:
+                unavailable += 1
+
+            checked += 1
+
     out_path = (
         args.in_path
         if args.write_inplace
-        else (args.out_path or args.in_path.replace(".json", "_with_stock.json"))
+        else (args.out or args.in_path.replace(".json", "_updated.json"))
     )
     write_products(out_path, products)
 
-    # Quick summary
-    nonzero = sum(1 for vid in variation_ids if stock_map.get(vid, 0) > 0)
-    print(f"\nVariants total: {len(variation_ids)}")
-    print(f"Variants with stock>0: {nonzero}")
-    print(f"Variants updated in JSON: {updated}")
+    print(f"Location used: {location_id}")
+    print(f"Variants checked: {len(var_ids)}")
+    print(f"Stockable variants (inventory tracked): {stockable_count}")
+    print(f"Missing in catalog: {missing_in_catalog}")
+    print(f"Unavailable at this location: {unavailable}")
     print(f"Wrote: {out_path}")
 
 
