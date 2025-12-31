@@ -299,6 +299,17 @@
       background: rgba(255, 255, 255, .08);
     }
 
+    .btn-danger {
+      background: rgba(255, 77, 77, .16);
+      color: rgba(255, 255, 255, .92);
+      border: 1px solid rgba(255, 77, 77, .30);
+    }
+
+    .btn-danger:hover {
+      background: rgba(255, 77, 77, .22);
+      border-color: rgba(255, 77, 77, .38);
+    }
+
     /* Right / Summary */
     .summary {
       padding: 16px;
@@ -356,45 +367,7 @@
       font-size: 13px;
     }
 
-    /* Donation block */
-    .donate {
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px solid rgba(255, 255, 255, .10);
-    }
-
-    .donate-title {
-      font-weight: 950;
-      letter-spacing: .2px;
-      margin-bottom: 8px;
-    }
-
-    .donate-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    select,
-    input[type="text"] {
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, .12);
-      background: rgba(10, 8, 18, .72);
-      color: rgba(255, 255, 255, .92);
-      padding: 10px 12px;
-      outline: none;
-      font-weight: 850;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    select option {
-      background: #0b0a12;
-      color: rgba(255, 255, 255, .92);
-    }
-
-    /* Modal */
+    /* Generic modal */
     .modalOverlay {
       position: fixed;
       inset: 0;
@@ -412,7 +385,7 @@
     }
 
     .modal {
-      width: min(520px, 100%);
+      width: min(560px, 100%);
       background: rgba(10, 8, 18, .88);
       border: 1px solid rgba(180, 130, 255, .28);
       border-radius: 18px;
@@ -467,15 +440,37 @@
       border-top: 1px solid rgba(255, 255, 255, .08);
     }
 
-    .btn-danger {
-      background: rgba(255, 77, 77, .16);
-      color: rgba(255, 255, 255, .92);
-      border: 1px solid rgba(255, 77, 77, .30);
+    /* Donation popup form */
+    .donateGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
     }
 
-    .btn-danger:hover {
-      background: rgba(255, 77, 77, .22);
-      border-color: rgba(255, 77, 77, .38);
+    select,
+    input[type="text"] {
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(10, 8, 18, .72);
+      color: rgba(255, 255, 255, .92);
+      padding: 10px 12px;
+      outline: none;
+      font-weight: 850;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    select option {
+      background: #0b0a12;
+      color: rgba(255, 255, 255, .92);
+    }
+
+    .donateHint {
+      margin-top: 10px;
+      color: rgba(255, 255, 255, .62);
+      font-size: 12px;
+      line-height: 1.35;
     }
 
     @media (max-width: 900px) {
@@ -500,7 +495,7 @@
         align-items: center;
       }
 
-      .donate-row {
+      .donateGrid {
         grid-template-columns: 1fr;
       }
     }
@@ -512,7 +507,7 @@
   <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
     profile-href="https://unlim8ted.com/profile"></site-navbar>
 
-  <!-- Modal -->
+  <!-- Modal: Confirm (clear cart) -->
   <div id="modalOverlay" class="modalOverlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="modalHead">
@@ -527,6 +522,53 @@
       <div class="modalActions">
         <button id="modalCancel" class="btn btn-ghost" type="button">Cancel</button>
         <button id="modalConfirm" class="btn btn-danger" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Donation popup -->
+  <div id="donateOverlay" class="modalOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
+      <div class="modalHead">
+        <div id="donateTitle" class="modalTitle">Support Unlim8ted</div>
+        <button id="donateClose" class="modalClose" type="button" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
+            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+      <div class="modalBody">
+        Choose how you’d like to support, then we’ll open Square in a secure popup.
+
+        <div class="donateGrid">
+          <div>
+            <div class="mini" style="margin-bottom:6px;">Frequency</div>
+            <select id="donateFreq" aria-label="Donation frequency">
+              <option value="one_time">One-time</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="annual">Annual</option>
+            </select>
+          </div>
+
+          <div>
+            <div class="mini" style="margin-bottom:6px;">Amount</div>
+            <select id="donateAmount" aria-label="Donation amount">
+              <option value="custom">Custom</option>
+              <option value="1">$1</option>
+              <option value="5">$5</option>
+              <option value="10">$10</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="donateHint">
+          Square will handle your payment securely. Thank you for supporting Unlim8ted.
+        </div>
+      </div>
+      <div class="modalActions">
+        <button id="donateCancel" class="btn btn-ghost" type="button">Cancel</button>
+        <button id="donateGo" class="btn btn-primary" type="button">Donate via Square</button>
       </div>
     </div>
   </div>
@@ -573,38 +615,11 @@
           <button id="checkoutBtn" class="btn btn-primary" type="button">Checkout</button>
           <button id="clearBtn" class="btn btn-ghost" type="button">Clear cart</button>
           <a id="continueBtn" class="btn btn-ghost" href="/products">Continue shopping</a>
+          <button id="openDonate" class="btn btn-ghost" type="button">Support / Donate</button>
         </div>
 
         <div class="helper" style="margin-top:12px;">
           Free items show as <strong>FREE</strong>. If Square requires a paid checkout, only paid items will be charged.
-        </div>
-
-        <!-- Donation (re-added) -->
-        <div class="donate">
-          <div class="donate-title">Support Unlim8ted</div>
-          <div class="donate-row">
-            <select id="donateFreq" aria-label="Donation frequency">
-              <option value="one_time">One-time</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="annual">Annual</option>
-            </select>
-
-            <select id="donateAmount" aria-label="Donation amount">
-              <option value="custom">Custom</option>
-              <option value="1">$1</option>
-              <option value="5">$5</option>
-              <option value="10">$10</option>
-            </select>
-          </div>
-
-          <button id="donateBtn" class="btn btn-ghost" type="button">
-            Donate via Square
-          </button>
-
-          <div class="helper" style="margin-top:10px;">
-            Donations open in a secure Square page.
-          </div>
         </div>
       </div>
     </div>
@@ -632,7 +647,7 @@
     const BUY_PRODUCT = String(QS.get("product") || "").trim();
 
     /* =============================
-       Donation links (re-added)
+       Donation links
     ============================= */
     const SQUARE_DONATION = {
       one_time: {
@@ -643,7 +658,7 @@
       },
       weekly: { custom: "https://square.link/u/FkJZDx1R" },
       monthly: { custom: "https://square.link/u/ZK2wPwwU" },
-      annual: { custom: "https://square.link/u/ypx1lQj1" }, // If you don't have annual, replace/remove.
+      annual: { custom: "https://square.link/u/ypx1lQj1" }, // replace/remove if you don't have it
     };
 
     /* =============================
@@ -652,7 +667,7 @@
     let _productsLoaded = false;
     let _productsLoading = null;
     let _productById = new Map();
-    let _variantByKey = new Map(); // `${productId}::${variantId}` -> variant
+    let _variantByKey = new Map();
     let _productsArray = [];
 
     function safeUrl(u) {
@@ -743,7 +758,7 @@
     }
 
     /* =============================
-       Modal (no alerts)
+       Modal: Confirm (clear cart)
     ============================= */
     const modalOverlay = document.getElementById("modalOverlay");
     const modalTitle = document.getElementById("modalTitle");
@@ -759,14 +774,13 @@
       modalBody.innerHTML = bodyHtml;
       modalConfirm.textContent = confirmText;
       modalConfirm.className = confirmClass;
+
       modalOverlay.classList.add("show");
       modalOverlay.setAttribute("aria-hidden", "false");
       _lastFocus = document.activeElement;
       setTimeout(() => modalConfirm.focus(), 0);
 
-      return new Promise(resolve => {
-        _modalResolver = resolve;
-      });
+      return new Promise(resolve => { _modalResolver = resolve; });
     }
 
     function closeModal(result) {
@@ -781,12 +795,76 @@
     modalClose.addEventListener("click", () => closeModal(false));
     modalCancel.addEventListener("click", () => closeModal(false));
     modalConfirm.addEventListener("click", () => closeModal(true));
-    modalOverlay.addEventListener("click", (e) => {
-      if (e.target === modalOverlay) closeModal(false);
-    });
+    modalOverlay.addEventListener("click", (e) => { if (e.target === modalOverlay) closeModal(false); });
     document.addEventListener("keydown", (e) => {
       if (!modalOverlay.classList.contains("show")) return;
       if (e.key === "Escape") closeModal(false);
+    });
+
+    /* =============================
+       Modal: Donation popup
+    ============================= */
+    const donateOverlay = document.getElementById("donateOverlay");
+    const donateClose = document.getElementById("donateClose");
+    const donateCancel = document.getElementById("donateCancel");
+    const donateGo = document.getElementById("donateGo");
+    const donateFreq = document.getElementById("donateFreq");
+    const donateAmount = document.getElementById("donateAmount");
+    let _donateLastFocus = null;
+
+    function openDonateModal() {
+      donateOverlay.classList.add("show");
+      donateOverlay.setAttribute("aria-hidden", "false");
+      _donateLastFocus = document.activeElement;
+      setTimeout(() => donateGo.focus(), 0);
+    }
+
+    function closeDonateModal() {
+      donateOverlay.classList.remove("show");
+      donateOverlay.setAttribute("aria-hidden", "true");
+      if (_donateLastFocus && typeof _donateLastFocus.focus === "function") _donateLastFocus.focus();
+    }
+
+    donateClose.addEventListener("click", closeDonateModal);
+    donateCancel.addEventListener("click", closeDonateModal);
+    donateOverlay.addEventListener("click", (e) => { if (e.target === donateOverlay) closeDonateModal(); });
+
+    document.addEventListener("keydown", (e) => {
+      if (!donateOverlay.classList.contains("show")) return;
+      if (e.key === "Escape") closeDonateModal();
+    });
+
+    function openPopup(url, name = "popup", features = "width=520,height=760,noopener,noreferrer") {
+      return window.open(url, name, features);
+    }
+
+    donateGo.addEventListener("click", () => {
+      const freq = donateFreq.value;
+      const amt = donateAmount.value;
+
+      const url = SQUARE_DONATION?.[freq]?.[amt] || SQUARE_DONATION?.[freq]?.custom || "";
+      if (!url) {
+        closeDonateModal();
+        setNotice("warn", `<strong>Donation link missing.</strong> Update SQUARE_DONATION in this page.`);
+        return;
+      }
+
+      const popup = openPopup(url, "squareDonate", "width=520,height=760,noopener,noreferrer");
+      closeDonateModal();
+
+      if (!popup) {
+        setNotice("warn", `<strong>Popup blocked.</strong> Allow popups and try again.`);
+        return;
+      }
+
+      setNotice("ok",
+        `<div style="display:flex;gap:10px;align-items:flex-start">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
+            <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div><strong>Donation popup opened.</strong><br/>Thank you for supporting Unlim8ted.</div>
+        </div>`
+      );
     });
 
     /* =============================
@@ -1328,15 +1406,8 @@
         return;
       }
 
-      if (e.target.closest("#donateBtn")) {
-        const freq = document.getElementById("donateFreq").value;
-        const amt = document.getElementById("donateAmount").value;
-        const url = SQUARE_DONATION?.[freq]?.[amt] || SQUARE_DONATION?.[freq]?.custom || "";
-        if (!url) {
-          setNotice("warn", `<strong>Donation link missing.</strong> Update SQUARE_DONATION in this page.`);
-          return;
-        }
-        window.open(url, "_blank", "noopener,noreferrer");
+      if (e.target.closest("#openDonate")) {
+        openDonateModal();
         return;
       }
     });
@@ -1380,7 +1451,6 @@
       const price = normalizePriceNumber(parsePrice(v?.price ?? p?.price)) || 0;
       const accessUrl = p.accessUrl ?? p.downloadUrl ?? p.url ?? p.link ?? null;
 
-      // paid items require Square variation id
       if (price > 0 && !vid) {
         cartItems = [];
         renderCart();
@@ -1391,7 +1461,6 @@
         return;
       }
 
-      // free items require link
       if (price <= 0 && !safeUrl(accessUrl)) {
         cartItems = [];
         renderCart();
@@ -1437,6 +1506,7 @@
       document.getElementById("continueBtn").textContent = "Back to products";
       document.getElementById("continueBtn").setAttribute("href", "/products");
       document.title = "Unlim8ted - Checkout";
+      document.getElementById("openDonate").style.display = "none";
     }
 
     loadProducts().catch(() => { });
