@@ -1036,12 +1036,9 @@
         vv.images = Array.isArray(vv.images) ? vv.images : (vv.image ? [vv.image] : []);
         const pn = Number(vv.price);
         vv.price = Number.isFinite(pn) ? pn : 0;
-
-        vv.available = (typeof vv.available === "boolean") ? vv.available : undefined;
-
+        vv.buyLink = vv["buy link"] || vv.buy_link || vv.buyLink || vv.url || "";
         return vv;
       });
-
 
       return item;
     }
@@ -1086,19 +1083,6 @@
       }
       return groups;
     }
-    function setBuyEnabled(enabled, href) {
-      if (enabled) {
-        buyBtn.setAttribute("aria-disabled", "false");
-        buyBtn.style.pointerEvents = "";
-        buyBtn.style.opacity = "";
-        buyBtn.href = href || "#";
-      } else {
-        buyBtn.setAttribute("aria-disabled", "true");
-        buyBtn.style.pointerEvents = "none";
-        buyBtn.style.opacity = ".55";
-        buyBtn.href = "#";
-      }
-    }
 
     function findVariantBySelection(varients, selectionParts) {
       // match by splitVariantName(v.name) === selectionParts (same length, same order)
@@ -1125,90 +1109,90 @@
       const tail = (parts || []).map(norm).filter(Boolean).join("__");
       return tail ? `${base}__${tail}` : base;
     }
-    async function addToCartMerged(payload) {
-      const user = auth.currentUser;
+async function addToCartMerged(payload) {
+  const user = auth.currentUser;
 
-      const clampInt = (n, min, max) =>
-        Math.max(min, Math.min(max, Math.trunc(Number(n) || 0)));
+  const clampInt = (n, min, max) =>
+    Math.max(min, Math.min(max, Math.trunc(Number(n) || 0)));
 
-      const safeStr = (s, maxLen) => {
-        const v = String(s ?? "").trim();
-        if (!v) return "";
-        return v.length > maxLen ? v.slice(0, maxLen) : v;
+  const safeStr = (s, maxLen) => {
+    const v = String(s ?? "").trim();
+    if (!v) return "";
+    return v.length > maxLen ? v.slice(0, maxLen) : v;
+  };
+
+  // --- minimal required fields ---
+  const productId = safeStr(payload.productId, 200);
+  const variantId = safeStr(payload.variantId, 200); // optional
+  const addQty = clampInt(payload.qty ?? 1, 1, 99);
+
+  if (!productId) throw new Error("addToCart: missing productId");
+
+  // Deterministic doc id: stacks same product+variant
+  const itemId = variantId ? `${productId}__${variantId}` : productId;
+
+  // ----------------------------
+  // SIGNED-IN USER (Firestore)
+  // ----------------------------
+  if (user) {
+    const ref = doc(db, "users", user.uid, "cartItems", itemId);
+
+    const snap = await getDoc(ref);
+    const now = Timestamp.now();
+
+    if (!snap.exists()) {
+      // CREATE
+      const docData = {
+        productId,
+        ...(variantId ? { variantId } : {}),
+        qty: addQty,
+        createdAt: now,
+        updatedAt: now,
       };
 
-      // --- minimal required fields ---
-      const productId = safeStr(payload.productId, 200);
-      const variantId = safeStr(payload.variantId, 200); // optional
-      const addQty = clampInt(payload.qty ?? 1, 1, 99);
+      await setDoc(ref, docData); // no merge needed
+    } else {
+      // UPDATE (do NOT touch createdAt)
+      const prevQty = clampInt(snap.data()?.qty ?? 0, 0, 99);
+      const nextQty = clampInt(prevQty + addQty, 1, 99);
 
-      if (!productId) throw new Error("addToCart: missing productId");
-
-      // Deterministic doc id: stacks same product+variant
-      const itemId = variantId ? `${productId}__${variantId}` : productId;
-
-      // ----------------------------
-      // SIGNED-IN USER (Firestore)
-      // ----------------------------
-      if (user) {
-        const ref = doc(db, "users", user.uid, "cartItems", itemId);
-
-        const snap = await getDoc(ref);
-        const now = Timestamp.now();
-
-        if (!snap.exists()) {
-          // CREATE
-          const docData = {
-            productId,
-            ...(variantId ? { variantId } : {}),
-            qty: addQty,
-            createdAt: now,
-            updatedAt: now,
-          };
-
-          await setDoc(ref, docData); // no merge needed
-        } else {
-          // UPDATE (do NOT touch createdAt)
-          const prevQty = clampInt(snap.data()?.qty ?? 0, 0, 99);
-          const nextQty = clampInt(prevQty + addQty, 1, 99);
-
-          await updateDoc(ref, {
-            ...(variantId ? { variantId } : {}), // harmless to re-send, still allowed
-            qty: nextQty,
-            updatedAt: now,
-          });
-        }
-
-        notifyCartChanged();
-        return;
-      }
-
-      // ----------------------------
-      // SIGNED-OUT (localStorage)
-      // ----------------------------
-      const key = "unlim8ted-cart";
-      const arr = JSON.parse(localStorage.getItem(key) || "[]");
-
-      const idx = arr.findIndex(x => x && (x.id === itemId || x._id === itemId));
-
-      if (idx >= 0) {
-        const prev = clampInt(arr[idx].qty ?? 0, 0, 99);
-        arr[idx].qty = clampInt(prev + addQty, 1, 99);
-        arr[idx].updatedAt = Date.now();
-      } else {
-        arr.push({
-          id: itemId,
-          productId,
-          variantId: variantId || null,
-          qty: addQty,
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-        });
-      }
-
-      localStorage.setItem(key, JSON.stringify(arr));
-      notifyCartChanged();
+      await updateDoc(ref, {
+        ...(variantId ? { variantId } : {}), // harmless to re-send, still allowed
+        qty: nextQty,
+        updatedAt: now,
+      });
     }
+
+    notifyCartChanged();
+    return;
+  }
+
+  // ----------------------------
+  // SIGNED-OUT (localStorage)
+  // ----------------------------
+  const key = "unlim8ted-cart";
+  const arr = JSON.parse(localStorage.getItem(key) || "[]");
+
+  const idx = arr.findIndex(x => x && (x.id === itemId || x._id === itemId));
+
+  if (idx >= 0) {
+    const prev = clampInt(arr[idx].qty ?? 0, 0, 99);
+    arr[idx].qty = clampInt(prev + addQty, 1, 99);
+    arr[idx].updatedAt = Date.now();
+  } else {
+    arr.push({
+      id: itemId,
+      productId,
+      variantId: variantId || null,
+      qty: addQty,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+  }
+
+  localStorage.setItem(key, JSON.stringify(arr));
+  notifyCartChanged();
+}
 
     // ----------------------------
     // Reviews helpers
@@ -1401,7 +1385,7 @@
         const parts = getSelectionParts();
         const v = findVariantBySelection(variants, parts);
 
-        // fallback: "starts with" match
+        // If exact match failed, fall back to "starts with" match for safety
         const vv = v || variants.find(x => {
           const p = splitVariantName(x.name);
           if (p.length < parts.length) return false;
@@ -1409,18 +1393,14 @@
           return true;
         }) || null;
 
-        const buyHref = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
-
         if (vv) {
           const priceNum = parsePriceAny(vv.price);
-
           selectedVariantLabelEl.textContent = vv.name || parts.join(", ");
           variantPriceEl.textContent = Number.isFinite(priceNum) ? toMoney(priceNum) : "$—";
 
-          // keep main price row updated
+          // ALSO keep the main price row updated (this is what you called "total price")
           pPrice.textContent = Number.isFinite(priceNum) ? toMoney(priceNum) : "$—";
 
-          // media: prefer variant images, else product media
           const vImgs = Array.isArray(vv.images) ? vv.images : [];
           const sources = [];
           vImgs.forEach(src => sources.push({ type: "img", src }));
@@ -1432,65 +1412,47 @@
           }
           buildThumbsFromSources(item.name, sources);
 
-          // -----------------------------
-          // AVAILABILITY GATING (NEW)
-          // -----------------------------
-          const hasAvail = (typeof vv.available === "boolean");
-          const isAvail = hasAvail ? vv.available : true; // missing => allow
+          // if (vv.buyLink) {
+          //   buyBtn.href = vv.buyLink;
+          //   buyBtn.target = "_blank";
+          //   buyBtn.rel = "noopener";
+          // } else {
+          //   buyBtn.href = "#";
+          //   buyBtn.removeAttribute("target");
+          //   buyBtn.removeAttribute("rel");
+          // }
 
-          if (hasAvail) {
-            variantAvailPill.style.display = "inline-flex";
-            variantAvailPill.className = `pill ${isAvail ? "ok" : "bad"}`;
-            variantAvailPill.textContent = isAvail ? "In stock" : "Out of stock";
-          } else {
-            variantAvailPill.style.display = "none";
-            variantAvailPill.textContent = "";
-            variantAvailPill.className = "pill";
-          }
-
-          // Gate buttons
-          addBtn.disabled = !isAvail;
-          setBuyEnabled(isAvail, buyHref);
-
-          addBtn.onclick = async () => {
-            if (!isAvail) {
-              toast("This variant is out of stock");
-              return;
-            }
-            try {
-              await addToCartMerged({
-                productId: item.id,
-                ...(vv?.id ? { variantId: vv.id } : {}),
-                qty: 1
-              });
-              toast("Added to cart");
-            } catch (e) {
-              console.log("UID", auth.currentUser?.uid);
-              console.log("ADD TO CART (variant) CONTEXT", {
-                productId: item?.id,
-                productName: item?.name,
-                variantId: vv?.id,
-                variantLabel: vv?.name,
-                qty: 1
-              });
-              console.error("addToCartMerged (variant) error:", e?.code, e?.message, e);
-              toast("Could not add to cart");
-            }
-          };
+          addBtn.disabled = false;
+addBtn.onclick = async () => {
+  try {
+    await addToCartMerged({
+      productId: item.id,
+      ...(vv?.id ? { variantId: vv.id } : {}),
+      qty: 1
+    });
+    toast("Added to cart");
+  } catch (e) {
+    console.log("UID", auth.currentUser?.uid);
+    console.log("ADD TO CART (variant) CONTEXT", {
+      productId: item?.id,
+      productName: item?.name,
+      variantId: vv?.id,
+      variantLabel: vv?.name,
+      qty: 1
+    });
+    console.error("addToCartMerged (variant) error:", e?.code, e?.message, e);
+    toast("Could not add to cart");
+  }
+};
 
         } else {
-          // no matching variant for current selection
           selectedVariantLabelEl.textContent = parts.join(", ");
           variantPriceEl.textContent = "$—";
           pPrice.textContent = "$—";
-
-          variantAvailPill.style.display = "inline-flex";
-          variantAvailPill.className = "pill bad";
-          variantAvailPill.textContent = "Unavailable";
-
           addBtn.disabled = true;
-          setBuyEnabled(false, buyHref);
-          addBtn.onclick = null;
+          buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
+          buyBtn.removeAttribute("target");
+          buyBtn.removeAttribute("rel");
         }
       }
 
