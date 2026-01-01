@@ -2,506 +2,408 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Primary Meta Tags -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Unlim8ted - Physical Items</title>
   <meta name="title" content="Products - Unlim8ted" />
-  <meta name="description" content="Explore Unlim8ted's different real life items and merch." />
+  <meta name="description" content="Explore Unlim8ted's physical items and merch." />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://unlim8ted.com/products/">
-  <meta property="og:title" content="Products - Unlim8ted Studio Productions">
-  <meta property="og:description"
-    content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
-  <meta property="og:image" content="https://unlim8ted.com/images/products-meta-image.jpg">
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://unlim8ted.com/products/" />
+  <meta property="og:title" content="Products - Unlim8ted Studio Productions" />
+  <meta property="og:description" content="Explore a wide range of products from Unlim8ted Studio Productions." />
+  <meta property="og:image" content="https://unlim8ted.com/images/products-meta-image.jpg" />
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://unlim8ted.com/products/">
-  <meta property="twitter:title" content="Products - Unlim8ted Studio Productions">
-  <meta property="twitter:description"
-    content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
-  <meta property="twitter:image" content="https://unlim8ted.com/images/products-meta-image.jpg">
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://unlim8ted.com/products/" />
+  <meta property="twitter:title" content="Products - Unlim8ted Studio Productions" />
+  <meta property="twitter:description" content="Explore a wide range of products from Unlim8ted Studio Productions." />
+  <meta property="twitter:image" content="https://unlim8ted.com/images/products-meta-image.jpg" />
 
-  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
 
-  <!-- Components (keeps consistent with your newer pages) -->
   <script type="module" src="/components/site-navbar.js"></script>
   <script type="module" src="/components/site-loader.js"></script>
 
   <style>
-    :root{
-      --bg0:#07060b;
-      --bg1:#0e0b16;
-      --panel: rgba(20,18,30,.88);
-      --panel2: rgba(28,26,42,.92);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.64);
-      --stroke: rgba(255,255,255,.10);
+    :root {
+      --bg0: #05040a;
+      --bg1: #0c0620;
+      --ink: rgba(255, 255, 255, .92);
+      --muted: rgba(255, 255, 255, .68);
+
+      --glass: rgba(20, 18, 30, .68);
+      --glass2: rgba(28, 26, 42, .78);
+      --stroke: rgba(255, 255, 255, .12);
+
       --accent: #00ffc6;
-      --accent2:#00ff99;
-      --danger:#ff4d4d;
-      --shadow: 0 14px 34px rgba(0,0,0,.42);
+      --accent2: #63d6ff;
+
+      --ok: #00ff99;
+      --warn: #ffd166;
+      --bad: #ff4d4d;
+
+      --shadow: 0 16px 44px rgba(0, 0, 0, .55);
       --r: 18px;
       --r2: 22px;
+
+      --max: 1140px;
     }
 
-    *{ box-sizing:border-box; }
+    * { box-sizing: border-box; }
 
-    body{
-      margin:0;
+    body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      color: var(--text);
+      color: var(--ink);
       background:
-        radial-gradient(circle at 20% 20%, rgba(0,255,153,.10), transparent 42%),
-        radial-gradient(circle at 80% 30%, rgba(255,0,119,.08), transparent 48%),
-        radial-gradient(circle at 50% 90%, rgba(52,152,219,.08), transparent 48%),
-        var(--bg0);
-      padding-top: 56px; /* room for fixed navbar component */
-      min-height:100vh;
+        radial-gradient(1200px 600px at 20% 20%, rgba(0, 255, 198, .10), transparent 60%),
+        radial-gradient(900px 500px at 80% 30%, rgba(99, 214, 255, .10), transparent 62%),
+        radial-gradient(900px 700px at 50% 95%, rgba(255, 0, 119, .08), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1) 70%, #060512);
+      padding-top: 56px;
+      min-height: 100vh;
     }
 
-    .wrap{
-      max-width: 1120px;
+    .wrap {
+      max-width: var(--max);
       margin: 0 auto;
-      padding: 28px 16px 64px;
+      padding: 26px 16px 64px;
     }
 
-    .hero{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:16px;
-      margin: 8px 0 18px;
-      flex-wrap:wrap;
+    .hero {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 6px 0 16px;
     }
 
-    h1{
-      margin:0;
-      font-size: 30px;
-      letter-spacing:.2px;
-      color: rgba(255,255,255,.95);
-      text-shadow: 0 0 10px rgba(0,255,198,.18);
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      letter-spacing: .2px;
+      color: rgba(255, 255, 255, .96);
+      text-shadow: 0 0 14px rgba(0, 255, 198, .14);
     }
 
-    .sub{
-      margin:8px 0 0;
+    .sub {
+      margin: 10px 0 0;
       font-size: 14px;
+      line-height: 1.45;
       color: var(--muted);
-      line-height:1.4;
-      max-width: 760px;
+      max-width: 900px;
     }
 
-    .toolbar{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
       margin: 18px 0 10px;
     }
 
-    /* Dark selects */
-    select{
-      background: rgba(10,10,16,.92) !important;
-      color: rgba(255,255,255,.92) !important;
-      border: 1px solid rgba(255,255,255,.14);
-    }
-    select option{
-      background: #0b0a12 !important;
-      color: rgba(255,255,255,.92) !important;
-    }
-    select:focus{
-      outline: none;
-      border-color: rgba(0,255,153,.45);
-      box-shadow: 0 0 0 3px rgba(0,255,153,.12);
-    }
-
-    .tool{
-      flex: 1 1 260px;
-      min-width: 220px;
-      display:flex;
-      gap:10px;
-      align-items:center;
+    .tool {
+      display: flex;
+      gap: 10px;
+      align-items: center;
       padding: 12px 12px;
       border-radius: 16px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 10px 22px rgba(0,0,0,.22);
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .10);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, .20);
       backdrop-filter: blur(10px);
     }
 
-    .tool input, .tool select{
-      width:100%;
-      border:none;
-      outline:none;
-      color: var(--text);
-      background: transparent;
-      font-size: 14px;
-    }
-    .tool select{
-      appearance: none;
-      cursor:pointer;
-    }
-
-    .icon{
+    .icon {
       width: 34px;
       height: 34px;
       border-radius: 12px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(0,255,198,.10);
-      border: 1px solid rgba(0,255,198,.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 255, 198, .10);
+      border: 1px solid rgba(0, 255, 198, .18);
       color: var(--accent);
-      user-select:none;
       flex: 0 0 auto;
+      user-select: none;
     }
-    .icon svg{ width: 18px; height: 18px; fill: currentColor; }
 
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    .icon svg { width: 18px; height: 18px; fill: currentColor; }
+
+    .tool input,
+    .tool select {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    select {
+      background: rgba(10, 10, 16, .92) !important;
+      color: rgba(255, 255, 255, .92) !important;
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 12px;
+      padding: 10px 10px;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: rgba(0, 255, 153, .45);
+      box-shadow: 0 0 0 3px rgba(0, 255, 153, .12);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
       gap: 16px;
       margin-top: 14px;
     }
 
-    .card{
-      background: rgba(20,18,30,.78);
-      border: 1px solid rgba(255,255,255,.10);
+    .card {
+      grid-column: span 4;
+      position: relative;
       border-radius: var(--r2);
+      background: linear-gradient(180deg, rgba(28, 26, 42, .72), rgba(20, 18, 30, .62));
+      border: 1px solid rgba(255, 255, 255, .10);
       box-shadow: var(--shadow);
-      overflow:hidden;
-      cursor:pointer;
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-      text-decoration:none;
+      overflow: hidden;
+      transform: translateZ(0);
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+      text-decoration: none;
       color: inherit;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0, 255, 198, .22);
+      box-shadow: 0 22px 54px rgba(0, 0, 0, .62);
+    }
+
+    .thumb {
+      aspect-ratio: 4 / 3;
+      background: rgba(255, 255, 255, .06);
+      overflow: hidden;
       position: relative;
     }
 
-    .card:hover{
-      transform: translateY(-3px);
-      border-color: rgba(0,255,198,.26);
-      box-shadow: 0 20px 46px rgba(0,0,0,.54);
+    .thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(600px 260px at 50% 0%, rgba(0, 255, 198, .10), transparent 60%);
+      pointer-events: none;
     }
 
-    .thumb{
-      height: 180px;
-      background: rgba(255,255,255,.06);
-      overflow:hidden;
-    }
-    .thumb img{
-      width:100%;
-      height:100%;
+    .thumb img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      display:block;
-      filter: saturate(1.05) contrast(1.05);
+      display: block;
+      filter: saturate(1.06) contrast(1.05);
     }
 
-    .info{
-      padding: 14px 14px 16px;
+    .badges {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      pointer-events: none;
     }
 
-    .title{
+    .badge {
+      pointer-events: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
       font-weight: 900;
-      font-size: 15px;
-      letter-spacing:.2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      margin: 0 0 8px;
+      font-size: 12px;
+      letter-spacing: .2px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(0, 0, 0, .38);
+      backdrop-filter: blur(10px);
+      color: rgba(255, 255, 255, .92);
+      text-shadow: 0 1px 0 rgba(0, 0, 0, .25);
+      white-space: nowrap;
     }
 
-    .desc{
-      margin: 0 0 10px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.35;
-      min-height: 34px;
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .70);
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, .22);
+    }
+
+    .stock-in .dot { background: var(--ok); }
+    .stock-partial .dot { background: var(--warn); }
+    .stock-out .dot { background: var(--bad); }
+
+    .badge.cat {
+      background: rgba(0, 255, 198, .10);
+      border-color: rgba(0, 255, 198, .22);
+      color: rgba(0, 255, 198, .95);
+    }
+
+    .info {
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1 1 auto;
+    }
+
+    .title {
+      margin: 0;
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: .2px;
+      line-height: 1.2;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
-      overflow:hidden;
+      overflow: hidden;
     }
 
-    .meta{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      flex-wrap:wrap;
-      color: rgba(255,255,255,.80);
-      font-size: 13px;
-    }
-
-    .price{
-      font-weight: 900;
-      color: rgba(255,255,255,.92);
-    }
-
-    .pill{
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(0,255,198,.10);
-      border: 1px solid rgba(0,255,198,.18);
-      color: var(--accent);
-      font-weight: 900;
-      font-size: 12px;
-      text-transform: capitalize;
-    }
-
-    .foot{
-      margin-top: 22px;
-      text-align:center;
-      color: rgba(255,255,255,.60);
-      font-size: 13px;
-    }
-
-    /* MODAL */
-    .modal{
-      position: fixed;
-      inset: 0;
-      z-index: 9998;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 18px;
-      background: rgba(0,0,0,.62);
-      backdrop-filter: blur(10px);
-    }
-    .modal.open{ display:flex; }
-
-    .sheet{
-      width: min(920px, 100%);
-      border-radius: 22px;
-      background: rgba(20,18,30,.92);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 28px 70px rgba(0,0,0,.62);
-      overflow:hidden;
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-    }
-
-    .sheet .img{
-      background: rgba(255,255,255,.06);
-      min-height: 380px;
-      position: relative;
-    }
-    .sheet .img img{
-      width:100%;
-      height:100%;
-      object-fit: cover;
-      display:block;
-    }
-
-    .sheet .content{
-      padding: 16px 16px 18px;
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-    }
-
-    .sheet h2{
-      margin: 0;
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing:.2px;
-    }
-
-    .sheet .p{
+    .desc {
       margin: 0;
       color: var(--muted);
       font-size: 13px;
-      line-height: 1.45;
+      line-height: 1.38;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 34px;
     }
 
-    .formgrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
+    .meta {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
       gap: 10px;
-    }
-
-    .field{
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 16px;
-      padding: 10px 12px;
-    }
-    .field label{
-      display:block;
-      font-size: 11px;
-      color: rgba(255,255,255,.65);
-      font-weight: 900;
-      letter-spacing: .3px;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-    }
-    .field select, .field input{
-      width:100%;
-      border:none;
-      outline:none;
-      background: transparent;
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      flex-wrap:wrap;
+      flex-wrap: wrap;
       margin-top: 2px;
     }
 
-    .qty{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 999px;
-      padding: 6px 10px;
-    }
-    .qty button{
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      border: none;
-      cursor:pointer;
-      background: rgba(255,255,255,.08);
-      color: var(--text);
-      font-size: 18px;
-      line-height: 0;
+    .price {
       font-weight: 900;
-    }
-    .qty button:hover{
-      background: rgba(0,255,153,.16);
-      color: var(--accent2);
-    }
-    .qty input{
-      width: 42px;
-      border:none;
-      background: transparent;
-      color: var(--text);
-      text-align:center;
-      outline:none;
-      font-weight: 900;
-      font-size: 14px;
-    }
-
-    .btns{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 4px;
-    }
-    .btn{
-      border:none;
-      border-radius: 16px;
-      padding: 12px 14px;
-      font-weight: 900;
-      cursor:pointer;
-      text-decoration:none;
-      text-align:center;
-      display:inline-block;
-    }
-    .btn-primary{
-      background: var(--accent2);
-      color: #0b1020;
-      box-shadow: 0 10px 22px rgba(0,255,153,.18);
-    }
-    .btn-primary:hover{ filter: brightness(.96); }
-    .btn-ghost{
-      background: rgba(255,255,255,.05);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,.10);
-    }
-    .btn-ghost:hover{ background: rgba(255,255,255,.08); }
-
-    .x{
-      position:absolute;
-      top: 10px;
-      right: 10px;
-      width: 40px;
-      height: 40px;
-      border-radius: 14px;
-      background: rgba(0,0,0,.35);
-      border: 1px solid rgba(255,255,255,.12);
-      color: rgba(255,255,255,.88);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      user-select:none;
-      z-index: 2;
-    }
-    .x svg{ width: 18px; height: 18px; fill: currentColor; }
-    .x:hover{
-      border-color: rgba(255,77,77,.30);
-      color: var(--danger);
-    }
-
-    .toast{
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 22px;
-      z-index: 9999;
-      background: rgba(0,0,0,.60);
-      border: 1px solid rgba(255,255,255,.14);
-      color: rgba(255,255,255,.92);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-weight: 900;
+      color: rgba(255, 255, 255, .94);
       font-size: 13px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 18px 40px rgba(0,0,0,.45);
-      display:none;
     }
-    .toast.show{ display:block; }
 
-    @media (max-width: 900px){
-      .sheet{ grid-template-columns: 1fr; }
-      .sheet .img{ min-height: 260px; }
-      .formgrid{ grid-template-columns: 1fr; }
+    .actions {
+      padding: 0 14px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 12px;
+      border-radius: 16px;
+      font-weight: 900;
+      text-decoration: none;
+      user-select: none;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .92);
+      transition: filter .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, .09);
+      border-color: rgba(0, 255, 198, .20);
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, rgba(0, 255, 153, .92), rgba(0, 255, 198, .85));
+      color: #07101a;
+      border: none;
+      box-shadow: 0 12px 28px rgba(0, 255, 153, .12);
+    }
+
+    .btn.primary:hover { filter: brightness(.97); }
+
+    .btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+    .foot {
+      margin-top: 22px;
+      text-align: center;
+      color: rgba(255, 255, 255, .60);
+      font-size: 13px;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      border-radius: var(--r2);
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .05);
+      padding: 18px;
+      color: rgba(255, 255, 255, .86);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .30);
+    }
+
+    @media (max-width: 980px) {
+      .card { grid-column: span 6; }
+      .toolbar { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .card { grid-column: span 12; }
     }
   </style>
 </head>
 
 <body>
   <site-loader text="Loading..."></site-loader>
-  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile"></site-navbar>
 
   <div class="wrap">
     <div class="hero">
       <div>
         <h1>Physical Items</h1>
-        <p class="sub">
-          Browse merch and physical items. Click a card to open its product page.
-          If you want to choose variants (size/color/etc), use “Quick add” from the product page or add here via the options modal.
-          Checkout happens via Square links (each physical item purchased separately).
-        </p>
+        <p class="sub">Stock is based on Printful and stored per variant in <strong>varients[].available</strong>. Click a product to view and choose a variant.</p>
       </div>
     </div>
 
     <div class="toolbar">
       <div class="tool" title="Search">
         <div class="icon" aria-hidden="true">
-          <!-- search icon -->
-          <svg viewBox="0 0 24 24"><path d="M10 4a6 6 0 104.472 10.01l4.759 4.758a1 1 0 001.414-1.414l-4.758-4.759A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M10 4a6 6 0 104.472 10.01l4.759 4.758a1 1 0 001.414-1.414l-4.758-4.759A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z" />
+          </svg>
         </div>
-        <input type="text" id="search" placeholder="Search items…">
+        <input type="text" id="search" placeholder="Search items…" />
       </div>
 
       <div class="tool" title="Filter">
         <div class="icon" aria-hidden="true">
-          <!-- sliders icon -->
-          <svg viewBox="0 0 24 24"><path d="M4 7h10a2 2 0 104 0h2v2h-2a2 2 0 11-4 0H4V7zm0 8h2a2 2 0 104 0h10v2H10a2 2 0 11-4 0H4v-2z"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M4 7h10a2 2 0 104 0h2v2h-2a2 2 0 11-4 0H4V7zm0 8h2a2 2 0 104 0h10v2H10a2 2 0 11-4 0H4v-2z" />
+          </svg>
         </div>
-        <select id="filter">
+        <select id="filter" aria-label="Category filter">
           <option value="all">All categories</option>
           <option value="t-shirts">T-Shirts</option>
           <option value="hoodies">Hoodies</option>
@@ -519,500 +421,170 @@
     </div>
   </div>
 
-  <!-- MODAL (variants + qty + add to cart) -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Product options">
-    <div class="sheet">
-      <div class="img">
-        <div id="closeBtn" class="x" aria-label="Close">
-          <svg viewBox="0 0 24 24"><path d="M18.3 5.71a1 1 0 00-1.41 0L12 10.59 7.11 5.7A1 1 0 105.7 7.11L10.59 12 5.7 16.89a1 1 0 101.41 1.41L12 13.41l4.89 4.89a1 1 0 001.41-1.41L13.41 12l4.89-4.89a1 1 0 000-1.4z"/></svg>
-        </div>
-        <img id="mImg" src="" alt="">
-      </div>
-      <div class="content">
-        <h2 id="mTitle">Item</h2>
-        <p id="mDesc" class="p"></p>
-
-        <div class="row">
-          <div class="pill" id="mPrice">$0.00</div>
-          <div class="pill" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:rgba(255,255,255,.86);">
-            Paid via Square at checkout
-          </div>
-        </div>
-
-        <div class="formgrid">
-          <div class="field">
-            <label for="mVariant1">Variant</label>
-            <select id="mVariant1"></select>
-          </div>
-          <div class="field">
-            <label for="mVariant2">Option</label>
-            <select id="mVariant2"></select>
-          </div>
-
-          <div class="field" style="grid-column:1 / -1;">
-            <label>Quantity</label>
-            <div class="row">
-              <div class="qty" aria-label="Quantity">
-                <button id="qtyDec" type="button" aria-label="Decrease quantity">−</button>
-                <input id="mQty" type="text" inputmode="numeric" value="1" aria-label="Quantity value">
-                <button id="qtyInc" type="button" aria-label="Increase quantity">+</button>
-              </div>
-              <div class="p" style="margin:0;">
-                Added items will show up in your navbar cart immediately.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="btns">
-          <button id="addToCartBtn" class="btn btn-primary" type="button">Add to cart</button>
-          <button id="goToProductBtn" class="btn btn-ghost" type="button">View product page</button>
-          <button id="closeBtn2" class="btn btn-ghost" type="button">Cancel</button>
-        </div>
-
-        <p class="p" style="margin-top:2px;">
-          Note: physical items will be purchased separately using their Square checkout links (shown in the cart).
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <div id="toast" class="toast">Added to cart</div>
-
   <script type="module">
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getFirebase } from "/components/firebase-init.js";
-
-    const { auth, db } = getFirebase();
-
-    // -----------------------------
-    // PRODUCT DATA
-    // -----------------------------
-    // IMPORTANT:
-    // - `id` should match products.json IDs so /product#id works.
-    // - `squareLink` is used by /cart to let users checkout each physical item separately.
-    const PRODUCTS = [
-      {
-        id: "unlim8ted-hoodie",
-        title: "Unlim8ted Unisex Hoodie",
-        desc: "Who knew that the softest hoodie you'll ever own comes with such...",
-        category: "hoodies",
-        priceLabel: "$35.50 – $47.00",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/Z73O3JCBDLCW5PGZTREXE3GR.jpeg?width=2560&optimize=medium",      },
-      {
-        id: "unlim8ted-t-shirt",
-        title: "Unlim8ted t-shirt",
-        desc: "We’re gonna make you an offe...",
-        category: "t-shirts",
-        priceLabel: "$13.50",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p1_i5_w2000.jpeg?width=2400&optimize=medium",
-
-      },
-      {
-        id: "the-life-of-a-meatball-unisex-t-shirt",
-        title: "The Life of a Meatball Unisex t-shirt",
-        desc: "We’re gonna make you an offe...",
-        category: "t-shirts",
-        priceLabel: "$23.00",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p52_i1_w2000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#the-life-of-a-meatball-unisex-t-shirt/52?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Black", "White"], option: ["S", "M", "L", "XL", "2XL"] }
-      },
-      {
-        id: "the-life-of-a-meatball-men-s-slides",
-        title: "The Life of a Meatball Men’s slides",
-        desc: "What’s a summer without comf...",
-        category: "accessories",
-        priceLabel: "$31.44",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p37_i3_w2000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#the-life-of-a-meatball-men-s-slides/37?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Black", "White"], option: ["8", "9", "10", "11", "12"] }
-      },
-      {
-        id: "the-life-of-a-meatball-jigsaw-puzzle",
-        title: "The Life of a Meatball Jigsaw puzzle",
-        desc: "Assembling puzzles is the pe...",
-        category: "home",
-        priceLabel: "$17.80",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p20_i1_w2000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#the-life-of-a-meatball-jigsaw-puzzle/20?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Standard"], option: ["One size"] }
-      },
-      {
-        id: "unlim8ted-bubble-free-stickers",
-        title: "Unlim8ted Bubble-free stickers",
-        desc: "Any item can be exciting wit...",
-        category: "stickers",
-        priceLabel: "$5.35",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p23_i3_w1000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#unlim8ted-bubble-free-stickers/23?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Matte", "Gloss"], option: ["Small", "Medium", "Large"] }
-      },
-      {
-        id: "unisex-lightweight-zip-up-windbreaker",
-        title: "Unisex lightweight zip up windbreaker",
-        desc: "Light as a feather, this jac...",
-        category: "accessories",
-        priceLabel: "$51.50",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p29_i1_w2000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#unisex-lightweight-zip-up-windbreaker/29?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Black", "Navy"], option: ["S", "M", "L", "XL", "2XL"] }
-      },
-      {
-        id: "unlim8ted-men-s-slides",
-        title: "Unlim8ted Men’s slides",
-        desc: "What’s a summer without comf...",
-        category: "accessories",
-        priceLabel: "$31.41",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p36_i1_w2000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#unlim8ted-men-s-slides/36?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Black", "White"], option: ["8", "9", "10", "11", "12"] }
-      },
-      {
-        id: "the-life-of-a-meatball-shaker-pint-glass",
-        title: "The Life of a Meatball Shaker pint glass",
-        desc: "Enjoy your refreshing drinks...",
-        category: "home",
-        priceLabel: "$18.00",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p34_i2_w2000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#the-life-of-a-meatball-shaker-pint-glass/34?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Standard"], option: ["One size"] }
-      },
-      {
-        id: "unlim8ted-spiral-notebook",
-        title: "Unlim8ted Spiral notebook",
-        desc: "A good notebook can help you...",
-        category: "home",
-        priceLabel: "$12.05",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p17_i2_w2000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#unlim8ted-spiral-notebook/17?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Standard"], option: ["One size"] }
-      },
-      {
-        id: "unlim8ted-men-s-t-shirt",
-        title: "Unlim8ted Athletic Men’s t-shirt",
-        desc: "It’s the little details that...",
-        category: "t-shirts",
-        priceLabel: "$23.00",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p18_i1_w1000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#unlim8ted-men-s-t-shirt/18?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Black", "White"], option: ["S", "M", "L", "XL", "2XL"] }
-      },
-      {
-        id: "unlim8ted-trucker-cap",
-        title: "Unlim8ted Trucker Cap",
-        desc: "Classic trucker cap style wi...",
-        category: "accessories",
-        priceLabel: "$14.52",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p15_i1_w2000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#unlim8ted-trucker-cap/15?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Black", "Navy"], option: ["One size"] }
-      },
-      {
-        id: "unlim8ted-organic-ribbed-beanie",
-        title: "Unlim8ted Organic ribbed beanie",
-        desc: "This organic ribbed beanie i...",
-        category: "accessories",
-        priceLabel: "$21.00",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p13_i20_w2000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#unlim8ted-organic-ribbed-beanie/13?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Black", "Heather Grey"], option: ["One size"] }
-      },
-      {
-        id: "unlim8ted-cork-back-coaster",
-        title: "Unlim8ted Cork-back coaster",
-        desc: "This cork-back coaster is a ...",
-        category: "home",
-        priceLabel: "$7.00",
-        image: "https://150721284.cdn6.editmysite.com/uploads/1/5/0/7/150721284/s649217925131779828_p2_i1_w2000.jpeg?width=2400&optimize=medium",
-        squareLink: "https://unlim8ted.com/products/squareproduct#unlim8ted-cork-back-coaster/2?cp=true&sa=true&sbp=false&q=false",
-        variants: { variant: ["Standard"], option: ["One size"] }
-      },
-    ];
-
-    // -----------------------------
-    // DOM
-    // -----------------------------
     const grid = document.getElementById("grid");
     const searchEl = document.getElementById("search");
     const filterEl = document.getElementById("filter");
 
-    const modal = document.getElementById("modal");
-    const closeBtn = document.getElementById("closeBtn");
-    const closeBtn2 = document.getElementById("closeBtn2");
-    const goToProductBtn = document.getElementById("goToProductBtn");
-
-    const mImg = document.getElementById("mImg");
-    const mTitle = document.getElementById("mTitle");
-    const mDesc = document.getElementById("mDesc");
-    const mPrice = document.getElementById("mPrice");
-    const mVariant1 = document.getElementById("mVariant1");
-    const mVariant2 = document.getElementById("mVariant2");
-    const mQty = document.getElementById("mQty");
-    const qtyDec = document.getElementById("qtyDec");
-    const qtyInc = document.getElementById("qtyInc");
-    const addToCartBtn = document.getElementById("addToCartBtn");
-
-    const toastEl = document.getElementById("toast");
-
-    let currentUser = null;
-    let openProduct = null;
-
-    // -----------------------------
-    // HELPERS
-    // -----------------------------
-    function escapeHtml(s){
+    function esc(s) {
       return String(s ?? "").replace(/[&<>"']/g, (c) => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
       }[c]));
     }
 
-    function toastShow(msg){
-      toastEl.textContent = msg;
-      toastEl.classList.add("show");
-      clearTimeout(toastEl._t);
-      toastEl._t = setTimeout(()=> toastEl.classList.remove("show"), 1200);
+    function productHref(id) {
+      return `/products/product#${encodeURIComponent(id)}`;
     }
 
-    function clampInt(v, min, max){
-      v = parseInt(v, 10);
-      if (!Number.isFinite(v)) v = min;
-      return Math.max(min, Math.min(max, v));
-    }
+    function stockFromVariants(item) {
+      const vs = Array.isArray(item?.varients) ? item.varients : null;
+      if (!vs || vs.length === 0) return { key: "in", label: "In stock" };
 
-    // Dispatch event so site-navbar/cart dropdown can refresh immediately
-    function notifyCartChanged() {
-      window.dispatchEvent(new CustomEvent("cart-changed"));
-    }
-
-    // -----------------------------
-    // CART (MATCHES YOUR PRODUCT PAGE)
-    // signed-in -> Firestore users/{uid}/cartItems/{autoId}
-    // signed-out -> localStorage "unlim8ted-cart" array
-    // -----------------------------
-    async function addToCartUnified(p, qty, variant, option){
-      const user = auth.currentUser;
-
-      const payload = {
-        productId: String(p.id),
-        name: String(p.title || "").slice(0, 120),
-        price: Number(p.price || 0), // optional numeric
-        image: p.image ? String(p.image).slice(0, 600) : null,
-        qty: Number(qty || 1),
-
-        // extra fields (safe to keep; your /cart can use these)
-        variant: String(variant || ""),
-        option: String(option || ""),
-        squareLink: String(p.squareLink || ""),
-
-        addedAt: serverTimestamp()
-      };
-
-      if (user) {
-        const cartItemRef = doc(collection(db, "users", user.uid, "cartItems"));
-        await setDoc(cartItemRef, payload);
-        notifyCartChanged();
-        return;
+      let total = 0, avail = 0;
+      for (const v of vs) {
+        total++;
+        if (v?.available !== false) avail++;
       }
-
-      const key = "unlim8ted-cart";
-      const existing = JSON.parse(localStorage.getItem(key) || "[]");
-      existing.push({
-        productId: payload.productId,
-        name: payload.name,
-        price: payload.price,
-        image: payload.image,
-        qty: payload.qty,
-        variant: payload.variant,
-        option: payload.option,
-        squareLink: payload.squareLink,
-        addedAt: Date.now()
-      });
-      localStorage.setItem(key, JSON.stringify(existing));
-      notifyCartChanged();
+      if (avail === 0) return { key: "out", label: "Out of stock" };
+      if (avail === total) return { key: "in", label: "In stock" };
+      return { key: "partial", label: "Partial stock" };
     }
 
-    // -----------------------------
-    // RENDER
-    // -----------------------------
-    function passesFilters(p){
+    function categoryGuessFromTags(p) {
+      const tags = Array.isArray(p?.tags) ? p.tags.map(String) : [];
+      const t = tags.join(" ").toLowerCase();
+      if (t.includes("hood")) return "hoodies";
+      if (t.includes("shirt") || t.includes("tee")) return "t-shirts";
+      if (t.includes("sticker")) return "stickers";
+      if (t.includes("cap") || t.includes("beanie") || t.includes("hat") || t.includes("slides") || t.includes("windbreaker") || t.includes("bag")) return "accessories";
+      if (t.includes("mug") || t.includes("glass") || t.includes("coaster") || t.includes("notebook") || t.includes("puzzle") || t.includes("home")) return "home";
+      return "accessories";
+    }
+
+    async function loadCatalog() {
+      const r = await fetch("/tools/data/products.json", { cache: "no-store" });
+      if (!r.ok) throw new Error(`Failed to load products.json (${r.status})`);
+      const data = await r.json();
+      const list = Array.isArray(data) ? data : (Array.isArray(data?.products) ? data.products : []);
+      return list;
+    }
+
+    function passesFilters(p) {
       const q = (searchEl.value || "").trim().toLowerCase();
       const f = filterEl.value;
 
-      const hay = `${p.title} ${p.desc} ${p.category}`.toLowerCase();
+      const title = String(p?.name ?? p?.title ?? "").toLowerCase();
+      const desc = String(p?.description ?? p?.desc ?? "").toLowerCase();
+      const cat = String(p?.category ?? categoryGuessFromTags(p)).toLowerCase();
+
+      const hay = `${title} ${desc} ${cat}`.trim();
       if (q && !hay.includes(q)) return false;
-      if (f !== "all" && p.category !== f) return false;
+      if (f !== "all" && cat !== f) return false;
       return true;
     }
 
-    function goToProductPage(p){
-      // integrates with /product page (hash = product id)
-      window.location.href = `/products/product#${encodeURIComponent(p.id)}`;
+    function bestImage(p) {
+      const img =
+        p?.image ||
+        p?.imageUrl ||
+        p?.thumbnail ||
+        p?.thumb ||
+        p?.images?.[0] ||
+        p?.media?.[0]?.src ||
+        "";
+      return String(img || "");
     }
 
-    function renderGrid(){
+    function bestPriceLabel(p) {
+      const pl = p?.priceLabel || p?.price_range || p?.priceRange || p?.price || "";
+      return pl ? String(pl) : "";
+    }
+
+    function render(products) {
       grid.innerHTML = "";
-      const shown = PRODUCTS.filter(passesFilters);
 
-      for (const p of shown){
-        const el = document.createElement("div");
-        el.className = "card";
-        el.setAttribute("tabindex","0");
-        el.setAttribute("role","button");
-        el.setAttribute("aria-label", `Open ${p.title}`);
+      const shown = products
+        .filter(p => String(p?.["product-type"] || p?.productType || "").toLowerCase() === "physical")
+        .map(p => ({
+          id: String(p?.id || ""),
+          title: String(p?.name ?? p?.title ?? "Item"),
+          desc: String(p?.description ?? p?.desc ?? ""),
+          category: String(p?.category ?? categoryGuessFromTags(p)),
+          image: bestImage(p),
+          priceLabel: bestPriceLabel(p),
+          varients: Array.isArray(p?.varients) ? p.varients : null
+        }))
+        .filter(p => p.id)
+        .filter(passesFilters);
 
-        el.innerHTML = `
+      if (!shown.length) {
+        grid.innerHTML = `<div class="empty"><strong>No results.</strong><div style="margin-top:8px;color:rgba(255,255,255,.68)">Try a different search or category.</div></div>`;
+        return;
+      }
+
+      for (const p of shown) {
+        const stock = stockFromVariants(p);
+        const href = productHref(p.id);
+
+        const card = document.createElement("a");
+        card.className = "card";
+        card.href = href;
+        card.setAttribute("aria-label", `View ${p.title}`);
+
+        const img = p.image ? `<img src="${esc(p.image)}" alt="${esc(p.title)}">` : "";
+
+        card.innerHTML = `
           <div class="thumb">
-            <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.title)}">
-          </div>
-          <div class="info">
-            <div class="title">${escapeHtml(p.title)}</div>
-            <div class="desc">${escapeHtml(p.desc)}</div>
-            <div class="meta">
-              <div class="price">${escapeHtml(p.priceLabel)}</div>
-              <div class="pill">${escapeHtml(p.category)}</div>
+            ${img}
+            <div class="badges">
+              <div class="badge stock-${esc(stock.key)}">
+                <span class="dot" aria-hidden="true"></span>
+                ${esc(stock.label)}
+              </div>
+              <div class="badge cat">${esc(p.category)}</div>
             </div>
           </div>
-        `;
 
-        // Click opens product page (requested)
-        el.addEventListener("click", ()=> goToProductPage(p));
-        el.addEventListener("keydown", (e)=> {
-          if (e.key === "Enter" || e.key === " "){
-            e.preventDefault();
-            goToProductPage(p);
-          }
-        });
-
-        // Right click / long press style: still allow variant modal via context menu
-        el.addEventListener("contextmenu", (e) => {
-          e.preventDefault();
-          openModal(p);
-        });
-
-        grid.appendChild(el);
-      }
-
-      if (!shown.length){
-        const empty = document.createElement("div");
-        empty.className = "card";
-        empty.style.cursor = "default";
-        empty.innerHTML = `
           <div class="info">
-            <div class="title">No results</div>
-            <div class="desc">Try a different search or category.</div>
+            <h3 class="title">${esc(p.title)}</h3>
+            <p class="desc">${esc(p.desc)}</p>
+            <div class="meta">
+              <div class="price">${esc(p.priceLabel)}</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <span class="btn primary" role="button" tabindex="-1">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6zm0 2.5L18.5 10H14V5.5zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
+              View product
+            </span>
           </div>
         `;
-        grid.appendChild(empty);
+
+        grid.appendChild(card);
       }
     }
 
-    // -----------------------------
-    // MODAL (optional quick add)
-    // -----------------------------
-    function fillSelect(selectEl, arr){
-      selectEl.innerHTML = "";
-      for (const v of arr){
-        const opt = document.createElement("option");
-        opt.value = v;
-        opt.textContent = v;
-        selectEl.appendChild(opt);
+    (async () => {
+      try {
+        const products = await loadCatalog();
+        const onChange = () => render(products);
+
+        searchEl.addEventListener("input", onChange);
+        filterEl.addEventListener("change", onChange);
+
+        render(products);
+
+        const y = new Date().getFullYear();
+        document.getElementById("footer-text").innerHTML =
+          `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+      } catch (e) {
+        console.error(e);
+        grid.innerHTML = `<div class="empty"><strong>Could not load products.</strong><div style="margin-top:8px;color:rgba(255,255,255,.68)">Please refresh and try again.</div></div>`;
       }
-    }
-
-    function openModal(p){
-      openProduct = p;
-
-      mImg.src = p.image;
-      mImg.alt = p.title;
-      mTitle.textContent = p.title;
-      mDesc.textContent = p.desc;
-      mPrice.textContent = p.priceLabel;
-
-      const v1 = (p.variants?.variant?.length ? p.variants.variant : ["Default"]);
-      const v2 = (p.variants?.option?.length ? p.variants.option : ["Default"]);
-
-      fillSelect(mVariant1, v1);
-      fillSelect(mVariant2, v2);
-
-      mQty.value = "1";
-
-      modal.classList.add("open");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeModal(){
-      modal.classList.remove("open");
-      document.body.style.overflow = "";
-      openProduct = null;
-    }
-
-    closeBtn.addEventListener("click", closeModal);
-    closeBtn2.addEventListener("click", closeModal);
-    modal.addEventListener("click", (e)=>{
-      if (e.target === modal) closeModal();
-    });
-    window.addEventListener("keydown", (e)=>{
-      if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
-    });
-
-    qtyDec.addEventListener("click", ()=> {
-      const next = clampInt(mQty.value, 1, 99) - 1;
-      mQty.value = String(next <= 0 ? 1 : next);
-    });
-    qtyInc.addEventListener("click", ()=> {
-      mQty.value = String(Math.min(99, clampInt(mQty.value, 1, 99) + 1));
-    });
-    mQty.addEventListener("input", ()=> {
-      mQty.value = String(clampInt(mQty.value, 1, 99));
-    });
-
-    addToCartBtn.addEventListener("click", async ()=>{
-      if (!openProduct) return;
-
-      const qty = clampInt(mQty.value, 1, 99);
-      const variant = mVariant1.value || "";
-      const option = mVariant2.value || "";
-
-      try{
-        await addToCartUnified(openProduct, qty, variant, option);
-        toastShow("Added to cart");
-        closeModal();
-      }catch(err){
-        console.error(err);
-        toastShow("Could not add to cart");
-      }
-    });
-
-    goToProductBtn.addEventListener("click", ()=>{
-      if (!openProduct) return;
-      goToProductPage(openProduct);
-    });
-
-    // -----------------------------
-    // AUTH (kept for parity)
-    // -----------------------------
-    onAuthStateChanged(auth, (user)=>{
-      currentUser = user || null;
-      // Navbar handles cart count UI. Nothing else needed here.
-    });
-
-    // -----------------------------
-    // FILTERS
-    // -----------------------------
-    searchEl.addEventListener("input", renderGrid);
-    filterEl.addEventListener("change", renderGrid);
-
-    renderGrid();
-
-    // Footer year
-    const y = new Date().getFullYear();
-    document.getElementById("footer-text").innerHTML =
-      `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+    })();
   </script>
 
-  <!-- Drop-in Smooth Scroll (wheel + touch) -->
   <script>
     (() => {
       const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
