@@ -304,7 +304,9 @@
       {
         "id": "6956b05e0d35d5",
         "available": true,
-        "image": "https://files.cdn.printful.com/files/512/512f2789034ba1c29e36424ade83539d_preview.png"
+        "image": "https://files.cdn.printful.com/files/512/512f2789034ba1c29e36424ade83539d_preview.png",
+        "price": 7.5,
+        "currency": "USD"
       }
     ],
     "additional_images": [],
@@ -330,7 +332,9 @@
       {
         "id": "6956aefbf192f9",
         "available": true,
-        "image": "https://files.cdn.printful.com/files/ba7/ba743714ed9f97556dfd9e431d7501a4_preview.png"
+        "image": "https://files.cdn.printful.com/files/ba7/ba743714ed9f97556dfd9e431d7501a4_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       }
     ],
     "additional_images": [
@@ -381,7 +385,9 @@
         "optionParts": [
           "Black"
         ],
-        "image": "https://files.cdn.printful.com/files/fbf/fbfb74b9796b6605d2ffac10896b535b_preview.png"
+        "image": "https://files.cdn.printful.com/files/fbf/fbfb74b9796b6605d2ffac10896b535b_preview.png",
+        "price": 19.5,
+        "currency": "USD"
       },
       {
         "id": "6956aecd234da6",
@@ -390,27 +396,31 @@
         "optionParts": [
           "Navy"
         ],
-        "image": "https://files.cdn.printful.com/files/e03/e036d0086941c94aa6f2e933960acc8d_preview.png"
+        "image": "https://files.cdn.printful.com/files/e03/e036d0086941c94aa6f2e933960acc8d_preview.png",
+        "price": 19.5,
+        "currency": "USD"
       },
       {
         "id": "6956aecd234df3",
         "available": true,
         "variantLabel": "Navy, White",
         "optionParts": [
-          "Navy",
-          "White"
+          "Navy, White"
         ],
-        "image": "https://files.cdn.printful.com/files/a95/a95ea40f8293d7c41f2beec899d940ff_preview.png"
+        "image": "https://files.cdn.printful.com/files/a95/a95ea40f8293d7c41f2beec899d940ff_preview.png",
+        "price": 19.5,
+        "currency": "USD"
       },
       {
         "id": "6956aecd234e35",
         "available": true,
-        "variantLabel": "Navy, White",
+        "variantLabel": "White, Navy",
         "optionParts": [
-          "Navy",
-          "White"
+          "White, Navy"
         ],
-        "image": "https://files.cdn.printful.com/files/6c0/6c018570ef42333e2e93e2f3706afb3f_preview.png"
+        "image": "https://files.cdn.printful.com/files/6c0/6c018570ef42333e2e93e2f3706afb3f_preview.png",
+        "price": 19.5,
+        "currency": "USD"
       }
     ],
     "additional_images": [
@@ -446,6 +456,9 @@
       "https://files.cdn.printful.com/files/a95/a95ea40f8293d7c41f2beec899d940ff_thumb.png",
       "https://files.cdn.printful.com/files/6c0/6c018570ef42333e2e93e2f3706afb3f_thumb.png",
       "https://files.cdn.printful.com/files/6c0/6c018570ef42333e2e93e2f3706afb3f_preview.png"
+    ],
+    "variation_types": [
+      "Color"
     ]
   },
   {
@@ -455,7 +468,9 @@
       {
         "id": "6956adc74a0b69",
         "available": true,
-        "image": "https://files.cdn.printful.com/files/7fb/7fbb2423c3a944bf12868a1816c83456_preview.png"
+        "image": "https://files.cdn.printful.com/files/7fb/7fbb2423c3a944bf12868a1816c83456_preview.png",
+        "price": 16.19,
+        "currency": "USD"
       }
     ],
     "additional_images": [
@@ -483,7 +498,9 @@
       {
         "id": "6956abb72e65c1",
         "available": true,
-        "image": "https://files.cdn.printful.com/files/12b/12be4b64683ceb21c2f3b724c519bbe9_preview.png"
+        "image": "https://files.cdn.printful.com/files/12b/12be4b64683ceb21c2f3b724c519bbe9_preview.png",
+        "price": 32.0,
+        "currency": "USD"
       }
     ],
     "additional_images": [
@@ -511,7 +528,9 @@
       {
         "id": "6956ac136feb67",
         "available": true,
-        "image": "https://files.cdn.printful.com/files/d0e/d0e9b97a0d4bac7bddc9ca2002541186_preview.png"
+        "image": "https://files.cdn.printful.com/files/d0e/d0e9b97a0d4bac7bddc9ca2002541186_preview.png",
+        "price": 3.29,
+        "currency": "USD"
       }
     ],
     "additional_images": [
@@ -547,7 +566,9 @@
         "optionParts": [
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png"
+        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
+        "price": 29.5,
+        "currency": "USD"
       },
       {
         "id": "6956ae21f26938",
@@ -556,7 +577,9 @@
         "optionParts": [
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png"
+        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
+        "price": 29.5,
+        "currency": "USD"
       },
       {
         "id": "6956ae21f269d5",
@@ -565,7 +588,9 @@
         "optionParts": [
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png"
+        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
+        "price": 29.5,
+        "currency": "USD"
       },
       {
         "id": "6956ae21f26a53",
@@ -574,7 +599,9 @@
         "optionParts": [
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png"
+        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
+        "price": 29.5,
+        "currency": "USD"
       },
       {
         "id": "6956ae21f26ad3",
@@ -583,7 +610,9 @@
         "optionParts": [
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png"
+        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
+        "price": 29.5,
+        "currency": "USD"
       },
       {
         "id": "6956ae21f26b59",
@@ -592,7 +621,9 @@
         "optionParts": [
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png"
+        "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
+        "price": 32.0,
+        "currency": "USD"
       }
     ],
     "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
@@ -607,6 +638,9 @@
       "https://files.cdn.printful.com/printfile-preview/923892390/b61be9598a2855d4b6174b7949114af7_thumb.png",
       "https://files.cdn.printful.com/printfile-preview/923892390/b61be9598a2855d4b6174b7949114af7_preview.png",
       "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_thumb.png"
+    ],
+    "variation_types": [
+      "Size"
     ]
   },
   {
@@ -618,7 +652,9 @@
       {
         "id": "6956ad674fb9b1",
         "available": true,
-        "image": "https://files.cdn.printful.com/files/06c/06cbafb908be8a75caaa85566a9942c7_preview.png"
+        "image": "https://files.cdn.printful.com/files/06c/06cbafb908be8a75caaa85566a9942c7_preview.png",
+        "price": 19.5,
+        "currency": "USD"
       }
     ],
     "image": "https://files.cdn.printful.com/files/06c/06cbafb908be8a75caaa85566a9942c7_preview.png",
@@ -643,7 +679,9 @@
           "Black",
           "6.5"
         ],
-        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png"
+        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f1fb6",
@@ -653,7 +691,9 @@
           "Black",
           "7"
         ],
-        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png"
+        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
+        "price": 42.5,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f2042",
@@ -663,7 +703,9 @@
           "Black",
           "8"
         ],
-        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png"
+        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
+        "price": 42.5,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f20c2",
@@ -673,7 +715,9 @@
           "Black",
           "8.5"
         ],
-        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png"
+        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f2147",
@@ -683,7 +727,9 @@
           "Black",
           "9.5"
         ],
-        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png"
+        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f21d1",
@@ -693,7 +739,9 @@
           "Black",
           "10"
         ],
-        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png"
+        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f2257",
@@ -703,7 +751,9 @@
           "Black",
           "11"
         ],
-        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png"
+        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f22d7",
@@ -713,7 +763,9 @@
           "Black",
           "11.5"
         ],
-        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png"
+        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f2361",
@@ -723,7 +775,9 @@
           "Black",
           "12.5"
         ],
-        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png"
+        "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f23e3",
@@ -733,7 +787,9 @@
           "White",
           "6.5"
         ],
-        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png"
+        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f2467",
@@ -743,7 +799,9 @@
           "White",
           "7"
         ],
-        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png"
+        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
+        "price": 42.5,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f24e2",
@@ -753,7 +811,9 @@
           "White",
           "8"
         ],
-        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png"
+        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
+        "price": 42.5,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f2574",
@@ -763,7 +823,9 @@
           "White",
           "8.5"
         ],
-        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png"
+        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f2605",
@@ -773,7 +835,9 @@
           "White",
           "9.5"
         ],
-        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png"
+        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f2683",
@@ -783,7 +847,9 @@
           "White",
           "10"
         ],
-        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png"
+        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f2711",
@@ -793,7 +859,9 @@
           "White",
           "11"
         ],
-        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png"
+        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f2799",
@@ -803,7 +871,9 @@
           "White",
           "11.5"
         ],
-        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png"
+        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       },
       {
         "id": "6956acfa0f2825",
@@ -813,7 +883,9 @@
           "White",
           "12.5"
         ],
-        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png"
+        "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
+        "price": 41.0,
+        "currency": "USD"
       }
     ],
     "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
@@ -826,6 +898,10 @@
       "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_thumb.png",
       "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_thumb.png",
       "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png"
+    ],
+    "variation_types": [
+      "Color",
+      "Size"
     ]
   },
   {
@@ -842,7 +918,9 @@
           "Black",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png"
+        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b66c4",
@@ -852,7 +930,9 @@
           "Black",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png"
+        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6717",
@@ -862,7 +942,9 @@
           "Black",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png"
+        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6765",
@@ -872,7 +954,9 @@
           "Black",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png"
+        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b67b8",
@@ -882,7 +966,9 @@
           "Black",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png"
+        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b67f9",
@@ -892,7 +978,9 @@
           "Black",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png"
+        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
+        "price": 62.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6845",
@@ -902,7 +990,9 @@
           "Black",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png"
+        "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
+        "price": 65.49,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6892",
@@ -912,7 +1002,9 @@
           "Classic Navy",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png"
+        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b68e3",
@@ -922,7 +1014,9 @@
           "Classic Navy",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png"
+        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6928",
@@ -932,7 +1026,9 @@
           "Classic Navy",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png"
+        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6973",
@@ -942,7 +1038,9 @@
           "Classic Navy",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png"
+        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b69c6",
@@ -952,7 +1050,9 @@
           "Classic Navy",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png"
+        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6a36",
@@ -962,7 +1062,9 @@
           "Classic Navy",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png"
+        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
+        "price": 62.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6a82",
@@ -972,7 +1074,9 @@
           "Classic Navy",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png"
+        "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
+        "price": 65.49,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6ac1",
@@ -982,7 +1086,9 @@
           "Maroon",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png"
+        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6b14",
@@ -992,7 +1098,9 @@
           "Maroon",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png"
+        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6b65",
@@ -1002,7 +1110,9 @@
           "Maroon",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png"
+        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6ba6",
@@ -1012,7 +1122,9 @@
           "Maroon",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png"
+        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6bf1",
@@ -1022,7 +1134,9 @@
           "Maroon",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png"
+        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6c34",
@@ -1032,7 +1146,9 @@
           "Maroon",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png"
+        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
+        "price": 62.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6c81",
@@ -1042,7 +1158,9 @@
           "Maroon",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png"
+        "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
+        "price": 65.49,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6cd1",
@@ -1052,7 +1170,9 @@
           "Red",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png"
+        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6d12",
@@ -1062,7 +1182,9 @@
           "Red",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png"
+        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6d56",
@@ -1072,7 +1194,9 @@
           "Red",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png"
+        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6da1",
@@ -1082,7 +1206,9 @@
           "Red",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png"
+        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6e39",
@@ -1092,7 +1218,9 @@
           "Red",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png"
+        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6e86",
@@ -1102,7 +1230,9 @@
           "Red",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png"
+        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
+        "price": 62.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6ec2",
@@ -1112,7 +1242,9 @@
           "Red",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png"
+        "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
+        "price": 65.49,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6f16",
@@ -1122,7 +1254,9 @@
           "Forest Camo",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png"
+        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6f51",
@@ -1132,7 +1266,9 @@
           "Forest Camo",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png"
+        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6fa1",
@@ -1142,7 +1278,9 @@
           "Forest Camo",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png"
+        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b6ff1",
@@ -1152,7 +1290,9 @@
           "Forest Camo",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png"
+        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7035",
@@ -1162,7 +1302,9 @@
           "Forest Camo",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png"
+        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7087",
@@ -1172,7 +1314,9 @@
           "Forest Camo",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png"
+        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
+        "price": 62.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b70c4",
@@ -1182,7 +1326,9 @@
           "Forest Camo",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png"
+        "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
+        "price": 65.49,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7109",
@@ -1192,7 +1338,9 @@
           "Graphite",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png"
+        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7154",
@@ -1202,7 +1350,9 @@
           "Graphite",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png"
+        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7191",
@@ -1212,7 +1362,9 @@
           "Graphite",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png"
+        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b71d4",
@@ -1222,7 +1374,9 @@
           "Graphite",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png"
+        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7225",
@@ -1232,7 +1386,9 @@
           "Graphite",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png"
+        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7297",
@@ -1242,7 +1398,9 @@
           "Graphite",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png"
+        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
+        "price": 62.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b72d6",
@@ -1252,7 +1410,9 @@
           "Graphite",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png"
+        "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
+        "price": 65.49,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7326",
@@ -1262,7 +1422,9 @@
           "Black Camo",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png"
+        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7366",
@@ -1272,7 +1434,9 @@
           "Black Camo",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png"
+        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b73b9",
@@ -1282,7 +1446,9 @@
           "Black Camo",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png"
+        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7408",
@@ -1292,7 +1458,9 @@
           "Black Camo",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png"
+        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7444",
@@ -1302,7 +1470,9 @@
           "Black Camo",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png"
+        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7497",
@@ -1312,7 +1482,9 @@
           "Black Camo",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png"
+        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
+        "price": 62.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b74d4",
@@ -1322,7 +1494,9 @@
           "Black Camo",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png"
+        "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
+        "price": 65.49,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7524",
@@ -1332,7 +1506,9 @@
           "Blush",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png"
+        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7562",
@@ -1342,7 +1518,9 @@
           "Blush",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png"
+        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b75b6",
@@ -1352,7 +1530,9 @@
           "Blush",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png"
+        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b75f4",
@@ -1362,7 +1542,9 @@
           "Blush",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png"
+        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7637",
@@ -1372,7 +1554,9 @@
           "Blush",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png"
+        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7687",
@@ -1382,7 +1566,9 @@
           "Blush",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png"
+        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
+        "price": 62.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b76e3",
@@ -1392,7 +1578,9 @@
           "Blush",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png"
+        "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
+        "price": 65.49,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7739",
@@ -1402,7 +1590,9 @@
           "Aqua",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png"
+        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7772",
@@ -1412,7 +1602,9 @@
           "Aqua",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png"
+        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b77c4",
@@ -1422,7 +1614,9 @@
           "Aqua",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png"
+        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7801",
@@ -1432,7 +1626,9 @@
           "Aqua",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png"
+        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7856",
@@ -1442,7 +1638,9 @@
           "Aqua",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png"
+        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7898",
@@ -1452,7 +1650,9 @@
           "Aqua",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png"
+        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
+        "price": 62.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b78e4",
@@ -1462,7 +1662,9 @@
           "Aqua",
           "White Zipper"
         ],
-        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png"
+        "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
+        "price": 65.49,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7924",
@@ -1472,7 +1674,9 @@
           "White Camo",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png"
+        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7973",
@@ -1482,7 +1686,9 @@
           "White Camo",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png"
+        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b79b7",
@@ -1492,7 +1698,9 @@
           "White Camo",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png"
+        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7a07",
@@ -1502,7 +1710,9 @@
           "White Camo",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png"
+        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7a47",
@@ -1512,7 +1722,9 @@
           "White Camo",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png"
+        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
+        "price": 59.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7a88",
@@ -1522,7 +1734,9 @@
           "White Camo",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png"
+        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
+        "price": 62.99,
+        "currency": "USD"
       },
       {
         "id": "6956ac887b7ac5",
@@ -1532,7 +1746,9 @@
           "White Camo",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png"
+        "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
+        "price": 65.49,
+        "currency": "USD"
       }
     ],
     "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
@@ -1559,6 +1775,10 @@
       "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
       "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_thumb.png",
       "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png"
+    ],
+    "variation_types": [
+      "Color",
+      "Size"
     ]
   },
   {
@@ -1575,7 +1795,9 @@
           "Black",
           "6.5"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e2a11",
@@ -1585,7 +1807,9 @@
           "Black",
           "7"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e2aa8",
@@ -1595,7 +1819,9 @@
           "Black",
           "8"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e2b29",
@@ -1605,7 +1831,9 @@
           "Black",
           "8.5"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e2ba5",
@@ -1615,7 +1843,9 @@
           "Black",
           "9.5"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e2c36",
@@ -1625,7 +1855,9 @@
           "Black",
           "10"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e2cb7",
@@ -1635,7 +1867,9 @@
           "Black",
           "11"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e2de6",
@@ -1645,7 +1879,9 @@
           "Black",
           "11.5"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e2e79",
@@ -1655,7 +1891,9 @@
           "Black",
           "12.5"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e2ef3",
@@ -1665,7 +1903,9 @@
           "White",
           "6.5"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e2f74",
@@ -1675,7 +1915,9 @@
           "White",
           "7"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e2ff7",
@@ -1685,7 +1927,9 @@
           "White",
           "8"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e3082",
@@ -1695,7 +1939,9 @@
           "White",
           "8.5"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e3105",
@@ -1705,7 +1951,9 @@
           "White",
           "9.5"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e3176",
@@ -1715,7 +1963,9 @@
           "White",
           "10"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e31f3",
@@ -1725,7 +1975,9 @@
           "White",
           "11"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e3272",
@@ -1735,7 +1987,9 @@
           "White",
           "11.5"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       },
       {
         "id": "6956ab3f2e3301",
@@ -1745,7 +1999,9 @@
           "White",
           "12.5"
         ],
-        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png"
+        "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
+        "price": 36.5,
+        "currency": "USD"
       }
     ],
     "image": "https://files.cdn.printful.com/files/723/723997e3dec0f27bc5f02c786eead254_preview.png",
@@ -1760,6 +2016,10 @@
       "https://files.cdn.printful.com/files/569/56973dd4fb16aa0e8900796e95abcd4b_thumb.png",
       "https://files.cdn.printful.com/files/569/56973dd4fb16aa0e8900796e95abcd4b_preview.png",
       "https://files.cdn.printful.com/files/723/723997e3dec0f27bc5f02c786eead254_thumb.png"
+    ],
+    "variation_types": [
+      "Color",
+      "Size"
     ]
   },
   {
@@ -1776,7 +2036,9 @@
           "Black Heather",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png"
+        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
+        "price": 24.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd2894a8",
@@ -1786,7 +2048,9 @@
           "Black Heather",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png"
+        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289505",
@@ -1796,7 +2060,9 @@
           "Black Heather",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png"
+        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289553",
@@ -1806,7 +2072,9 @@
           "Black Heather",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png"
+        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd2895a6",
@@ -1816,7 +2084,9 @@
           "Black Heather",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png"
+        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd2895f7",
@@ -1826,7 +2096,9 @@
           "Black Heather",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png"
+        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289646",
@@ -1836,7 +2108,9 @@
           "Black Heather",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png"
+        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
+        "price": 28.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289696",
@@ -1846,7 +2120,9 @@
           "Black Heather",
           "4XL"
         ],
-        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png"
+        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
+        "price": 31.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd2896e2",
@@ -1856,7 +2132,9 @@
           "Black Heather",
           "5XL"
         ],
-        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png"
+        "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
+        "price": 33.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289731",
@@ -1866,7 +2144,9 @@
           "Navy",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png"
+        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
+        "price": 24.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289784",
@@ -1876,7 +2156,9 @@
           "Navy",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png"
+        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd2897d3",
@@ -1886,7 +2168,9 @@
           "Navy",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png"
+        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289822",
@@ -1896,7 +2180,9 @@
           "Navy",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png"
+        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289877",
@@ -1906,7 +2192,9 @@
           "Navy",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png"
+        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd2898c9",
@@ -1916,7 +2204,9 @@
           "Navy",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png"
+        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289919",
@@ -1926,7 +2216,9 @@
           "Navy",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png"
+        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
+        "price": 28.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289967",
@@ -1936,7 +2228,9 @@
           "Navy",
           "4XL"
         ],
-        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png"
+        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
+        "price": 31.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd2899b4",
@@ -1946,7 +2240,9 @@
           "Navy",
           "5XL"
         ],
-        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png"
+        "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
+        "price": 33.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289a06",
@@ -1956,7 +2252,9 @@
           "Cardinal",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png"
+        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
+        "price": 24.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289a48",
@@ -1966,7 +2264,9 @@
           "Cardinal",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png"
+        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289a95",
@@ -1976,7 +2276,9 @@
           "Cardinal",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png"
+        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289ae1",
@@ -1986,7 +2288,9 @@
           "Cardinal",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png"
+        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289b37",
@@ -1996,7 +2300,9 @@
           "Cardinal",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png"
+        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289b85",
@@ -2006,7 +2312,9 @@
           "Cardinal",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png"
+        "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289bd6",
@@ -2016,7 +2324,9 @@
           "Heather Midnight Navy",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png"
+        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
+        "price": 24.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289c25",
@@ -2026,7 +2336,9 @@
           "Heather Midnight Navy",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png"
+        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289c72",
@@ -2036,7 +2348,9 @@
           "Heather Midnight Navy",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png"
+        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289cc6",
@@ -2046,7 +2360,9 @@
           "Heather Midnight Navy",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png"
+        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289d14",
@@ -2056,7 +2372,9 @@
           "Heather Midnight Navy",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png"
+        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289d69",
@@ -2066,7 +2384,9 @@
           "Heather Midnight Navy",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png"
+        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289da5",
@@ -2076,7 +2396,9 @@
           "Heather Midnight Navy",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png"
+        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
+        "price": 28.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289df9",
@@ -2086,7 +2408,9 @@
           "Heather Midnight Navy",
           "4XL"
         ],
-        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png"
+        "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
+        "price": 31.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289e42",
@@ -2096,7 +2420,9 @@
           "Heather Deep Teal",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png"
+        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289e91",
@@ -2106,7 +2432,9 @@
           "Heather Deep Teal",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png"
+        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289ee8",
@@ -2116,7 +2444,9 @@
           "Heather Deep Teal",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png"
+        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289f33",
@@ -2126,7 +2456,9 @@
           "Heather Deep Teal",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png"
+        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289f84",
@@ -2136,7 +2468,9 @@
           "Heather Deep Teal",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png"
+        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd289fd1",
@@ -2146,7 +2480,9 @@
           "Heather Deep Teal",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png"
+        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
+        "price": 28.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a027",
@@ -2156,7 +2492,9 @@
           "Heather Deep Teal",
           "4XL"
         ],
-        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png"
+        "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
+        "price": 31.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a075",
@@ -2166,7 +2504,9 @@
           "Heather Grass Green",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png"
+        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
+        "price": 24.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a0b5",
@@ -2176,7 +2516,9 @@
           "Heather Grass Green",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png"
+        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a108",
@@ -2186,7 +2528,9 @@
           "Heather Grass Green",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png"
+        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a156",
@@ -2196,7 +2540,9 @@
           "Heather Grass Green",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png"
+        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a1a3",
@@ -2206,7 +2552,9 @@
           "Heather Grass Green",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png"
+        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a1f4",
@@ -2216,7 +2564,9 @@
           "Heather Grass Green",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png"
+        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a241",
@@ -2226,7 +2576,9 @@
           "Heather Grass Green",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png"
+        "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
+        "price": 28.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a295",
@@ -2236,7 +2588,9 @@
           "Heather True Royal",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png"
+        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a2e3",
@@ -2246,7 +2600,9 @@
           "Heather True Royal",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png"
+        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a323",
@@ -2256,7 +2612,9 @@
           "Heather True Royal",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png"
+        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a389",
@@ -2266,7 +2624,9 @@
           "Heather True Royal",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png"
+        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a3c5",
@@ -2276,7 +2636,9 @@
           "Heather True Royal",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png"
+        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a422",
@@ -2286,7 +2648,9 @@
           "Heather True Royal",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png"
+        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
+        "price": 28.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a474",
@@ -2296,7 +2660,9 @@
           "Heather True Royal",
           "4XL"
         ],
-        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png"
+        "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
+        "price": 31.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a4c7",
@@ -2306,7 +2672,9 @@
           "Aqua",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png"
+        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a513",
@@ -2316,7 +2684,9 @@
           "Aqua",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png"
+        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a557",
@@ -2326,7 +2696,9 @@
           "Aqua",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png"
+        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a5a9",
@@ -2336,7 +2708,9 @@
           "Aqua",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png"
+        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a5f2",
@@ -2346,7 +2720,9 @@
           "Aqua",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png"
+        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a644",
@@ -2356,7 +2732,9 @@
           "Aqua",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png"
+        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
+        "price": 28.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a694",
@@ -2366,7 +2744,9 @@
           "Aqua",
           "4XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png"
+        "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
+        "price": 31.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a6e7",
@@ -2376,7 +2756,9 @@
           "Kelly",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png"
+        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
+        "price": 24.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a733",
@@ -2386,7 +2768,9 @@
           "Kelly",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png"
+        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a772",
@@ -2396,7 +2780,9 @@
           "Kelly",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png"
+        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a7c2",
@@ -2406,7 +2792,9 @@
           "Kelly",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png"
+        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a814",
@@ -2416,7 +2804,9 @@
           "Kelly",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png"
+        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a864",
@@ -2426,7 +2816,9 @@
           "Kelly",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png"
+        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a8b1",
@@ -2436,7 +2828,9 @@
           "Kelly",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png"
+        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
+        "price": 28.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a945",
@@ -2446,7 +2840,9 @@
           "Kelly",
           "4XL"
         ],
-        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png"
+        "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
+        "price": 31.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a985",
@@ -2456,7 +2852,9 @@
           "Steel Blue",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png"
+        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
+        "price": 24.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28a9d2",
@@ -2466,7 +2864,9 @@
           "Steel Blue",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png"
+        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28aa24",
@@ -2476,7 +2876,9 @@
           "Steel Blue",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png"
+        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28aa77",
@@ -2486,7 +2888,9 @@
           "Steel Blue",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png"
+        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28aab4",
@@ -2496,7 +2900,9 @@
           "Steel Blue",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png"
+        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28ab04",
@@ -2506,7 +2912,9 @@
           "Steel Blue",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png"
+        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28ab55",
@@ -2516,7 +2924,9 @@
           "Steel Blue",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png"
+        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
+        "price": 28.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28aba7",
@@ -2526,7 +2936,9 @@
           "Steel Blue",
           "4XL"
         ],
-        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png"
+        "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
+        "price": 31.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28abe7",
@@ -2536,7 +2948,9 @@
           "Orange",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png"
+        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
+        "price": 24.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28ac39",
@@ -2546,7 +2960,9 @@
           "Orange",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png"
+        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28ac79",
@@ -2556,7 +2972,9 @@
           "Orange",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png"
+        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28acc5",
@@ -2566,7 +2984,9 @@
           "Orange",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png"
+        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28ad15",
@@ -2576,7 +2996,9 @@
           "Orange",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png"
+        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28ad67",
@@ -2586,7 +3008,9 @@
           "Orange",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png"
+        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28add4",
@@ -2596,7 +3020,9 @@
           "Orange",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png"
+        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
+        "price": 28.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28ae21",
@@ -2606,7 +3032,9 @@
           "Orange",
           "4XL"
         ],
-        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png"
+        "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
+        "price": 31.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28ae78",
@@ -2616,7 +3044,9 @@
           "White",
           "XS"
         ],
-        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png"
+        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
+        "price": 24.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28aec4",
@@ -2626,7 +3056,9 @@
           "White",
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png"
+        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28af16",
@@ -2636,7 +3068,9 @@
           "White",
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png"
+        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28af58",
@@ -2646,7 +3080,9 @@
           "White",
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png"
+        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28afa7",
@@ -2656,7 +3092,9 @@
           "White",
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png"
+        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28aff2",
@@ -2666,7 +3104,9 @@
           "White",
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png"
+        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
+        "price": 26.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28b041",
@@ -2676,7 +3116,9 @@
           "White",
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png"
+        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
+        "price": 28.5,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28b093",
@@ -2686,7 +3128,9 @@
           "White",
           "4XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png"
+        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
+        "price": 31.0,
+        "currency": "USD"
       },
       {
         "id": "6956aacd28b0e9",
@@ -2696,7 +3140,9 @@
           "White",
           "5XL"
         ],
-        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png"
+        "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
+        "price": 33.5,
+        "currency": "USD"
       }
     ],
     "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
@@ -2729,6 +3175,10 @@
       "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
       "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_thumb.png",
       "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png"
+    ],
+    "variation_types": [
+      "Color",
+      "Size"
     ]
   },
   {
@@ -2744,7 +3194,9 @@
         "optionParts": [
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png"
+        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
+        "price": 15.5,
+        "currency": "USD"
       },
       {
         "id": "6956a92db010a4",
@@ -2753,7 +3205,9 @@
         "optionParts": [
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png"
+        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
+        "price": 15.5,
+        "currency": "USD"
       },
       {
         "id": "6956a92db010f7",
@@ -2762,7 +3216,9 @@
         "optionParts": [
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png"
+        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
+        "price": 15.5,
+        "currency": "USD"
       },
       {
         "id": "6956a92db01143",
@@ -2771,7 +3227,9 @@
         "optionParts": [
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png"
+        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
+        "price": 15.5,
+        "currency": "USD"
       },
       {
         "id": "6956a92db01195",
@@ -2780,7 +3238,9 @@
         "optionParts": [
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png"
+        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
+        "price": 18.0,
+        "currency": "USD"
       },
       {
         "id": "6956a92db011e8",
@@ -2789,7 +3249,9 @@
         "optionParts": [
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png"
+        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
+        "price": 20.5,
+        "currency": "USD"
       },
       {
         "id": "6956a92db01222",
@@ -2798,7 +3260,9 @@
         "optionParts": [
           "4XL"
         ],
-        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png"
+        "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
+        "price": 23.0,
+        "currency": "USD"
       }
     ],
     "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
@@ -2807,6 +3271,9 @@
       "https://files.cdn.printful.com/printfile-preview/923884960/b2bd641322f7a1a307ecb7b6f0c876d3_thumb.png",
       "https://files.cdn.printful.com/printfile-preview/923884960/b2bd641322f7a1a307ecb7b6f0c876d3_preview.png",
       "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_thumb.png"
+    ],
+    "variation_types": [
+      "Size"
     ]
   },
   {
@@ -2822,7 +3289,9 @@
         "optionParts": [
           "S"
         ],
-        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png"
+        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
+        "price": 37.0,
+        "currency": "USD"
       },
       {
         "id": "6956a7c651a7a2",
@@ -2831,7 +3300,9 @@
         "optionParts": [
           "M"
         ],
-        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png"
+        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
+        "price": 37.0,
+        "currency": "USD"
       },
       {
         "id": "6956a7c651a7f8",
@@ -2840,7 +3311,9 @@
         "optionParts": [
           "L"
         ],
-        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png"
+        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
+        "price": 37.0,
+        "currency": "USD"
       },
       {
         "id": "6956a7c651a844",
@@ -2849,7 +3322,9 @@
         "optionParts": [
           "XL"
         ],
-        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png"
+        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
+        "price": 37.0,
+        "currency": "USD"
       },
       {
         "id": "6956a7c651a891",
@@ -2858,7 +3333,9 @@
         "optionParts": [
           "2XL"
         ],
-        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png"
+        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
+        "price": 39.5,
+        "currency": "USD"
       },
       {
         "id": "6956a7c651a8e7",
@@ -2867,7 +3344,9 @@
         "optionParts": [
           "3XL"
         ],
-        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png"
+        "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
+        "price": 42.0,
+        "currency": "USD"
       }
     ],
     "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
@@ -2876,6 +3355,9 @@
       "https://files.cdn.printful.com/printfile-preview/921204496/905f4e83a8ae387de5fb6ce01a9405d8_thumb.png",
       "https://files.cdn.printful.com/printfile-preview/921204496/905f4e83a8ae387de5fb6ce01a9405d8_preview.png",
       "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_thumb.png"
+    ],
+    "variation_types": [
+      "Size"
     ]
   }
 ]

@@ -38,7 +38,6 @@
         var(--bg);
       color: var(--text);
       padding-top: 56px;
-      /* navbar space */
       min-height: 100vh;
     }
 
@@ -74,23 +73,17 @@
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-
       width: 100%;
       padding: 10px 36px 10px 12px;
       border-radius: 12px;
-
       border: 1px solid rgba(0, 255, 153, .30);
       background: rgba(16, 16, 23, .88);
       color: var(--text);
-
       font-weight: 700;
       font-size: 14px;
       letter-spacing: .2px;
-
       outline: none;
       cursor: pointer;
-
-      /* dropdown arrow */
       background-image:
         url("data:image/svg+xml;utf8,\<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,.75)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>\<path d='M6 9l6 6 6-6'/>\</svg>");
       background-repeat: no-repeat;
@@ -98,19 +91,16 @@
       background-size: 14px;
     }
 
-    /* Focus — identical to input/textarea */
     select:focus {
       border-color: rgba(0, 255, 153, .65);
       box-shadow: 0 0 0 3px rgba(0, 255, 153, .10);
     }
 
-    /* Disabled */
     select:disabled {
       opacity: .6;
       cursor: not-allowed;
     }
 
-    /* Dropdown list */
     select option {
       background: rgba(16, 16, 23, .98);
       color: var(--text);
@@ -228,66 +218,6 @@
       font-weight: 800;
       color: var(--accent);
       text-shadow: 0 0 16px rgba(0, 255, 153, .22);
-    }
-
-    .variantRow {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 8px;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, .10);
-      background: rgba(255, 255, 255, .03);
-    }
-
-    .variantRow label {
-      font-size: 12px;
-      color: rgba(255, 255, 255, .70);
-      font-weight: 800;
-      letter-spacing: .2px;
-    }
-
-    .variantRow select {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(0, 255, 153, .30);
-      background: rgba(16, 16, 23, .88);
-      color: var(--text);
-      outline: none;
-      font-weight: 800;
-    }
-
-    .variantMeta {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      color: rgba(255, 255, 255, .72);
-      font-size: 13px;
-      margin-top: 2px;
-    }
-
-    .pill {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, .14);
-      background: rgba(255, 255, 255, .04);
-      font-weight: 800;
-    }
-
-    .pill.ok {
-      border-color: rgba(0, 255, 153, .30);
-      background: rgba(0, 255, 153, .10);
-      color: rgba(0, 255, 153, .95);
-    }
-
-    .pill.bad {
-      border-color: rgba(255, 0, 119, .35);
-      background: rgba(255, 0, 119, .10);
-      color: rgba(255, 170, 200, .95);
     }
 
     .btns {
@@ -555,13 +485,9 @@
     .btn {
       display: inline-flex;
       align-items: center;
-      /* vertical centering */
       justify-content: center;
-      /* horizontal centering */
       line-height: 1;
-      /* prevents baseline drift */
       min-height: 44px;
-      /* consistent height */
     }
 
     /* Collapsible info dropdowns (Details / Notes) */
@@ -627,7 +553,6 @@
       white-space: pre-wrap;
     }
 
-    /* IMPORTANT Notes styling */
     details.infoDrop.important {
       border-color: rgba(255, 0, 119, .30);
       background: rgba(255, 0, 119, .06);
@@ -646,6 +571,33 @@
       border: 1px solid rgba(255, 0, 119, .40);
       background: rgba(255, 0, 119, .14);
       color: rgba(255, 190, 215, .98);
+    }
+
+    /* availability pill */
+    .pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .04);
+      font-weight: 900;
+      letter-spacing: .2px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .pill.ok {
+      border-color: rgba(0, 255, 153, .30);
+      background: rgba(0, 255, 153, .10);
+      color: rgba(0, 255, 153, .95);
+    }
+
+    .pill.bad {
+      border-color: rgba(255, 0, 119, .35);
+      background: rgba(255, 0, 119, .10);
+      color: rgba(255, 170, 200, .95);
     }
   </style>
 </head>
@@ -680,10 +632,8 @@
               <div class="stars" id="avgStars" aria-label="Average rating stars"></div>
             </div>
 
-
-
             <div class="btns">
-              <a class="btn secondary" id="buyBtn" href="#" target="_blank" rel="noopener">Buy Now</a>
+              <a class="btn secondary" id="buyBtn" href="#" rel="noopener">Buy Now</a>
               <button class="btn" id="addBtn">Add to Cart</button>
             </div>
           </div>
@@ -759,7 +709,7 @@
   <script type="module">
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import {
-      collection, query, orderBy, onSnapshot, doc, setDoc, getDoc, deleteDoc,
+      collection, query, orderBy, onSnapshot, doc, setDoc, getDoc, deleteDoc, updateDoc,
       Timestamp
     } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
     import { getFirebase } from "/components/firebase-init.js";
@@ -832,18 +782,17 @@
       document.body.appendChild(t);
       setTimeout(() => t.remove(), 1600);
     }
-    function hasContent(v) {
-      return typeof v === "string" && v.trim().length > 0;
-    }
+
+    function hasContent(v) { return typeof v === "string" && v.trim().length > 0; }
 
     function chevronSvg() {
       return `
-    <svg class="chev" viewBox="0 0 24 24" fill="none"
-      stroke="rgba(255,255,255,.75)" stroke-width="2"
-      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M6 9l6 6 6-6"></path>
-    </svg>
-  `;
+        <svg class="chev" viewBox="0 0 24 24" fill="none"
+          stroke="rgba(255,255,255,.75)" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 9l6 6 6-6"></path>
+        </svg>
+      `;
     }
 
     function removeInfoAccordions() {
@@ -856,7 +805,7 @@
       const detailsText = hasContent(item.details) ? item.details.trim() : "";
       const notesText = hasContent(item.notes) ? item.notes.trim() : "";
 
-      if (!detailsText && !notesText) return; // nothing to show
+      if (!detailsText && !notesText) return;
 
       const wrap = document.createElement("div");
       wrap.id = "infoAccordions";
@@ -866,47 +815,43 @@
         const d = document.createElement("details");
         d.className = "infoDrop";
         d.innerHTML = `
-      <summary>
-        <span class="sumLeft">
-          <span>Details</span>
-          <span class="sumHint">More info</span>
-        </span>
-        ${chevronSvg()}
-      </summary>
-      <div class="content">${escapeHtml(detailsText)}</div>
-    `;
+          <summary>
+            <span class="sumLeft">
+              <span>Details</span>
+              <span class="sumHint">More info</span>
+            </span>
+            ${chevronSvg()}
+          </summary>
+          <div class="content">${escapeHtml(detailsText)}</div>
+        `;
         wrap.appendChild(d);
       }
 
       if (notesText) {
         const n = document.createElement("details");
         n.className = "infoDrop important";
-        n.open = true; // open by default so it's clearly important
+        n.open = true;
         n.innerHTML = `
-      <summary>
-        <span class="sumLeft">
-          <span>Notes</span>
-          <span class="badgeImportant" aria-label="Important notes">IMPORTANT</span>
-        </span>
-        ${chevronSvg()}
-      </summary>
-      <div class="content">${escapeHtml(notesText)}</div>
-    `;
+          <summary>
+            <span class="sumLeft">
+              <span>Notes</span>
+              <span class="badgeImportant" aria-label="Important notes">IMPORTANT</span>
+            </span>
+            ${chevronSvg()}
+          </summary>
+          <div class="content">${escapeHtml(notesText)}</div>
+        `;
         wrap.appendChild(n);
       }
 
-      // Put them directly under description (and above buttons/variants area)
       pDesc.insertAdjacentElement("afterend", wrap);
     }
 
-    // Dispatch event so navbar/cart dropdown can refresh immediately
     function notifyCartChanged() {
       window.dispatchEvent(new CustomEvent("cart-changed"));
     }
 
-    function safeStr(v, max = 600) {
-      return (v == null) ? "" : String(v).slice(0, max);
-    }
+    function safeStr(v, max = 600) { return (v == null) ? "" : String(v).slice(0, max); }
 
     function escapeHtml(s) {
       return String(s ?? "").replace(/[&<>"']/g, (c) => ({
@@ -933,7 +878,6 @@
         return;
       }
 
-      // video
       const url = source.src || "";
       if (url.includes("youtube.com") || url.includes("youtu.be")) {
         const id = extractYouTubeID(url);
@@ -959,7 +903,6 @@
         return;
       }
 
-      // set default hero
       setHeroMediaFromSource(itemName, list[0]);
 
       list.forEach(s => {
@@ -985,7 +928,7 @@
     // ----------------------------
     let productsCache = null;
     async function loadProducts() {
-      const r = await fetch("https://unlim8ted.com/tools/data/products.json", { cache: "no-store" });
+      const r = await fetch("/tools/data/products.json", { cache: "no-store" });
       if (!r.ok) throw new Error("Failed to load products.json");
       return await r.json();
     }
@@ -995,204 +938,176 @@
       return productsCache;
     }
 
-    function normalizeItemForPage(raw) {
-      // Supports your old JSON and your new physical JSON shape.
-      // New physical example:
-      // {
-      //   id, image, varients:[{id,name,images,price,buy link}], additional_images, video, additional_videos, name, description, "product-type":"physical"
-      // }
-      const item = { ...raw };
+function normalizeItemForPage(raw) {
+  const item = { ...raw };
 
-      // unify fields
-      item.id = safeStr(item.id, 200);
-      item.name = item.name ?? item.title ?? "";
-      item.description = item.description ?? item.desc ?? "";
-      item.details = item.details ?? "";
-      item.notes = item.notes ?? "";
-      item.image = item.image ?? item.main_image ?? "";
-      item.additional_images = item.additional_images ?? [];
-      item.video = item.video ?? null;
-      item.additional_videos = item.additional_videos ?? [];
+  item.id = safeStr(item.id, 200);
+  item.name = item.name ?? item.title ?? "";
+  item.description = item.description ?? item.desc ?? "";
+  item.details = item.details ?? "";
+  item.notes = item.notes ?? "";
 
-      // product-type can be "physical" or "digital"
-      item.productType = item["product-type"] || item.productType || item.type || "";
-      item.productType = String(item.productType || "").toLowerCase();
+  item.productType = item["product-type"] || item.productType || item.type || "";
+  item.productType = String(item.productType || "").toLowerCase();
 
-      // normalize variants key
-      item.varients = item.varients ?? item.variants ?? [];
-      if (!Array.isArray(item.varients)) item.varients = [];
+  // images list (new schema uses item.images)
+  item.image = item.image ?? item.main_image ?? "";
+  item.images = Array.isArray(item.images) ? item.images : (Array.isArray(item.additional_images) ? item.additional_images : []);
+  item.video = item.video ?? null;
+  item.additional_videos = item.additional_videos ?? [];
 
-      // numeric price fallback (digital)
-      if (typeof item.price !== "number") {
-        const p = Number(item.price);
-        item.price = Number.isFinite(p) ? p : 0;
-      }
+  // variation types
+  item.variation_types = Array.isArray(item.variation_types) ? item.variation_types : [];
 
-      // normalize variant objects
-      item.varients = item.varients.map(v => {
-        const vv = { ...v };
-        vv.id = safeStr(vv.id || vv.variant_id || "", 200);
-        vv.name = vv.name ?? vv.title ?? "";
-        vv.images = Array.isArray(vv.images) ? vv.images : (vv.image ? [vv.image] : []);
-        const pn = Number(vv.price);
-        vv.price = Number.isFinite(pn) ? pn : 0;
-        vv.buyLink = vv["buy link"] || vv.buy_link || vv.buyLink || vv.url || "";
-        return vv;
-      });
+  // variants (spelled varients in your JSON)
+  item.varients = item.varients ?? item.variants ?? [];
+  if (!Array.isArray(item.varients)) item.varients = [];
 
-      return item;
+  // digital price fallback
+  if (typeof item.price !== "number") {
+    const p = Number(item.price);
+    item.price = Number.isFinite(p) ? p : 0;
+  }
+
+  // normalize each variant to one consistent shape:
+  // { id, label, parts[], price, image, available }
+  item.varients = item.varients.map(v => {
+    const vv = { ...v };
+    vv.id = safeStr(vv.id || "", 200);
+
+    vv.label = (vv.variantLabel ?? vv.name ?? vv.title ?? "").trim();
+    vv.optionParts = Array.isArray(vv.optionParts) ? vv.optionParts.map(x => String(x).trim()) : [];
+
+    // if optionParts missing, derive from label "Black, XS"
+    if (!vv.optionParts.length && vv.label) {
+      vv.optionParts = vv.label.split(",").map(x => x.trim()).filter(Boolean);
     }
+
+    const pn = Number(vv.price);
+    vv.price = Number.isFinite(pn) ? pn : 0;
+
+    vv.currency = vv.currency || "USD";
+    vv.image = vv.image || "";
+
+    // availability boolean (default true if missing)
+    vv.available = (typeof vv.available === "boolean") ? vv.available : true;
+
+    return vv;
+  });
+
+  return item;
+}
 
     // ----------------------------
-    // Variant parsing: "Black, S" => [ "Black", "S" ]
-    // also supports "Black / S" or "Black - S"
+    // Variant parsing
     // ----------------------------
-    function splitVariantName(name) {
-      const s = String(name || "").trim();
+function titleCaseWord(s) {
+  const w = String(s || "").trim();
+  if (!w) return "";
+  return w.charAt(0).toUpperCase() + w.slice(1);
+}
 
-      // prefer comma split if present
-      if (s.includes(",")) return s.split(",").map(x => x.trim()).filter(Boolean);
+function buildVariantGroupsFromParts(varients, variationTypes = []) {
+  const partsList = (varients || []).map(v => Array.isArray(v.optionParts) ? v.optionParts : []);
+  const maxLen = Math.max(0, ...partsList.map(a => a.length));
 
-      // then slash
-      if (s.includes(" / ")) return s.split(" / ").map(x => x.trim()).filter(Boolean);
-      if (s.includes("/")) return s.split("/").map(x => x.trim()).filter(Boolean);
+  const groups = [];
+  for (let i = 0; i < maxLen; i++) {
+    const vals = new Set();
+    for (const parts of partsList) if (parts[i]) vals.add(parts[i]);
 
-      // then dash (guard so we don't split "XXL - Tall" too aggressively)
-      if (s.includes(" - ")) return s.split(" - ").map(x => x.trim()).filter(Boolean);
+    const vt = Array.isArray(variationTypes) ? variationTypes[i] : null;
+    const label = vt ? titleCaseWord(vt) : `Option ${i + 1}`;
 
-      return [s].filter(Boolean);
-    }
+    groups.push({ index: i, label, values: Array.from(vals) });
+  }
+  return groups;
+}
 
-    function buildVariantGroups(varients) {
-      // Returns groups by position:
-      // groups = [{ label:"Option 1", values:[...]} , {label:"Option 2", values:[...]}]
-      const partsList = varients.map(v => splitVariantName(v.name));
-      const maxLen = Math.max(0, ...partsList.map(a => a.length));
-
-      const groups = [];
-      for (let i = 0; i < maxLen; i++) {
-        const vals = new Set();
-        for (const parts of partsList) {
-          if (parts[i]) vals.add(parts[i]);
-        }
-        groups.push({
-          index: i,
-          label: i === 0 ? "Color" : (i === 1 ? "Size" : `Option ${i + 1}`),
-          values: Array.from(vals)
-        });
-      }
-      return groups;
-    }
-
-    function findVariantBySelection(varients, selectionParts) {
-      // match by splitVariantName(v.name) === selectionParts (same length, same order)
-      const target = selectionParts.map(x => String(x || "").trim());
-      return varients.find(v => {
-        const parts = splitVariantName(v.name);
-        if (parts.length !== target.length) return false;
-        for (let i = 0; i < parts.length; i++) {
-          if (parts[i] !== target[i]) return false;
-        }
-        return true;
-      }) || null;
-    }
+function findVariantByParts(varients, selectionParts) {
+  const target = (selectionParts || []).map(x => String(x || "").trim());
+  return (varients || []).find(v => {
+    const parts = Array.isArray(v.optionParts) ? v.optionParts : [];
+    if (parts.length !== target.length) return false;
+    for (let i = 0; i < parts.length; i++) if (parts[i] !== target[i]) return false;
+    return true;
+  }) || null;
+}
 
     // ----------------------------
-    // CART: merge by product + chosen variant parts
+    // CART: add/merge by product + variantId
     // ----------------------------
-    function cartDocId(productId, parts) {
-      const norm = (s) =>
-        safeStr(String(s || "").trim().toLowerCase(), 80)
-          .replace(/\s+/g, "-")
-          .replace(/[^a-z0-9\-]/g, "");
-      const base = norm(productId);
-      const tail = (parts || []).map(norm).filter(Boolean).join("__");
-      return tail ? `${base}__${tail}` : base;
-    }
-async function addToCartMerged(payload) {
-  const user = auth.currentUser;
+    async function addToCartMerged(payload) {
+      const user = auth.currentUser;
 
-  const clampInt = (n, min, max) =>
-    Math.max(min, Math.min(max, Math.trunc(Number(n) || 0)));
+      const clampInt = (n, min, max) =>
+        Math.max(min, Math.min(max, Math.trunc(Number(n) || 0)));
 
-  const safeStr = (s, maxLen) => {
-    const v = String(s ?? "").trim();
-    if (!v) return "";
-    return v.length > maxLen ? v.slice(0, maxLen) : v;
-  };
-
-  // --- minimal required fields ---
-  const productId = safeStr(payload.productId, 200);
-  const variantId = safeStr(payload.variantId, 200); // optional
-  const addQty = clampInt(payload.qty ?? 1, 1, 99);
-
-  if (!productId) throw new Error("addToCart: missing productId");
-
-  // Deterministic doc id: stacks same product+variant
-  const itemId = variantId ? `${productId}__${variantId}` : productId;
-
-  // ----------------------------
-  // SIGNED-IN USER (Firestore)
-  // ----------------------------
-  if (user) {
-    const ref = doc(db, "users", user.uid, "cartItems", itemId);
-
-    const snap = await getDoc(ref);
-    const now = Timestamp.now();
-
-    if (!snap.exists()) {
-      // CREATE
-      const docData = {
-        productId,
-        ...(variantId ? { variantId } : {}),
-        qty: addQty,
-        createdAt: now,
-        updatedAt: now,
+      const safeStr = (s, maxLen) => {
+        const v = String(s ?? "").trim();
+        if (!v) return "";
+        return v.length > maxLen ? v.slice(0, maxLen) : v;
       };
 
-      await setDoc(ref, docData); // no merge needed
-    } else {
-      // UPDATE (do NOT touch createdAt)
-      const prevQty = clampInt(snap.data()?.qty ?? 0, 0, 99);
-      const nextQty = clampInt(prevQty + addQty, 1, 99);
+      const productId = safeStr(payload.productId, 200);
+      const variantId = safeStr(payload.variantId, 200);
+      const addQty = clampInt(payload.qty ?? 1, 1, 99);
 
-      await updateDoc(ref, {
-        ...(variantId ? { variantId } : {}), // harmless to re-send, still allowed
-        qty: nextQty,
-        updatedAt: now,
-      });
+      if (!productId) throw new Error("addToCart: missing productId");
+
+      const itemId = variantId ? `${productId}__${variantId}` : productId;
+
+      if (user) {
+        const ref = doc(db, "users", user.uid, "cartItems", itemId);
+        const snap = await getDoc(ref);
+        const now = Timestamp.now();
+
+        if (!snap.exists()) {
+          const docData = {
+            productId,
+            ...(variantId ? { variantId } : {}),
+            qty: addQty,
+            createdAt: now,
+            updatedAt: now,
+          };
+          await setDoc(ref, docData);
+        } else {
+          const prevQty = clampInt(snap.data()?.qty ?? 0, 0, 99);
+          const nextQty = clampInt(prevQty + addQty, 1, 99);
+
+          await updateDoc(ref, {
+            ...(variantId ? { variantId } : {}),
+            qty: nextQty,
+            updatedAt: now,
+          });
+        }
+
+        notifyCartChanged();
+        return;
+      }
+
+      const key = "unlim8ted-cart";
+      const arr = JSON.parse(localStorage.getItem(key) || "[]");
+      const idx = arr.findIndex(x => x && (x.id === itemId || x._id === itemId));
+
+      if (idx >= 0) {
+        const prev = clampInt(arr[idx].qty ?? 0, 0, 99);
+        arr[idx].qty = clampInt(prev + addQty, 1, 99);
+        arr[idx].updatedAt = Date.now();
+      } else {
+        arr.push({
+          id: itemId,
+          productId,
+          variantId: variantId || null,
+          qty: addQty,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        });
+      }
+
+      localStorage.setItem(key, JSON.stringify(arr));
+      notifyCartChanged();
     }
-
-    notifyCartChanged();
-    return;
-  }
-
-  // ----------------------------
-  // SIGNED-OUT (localStorage)
-  // ----------------------------
-  const key = "unlim8ted-cart";
-  const arr = JSON.parse(localStorage.getItem(key) || "[]");
-
-  const idx = arr.findIndex(x => x && (x.id === itemId || x._id === itemId));
-
-  if (idx >= 0) {
-    const prev = clampInt(arr[idx].qty ?? 0, 0, 99);
-    arr[idx].qty = clampInt(prev + addQty, 1, 99);
-    arr[idx].updatedAt = Date.now();
-  } else {
-    arr.push({
-      id: itemId,
-      productId,
-      variantId: variantId || null,
-      qty: addQty,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
-  }
-
-  localStorage.setItem(key, JSON.stringify(arr));
-  notifyCartChanged();
-}
 
     // ----------------------------
     // Reviews helpers
@@ -1299,26 +1214,40 @@ async function addToCartMerged(payload) {
     }
 
     // ----------------------------
-    // Variant UI (no duplicates)
+    // Variant UI + availability gating
     // ----------------------------
     function removeVariantUI() {
       document.querySelectorAll("#variantWrap, [data-variant-ui='1']").forEach(el => el.remove());
     }
 
-    function renderVariantUI(item) {
-      removeVariantUI();
+    function setBuyEnabled(enabled, hrefWhenEnabled) {
+      if (enabled) {
+        buyBtn.setAttribute("aria-disabled", "false");
+        buyBtn.style.pointerEvents = "";
+        buyBtn.style.opacity = "";
+        buyBtn.href = hrefWhenEnabled || "#";
+      } else {
+        buyBtn.setAttribute("aria-disabled", "true");
+        buyBtn.style.pointerEvents = "none";
+        buyBtn.style.opacity = ".55";
+        buyBtn.href = "#";
+      }
+    }
 
-      const variants = Array.isArray(item.varients) ? item.varients : [];
-      const groups = buildVariantGroups(variants);
+function renderVariantUI(item) {
+  removeVariantUI();
 
-      const wrap = document.createElement("div");
-      wrap.id = "variantWrap";
-      wrap.setAttribute("data-variant-ui", "1");
-      wrap.style.marginTop = "12px";
-      wrap.style.display = "grid";
-      wrap.style.gap = "10px";
+  const variants = Array.isArray(item.varients) ? item.varients : [];
+  const groups = buildVariantGroupsFromParts(variants, item.variation_types || []);
 
-      wrap.innerHTML = `
+  const wrap = document.createElement("div");
+  wrap.id = "variantWrap";
+  wrap.setAttribute("data-variant-ui", "1");
+  wrap.style.marginTop = "12px";
+  wrap.style.display = "grid";
+  wrap.style.gap = "10px";
+
+  wrap.innerHTML = `
     <div style="display:grid;gap:10px;grid-template-columns: 1fr 1fr;">
       ${groups.map(g => `
         <div>
@@ -1329,8 +1258,9 @@ async function addToCartMerged(payload) {
     </div>
 
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-      <div style="color:rgba(255,255,255,.62);font-size:13px;">
-        Selected: <span id="selectedVariantLabel" style="color:rgba(255,255,255,.92);font-weight:800;"></span>
+      <div style="color:rgba(255,255,255,.62);font-size:13px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span>Selected: <span id="selectedVariantLabel" style="color:rgba(255,255,255,.92);font-weight:800;"></span></span>
+        <span id="variantAvailPill" class="pill" style="display:none;"></span>
       </div>
       <div style="color:rgba(0,255,153,.95);font-weight:900;font-size:16px;text-shadow:0 0 16px rgba(0,255,153,.22);">
         <span id="variantPrice">$—</span>
@@ -1338,134 +1268,143 @@ async function addToCartMerged(payload) {
     </div>
   `;
 
-      pDesc.insertAdjacentElement("afterend", wrap);
+  pDesc.insertAdjacentElement("afterend", wrap);
 
-      // Robust price parsing (supports number, "19.99", {"amount":1999,"currency":"USD"}, {"amount_money":{"amount":1999}})
-      function parsePriceAny(v) {
-        if (v == null) return NaN;
-        if (typeof v === "number") return v;
-        if (typeof v === "string") {
-          const n = Number(v.replace(/[^0-9.\-]/g, ""));
-          return Number.isFinite(n) ? n : NaN;
-        }
-        // common Square-ish shapes (just in case you stored it)
-        if (typeof v === "object") {
-          if (typeof v.amount === "number") return v.amount / 100; // cents
-          if (v.amount_money && typeof v.amount_money.amount === "number") return v.amount_money.amount / 100;
-          if (typeof v.price === "number") return v.price;
-        }
-        return NaN;
-      }
+  const buyHref = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
+  const selects = Array.from(wrap.querySelectorAll("select[data-variant-group]"));
 
-      // fill selects + force default selection
-      const selects = Array.from(wrap.querySelectorAll("select[data-variant-group]"));
-      selects.forEach(sel => {
-        const idx = Number(sel.getAttribute("data-variant-group"));
-        const g = groups.find(x => x.index === idx);
-        sel.innerHTML = "";
+  // Fill dropdowns
+  selects.forEach(sel => {
+    const idx = Number(sel.getAttribute("data-variant-group"));
+    const g = groups.find(x => x.index === idx);
+    sel.innerHTML = "";
+    (g?.values || []).forEach(val => {
+      const opt = document.createElement("option");
+      opt.value = val;
+      opt.textContent = val;
+      sel.appendChild(opt);
+    });
+    if ((g?.values || []).length) sel.value = g.values[0];
+  });
 
-        const values = (g?.values || []);
-        values.forEach((val, i) => {
-          const opt = document.createElement("option");
-          opt.value = val;
-          opt.textContent = val;
-          sel.appendChild(opt);
+  const selectedVariantLabelEl = wrap.querySelector("#selectedVariantLabel");
+  const variantPriceEl = wrap.querySelector("#variantPrice");
+  const variantAvailPill = wrap.querySelector("#variantAvailPill");
+
+  const getSelectionParts = () => selects.map(s => s.value).filter(Boolean);
+
+  function matchesExcept(parts, selected, skipIndex) {
+    for (let i = 0; i < selected.length; i++) {
+      if (i === skipIndex) continue;
+      if (selected[i] && parts[i] !== selected[i]) return false;
+    }
+    return true;
+  }
+
+  function recomputeOptionAvailability() {
+    const selected = getSelectionParts();
+
+    selects.forEach((sel) => {
+      const groupIndex = Number(sel.getAttribute("data-variant-group"));
+      Array.from(sel.options).forEach((opt) => {
+        const val = opt.value;
+
+        const possibleInStock = variants.some(v => {
+          const parts = Array.isArray(v.optionParts) ? v.optionParts : [];
+          if (parts[groupIndex] !== val) return false;
+          if (!matchesExcept(parts, selected, groupIndex)) return false;
+          return v.available !== false; // boolean only
         });
 
-        // IMPORTANT: ensure something is selected
-        if (values.length) sel.value = values[0];
+        opt.disabled = !possibleInStock;
+        opt.textContent = possibleInStock ? val : `${val} — Out of stock`;
       });
-
-      const selectedVariantLabelEl = wrap.querySelector("#selectedVariantLabel");
-      const variantPriceEl = wrap.querySelector("#variantPrice");
-
-      const getSelectionParts = () => selects.map(s => s.value).filter(Boolean);
-
-      function syncVariant() {
-        const parts = getSelectionParts();
-        const v = findVariantBySelection(variants, parts);
-
-        // If exact match failed, fall back to "starts with" match for safety
-        const vv = v || variants.find(x => {
-          const p = splitVariantName(x.name);
-          if (p.length < parts.length) return false;
-          for (let i = 0; i < parts.length; i++) if (p[i] !== parts[i]) return false;
-          return true;
-        }) || null;
-
-        if (vv) {
-          const priceNum = parsePriceAny(vv.price);
-          selectedVariantLabelEl.textContent = vv.name || parts.join(", ");
-          variantPriceEl.textContent = Number.isFinite(priceNum) ? toMoney(priceNum) : "$—";
-
-          // ALSO keep the main price row updated (this is what you called "total price")
-          pPrice.textContent = Number.isFinite(priceNum) ? toMoney(priceNum) : "$—";
-
-          const vImgs = Array.isArray(vv.images) ? vv.images : [];
-          const sources = [];
-          vImgs.forEach(src => sources.push({ type: "img", src }));
-          if (!sources.length) {
-            if (item.image) sources.push({ type: "img", src: item.image });
-            (item.additional_images || []).forEach(src => sources.push({ type: "img", src }));
-            if (item.video) sources.push({ type: "video", src: item.video });
-            (item.additional_videos || []).forEach(src => sources.push({ type: "video", src }));
-          }
-          buildThumbsFromSources(item.name, sources);
-
-          // if (vv.buyLink) {
-          //   buyBtn.href = vv.buyLink;
-          //   buyBtn.target = "_blank";
-          //   buyBtn.rel = "noopener";
-          // } else {
-          //   buyBtn.href = "#";
-          //   buyBtn.removeAttribute("target");
-          //   buyBtn.removeAttribute("rel");
-          // }
-
-          addBtn.disabled = false;
-addBtn.onclick = async () => {
-  try {
-    await addToCartMerged({
-      productId: item.id,
-      ...(vv?.id ? { variantId: vv.id } : {}),
-      qty: 1
     });
-    toast("Added to cart");
-  } catch (e) {
-    console.log("UID", auth.currentUser?.uid);
-    console.log("ADD TO CART (variant) CONTEXT", {
-      productId: item?.id,
-      productName: item?.name,
-      variantId: vv?.id,
-      variantLabel: vv?.name,
-      qty: 1
-    });
-    console.error("addToCartMerged (variant) error:", e?.code, e?.message, e);
-    toast("Could not add to cart");
   }
-};
 
-        } else {
-          selectedVariantLabelEl.textContent = parts.join(", ");
-          variantPriceEl.textContent = "$—";
-          pPrice.textContent = "$—";
-          addBtn.disabled = true;
-          buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
-          buyBtn.removeAttribute("target");
-          buyBtn.removeAttribute("rel");
-        }
-      }
+  function setAvailabilityUI(isAvail, hasAvailField) {
+    if (!hasAvailField) {
+      variantAvailPill.style.display = "none";
+      return;
+    }
+    variantAvailPill.style.display = "inline-flex";
+    variantAvailPill.className = `pill ${isAvail ? "ok" : "bad"}`;
+    variantAvailPill.textContent = isAvail ? "In stock" : "Out of stock";
+  }
 
-      selects.forEach(sel => sel.addEventListener("change", syncVariant));
+  function syncVariant() {
+    const parts = getSelectionParts();
+    recomputeOptionAvailability();
 
-      // initial
-      syncVariant();
+    const vv = findVariantByParts(variants, parts);
 
-      return { wrap, selects, syncVariant };
+    if (!vv) {
+      selectedVariantLabelEl.textContent = parts.join(", ");
+      variantPriceEl.textContent = "$—";
+      pPrice.textContent = "$—";
+
+      setAvailabilityUI(false, true);
+      addBtn.disabled = true;
+      setBuyEnabled(false, buyHref);
+      addBtn.onclick = null;
+      return;
     }
 
+    const label = vv.label || vv.variantLabel || parts.join(", ");
+    selectedVariantLabelEl.textContent = label;
+
+    const priceNum = Number(vv.price);
+    variantPriceEl.textContent = Number.isFinite(priceNum) ? toMoney(priceNum) : "$—";
+    pPrice.textContent = Number.isFinite(priceNum) ? toMoney(priceNum) : "$—";
+
+    // media: prefer variant image, else product images
+    const sources = [];
+    if (vv.image) sources.push({ type: "img", src: vv.image });
+    if (!sources.length) {
+      if (item.image) sources.push({ type: "img", src: item.image });
+      (item.images || []).forEach(src => sources.push({ type: "img", src }));
+      if (item.video) sources.push({ type: "video", src: item.video });
+      (item.additional_videos || []).forEach(src => sources.push({ type: "video", src }));
+    }
+    buildThumbsFromSources(item.name, sources);
+
+    const hasAvailField = (typeof vv.available === "boolean");
+    const isAvail = (vv.available !== false);
+
+    setAvailabilityUI(isAvail, hasAvailField);
+
+    addBtn.disabled = !isAvail;
+    setBuyEnabled(isAvail, buyHref);
+
+    addBtn.onclick = async () => {
+      if (!isAvail) {
+        toast("This variant is out of stock");
+        return;
+      }
+      try {
+        await addToCartMerged({
+          productId: item.id,
+          ...(vv?.id ? { variantId: vv.id } : {}),
+          qty: 1
+        });
+        toast("Added to cart");
+      } catch (e) {
+        console.error("addToCartMerged (variant) error:", e?.code, e?.message, e);
+        toast("Could not add to cart");
+      }
+    };
+  }
+
+  selects.forEach(sel => sel.addEventListener("change", syncVariant));
+
+  // initial
+  syncVariant();
+
+  return { wrap, selects, syncVariant };
+}
+
     // ----------------------------
-    // Page render (react to hash)
+    // Page render
     // ----------------------------
     function getProductIdFromUrl() {
       return (window.location.hash || "").replace("#", "").trim();
@@ -1480,9 +1419,8 @@ addBtn.onclick = async () => {
       pDesc.textContent = "";
       pPrice.textContent = "$—";
 
-      buyBtn.href = "#";
+      setBuyEnabled(true, "#"); // default, gets set later
       buyBtn.removeAttribute("target");
-      buyBtn.removeAttribute("rel");
 
       hero.innerHTML = "";
       thumbs.innerHTML = "";
@@ -1490,23 +1428,13 @@ addBtn.onclick = async () => {
       addBtn.style.display = "inline-flex";
       addBtn.disabled = true;
       addBtn.onclick = null;
-
-      // keep reviews UI as-is (it will be re-bound per product)
     }
 
     let lastRenderedPid = null;
-    let commentsUnsub = null; // store unsubscribe if you later switch to manual listeners; onSnapshot returns function (not used here)
     let currentUid = null;
     let myReviewCache = null;
-    // IMPORTANT: avoid stacking auth listeners on every hash change
     let unsubAuth = null;
-    // OPTIONAL: avoid stacking comments listeners too
     let unsubComments = null;
-    function teardownComments() {
-      // We used onSnapshot without keeping the unsubscribe in the original code.
-      // We'll keep it simple: reload page lifecycle handles it. If you want strict cleanup,
-      // we can store and call unsub. (Optional improvement)
-    }
 
     async function renderCurrentProduct(force = false) {
       const pid = getProductIdFromUrl();
@@ -1515,20 +1443,14 @@ addBtn.onclick = async () => {
 
       resetUI();
 
-      // clean up previous listeners
-      if (unsubAuth) {
-        unsubAuth();
-        unsubAuth = null;
-      }
-      if (unsubComments) {
-        unsubComments();
-        unsubComments = null;
-      }
+      if (unsubAuth) { unsubAuth(); unsubAuth = null; }
+      if (unsubComments) { unsubComments(); unsubComments = null; }
 
       if (!pid) {
         pageTitle.textContent = "Product Not Found";
         pName.textContent = "No product selected";
         pDesc.textContent = "Open a product using a URL like /product#some-id";
+        setBuyEnabled(false);
         return;
       }
 
@@ -1540,6 +1462,7 @@ addBtn.onclick = async () => {
         pageTitle.textContent = "Product Not Found";
         pName.textContent = "Product not found";
         pDesc.textContent = "That product ID doesn't exist.";
+        setBuyEnabled(false);
         return;
       }
 
@@ -1552,28 +1475,23 @@ addBtn.onclick = async () => {
         item.productType === "physical" ||
         (Array.isArray(item.varients) && item.varients.length > 0);
 
+      const buyHref = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
+
       if (isPhysical) {
         pPrice.textContent = "$—";
-        buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
-        buyBtn.removeAttribute("target");
-        buyBtn.removeAttribute("rel");
-
+        setBuyEnabled(false, buyHref); // enabled only when a selected variant is available
         addBtn.style.display = "inline-flex";
         addBtn.disabled = true;
-
         renderVariantUI(item);
       } else {
         pPrice.textContent = toMoney(Number(item.price || 0));
-        buyBtn.href = `/cart?source=buy&product=${encodeURIComponent(item.id)}`;
-        buyBtn.removeAttribute("target");
-        buyBtn.removeAttribute("rel");
+        setBuyEnabled(true, buyHref);
 
         const sources = [];
         if (item.image) sources.push({ type: "img", src: item.image });
         (item.additional_images || []).forEach((src) => sources.push({ type: "img", src }));
         if (item.video) sources.push({ type: "video", src: item.video });
         (item.additional_videos || []).forEach((src) => sources.push({ type: "video", src }));
-
         buildThumbsFromSources(item.name, sources);
 
         addBtn.disabled = false;
@@ -1581,15 +1499,8 @@ addBtn.onclick = async () => {
           try {
             await addToCartMerged({
               productId: item.id,
-              name: item.name,
-              image: item.image || null,
               qty: 1,
-              price: Number(item.price || 0),
-              productType: "digital",
               variantId: "",
-              variantLabel: "",
-              optionParts: [],
-              buyLink: "",
             });
             toast("Added to cart");
           } catch (e) {
@@ -1606,7 +1517,6 @@ addBtn.onclick = async () => {
       const commentsRef = collection(db, "products", String(item.id), "comments");
       const commentsQ = query(commentsRef, orderBy("createdAt", "desc"));
 
-      // Auth controls: show/hide review form + prefill if user's review exists
       unsubAuth = onAuthStateChanged(auth, async (user) => {
         currentUid = user ? user.uid : null;
 
@@ -1615,7 +1525,6 @@ addBtn.onclick = async () => {
           commentForm.style.display = "grid";
           displayNameInput.value = user.displayName || "";
 
-          // Always check the doc; don't rely on stale cache
           try {
             const myRef = doc(db, "products", String(item.id), "comments", user.uid);
             const mySnap = await getDoc(myRef);
@@ -1636,8 +1545,6 @@ addBtn.onclick = async () => {
               showFormMessage("");
             }
           } catch (e) {
-            console.log("UID", auth.currentUser?.uid);
-            console.log("LOAD MY REVIEW CONTEXT", { productId: item?.id });
             console.error("load my review error:", e?.code, e?.message, e);
             myReviewCache = null;
             deleteMyReviewBtn.style.display = "none";
@@ -1653,12 +1560,10 @@ addBtn.onclick = async () => {
         }
       });
 
-      // Live ratings + list
       unsubComments = onSnapshot(
         commentsQ,
         (snap) => {
           const docs = snap.docs;
-
           const total = docs.length;
           let sum = 0;
           const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -1672,7 +1577,6 @@ addBtn.onclick = async () => {
           }
 
           const avg = total ? sum / total : 0;
-
           avgNum.textContent = total ? avg.toFixed(1) : "—";
           avgLabel.textContent = total ? "Average rating" : "No ratings yet";
           countLabel.textContent = `${total} review${total === 1 ? "" : "s"}`;
@@ -1688,7 +1592,6 @@ addBtn.onclick = async () => {
         }
       );
 
-      // Submit: create OR edit (doc id = uid)
       commentForm.onsubmit = async (e) => {
         e.preventDefault();
 
@@ -1700,22 +1603,10 @@ addBtn.onclick = async () => {
         const rawName = displayNameInput.value.trim();
         const finalName = rawName ? rawName : "Anonymous";
 
-        if (!text) {
-          showFormMessage("Please write a comment.", true);
-          return;
-        }
-        if (text.length > 2000) {
-          showFormMessage("Comment is too long (max 2000 chars).", true);
-          return;
-        }
-        if (rating < 1 || rating > 5) {
-          showFormMessage("Please select a rating 1–5.", true);
-          return;
-        }
-        if (finalName.length > 80) {
-          showFormMessage("Name too long (max 80 chars).", true);
-          return;
-        }
+        if (!text) { showFormMessage("Please write a comment.", true); return; }
+        if (text.length > 2000) { showFormMessage("Comment is too long (max 2000 chars).", true); return; }
+        if (rating < 1 || rating > 5) { showFormMessage("Please select a rating 1–5.", true); return; }
+        if (finalName.length > 80) { showFormMessage("Name too long (max 80 chars).", true); return; }
 
         showFormMessage("Saving…");
         setFormBusy(true);
@@ -1725,17 +1616,8 @@ addBtn.onclick = async () => {
           const existing = await getDoc(myRef);
 
           if (existing.exists()) {
-            await setDoc(
-              myRef,
-              {
-                rating,
-                text,
-                displayName: finalName,
-              },
-              { merge: true }
-            );
+            await setDoc(myRef, { rating, text, displayName: finalName }, { merge: true });
           } else {
-            // CREATE: must include userId + createdAt (required by your rules)
             await setDoc(myRef, {
               userId: user.uid,
               rating,
@@ -1752,12 +1634,9 @@ addBtn.onclick = async () => {
           showFormMessage("Saved");
           setTimeout(() => showFormMessage(myReviewCache ? "Editing your review." : ""), 900);
         } catch (err) {
-          console.log("UID", auth.currentUser?.uid);
-          console.log("SAVE REVIEW CONTEXT", { productId: item?.id });
           console.error("save review error:", err?.code, err?.message, err);
           showFormMessage("Failed to save review.", true);
         } finally {
-
           setFormBusy(false);
         }
       };
@@ -1765,7 +1644,6 @@ addBtn.onclick = async () => {
       deleteMyReviewBtn.onclick = async () => {
         const user = auth.currentUser;
         if (!user) return;
-
         if (!confirm("Delete your review?")) return;
 
         showFormMessage("Deleting…");
@@ -1783,30 +1661,24 @@ addBtn.onclick = async () => {
           showFormMessage("Deleted");
           setTimeout(() => showFormMessage(""), 900);
         } catch (err) {
-          console.log("UID", auth.currentUser?.uid);
-          console.log("DELETE REVIEW CONTEXT", { productId: item?.id });
           console.error("delete review error:", err?.code, err?.message, err);
           showFormMessage("Failed to delete.", true);
         } finally {
-
           setFormBusy(false);
         }
       };
     }
-    // Initial render
+
     await renderCurrentProduct(true);
 
-    // Re-render when hash changes (no reload needed)
     window.addEventListener("hashchange", () => {
       renderCurrentProduct(true).catch(console.error);
     });
 
-    // Back/forward cache friendliness
     window.addEventListener("pageshow", () => {
       renderCurrentProduct(false).catch(console.error);
     });
 
-    // footer
     const y = new Date().getFullYear();
     $("footerText").innerHTML = `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
   </script>
