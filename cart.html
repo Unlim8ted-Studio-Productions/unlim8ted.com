@@ -645,333 +645,347 @@
             .formGrid {
                 grid-template-columns: 1fr;
             }
-        }/* =========================
+        }
+
+        /* =========================
    Form controls (make inputs not terrible)
 ========================= */
 
-:root{
-  --fieldBg: rgba(10, 8, 18, .58);
-  --fieldBg2: rgba(255,255,255,.04);
-  --fieldStroke: rgba(255,255,255,.14);
-  --fieldStroke2: rgba(184,107,255,.26);
-  --fieldGlow: 0 0 0 4px rgba(184,107,255,.14);
-}
+        :root {
+            --fieldBg: rgba(10, 8, 18, .58);
+            --fieldBg2: rgba(255, 255, 255, .04);
+            --fieldStroke: rgba(255, 255, 255, .14);
+            --fieldStroke2: rgba(184, 107, 255, .26);
+            --fieldGlow: 0 0 0 4px rgba(184, 107, 255, .14);
+        }
 
-/* consistent typography + smoothing */
-input, select, textarea, button {
-  font: inherit;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+        /* consistent typography + smoothing */
+        input,
+        select,
+        textarea,
+        button {
+            font: inherit;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-select,
-textarea {
-  width: 100%;
-  border-radius: 14px;
-  border: 1px solid var(--fieldStroke);
-  background: linear-gradient(180deg, var(--fieldBg), rgba(10, 8, 18, .72));
-  color: rgba(233,231,255,.92);
-  padding: 11px 12px;
-  outline: none;
-  font-weight: 800;
-  letter-spacing: .15px;
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid var(--fieldStroke);
+            background: linear-gradient(180deg, var(--fieldBg), rgba(10, 8, 18, .72));
+            color: rgba(233, 231, 255, .92);
+            padding: 11px 12px;
+            outline: none;
+            font-weight: 800;
+            letter-spacing: .15px;
 
-  /* nicer depth */
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06),
-    0 10px 24px rgba(0,0,0,.18);
+            /* nicer depth */
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, .06),
+                0 10px 24px rgba(0, 0, 0, .18);
 
-  transition:
-    border-color .15s ease,
-    box-shadow .15s ease,
-    background .15s ease,
-    transform .06s ease;
-}
+            transition:
+                border-color .15s ease,
+                box-shadow .15s ease,
+                background .15s ease,
+                transform .06s ease;
+        }
 
-input::placeholder,
-textarea::placeholder {
-  color: rgb(0, 0, 0);
-}
+        input::placeholder,
+        textarea::placeholder {
+            color: rgb(0, 0, 0);
+        }
 
-input:hover,
-select:hover,
-textarea:hover {
-  border-color: rgba(255,255,255,.22);
-  background: linear-gradient(180deg, rgba(10,8,18,.66), rgba(10,8,18,.78));
-}
+        input:hover,
+        select:hover,
+        textarea:hover {
+            border-color: rgba(255, 255, 255, .22);
+            background: linear-gradient(180deg, rgba(10, 8, 18, .66), rgba(10, 8, 18, .78));
+        }
 
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--fieldStroke2);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06),
-    0 12px 26px rgba(184,107,255,.10),
-    var(--fieldGlow);
-}
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--fieldStroke2);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, .06),
+                0 12px 26px rgba(184, 107, 255, .10),
+                var(--fieldGlow);
+        }
 
-/* Disabled states */
-input:disabled,
-select:disabled,
-textarea:disabled {
-  opacity: .6;
-  cursor: not-allowed;
-  filter: grayscale(.15);
-}
+        /* Disabled states */
+        input:disabled,
+        select:disabled,
+        textarea:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            filter: grayscale(.15);
+        }
 
-/* Fix autofill yellow/blue nonsense (Chrome/Edge) */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus {
-  -webkit-text-fill-color: rgba(233,231,255,.92) !important;
-  box-shadow: 0 0 0px 1000px rgba(10, 8, 18, .78) inset !important;
-  transition: background-color 9999s ease-in-out 0s;
-}
+        /* Fix autofill yellow/blue nonsense (Chrome/Edge) */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: rgba(233, 231, 255, .92) !important;
+            box-shadow: 0 0 0px 1000px rgba(10, 8, 18, .78) inset !important;
+            transition: background-color 9999s ease-in-out 0s;
+        }
 
-/* Make selects look like your UI */
-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+        /* Make selects look like your UI */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
 
-  padding-right: 40px;
+            padding-right: 40px;
 
-  /* custom caret */
-  background-image:
-    linear-gradient(180deg, rgba(10, 8, 18, .58), rgba(10, 8, 18, .72)),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 10l5 5 5-5' stroke='rgba(233,231,255,.75)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat, no-repeat;
-  background-position: 0 0, right 12px center;
-  background-size: auto, 18px 18px;
-}
+            /* custom caret */
+            background-image:
+                linear-gradient(180deg, rgba(10, 8, 18, .58), rgba(10, 8, 18, .72)),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 10l5 5 5-5' stroke='rgba(233,231,255,.75)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat, no-repeat;
+            background-position: 0 0, right 12px center;
+            background-size: auto, 18px 18px;
+        }
 
-select option {
-  background: #0b0a12;
-  color: rgba(8, 3, 68, 0.92);
-}
+        select option {
+            background: #0b0a12;
+            color: rgba(8, 3, 68, 0.92);
+        }
 
-/* Tighter + prettier checkout form layout */
-.formGrid input,
-.formGrid select {
-  height: 44px;
-}
+        /* Tighter + prettier checkout form layout */
+        .formGrid input,
+        .formGrid select {
+            height: 44px;
+        }
 
-.formGrid input#ship_address1,
-.formGrid input#ship_address2 {
-  height: 44px;
-}
+        .formGrid input#ship_address1,
+        .formGrid input#ship_address2 {
+            height: 44px;
+        }
 
-/* Small label spacing inside donate modal */
-#donateOverlay label {
-  padding-top: 10px;
-}
-#donateOverlay label select {
-  margin-top: 6px;
-}
-/* ===== Shipping form (nebula) ===== */
+        /* Small label spacing inside donate modal */
+        #donateOverlay label {
+            padding-top: 10px;
+        }
 
-.leftCol h2,
-.leftCol h3{
-  margin: 0 0 10px;
-  color: rgba(233,231,255,.92);
-  letter-spacing: .01em;
-}
+        #donateOverlay label select {
+            margin-top: 6px;
+        }
 
-.leftCol h3{
-  margin-top: 18px;
-  font-size: 14px;
-  color: rgba(233,231,255,.80);
-}
+        /* ===== Shipping form (nebula) ===== */
 
-/* Grid layout */
-.formGrid{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 10px;
-}
+        .leftCol h2,
+        .leftCol h3 {
+            margin: 0 0 10px;
+            color: rgba(233, 231, 255, .92);
+            letter-spacing: .01em;
+        }
 
-/* Full-width rows */
-#ship_address1,
-#ship_address2{
-  grid-column: 1 / -1;
-}
+        .leftCol h3 {
+            margin-top: 18px;
+            font-size: 14px;
+            color: rgba(233, 231, 255, .80);
+        }
 
-/* Make country sit nicely next to zip on desktop */
-#ship_country_code{
-  grid-column: 2 / 3;
-}
+        /* Grid layout */
+        .formGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
 
-/* Base control styling */
-.formGrid input,
-.formGrid select,
-#ship_method{
-  height: 44px;
-  width: 100%;
-  box-sizing: border-box;
+        /* Full-width rows */
+        #ship_address1,
+        #ship_address2 {
+            grid-column: 1 / -1;
+        }
 
-  padding: 10px 12px;
-  border-radius: 14px;
+        /* Make country sit nicely next to zip on desktop */
+        #ship_country_code {
+            grid-column: 2 / 3;
+        }
 
-  color: rgba(233,231,255,.92);
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.10);
+        /* Base control styling */
+        .formGrid input,
+        .formGrid select,
+        #ship_method {
+            height: 44px;
+            width: 100%;
+            box-sizing: border-box;
 
-  outline: none;
-  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .18s ease;
-}
+            padding: 10px 12px;
+            border-radius: 14px;
 
-/* Better placeholder */
-.formGrid input::placeholder{
-  color: rgba(233,231,255,.45);
-}
+            color: rgba(233, 231, 255, .92);
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .10);
 
-/* Hover */
-.formGrid input:hover,
-.formGrid select:hover,
-#ship_method:hover{
-  background: rgba(255,255,255,.075);
-  border-color: rgba(184,107,255,.20);
-}
+            outline: none;
+            transition: border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .18s ease;
+        }
 
-/* Focus ring */
-.formGrid input:focus,
-.formGrid select:focus,
-#ship_method:focus{
-  border-color: rgba(184,107,255,.55);
-  box-shadow:
-    0 0 0 3px rgba(184,107,255,.18),
-    0 12px 30px rgba(0,0,0,.35);
-  background: rgba(255,255,255,.085);
-}
+        /* Better placeholder */
+        .formGrid input::placeholder {
+            color: rgba(233, 231, 255, .45);
+        }
 
-/* Slight pressed feel */
-.formGrid input:active,
-.formGrid select:active{
-  transform: translateY(0.5px);
-}
+        /* Hover */
+        .formGrid input:hover,
+        .formGrid select:hover,
+        #ship_method:hover {
+            background: rgba(255, 255, 255, .075);
+            border-color: rgba(184, 107, 255, .20);
+        }
 
-/* Select dropdown arrow polish */
-.formGrid select,
-#ship_method{
-  appearance: none;
-  -webkit-appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, rgba(233,231,255,.75) 50%),
-    linear-gradient(135deg, rgba(233,231,255,.75) 50%, transparent 50%),
-    linear-gradient(to right, transparent, transparent);
-  background-position:
-    calc(100% - 18px) 50%,
-    calc(100% - 12px) 50%,
-    0 0;
-  background-size:
-    6px 6px,
-    6px 6px,
-    100% 100%;
-  background-repeat: no-repeat;
-  padding-right: 38px;
-}
+        /* Focus ring */
+        .formGrid input:focus,
+        .formGrid select:focus,
+        #ship_method:focus {
+            border-color: rgba(184, 107, 255, .55);
+            box-shadow:
+                0 0 0 3px rgba(184, 107, 255, .18),
+                0 12px 30px rgba(0, 0, 0, .35);
+            background: rgba(255, 255, 255, .085);
+        }
 
-/* Disabled states */
-.formGrid input:disabled,
-.formGrid select:disabled,
-#ship_method:disabled{
-  opacity: .60;
-  cursor: not-allowed;
-  background: rgba(255,255,255,.04);
-  border-color: rgba(255,255,255,.08);
-  box-shadow: none;
-}
+        /* Slight pressed feel */
+        .formGrid input:active,
+        .formGrid select:active {
+            transform: translateY(0.5px);
+        }
 
-/* Autofill (Chrome) */
-.formGrid input:-webkit-autofill{
-  -webkit-text-fill-color: rgba(233,231,255,.92);
-  transition: background-color 99999s ease-in-out 0s;
-  box-shadow: 0 0 0px 1000px rgba(255,255,255,.06) inset;
-  border: 1px solid rgba(255,255,255,.12);
-}
+        /* Select dropdown arrow polish */
+        .formGrid select,
+        #ship_method {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, rgba(233, 231, 255, .75) 50%),
+                linear-gradient(135deg, rgba(233, 231, 255, .75) 50%, transparent 50%),
+                linear-gradient(to right, transparent, transparent);
+            background-position:
+                calc(100% - 18px) 50%,
+                calc(100% - 12px) 50%,
+                0 0;
+            background-size:
+                6px 6px,
+                6px 6px,
+                100% 100%;
+            background-repeat: no-repeat;
+            padding-right: 38px;
+        }
 
-/* Shipping method block spacing */
-#ship_method{
-  margin-top: 8px;
-}
+        /* Disabled states */
+        .formGrid input:disabled,
+        .formGrid select:disabled,
+        #ship_method:disabled {
+            opacity: .60;
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, .04);
+            border-color: rgba(255, 255, 255, .08);
+            box-shadow: none;
+        }
 
-.hint, #quoteHint{
-  margin-top: 10px;
-  font-size: 12px;
-  color: rgba(233,231,255,.65);
-  line-height: 1.35;
-}
+        /* Autofill (Chrome) */
+        .formGrid input:-webkit-autofill {
+            -webkit-text-fill-color: rgba(233, 231, 255, .92);
+            transition: background-color 99999s ease-in-out 0s;
+            box-shadow: 0 0 0px 1000px rgba(255, 255, 255, .06) inset;
+            border: 1px solid rgba(255, 255, 255, .12);
+        }
 
-/* Optional: subtle section divider feel */
-.leftCol{
-  --glowA: rgba(184,107,255,.22);
-  --glowB: rgba(103,213,255,.16);
-}
+        /* Shipping method block spacing */
+        #ship_method {
+            margin-top: 8px;
+        }
 
-.leftCol .formGrid{
-  padding: 2px;
-}
+        .hint,
+        #quoteHint {
+            margin-top: 10px;
+            font-size: 12px;
+            color: rgba(233, 231, 255, .65);
+            line-height: 1.35;
+        }
 
-/* Mobile layout */
-@media (max-width: 560px){
-  .formGrid{
-    grid-template-columns: 1fr;
-  }
+        /* Optional: subtle section divider feel */
+        .leftCol {
+            --glowA: rgba(184, 107, 255, .22);
+            --glowB: rgba(103, 213, 255, .16);
+        }
 
-  #ship_address1,
-  #ship_address2,
-  #ship_country_code{
-    grid-column: auto;
-  }
-}
-/* === Fix the 2-col layout + header spanning both columns === */
+        .leftCol .formGrid {
+            padding: 2px;
+        }
 
-.modalBody.twoCol{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  align-items: start;            /* <— important: top-align both columns */
-}
+        /* Mobile layout */
+        @media (max-width: 560px) {
+            .formGrid {
+                grid-template-columns: 1fr;
+            }
 
-/* Your step header is the first child inside .modalBody */
-.modalBody.twoCol > :first-child{
-  grid-column: 1 / -1;           /* <— header spans both columns */
-  margin-bottom: 2px;
-}
+            #ship_address1,
+            #ship_address2,
+            #ship_country_code {
+                grid-column: auto;
+            }
+        }
 
-/* Make sure columns don’t add random top spacing */
-.leftCol, .rightCol{
-  align-self: start;
-  min-width: 0;
-}
+        /* === Fix the 2-col layout + header spanning both columns === */
 
-/* Normalize headings so one side isn't "visually lower" */
-.leftCol h2, .rightCol h2{
-  margin: 0 0 10px;
-}
+        .modalBody.twoCol {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            align-items: start;
+            /* <— important: top-align both columns */
+        }
 
-/* Optional: keep both columns visually consistent (same panel feel) */
-.leftCol, .rightCol{
-  background: rgba(255,255,255,.03);
-  border: 1px solid rgba(255,255,255,.10);
-  border-radius: 18px;
-  padding: 14px;
-}
+        /* Your step header is the first child inside .modalBody */
+        .modalBody.twoCol> :first-child {
+            grid-column: 1 / -1;
+            /* <— header spans both columns */
+            margin-bottom: 2px;
+        }
 
-/* Mobile */
-@media (max-width: 900px){
-  .modalBody.twoCol{
-    grid-template-columns: 1fr;
-  }
-  .modalBody.twoCol > :first-child{
-    grid-column: 1 / 2;
-  }
-}
+        /* Make sure columns don’t add random top spacing */
+        .leftCol,
+        .rightCol {
+            align-self: start;
+            min-width: 0;
+        }
 
+        /* Normalize headings so one side isn't "visually lower" */
+        .leftCol h2,
+        .rightCol h2 {
+            margin: 0 0 10px;
+        }
+
+        /* Optional: keep both columns visually consistent (same panel feel) */
+        .leftCol,
+        .rightCol {
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 18px;
+            padding: 14px;
+        }
+
+        /* Mobile */
+        @media (max-width: 900px) {
+            .modalBody.twoCol {
+                grid-template-columns: 1fr;
+            }
+
+            .modalBody.twoCol> :first-child {
+                grid-column: 1 / 2;
+            }
+        }
     </style>
 </head>
 
@@ -1673,10 +1687,23 @@ select option {
         }
 
         // UPDATED: printful_catalog_variant_id is just varient.id (and cart variantId matches it)
+        // Resolve the Printful catalog/sync variant ID for a cart item
         function getPrintfulVariantIdForCartItem(it) {
-            const raw = it?.printful_catalog_variant_id ?? "";
-            const s = String(raw).trim();
-            return s ? s : null;
+            const productId = String(it?.productId ?? "").trim();
+            const variantId = String(it?.variantId ?? "").trim();
+            if (!productId || !variantId) return "";
+
+            // Fast lookup from products.json index
+            const v = _variantByKey?.get(`${productId}::${variantId}`) || null;
+            if (!v) return "";
+
+            // Preferred explicit field
+            if (v.printful_catalog_variant_id != null) {
+                return String(v.printful_catalog_variant_id).trim();
+            }
+
+            // Per your data model: variant.id IS the Printful variant ID
+            return String(v.id ?? "").trim();
         }
 
         function resolveFromCatalog(item) {
@@ -1982,18 +2009,18 @@ select option {
             }, 0);
         }
 
-function buildWorkerItemsFromPaidCart(paidItems) {
-  const out = [];
-  for (const it of (paidItems || [])) {
-    const pfid = getPrintfulVariantIdForCartItem(it);
-    if (!pfid) throw new Error(`Missing/invalid variant id for ${it.productId || "?"}`);
-    out.push({
-      printfulVariantId: pfid, // ✅ string
-      qty: Math.max(1, Number(it.qty) || 1),
-    });
-  }
-  return out;
-}
+        function buildWorkerItemsFromPaidCart(paidItems) {
+            const out = [];
+            for (const it of (paidItems || [])) {
+                const pfid = getPrintfulVariantIdForCartItem(it);
+                if (!pfid) throw new Error(`Missing/invalid variant id for ${it.productId || "?"}`);
+                out.push({
+                    printfulVariantId: pfid, // ✅ string
+                    qty: Math.max(1, Number(it.qty) || 1),
+                });
+            }
+            return out;
+        }
 
 
         /* =============================
