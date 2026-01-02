@@ -1689,21 +1689,47 @@
         // UPDATED: printful_catalog_variant_id is just varient.id (and cart variantId matches it)
         // Resolve the Printful catalog/sync variant ID for a cart item
         function getPrintfulVariantIdForCartItem(it) {
-            const productId = String(it?.productId ?? "").trim();
-            const variantId = String(it?.variantId ?? "").trim();
-            if (!productId || !variantId) return "";
+            // 0) already explicit on cart item
+            const direct = it?.printful_catalog_variant_id;
+            if (direct != null && String(direct).trim() !== "") return String(direct).trim();
 
-            // Fast lookup from products.json index
-            const v = _variantByKey?.get(`${productId}::${variantId}`) || null;
+            const productId = String(it?.productId ?? "").trim();
+            if (!productId) return "";
+
+            const raw = String(it?.variantId ?? "").trim();
+            if (!raw) return "";
+
+            // normalize "#6956..." -> "6956..."
+            const rawNoHash = raw.startsWith("#") ? raw.slice(1) : raw;
+
+            const p = _productById.get(productId) || null;
+            if (!p) return "";
+
+            const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
+            if (!vars.length) return "";
+
+            const v = vars.find(vr => {
+                const id = String(vr?.id ?? "").trim();
+                const idNoHash = id.startsWith("#") ? id.slice(1) : id;
+
+                const cat = String(vr?.printful_cat_id ?? "").trim();
+                const catNoHash = cat.startsWith("#") ? cat.slice(1) : cat;
+
+                const pf = vr?.printful_catalog_variant_id != null ? String(vr.printful_catalog_variant_id).trim() : "";
+
+                return (
+                    raw === id || rawNoHash === idNoHash ||
+                    raw === cat || rawNoHash === catNoHash ||
+                    raw === pf
+                );
+            }) || null;
+
             if (!v) return "";
 
-            // Preferred explicit field
-            if (v.printful_catalog_variant_id != null) {
-                return String(v.printful_catalog_variant_id).trim();
-            }
+            const pfid = v?.printful_catalog_variant_id;
+            if (pfid == null || String(pfid).trim() === "") return "";
 
-            // Per your data model: variant.id IS the Printful variant ID
-            return String(v.id ?? "").trim();
+            return String(pfid).trim(); // <-- this is what the worker wants
         }
 
         function resolveFromCatalog(item) {
@@ -1924,27 +1950,31 @@
         /* =============================
            Checkout helpers
         ============================= */
+        // "Paid" means: NOT a free-link item.
+        // Free items are identified by having an accessUrl/downloadUrl/url/link.
         function getPaidItems(allItems) {
             return (allItems || [])
                 .map(it => {
                     const qty = Math.max(1, Number(it.qty) || 1);
-                    const price = normalizePriceNumber(parsePrice(it.price)) || 0;
-                    return { ...it, qty, price };
+                    const accessUrl = safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link);
+                    return { ...it, qty, _isFree: !!accessUrl, accessUrl };
                 })
-                .filter(x => x.price > 0);
+                .filter(it => !it._isFree);
         }
 
+
         function findPaidMissingVariant(allItems) {
-            // Paid items must have productId + variantId (variantId is Printful catalog variant id)
-            return (allItems || [])
+            const paid = getPaidItems(allItems);
+
+            return paid
                 .map(it => ({
                     title: String(it.title || it.name || "Item"),
-                    price: normalizePriceNumber(parsePrice(it.price)) || 0,
-                    variantId: String(it.variantId || "").trim(),
                     productId: String(it.productId || "").trim(),
+                    variantId: String(it.variantId || it.printful_catalog_variant_id || "").trim(),
                 }))
-                .filter(x => x.price > 0 && (!x.productId || !x.variantId));
+                .filter(x => (!x.productId || !x.variantId));
         }
+
 
         function findPaidMissingPrintfulVariantId(paidItems) {
             const missing = [];
@@ -2013,14 +2043,15 @@
             const out = [];
             for (const it of (paidItems || [])) {
                 const pfid = getPrintfulVariantIdForCartItem(it);
-                if (!pfid) throw new Error(`Missing/invalid variant id for ${it.productId || "?"}`);
+                if (!pfid) throw new Error(`Missing Printful catalog variant id for ${it.productId || "?"} / ${it.variantId || "?"}`);
                 out.push({
-                    printfulVariantId: pfid, // ✅ string
+                    printfulVariantId: pfid,
                     qty: Math.max(1, Number(it.qty) || 1),
                 });
             }
             return out;
         }
+
 
 
         /* =============================
