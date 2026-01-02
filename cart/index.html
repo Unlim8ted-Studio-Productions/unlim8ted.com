@@ -1,0 +1,226 @@
+<!-- =========================================================
+     /cart.html  (NO inline scripts; strict CSP friendly)
+========================================================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Unlim8ted — Cart</title>
+  <meta name="description" content="View your Unlim8ted cart, powered by Unlim8ted Studio Productions" />
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+
+  <!-- Components -->
+  <script type="module" src="/components/site-navbar.js"></script>
+  <script type="module" src="/components/site-loader.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/cart.css" />
+
+  <!-- Square Web Payments SDK (card iframes) -->
+  <!-- Production -->
+  <script src="https://web.squarecdn.com/v1/square.js" defer></script>
+  <!-- If you use Square Sandbox instead, swap to:
+       https://sandbox.web.squarecdn.com/v1/square.js
+  -->
+
+  <!-- Page JS (no inline) -->
+  <script type="module" src="js/cart.js" defer></script>
+</head>
+
+<body>
+  <site-navbar base=""></site-navbar>
+  <site-loader></site-loader>
+
+  <main class="page">
+    <header class="hero">
+      <h1>Your Cart</h1>
+      <p class="muted">Secure checkout powered by Square. Shipping quotes powered by Printful.</p>
+    </header>
+
+    <section class="panel">
+      <div class="panelHead">
+        <div class="left">
+          <h2>Items</h2>
+          <div class="mini" id="cartCount">—</div>
+        </div>
+        <div class="right">
+          <button class="btn ghost" id="clearCartBtn" type="button">Clear cart</button>
+          <button class="btn primary" id="checkoutBtn" type="button" disabled>Checkout</button>
+        </div>
+      </div>
+
+      <div class="panelBody">
+        <div id="cartList" class="cartList"></div>
+
+        <aside class="summaryCard">
+          <h3>Summary</h3>
+          <div class="rows" id="summaryRows"></div>
+          <div class="divider"></div>
+          <div class="rows">
+            <div class="row">
+              <div>Total (est.)</div>
+              <div class="val" id="summaryTotal">$0.00</div>
+            </div>
+          </div>
+          <p class="tiny muted">Final total calculated after shipping in checkout.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- Checkout Modal (hidden by default) -->
+  <div class="overlay" id="checkoutOverlay" hidden>
+    <div class="checkoutModal" role="dialog" aria-modal="true" aria-label="Checkout">
+      <div class="checkoutHeader">
+        <div class="steps" aria-label="Checkout steps">
+          <div class="step is-active" data-step="1"><span class="dot">1</span> Shipping</div>
+          <div class="step" data-step="2"><span class="dot">2</span> Payment</div>
+        </div>
+        <button class="xBtn" type="button" id="checkoutCloseBtn" aria-label="Close checkout">✕</button>
+      </div>
+
+      <div class="checkoutBody">
+        <!-- LEFT PANE -->
+        <div class="leftPane">
+          <div class="paneScroll">
+            <!-- STEP 1 -->
+            <section class="stepPane" data-pane="1">
+              <h3>Shipping Address</h3>
+
+              <div class="grid2">
+                <label class="field">
+                  <span>Name</span>
+                  <input id="shipName" type="text" autocomplete="name" />
+                </label>
+                <label class="field">
+                  <span>Email</span>
+                  <input id="shipEmail" type="email" autocomplete="email" />
+                </label>
+              </div>
+
+              <div class="grid2">
+                <label class="field">
+                  <span>Phone</span>
+                  <input id="shipPhone" type="tel" autocomplete="tel" />
+                </label>
+                <label class="field">
+                  <span>Country</span>
+                  <select id="shipCountry" autocomplete="country">
+                    <option value="US">United States</option>
+                    <option value="CA">Canada</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="AU">Australia</option>
+                    <option value="DE">Germany</option>
+                    <option value="FR">France</option>
+                    <option value="ES">Spain</option>
+                    <option value="IT">Italy</option>
+                    <option value="NL">Netherlands</option>
+                  </select>
+                </label>
+              </div>
+
+              <label class="field">
+                <span>Address line 1</span>
+                <input id="shipAddress1" type="text" autocomplete="address-line1" />
+              </label>
+
+              <label class="field">
+                <span>Address line 2 (optional)</span>
+                <input id="shipAddress2" type="text" autocomplete="address-line2" />
+              </label>
+
+              <div class="grid3">
+                <label class="field">
+                  <span>City</span>
+                  <input id="shipCity" type="text" autocomplete="address-level2" />
+                </label>
+                <label class="field">
+                  <span>State / Province</span>
+                  <input id="shipState" type="text" autocomplete="address-level1" />
+                </label>
+                <label class="field">
+                  <span>ZIP / Postal</span>
+                  <input id="shipZip" type="text" autocomplete="postal-code" />
+                </label>
+              </div>
+
+              <div class="divider"></div>
+
+              <h3>Shipping Method</h3>
+              <div id="shipOptions" class="shipOptions">
+                <div class="muted tiny">Enter your address and click Next to load shipping options.</div>
+              </div>
+
+              <div class="err" id="shipError" hidden></div>
+            </section>
+
+            <!-- STEP 2 -->
+            <section class="stepPane" data-pane="2" hidden>
+              <h3>Payment Details</h3>
+              <p class="muted">Use the secure Square card field on the right.</p>
+              <div class="tiny muted">
+                If your quote expires, go Back and re-run shipping.
+              </div>
+              <div class="err" id="payLeftError" hidden></div>
+            </section>
+          </div>
+
+          <div class="paneFooter">
+            <button class="btn" type="button" id="backBtn" hidden>Back</button>
+            <button class="btn primary" type="button" id="nextBtn">Next</button>
+          </div>
+        </div>
+
+        <!-- RIGHT PANE -->
+        <div class="rightPane">
+          <div class="rightInner">
+            <!-- RIGHT STEP 1 -->
+            <div class="rightPaneStep" data-right="1">
+              <h3>Order Summary</h3>
+              <div id="summaryBox" class="summaryBox"></div>
+              <div class="divider"></div>
+              <div class="rows">
+                <div class="row"><div>Subtotal</div><div class="val" id="modalSubtotal">$0.00</div></div>
+                <div class="row"><div>Shipping</div><div class="val" id="modalShipping">$—</div></div>
+                <div class="row total"><div>Total</div><div class="val" id="modalTotal">$—</div></div>
+              </div>
+              <p class="tiny muted">Shipping updates after quote.</p>
+            </div>
+
+            <!-- RIGHT STEP 2 (fills entire panel) -->
+            <div class="rightPaneStep payFill" data-right="2" hidden>
+              <div class="payHeader">
+                <h3>Payment</h3>
+                <div class="mini" id="payTotal">$—</div>
+              </div>
+
+              <div class="payBody">
+                <div id="card-container"></div>
+                <div id="card-errors" class="err" hidden></div>
+              </div>
+
+              <div class="payFooter">
+                <button class="btn primary" type="button" id="payBtn">Pay</button>
+                <div class="mini muted" id="payStatus"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /checkoutBody -->
+    </div><!-- /checkoutModal -->
+  </div><!-- /overlay -->
+
+  <!-- Clear Cart confirm modal -->
+  <div class="overlay" id="confirmOverlay" hidden>
+    <div class="miniModal" role="dialog" aria-modal="true" aria-label="Confirm clear cart">
+      <h3>Clear your cart?</h3>
+      <p class="muted">This removes all items from your cart.</p>
+      <div class="miniModalActions">
+        <button class="btn" type="button" id="confirmCancelBtn">Cancel</button>
+        <button class="btn danger" type="button" id="confirmClearBtn">Clear cart</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
