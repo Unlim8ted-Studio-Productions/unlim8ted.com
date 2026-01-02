@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unlim8ted - Cart</title>
+    <meta name="description" content="View your Unlim8ted cart, powered by Unlim8ted Studio Productions" />
+    <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+
+    <!-- Components -->
+    <script type="module" src="/components/site-navbar.js"></script>
+    <script type="module" src="/components/site-loader.js"></script>
+
+    <style>
+        :root {
+            --bg0: #05040a;
+            --bg1: #0c0620;
+            --ink: rgba(233, 231, 255, .92);
+            --muted: rgba(233, 231, 255, .72);
+            --glass: rgba(0, 0, 0, .38);
+            --glass2: rgba(255, 255, 255, .04);
+            --stroke: rgba(180, 130, 255, .24);
+            --stroke2: rgba(255, 255, 255, .10);
+            --accent: #b86bff;
+            --accent2: #63d6ff;
+            --danger: #ff4d4d;
+            --warn: #ffd166;
+            --shadow: 0 18px 40px rgba(0, 0, 0, .45);
+            --r: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background:
+                radial-gradient(900px 600px at 20% 15%, rgba(184, 107, 255, .16), transparent 55%),
+                radial-gradient(900px 650px at 80% 25%, rgba(99, 214, 255, .14), transparent 60%),
+                radial-gradient(900px 700px at 55% 95%, rgba(255, 77, 45, .08), transparent 60%),
+                linear-gradient(180deg, var(--bg0), var(--bg1));
+            min-height: 100vh;
+            padding-top: 56px;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        #notice {
+            max-width: 1100px;
+            margin: 14px auto 0;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .06);
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.35;
+            display: none;
+        }
+
+        #notice strong {
+            color: rgba(255, 255, 255, .92);
+        }
+
+        #notice.ok {
+            border-color: rgba(99, 214, 255, .22);
+            background: rgba(99, 214, 255, .08);
+            color: rgba(255, 255, 255, .82);
+        }
+
+        #notice.warn {
+            border-color: rgba(255, 209, 102, .22);
+            background: rgba(255, 209, 102, .08);
+            color: rgba(255, 255, 255, .78);
+        }
+
+        #notice.bad {
+            border-color: rgba(255, 77, 77, .28);
+            background: rgba(255, 77, 77, .10);
+            color: rgba(255, 255, 255, .86);
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 18px 16px 70px;
+        }
+
+        .pageHeader {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 10px 0 14px;
+        }
+
+        .pageHeader h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: .2px;
+        }
+
+        .pageHeader p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.35;
+        }
+
+        .cartPanel {
+            background: var(--glass);
+            border: 1px solid var(--stroke);
+            border-radius: var(--r);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            padding: 14px;
+        }
+
+        .empty {
+            padding: 18px;
+            color: var(--muted);
+        }
+
+        .cartList {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item {
+            display: grid;
+            grid-template-columns: 88px 1fr auto;
+            gap: 14px;
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .06);
+            align-items: center;
+        }
+
+        .thumb {
+            width: 88px;
+            height: 88px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, .07);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, .55);
+            font-size: 12px;
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .meta {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .title {
+            font-size: 15px;
+            font-weight: 850;
+            letter-spacing: .2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mini {
+            font-size: 12px;
+            color: rgba(255, 255, 255, .64);
+        }
+
+        .row2 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .price {
+            font-weight: 900;
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .price .free {
+            color: rgba(99, 214, 255, .95);
+            letter-spacing: .3px;
+            font-weight: 950;
+        }
+
+        .qty {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 999px;
+            padding: 6px 10px;
+        }
+
+        .qty button {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            background: rgba(255, 255, 255, .08);
+            color: var(--ink);
+            font-size: 18px;
+            line-height: 0;
+        }
+
+        .qty button:hover {
+            background: rgba(184, 107, 255, .16);
+            color: rgba(184, 107, 255, 1);
+        }
+
+        .qty input {
+            width: 42px;
+            border: none;
+            background: transparent;
+            color: var(--ink);
+            text-align: center;
+            outline: none;
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .iconbtn {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .05);
+            color: rgba(255, 255, 255, .88);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .iconbtn:hover {
+            border-color: rgba(255, 77, 77, .35);
+            background: rgba(255, 77, 77, .12);
+            color: var(--danger);
+        }
+
+        .cartSummary {
+            margin-top: 12px;
+            padding: 12px 12px 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .cartSummary .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 2px;
+            color: var(--muted);
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .cartSummary .row strong {
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .cartSummary .row.total {
+            border-bottom: 0;
+            padding-top: 12px;
+            font-size: 16px;
+            font-weight: 950;
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .cartActions {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-weight: 950;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            filter: grayscale(.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, rgba(184, 107, 255, 1), rgba(99, 214, 255, 1));
+            color: #071022;
+            box-shadow: 0 12px 26px rgba(184, 107, 255, .16);
+        }
+
+        .btn-primary:hover {
+            filter: brightness(.98);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, .05);
+            color: var(--ink);
+            border: 1px solid rgba(255, 255, 255, .10);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, .08);
+        }
+
+        .btn-danger {
+            background: rgba(255, 77, 77, .16);
+            color: rgba(255, 255, 255, .92);
+            border: 1px solid rgba(255, 77, 77, .30);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 77, 77, .22);
+            border-color: rgba(255, 77, 77, .38);
+        }
+
+        .footer {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 22px 16px 28px;
+            color: rgba(255, 255, 255, .60);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* Overlays + modals */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .62);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 9999;
+            overflow: auto;
+        }
+
+        .overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: min(740px, 100%);
+            background: rgba(10, 8, 18, .88);
+            border: 1px solid rgba(180, 130, 255, .28);
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .55);
+            overflow: hidden;
+            max-height: calc(100vh - 32px);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal.wide {
+            width: min(980px, 100%);
+        }
+
+        .modalClose {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .05);
+            color: rgba(255, 255, 255, .9);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .modalClose:hover {
+            background: rgba(255, 255, 255, .08);
+        }
+
+        .modal>h3,
+        .modal>h2 {
+            margin: 0;
+            padding: 16px 54px 10px 16px;
+            font-weight: 950;
+            letter-spacing: .2px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .04);
+        }
+
+        .modal>p {
+            margin: 0;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, .82);
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .modalBody {
+            padding: 14px 16px;
+            color: rgba(255, 255, 255, .82);
+            line-height: 1.35;
+            font-size: 13px;
+            flex: 1 1 auto;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .modalActions {
+            padding: 14px 16px 16px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            border-top: 1px solid rgba(255, 255, 255, .08);
+            flex: 0 0 auto;
+            position: sticky;
+            bottom: 0;
+            background: rgba(10, 8, 18, .92);
+            backdrop-filter: blur(10px);
+        }
+
+        #modalBody {
+            padding: 12px 16px 4px;
+            color: rgba(255, 255, 255, .82);
+            font-size: 13px;
+            line-height: 1.35;
+            flex: 1 1 auto;
+            overflow: auto;
+        }
+
+        #modalTitle {
+            margin: 0;
+            padding: 16px 54px 10px 16px;
+            font-weight: 950;
+            letter-spacing: .2px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .04);
+        }
+
+        #donateOverlay label {
+            display: block;
+            padding: 12px 16px 0;
+            color: rgba(255, 255, 255, .82);
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        select,
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(10, 8, 18, .72);
+            color: rgba(255, 255, 255, .92);
+            padding: 10px 12px;
+            outline: none;
+            font-weight: 850;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 8px;
+        }
+
+        select option {
+            background: #0b0a12;
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .hint {
+            margin-top: 8px;
+            color: rgba(255, 255, 255, .62);
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .expiry {
+            display: inline-flex;
+            margin-top: 10px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .06);
+            color: rgba(255, 255, 255, .85);
+            font-weight: 900;
+            font-size: 12px;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .modalBody.twoCol {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 14px;
+            align-items: start;
+        }
+
+        .leftCol,
+        .rightCol {
+            background: rgba(255, 255, 255, .02);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 16px;
+            padding: 12px;
+        }
+
+        .leftCol h2,
+        .rightCol h2 {
+            margin: 0 0 10px;
+            font-size: 14px;
+            font-weight: 950;
+            letter-spacing: .2px;
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .leftCol h3 {
+            margin: 12px 0 8px;
+            font-size: 13px;
+            font-weight: 950;
+            letter-spacing: .2px;
+            color: rgba(255, 255, 255, .90);
+        }
+
+        .formGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .formGrid input#ship_address1,
+        .formGrid input#ship_address2 {
+            grid-column: 1 / -1;
+        }
+
+        .summaryBox {
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .03);
+            padding: 10px 12px;
+        }
+
+        .summaryBox .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 0;
+            color: var(--muted);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            font-size: 14px;
+        }
+
+        .summaryBox .row strong {
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .summaryBox .row.total {
+            border-bottom: 0;
+            padding-top: 12px;
+            font-size: 16px;
+            font-weight: 950;
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .cardContainer {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .03);
+            min-height: 70px;
+        }
+
+        #card-container iframe {
+            border-radius: 14px !important;
+        }
+
+        @media (max-width: 900px) {
+            #notice {
+                margin-left: 16px;
+                margin-right: 16px;
+            }
+
+            .item {
+                grid-template-columns: 74px 1fr;
+                grid-template-rows: auto auto;
+                align-items: start;
+            }
+
+            .actions {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .modalBody.twoCol {
+                grid-template-columns: 1fr;
+            }
+
+            .formGrid {
+                grid-template-columns: 1fr;
+            }
+        }/* =========================
+   Form controls (make inputs not terrible)
+========================= */
+
+:root{
+  --fieldBg: rgba(10, 8, 18, .58);
+  --fieldBg2: rgba(255,255,255,.04);
+  --fieldStroke: rgba(255,255,255,.14);
+  --fieldStroke2: rgba(184,107,255,.26);
+  --fieldGlow: 0 0 0 4px rgba(184,107,255,.14);
+}
+
+/* consistent typography + smoothing */
+input, select, textarea, button {
+  font: inherit;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid var(--fieldStroke);
+  background: linear-gradient(180deg, var(--fieldBg), rgba(10, 8, 18, .72));
+  color: rgba(233,231,255,.92);
+  padding: 11px 12px;
+  outline: none;
+  font-weight: 800;
+  letter-spacing: .15px;
+
+  /* nicer depth */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 10px 24px rgba(0,0,0,.18);
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease,
+    background .15s ease,
+    transform .06s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgb(0, 0, 0);
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: rgba(255,255,255,.22);
+  background: linear-gradient(180deg, rgba(10,8,18,.66), rgba(10,8,18,.78));
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--fieldStroke2);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 12px 26px rgba(184,107,255,.10),
+    var(--fieldGlow);
+}
+
+/* Disabled states */
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  filter: grayscale(.15);
+}
+
+/* Fix autofill yellow/blue nonsense (Chrome/Edge) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: rgba(233,231,255,.92) !important;
+  box-shadow: 0 0 0px 1000px rgba(10, 8, 18, .78) inset !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Make selects look like your UI */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  padding-right: 40px;
+
+  /* custom caret */
+  background-image:
+    linear-gradient(180deg, rgba(10, 8, 18, .58), rgba(10, 8, 18, .72)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 10l5 5 5-5' stroke='rgba(233,231,255,.75)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat;
+  background-position: 0 0, right 12px center;
+  background-size: auto, 18px 18px;
+}
+
+select option {
+  background: #0b0a12;
+  color: rgba(8, 3, 68, 0.92);
+}
+
+/* Tighter + prettier checkout form layout */
+.formGrid input,
+.formGrid select {
+  height: 44px;
+}
+
+.formGrid input#ship_address1,
+.formGrid input#ship_address2 {
+  height: 44px;
+}
+
+/* Small label spacing inside donate modal */
+#donateOverlay label {
+  padding-top: 10px;
+}
+#donateOverlay label select {
+  margin-top: 6px;
+}
+/* ===== Shipping form (nebula) ===== */
+
+.leftCol h2,
+.leftCol h3{
+  margin: 0 0 10px;
+  color: rgba(233,231,255,.92);
+  letter-spacing: .01em;
+}
+
+.leftCol h3{
+  margin-top: 18px;
+  font-size: 14px;
+  color: rgba(233,231,255,.80);
+}
+
+/* Grid layout */
+.formGrid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Full-width rows */
+#ship_address1,
+#ship_address2{
+  grid-column: 1 / -1;
+}
+
+/* Make country sit nicely next to zip on desktop */
+#ship_country_code{
+  grid-column: 2 / 3;
+}
+
+/* Base control styling */
+.formGrid input,
+.formGrid select,
+#ship_method{
+  height: 44px;
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 10px 12px;
+  border-radius: 14px;
+
+  color: rgba(233,231,255,.92);
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+
+  outline: none;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .18s ease;
+}
+
+/* Better placeholder */
+.formGrid input::placeholder{
+  color: rgba(233,231,255,.45);
+}
+
+/* Hover */
+.formGrid input:hover,
+.formGrid select:hover,
+#ship_method:hover{
+  background: rgba(255,255,255,.075);
+  border-color: rgba(184,107,255,.20);
+}
+
+/* Focus ring */
+.formGrid input:focus,
+.formGrid select:focus,
+#ship_method:focus{
+  border-color: rgba(184,107,255,.55);
+  box-shadow:
+    0 0 0 3px rgba(184,107,255,.18),
+    0 12px 30px rgba(0,0,0,.35);
+  background: rgba(255,255,255,.085);
+}
+
+/* Slight pressed feel */
+.formGrid input:active,
+.formGrid select:active{
+  transform: translateY(0.5px);
+}
+
+/* Select dropdown arrow polish */
+.formGrid select,
+#ship_method{
+  appearance: none;
+  -webkit-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(233,231,255,.75) 50%),
+    linear-gradient(135deg, rgba(233,231,255,.75) 50%, transparent 50%),
+    linear-gradient(to right, transparent, transparent);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%,
+    0 0;
+  background-size:
+    6px 6px,
+    6px 6px,
+    100% 100%;
+  background-repeat: no-repeat;
+  padding-right: 38px;
+}
+
+/* Disabled states */
+.formGrid input:disabled,
+.formGrid select:disabled,
+#ship_method:disabled{
+  opacity: .60;
+  cursor: not-allowed;
+  background: rgba(255,255,255,.04);
+  border-color: rgba(255,255,255,.08);
+  box-shadow: none;
+}
+
+/* Autofill (Chrome) */
+.formGrid input:-webkit-autofill{
+  -webkit-text-fill-color: rgba(233,231,255,.92);
+  transition: background-color 99999s ease-in-out 0s;
+  box-shadow: 0 0 0px 1000px rgba(255,255,255,.06) inset;
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+/* Shipping method block spacing */
+#ship_method{
+  margin-top: 8px;
+}
+
+.hint, #quoteHint{
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(233,231,255,.65);
+  line-height: 1.35;
+}
+
+/* Optional: subtle section divider feel */
+.leftCol{
+  --glowA: rgba(184,107,255,.22);
+  --glowB: rgba(103,213,255,.16);
+}
+
+.leftCol .formGrid{
+  padding: 2px;
+}
+
+/* Mobile layout */
+@media (max-width: 560px){
+  .formGrid{
+    grid-template-columns: 1fr;
+  }
+
+  #ship_address1,
+  #ship_address2,
+  #ship_country_code{
+    grid-column: auto;
+  }
+}
+/* === Fix the 2-col layout + header spanning both columns === */
+
+.modalBody.twoCol{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;            /* <— important: top-align both columns */
+}
+
+/* Your step header is the first child inside .modalBody */
+.modalBody.twoCol > :first-child{
+  grid-column: 1 / -1;           /* <— header spans both columns */
+  margin-bottom: 2px;
+}
+
+/* Make sure columns don’t add random top spacing */
+.leftCol, .rightCol{
+  align-self: start;
+  min-width: 0;
+}
+
+/* Normalize headings so one side isn't "visually lower" */
+.leftCol h2, .rightCol h2{
+  margin: 0 0 10px;
+}
+
+/* Optional: keep both columns visually consistent (same panel feel) */
+.leftCol, .rightCol{
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+/* Mobile */
+@media (max-width: 900px){
+  .modalBody.twoCol{
+    grid-template-columns: 1fr;
+  }
+  .modalBody.twoCol > :first-child{
+    grid-column: 1 / 2;
+  }
+}
+
+    </style>
+</head>
+
+<body>
+    <site-loader text="Loading..."></site-loader>
+    <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
+        profile-href="https://unlim8ted.com/profile"></site-navbar>
+
+    <!-- NOTICE -->
+    <div id="notice" class="notice"></div>
+
+    <!-- CART PAGE -->
+    <main class="page">
+        <header class="pageHeader">
+            <h1 id="pageTitle">Your Cart</h1>
+            <p id="pageSub">Review your items before checkout.</p>
+        </header>
+
+        <section class="cartPanel">
+            <div id="cartEmpty" class="empty" style="display:none;">
+                Your cart is empty.
+            </div>
+
+            <div id="cartList" class="cartList"></div>
+
+            <div class="cartSummary">
+                <div class="row">
+                    <span>Items</span>
+                    <strong id="itemsCount">0</strong>
+                </div>
+                <div class="row">
+                    <span>Subtotal</span>
+                    <strong>$<span id="subtotal">0.00</span></strong>
+                </div>
+                <div class="row total">
+                    <span>Total</span>
+                    <strong>$<span id="total">0.00</span></strong>
+                </div>
+            </div>
+
+            <div class="cartActions">
+                <a id="continueBtn" href="/products" class="btn btn-ghost">Continue shopping</a>
+                <button id="openDonate" class="btn btn-ghost" type="button">Donate</button>
+                <button id="clearBtn" class="btn btn-ghost" type="button">Clear cart</button>
+                <button id="checkoutBtn" class="btn btn-primary" type="button">Checkout</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkoutOverlay" class="overlay" aria-hidden="true">
+        <div class="modal wide">
+            <button id="checkoutClose" class="modalClose" aria-label="Close">×</button>
+
+            <div class="modalBody twoCol">
+                <!-- LEFT -->
+                <div class="leftCol">
+                    <h2>Shipping address</h2>
+
+                    <div class="formGrid">
+                        <input id="ship_full_name" placeholder="Full name">
+                        <input id="ship_email" placeholder="Email">
+                        <input id="ship_phone" placeholder="Phone">
+
+                        <input id="ship_address1" placeholder="Address line 1">
+                        <input id="ship_address2" placeholder="Address line 2">
+
+                        <input id="ship_city" placeholder="City">
+                        <input id="ship_state_code" placeholder="State">
+                        <input id="ship_zip" placeholder="ZIP / Postal code">
+
+                        <select id="ship_country_code">
+                            <option value="US">United States</option>
+                        </select>
+                    </div>
+
+                    <h3>Shipping method</h3>
+                    <select id="ship_method" disabled>
+                        <option value="">Shipping options will appear after Next…</option>
+                    </select>
+
+                    <div id="quoteHint" class="hint">
+                        Enter your address, then click Next to calculate shipping.
+                    </div>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="rightCol">
+                    <h2>Order summary</h2>
+
+                    <div class="summaryBox">
+                        <div class="row">
+                            <span>Items</span>
+                            <strong id="q_items">0</strong>
+                        </div>
+                        <div class="row">
+                            <span>Subtotal</span>
+                            <strong>$<span id="q_subtotal">0.00</span></strong>
+                        </div>
+                        <div class="row">
+                            <span>Shipping</span>
+                            <strong>$<span id="q_shipping">0.00</span></strong>
+                        </div>
+                        <div class="row total">
+                            <span>Total</span>
+                            <strong>$<span id="q_total">0.00</span></strong>
+                        </div>
+                    </div>
+
+                    <div id="q_exp" class="expiry" style="display:none;">
+                        Quote expires at <strong id="q_exp_time"></strong>
+                    </div>
+
+                    <div id="payStatus" class="notice" style="display:none; margin-top:10px;"></div>
+
+                    <div id="card-container" class="cardContainer" style="display:none;"></div>
+
+                    <div id="payHint" class="hint">
+                        Secure payment will appear after shipping is calculated.
+                    </div>
+                </div>
+            </div>
+
+            <div class="modalActions">
+                <button id="btnQuote" class="btn btn-primary" type="button">Next</button>
+                <button id="btnPay" class="btn btn-primary" type="button" disabled>Pay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIRM MODAL -->
+    <div id="modalOverlay" class="overlay" aria-hidden="true">
+        <div class="modal">
+            <button id="modalClose" class="modalClose">×</button>
+            <h3 id="modalTitle">Confirm</h3>
+            <div id="modalBody"></div>
+            <div class="modalActions">
+                <button id="modalCancel" class="btn btn-ghost">Cancel</button>
+                <button id="modalConfirm" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DONATION MODAL -->
+    <div id="donateOverlay" class="overlay" aria-hidden="true">
+        <div class="modal">
+            <button id="donateClose" class="modalClose">×</button>
+            <h3>Support Unlim8ted</h3>
+
+            <label>
+                Frequency
+                <select id="donateFreq">
+                    <option value="one_time">One-time</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="annual">Annual</option>
+                </select>
+            </label>
+
+            <label>
+                Amount
+                <select id="donateAmount">
+                    <option value="custom">Custom</option>
+                    <option value="1">$1</option>
+                    <option value="5">$5</option>
+                    <option value="10">$10</option>
+                </select>
+            </label>
+
+            <div class="modalActions">
+                <button id="donateCancel" class="btn btn-ghost">Cancel</button>
+                <button id="donateGo" class="btn btn-primary">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPIRED MODAL -->
+    <div id="expiredOverlay" class="overlay" aria-hidden="true">
+        <div class="modal">
+            <button id="expiredClose" class="modalClose">×</button>
+            <h3>Quote expired</h3>
+            <p>Your shipping quote has expired. Please restart checkout.</p>
+            <div class="modalActions">
+                <button id="expiredReload" class="btn btn-primary">Reload</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div id="footer-text"></div>
+    </footer>
+
+    <script type="module">
+        /* =========================================================
+           cart.js (ESM) — Unlim8ted custom checkout
+           IMPORTANT UPDATE:
+           - products.json varients[].id IS the Printful catalog variant id (printful_catalog_variant_id).
+           - Cart item variantId is expected to be that same Printful variant id.
+           - Worker expects items: { printfulVariantId, qty } where printfulVariantId is that id.
+        ========================================================= */
+
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+        import { collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        import { getFirebase } from "/components/firebase-init.js";
+        const { auth, db } = getFirebase();
+
+        /* =============================
+           CONFIG
+        ============================= */
+        const WORKER_BASE = "https://api.unlim8ted.com";
+
+        // Square IDs (public + safe on frontend)
+        const SQUARE_APP_ID = "sq0idp-Nnvnru9L9hR3CwVKikShGA";
+        const SQUARE_LOCATION_ID = "L4KPR2BE0PAA4";
+
+        /* =============================
+           URL mode: single-item checkout
+           /cart?source=buy&product=theglitch
+        ============================= */
+        const QS = new URLSearchParams(location.search);
+        const BUY_MODE = (QS.get("source") || "").toLowerCase() === "buy";
+        const BUY_PRODUCT = String(QS.get("product") || "").trim();
+
+        /* =============================
+           Donation links
+        ============================= */
+        const SQUARE_DONATION = {
+            one_time: {
+                custom: "https://square.link/u/h4bY1vEF",
+                "1": "https://square.link/u/bWytGN4p",
+                "5": "https://square.link/u/4XBSzfLg",
+                "10": "https://square.link/u/AvF6x51S",
+            },
+            weekly: { custom: "https://square.link/u/FkJZDx1R" },
+            monthly: { custom: "https://square.link/u/ZK2wPwwU" },
+            annual: { custom: "https://square.link/u/ypx1lQj1" },
+        };
+
+        /* =============================
+           products.json cache/index
+        ============================= */
+        let _productsLoaded = false;
+        let _productsLoading = null;
+        let _productById = new Map();
+        let _variantByKey = new Map(); // `${productId}::${variantId}` -> variant
+        let _productsArray = [];
+
+        function safeUrl(u) {
+            const s = String(u || "").trim();
+            if (!s) return "";
+            if (s.startsWith("https://") || s.startsWith("http://") || s.startsWith("/")) return s;
+            return "";
+        }
+
+        async function loadProducts() {
+            if (_productsLoaded) return;
+            if (_productsLoading) return _productsLoading;
+
+            _productsLoading = (async () => {
+                try {
+                    const r = await fetch("/tools/data/products.json", { cache: "no-store" });
+                    if (!r.ok) throw new Error("Failed to load products.json");
+                    const data = await r.json();
+                    const products = Array.isArray(data) ? data : (data?.products || []);
+                    _productsArray = Array.isArray(products) ? products : [];
+                    indexProducts(_productsArray);
+                    _productsLoaded = true;
+                } catch (e) {
+                    console.warn("products.json load failed:", e);
+                } finally {
+                    _productsLoading = null;
+                }
+            })();
+
+            return _productsLoading;
+        }
+
+        function indexProducts(products) {
+            _productById = new Map();
+            _variantByKey = new Map();
+
+            for (const p of (products || [])) {
+                // ✅ YOUR products.json uses "id" as the product key
+                const pid = String(p.id ?? p.productId ?? p.printful_sync_id ?? "").trim();
+                if (!pid) continue;
+
+                _productById.set(pid, p);
+
+                const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
+                for (const v of vars) {
+                    // ✅ Variant id should be v.id (your rule: printful_catalog_variant_id is just varient.id)
+                    const vid = String(v.id ?? v.printful_catalog_variant_id ?? v.variantId ?? "").trim();
+                    if (!vid) continue;
+
+                    _variantByKey.set(`${pid}::${vid}`, v);
+                }
+            }
+        }
+
+        function parsePrice(val) {
+            if (val == null) return null;
+            if (typeof val === "number") return Number.isFinite(val) ? val : null;
+            const s = String(val).trim();
+            if (!s) return null;
+            const cleaned = s.replace(/[^0-9.\-]/g, "");
+            if (!cleaned) return null;
+            const n = Number(cleaned);
+            return Number.isFinite(n) ? n : null;
+        }
+
+        function normalizePriceNumber(n) {
+            if (!Number.isFinite(n)) return null;
+            if (n >= 1000 && Math.abs(n - Math.round(n)) < 1e-9) return n / 100;
+            return n;
+        }
+
+        const money = (n) => (normalizePriceNumber(Number(n)) ?? 0).toFixed(2);
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, (c) => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            }[c]));
+        }
+
+        /* =============================
+           Page notice
+        ============================= */
+        function setNotice(kind, msgHtml) {
+            const el = document.getElementById("notice");
+            el.style.display = "block";
+            el.className = "notice " + (kind || "");
+            el.innerHTML = msgHtml;
+        }
+
+        function clearNotice() {
+            const el = document.getElementById("notice");
+            el.style.display = "none";
+            el.className = "notice";
+            el.innerHTML = "";
+        }
+
+        /* =============================
+           Confirm modal (clear cart)
+        ============================= */
+        const modalOverlay = document.getElementById("modalOverlay");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalBody = document.getElementById("modalBody");
+        const modalClose = document.getElementById("modalClose");
+        const modalCancel = document.getElementById("modalCancel");
+        const modalConfirm = document.getElementById("modalConfirm");
+        let _modalResolver = null;
+        let _lastFocus = null;
+
+        function openModal({ title = "Confirm", bodyHtml = "", confirmText = "Confirm", confirmClass = "btn btn-danger" } = {}) {
+            modalTitle.textContent = title;
+            modalBody.innerHTML = bodyHtml;
+            modalConfirm.textContent = confirmText;
+            modalConfirm.className = confirmClass;
+
+            modalOverlay.classList.add("show");
+            modalOverlay.setAttribute("aria-hidden", "false");
+            _lastFocus = document.activeElement;
+            setTimeout(() => modalConfirm.focus(), 0);
+
+            return new Promise(resolve => { _modalResolver = resolve; });
+        }
+
+        function closeModal(result) {
+            modalOverlay.classList.remove("show");
+            modalOverlay.setAttribute("aria-hidden", "true");
+            const r = _modalResolver;
+            _modalResolver = null;
+            if (typeof r === "function") r(result);
+            if (_lastFocus && typeof _lastFocus.focus === "function") _lastFocus.focus();
+        }
+
+        modalClose.addEventListener("click", () => closeModal(false));
+        modalCancel.addEventListener("click", () => closeModal(false));
+        modalConfirm.addEventListener("click", () => closeModal(true));
+        modalOverlay.addEventListener("click", (e) => { if (e.target === modalOverlay) closeModal(false); });
+        document.addEventListener("keydown", (e) => {
+            if (!modalOverlay.classList.contains("show")) return;
+            if (e.key === "Escape") closeModal(false);
+        });
+
+        /* =============================
+           Donation modal
+        ============================= */
+        const donateOverlay = document.getElementById("donateOverlay");
+        const donateClose = document.getElementById("donateClose");
+        const donateCancel = document.getElementById("donateCancel");
+        const donateGo = document.getElementById("donateGo");
+        const donateFreq = document.getElementById("donateFreq");
+        const donateAmount = document.getElementById("donateAmount");
+        let _donateLastFocus = null;
+
+        function openDonateModal() {
+            donateOverlay.classList.add("show");
+            donateOverlay.setAttribute("aria-hidden", "false");
+            _donateLastFocus = document.activeElement;
+            setTimeout(() => donateGo.focus(), 0);
+        }
+
+        function closeDonateModal() {
+            donateOverlay.classList.remove("show");
+            donateOverlay.setAttribute("aria-hidden", "true");
+            if (_donateLastFocus && typeof _donateLastFocus.focus === "function") _donateLastFocus.focus();
+        }
+
+        donateClose.addEventListener("click", closeDonateModal);
+        donateCancel.addEventListener("click", closeDonateModal);
+        donateOverlay.addEventListener("click", (e) => { if (e.target === donateOverlay) closeDonateModal(); });
+        document.addEventListener("keydown", (e) => {
+            if (!donateOverlay.classList.contains("show")) return;
+            if (e.key === "Escape") closeDonateModal();
+        });
+
+        function openPopup(url, name = "popup", features = "width=520,height=760,noopener,noreferrer") {
+            return window.open(url, name, features);
+        }
+
+        donateGo.addEventListener("click", () => {
+            const freq = donateFreq.value;
+            const amt = donateAmount.value;
+
+            const url = SQUARE_DONATION?.[freq]?.[amt] || SQUARE_DONATION?.[freq]?.custom || "";
+            if (!url) {
+                closeDonateModal();
+                setNotice("warn", `<strong>Donation link missing.</strong> Update SQUARE_DONATION.`);
+                return;
+            }
+
+            const popup = openPopup(url, "squareDonate", "width=520,height=760,noopener,noreferrer");
+            closeDonateModal();
+
+            if (!popup) {
+                setNotice("warn", `<strong>Popup blocked.</strong> Allow popups and try again.`);
+                return;
+            }
+
+            setNotice("ok",
+                `<div style="display:flex;gap:10px;align-items:flex-start">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
+            <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div><strong>Donation popup opened.</strong><br/>Thank you for supporting Unlim8ted.</div>
+        </div>`
+            );
+        });
+
+        /* =============================
+           Expired modal
+        ============================= */
+        const expiredOverlay = document.getElementById("expiredOverlay");
+        const expiredClose = document.getElementById("expiredClose");
+        const expiredReload = document.getElementById("expiredReload");
+        function showExpired() {
+            try { closeCheckoutModal(); } catch { }
+            expiredOverlay.classList.add("show");
+            expiredOverlay.setAttribute("aria-hidden", "false");
+            setTimeout(() => expiredReload.focus(), 0);
+        }
+        function closeExpired() {
+            expiredOverlay.classList.remove("show");
+            expiredOverlay.setAttribute("aria-hidden", "true");
+        }
+        expiredClose.addEventListener("click", () => { closeExpired(); location.reload(); });
+        expiredReload.addEventListener("click", () => location.reload());
+        expiredOverlay.addEventListener("click", (e) => { if (e.target === expiredOverlay) location.reload(); });
+        document.addEventListener("keydown", (e) => {
+            if (!expiredOverlay.classList.contains("show")) return;
+            if (e.key === "Escape") location.reload();
+        });
+
+        /* =============================
+           Checkout modal: state + step UI
+        ============================= */
+        const checkoutOverlay = document.getElementById("checkoutOverlay");
+        const checkoutClose = document.getElementById("checkoutClose");
+        const btnQuote = document.getElementById("btnQuote");
+        const btnPay = document.getElementById("btnPay");
+
+        const shipMethodEl = document.getElementById("ship_method");
+        const payStatusEl = document.getElementById("payStatus");
+        const quoteHintEl = document.getElementById("quoteHint");
+
+        const qItemsEl = document.getElementById("q_items");
+        const qSubtotalEl = document.getElementById("q_subtotal");
+        const qShippingEl = document.getElementById("q_shipping");
+        const qTotalEl = document.getElementById("q_total");
+        const qExpWrap = document.getElementById("q_exp");
+        const qExpTime = document.getElementById("q_exp_time");
+
+        const cardContainer = document.getElementById("card-container");
+        const payHintEl = document.getElementById("payHint");
+
+        let _checkoutLastFocus = null;
+        let _quote = null; // { quoteId, shippingOptions, subtotalCents }
+        let _quoteExpiresAt = 0;
+        let _quoteExpireTimer = null;
+
+        let _squarePayments = null;
+        let _squareCard = null;
+        let _cardMounted = false;
+
+        let _step = 1; // 1=Address+Shipping, 2=Payment
+
+        let _progressEl = null;
+        function ensureProgressUI() {
+            if (_progressEl) return;
+            const body = checkoutOverlay.querySelector(".modalBody");
+            if (!body) return;
+
+            const wrap = document.createElement("div");
+            wrap.style.display = "flex";
+            wrap.style.alignItems = "center";
+            wrap.style.justifyContent = "space-between";
+            wrap.style.gap = "10px";
+            wrap.style.marginBottom = "12px";
+
+            const left = document.createElement("div");
+            left.style.fontWeight = "950";
+            left.style.letterSpacing = ".2px";
+            left.textContent = "Step 1 of 2";
+
+            const bar = document.createElement("div");
+            bar.style.flex = "1";
+            bar.style.height = "10px";
+            bar.style.borderRadius = "999px";
+            bar.style.border = "1px solid rgba(255,255,255,.12)";
+            bar.style.background = "rgba(255,255,255,.06)";
+            bar.style.overflow = "hidden";
+
+            const fill = document.createElement("div");
+            fill.style.height = "100%";
+            fill.style.width = "50%";
+            fill.style.borderRadius = "999px";
+            fill.style.background = "linear-gradient(90deg, rgba(184,107,255,1), rgba(99,214,255,1))";
+            bar.appendChild(fill);
+
+            const right = document.createElement("div");
+            right.style.color = "rgba(233,231,255,.72)";
+            right.style.fontSize = "12px";
+            right.textContent = "Address → Payment";
+
+            wrap.appendChild(left);
+            wrap.appendChild(bar);
+            wrap.appendChild(right);
+
+            _progressEl = { wrap, left, fill };
+            body.prepend(wrap);
+        }
+
+        function setStep(n) {
+            _step = n;
+            ensureProgressUI();
+            if (_progressEl) {
+                _progressEl.left.textContent = `Step ${n} of 2`;
+                _progressEl.fill.style.width = n === 1 ? "50%" : "100%";
+            }
+
+            if (n === 1) {
+                btnQuote.style.display = "inline-flex";
+                btnQuote.textContent = "Next";
+                btnPay.textContent = "Pay";
+                btnPay.disabled = true;
+
+                cardContainer.style.display = "none";
+                payHintEl.textContent = "We’ll show secure payment after we calculate shipping.";
+                quoteHintEl.textContent = "Enter your address, then click Next to calculate shipping.";
+            } else {
+                btnQuote.style.display = "none";
+                btnPay.style.display = "inline-flex";
+                btnPay.textContent = "Pay";
+                cardContainer.style.display = "block";
+                payHintEl.textContent = "Card details are handled by Square securely.";
+                quoteHintEl.textContent = "Quote ready. Review totals and pay.";
+                btnPay.disabled = false;
+            }
+        }
+
+        function setPayStatus(kind, html) {
+            payStatusEl.style.display = "block";
+            payStatusEl.className = "notice " + (kind || "");
+            payStatusEl.innerHTML = html;
+        }
+        function clearPayStatus() {
+            payStatusEl.style.display = "none";
+            payStatusEl.className = "notice";
+            payStatusEl.innerHTML = "";
+        }
+
+        function openCheckoutModal() {
+            ensureProgressUI();
+            checkoutOverlay.classList.add("show");
+            checkoutOverlay.setAttribute("aria-hidden", "false");
+            _checkoutLastFocus = document.activeElement;
+            setTimeout(() => btnQuote.focus(), 0);
+        }
+
+        function closeCheckoutModal() {
+            checkoutOverlay.classList.remove("show");
+            checkoutOverlay.setAttribute("aria-hidden", "true");
+            if (_checkoutLastFocus && typeof _checkoutLastFocus.focus === "function") _checkoutLastFocus.focus();
+        }
+
+        checkoutClose.addEventListener("click", () => closeCheckoutModal());
+        checkoutOverlay.addEventListener("click", (e) => { if (e.target === checkoutOverlay) closeCheckoutModal(); });
+        document.addEventListener("keydown", (e) => {
+            if (!checkoutOverlay.classList.contains("show")) return;
+            if (e.key === "Escape") closeCheckoutModal();
+        });
+
+        function resetCheckoutState() {
+            _quote = null;
+            _quoteExpiresAt = 0;
+            if (_quoteExpireTimer) clearTimeout(_quoteExpireTimer);
+            _quoteExpireTimer = null;
+
+            shipMethodEl.innerHTML = `<option value="">Shipping options will appear after Next…</option>`;
+            shipMethodEl.disabled = true;
+
+            clearPayStatus();
+
+            qItemsEl.textContent = "0";
+            qSubtotalEl.textContent = "0.00";
+            qShippingEl.textContent = "0.00";
+            qTotalEl.textContent = "0.00";
+            qExpWrap.style.display = "none";
+            qExpTime.textContent = "";
+
+            setStep(1);
+        }
+
+        function scheduleQuoteExpiry(expiresAtMs) {
+            if (_quoteExpireTimer) clearTimeout(_quoteExpireTimer);
+            const msLeft = Math.max(0, expiresAtMs - Date.now());
+            _quoteExpireTimer = setTimeout(() => showExpired(), msLeft);
+        }
+
+        function formatTime(msEpoch) {
+            const d = new Date(msEpoch);
+            const hh = String(d.getHours()).padStart(2, "0");
+            const mm = String(d.getMinutes()).padStart(2, "0");
+            return `${hh}:${mm}`;
+        }
+
+        /* =============================
+           Square card
+        ============================= */
+        async function ensureSquareCardMounted() {
+            if (!window.Square) throw new Error("Square Web Payments SDK not loaded.");
+            if (_cardMounted && _squareCard) return;
+
+            _squarePayments = _squarePayments || window.Square.payments(SQUARE_APP_ID, SQUARE_LOCATION_ID);
+            _squareCard = _squareCard || await _squarePayments.card();
+
+            await _squareCard.attach("#card-container");
+            _cardMounted = true;
+        }
+
+        /* =============================
+           Catalog resolution helpers
+        ============================= */
+        function resolveProductImage(productId, variantId) {
+            const pid = String(productId || "").trim();
+            if (!pid) return "";
+            const p = _productById.get(pid) || null;
+            if (!p) return "";
+
+            const vid = String(variantId || "").trim();
+            if (vid) {
+                const v = _variantByKey.get(`${pid}::${vid}`) || null;
+                const vImg =
+                    (v && Array.isArray(v.images) && v.images.length && safeUrl(v.images[0])) ||
+                    safeUrl(v?.image) ||
+                    safeUrl(v?.imageUrl) ||
+                    safeUrl(v?.thumbnail) ||
+                    "";
+                if (vImg) return vImg;
+            }
+
+            const pImg =
+                safeUrl(p.image) ||
+                safeUrl(p.imageUrl) ||
+                safeUrl(p.thumbnail) ||
+                safeUrl(p.thumb) ||
+                "";
+            if (pImg) return pImg;
+
+            if (Array.isArray(p.images) && p.images.length) {
+                const first = p.images[0];
+                if (typeof first === "string") return safeUrl(first);
+                if (first && typeof first === "object") return safeUrl(first.url || first.src || first.imageUrl || first.image);
+            }
+            return "";
+        }
+
+        // UPDATED: printful_catalog_variant_id is just varient.id (and cart variantId matches it)
+        function getPrintfulVariantIdForCartItem(it) {
+            const raw = it?.variantId ?? it?.printful_catalog_variant_id ?? it?.printfulVariantId ?? "";
+            const s = String(raw).trim();
+            return s ? s : null;
+        }
+
+        function resolveFromCatalog(item) {
+            const it = { ...(item || {}) };
+            const productId = String(it.productId || "").trim();
+            const variantId = String(it.variantId || "").trim();
+
+            const p = productId ? (_productById.get(productId) || null) : null;
+            const v = (productId && variantId) ? (_variantByKey.get(`${productId}::${variantId}`) || null) : null;
+
+            if (!String(it.title || it.name || "").trim()) {
+                it.title = String(p?.name || p?.title || productId || it.id || "Item").trim();
+            }
+
+            if (!String(it.variantLabel || "").trim()) {
+                it.variantLabel =
+                    String(v?.variantLabel || v?.name || "").trim() ||
+                    (Array.isArray(v?.optionParts) ? v.optionParts.join(" / ") : "");
+            }
+
+            const hasPrice =
+                it.price !== null &&
+                it.price !== undefined &&
+                Number.isFinite(Number(it.price));
+
+            if (!hasPrice) {
+                const catalogPrice =
+                    (v && Number.isFinite(Number(v.price)) ? Number(v.price) : null) ??
+                    (p && Number.isFinite(Number(p.price)) ? Number(p.price) : null) ??
+                    null;
+                if (catalogPrice !== null) it.price = catalogPrice;
+            }
+
+            const hasImage = !!safeUrl(it.image || it.imageUrl || "");
+            if (!hasImage) {
+                const img = resolveProductImage(productId, variantId);
+                if (img) it.image = img;
+            }
+
+            // Normalize printful_catalog_variant_id for checkout (optional)
+            if (it.printful_catalog_variant_id == null) {
+                const pfid = getPrintfulVariantIdForCartItem(it);
+                if (pfid) it.printful_catalog_variant_id = pfid;
+            }
+
+            return it;
+        }
+
+        /* =============================
+           Buy-mode helpers
+        ============================= */
+        function getProductByQueryKey(keyRaw) {
+            const key = String(keyRaw || "").trim().toLowerCase();
+            if (!key) return null;
+
+            for (const [pid, p] of _productById.entries()) {
+                if (String(pid).toLowerCase() === key) return p;
+            }
+
+            for (const p of (_productsArray || [])) {
+                const candidates = [
+                    p.id, p.productId, p.slug, p.handle, p.key, p.shortId,
+                    p?.meta?.slug, p?.meta?.handle
+                ].filter(Boolean).map(x => String(x).trim().toLowerCase());
+                if (candidates.includes(key)) return p;
+            }
+
+            for (const p of (_productsArray || [])) {
+                const name = String(p.name || p.title || "").trim().toLowerCase();
+                if (name && name.replace(/\s+/g, "") === key.replace(/\s+/g, "")) return p;
+            }
+
+            return null;
+        }
+
+        function pickDefaultVariant(product) {
+            const vars = Array.isArray(product?.varients) ? product.varients : (Array.isArray(product?.variants) ? product.variants : []);
+            if (!vars.length) return null;
+            for (const v of vars) {
+                const vid = String(v?.id ?? v?.variantId ?? "").trim();
+                if (vid) return v;
+            }
+            return vars[0] || null;
+        }
+
+        /* =============================
+           Local cart helpers (signed-out)
+        ============================= */
+        function getLocalCart() {
+            try {
+                const raw = localStorage.getItem("unlim8ted-cart");
+                const arr = raw ? JSON.parse(raw) : [];
+                return Array.isArray(arr) ? arr : [];
+            } catch { return []; }
+        }
+
+        function setLocalCart(items) {
+            try {
+                localStorage.setItem("unlim8ted-cart", JSON.stringify(items || []));
+                window.dispatchEvent(new CustomEvent("cart-changed"));
+            } catch { }
+        }
+
+        /* =============================
+           Cart state + listeners
+        ============================= */
+        let currentUser = null;
+        let cartItems = [];
+        let unsubCart = null;
+
+        async function emitCart(items) {
+            await loadProducts();
+            cartItems = (items || []).map(x => resolveFromCatalog(x));
+            renderCart();
+        }
+
+        window.addEventListener("cart-changed", () => {
+            if (BUY_MODE) return;
+            if (!currentUser) emitCart(getLocalCart());
+        });
+
+        function startCartData() {
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user || null;
+
+                if (unsubCart) { unsubCart(); unsubCart = null; }
+                if (BUY_MODE) return;
+
+                if (!user) {
+                    emitCart(getLocalCart());
+                    return;
+                }
+
+                const cartRef = collection(db, "users", user.uid, "cartItems");
+                unsubCart = onSnapshot(cartRef, (snap) => {
+                    const raw = [];
+                    snap.forEach(d => {
+                        const data = d.data() || {};
+                        raw.push({
+                            id: d.id,
+                            productId: data.productId ?? null,
+                            // UPDATED: cart variantId should be the Printful catalog variant id
+                            variantId: data.variantId ?? data.printful_catalog_variant_id ?? null,
+                            printful_catalog_variant_id: data.printful_catalog_variant_id ?? null,
+                            variantLabel: data.variantLabel ?? "",
+                            title: data.title || data.name || data.productName || "",
+                            price: (data.price ?? data.priceNum ?? null),
+                            qty: Number.isFinite(data.qty) ? Number(data.qty) : 1,
+                            image: data.image ?? data.imageUrl ?? null,
+                            accessUrl: data.accessUrl ?? data.downloadUrl ?? data.url ?? data.link ?? null,
+                        });
+                    });
+                    emitCart(raw);
+                });
+            });
+        }
+
+        /* =============================
+           Cart mutations
+        ============================= */
+        async function setQty(id, qty) {
+            qty = Math.max(1, qty | 0);
+
+            if (BUY_MODE) {
+                const idx = cartItems.findIndex(x => String(x.id) === String(id));
+                if (idx >= 0) {
+                    cartItems[idx].qty = qty;
+                    renderCart();
+                }
+                return;
+            }
+
+            if (!currentUser?.uid) {
+                const arr = getLocalCart();
+                const idx = arr.findIndex(x => String(x.id) === String(id));
+                if (idx >= 0) {
+                    arr[idx].qty = qty;
+                    setLocalCart(arr);
+                }
+                return;
+            }
+
+            await updateDoc(doc(db, "users", currentUser.uid, "cartItems", id), {
+                qty,
+                updatedAt: serverTimestamp(),
+            });
+        }
+
+        async function removeItem(id) {
+            if (BUY_MODE) {
+                cartItems = cartItems.filter(x => String(x.id) !== String(id));
+                renderCart();
+                return;
+            }
+
+            if (!currentUser?.uid) {
+                setLocalCart(getLocalCart().filter(x => String(x.id) !== String(id)));
+                return;
+            }
+            await deleteDoc(doc(db, "users", currentUser.uid, "cartItems", id));
+        }
+
+        async function clearCart() {
+            if (BUY_MODE) {
+                cartItems = [];
+                renderCart();
+                return;
+            }
+
+            if (!currentUser?.uid) {
+                setLocalCart([]);
+                return;
+            }
+            const snap = await getDocs(collection(db, "users", currentUser.uid, "cartItems"));
+            await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+        }
+
+        /* =============================
+           Checkout helpers
+        ============================= */
+        function getPaidItems(allItems) {
+            return (allItems || [])
+                .map(it => {
+                    const qty = Math.max(1, Number(it.qty) || 1);
+                    const price = normalizePriceNumber(parsePrice(it.price)) || 0;
+                    return { ...it, qty, price };
+                })
+                .filter(x => x.price > 0);
+        }
+
+        function findPaidMissingVariant(allItems) {
+            // Paid items must have productId + variantId (variantId is Printful catalog variant id)
+            return (allItems || [])
+                .map(it => ({
+                    title: String(it.title || it.name || "Item"),
+                    price: normalizePriceNumber(parsePrice(it.price)) || 0,
+                    variantId: String(it.variantId || "").trim(),
+                    productId: String(it.productId || "").trim(),
+                }))
+                .filter(x => x.price > 0 && (!x.productId || !x.variantId));
+        }
+
+        function findPaidMissingPrintfulVariantId(paidItems) {
+            const missing = [];
+            for (const it of (paidItems || [])) {
+                const pfid = getPrintfulVariantIdForCartItem(it);
+                if (!pfid) missing.push(it);
+            }
+            return missing;
+        }
+
+        function getAddressForWorker() {
+            const get = (id) => document.getElementById(id).value.trim();
+            return {
+                name: get("ship_full_name"),
+                email: get("ship_email"),
+                phone: get("ship_phone"),
+                address1: get("ship_address1"),
+                address2: get("ship_address2"),
+                city: get("ship_city"),
+                state: get("ship_state_code"),
+                zip: get("ship_zip"),
+                country: get("ship_country_code").toUpperCase(),
+            };
+        }
+
+        function validateAddressForWorker(a) {
+            const errs = [];
+            const req = (k, label) => { if (!String(a[k] || "").trim()) errs.push(`${label} is required.`); };
+
+            req("name", "Full name");
+            req("email", "Email");
+            req("address1", "Address line 1");
+            req("city", "City");
+            req("zip", "ZIP / Postal");
+            req("country", "Country");
+
+            if (a.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email)) errs.push("Email looks invalid.");
+
+            if (a.country === "US") {
+                if (!/^[A-Z]{2}$/.test(String(a.state || "").toUpperCase())) errs.push("State must be 2 letters (US).");
+                if (!/^\d{5}(-\d{4})?$/.test(String(a.zip || ""))) errs.push("ZIP must be 5 digits (or 5+4).");
+            }
+
+            if (a.phone) {
+                const digits = a.phone.replace(/[^\d]/g, "");
+                if (digits.length < 7) errs.push("Phone looks too short.");
+            }
+
+            return errs;
+        }
+
+        function centsToUsdString(cents) {
+            const n = Number(cents || 0) / 100;
+            return n.toFixed(2);
+        }
+
+        function computeSubtotalCents(items) {
+            return (items || []).reduce((sum, it) => {
+                const qty = Math.max(1, Number(it.qty) || 1);
+                const price = normalizePriceNumber(parsePrice(it.price)) || 0;
+                return sum + Math.round(price * 100) * qty;
+            }, 0);
+        }
+
+function buildWorkerItemsFromPaidCart(paidItems) {
+  const out = [];
+  for (const it of (paidItems || [])) {
+    const pfid = getPrintfulVariantIdForCartItem(it);
+    if (!pfid) throw new Error(`Missing/invalid variant id for ${it.productId || "?"}`);
+    out.push({
+      printfulVariantId: pfid, // ✅ string
+      qty: Math.max(1, Number(it.qty) || 1),
+    });
+  }
+  return out;
+}
+
+
+        /* =============================
+           Worker calls
+        ============================= */
+        async function workerFetchJson(path, opts) {
+            const res = await fetch(`${WORKER_BASE}${path}`, {
+                mode: "cors",
+                credentials: "omit",
+                ...opts,
+            });
+
+            const txt = await res.text().catch(() => "");
+            let j = {};
+            try { j = txt ? JSON.parse(txt) : {}; } catch { j = {}; }
+
+            if (!res.ok) {
+                const msg = j?.error || j?.detail || txt || `HTTP ${res.status}`;
+                const err = new Error(msg);
+                err.status = res.status;
+                err.body = j;
+                throw err;
+            }
+            return j;
+        }
+
+        function workerQuote(payload) {
+            return workerFetchJson("/quote", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+        }
+
+        function workerPay(payload) {
+            return workerFetchJson("/pay", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+        }
+
+        function workerPaymentStatus(quoteId) {
+            return workerFetchJson(`/payment-status?quoteId=${encodeURIComponent(quoteId)}`, { method: "GET" });
+        }
+
+        /* =============================
+           Checkout flow
+        ============================= */
+        async function beginCheckoutFlow() {
+            clearNotice();
+
+            if (!cartItems.length) {
+                setNotice("warn", `<strong>Your cart is empty.</strong> Add something first.`);
+                return;
+            }
+
+            const paid = getPaidItems(cartItems);
+            if (!paid.length) {
+                setNotice("ok",
+                    `<div style="display:flex;gap:10px;align-items:flex-start">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
+              <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div><strong>No paid items.</strong><br/>Your free items are ready via their links.</div>
+          </div>`
+                );
+                return;
+            }
+
+            const missingVariant = findPaidMissingVariant(cartItems);
+            if (missingVariant.length) {
+                setNotice("warn",
+                    `<strong>Some paid items can’t be checked out yet.</strong><br/>
+           These need productId + variantId (Printful catalog variant id) in your cart data/products.json:<br/>
+           <div style="margin-top:6px;opacity:.9">${missingVariant.map(m => `• ${escapeHtml(m.title)}`).join("<br/>")}</div>`
+                );
+                return;
+            }
+
+            const missingPfid = findPaidMissingPrintfulVariantId(paid);
+            if (missingPfid.length) {
+                setNotice("warn",
+                    `<strong>Missing Printful catalog variant id.</strong><br/>
+           Make sure your cart item <code>variantId</code> is the Printful catalog variant id (products.json varient.id).<br/>
+           <div style="margin-top:6px;opacity:.9">${missingPfid.map(m => `• ${escapeHtml(m.title)} (${escapeHtml(m.variantLabel || "")})`).join("<br/>")}</div>`
+                );
+                return;
+            }
+
+            resetCheckoutState();
+            openCheckoutModal();
+
+            const itemsCount = cartItems.reduce((s, it) => s + (Number(it.qty) || 1), 0);
+            const subtotalCents = computeSubtotalCents(paid);
+            qItemsEl.textContent = String(itemsCount);
+            qSubtotalEl.textContent = centsToUsdString(subtotalCents);
+            qShippingEl.textContent = "0.00";
+            qTotalEl.textContent = centsToUsdString(subtotalCents);
+        }
+
+        // Step 1: Next => quote
+        btnQuote.addEventListener("click", async () => {
+            clearPayStatus();
+
+            const paid = getPaidItems(cartItems);
+            if (!paid.length) {
+                setPayStatus("warn", `<strong>No paid items.</strong> Nothing to checkout.`);
+                return;
+            }
+
+            const address = getAddressForWorker();
+            const errs = validateAddressForWorker(address);
+            if (errs.length) {
+                setPayStatus("warn", `<strong>Please fix:</strong><br/>${errs.map(e => `• ${escapeHtml(e)}`).join("<br/>")}`);
+                return;
+            }
+
+            btnQuote.disabled = true;
+            shipMethodEl.disabled = true;
+            shipMethodEl.innerHTML = `<option value="">Calculating…</option>`;
+            quoteHintEl.textContent = "Calculating shipping options…";
+
+            try {
+                const items = buildWorkerItemsFromPaidCart(paid);
+
+                const resp = await workerQuote({ address, items });
+                const quoteId = String(resp.quoteId || "").trim();
+                const shippingOptions = Array.isArray(resp.shippingOptions) ? resp.shippingOptions : [];
+                const subtotalCents = typeof resp.subtotal === "number" ? resp.subtotal : computeSubtotalCents(paid);
+
+                if (!quoteId) throw new Error("Worker did not return quoteId.");
+                if (!shippingOptions.length) throw new Error("No shipping options returned.");
+
+                _quote = { quoteId, shippingOptions, subtotalCents };
+
+                _quoteExpiresAt = Number(resp.expiresAt || 0) || (Date.now() + 10 * 60 * 1000);
+                scheduleQuoteExpiry(_quoteExpiresAt);
+
+                qExpWrap.style.display = "inline-flex";
+                qExpTime.textContent = formatTime(_quoteExpiresAt);
+
+                shipMethodEl.innerHTML = "";
+                for (const opt of shippingOptions) {
+                    const id = String(opt.id || "").trim();
+                    const name = String(opt.name || "Shipping").trim();
+                    const cost = Number(opt.cost || 0);
+                    const label = `${name} — $${centsToUsdString(cost)}`;
+
+                    const o = document.createElement("option");
+                    o.value = id;
+                    o.textContent = label;
+                    shipMethodEl.appendChild(o);
+                }
+
+                shipMethodEl.disabled = false;
+
+                const selected = shipMethodEl.value;
+                const shipCents = Number(shippingOptions.find(x => String(x.id) === String(selected))?.cost || 0);
+
+                qSubtotalEl.textContent = centsToUsdString(subtotalCents);
+                qShippingEl.textContent = centsToUsdString(shipCents);
+                qTotalEl.textContent = centsToUsdString(subtotalCents + shipCents);
+
+                setPayStatus("ok",
+                    `<div style="display:flex;gap:10px;align-items:flex-start">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
+              <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div><strong>Shipping calculated.</strong><br/>Proceed to payment.</div>
+          </div>`
+                );
+
+                setStep(2);
+                await ensureSquareCardMounted();
+
+            } catch (err) {
+                console.error(err);
+                shipMethodEl.innerHTML = `<option value="">Shipping options will appear after Next…</option>`;
+                shipMethodEl.disabled = true;
+                quoteHintEl.textContent = "Enter your address, then click Next to calculate shipping.";
+                setPayStatus("bad", `<strong>Checkout error:</strong> ${escapeHtml(err?.message || String(err))}`);
+            } finally {
+                btnQuote.disabled = false;
+            }
+        });
+
+        shipMethodEl.addEventListener("change", () => {
+            if (!_quote) return;
+            const id = shipMethodEl.value;
+            const shipCents = Number(_quote.shippingOptions.find(x => String(x.id) === String(id))?.cost || 0);
+            qShippingEl.textContent = centsToUsdString(shipCents);
+            qTotalEl.textContent = centsToUsdString(_quote.subtotalCents + shipCents);
+        });
+
+        // Step 2: Pay
+        btnPay.addEventListener("click", async () => {
+            clearPayStatus();
+
+            if (!_quote?.quoteId) {
+                setPayStatus("warn", `<strong>Start checkout again.</strong>`);
+                setStep(1);
+                return;
+            }
+
+            if (Date.now() >= _quoteExpiresAt) {
+                showExpired();
+                return;
+            }
+
+            const selectedShippingId = String(shipMethodEl.value || "").trim();
+            if (!selectedShippingId) {
+                setPayStatus("warn", `<strong>Select a shipping method.</strong>`);
+                return;
+            }
+
+            btnPay.disabled = true;
+            shipMethodEl.disabled = true;
+
+            setPayStatus("warn", `<strong>Processing payment…</strong> Do not refresh.`);
+
+            try {
+                await ensureSquareCardMounted();
+
+                const tokenizeResult = await _squareCard.tokenize();
+                if (tokenizeResult.status !== "OK") {
+                    const msg = tokenizeResult.errors?.[0]?.message || "Card tokenization failed.";
+                    throw new Error(msg);
+                }
+
+                if (Date.now() >= _quoteExpiresAt) {
+                    showExpired();
+                    return;
+                }
+
+                await workerPay({
+                    quoteId: _quote.quoteId,
+                    selectedShippingId,
+                    sourceId: tokenizeResult.token,
+                });
+
+                const start = Date.now();
+                const hardStop = 60 * 1000;
+
+                while (true) {
+                    if (Date.now() >= _quoteExpiresAt) {
+                        showExpired();
+                        return;
+                    }
+                    if (Date.now() - start > hardStop) break;
+
+                    const st = await workerPaymentStatus(_quote.quoteId);
+                    const status = String(st.status || "").toLowerCase();
+
+                    if (status === "paid" || status === "completed") {
+                        setPayStatus("ok",
+                            `<div style="display:flex;gap:10px;align-items:flex-start">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
+                  <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div><strong>Payment confirmed.</strong><br/>Thank you! Your order will be processed.</div>
+              </div>`
+                        );
+
+                        try { await clearCart(); } catch { }
+                        renderCart();
+                        setTimeout(() => closeCheckoutModal(), 900);
+                        return;
+                    }
+
+                    if (status === "failed" || status === "canceled") {
+                        setPayStatus("bad", `<strong>Payment failed.</strong> Please try again.`);
+                        btnPay.disabled = false;
+                        shipMethodEl.disabled = false;
+                        return;
+                    }
+
+                    await new Promise(r => setTimeout(r, 1200));
+                }
+
+                setPayStatus("warn",
+                    `<strong>Processing.</strong><br/>If you were charged, it will finalize shortly. You can keep this page open and retry Pay if needed.`
+                );
+
+            } catch (err) {
+                console.error(err);
+                setPayStatus("bad", `<strong>Payment error:</strong> ${escapeHtml(err?.message || String(err))}`);
+            } finally {
+                if (!expiredOverlay.classList.contains("show")) {
+                    btnPay.disabled = false;
+                    shipMethodEl.disabled = false;
+                }
+            }
+        });
+
+        /* =============================
+           Render
+        ============================= */
+        function itemHTML(it) {
+            const qty = Math.max(1, Number(it.qty) || 1);
+            const price = normalizePriceNumber(parsePrice(it.price)) || 0;
+
+            const title = escapeHtml(it.title || it.name || "Item");
+            const variantLabel = String(it.variantLabel || "").trim();
+            const variantLine = variantLabel
+                ? `<div class="mini">Variant: <strong>${escapeHtml(variantLabel)}</strong></div>`
+                : ``;
+
+            const imgUrl = safeUrl(it.image || it.imageUrl || "");
+            const img = imgUrl ? `<img src="${escapeHtml(imgUrl)}" alt="">` : "No image";
+
+            const priceHtml = price > 0
+                ? `$${money(price)}`
+                : `<span class="free">FREE</span>`;
+
+            return `
+        <div class="item">
+          <div class="thumb">${img}</div>
+
+          <div class="meta">
+            <div class="title">${title}</div>
+            ${variantLine}
+
+            <div class="row2">
+              <div class="price">${priceHtml}</div>
+
+              <div class="qty" aria-label="Quantity">
+                <button type="button" data-dec="${escapeHtml(it.id)}" aria-label="Decrease quantity">−</button>
+                <input type="text" inputmode="numeric" value="${qty}" data-qty="${escapeHtml(it.id)}" aria-label="Quantity value">
+                <button type="button" data-inc="${escapeHtml(it.id)}" aria-label="Increase quantity">+</button>
+              </div>
+            </div>
+
+            ${safeUrl(it.accessUrl) && price <= 0
+                    ? `<div class="mini">Free access: <a href="${escapeHtml(it.accessUrl)}" target="_blank" rel="noopener" style="color:rgba(99,214,255,.95);text-decoration:none;font-weight:900;">Open link</a></div>`
+                    : ``
+                }
+          </div>
+
+          <div class="actions">
+            <button class="iconbtn" type="button" data-remove="${escapeHtml(it.id)}" title="Remove" aria-label="Remove">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
+                <path d="M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M6 7l1 14h10l1-14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M9 7V4h6v3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      `;
+        }
+
+        function renderCart() {
+            const list = document.getElementById("cartList");
+            const empty = document.getElementById("cartEmpty");
+
+            list.innerHTML = "";
+            if (!cartItems.length) {
+                empty.style.display = "block";
+            } else {
+                empty.style.display = "none";
+                for (const it of cartItems) {
+                    const d = document.createElement("div");
+                    d.innerHTML = itemHTML(it);
+                    list.appendChild(d.firstElementChild);
+                }
+            }
+
+            const itemsCount = cartItems.reduce((s, it) => s + (Number(it.qty) || 1), 0);
+            const subtotal = cartItems.reduce((s, it) => {
+                const price = normalizePriceNumber(parsePrice(it.price)) || 0;
+                return s + price * (Number(it.qty) || 1);
+            }, 0);
+
+            document.getElementById("itemsCount").textContent = String(itemsCount);
+            document.getElementById("subtotal").textContent = money(subtotal);
+            document.getElementById("total").textContent = money(subtotal);
+
+            const checkoutBtn = document.getElementById("checkoutBtn");
+            checkoutBtn.disabled = cartItems.length === 0;
+
+            if (BUY_MODE) {
+                const it = cartItems[0] || null;
+                const price = it ? (normalizePriceNumber(parsePrice(it.price)) || 0) : 0;
+                const url = it ? safeUrl(it.accessUrl) : "";
+                checkoutBtn.textContent = (it && price <= 0 && url) ? "Get free item" : "Checkout";
+            } else {
+                checkoutBtn.textContent = "Checkout";
+            }
+
+            const clearBtn = document.getElementById("clearBtn");
+            clearBtn.disabled = cartItems.length === 0 || BUY_MODE;
+            clearBtn.style.display = BUY_MODE ? "none" : "inline-flex";
+        }
+
+        /* =============================
+           UI events
+        ============================= */
+        document.addEventListener("click", async (e) => {
+            const rm = e.target.closest("[data-remove]");
+            if (rm) {
+                const id = rm.getAttribute("data-remove");
+                try { await removeItem(id); } catch (err) { console.error(err); }
+                return;
+            }
+
+            const inc = e.target.closest("[data-inc]");
+            if (inc) {
+                const id = inc.getAttribute("data-inc");
+                const input = document.querySelector(`[data-qty="${CSS.escape(id)}"]`);
+                const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
+                input.value = String(current + 1);
+                try { await setQty(id, current + 1); } catch (err) { console.error(err); }
+                return;
+            }
+
+            const dec = e.target.closest("[data-dec]");
+            if (dec) {
+                const id = dec.getAttribute("data-dec");
+                const input = document.querySelector(`[data-qty="${CSS.escape(id)}"]`);
+                const current = Math.max(1, parseInt(input?.value || "1", 10) || 1);
+                const next = Math.max(1, current - 1);
+                input.value = String(next);
+                try { await setQty(id, next); } catch (err) { console.error(err); }
+                return;
+            }
+
+            if (e.target.closest("#checkoutBtn")) {
+                if (BUY_MODE && cartItems.length === 1) {
+                    const it = cartItems[0];
+                    const price = normalizePriceNumber(parsePrice(it.price)) || 0;
+                    const url = safeUrl(it.accessUrl);
+
+                    if (price <= 0 && url) {
+                        setNotice("ok",
+                            `<div style="display:flex;gap:10px;align-items:flex-start">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
+                  <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div><strong>Opening your free item…</strong></div>
+              </div>`
+                        );
+                        window.open(url, "_blank", "noopener,noreferrer");
+                        return;
+                    }
+                }
+
+                await beginCheckoutFlow();
+                return;
+            }
+
+            if (e.target.closest("#clearBtn")) {
+                if (BUY_MODE) return;
+                clearNotice();
+                if (!cartItems.length) return;
+
+                const ok = await openModal({
+                    title: "Clear cart?",
+                    bodyHtml: `This will remove <strong>all items</strong> from your cart. This can’t be undone.`,
+                    confirmText: "Clear cart",
+                    confirmClass: "btn btn-danger"
+                });
+
+                if (!ok) return;
+                try { await clearCart(); } catch (err) { console.error(err); }
+                return;
+            }
+
+            if (e.target.closest("#openDonate")) {
+                openDonateModal();
+                return;
+            }
+        });
+
+        let t = null;
+        document.addEventListener("input", (e) => {
+            const inp = e.target.closest("[data-qty]");
+            if (!inp) return;
+
+            const id = inp.getAttribute("data-qty");
+            let qty = parseInt(inp.value, 10);
+            if (!Number.isFinite(qty) || qty < 1) qty = 1;
+
+            clearTimeout(t);
+            t = setTimeout(async () => {
+                try { await setQty(id, qty); } catch (err) { console.error(err); }
+            }, 300);
+        });
+
+        /* =============================
+           BUY MODE bootstrap
+        ============================= */
+        async function startBuyMode(productKey) {
+            await loadProducts();
+
+            const p = getProductByQueryKey(productKey);
+            if (!p) {
+                cartItems = [];
+                renderCart();
+                setNotice("warn",
+                    `<strong>Product not found:</strong> ${escapeHtml(productKey)}<br/>
+           <a href="/products" style="color:rgba(99,214,255,.95);text-decoration:none;font-weight:900;">Go to products</a>`
+                );
+                return;
+            }
+
+            const pid = String(p.id ?? p.productId ?? "").trim();
+            const v = pickDefaultVariant(p);
+
+            // UPDATED: vid is Printful catalog variant id
+            const vid = String(v?.id ?? v?.variantId ?? "").trim();
+
+            const price = normalizePriceNumber(parsePrice(v?.price ?? p?.price)) || 0;
+            const accessUrl = p.accessUrl ?? p.downloadUrl ?? p.url ?? p.link ?? null;
+
+            if (price > 0 && !vid) {
+                cartItems = [];
+                renderCart();
+                setNotice("warn",
+                    `<strong>This product can’t be purchased yet.</strong><br/>
+           Missing varient.id (Printful catalog variant id) in products.json for <strong>${escapeHtml(pid || productKey)}</strong>.`
+                );
+                return;
+            }
+
+            if (price <= 0 && !safeUrl(accessUrl)) {
+                cartItems = [];
+                renderCart();
+                setNotice("warn",
+                    `<strong>This free item is missing its link.</strong><br/>
+           Add <code>accessUrl</code> (or <code>downloadUrl/url/link</code>) in products.json.`
+                );
+                return;
+            }
+
+            const image = resolveProductImage(pid, vid) || safeUrl(p.image || p.imageUrl || "");
+            const title = String(p.name || p.title || pid || productKey || "Item").trim();
+            const variantLabel = String(v?.name || "").trim();
+
+            cartItems = [
+                resolveFromCatalog({
+                    id: `buy-${pid}-${vid || "free"}`,
+                    productId: pid,
+                    variantId: vid || null,
+                    printful_catalog_variant_id: vid ? Number(vid) : null,
+                    title,
+                    variantLabel,
+                    price,
+                    qty: 1,
+                    image: image || null,
+                    accessUrl
+                })
+            ];
+
+            renderCart();
+            clearNotice();
+        }
+
+        /* =============================
+           Start
+        ============================= */
+        const y = new Date().getFullYear();
+        document.getElementById("footer-text").innerHTML =
+            `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+
+        if (BUY_MODE) {
+            document.getElementById("pageTitle").textContent = "Checkout";
+            document.getElementById("pageSub").textContent = "One item. Adjust quantity, then checkout.";
+            document.getElementById("continueBtn").textContent = "Back to products";
+            document.getElementById("continueBtn").setAttribute("href", "/products");
+            document.title = "Unlim8ted - Checkout";
+            document.getElementById("openDonate").style.display = "none";
+        }
+
+        loadProducts().catch(() => { });
+        startCartData();
+
+        if (BUY_MODE) {
+            if (!BUY_PRODUCT) {
+                setNotice("warn",
+                    `<strong>Missing product.</strong> Use <code>?source=buy&amp;product=theglitch</code><br/>
+           <a href="/products" style="color:rgba(99,214,255,.95);text-decoration:none;font-weight:900;">Go to products</a>`
+                );
+            } else {
+                startBuyMode(BUY_PRODUCT).catch(err => {
+                    console.error(err);
+                    setNotice("warn", `<strong>Error:</strong> ${escapeHtml(err?.message || String(err))}`);
+                });
+            }
+        } else {
+            renderCart();
+        }
+
+        const cc = document.getElementById("ship_country_code");
+        if (cc) cc.value = "US";
+
+        btnQuote.textContent = "Next";
+        btnPay.style.display = "inline-flex";
+    </script>
+</body>
+
+</html>

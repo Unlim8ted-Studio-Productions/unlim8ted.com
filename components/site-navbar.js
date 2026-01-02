@@ -694,34 +694,59 @@ class SiteNavbar extends HTMLElement {
     }
   }
 
-  resolveCartDisplay(it) {
-    const productId = String(it.productId || "").trim();
-    const variantId = String(it.variantId || "").trim();
+resolveCartDisplay(it) {
+  const productId = String(it.productId || "").trim();
+  const variantId = String(it.variantId || "").trim();
 
-    const p = productId ? (this._productById.get(productId) || null) : null;
-    const v = (productId && variantId) ? (this._variantByKey.get(`${productId}::${variantId}`) || null) : null;
+  const p = productId ? (this._productById.get(productId) || null) : null;
+  const v = (productId && variantId) ? (this._variantByKey.get(`${productId}::${variantId}`) || null) : null;
 
-    const title =
-      String(it.title || it.name || "").trim() ||
-      String(p?.name || p?.title || productId || it.id || "Item").trim();
+  const title =
+    String(it.title || it.name || "").trim() ||
+    String(p?.name || p?.title || productId || it.id || "Item").trim();
 
-    const variantLabel =
-      String(it.variantLabel || "").trim() ||
-      String(v?.name || "").trim();
+  const variantLabel =
+    String(it.variantLabel || "").trim() ||
+    String(v?.name || "").trim();
 
-    const price =
-      (Number.isFinite(Number(it.price)) ? Number(it.price) : null) ??
-      (v && Number.isFinite(Number(v.price)) ? Number(v.price) : null) ??
-      null;
+  // --- Price resolution (cart item wins, then variant, then product) ---
+  const parsedItem = this.parsePriceAny(it.price);
+  const parsedVar  = this.parsePriceAny(v?.price);
+  const parsedProd = this.parsePriceAny(p?.price);
 
-    let image = this.safeUrl(it.image || it.imageUrl || "");
-    if (!image && Array.isArray(v?.images) && v.images.length) {
-      image = this.safeUrl(v.images[0]);
-    }
-    if (!image) image = this.safeUrl(p?.image || "");
+  // currency preference: item -> variant -> product -> USD
+  const currency =
+    (parsedItem?.currency) ||
+    (v?.currency) ||
+    (parsedVar?.currency) ||
+    (p?.currency) ||
+    (parsedProd?.currency) ||
+    "USD";
 
-    return { title, variantLabel, price, image };
-  }
+  // pick best source
+  const picked = parsedItem || parsedVar || parsedProd;
+
+  // Sometimes your products.json uses dollars (major units) like 23.0
+  // Sometimes Square returns cents (minor units) like 2300
+  // Heuristic: if picked is from objects (isMinor=true) treat as cents; otherwise treat as dollars.
+  const priceAmount = picked ? picked.amount : null;
+  const priceIsMinor = picked ? !!picked.isMinor : false;
+
+  let image = this.safeUrl(it.image || it.imageUrl || "");
+  if (!image && Array.isArray(v?.images) && v.images.length) image = this.safeUrl(v.images[0]);
+  if (!image) image = this.safeUrl(v?.image || ""); // <- add support for v.image (your json uses image)
+  if (!image) image = this.safeUrl(p?.image || "");
+
+  return {
+    title,
+    variantLabel,
+    priceAmount,
+    priceCurrency: currency,
+    priceIsMinor,
+    image
+  };
+}
+
 
   // ----- spacer logic -----
   ensureSpacer() {
@@ -831,6 +856,57 @@ class SiteNavbar extends HTMLElement {
     badge.textContent = n > 99 ? "99+" : String(n);
     badge.classList.toggle("hidden", n === 0);
   }
+parsePriceAny(val) {
+  // Handles: 23, "23", "$23.00", {amount: 2300}, {amount_money:{amount:2300,currency:"USD"}}
+  if (val == null) return null;
+
+  // Square-like money objects
+  if (typeof val === "object") {
+    if (val.amount_money && typeof val.amount_money.amount === "number") {
+      return { amount: val.amount_money.amount, currency: val.amount_money.currency || "USD", isMinor: true };
+    }
+    if (typeof val.amount === "number") {
+      return { amount: val.amount, currency: val.currency || "USD", isMinor: true };
+    }
+    // sometimes { money: { amount, currency } }
+    if (val.money && typeof val.money.amount === "number") {
+      return { amount: val.money.amount, currency: val.money.currency || "USD", isMinor: true };
+    }
+  }
+
+  // Numeric
+  if (typeof val === "number" && Number.isFinite(val)) {
+    return { amount: val, currency: "USD", isMinor: false };
+  }
+
+  // String like "$23.00" or "23.00"
+  if (typeof val === "string") {
+    const s = val.trim();
+    if (!s) return null;
+    const n = Number(s.replace(/[^0-9.\-]/g, ""));
+    if (Number.isFinite(n)) return { amount: n, currency: "USD", isMinor: false };
+  }
+
+  return null;
+}
+
+formatMoney(amount, currency = "USD", isMinor = false) {
+  // If isMinor, amount is cents (USD minor units). Convert to major units.
+  let major = Number(amount);
+  if (!Number.isFinite(major)) return "";
+  if (isMinor) major = major / 100;
+
+  try {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 2,
+    }).format(major);
+  } catch {
+    // fallback if Intl currency fails
+    return `$${major.toFixed(2)}`;
+  }
+}
 
   renderCartMenu() {
     const meta = this.shadowRoot.getElementById("cartMeta");
@@ -858,7 +934,11 @@ class SiteNavbar extends HTMLElement {
         const qty = Number(it.qty) || 1;
 
         const subLeft = r.variantLabel ? `Qty: ${qty} • ${this.escapeHtml(r.variantLabel)}` : `Qty: ${qty}`;
-        const subRight = (r.price != null) ? `$${this.escapeHtml(String(r.price))}` : "";
+        const subRight =
+  (r.priceAmount != null)
+    ? this.escapeHtml(this.formatMoney(r.priceAmount, r.priceCurrency, r.priceIsMinor))
+    : "";
+
 
         return `
           <div class="cart-item">

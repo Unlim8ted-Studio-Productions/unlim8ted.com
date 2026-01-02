@@ -306,7 +306,9 @@
         "available": true,
         "image": "https://files.cdn.printful.com/files/512/512f2789034ba1c29e36424ade83539d_preview.png",
         "price": 7.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956b05e0d35d5",
+        "printful_catalog_variant_id": 15662
       }
     ],
     "additional_images": [],
@@ -330,12 +332,99 @@
     "image": "https://files.cdn.printful.com/files/c89/c8975a3ec0c6124d890897b25f902108_preview.png",
     "varients": [
       {
-        "id": "6956aefbf192f9",
+        "id": "#6956aefbf192f9",
         "available": true,
         "image": "https://files.cdn.printful.com/files/c89/c8975a3ec0c6124d890897b25f902108_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_catalog_variant_id": "5129466105",
+        "printful_cat_id": "#6956aefbf192f9",
+        "optionParts": [
+          "Burgundy"
+        ],
+        "variantLabel": "Burgundy"
+      },
+      {
+        "id": "6957ecd18ddae4",
+        "available": true,
+        "optionParts": [
+          "Black"
+        ],
+        "variantLabel": "Black",
+        "image": "https://files.cdn.printful.com/files/d4c/d4c6d40626265dd3606c373c74de28ad_preview.png",
+        "price": 23.5,
+        "currency": "USD",
+        "printful_catalog_variant_id": "5130834257",
+        "printful_cat_id": "6957ecd18ddae4"
+      },
+      {
+        "id": "6957ecd18ddb81",
+        "available": true,
+        "optionParts": [
+          "Oxford Navy"
+        ],
+        "variantLabel": "Oxford Navy",
+        "image": "https://files.cdn.printful.com/files/603/6031754815d7c2021f8e1f0146ae5bbb_preview.png",
+        "price": 23.5,
+        "currency": "USD",
+        "printful_catalog_variant_id": "5130834258",
+        "printful_cat_id": "6957ecd18ddb81"
+      },
+      {
+        "id": "6957ecd18ddbd6",
+        "available": true,
+        "optionParts": [
+          "Light Avio Blue"
+        ],
+        "variantLabel": "Light Avio Blue",
+        "image": "https://files.cdn.printful.com/files/35d/35d452cdcf3e40b72cd9f8716b6d45c9_preview.png",
+        "price": 23.5,
+        "currency": "USD",
+        "printful_catalog_variant_id": "5130834259",
+        "printful_cat_id": "6957ecd18ddbd6"
+      },
+      {
+        "id": "6957ecd18ddc27",
+        "available": true,
+        "optionParts": [
+          "Mustard Yellow"
+        ],
+        "variantLabel": "Mustard Yellow",
+        "image": "https://files.cdn.printful.com/files/8b4/8b4853101de4635c9d3e14ac5626ce86_preview.png",
+        "price": 23.5,
+        "currency": "USD",
+        "printful_catalog_variant_id": "5130834260",
+        "printful_cat_id": "6957ecd18ddc27"
+      },
+      {
+        "id": "6957ecd18ddc75",
+        "available": true,
+        "optionParts": [
+          "Light Grey"
+        ],
+        "variantLabel": "Light Grey",
+        "image": "https://files.cdn.printful.com/files/d14/d14deb22ab23a9b886f94367d1444cd2_preview.png",
+        "price": 23.5,
+        "currency": "USD",
+        "printful_catalog_variant_id": "5130834261",
+        "printful_cat_id": "6957ecd18ddc75"
+      },
+      {
+        "id": "6957ecd18ddcb8",
+        "available": true,
+        "optionParts": [
+          "Leaf Green"
+        ],
+        "variantLabel": "Leaf Green",
+        "image": "https://files.cdn.printful.com/files/1dd/1dd46314800734dd57425d288fe0f54c_preview.png",
+        "price": 23.5,
+        "currency": "USD",
+        "printful_catalog_variant_id": "5130834262",
+        "printful_cat_id": "6957ecd18ddcb8"
       }
+    ],
+    "variation_types": [
+      "Color"
     ],
     "additional_images": [
       "https://items-images-production.s3.us-west-2.amazonaws.com/files/3948268de744b80123b5cbecb1bd5ba14fb35796/original.jpeg",
@@ -368,10 +457,22 @@
     "product-type": "physical",
     "printful_id": "411558074",
     "images": [
-      "https://files.cdn.printful.com/files/c89/c8975a3ec0c6124d890897b25f902108_preview.png",
+      "https://files.cdn.printful.com/files/35d/35d452cdcf3e40b72cd9f8716b6d45c9_preview.png",
       "https://files.cdn.printful.com/files/ba7/ba743714ed9f97556dfd9e431d7501a4_thumb.png",
       "https://files.cdn.printful.com/files/ba7/ba743714ed9f97556dfd9e431d7501a4_preview.png",
-      "https://files.cdn.printful.com/files/c89/c8975a3ec0c6124d890897b25f902108_thumb.png"
+      "https://files.cdn.printful.com/files/c89/c8975a3ec0c6124d890897b25f902108_thumb.png",
+      "https://files.cdn.printful.com/files/c89/c8975a3ec0c6124d890897b25f902108_preview.png",
+      "https://files.cdn.printful.com/files/d4c/d4c6d40626265dd3606c373c74de28ad_thumb.png",
+      "https://files.cdn.printful.com/files/d4c/d4c6d40626265dd3606c373c74de28ad_preview.png",
+      "https://files.cdn.printful.com/files/603/6031754815d7c2021f8e1f0146ae5bbb_thumb.png",
+      "https://files.cdn.printful.com/files/603/6031754815d7c2021f8e1f0146ae5bbb_preview.png",
+      "https://files.cdn.printful.com/files/35d/35d452cdcf3e40b72cd9f8716b6d45c9_thumb.png",
+      "https://files.cdn.printful.com/files/8b4/8b4853101de4635c9d3e14ac5626ce86_thumb.png",
+      "https://files.cdn.printful.com/files/8b4/8b4853101de4635c9d3e14ac5626ce86_preview.png",
+      "https://files.cdn.printful.com/files/d14/d14deb22ab23a9b886f94367d1444cd2_thumb.png",
+      "https://files.cdn.printful.com/files/d14/d14deb22ab23a9b886f94367d1444cd2_preview.png",
+      "https://files.cdn.printful.com/files/1dd/1dd46314800734dd57425d288fe0f54c_thumb.png",
+      "https://files.cdn.printful.com/files/1dd/1dd46314800734dd57425d288fe0f54c_preview.png"
     ]
   },
   {
@@ -387,7 +488,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/fbf/fbfb74b9796b6605d2ffac10896b535b_preview.png",
         "price": 19.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aecd234d33",
+        "printful_catalog_variant_id": 4811
       },
       {
         "id": "6956aecd234da6",
@@ -398,7 +501,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/e03/e036d0086941c94aa6f2e933960acc8d_preview.png",
         "price": 19.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aecd234da6",
+        "printful_catalog_variant_id": 4816
       },
       {
         "id": "6956aecd234df3",
@@ -409,7 +514,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/a95/a95ea40f8293d7c41f2beec899d940ff_preview.png",
         "price": 19.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aecd234df3",
+        "printful_catalog_variant_id": 4817
       },
       {
         "id": "6956aecd234e35",
@@ -420,7 +527,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6c0/6c018570ef42333e2e93e2f3706afb3f_preview.png",
         "price": 19.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aecd234e35",
+        "printful_catalog_variant_id": 4818
       }
     ],
     "additional_images": [
@@ -470,7 +579,9 @@
         "available": true,
         "image": "https://files.cdn.printful.com/files/7fb/7fbb2423c3a944bf12868a1816c83456_preview.png",
         "price": 16.19,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956adc74a0b69",
+        "printful_catalog_variant_id": 12141
       }
     ],
     "additional_images": [
@@ -500,7 +611,9 @@
         "available": true,
         "image": "https://files.cdn.printful.com/files/12b/12be4b64683ceb21c2f3b724c519bbe9_preview.png",
         "price": 32.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956abb72e65c1",
+        "printful_catalog_variant_id": 13432
       }
     ],
     "additional_images": [
@@ -530,7 +643,9 @@
         "available": true,
         "image": "https://files.cdn.printful.com/files/d0e/d0e9b97a0d4bac7bddc9ca2002541186_preview.png",
         "price": 3.29,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac136feb67",
+        "printful_catalog_variant_id": 10163
       }
     ],
     "additional_images": [
@@ -568,7 +683,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
         "price": 29.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ae21f268a7",
+        "printful_catalog_variant_id": 8850
       },
       {
         "id": "6956ae21f26938",
@@ -579,7 +696,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
         "price": 29.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ae21f26938",
+        "printful_catalog_variant_id": 8851
       },
       {
         "id": "6956ae21f269d5",
@@ -590,7 +709,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
         "price": 29.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ae21f269d5",
+        "printful_catalog_variant_id": 8852
       },
       {
         "id": "6956ae21f26a53",
@@ -601,7 +722,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
         "price": 29.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ae21f26a53",
+        "printful_catalog_variant_id": 8853
       },
       {
         "id": "6956ae21f26ad3",
@@ -612,7 +735,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
         "price": 29.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ae21f26ad3",
+        "printful_catalog_variant_id": 8854
       },
       {
         "id": "6956ae21f26b59",
@@ -623,7 +748,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
         "price": 32.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ae21f26b59",
+        "printful_catalog_variant_id": 8855
       }
     ],
     "image": "https://files.cdn.printful.com/files/6ec/6ec18182bbf16b890b1298d3d63d50df_preview.png",
@@ -654,7 +781,9 @@
         "available": true,
         "image": "https://files.cdn.printful.com/files/06c/06cbafb908be8a75caaa85566a9942c7_preview.png",
         "price": 19.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ad674fb9b1",
+        "printful_catalog_variant_id": 16359
       }
     ],
     "image": "https://files.cdn.printful.com/files/06c/06cbafb908be8a75caaa85566a9942c7_preview.png",
@@ -681,7 +810,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f1f12",
+        "printful_catalog_variant_id": 15236
       },
       {
         "id": "6956acfa0f1fb6",
@@ -693,7 +824,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
         "price": 42.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f1fb6",
+        "printful_catalog_variant_id": 15237
       },
       {
         "id": "6956acfa0f2042",
@@ -705,7 +838,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
         "price": 42.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f2042",
+        "printful_catalog_variant_id": 15238
       },
       {
         "id": "6956acfa0f20c2",
@@ -717,7 +852,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f20c2",
+        "printful_catalog_variant_id": 15239
       },
       {
         "id": "6956acfa0f2147",
@@ -729,7 +866,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f2147",
+        "printful_catalog_variant_id": 15240
       },
       {
         "id": "6956acfa0f21d1",
@@ -741,7 +880,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f21d1",
+        "printful_catalog_variant_id": 15241
       },
       {
         "id": "6956acfa0f2257",
@@ -753,7 +894,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f2257",
+        "printful_catalog_variant_id": 15242
       },
       {
         "id": "6956acfa0f22d7",
@@ -765,7 +908,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f22d7",
+        "printful_catalog_variant_id": 15243
       },
       {
         "id": "6956acfa0f2361",
@@ -777,7 +922,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f2361",
+        "printful_catalog_variant_id": 15244
       },
       {
         "id": "6956acfa0f23e3",
@@ -789,7 +936,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f23e3",
+        "printful_catalog_variant_id": 15245
       },
       {
         "id": "6956acfa0f2467",
@@ -801,7 +950,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
         "price": 42.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f2467",
+        "printful_catalog_variant_id": 15246
       },
       {
         "id": "6956acfa0f24e2",
@@ -813,7 +964,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
         "price": 42.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f24e2",
+        "printful_catalog_variant_id": 15247
       },
       {
         "id": "6956acfa0f2574",
@@ -825,7 +978,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f2574",
+        "printful_catalog_variant_id": 15248
       },
       {
         "id": "6956acfa0f2605",
@@ -837,7 +992,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f2605",
+        "printful_catalog_variant_id": 15249
       },
       {
         "id": "6956acfa0f2683",
@@ -849,7 +1006,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f2683",
+        "printful_catalog_variant_id": 15250
       },
       {
         "id": "6956acfa0f2711",
@@ -861,7 +1020,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f2711",
+        "printful_catalog_variant_id": 15251
       },
       {
         "id": "6956acfa0f2799",
@@ -873,7 +1034,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f2799",
+        "printful_catalog_variant_id": 15252
       },
       {
         "id": "6956acfa0f2825",
@@ -885,7 +1048,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/60f/60fb2ecaa81cf503e0e2c34b8ff63ee1_preview.png",
         "price": 41.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956acfa0f2825",
+        "printful_catalog_variant_id": 15253
       }
     ],
     "image": "https://files.cdn.printful.com/files/b54/b548d1cbf949ceaa28af52543efbb3ea_preview.png",
@@ -920,7 +1085,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6648",
+        "printful_catalog_variant_id": 15917
       },
       {
         "id": "6956ac887b66c4",
@@ -932,7 +1099,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b66c4",
+        "printful_catalog_variant_id": 15918
       },
       {
         "id": "6956ac887b6717",
@@ -944,7 +1113,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6717",
+        "printful_catalog_variant_id": 15919
       },
       {
         "id": "6956ac887b6765",
@@ -956,7 +1127,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6765",
+        "printful_catalog_variant_id": 15920
       },
       {
         "id": "6956ac887b67b8",
@@ -968,7 +1141,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b67b8",
+        "printful_catalog_variant_id": 15921
       },
       {
         "id": "6956ac887b67f9",
@@ -980,7 +1155,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
         "price": 62.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b67f9",
+        "printful_catalog_variant_id": 15922
       },
       {
         "id": "6956ac887b6845",
@@ -992,7 +1169,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c6c/c6cb50b5c60752b3b1a133094f71543b_preview.png",
         "price": 65.49,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6845",
+        "printful_catalog_variant_id": 15923
       },
       {
         "id": "6956ac887b6892",
@@ -1004,7 +1183,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6892",
+        "printful_catalog_variant_id": 15938
       },
       {
         "id": "6956ac887b68e3",
@@ -1016,7 +1197,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b68e3",
+        "printful_catalog_variant_id": 15939
       },
       {
         "id": "6956ac887b6928",
@@ -1028,7 +1211,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6928",
+        "printful_catalog_variant_id": 15940
       },
       {
         "id": "6956ac887b6973",
@@ -1040,7 +1225,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6973",
+        "printful_catalog_variant_id": 15941
       },
       {
         "id": "6956ac887b69c6",
@@ -1052,7 +1239,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b69c6",
+        "printful_catalog_variant_id": 15942
       },
       {
         "id": "6956ac887b6a36",
@@ -1064,7 +1253,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
         "price": 62.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6a36",
+        "printful_catalog_variant_id": 15943
       },
       {
         "id": "6956ac887b6a82",
@@ -1076,7 +1267,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
         "price": 65.49,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6a82",
+        "printful_catalog_variant_id": 15944
       },
       {
         "id": "6956ac887b6ac1",
@@ -1088,7 +1281,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6ac1",
+        "printful_catalog_variant_id": 15959
       },
       {
         "id": "6956ac887b6b14",
@@ -1100,7 +1295,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6b14",
+        "printful_catalog_variant_id": 15960
       },
       {
         "id": "6956ac887b6b65",
@@ -1112,7 +1309,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6b65",
+        "printful_catalog_variant_id": 15961
       },
       {
         "id": "6956ac887b6ba6",
@@ -1124,7 +1323,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6ba6",
+        "printful_catalog_variant_id": 15962
       },
       {
         "id": "6956ac887b6bf1",
@@ -1136,7 +1337,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6bf1",
+        "printful_catalog_variant_id": 15963
       },
       {
         "id": "6956ac887b6c34",
@@ -1148,7 +1351,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
         "price": 62.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6c34",
+        "printful_catalog_variant_id": 15964
       },
       {
         "id": "6956ac887b6c81",
@@ -1160,7 +1365,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/781/781064ca87dddb752f4126613433d414_preview.png",
         "price": 65.49,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6c81",
+        "printful_catalog_variant_id": 15965
       },
       {
         "id": "6956ac887b6cd1",
@@ -1172,7 +1379,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6cd1",
+        "printful_catalog_variant_id": 15966
       },
       {
         "id": "6956ac887b6d12",
@@ -1184,7 +1393,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6d12",
+        "printful_catalog_variant_id": 15967
       },
       {
         "id": "6956ac887b6d56",
@@ -1196,7 +1407,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6d56",
+        "printful_catalog_variant_id": 15968
       },
       {
         "id": "6956ac887b6da1",
@@ -1208,7 +1421,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6da1",
+        "printful_catalog_variant_id": 15969
       },
       {
         "id": "6956ac887b6e39",
@@ -1220,7 +1435,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6e39",
+        "printful_catalog_variant_id": 15970
       },
       {
         "id": "6956ac887b6e86",
@@ -1232,7 +1449,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
         "price": 62.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6e86",
+        "printful_catalog_variant_id": 15971
       },
       {
         "id": "6956ac887b6ec2",
@@ -1244,7 +1463,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/686/6862eb036fd21133d08157f064ccd102_preview.png",
         "price": 65.49,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6ec2",
+        "printful_catalog_variant_id": 15972
       },
       {
         "id": "6956ac887b6f16",
@@ -1256,7 +1477,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6f16",
+        "printful_catalog_variant_id": 15945
       },
       {
         "id": "6956ac887b6f51",
@@ -1268,7 +1491,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6f51",
+        "printful_catalog_variant_id": 15946
       },
       {
         "id": "6956ac887b6fa1",
@@ -1280,7 +1505,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6fa1",
+        "printful_catalog_variant_id": 15947
       },
       {
         "id": "6956ac887b6ff1",
@@ -1292,7 +1519,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b6ff1",
+        "printful_catalog_variant_id": 15948
       },
       {
         "id": "6956ac887b7035",
@@ -1304,7 +1533,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7035",
+        "printful_catalog_variant_id": 15949
       },
       {
         "id": "6956ac887b7087",
@@ -1316,7 +1547,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
         "price": 62.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7087",
+        "printful_catalog_variant_id": 15950
       },
       {
         "id": "6956ac887b70c4",
@@ -1328,7 +1561,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/1bb/1bb595768f083f18dd562e1a2130a429_preview.png",
         "price": 65.49,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b70c4",
+        "printful_catalog_variant_id": 15951
       },
       {
         "id": "6956ac887b7109",
@@ -1340,7 +1575,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7109",
+        "printful_catalog_variant_id": 15952
       },
       {
         "id": "6956ac887b7154",
@@ -1352,7 +1589,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7154",
+        "printful_catalog_variant_id": 15953
       },
       {
         "id": "6956ac887b7191",
@@ -1364,7 +1603,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7191",
+        "printful_catalog_variant_id": 15954
       },
       {
         "id": "6956ac887b71d4",
@@ -1376,7 +1617,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b71d4",
+        "printful_catalog_variant_id": 15955
       },
       {
         "id": "6956ac887b7225",
@@ -1388,7 +1631,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7225",
+        "printful_catalog_variant_id": 15956
       },
       {
         "id": "6956ac887b7297",
@@ -1400,7 +1645,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
         "price": 62.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7297",
+        "printful_catalog_variant_id": 15957
       },
       {
         "id": "6956ac887b72d6",
@@ -1412,7 +1659,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/047/047948cbe9b956d839ce34f3ca389638_preview.png",
         "price": 65.49,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b72d6",
+        "printful_catalog_variant_id": 15958
       },
       {
         "id": "6956ac887b7326",
@@ -1424,7 +1673,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7326",
+        "printful_catalog_variant_id": 15924
       },
       {
         "id": "6956ac887b7366",
@@ -1436,7 +1687,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7366",
+        "printful_catalog_variant_id": 15925
       },
       {
         "id": "6956ac887b73b9",
@@ -1448,7 +1701,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b73b9",
+        "printful_catalog_variant_id": 15926
       },
       {
         "id": "6956ac887b7408",
@@ -1460,7 +1715,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7408",
+        "printful_catalog_variant_id": 15927
       },
       {
         "id": "6956ac887b7444",
@@ -1472,7 +1729,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7444",
+        "printful_catalog_variant_id": 15928
       },
       {
         "id": "6956ac887b7497",
@@ -1484,7 +1743,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
         "price": 62.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7497",
+        "printful_catalog_variant_id": 15929
       },
       {
         "id": "6956ac887b74d4",
@@ -1496,7 +1757,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/72d/72da0006c7d398d0ae0364e7304fbe0f_preview.png",
         "price": 65.49,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b74d4",
+        "printful_catalog_variant_id": 15930
       },
       {
         "id": "6956ac887b7524",
@@ -1508,7 +1771,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7524",
+        "printful_catalog_variant_id": 15931
       },
       {
         "id": "6956ac887b7562",
@@ -1520,7 +1785,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7562",
+        "printful_catalog_variant_id": 15932
       },
       {
         "id": "6956ac887b75b6",
@@ -1532,7 +1799,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b75b6",
+        "printful_catalog_variant_id": 15933
       },
       {
         "id": "6956ac887b75f4",
@@ -1544,7 +1813,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b75f4",
+        "printful_catalog_variant_id": 15934
       },
       {
         "id": "6956ac887b7637",
@@ -1556,7 +1827,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7637",
+        "printful_catalog_variant_id": 15935
       },
       {
         "id": "6956ac887b7687",
@@ -1568,7 +1841,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
         "price": 62.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7687",
+        "printful_catalog_variant_id": 15936
       },
       {
         "id": "6956ac887b76e3",
@@ -1580,7 +1855,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/53c/53cc136a2542d4d659b1ce1f1992ceec_preview.png",
         "price": 65.49,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b76e3",
+        "printful_catalog_variant_id": 15937
       },
       {
         "id": "6956ac887b7739",
@@ -1592,7 +1869,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7739",
+        "printful_catalog_variant_id": 15910
       },
       {
         "id": "6956ac887b7772",
@@ -1604,7 +1883,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7772",
+        "printful_catalog_variant_id": 15911
       },
       {
         "id": "6956ac887b77c4",
@@ -1616,7 +1897,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b77c4",
+        "printful_catalog_variant_id": 15912
       },
       {
         "id": "6956ac887b7801",
@@ -1628,7 +1911,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7801",
+        "printful_catalog_variant_id": 15913
       },
       {
         "id": "6956ac887b7856",
@@ -1640,7 +1925,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7856",
+        "printful_catalog_variant_id": 15914
       },
       {
         "id": "6956ac887b7898",
@@ -1652,7 +1939,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
         "price": 62.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7898",
+        "printful_catalog_variant_id": 15915
       },
       {
         "id": "6956ac887b78e4",
@@ -1664,7 +1953,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/c7a/c7afaf32a33ee258340d8cfca3872741_preview.png",
         "price": 65.49,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b78e4",
+        "printful_catalog_variant_id": 15916
       },
       {
         "id": "6956ac887b7924",
@@ -1676,7 +1967,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7924",
+        "printful_catalog_variant_id": 15987
       },
       {
         "id": "6956ac887b7973",
@@ -1688,7 +1981,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7973",
+        "printful_catalog_variant_id": 15988
       },
       {
         "id": "6956ac887b79b7",
@@ -1700,7 +1995,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b79b7",
+        "printful_catalog_variant_id": 15989
       },
       {
         "id": "6956ac887b7a07",
@@ -1712,7 +2009,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7a07",
+        "printful_catalog_variant_id": 15990
       },
       {
         "id": "6956ac887b7a47",
@@ -1724,7 +2023,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
         "price": 59.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7a47",
+        "printful_catalog_variant_id": 15991
       },
       {
         "id": "6956ac887b7a88",
@@ -1736,7 +2037,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
         "price": 62.99,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7a88",
+        "printful_catalog_variant_id": 15992
       },
       {
         "id": "6956ac887b7ac5",
@@ -1748,7 +2051,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/8f8/8f8f9e39822001d93155272876642739_preview.png",
         "price": 65.49,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ac887b7ac5",
+        "printful_catalog_variant_id": 15993
       }
     ],
     "image": "https://files.cdn.printful.com/files/025/0250e5973f8744334f8cbee676a3fcdf_preview.png",
@@ -1797,7 +2102,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2974",
+        "printful_catalog_variant_id": 15236
       },
       {
         "id": "6956ab3f2e2a11",
@@ -1809,7 +2116,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2a11",
+        "printful_catalog_variant_id": 15237
       },
       {
         "id": "6956ab3f2e2aa8",
@@ -1821,7 +2130,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2aa8",
+        "printful_catalog_variant_id": 15238
       },
       {
         "id": "6956ab3f2e2b29",
@@ -1833,7 +2144,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2b29",
+        "printful_catalog_variant_id": 15239
       },
       {
         "id": "6956ab3f2e2ba5",
@@ -1845,7 +2158,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2ba5",
+        "printful_catalog_variant_id": 15240
       },
       {
         "id": "6956ab3f2e2c36",
@@ -1857,7 +2172,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2c36",
+        "printful_catalog_variant_id": 15241
       },
       {
         "id": "6956ab3f2e2cb7",
@@ -1869,7 +2186,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2cb7",
+        "printful_catalog_variant_id": 15242
       },
       {
         "id": "6956ab3f2e2de6",
@@ -1881,7 +2200,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2de6",
+        "printful_catalog_variant_id": 15243
       },
       {
         "id": "6956ab3f2e2e79",
@@ -1893,7 +2214,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2e79",
+        "printful_catalog_variant_id": 15244
       },
       {
         "id": "6956ab3f2e2ef3",
@@ -1905,7 +2228,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2ef3",
+        "printful_catalog_variant_id": 15245
       },
       {
         "id": "6956ab3f2e2f74",
@@ -1917,7 +2242,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2f74",
+        "printful_catalog_variant_id": 15246
       },
       {
         "id": "6956ab3f2e2ff7",
@@ -1929,7 +2256,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e2ff7",
+        "printful_catalog_variant_id": 15247
       },
       {
         "id": "6956ab3f2e3082",
@@ -1941,7 +2270,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e3082",
+        "printful_catalog_variant_id": 15248
       },
       {
         "id": "6956ab3f2e3105",
@@ -1953,7 +2284,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e3105",
+        "printful_catalog_variant_id": 15249
       },
       {
         "id": "6956ab3f2e3176",
@@ -1965,7 +2298,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e3176",
+        "printful_catalog_variant_id": 15250
       },
       {
         "id": "6956ab3f2e31f3",
@@ -1977,7 +2312,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e31f3",
+        "printful_catalog_variant_id": 15251
       },
       {
         "id": "6956ab3f2e3272",
@@ -1989,7 +2326,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e3272",
+        "printful_catalog_variant_id": 15252
       },
       {
         "id": "6956ab3f2e3301",
@@ -2001,7 +2340,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/574/574930118cee615a750e0b3b786bec26_preview.png",
         "price": 36.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956ab3f2e3301",
+        "printful_catalog_variant_id": 15253
       }
     ],
     "image": "https://files.cdn.printful.com/files/723/723997e3dec0f27bc5f02c786eead254_preview.png",
@@ -2038,7 +2379,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
         "price": 24.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289436",
+        "printful_catalog_variant_id": 9575
       },
       {
         "id": "6956aacd2894a8",
@@ -2050,7 +2393,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd2894a8",
+        "printful_catalog_variant_id": 8923
       },
       {
         "id": "6956aacd289505",
@@ -2062,7 +2407,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289505",
+        "printful_catalog_variant_id": 8924
       },
       {
         "id": "6956aacd289553",
@@ -2074,7 +2421,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289553",
+        "printful_catalog_variant_id": 8925
       },
       {
         "id": "6956aacd2895a6",
@@ -2086,7 +2435,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd2895a6",
+        "printful_catalog_variant_id": 8926
       },
       {
         "id": "6956aacd2895f7",
@@ -2098,7 +2449,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd2895f7",
+        "printful_catalog_variant_id": 8927
       },
       {
         "id": "6956aacd289646",
@@ -2110,7 +2463,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
         "price": 28.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289646",
+        "printful_catalog_variant_id": 8928
       },
       {
         "id": "6956aacd289696",
@@ -2122,7 +2477,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
         "price": 31.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289696",
+        "printful_catalog_variant_id": 8929
       },
       {
         "id": "6956aacd2896e2",
@@ -2134,7 +2491,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/92e/92ebf9e854197a154d5afcf7a5560873_preview.png",
         "price": 33.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd2896e2",
+        "printful_catalog_variant_id": 12878
       },
       {
         "id": "6956aacd289731",
@@ -2146,7 +2505,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
         "price": 24.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289731",
+        "printful_catalog_variant_id": 9546
       },
       {
         "id": "6956aacd289784",
@@ -2158,7 +2519,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289784",
+        "printful_catalog_variant_id": 4111
       },
       {
         "id": "6956aacd2897d3",
@@ -2170,7 +2533,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd2897d3",
+        "printful_catalog_variant_id": 4112
       },
       {
         "id": "6956aacd289822",
@@ -2182,7 +2547,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289822",
+        "printful_catalog_variant_id": 4113
       },
       {
         "id": "6956aacd289877",
@@ -2194,7 +2561,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289877",
+        "printful_catalog_variant_id": 4114
       },
       {
         "id": "6956aacd2898c9",
@@ -2206,7 +2575,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd2898c9",
+        "printful_catalog_variant_id": 4115
       },
       {
         "id": "6956aacd289919",
@@ -2218,7 +2589,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
         "price": 28.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289919",
+        "printful_catalog_variant_id": 12874
       },
       {
         "id": "6956aacd289967",
@@ -2230,7 +2603,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
         "price": 31.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289967",
+        "printful_catalog_variant_id": 12875
       },
       {
         "id": "6956aacd2899b4",
@@ -2242,7 +2617,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/365/3650499367dc8bf1ca0f7ea032d815b3_preview.png",
         "price": 33.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd2899b4",
+        "printful_catalog_variant_id": 12873
       },
       {
         "id": "6956aacd289a06",
@@ -2254,7 +2631,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
         "price": 24.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289a06",
+        "printful_catalog_variant_id": 9536
       },
       {
         "id": "6956aacd289a48",
@@ -2266,7 +2645,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289a48",
+        "printful_catalog_variant_id": 4061
       },
       {
         "id": "6956aacd289a95",
@@ -2278,7 +2659,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289a95",
+        "printful_catalog_variant_id": 4062
       },
       {
         "id": "6956aacd289ae1",
@@ -2290,7 +2673,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289ae1",
+        "printful_catalog_variant_id": 4063
       },
       {
         "id": "6956aacd289b37",
@@ -2302,7 +2687,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289b37",
+        "printful_catalog_variant_id": 4064
       },
       {
         "id": "6956aacd289b85",
@@ -2314,7 +2701,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/02b/02bc70c0d28435237df70a234086ce74_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289b85",
+        "printful_catalog_variant_id": 4065
       },
       {
         "id": "6956aacd289bd6",
@@ -2326,7 +2715,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
         "price": 24.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289bd6",
+        "printful_catalog_variant_id": 9569
       },
       {
         "id": "6956aacd289c25",
@@ -2338,7 +2729,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289c25",
+        "printful_catalog_variant_id": 8495
       },
       {
         "id": "6956aacd289c72",
@@ -2350,7 +2743,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289c72",
+        "printful_catalog_variant_id": 8496
       },
       {
         "id": "6956aacd289cc6",
@@ -2362,7 +2757,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289cc6",
+        "printful_catalog_variant_id": 8497
       },
       {
         "id": "6956aacd289d14",
@@ -2374,7 +2771,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289d14",
+        "printful_catalog_variant_id": 8498
       },
       {
         "id": "6956aacd289d69",
@@ -2386,7 +2785,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289d69",
+        "printful_catalog_variant_id": 8499
       },
       {
         "id": "6956aacd289da5",
@@ -2398,7 +2799,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
         "price": 28.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289da5",
+        "printful_catalog_variant_id": 8500
       },
       {
         "id": "6956aacd289df9",
@@ -2410,7 +2813,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/a54/a54165d823c44ed3c4c0fb4ce428e8b7_preview.png",
         "price": 31.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289df9",
+        "printful_catalog_variant_id": 8501
       },
       {
         "id": "6956aacd289e42",
@@ -2422,7 +2827,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289e42",
+        "printful_catalog_variant_id": 8481
       },
       {
         "id": "6956aacd289e91",
@@ -2434,7 +2841,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289e91",
+        "printful_catalog_variant_id": 8482
       },
       {
         "id": "6956aacd289ee8",
@@ -2446,7 +2855,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289ee8",
+        "printful_catalog_variant_id": 8483
       },
       {
         "id": "6956aacd289f33",
@@ -2458,7 +2869,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289f33",
+        "printful_catalog_variant_id": 8484
       },
       {
         "id": "6956aacd289f84",
@@ -2470,7 +2883,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289f84",
+        "printful_catalog_variant_id": 8485
       },
       {
         "id": "6956aacd289fd1",
@@ -2482,7 +2897,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
         "price": 28.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd289fd1",
+        "printful_catalog_variant_id": 8486
       },
       {
         "id": "6956aacd28a027",
@@ -2494,7 +2911,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/ad7/ad7df3be506ce994390b2b1b5de4895f_preview.png",
         "price": 31.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a027",
+        "printful_catalog_variant_id": 8487
       },
       {
         "id": "6956aacd28a075",
@@ -2506,7 +2925,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
         "price": 24.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a075",
+        "printful_catalog_variant_id": 24344
       },
       {
         "id": "6956aacd28a0b5",
@@ -2518,7 +2939,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a0b5",
+        "printful_catalog_variant_id": 24345
       },
       {
         "id": "6956aacd28a108",
@@ -2530,7 +2953,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a108",
+        "printful_catalog_variant_id": 24346
       },
       {
         "id": "6956aacd28a156",
@@ -2542,7 +2967,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a156",
+        "printful_catalog_variant_id": 24347
       },
       {
         "id": "6956aacd28a1a3",
@@ -2554,7 +2981,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a1a3",
+        "printful_catalog_variant_id": 24348
       },
       {
         "id": "6956aacd28a1f4",
@@ -2566,7 +2995,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a1f4",
+        "printful_catalog_variant_id": 24349
       },
       {
         "id": "6956aacd28a241",
@@ -2578,7 +3009,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6d0/6d0c3fb079aaca083be556bdfa79e7ed_preview.png",
         "price": 28.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a241",
+        "printful_catalog_variant_id": 24350
       },
       {
         "id": "6956aacd28a295",
@@ -2590,7 +3023,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a295",
+        "printful_catalog_variant_id": 8530
       },
       {
         "id": "6956aacd28a2e3",
@@ -2602,7 +3037,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a2e3",
+        "printful_catalog_variant_id": 8531
       },
       {
         "id": "6956aacd28a323",
@@ -2614,7 +3051,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a323",
+        "printful_catalog_variant_id": 8532
       },
       {
         "id": "6956aacd28a389",
@@ -2626,7 +3065,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a389",
+        "printful_catalog_variant_id": 8533
       },
       {
         "id": "6956aacd28a3c5",
@@ -2638,7 +3079,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a3c5",
+        "printful_catalog_variant_id": 8534
       },
       {
         "id": "6956aacd28a422",
@@ -2650,7 +3093,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
         "price": 28.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a422",
+        "printful_catalog_variant_id": 8535
       },
       {
         "id": "6956aacd28a474",
@@ -2662,7 +3107,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/fb3/fb3890a3fef51627532acd49ab5c753b_preview.png",
         "price": 31.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a474",
+        "printful_catalog_variant_id": 8536
       },
       {
         "id": "6956aacd28a4c7",
@@ -2674,7 +3121,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a4c7",
+        "printful_catalog_variant_id": 4021
       },
       {
         "id": "6956aacd28a513",
@@ -2686,7 +3135,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a513",
+        "printful_catalog_variant_id": 4022
       },
       {
         "id": "6956aacd28a557",
@@ -2698,7 +3149,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a557",
+        "printful_catalog_variant_id": 4023
       },
       {
         "id": "6956aacd28a5a9",
@@ -2710,7 +3163,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a5a9",
+        "printful_catalog_variant_id": 4024
       },
       {
         "id": "6956aacd28a5f2",
@@ -2722,7 +3177,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a5f2",
+        "printful_catalog_variant_id": 4025
       },
       {
         "id": "6956aacd28a644",
@@ -2734,7 +3191,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
         "price": 28.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a644",
+        "printful_catalog_variant_id": 5296
       },
       {
         "id": "6956aacd28a694",
@@ -2746,7 +3205,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6c0/6c05c076f04726103f1ae6a10e988229_preview.png",
         "price": 31.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a694",
+        "printful_catalog_variant_id": 5311
       },
       {
         "id": "6956aacd28a6e7",
@@ -2758,7 +3219,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
         "price": 24.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a6e7",
+        "printful_catalog_variant_id": 9541
       },
       {
         "id": "6956aacd28a733",
@@ -2770,7 +3233,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a733",
+        "printful_catalog_variant_id": 4086
       },
       {
         "id": "6956aacd28a772",
@@ -2782,7 +3247,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a772",
+        "printful_catalog_variant_id": 4087
       },
       {
         "id": "6956aacd28a7c2",
@@ -2794,7 +3261,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a7c2",
+        "printful_catalog_variant_id": 4088
       },
       {
         "id": "6956aacd28a814",
@@ -2806,7 +3275,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a814",
+        "printful_catalog_variant_id": 4089
       },
       {
         "id": "6956aacd28a864",
@@ -2818,7 +3289,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a864",
+        "printful_catalog_variant_id": 4090
       },
       {
         "id": "6956aacd28a8b1",
@@ -2830,7 +3303,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
         "price": 28.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a8b1",
+        "printful_catalog_variant_id": 5300
       },
       {
         "id": "6956aacd28a945",
@@ -2842,7 +3317,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/99f/99f9ead1a15b5d8c3e9b168a9f115a89_preview.png",
         "price": 31.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a945",
+        "printful_catalog_variant_id": 5315
       },
       {
         "id": "6956aacd28a985",
@@ -2854,7 +3331,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
         "price": 24.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a985",
+        "printful_catalog_variant_id": 9556
       },
       {
         "id": "6956aacd28a9d2",
@@ -2866,7 +3345,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28a9d2",
+        "printful_catalog_variant_id": 4161
       },
       {
         "id": "6956aacd28aa24",
@@ -2878,7 +3359,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28aa24",
+        "printful_catalog_variant_id": 4162
       },
       {
         "id": "6956aacd28aa77",
@@ -2890,7 +3373,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28aa77",
+        "printful_catalog_variant_id": 4163
       },
       {
         "id": "6956aacd28aab4",
@@ -2902,7 +3387,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28aab4",
+        "printful_catalog_variant_id": 4164
       },
       {
         "id": "6956aacd28ab04",
@@ -2914,7 +3401,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28ab04",
+        "printful_catalog_variant_id": 4165
       },
       {
         "id": "6956aacd28ab55",
@@ -2926,7 +3415,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
         "price": 28.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28ab55",
+        "printful_catalog_variant_id": 5306
       },
       {
         "id": "6956aacd28aba7",
@@ -2938,7 +3429,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
         "price": 31.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28aba7",
+        "printful_catalog_variant_id": 5321
       },
       {
         "id": "6956aacd28abe7",
@@ -2950,7 +3443,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
         "price": 24.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28abe7",
+        "printful_catalog_variant_id": 9549
       },
       {
         "id": "6956aacd28ac39",
@@ -2962,7 +3457,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28ac39",
+        "printful_catalog_variant_id": 4126
       },
       {
         "id": "6956aacd28ac79",
@@ -2974,7 +3471,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28ac79",
+        "printful_catalog_variant_id": 4127
       },
       {
         "id": "6956aacd28acc5",
@@ -2986,7 +3485,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28acc5",
+        "printful_catalog_variant_id": 4128
       },
       {
         "id": "6956aacd28ad15",
@@ -2998,7 +3499,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28ad15",
+        "printful_catalog_variant_id": 4129
       },
       {
         "id": "6956aacd28ad67",
@@ -3010,7 +3513,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28ad67",
+        "printful_catalog_variant_id": 4130
       },
       {
         "id": "6956aacd28add4",
@@ -3022,7 +3527,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
         "price": 28.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28add4",
+        "printful_catalog_variant_id": 17210
       },
       {
         "id": "6956aacd28ae21",
@@ -3034,7 +3541,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/5f7/5f746e4ec77c2f3f1e53bc8a8bd10a48_preview.png",
         "price": 31.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28ae21",
+        "printful_catalog_variant_id": 17211
       },
       {
         "id": "6956aacd28ae78",
@@ -3046,7 +3555,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
         "price": 24.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28ae78",
+        "printful_catalog_variant_id": 9526
       },
       {
         "id": "6956aacd28aec4",
@@ -3058,7 +3569,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28aec4",
+        "printful_catalog_variant_id": 4011
       },
       {
         "id": "6956aacd28af16",
@@ -3070,7 +3583,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28af16",
+        "printful_catalog_variant_id": 4012
       },
       {
         "id": "6956aacd28af58",
@@ -3082,7 +3597,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28af58",
+        "printful_catalog_variant_id": 4013
       },
       {
         "id": "6956aacd28afa7",
@@ -3094,7 +3611,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28afa7",
+        "printful_catalog_variant_id": 4014
       },
       {
         "id": "6956aacd28aff2",
@@ -3106,7 +3625,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
         "price": 26.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28aff2",
+        "printful_catalog_variant_id": 4015
       },
       {
         "id": "6956aacd28b041",
@@ -3118,7 +3639,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
         "price": 28.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28b041",
+        "printful_catalog_variant_id": 5294
       },
       {
         "id": "6956aacd28b093",
@@ -3130,7 +3653,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
         "price": 31.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28b093",
+        "printful_catalog_variant_id": 5309
       },
       {
         "id": "6956aacd28b0e9",
@@ -3142,7 +3667,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/6da/6da1ff11c5c9dc91855e34e1772f3f0b_preview.png",
         "price": 33.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956aacd28b0e9",
+        "printful_catalog_variant_id": 12872
       }
     ],
     "image": "https://files.cdn.printful.com/files/11b/11b1564d7f594de3fd978dd635c2cfa6_preview.png",
@@ -3196,7 +3723,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
         "price": 15.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a92db01038",
+        "printful_catalog_variant_id": 8481
       },
       {
         "id": "6956a92db010a4",
@@ -3207,7 +3736,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
         "price": 15.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a92db010a4",
+        "printful_catalog_variant_id": 8482
       },
       {
         "id": "6956a92db010f7",
@@ -3218,7 +3749,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
         "price": 15.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a92db010f7",
+        "printful_catalog_variant_id": 8483
       },
       {
         "id": "6956a92db01143",
@@ -3229,7 +3762,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
         "price": 15.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a92db01143",
+        "printful_catalog_variant_id": 8484
       },
       {
         "id": "6956a92db01195",
@@ -3240,7 +3775,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
         "price": 18.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a92db01195",
+        "printful_catalog_variant_id": 8485
       },
       {
         "id": "6956a92db011e8",
@@ -3251,7 +3788,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
         "price": 20.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a92db011e8",
+        "printful_catalog_variant_id": 8486
       },
       {
         "id": "6956a92db01222",
@@ -3262,7 +3801,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
         "price": 23.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a92db01222",
+        "printful_catalog_variant_id": 8487
       }
     ],
     "image": "https://files.cdn.printful.com/files/2bf/2bf85474a02068084e64dcc0d3e94688_preview.png",
@@ -3291,7 +3832,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
         "price": 37.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a7c651a742",
+        "printful_catalog_variant_id": 11491
       },
       {
         "id": "6956a7c651a7a2",
@@ -3302,7 +3845,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
         "price": 37.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a7c651a7a2",
+        "printful_catalog_variant_id": 11492
       },
       {
         "id": "6956a7c651a7f8",
@@ -3313,7 +3858,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
         "price": 37.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a7c651a7f8",
+        "printful_catalog_variant_id": 11493
       },
       {
         "id": "6956a7c651a844",
@@ -3324,7 +3871,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
         "price": 37.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a7c651a844",
+        "printful_catalog_variant_id": 11494
       },
       {
         "id": "6956a7c651a891",
@@ -3335,7 +3884,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
         "price": 39.5,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a7c651a891",
+        "printful_catalog_variant_id": 11495
       },
       {
         "id": "6956a7c651a8e7",
@@ -3346,7 +3897,9 @@
         ],
         "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",
         "price": 42.0,
-        "currency": "USD"
+        "currency": "USD",
+        "printful_cat_id": "6956a7c651a8e7",
+        "printful_catalog_variant_id": 13417
       }
     ],
     "image": "https://files.cdn.printful.com/files/9e5/9e50eab3d101bb1dd9a4497f803f23d5_preview.png",

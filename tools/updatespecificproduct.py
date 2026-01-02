@@ -1,39 +1,33 @@
 #!/usr/bin/env python3
 """
-Update ONE product object in products.json from Printful, but ONLY these fields:
+REBUILD variants for ONE product from Printful, but ONLY touch the fields you approved.
 
-PRODUCT-level (overwrite):
-  - image
-  - images
-  - additional_images (best-effort from discovered URLs)
+What it does (for ONE product):
+✅ Replaces the entire `varients` array with fresh data from Printful store product detail.
+✅ Updates product `image`, `images`, `additional_images` (best-effort)
+✅ Updates each variant:
+   - id            (Printful store variant id)
+   - available     (bool inferred)
+   - optionParts   (parsed from Printful variant name; e.g. "Red / XL" => ["Red","XL"])
+   - variantLabel  ("Red / XL")
+   - image         (best-effort)
+   - price         (float)
+   - currency      ("USD" etc)
 
-VARIANT-level (for each item in varients[], matched by id):
-  - available
-  - price
-  - currency
-  - image
-  - variantLabel (derived from optionParts -> "Red / XL" style)
-
-DO NOT touch:
-  - name, description, details, notes (or any other copy fields)
-  - product-type, printful_id, id
-  - additional_videos, video, etc. (left as-is unless you edit manually)
-
-Match rules:
-  - Select product by --product-id (your slug) OR --printful-id
-  - Match variants by:
-      Printful sync_variant.id  (store variant id)  ==  products.json varients[].id
-    (Your JSON shows variant ids like "6956aecd234d33" which look like Printful store variant IDs.)
+❌ Does NOT touch: name, description, details, notes, product-type, printful_id, videos, etc.
 
 Env:
   PRINTFUL_ACCESS_TOKEN
 
-Usage:
+Usage (CMD):
   set PRINTFUL_ACCESS_TOKEN=YOUR_TOKEN
-  python tools\\printful_update_one_fields.py --in tools\\data\\products.json --write-inplace --product-id unlim8ted-organic-ribbed-beanie
+  python tools\\printful_rebuild_variants_one.py --in tools\\data\\products.json --write-inplace --product-id unlim8ted-organic-ribbed-beanie
+
+Or:
+  python tools\\printful_rebuild_variants_one.py --in tools\\data\\products.json --write-inplace --printful-id 411558074
 """
 
-import os, json, argparse, time
+import os, json, argparse
 from typing import Any, Dict, List, Optional, Tuple
 import requests
 
@@ -57,24 +51,26 @@ def write_json(path: str, data: Any) -> None:
 # ---------------- Helpers ----------------
 
 
+def s(x: Any) -> str:
+    return "" if x is None else str(x)
+
+
 def is_physical_product(p: Dict[str, Any]) -> bool:
-    return str(p.get("product-type") or "").strip().lower() == "physical"
+    return s(p.get("product-type")).strip().lower() == "physical"
 
 
 def norm_url(x: Any) -> Optional[str]:
     if not isinstance(x, str):
         return None
     u = x.strip()
-    if not u:
-        return None
-    if u.startswith("https://") or u.startswith("http://"):
+    if u.startswith("http://") or u.startswith("https://"):
         return u
     return None
 
 
 def dedupe(urls: List[str]) -> List[str]:
     seen = set()
-    out = []
+    out: List[str] = []
     for u in urls:
         if u and u not in seen:
             seen.add(u)
@@ -88,25 +84,12 @@ def to_float(x: Any) -> Optional[float]:
     if isinstance(x, (int, float)):
         return float(x)
     if isinstance(x, str):
-        s = x.strip().replace("$", "").replace(",", "")
+        t = x.strip().replace("$", "").replace(",", "")
         try:
-            return float(s)
+            return float(t)
         except Exception:
             return None
     return None
-
-
-def build_variant_label_from_optionparts(option_parts: Any) -> Optional[str]:
-    if not isinstance(option_parts, list):
-        return None
-    parts = []
-    for p in option_parts:
-        ps = str(p).strip()
-        if ps:
-            parts.append(ps)
-    if not parts:
-        return None
-    return " / ".join(parts)  # "Red / XL"
 
 
 # ---------------- Printful HTTP ----------------
@@ -117,7 +100,7 @@ def pf_headers(token: str) -> Dict[str, str]:
         "Authorization": f"Bearer {token}",
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "User-Agent": "unlim8ted-printful-update-one-fields/1.0",
+        "User-Agent": "unlim8ted-printful-rebuild-variants/1.0",
     }
 
 
@@ -133,12 +116,13 @@ def pf_get(token: str, path: str, params=None) -> Dict[str, Any]:
             f"GET {path} failed HTTP {r.status_code}\n"
             f"{json.dumps(j, indent=2) if isinstance(j,(dict,list)) else r.text[:1200]}"
         )
+    # classic Printful format: {"code":200,"result":{...}}
     if isinstance(j, dict) and isinstance(j.get("result"), dict):
         return j["result"]
     return j if isinstance(j, dict) else {}
 
 
-# ---------------- Inference (availability, price, images) ----------------
+# ---------------- Inference ----------------
 
 
 def infer_available(obj: Dict[str, Any]) -> Optional[bool]:
@@ -147,10 +131,10 @@ def infer_available(obj: Dict[str, Any]) -> Optional[bool]:
             return bool(obj[k])
     for k in ("availability_status", "availability", "status", "stock_status"):
         if k in obj and isinstance(obj[k], str):
-            s = obj[k].strip().lower()
-            if s in ("in_stock", "instock", "available", "ok", "active", "enabled"):
+            st = obj[k].strip().lower()
+            if st in ("in_stock", "instock", "available", "ok", "active", "enabled"):
                 return True
-            if s in (
+            if st in (
                 "out_of_stock",
                 "outofstock",
                 "unavailable",
@@ -169,33 +153,26 @@ def infer_price_and_currency(
     v: Dict[str, Any],
 ) -> Tuple[Optional[float], Optional[str]]:
     currency = None
-    for ck in (
-        "currency",
-        "retail_currency",
-        "retail_price_currency",
-        "store_currency",
-    ):
+    for ck in ("currency", "retail_currency", "store_currency"):
         cv = v.get(ck)
         if isinstance(cv, str) and cv.strip():
             currency = cv.strip().upper()
             break
 
-    if "retail_price" in v:
-        rp = v.get("retail_price")
-        if isinstance(rp, dict):
-            if not currency:
-                c2 = rp.get("currency") or rp.get("curr")
-                if isinstance(c2, str) and c2.strip():
-                    currency = c2.strip().upper()
-            val = rp.get("value")
-            amt = rp.get("amount")
-            f = to_float(val if val is not None else amt)
-            if f is not None:
-                return f, currency
-        else:
-            f = to_float(rp)
-            if f is not None:
-                return f, currency
+    rp = v.get("retail_price")
+    if isinstance(rp, dict):
+        if not currency:
+            c2 = rp.get("currency")
+            if isinstance(c2, str) and c2.strip():
+                currency = c2.strip().upper()
+        val = rp.get("value") if rp.get("value") is not None else rp.get("amount")
+        f = to_float(val)
+        if f is not None:
+            return f, currency
+    elif rp is not None:
+        f = to_float(rp)
+        if f is not None:
+            return f, currency
 
     for k in ("price", "variant_price", "store_price"):
         if k in v:
@@ -236,19 +213,47 @@ def choose_best(urls: List[str]) -> Optional[str]:
 
     def score(u: str) -> int:
         ul = u.lower()
-        s = 0
+        sc = 0
         if "preview" in ul:
-            s += 40
+            sc += 40
         if "mockup" in ul:
-            s += 35
+            sc += 30
         if "thumbnail" in ul or "_thumb" in ul:
-            s += 20
-        return s
+            sc += 15
+        if "printfile-preview" in ul:
+            sc -= 5
+        return sc
 
     return sorted(urls, key=score, reverse=True)[0]
 
 
-# ---------------- Core update ----------------
+def parse_option_parts_from_variant_name(
+    full_name: str, product_name_hint: Optional[str]
+) -> List[str]:
+    """
+    Your Printful display names look like:
+      "Life of a Meatball Unisex T-Shirt / White / XS"
+    We want optionParts: ["White","XS"]
+    Strategy:
+      - Split by " / "
+      - If first segment matches product name (or contains it), drop first segment
+      - Return remaining segments
+    """
+    parts = [p.strip() for p in full_name.split(" / ") if p.strip()]
+    if not parts:
+        return []
+    if product_name_hint:
+        pnh = product_name_hint.strip().lower()
+        if parts and pnh and parts[0].lower() == pnh:
+            return parts[1:]
+        # sometimes full product name is embedded; keep simple & safe:
+        if parts and pnh and pnh in parts[0].lower() and len(parts) > 1:
+            return parts[1:]
+    # if it doesn't look prefixed, just return all (better than empty)
+    return parts
+
+
+# ---------------- Core ----------------
 
 
 def find_product_index(
@@ -258,42 +263,43 @@ def find_product_index(
 ) -> int:
     if product_id:
         for i, p in enumerate(products):
-            if str(p.get("id") or "").strip() == product_id:
+            if s(p.get("id")).strip() == product_id:
                 return i
     if printful_id:
         for i, p in enumerate(products):
-            if str(p.get("printful_id") or "").strip() == str(printful_id).strip():
+            if s(p.get("printful_id")).strip() == s(printful_id).strip():
                 return i
     raise SystemExit(
-        "Product not found. Use --product-id or --printful-id that exists in products.json"
+        "Product not found. Use --product-id or --printful-id that exists in products.json."
     )
 
 
-def update_one_product_fields(prod: Dict[str, Any], token: str) -> Dict[str, int]:
+def rebuild_variants_for_one_product(
+    prod: Dict[str, Any], token: str
+) -> Dict[str, int]:
     if not is_physical_product(prod):
         raise SystemExit("Selected product is not product-type: physical")
 
-    pfid = str(prod.get("printful_id") or "").strip()
+    pfid = s(prod.get("printful_id")).strip()
     if not pfid:
         raise SystemExit("Selected product has no printful_id")
 
-    # Pull Printful store product detail (v1)
     detail = pf_get(token, f"/store/products/{pfid}")
 
-    # PRODUCT images
-    all_prod_urls = dedupe([u for u in extract_urls(detail) if u])
-    best = choose_best(all_prod_urls)
+    # --- product images (only fields you approved) ---
+    prod_urls = dedupe([u for u in extract_urls(detail) if u])
+    best = choose_best(prod_urls)
     if best:
         prod["image"] = best
-    if all_prod_urls:
-        prod["images"] = all_prod_urls
+    if prod_urls:
+        prod["images"] = prod_urls
 
-    # additional_images best-effort: prefer non Printful CDN if present
-    addl = [u for u in all_prod_urls if ("items-images-production" in u or "s3." in u)]
+    # best-effort additional_images: prioritize non Printful CDN if present
+    addl = [u for u in prod_urls if ("items-images-production" in u or "s3." in u)]
     if addl:
         prod["additional_images"] = dedupe(addl)
 
-    # VARIANTS: your ids look like Printful store variant ids, so match on sync_variant.id
+    # --- rebuild variants ---
     pf_variants = (
         detail.get("sync_variants")
         or detail.get("variants")
@@ -303,69 +309,75 @@ def update_one_product_fields(prod: Dict[str, Any], token: str) -> Dict[str, int
     if not isinstance(pf_variants, list):
         pf_variants = []
 
-    pf_by_id: Dict[str, Dict[str, Any]] = {}
+    # use product name from your json as hint for parsing optionParts
+    name_hint = s(prod.get("name")).strip() or None
+
+    new_vars: List[Dict[str, Any]] = []
+    seen_ids = set()
+
     for sv in pf_variants:
-        if isinstance(sv, dict) and sv.get("id") is not None:
-            pf_by_id[str(sv["id"]).strip()] = sv
-
-    stats = {
-        "variants_seen": 0,
-        "variants_matched": 0,
-        "availability_set": 0,
-        "price_set": 0,
-        "currency_set": 0,
-        "variant_image_set": 0,
-        "variant_label_set": 0,
-    }
-
-    local_vars = prod.get("varients") or []
-    if not isinstance(local_vars, list):
-        return stats
-
-    for lv in local_vars:
-        if not isinstance(lv, dict):
+        if not isinstance(sv, dict):
             continue
 
-        stats["variants_seen"] += 1
-        vid = str(lv.get("id") or "").strip()
-        if not vid:
+        vid = sv.get("id")
+        if vid is None:
             continue
-
-        sv = pf_by_id.get(vid)
-        if not sv:
+        vid_s = s(vid).strip()
+        if not vid_s or vid_s in seen_ids:
             continue
+        seen_ids.add(vid_s)
 
-        stats["variants_matched"] += 1
-
-        # available
         av = infer_available(sv)
-        if av is not None:
-            lv["available"] = bool(av)
-            stats["availability_set"] += 1
+        if av is None:
+            # if unknown, default to True (safer for storefront?) — but you can change to False
+            av = True
 
-        # price/currency
         price, cur = infer_price_and_currency(sv)
-        if price is not None:
-            lv["price"] = float(price)
-            stats["price_set"] += 1
-        if cur:
-            lv["currency"] = cur
-            stats["currency_set"] += 1
+        if cur is None:
+            cur = "USD"  # sensible default; keep if Printful doesn't send
 
-        # variant image
+        # variant label + optionParts
+        # prefer sv["name"] if present, else try external name fields
+        full_name = s(
+            sv.get("name") or sv.get("variant_name") or sv.get("title")
+        ).strip()
+        opt_parts: List[str] = []
+
+        if full_name:
+            opt_parts = parse_option_parts_from_variant_name(full_name, name_hint)
+
+        variant_label = " / ".join(opt_parts) if opt_parts else ""
+
+        # variant image best-effort
         vurls = dedupe([u for u in extract_urls(sv) if u])
         vbest = choose_best(vurls)
+
+        vobj: Dict[str, Any] = {
+            "id": vid_s,
+            "available": bool(av),
+        }
+
+        if opt_parts:
+            vobj["optionParts"] = opt_parts
+        if variant_label:
+            vobj["variantLabel"] = variant_label
         if vbest:
-            lv["image"] = vbest
-            stats["variant_image_set"] += 1
+            vobj["image"] = vbest
+        if price is not None:
+            vobj["price"] = float(price)
+        if cur:
+            vobj["currency"] = str(cur).upper()
 
-        # variantLabel from optionParts -> "Red / XL"
-        new_label = build_variant_label_from_optionparts(lv.get("optionParts"))
-        if new_label:
-            lv["variantLabel"] = new_label
-            stats["variant_label_set"] += 1
+        new_vars.append(vobj)
 
-    return stats
+    # Replace the entire variants list
+    prod["varients"] = new_vars
+
+    return {
+        "pf_variants_total": len(pf_variants),
+        "variants_written": len(new_vars),
+        "product_images_found": len(prod_urls),
+    }
 
 
 def main():
@@ -390,25 +402,26 @@ def main():
     prod = products[idx]
 
     print(
-        f"Updating product index={idx} id={prod.get('id')} printful_id={prod.get('printful_id')}"
+        f"Rebuilding varients for product index={idx} id={prod.get('id')} printful_id={prod.get('printful_id')}"
     )
 
-    stats = update_one_product_fields(prod, token)
+    stats = rebuild_variants_for_one_product(prod, token)
 
     out_path = (
         args.in_path
         if args.write_inplace
-        else (args.out or args.in_path.replace(".json", "_one_fields_updated.json"))
+        else (args.out or args.in_path.replace(".json", "_rebuilt_one.json"))
     )
     write_json(out_path, products)
 
     print("\n--- Done ---")
-    for k in sorted(stats.keys()):
-        print(f"{k}: {stats[k]}")
+    for k, v in stats.items():
+        print(f"{k}: {v}")
     print(f"Wrote: {out_path}")
     print(
-        "\nUpdated ONLY: product image(s) + variant image/price/currency/available/variantLabel."
+        "\nRebuilt ONLY: product images + varients (id/available/price/currency/image/variantLabel/optionParts)."
     )
+    print("Did NOT touch: name/description/details/notes and other product fields.")
 
 
 if __name__ == "__main__":
