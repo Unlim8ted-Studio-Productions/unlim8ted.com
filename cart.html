@@ -449,6 +449,48 @@
       justify-content: flex-end;
       border-top: 1px solid rgba(255, 255, 255, .08);
     }
+/* --- Modal scrolling fixes --- */
+.modalOverlay {
+  /* already fixed/inset; keep it, but allow the overlay itself to scroll */
+  overflow: auto;
+}
+
+.modal {
+  /* keep the modal from exceeding the viewport height */
+  max-height: calc(100vh - 32px); /* respects overlay padding */
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHead {
+  /* header stays visible */
+  flex: 0 0 auto;
+}
+
+.modalBody {
+  /* body becomes the scroll area */
+  flex: 1 1 auto;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: none; /* ensure flex controls height */
+}
+
+.modalActions {
+  /* footer stays visible */
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+  background: rgba(10, 8, 18, .92);
+  backdrop-filter: blur(10px);
+}
+
+/* optional: nicer scrollbar on desktop */
+.modalBody::-webkit-scrollbar { width: 10px; }
+.modalBody::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, .18);
+  border-radius: 999px;
+}
+.modalBody::-webkit-scrollbar-track { background: transparent; }
 
     /* Donation popup form */
     .donateGrid {
