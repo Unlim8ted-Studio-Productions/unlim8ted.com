@@ -26,6 +26,7 @@
       --accent: #b86bff;
       --accent2: #63d6ff;
       --danger: #ff4d4d;
+      --warn: #ffd166;
       --shadow: 0 18px 40px rgba(0, 0, 0, .45);
       --r: 18px;
     }
@@ -84,6 +85,7 @@
       backdrop-filter: blur(12px);
     }
 
+    /* Left */
     .list {
       padding: 14px;
     }
@@ -99,7 +101,9 @@
       line-height: 1.35;
     }
 
-    .notice strong { color: rgba(255, 255, 255, .92); }
+    .notice strong {
+      color: rgba(255, 255, 255, .92);
+    }
 
     .notice.ok {
       border-color: rgba(99, 214, 255, .22);
@@ -113,11 +117,18 @@
       color: rgba(255, 255, 255, .78);
     }
 
+    .notice.bad {
+      border-color: rgba(255, 77, 77, .28);
+      background: rgba(255, 77, 77, .10);
+      color: rgba(255, 255, 255, .86);
+    }
+
     .empty {
       padding: 18px;
       color: var(--muted);
     }
 
+    /* Item */
     .item {
       display: grid;
       grid-template-columns: 88px 1fr auto;
@@ -190,6 +201,7 @@
       letter-spacing: .3px;
     }
 
+    /* Qty */
     .qty {
       display: inline-flex;
       align-items: center;
@@ -228,6 +240,7 @@
       font-size: 14px;
     }
 
+    /* Actions */
     .actions {
       display: flex;
       flex-direction: column;
@@ -282,7 +295,9 @@
       box-shadow: 0 12px 26px rgba(184, 107, 255, .16);
     }
 
-    .btn-primary:hover { filter: brightness(.98); }
+    .btn-primary:hover {
+      filter: brightness(.98);
+    }
 
     .btn-ghost {
       background: rgba(255, 255, 255, .05);
@@ -290,7 +305,9 @@
       border: 1px solid rgba(255, 255, 255, .10);
     }
 
-    .btn-ghost:hover { background: rgba(255, 255, 255, .08); }
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, .08);
+    }
 
     .btn-danger {
       background: rgba(255, 77, 77, .16);
@@ -303,13 +320,18 @@
       border-color: rgba(255, 77, 77, .38);
     }
 
+    /* Right / Summary */
     .summary {
       padding: 16px;
       position: sticky;
       top: 76px;
     }
 
-    .sum-title { font-weight: 950; letter-spacing: .2px; margin-bottom: 10px; }
+    .sum-title {
+      font-weight: 950;
+      letter-spacing: .2px;
+      margin-bottom: 10px;
+    }
 
     .sumline {
       display: flex;
@@ -321,7 +343,9 @@
       font-size: 14px;
     }
 
-    .sumline strong { color: rgba(255, 255, 255, .92); }
+    .sumline strong {
+      color: rgba(255, 255, 255, .92);
+    }
 
     .total {
       display: flex;
@@ -332,7 +356,12 @@
       font-weight: 950;
     }
 
-    .cta { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .cta {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
     .helper {
       margin-top: 10px;
@@ -361,10 +390,12 @@
       z-index: 9999;
     }
 
-    .modalOverlay.show { display: flex; }
+    .modalOverlay.show {
+      display: flex;
+    }
 
     .modal {
-      width: min(560px, 100%);
+      width: min(740px, 100%);
       background: rgba(10, 8, 18, .88);
       border: 1px solid rgba(180, 130, 255, .28);
       border-radius: 18px;
@@ -382,7 +413,10 @@
       background: rgba(255, 255, 255, .04);
     }
 
-    .modalTitle { font-weight: 950; letter-spacing: .2px; }
+    .modalTitle {
+      font-weight: 950;
+      letter-spacing: .2px;
+    }
 
     .modalClose {
       width: 38px;
@@ -397,7 +431,9 @@
       justify-content: center;
     }
 
-    .modalClose:hover { background: rgba(255, 255, 255, .08); }
+    .modalClose:hover {
+      background: rgba(255, 255, 255, .08);
+    }
 
     .modalBody {
       padding: 14px 16px;
@@ -422,8 +458,30 @@
       margin-top: 10px;
     }
 
+    /* Checkout grid */
+    .checkoutGrid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+      align-items: start;
+      margin-top: 10px;
+    }
+
+    .fieldGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .fieldGrid .full {
+      grid-column: 1 / -1;
+    }
+
     select,
-    input[type="text"] {
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
       border-radius: 14px;
       border: 1px solid rgba(255, 255, 255, .12);
       background: rgba(10, 8, 18, .72);
@@ -435,59 +493,77 @@
       box-sizing: border-box;
     }
 
-    select option { background: #0b0a12; color: rgba(255, 255, 255, .92); }
+    select option {
+      background: #0b0a12;
+      color: rgba(255, 255, 255, .92);
+    }
 
-    .donateHint {
-      margin-top: 10px;
+    .hint {
+      margin-top: 8px;
       color: rgba(255, 255, 255, .62);
       font-size: 12px;
       line-height: 1.35;
     }
 
-    /* Checkout modal (Square card) */
-    .payPanel {
-      padding: 12px 0 0;
-    }
-    .payRow {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      color: rgba(255,255,255,.78);
-      font-size: 13px;
-    }
-    .payRow strong { color: rgba(255,255,255,.92); }
-    #card-container {
-      margin-top: 12px;
-      padding: 10px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, .10);
-      background: rgba(255,255,255,.04);
-    }
-    .tiny {
-      margin-top: 10px;
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .85);
+      font-weight: 900;
       font-size: 12px;
-      color: rgba(255,255,255,.62);
-      line-height: 1.35;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255, 255, 255, .08);
+      margin: 12px 0;
+    }
+
+    #card-container {
+      border: 1px solid rgba(255, 255, 255, .10);
+      border-radius: 16px;
+      padding: 10px;
+      background: rgba(255, 255, 255, .04);
     }
 
     @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
-      .summary { position: static; }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary {
+        position: static;
+      }
+
       .item {
         grid-template-columns: 74px 1fr;
         grid-template-rows: auto auto;
         align-items: start;
       }
+
       .actions {
         grid-column: 1 / -1;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
       }
-      .donateGrid { grid-template-columns: 1fr; }
+
+      .donateGrid {
+        grid-template-columns: 1fr;
+      }
+
+      .checkoutGrid {
+        grid-template-columns: 1fr;
+      }
+
+      .fieldGrid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -552,7 +628,7 @@
           </div>
         </div>
 
-        <div class="donateHint">
+        <div class="hint">
           Square will handle your payment securely. Thank you for supporting Unlim8ted.
         </div>
       </div>
@@ -563,44 +639,129 @@
     </div>
   </div>
 
-  <!-- Modal: Checkout (Square Web Payments SDK) -->
-  <div id="payOverlay" class="modalOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+  <!-- Modal: Checkout (address + shipping + card payment) -->
+  <div id="checkoutOverlay" class="modalOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
       <div class="modalHead">
-        <div id="payTitle" class="modalTitle">Secure checkout</div>
-        <button id="payClose" class="modalClose" type="button" aria-label="Close">
+        <div id="checkoutTitle" class="modalTitle">Checkout</div>
+        <button id="checkoutClose" class="modalClose" type="button" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
+            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modalBody">
+        <div class="mini">Enter your shipping address, choose a shipping method, then pay securely.</div>
+
+        <div class="checkoutGrid">
+          <!-- Left: address + shipping + totals -->
+          <div>
+            <div class="fieldGrid">
+              <div class="full">
+                <div class="mini" style="margin-bottom:6px;">Full name</div>
+                <input id="ship_full_name" type="text" autocomplete="name" placeholder="Full name" />
+              </div>
+
+              <div>
+                <div class="mini" style="margin-bottom:6px;">Email</div>
+                <input id="ship_email" type="email" autocomplete="email" placeholder="you@example.com" />
+              </div>
+
+              <div>
+                <div class="mini" style="margin-bottom:6px;">Phone</div>
+                <input id="ship_phone" type="tel" autocomplete="tel" placeholder="(optional but recommended)" />
+              </div>
+
+              <div class="full">
+                <div class="mini" style="margin-bottom:6px;">Address line 1</div>
+                <input id="ship_address1" type="text" autocomplete="address-line1" placeholder="Street address" />
+              </div>
+
+              <div class="full">
+                <div class="mini" style="margin-bottom:6px;">Address line 2</div>
+                <input id="ship_address2" type="text" autocomplete="address-line2" placeholder="Apt, suite, unit (optional)" />
+              </div>
+
+              <div>
+                <div class="mini" style="margin-bottom:6px;">City</div>
+                <input id="ship_city" type="text" autocomplete="address-level2" placeholder="City" />
+              </div>
+
+              <div>
+                <div class="mini" style="margin-bottom:6px;">State (US)</div>
+                <input id="ship_state_code" type="text" autocomplete="address-level1" placeholder="MA" />
+              </div>
+
+              <div>
+                <div class="mini" style="margin-bottom:6px;">ZIP / Postal</div>
+                <input id="ship_zip" type="text" autocomplete="postal-code" placeholder="02110" />
+              </div>
+
+              <div>
+                <div class="mini" style="margin-bottom:6px;">Country (ISO2)</div>
+                <input id="ship_country_code" type="text" autocomplete="country" placeholder="US" />
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="mini" style="margin-bottom:6px;">Shipping method</div>
+            <select id="ship_method">
+              <option value="">Get a quote first…</option>
+            </select>
+
+            <div class="hint" id="quoteHint">
+              We’ll calculate shipping options and totals before you pay.
+            </div>
+
+            <div class="divider"></div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <span class="pill">Items: <span id="q_items">0</span></span>
+              <span class="pill">Subtotal: $<span id="q_subtotal">0.00</span></span>
+              <span class="pill">Shipping: $<span id="q_shipping">0.00</span></span>
+              <span class="pill">Total: $<span id="q_total">0.00</span></span>
+              <span class="pill" id="q_exp" style="display:none;">Expires: <span id="q_exp_time"></span></span>
+            </div>
+          </div>
+
+          <!-- Right: payment -->
+          <div>
+            <div class="mini" style="margin-bottom:8px;">Payment</div>
+            <div id="card-container"></div>
+            <div class="hint" id="payHint">
+              Card details are handled by Square securely.
+            </div>
+            <div class="divider"></div>
+            <div id="payStatus" class="notice" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modalActions">
+        <button id="btnQuote" class="btn btn-ghost" type="button">Get quote</button>
+        <button id="btnPay" class="btn btn-primary" type="button" disabled>Pay</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Expired -->
+  <div id="expiredOverlay" class="modalOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="expiredTitle">
+      <div class="modalHead">
+        <div id="expiredTitle" class="modalTitle">Checkout expired</div>
+        <button id="expiredClose" class="modalClose" type="button" aria-label="Close">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
             <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
           </svg>
         </button>
       </div>
       <div class="modalBody">
-        <div id="payMsg" class="notice warn" style="display:none;margin:0 0 12px;"></div>
-
-        <div class="payPanel">
-          <div class="payRow">
-            <span>Items</span>
-            <strong><span id="payItems">0</span></strong>
-          </div>
-          <div class="payRow">
-            <span>Subtotal</span>
-            <strong>$<span id="paySubtotal">0.00</span></strong>
-          </div>
-          <div class="payRow">
-            <span>Total</span>
-            <strong>$<span id="payTotal">0.00</span></strong>
-          </div>
-
-          <div id="card-container"></div>
-
-          <div class="tiny">
-            If this checkout sits too long, it will expire and you’ll need to reload.
-          </div>
-        </div>
+        This checkout session expired to keep pricing and shipping accurate. Please reload the page and try again.
       </div>
       <div class="modalActions">
-        <button id="payCancel" class="btn btn-ghost" type="button">Cancel</button>
-        <button id="payBtn" class="btn btn-primary" type="button">Pay</button>
+        <button id="expiredReload" class="btn btn-primary" type="button">Reload</button>
       </div>
     </div>
   </div>
@@ -641,7 +802,7 @@
           <span>$<span id="total">0.00</span></span>
         </div>
 
-        <div class="helper">Shipping/taxes (if any) are calculated server-side as part of checkout.</div>
+        <div class="helper">Shipping is calculated in the checkout step before payment.</div>
 
         <div class="cta">
           <button id="checkoutBtn" class="btn btn-primary" type="button">Checkout</button>
@@ -651,7 +812,7 @@
         </div>
 
         <div class="helper" style="margin-top:12px;">
-          Free items show as <strong>FREE</strong>. Paid items are processed securely via Square.
+          Free items show as <strong>FREE</strong>. Paid physical items require shipping + payment.
         </div>
       </div>
     </div>
@@ -670,23 +831,18 @@
     import { getFirebase } from "/components/firebase-init.js";
     const { auth, db } = getFirebase();
 
-    /* =========================================================
-       IMPORTANT: Square Web Payments SDK requires PUBLIC values.
-       Set these to your production Square Application ID + Location ID.
-       - App ID is safe to expose.
-       - Location ID is safe to expose.
-    ========================================================= */
+    /* =============================
+       CONFIG
+    ============================= */
+    const WORKER_BASE = "https://api.unlim8ted.com";
+
+    // Your Square IDs (public + safe on frontend)
     const SQUARE_APP_ID = "sq0idp-Nnvnru9L9hR3CwVKikShGA";
     const SQUARE_LOCATION_ID = "L4KPR2BE0PAA4";
 
-    /* =========================================================
-       Worker base (you moved it to api.unlim8ted.com)
-    ========================================================= */
-    const WORKER_BASE = "https://api.unlim8ted.com";
-
-    /* Quote TTL (must match your Worker QUOTE_TTL). Used only for frontend UX. */
-    const QUOTE_TTL_MS = (2 * 60 - 10) * 60 * 1000; // 1h 50m
-
+    // Frontend safety expiry: 10 minutes earlier than backend TTL
+    // If your backend uses 2 hours: frontend treats it as 1h50m.
+    const FRONTEND_QUOTE_TTL_MS = (2 * 60 - 10) * 60 * 1000; // 110 minutes
 
     /* =============================
        URL mode: single-item checkout
@@ -819,15 +975,11 @@
     let _modalResolver = null;
     let _lastFocus = null;
 
-    function openModal({ title = "Confirm", bodyHtml = "", confirmText = "Confirm", confirmClass = "btn btn-danger", cancelText = "Cancel", hideCancel = false } = {}) {
+    function openModal({ title = "Confirm", bodyHtml = "", confirmText = "Confirm", confirmClass = "btn btn-danger" } = {}) {
       modalTitle.textContent = title;
       modalBody.innerHTML = bodyHtml;
-
       modalConfirm.textContent = confirmText;
       modalConfirm.className = confirmClass;
-
-      modalCancel.textContent = cancelText;
-      modalCancel.style.display = hideCancel ? "none" : "inline-flex";
 
       modalOverlay.classList.add("show");
       modalOverlay.setAttribute("aria-hidden", "false");
@@ -854,21 +1006,6 @@
       if (!modalOverlay.classList.contains("show")) return;
       if (e.key === "Escape") closeModal(false);
     });
-
-    async function showExpiredPopupAndReload(extra = "") {
-      await openModal({
-        title: "Checkout expired",
-        bodyHtml: `
-          Your checkout session expired${extra ? ` (${escapeHtml(extra)})` : ""}.<br/>
-          Please reload to start again.
-        `,
-        confirmText: "Reload",
-        confirmClass: "btn btn-primary",
-        cancelText: "",
-        hideCancel: true
-      });
-      location.reload();
-    }
 
     /* =============================
        Modal: Donation popup
@@ -935,6 +1072,111 @@
         </div>`
       );
     });
+
+    /* =============================
+       Modal: Expired
+    ============================= */
+    const expiredOverlay = document.getElementById("expiredOverlay");
+    const expiredClose = document.getElementById("expiredClose");
+    const expiredReload = document.getElementById("expiredReload");
+    function showExpired() {
+      try { closeCheckoutModal(false); } catch {}
+      expiredOverlay.classList.add("show");
+      expiredOverlay.setAttribute("aria-hidden", "false");
+      setTimeout(() => expiredReload.focus(), 0);
+    }
+    function closeExpired() {
+      expiredOverlay.classList.remove("show");
+      expiredOverlay.setAttribute("aria-hidden", "true");
+    }
+    expiredClose.addEventListener("click", () => { closeExpired(); location.reload(); });
+    expiredReload.addEventListener("click", () => location.reload());
+    expiredOverlay.addEventListener("click", (e) => { if (e.target === expiredOverlay) location.reload(); });
+    document.addEventListener("keydown", (e) => {
+      if (!expiredOverlay.classList.contains("show")) return;
+      if (e.key === "Escape") location.reload();
+    });
+
+    /* =============================
+       Checkout modal: open/close + state
+    ============================= */
+    const checkoutOverlay = document.getElementById("checkoutOverlay");
+    const checkoutClose = document.getElementById("checkoutClose");
+    const btnQuote = document.getElementById("btnQuote");
+    const btnPay = document.getElementById("btnPay");
+
+    const shipMethodEl = document.getElementById("ship_method");
+    const payStatusEl = document.getElementById("payStatus");
+    const quoteHintEl = document.getElementById("quoteHint");
+
+    const qItemsEl = document.getElementById("q_items");
+    const qSubtotalEl = document.getElementById("q_subtotal");
+    const qShippingEl = document.getElementById("q_shipping");
+    const qTotalEl = document.getElementById("q_total");
+    const qExpWrap = document.getElementById("q_exp");
+    const qExpTime = document.getElementById("q_exp_time");
+
+    let _checkoutLastFocus = null;
+    let _quote = null;                 // { quoteId, expiresAt? , shippingOptions, subtotal, itemsCount }
+    let _quoteExpiresAt = 0;           // ms epoch (frontend safety)
+    let _quoteExpireTimer = null;
+
+    let _squarePayments = null;
+    let _squareCard = null;
+    let _cardMounted = false;
+
+    function setPayStatus(kind, html) {
+      payStatusEl.style.display = "block";
+      payStatusEl.className = "notice " + (kind || "");
+      payStatusEl.innerHTML = html;
+    }
+    function clearPayStatus() {
+      payStatusEl.style.display = "none";
+      payStatusEl.className = "notice";
+      payStatusEl.innerHTML = "";
+    }
+
+    function openCheckoutModal() {
+      checkoutOverlay.classList.add("show");
+      checkoutOverlay.setAttribute("aria-hidden", "false");
+      _checkoutLastFocus = document.activeElement;
+      setTimeout(() => btnQuote.focus(), 0);
+    }
+
+    function closeCheckoutModal() {
+      checkoutOverlay.classList.remove("show");
+      checkoutOverlay.setAttribute("aria-hidden", "true");
+      if (_checkoutLastFocus && typeof _checkoutLastFocus.focus === "function") _checkoutLastFocus.focus();
+    }
+
+    checkoutClose.addEventListener("click", () => closeCheckoutModal());
+    checkoutOverlay.addEventListener("click", (e) => { if (e.target === checkoutOverlay) closeCheckoutModal(); });
+    document.addEventListener("keydown", (e) => {
+      if (!checkoutOverlay.classList.contains("show")) return;
+      if (e.key === "Escape") closeCheckoutModal();
+    });
+
+    function resetCheckoutState() {
+      _quote = null;
+      _quoteExpiresAt = 0;
+      if (_quoteExpireTimer) clearTimeout(_quoteExpireTimer);
+      _quoteExpireTimer = null;
+
+      shipMethodEl.innerHTML = `<option value="">Get a quote first…</option>`;
+      btnPay.disabled = true;
+      clearPayStatus();
+
+      qItemsEl.textContent = "0";
+      qSubtotalEl.textContent = "0.00";
+      qShippingEl.textContent = "0.00";
+      qTotalEl.textContent = "0.00";
+      qExpWrap.style.display = "none";
+      qExpTime.textContent = "";
+
+      quoteHintEl.textContent = "We’ll calculate shipping options and totals before you pay.";
+
+      // keep card mounted but disable pay until quote exists
+    }
 
     /* =============================
        Catalog resolution
@@ -1008,11 +1250,6 @@
         if (img) it.image = img;
       }
 
-      // availability flag from products.json (optional)
-      if (typeof it.available !== "boolean" && v && typeof v.available === "boolean") {
-        it.available = v.available;
-      }
-
       return it;
     }
 
@@ -1043,12 +1280,6 @@
     function pickDefaultVariant(product) {
       const vars = Array.isArray(product?.varients) ? product.varients : (Array.isArray(product?.variants) ? product.variants : []);
       if (!vars.length) return null;
-      // prefer available
-      for (const v of vars) {
-        if (typeof v?.available === "boolean" && v.available === false) continue;
-        const vid = String(v?.id ?? v?.variantId ?? "").trim();
-        if (vid) return v;
-      }
       for (const v of vars) {
         const vid = String(v?.id ?? v?.variantId ?? "").trim();
         if (vid) return v;
@@ -1186,42 +1417,433 @@
       await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
     }
 
-    async function removePaidItemsAfterPayment(paidVariantIdsSet) {
-      if (!paidVariantIdsSet || paidVariantIdsSet.size === 0) return;
-
-      if (BUY_MODE) {
-        cartItems = cartItems.filter(it => {
+    /* =============================
+       Checkout helpers
+    ============================= */
+    function getPaidPhysicalItems(allItems) {
+      return (allItems || [])
+        .map(it => {
+          const qty = Math.max(1, Number(it.qty) || 1);
           const price = normalizePriceNumber(parsePrice(it.price)) || 0;
-          const vid = String(it.variantId || "").trim();
-          return !(price > 0 && vid && paidVariantIdsSet.has(vid));
-        });
-        renderCart();
-        return;
-      }
-
-      if (!currentUser?.uid) {
-        const arr = getLocalCart().filter(it => {
-          const price = normalizePriceNumber(parsePrice(it.price)) || 0;
-          const vid = String(it.variantId || "").trim();
-          return !(price > 0 && vid && paidVariantIdsSet.has(vid));
-        });
-        setLocalCart(arr);
-        return;
-      }
-
-      // Signed-in: delete docs whose variantId was paid
-      const snap = await getDocs(collection(db, "users", currentUser.uid, "cartItems"));
-      const dels = [];
-      snap.forEach(d => {
-        const data = d.data() || {};
-        const vid = String(data.variantId || "").trim();
-        const price = normalizePriceNumber(parsePrice(data.price ?? data.priceNum)) || 0;
-        if (price > 0 && vid && paidVariantIdsSet.has(vid)) {
-          dels.push(deleteDoc(d.ref));
-        }
-      });
-      await Promise.all(dels);
+          const variationId = String(it.variantId || "").trim();
+          return { ...it, qty, price, variationId };
+        })
+        .filter(x => x.price > 0); // treat all paid items as needing shipping/payment
     }
+
+    function findPaidMissingVariant(allItems) {
+      return (allItems || [])
+        .map(it => ({
+          title: String(it.title || it.name || "Item"),
+          price: normalizePriceNumber(parsePrice(it.price)) || 0,
+          variationId: String(it.variantId || "").trim()
+        }))
+        .filter(x => x.price > 0 && !x.variationId);
+    }
+
+    function getShippingForm() {
+      const get = (id) => document.getElementById(id).value.trim();
+      return {
+        full_name: get("ship_full_name"),
+        email: get("ship_email"),
+        phone: get("ship_phone"),
+        address1: get("ship_address1"),
+        address2: get("ship_address2"),
+        city: get("ship_city"),
+        state_code: get("ship_state_code"),
+        zip: get("ship_zip"),
+        country_code: get("ship_country_code").toUpperCase(),
+      };
+    }
+
+    function validateShippingForm(s) {
+      const errs = [];
+
+      const req = (field, label) => {
+        if (!String(s[field] || "").trim()) errs.push(`${label} is required.`);
+      };
+
+      req("full_name", "Full name");
+      req("email", "Email");
+      req("address1", "Address line 1");
+      req("city", "City");
+      req("zip", "ZIP / Postal");
+      req("country_code", "Country");
+
+      // basic email
+      if (s.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email)) errs.push("Email looks invalid.");
+
+      // US specific
+      if (s.country_code === "US") {
+        if (!/^[A-Z]{2}$/.test(String(s.state_code || "").toUpperCase())) errs.push("State must be 2 letters (US).");
+        if (!/^\d{5}(-\d{4})?$/.test(String(s.zip || ""))) errs.push("ZIP must be 5 digits (or 5+4).");
+      }
+
+      // phone: optional, but if present must have enough digits
+      if (s.phone) {
+        const digits = s.phone.replace(/[^\d]/g, "");
+        if (digits.length < 7) errs.push("Phone looks too short.");
+      }
+
+      return errs;
+    }
+
+    function centsToUsdString(cents) {
+      const n = Number(cents || 0) / 100;
+      return n.toFixed(2);
+    }
+
+    function computeSubtotalCents(items) {
+      return (items || []).reduce((sum, it) => {
+        const qty = Math.max(1, Number(it.qty) || 1);
+        const price = normalizePriceNumber(parsePrice(it.price)) || 0;
+        return sum + Math.round(price * 100) * qty;
+      }, 0);
+    }
+
+    function scheduleQuoteExpiry(expiresAtMs) {
+      if (_quoteExpireTimer) clearTimeout(_quoteExpireTimer);
+      const msLeft = Math.max(0, expiresAtMs - Date.now());
+      _quoteExpireTimer = setTimeout(() => showExpired(), msLeft);
+    }
+
+    function formatTime(msEpoch) {
+      const d = new Date(msEpoch);
+      const hh = String(d.getHours()).padStart(2, "0");
+      const mm = String(d.getMinutes()).padStart(2, "0");
+      return `${hh}:${mm}`;
+    }
+
+    async function ensureSquareCardMounted() {
+      if (!window.Square) throw new Error("Square Web Payments SDK not loaded.");
+      if (_cardMounted && _squareCard) return;
+
+      _squarePayments = _squarePayments || window.Square.payments(SQUARE_APP_ID, SQUARE_LOCATION_ID);
+      _squareCard = _squareCard || await _squarePayments.card();
+
+      // attach once
+      await _squareCard.attach("#card-container");
+      _cardMounted = true;
+    }
+
+    /* =============================
+       Worker calls
+    ============================= */
+    async function workerQuote(payload) {
+      const res = await fetch(`${WORKER_BASE}/quote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(j?.error ? `${j.error}: ${JSON.stringify(j.details || j)}` : `HTTP ${res.status}`);
+      return j;
+    }
+
+    async function workerPay(payload) {
+      const res = await fetch(`${WORKER_BASE}/pay`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(j?.error ? `${j.error}: ${JSON.stringify(j.details || j)}` : `HTTP ${res.status}`);
+      return j;
+    }
+
+    async function workerPaymentStatus(quoteId) {
+      const res = await fetch(`${WORKER_BASE}/payment-status?quoteId=${encodeURIComponent(quoteId)}`, { method: "GET" });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(j?.error ? `${j.error}` : `HTTP ${res.status}`);
+      return j;
+    }
+
+    /* =============================
+       Checkout flow
+    ============================= */
+    async function beginCheckoutFlow() {
+      clearNotice();
+
+      if (!cartItems.length) {
+        setNotice("warn", `<strong>Your cart is empty.</strong> Add something first.`);
+        return;
+      }
+
+      // free-only cart shortcut
+      const paid = getPaidPhysicalItems(cartItems);
+      if (!paid.length) {
+        setNotice("ok",
+          `<div style="display:flex;gap:10px;align-items:flex-start">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
+              <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div><strong>No paid items.</strong><br/>Your free items are ready via their links.</div>
+          </div>`
+        );
+        return;
+      }
+
+      // block if paid items missing variant id
+      const missing = findPaidMissingVariant(cartItems);
+      if (missing.length) {
+        setNotice("warn",
+          `<strong>Some paid items can’t be checked out yet.</strong><br/>
+           These need a variantId in your cart data/products.json:<br/>
+           <div style="margin-top:6px;opacity:.9">${missing.map(m => `• ${escapeHtml(m.title)}`).join("<br/>")}</div>`
+        );
+        return;
+      }
+
+      resetCheckoutState();
+      openCheckoutModal();
+
+      try {
+        await ensureSquareCardMounted();
+      } catch (err) {
+        console.error(err);
+        setNotice("bad", `<strong>Payment system error:</strong> ${escapeHtml(err?.message || String(err))}`);
+        closeCheckoutModal();
+      }
+
+      // seed totals (subtotal only) in the modal UI
+      const itemsCount = cartItems.reduce((s, it) => s + (Number(it.qty) || 1), 0);
+      const subtotalCents = computeSubtotalCents(paid);
+      qItemsEl.textContent = String(itemsCount);
+      qSubtotalEl.textContent = centsToUsdString(subtotalCents);
+      qShippingEl.textContent = "0.00";
+      qTotalEl.textContent = centsToUsdString(subtotalCents);
+    }
+
+    btnQuote.addEventListener("click", async () => {
+      clearPayStatus();
+
+      const paid = getPaidPhysicalItems(cartItems);
+      if (!paid.length) {
+        setPayStatus("warn", `<strong>No paid items.</strong> Nothing to quote.`);
+        return;
+      }
+
+      const shipping = getShippingForm();
+      const errs = validateShippingForm(shipping);
+      if (errs.length) {
+        setPayStatus("warn",
+          `<strong>Please fix:</strong><br/>${errs.map(e => `• ${escapeHtml(e)}`).join("<br/>")}`
+        );
+        return;
+      }
+
+      btnQuote.disabled = true;
+      btnPay.disabled = true;
+      shipMethodEl.disabled = true;
+      shipMethodEl.innerHTML = `<option value="">Calculating…</option>`;
+      quoteHintEl.textContent = "Calculating shipping options…";
+
+      try {
+        const itemsPayload = paid.map(it => ({
+          variationId: String(it.variantId).trim(),
+          quantity: Math.max(1, Number(it.qty) || 1),
+          // send price so backend can compute subtotal; backend should still trust products.json if you want stricter security
+          price: normalizePriceNumber(parsePrice(it.price)) || 0,
+          productId: it.productId || null,
+          title: it.title || it.name || "Item",
+        }));
+
+        const resp = await workerQuote({
+          currency: "USD",
+          items: itemsPayload,
+          shipping,
+          context: {
+            uid: currentUser?.uid || null,
+            mode: BUY_MODE ? "buy" : "cart",
+            product: BUY_MODE ? BUY_PRODUCT : null
+          }
+        });
+
+        // Expected from worker:
+        // { quoteId, shippingOptions: [{id,name,cost,estimated_days?}], subtotal, expiresAt? }
+        const quoteId = String(resp.quoteId || "").trim();
+        const shippingOptions = Array.isArray(resp.shippingOptions) ? resp.shippingOptions : [];
+        const subtotalCents = typeof resp.subtotal === "number" ? resp.subtotal : computeSubtotalCents(paid);
+
+        if (!quoteId) throw new Error("Worker did not return quoteId.");
+        if (!shippingOptions.length) throw new Error("No shipping options returned.");
+
+        _quote = { quoteId, shippingOptions, subtotalCents };
+
+        // expiry: if worker provides expiresAt, still apply a safety clamp to be "10 min earlier"
+        const workerExpiresAt = Number(resp.expiresAt || 0);
+        const frontendExpiresAt = Date.now() + FRONTEND_QUOTE_TTL_MS;
+        _quoteExpiresAt = workerExpiresAt > 0 ? Math.min(workerExpiresAt, frontendExpiresAt) : frontendExpiresAt;
+
+        scheduleQuoteExpiry(_quoteExpiresAt);
+
+        qExpWrap.style.display = "inline-flex";
+        qExpTime.textContent = formatTime(_quoteExpiresAt);
+
+        // populate shipping select
+        shipMethodEl.innerHTML = "";
+        for (const opt of shippingOptions) {
+          const id = String(opt.id || "").trim();
+          const name = String(opt.name || opt.service_name || "Shipping").trim();
+          const cost = Number(opt.cost || 0); // cents
+          const days = opt.estimated_days ? String(opt.estimated_days) : "";
+          const label = days ? `${name} — $${centsToUsdString(cost)} (${days} days)` : `${name} — $${centsToUsdString(cost)}`;
+
+          const o = document.createElement("option");
+          o.value = id;
+          o.textContent = label;
+          shipMethodEl.appendChild(o);
+        }
+
+        shipMethodEl.disabled = false;
+
+        // default select first option
+        const first = shipMethodEl.value;
+        const shipCents = Number(shippingOptions.find(x => String(x.id) === String(first))?.cost || 0);
+
+        qItemsEl.textContent = String(cartItems.reduce((s, it) => s + (Number(it.qty) || 1), 0));
+        qSubtotalEl.textContent = centsToUsdString(subtotalCents);
+        qShippingEl.textContent = centsToUsdString(shipCents);
+        qTotalEl.textContent = centsToUsdString(subtotalCents + shipCents);
+
+        quoteHintEl.textContent = "Quote ready. Choose a shipping method, then pay.";
+        btnPay.disabled = false;
+        setPayStatus("ok",
+          `<div style="display:flex;gap:10px;align-items:flex-start">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
+              <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div><strong>Quote created.</strong><br/>Complete payment before it expires.</div>
+          </div>`
+        );
+
+      } catch (err) {
+        console.error(err);
+        shipMethodEl.innerHTML = `<option value="">Get a quote first…</option>`;
+        shipMethodEl.disabled = true;
+        quoteHintEl.textContent = "We’ll calculate shipping options and totals before you pay.";
+        setPayStatus("bad", `<strong>Quote error:</strong> ${escapeHtml(err?.message || String(err))}`);
+      } finally {
+        btnQuote.disabled = false;
+      }
+    });
+
+    shipMethodEl.addEventListener("change", () => {
+      if (!_quote) return;
+      const id = shipMethodEl.value;
+      const shipCents = Number(_quote.shippingOptions.find(x => String(x.id) === String(id))?.cost || 0);
+      qShippingEl.textContent = centsToUsdString(shipCents);
+      qTotalEl.textContent = centsToUsdString(_quote.subtotalCents + shipCents);
+    });
+
+    btnPay.addEventListener("click", async () => {
+      clearPayStatus();
+
+      if (!_quote?.quoteId) {
+        setPayStatus("warn", `<strong>Get a quote first.</strong>`);
+        return;
+      }
+
+      if (Date.now() >= _quoteExpiresAt) {
+        showExpired();
+        return;
+      }
+
+      const selectedShippingId = String(shipMethodEl.value || "").trim();
+      if (!selectedShippingId) {
+        setPayStatus("warn", `<strong>Select a shipping method.</strong>`);
+        return;
+      }
+
+      btnPay.disabled = true;
+      btnQuote.disabled = true;
+      shipMethodEl.disabled = true;
+
+      setPayStatus("warn", `<strong>Processing payment…</strong> Do not refresh.`);
+
+      try {
+        await ensureSquareCardMounted();
+
+        const tokenizeResult = await _squareCard.tokenize();
+        if (tokenizeResult.status !== "OK") {
+          const msg = tokenizeResult.errors?.[0]?.message || "Card tokenization failed.";
+          throw new Error(msg);
+        }
+
+        if (Date.now() >= _quoteExpiresAt) {
+          showExpired();
+          return;
+        }
+
+        // Pay via worker
+        const payResp = await workerPay({
+          quoteId: _quote.quoteId,
+          selectedShippingId,
+          sourceId: tokenizeResult.token,
+        });
+
+        // Poll status (authoritative check)
+        const start = Date.now();
+        const maxMs = Math.max(0, _quoteExpiresAt - Date.now());
+        const hardStop = Math.min(maxMs, 60 * 1000); // stop polling after 60s or expiry (whichever first)
+
+        while (true) {
+          if (Date.now() >= _quoteExpiresAt) {
+            showExpired();
+            return;
+          }
+          if (Date.now() - start > hardStop) break;
+
+          const st = await workerPaymentStatus(_quote.quoteId);
+
+          const status = String(st.squareStatus || st.status || "").toLowerCase();
+          if (status === "paid" || status === "completed") {
+            setPayStatus("ok",
+              `<div style="display:flex;gap:10px;align-items:flex-start">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
+                  <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div><strong>Payment confirmed.</strong><br/>Thank you! Your order will be processed.</div>
+              </div>`
+            );
+
+            // Clear cart (paid items) on success
+            // For now: clear entire cart for simplicity; adjust if you mix digital/free.
+            try { await clearCart(); } catch {}
+            renderCart();
+
+            // Close modal after a moment
+            setTimeout(() => closeCheckoutModal(), 900);
+            return;
+          }
+
+          if (status === "failed" || status === "canceled") {
+            setPayStatus("bad", `<strong>Payment failed.</strong> Please try again.`);
+            btnPay.disabled = false;
+            btnQuote.disabled = false;
+            shipMethodEl.disabled = false;
+            return;
+          }
+
+          // pending
+          await new Promise(r => setTimeout(r, 1200));
+        }
+
+        setPayStatus("warn",
+          `<strong>Payment processing.</strong><br/>If you were charged, it will finalize shortly. You can keep this page open and retry “Pay” if needed.`
+        );
+
+      } catch (err) {
+        console.error(err);
+        setPayStatus("bad", `<strong>Payment error:</strong> ${escapeHtml(err?.message || String(err))}`);
+      } finally {
+        if (!expiredOverlay.classList.contains("show")) {
+          btnQuote.disabled = false;
+          shipMethodEl.disabled = !_quote;
+          btnPay.disabled = !_quote;
+        }
+      }
+    });
 
     /* =============================
        Render
@@ -1239,11 +1861,6 @@
       const imgUrl = safeUrl(it.image || it.imageUrl || "");
       const img = imgUrl ? `<img src="${escapeHtml(imgUrl)}" alt="">` : "No image";
 
-      const available = (typeof it.available === "boolean") ? it.available : true;
-      const availabilityLine = (price > 0 && available === false)
-        ? `<div class="mini" style="color:rgba(255,209,102,.95);font-weight:900;">Currently unavailable</div>`
-        : ``;
-
       const priceHtml = price > 0
         ? `$${money(price)}`
         : `<span class="free">FREE</span>`;
@@ -1255,7 +1872,6 @@
           <div class="meta">
             <div class="title">${title}</div>
             ${variantLine}
-            ${availabilityLine}
 
             <div class="row2">
               <div class="price">${priceHtml}</div>
@@ -1333,357 +1949,6 @@
     }
 
     /* =============================
-       Checkout (NEW FLOW)
-       1) POST /quote  → returns sid, totals, items[]
-       2) Square tokenize card → sourceId
-       3) POST /pay { sid, sourceId }
-       4) Poll GET /payment-status?sid=... (authoritative)
-       5) If quote_not_found => expired popup + reload
-    ============================= */
-
-    function buildQuoteItemsFromCart(allItems) {
-      // only PAID items go into quote/payment
-      return (allItems || [])
-        .map(it => ({
-          variantId: String(it.variantId || "").trim(),
-          quantity: Math.max(1, Number(it.qty) || 1),
-          price: normalizePriceNumber(parsePrice(it.price)) || 0,
-          available: (typeof it.available === "boolean") ? it.available : true,
-          title: String(it.title || it.name || "Item")
-        }))
-        .filter(x => x.price > 0);
-    }
-
-    function findPaidIssues(allItems) {
-      const paid = buildQuoteItemsFromCart(allItems);
-      const missingVariant = paid.filter(x => !x.variantId);
-      const unavailable = paid.filter(x => x.available === false);
-      return { missingVariant, unavailable };
-    }
-
-    async function workerQuote(items) {
-      const res = await fetch(`${WORKER_BASE}/quote`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ currency: "USD", items: items.map(i => ({ variantId: i.variantId, quantity: i.quantity })) })
-      });
-      const j = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(j?.error ? `${j.error}` : `HTTP ${res.status}`);
-      if (!j.sid) throw new Error("Worker did not return sid");
-      return j;
-    }
-
-    async function workerPay(sid, sourceId) {
-      const res = await fetch(`${WORKER_BASE}/pay`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sid, sourceId })
-      });
-      const j = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(j?.error ? `${j.error}` : `HTTP ${res.status}`);
-      return j;
-    }
-
-    async function workerPaymentStatus(sid) {
-      const res = await fetch(`${WORKER_BASE}/payment-status?sid=${encodeURIComponent(sid)}`, {
-        method: "GET"
-      });
-      const j = await res.json().catch(() => ({}));
-      // status endpoint returns 200 even for many states; treat non-200 as network error
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return j;
-    }
-
-    /* ---------- Checkout Modal + Square Card ---------- */
-
-    const payOverlay = document.getElementById("payOverlay");
-    const payClose = document.getElementById("payClose");
-    const payCancel = document.getElementById("payCancel");
-    const payBtn = document.getElementById("payBtn");
-    const payMsg = document.getElementById("payMsg");
-    const payItemsEl = document.getElementById("payItems");
-    const paySubtotalEl = document.getElementById("paySubtotal");
-    const payTotalEl = document.getElementById("payTotal");
-    const cardContainer = document.getElementById("card-container");
-
-    let _payLastFocus = null;
-    let _squarePayments = null;
-    let _card = null;
-
-    let _activeSid = null;
-    let _activeQuote = null;
-    let _activePaidVariantIds = new Set();
-    let _activeQuoteCreatedAt = 0;
-    let _expireTimer = null;
-    let _pollTimer = null;
-
-    function setPayMsg(kind, html) {
-      payMsg.style.display = "block";
-      payMsg.className = "notice " + (kind || "");
-      payMsg.innerHTML = html;
-    }
-    function clearPayMsg() {
-      payMsg.style.display = "none";
-      payMsg.className = "notice";
-      payMsg.innerHTML = "";
-    }
-
-    function openPayModal() {
-      payOverlay.classList.add("show");
-      payOverlay.setAttribute("aria-hidden", "false");
-      _payLastFocus = document.activeElement;
-      setTimeout(() => payBtn.focus(), 0);
-    }
-
-    function closePayModal() {
-      payOverlay.classList.remove("show");
-      payOverlay.setAttribute("aria-hidden", "true");
-      if (_payLastFocus && typeof _payLastFocus.focus === "function") _payLastFocus.focus();
-    }
-
-    payClose.addEventListener("click", () => {
-      stopCheckoutTimers();
-      closePayModal();
-    });
-    payCancel.addEventListener("click", () => {
-      stopCheckoutTimers();
-      closePayModal();
-    });
-    payOverlay.addEventListener("click", (e) => {
-      if (e.target === payOverlay) {
-        stopCheckoutTimers();
-        closePayModal();
-      }
-    });
-    document.addEventListener("keydown", (e) => {
-      if (!payOverlay.classList.contains("show")) return;
-      if (e.key === "Escape") {
-        stopCheckoutTimers();
-        closePayModal();
-      }
-    });
-
-    function stopCheckoutTimers() {
-      if (_expireTimer) { clearTimeout(_expireTimer); _expireTimer = null; }
-      if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
-    }
-
-    async function mountSquareCard() {
-      if (!window.Square) throw new Error("Square Web Payments SDK not loaded.");
-      if (!SQUARE_APP_ID || SQUARE_APP_ID.startsWith("REPLACE_")) {
-        throw new Error("Set SQUARE_APP_ID in this page (public Square application id).");
-      }
-      if (!SQUARE_LOCATION_ID || SQUARE_LOCATION_ID.startsWith("REPLACE_")) {
-        throw new Error("Set SQUARE_LOCATION_ID in this page (public Square location id).");
-      }
-
-      // Clean previous
-      try { if (_card && _card.destroy) _card.destroy(); } catch { }
-      _card = null;
-      cardContainer.innerHTML = "";
-
-      _squarePayments = window.Square.payments(SQUARE_APP_ID, SQUARE_LOCATION_ID);
-      _card = await _squarePayments.card();
-      await _card.attach("#card-container");
-    }
-
-    async function beginCheckout() {
-      clearNotice();
-
-      if (!cartItems.length) {
-        setNotice("warn", `<strong>Your cart is empty.</strong> Add something first.`);
-        return;
-      }
-
-      // BUY mode free item: open link instead of payment
-      if (BUY_MODE && cartItems.length === 1) {
-        const it = cartItems[0];
-        const price = normalizePriceNumber(parsePrice(it.price)) || 0;
-        const url = safeUrl(it.accessUrl);
-        if (price <= 0 && url) {
-          setNotice("ok",
-            `<div style="display:flex;gap:10px;align-items:flex-start">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
-                <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <div><strong>Opening your free item…</strong></div>
-            </div>`
-          );
-          window.open(url, "_blank", "noopener,noreferrer");
-          return;
-        }
-      }
-
-      const { missingVariant, unavailable } = findPaidIssues(cartItems);
-      if (missingVariant.length) {
-        setNotice("warn",
-          `<strong>Some paid items can’t be checked out yet.</strong><br/>
-           These need a Square variantId in your products.json / cart item:<br/>
-           <div style="margin-top:6px;opacity:.9">${missingVariant.map(m => `• ${escapeHtml(m.title)}`).join("<br/>")}</div>`
-        );
-        return;
-      }
-      if (unavailable.length) {
-        setNotice("warn",
-          `<strong>Some items are currently unavailable.</strong><br/>
-           Remove them or wait for restock:<br/>
-           <div style="margin-top:6px;opacity:.9">${unavailable.map(m => `• ${escapeHtml(m.title)}`).join("<br/>")}</div>`
-        );
-        return;
-      }
-
-      const paidItems = buildQuoteItemsFromCart(cartItems);
-      if (!paidItems.length) {
-        setNotice("ok", `<strong>No paid items.</strong> Nothing to pay for. Your free items are ready.`);
-        return;
-      }
-
-      document.getElementById("checkoutBtn").disabled = true;
-
-      try {
-        // 1) quote
-        setNotice("warn", `<strong>Preparing checkout…</strong>`);
-        const quote = await workerQuote(paidItems);
-
-        _activeSid = String(quote.sid || "");
-        _activeQuote = quote;
-        _activeQuoteCreatedAt = Number(quote.createdAt || Date.now());
-        _activePaidVariantIds = new Set((quote.items || []).map(x => String(x.variantId || "").trim()).filter(Boolean));
-
-        // fill modal summary
-        const qtyCount = (quote.items || []).reduce((s, it) => s + (Number(it.quantity) || 1), 0);
-        payItemsEl.textContent = String(qtyCount);
-        paySubtotalEl.textContent = money((Number(quote.subtotal || 0) / 100));
-        payTotalEl.textContent = money((Number(quote.total || 0) / 100));
-
-        // 2) open modal + mount card
-        openPayModal();
-        clearPayMsg();
-        await mountSquareCard();
-
-        // 3) front-end expiry timer (UX only)
-        stopCheckoutTimers();
-        const expiresAt = _activeQuoteCreatedAt + QUOTE_TTL_MS;
-        const msLeft = Math.max(1_000, expiresAt - Date.now());
-        _expireTimer = setTimeout(() => {
-          // if user is still in modal, show expired + reload
-          showExpiredPopupAndReload("timeout");
-        }, msLeft);
-
-      } catch (err) {
-        console.error(err);
-        setNotice("warn", `<strong>Checkout error:</strong> ${escapeHtml(err?.message || String(err))}`);
-      } finally {
-        document.getElementById("checkoutBtn").disabled = false;
-      }
-    }
-
-    async function pollUntilFinal(sid) {
-      stopCheckoutTimers(); // keep expire timer? we keep it running; poll timer separate
-      const expiresAt = _activeQuoteCreatedAt + QUOTE_TTL_MS;
-      const poll = async () => {
-        // UX: if we're past expected expiry, just pop
-        if (Date.now() > expiresAt + 3_000) {
-          await showExpiredPopupAndReload("timeout");
-          return;
-        }
-
-        let st;
-        try {
-          st = await workerPaymentStatus(sid);
-        } catch (e) {
-          // network hiccup: keep polling
-          return;
-        }
-
-        const status = String(st?.status || "").toLowerCase();
-
-        if (status === "quote_not_found") {
-          await showExpiredPopupAndReload("server-expired");
-          return;
-        }
-
-        if (status === "paid") {
-          stopCheckoutTimers();
-          closePayModal();
-
-          setNotice("ok",
-            `<div style="display:flex;gap:10px;align-items:flex-start">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
-                <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <div><strong>Payment complete.</strong><br/>Updating your cart…</div>
-            </div>`
-          );
-
-          // Remove paid items from cart (free items remain)
-          await removePaidItemsAfterPayment(_activePaidVariantIds);
-
-          setNotice("ok",
-            `<div style="display:flex;gap:10px;align-items:flex-start">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
-                <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <div><strong>All set.</strong><br/>Paid items were removed from your cart.</div>
-            </div>`
-          );
-          return;
-        }
-
-        if (status === "failed" || status === "mismatch") {
-          stopCheckoutTimers();
-          setPayMsg("warn",
-            `<strong>Payment not completed.</strong><br/>
-             Status: <code>${escapeHtml(st.squareStatus || st.status || "unknown")}</code><br/>
-             Please try again.`
-          );
-          payBtn.disabled = false;
-          return;
-        }
-
-        // pending / not_started / etc → keep polling
-      };
-
-      _pollTimer = setInterval(poll, 1500);
-      await poll();
-    }
-
-    payBtn.addEventListener("click", async () => {
-      if (!_activeSid) return;
-
-      payBtn.disabled = true;
-      clearPayMsg();
-      setPayMsg("warn", `<strong>Processing…</strong> Do not close this window.`);
-
-      try {
-        // Tokenize card
-        const tokenResult = await _card.tokenize();
-        if (tokenResult.status !== "OK") {
-          throw new Error(tokenResult?.errors?.[0]?.message || "Card tokenize failed.");
-        }
-
-        const sourceId = tokenResult.token;
-
-        // Create payment on worker
-        await workerPay(_activeSid, sourceId);
-
-        // Poll server until paid / failed / expired
-        setPayMsg("warn", `<strong>Confirming payment…</strong>`);
-        await pollUntilFinal(_activeSid);
-
-      } catch (err) {
-        console.error(err);
-        const msg = String(err?.message || err);
-        if (/quote_not_found|expired/i.test(msg)) {
-          await showExpiredPopupAndReload("server-expired");
-          return;
-        }
-        setPayMsg("warn", `<strong>Error:</strong> ${escapeHtml(msg)}`);
-        payBtn.disabled = false;
-      }
-    });
-
-    /* =============================
        UI events
     ============================= */
     document.addEventListener("click", async (e) => {
@@ -1716,7 +1981,27 @@
       }
 
       if (e.target.closest("#checkoutBtn")) {
-        beginCheckout();
+        // BUY mode free item: open link instead of checkout
+        if (BUY_MODE && cartItems.length === 1) {
+          const it = cartItems[0];
+          const price = normalizePriceNumber(parsePrice(it.price)) || 0;
+          const url = safeUrl(it.accessUrl);
+
+          if (price <= 0 && url) {
+            setNotice("ok",
+              `<div style="display:flex;gap:10px;align-items:flex-start">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
+                  <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div><strong>Opening your free item…</strong></div>
+              </div>`
+            );
+            window.open(url, "_blank", "noopener,noreferrer");
+            return;
+          }
+        }
+
+        await beginCheckoutFlow();
         return;
       }
 
@@ -1782,17 +2067,12 @@
       const price = normalizePriceNumber(parsePrice(v?.price ?? p?.price)) || 0;
       const accessUrl = p.accessUrl ?? p.downloadUrl ?? p.url ?? p.link ?? null;
 
-      if (price > 0 && (!vid || vid.startsWith("6956") === false && vid.length < 6)) {
-        // no special rule here; just a sanity check that variantId exists
-        // (remove this if you want to allow any string)
-      }
-
       if (price > 0 && !vid) {
         cartItems = [];
         renderCart();
         setNotice("warn",
           `<strong>This product can’t be purchased yet.</strong><br/>
-           Missing variantId for <strong>${escapeHtml(pid || productKey)}</strong>.`
+           Missing variantId in products.json for <strong>${escapeHtml(pid || productKey)}</strong>.`
         );
         return;
       }
@@ -1809,7 +2089,7 @@
 
       const image = resolveProductImage(pid, vid) || safeUrl(p.image || p.imageUrl || "");
       const title = String(p.name || p.title || pid || productKey || "Item").trim();
-      const variantLabel = String(v?.name || v?.variantLabel || "").trim();
+      const variantLabel = String(v?.name || "").trim();
 
       cartItems = [
         resolveFromCatalog({
@@ -1821,8 +2101,7 @@
           price,
           qty: 1,
           image: image || null,
-          accessUrl,
-          available: (typeof v?.available === "boolean") ? v.available : true
+          accessUrl
         })
       ];
 
@@ -1864,8 +2143,10 @@
     } else {
       renderCart();
     }
+
+    // Prefill country default for convenience
+    document.getElementById("ship_country_code").value = "US";
   </script>
 </body>
 
 </html>
-
