@@ -1674,7 +1674,7 @@ select option {
 
         // UPDATED: printful_catalog_variant_id is just varient.id (and cart variantId matches it)
         function getPrintfulVariantIdForCartItem(it) {
-            const raw = it?.variantId ?? it?.printful_catalog_variant_id ?? it?.printfulVariantId ?? "";
+            const raw = it?.printful_catalog_variant_id ?? "";
             const s = String(raw).trim();
             return s ? s : null;
         }

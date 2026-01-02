@@ -337,7 +337,7 @@
         "image": "https://files.cdn.printful.com/files/c89/c8975a3ec0c6124d890897b25f902108_preview.png",
         "price": 23.0,
         "currency": "USD",
-        "printful_catalog_variant_id": "5129466105",
+        "printful_catalog_variant_id": 5129466105,
         "printful_cat_id": "#6956aefbf192f9",
         "optionParts": [
           "Burgundy"
@@ -354,7 +354,7 @@
         "image": "https://files.cdn.printful.com/files/d4c/d4c6d40626265dd3606c373c74de28ad_preview.png",
         "price": 23.5,
         "currency": "USD",
-        "printful_catalog_variant_id": "5130834257",
+        "printful_catalog_variant_id": 5130834257,
         "printful_cat_id": "6957ecd18ddae4"
       },
       {
@@ -367,7 +367,7 @@
         "image": "https://files.cdn.printful.com/files/603/6031754815d7c2021f8e1f0146ae5bbb_preview.png",
         "price": 23.5,
         "currency": "USD",
-        "printful_catalog_variant_id": "5130834258",
+        "printful_catalog_variant_id": 5130834258,
         "printful_cat_id": "6957ecd18ddb81"
       },
       {
@@ -380,7 +380,7 @@
         "image": "https://files.cdn.printful.com/files/35d/35d452cdcf3e40b72cd9f8716b6d45c9_preview.png",
         "price": 23.5,
         "currency": "USD",
-        "printful_catalog_variant_id": "5130834259",
+        "printful_catalog_variant_id": 5130834259,
         "printful_cat_id": "6957ecd18ddbd6"
       },
       {
@@ -393,7 +393,7 @@
         "image": "https://files.cdn.printful.com/files/8b4/8b4853101de4635c9d3e14ac5626ce86_preview.png",
         "price": 23.5,
         "currency": "USD",
-        "printful_catalog_variant_id": "5130834260",
+        "printful_catalog_variant_id": 5130834260,
         "printful_cat_id": "6957ecd18ddc27"
       },
       {
@@ -406,7 +406,7 @@
         "image": "https://files.cdn.printful.com/files/d14/d14deb22ab23a9b886f94367d1444cd2_preview.png",
         "price": 23.5,
         "currency": "USD",
-        "printful_catalog_variant_id": "5130834261",
+        "printful_catalog_variant_id": 5130834261,
         "printful_cat_id": "6957ecd18ddc75"
       },
       {
@@ -419,7 +419,7 @@
         "image": "https://files.cdn.printful.com/files/1dd/1dd46314800734dd57425d288fe0f54c_preview.png",
         "price": 23.5,
         "currency": "USD",
-        "printful_catalog_variant_id": "5130834262",
+        "printful_catalog_variant_id": 5130834262,
         "printful_cat_id": "6957ecd18ddcb8"
       }
     ],
