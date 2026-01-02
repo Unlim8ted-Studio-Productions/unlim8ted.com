@@ -612,257 +612,194 @@
   <site-loader text="Loading..."></site-loader>
   <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
     profile-href="https://unlim8ted.com/profile"></site-navbar>
+  <!-- NOTICE -->
+  <div id="notice" class="notice" style="display:none;"></div>
 
-  <!-- Modal: Confirm (clear cart) -->
-  <div id="modalOverlay" class="modalOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modalHead">
-        <div id="modalTitle" class="modalTitle">Confirm</div>
-        <button id="modalClose" class="modalClose" type="button" aria-label="Close">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
-            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
-        </button>
-      </div>
-      <div id="modalBody" class="modalBody"></div>
-      <div class="modalActions">
-        <button id="modalCancel" class="btn btn-ghost" type="button">Cancel</button>
-        <button id="modalConfirm" class="btn btn-danger" type="button">Confirm</button>
-      </div>
-    </div>
-  </div>
+  <!-- CART PAGE -->
+  <main class="page">
+    <header class="pageHeader">
+      <h1 id="pageTitle">Your Cart</h1>
+      <p id="pageSub">Review your items before checkout.</p>
+    </header>
 
-  <!-- Modal: Donation popup -->
-  <div id="donateOverlay" class="modalOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
-      <div class="modalHead">
-        <div id="donateTitle" class="modalTitle">Support Unlim8ted</div>
-        <button id="donateClose" class="modalClose" type="button" aria-label="Close">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
-            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
-        </button>
-      </div>
-      <div class="modalBody">
-        Choose how you’d like to support, then we’ll open Square in a secure popup.
-
-        <div class="donateGrid">
-          <div>
-            <div class="mini" style="margin-bottom:6px;">Frequency</div>
-            <select id="donateFreq" aria-label="Donation frequency">
-              <option value="one_time">One-time</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="annual">Annual</option>
-            </select>
-          </div>
-
-          <div>
-            <div class="mini" style="margin-bottom:6px;">Amount</div>
-            <select id="donateAmount" aria-label="Donation amount">
-              <option value="custom">Custom</option>
-              <option value="1">$1</option>
-              <option value="5">$5</option>
-              <option value="10">$10</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="hint">
-          Square will handle your payment securely. Thank you for supporting Unlim8ted.
-        </div>
-      </div>
-      <div class="modalActions">
-        <button id="donateCancel" class="btn btn-ghost" type="button">Cancel</button>
-        <button id="donateGo" class="btn btn-primary" type="button">Donate via Square</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: Checkout (quote -> open Square hosted checkout in popup) -->
-  <div id="checkoutOverlay" class="modalOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
-      <div class="modalHead">
-        <div id="checkoutTitle" class="modalTitle">Checkout</div>
-        <button id="checkoutClose" class="modalClose" type="button" aria-label="Close">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
-            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
-        </button>
+    <section class="cartPanel">
+      <div id="cartEmpty" class="empty" style="display:none;">
+        Your cart is empty.
       </div>
 
-      <div class="modalBody">
-        <div class="mini">Enter your shipping address, choose a shipping method, then we’ll open Square checkout in a secure popup.</div>
+      <div id="cartList" class="cartList"></div>
 
-        <div class="checkoutGrid">
-          <!-- Left: address + shipping + totals -->
-          <div>
-            <div class="fieldGrid">
-              <div class="full">
-                <div class="mini" style="margin-bottom:6px;">Full name</div>
-                <input id="ship_full_name" type="text" autocomplete="name" placeholder="Full name" />
-              </div>
-
-              <div>
-                <div class="mini" style="margin-bottom:6px;">Email</div>
-                <input id="ship_email" type="email" autocomplete="email" placeholder="you@example.com" />
-              </div>
-
-              <div>
-                <div class="mini" style="margin-bottom:6px;">Phone</div>
-                <input id="ship_phone" type="tel" autocomplete="tel" placeholder="(optional but recommended)" />
-              </div>
-
-              <div class="full">
-                <div class="mini" style="margin-bottom:6px;">Address line 1</div>
-                <input id="ship_address1" type="text" autocomplete="address-line1" placeholder="Street address" />
-              </div>
-
-              <div class="full">
-                <div class="mini" style="margin-bottom:6px;">Address line 2</div>
-                <input id="ship_address2" type="text" autocomplete="address-line2" placeholder="Apt, suite, unit (optional)" />
-              </div>
-
-              <div>
-                <div class="mini" style="margin-bottom:6px;">City</div>
-                <input id="ship_city" type="text" autocomplete="address-level2" placeholder="City" />
-              </div>
-
-              <div>
-                <div class="mini" style="margin-bottom:6px;">State (US)</div>
-                <input id="ship_state_code" type="text" autocomplete="address-level1" placeholder="MA" />
-              </div>
-
-              <div>
-                <div class="mini" style="margin-bottom:6px;">ZIP / Postal</div>
-                <input id="ship_zip" type="text" autocomplete="postal-code" placeholder="02110" />
-              </div>
-
-              <div>
-                <div class="mini" style="margin-bottom:6px;">Country (ISO2)</div>
-                <input id="ship_country_code" type="text" autocomplete="country" placeholder="US" />
-              </div>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="mini" style="margin-bottom:6px;">Shipping method</div>
-            <select id="ship_method">
-              <option value="">Get a quote first…</option>
-            </select>
-
-            <div class="hint" id="quoteHint">
-              We’ll calculate shipping options and totals before opening Square checkout.
-            </div>
-
-            <div class="divider"></div>
-
-            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-              <span class="pill">Items: <span id="q_items">0</span></span>
-              <span class="pill">Subtotal: $<span id="q_subtotal">0.00</span></span>
-              <span class="pill">Shipping: $<span id="q_shipping">0.00</span></span>
-              <span class="pill">Total: $<span id="q_total">0.00</span></span>
-              <span class="pill" id="q_exp" style="display:none;">Expires: <span id="q_exp_time"></span></span>
-            </div>
-          </div>
-
-          <!-- Right: status -->
-          <div>
-            <div class="mini" style="margin-bottom:8px;">Status</div>
-            <div id="payStatus" class="notice" style="display:none;"></div>
-            <div class="hint" id="payHint">
-              Payment happens in Square’s secure hosted checkout. This page will confirm the result.
-            </div>
-            <div class="spinnerRow" id="spinnerRow" style="display:none;">
-              <span class="spinner" aria-hidden="true"></span>
-              <span id="spinnerText">Waiting…</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="modalActions">
-        <button id="btnQuote" class="btn btn-ghost" type="button">Get quote</button>
-        <button id="btnOpenSquare" class="btn btn-primary" type="button" disabled>Open Square checkout</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: Expired -->
-  <div id="expiredOverlay" class="modalOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="expiredTitle">
-      <div class="modalHead">
-        <div id="expiredTitle" class="modalTitle">Checkout expired</div>
-        <button id="expiredClose" class="modalClose" type="button" aria-label="Close">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
-            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
-        </button>
-      </div>
-      <div class="modalBody">
-        This checkout session expired to keep pricing and shipping accurate. Please reload the page and try again.
-      </div>
-      <div class="modalActions">
-        <button id="expiredReload" class="btn btn-primary" type="button">Reload</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="wrap">
-    <div class="topbar">
-      <div>
-        <h1 id="pageTitle">Your Cart</h1>
-        <p id="pageSub" class="sub">Everything in one list. Adjust quantities, then checkout.</p>
-      </div>
-    </div>
-
-    <div id="notice" class="notice" style="display:none;"></div>
-
-    <div class="grid">
-      <!-- LEFT -->
-      <div class="card list">
-        <div id="cartList"></div>
-        <div id="cartEmpty" class="empty" style="display:none;">Your cart is empty.</div>
-      </div>
-
-      <!-- RIGHT -->
-      <div class="card summary">
-        <div class="sum-title">Order summary</div>
-
-        <div class="sumline">
+      <div class="cartSummary">
+        <div class="row">
           <span>Items</span>
-          <strong><span id="itemsCount">0</span></strong>
+          <strong id="itemsCount">0</strong>
         </div>
-
-        <div class="sumline">
+        <div class="row">
           <span>Subtotal</span>
           <strong>$<span id="subtotal">0.00</span></strong>
         </div>
-
-        <div class="total">
+        <div class="row total">
           <span>Total</span>
-          <span>$<span id="total">0.00</span></span>
-        </div>
-
-        <div class="helper">Shipping is calculated in the checkout step before opening Square.</div>
-
-        <div class="cta">
-          <button id="checkoutBtn" class="btn btn-primary" type="button">Checkout</button>
-          <button id="clearBtn" class="btn btn-ghost" type="button">Clear cart</button>
-          <a id="continueBtn" class="btn btn-ghost" href="/products">Continue shopping</a>
-          <button id="openDonate" class="btn btn-ghost" type="button">Support / Donate</button>
-        </div>
-
-        <div class="helper" style="margin-top:12px;">
-          Free items show as <strong>FREE</strong>. Paid physical items require shipping + payment.
+          <strong>$<span id="total">0.00</span></strong>
         </div>
       </div>
-    </div>
 
-    <div class="foot">
-      <span id="footer-text"></span>
+      <div class="cartActions">
+        <a id="continueBtn" href="/products" class="btn btn-ghost">Continue shopping</a>
+        <button id="openDonate" class="btn btn-ghost" type="button">Donate</button>
+        <button id="clearBtn" class="btn btn-ghost" type="button">Clear cart</button>
+        <button id="checkoutBtn" class="btn btn-primary" type="button">Checkout</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- CHECKOUT MODAL -->
+  <div id="checkoutOverlay" class="overlay" aria-hidden="true">
+    <div class="modal wide">
+      <button id="checkoutClose" class="modalClose" aria-label="Close">×</button>
+
+      <div class="modalBody twoCol">
+
+        <!-- LEFT: ADDRESS + SHIPPING -->
+        <div class="leftCol">
+          <h2>Shipping address</h2>
+
+          <div class="formGrid">
+            <input id="ship_full_name" placeholder="Full name">
+            <input id="ship_email" placeholder="Email">
+            <input id="ship_phone" placeholder="Phone">
+
+            <input id="ship_address1" placeholder="Address line 1">
+            <input id="ship_address2" placeholder="Address line 2">
+
+            <input id="ship_city" placeholder="City">
+            <input id="ship_state_code" placeholder="State">
+            <input id="ship_zip" placeholder="ZIP / Postal code">
+
+            <select id="ship_country_code">
+              <option value="US">United States</option>
+            </select>
+          </div>
+
+          <h3>Shipping method</h3>
+          <select id="ship_method" disabled>
+            <option value="">Shipping options will appear after Next…</option>
+          </select>
+
+          <div id="quoteHint" class="hint">
+            Enter your address, then click Next to calculate shipping.
+          </div>
+        </div>
+
+        <!-- RIGHT: PAYMENT (FULL HEIGHT IN STEP 2) -->
+        <div class="rightCol">
+          <h2>Order summary</h2>
+
+          <div class="summaryBox">
+            <div class="row">
+              <span>Items</span>
+              <strong id="q_items">0</strong>
+            </div>
+            <div class="row">
+              <span>Subtotal</span>
+              <strong>$<span id="q_subtotal">0.00</span></strong>
+            </div>
+            <div class="row">
+              <span>Shipping</span>
+              <strong>$<span id="q_shipping">0.00</span></strong>
+            </div>
+            <div class="row total">
+              <span>Total</span>
+              <strong>$<span id="q_total">0.00</span></strong>
+            </div>
+          </div>
+
+          <div id="q_exp" class="expiry" style="display:none;">
+            Quote expires at <strong id="q_exp_time"></strong>
+          </div>
+
+          <div id="payStatus" class="notice" style="display:none;"></div>
+
+          <!-- CARD UI -->
+          <div id="card-container" class="cardContainer" style="display:none;"></div>
+
+          <div id="payHint" class="hint">
+            Secure payment will appear after shipping is calculated.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modalActions">
+        <button id="btnQuote" class="btn btn-primary" type="button">Next</button>
+        <button id="btnPay" class="btn btn-primary" type="button" disabled>Pay</button>
+      </div>
     </div>
   </div>
+
+  <!-- CONFIRM MODAL (CLEAR CART) -->
+  <div id="modalOverlay" class="overlay" aria-hidden="true">
+    <div class="modal">
+      <button id="modalClose" class="modalClose">×</button>
+      <h3 id="modalTitle">Confirm</h3>
+      <div id="modalBody"></div>
+      <div class="modalActions">
+        <button id="modalCancel" class="btn btn-ghost">Cancel</button>
+        <button id="modalConfirm" class="btn btn-danger">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONATION MODAL -->
+  <div id="donateOverlay" class="overlay" aria-hidden="true">
+    <div class="modal">
+      <button id="donateClose" class="modalClose">×</button>
+      <h3>Support Unlim8ted</h3>
+
+      <label>
+        Frequency
+        <select id="donateFreq">
+          <option value="one_time">One-time</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+          <option value="annual">Annual</option>
+        </select>
+      </label>
+
+      <label>
+        Amount
+        <select id="donateAmount">
+          <option value="custom">Custom</option>
+          <option value="1">$1</option>
+          <option value="5">$5</option>
+          <option value="10">$10</option>
+        </select>
+      </label>
+
+      <div class="modalActions">
+        <button id="donateCancel" class="btn btn-ghost">Cancel</button>
+        <button id="donateGo" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPIRED MODAL -->
+  <div id="expiredOverlay" class="overlay" aria-hidden="true">
+    <div class="modal">
+      <button id="expiredClose" class="modalClose">×</button>
+      <h3>Quote expired</h3>
+      <p>Your shipping quote has expired. Please restart checkout.</p>
+      <div class="modalActions">
+        <button id="expiredReload" class="btn btn-primary">Reload</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div id="footer-text"></div>
+  </footer>
+
 
   <script type="module">
 /* =========================================================
