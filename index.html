@@ -21,7 +21,7 @@
       --accent2: #63d6ff;
       --hot: #ff4d2d;
       --hot2: #ffcc4d;
---sigilScale: 1;
+      --sigilScale: 1;
 
       --p: 0;
       --sparkX: 50vw;
@@ -1082,7 +1082,7 @@
     #navToggle,
     .nav-overlay {
       display: none;
-      z-index:50;
+      z-index: 50;
     }
 
     /* Mobile breakpoint */
@@ -2222,9 +2222,9 @@ Z
         const y = window.scrollY || window.pageYOffset || 0;
         const p = maxScroll > 0 ? clamp(y / maxScroll) : 0;
 
-const minDim = Math.min(window.innerWidth, window.innerHeight);
-const sigilScale = clamp(minDim / 900, 0.78, 1.18); // tweak bounds if you want
-setVar("--sigilScale", sigilScale.toFixed(4));
+        const minDim = Math.min(window.innerWidth, window.innerHeight);
+        const sigilScale = clamp(minDim / 900, 0.78, 1.18); // tweak bounds if you want
+        setVar("--sigilScale", sigilScale.toFixed(4));
 
         // subtle drifting background
         setVar("--bgx", (Math.sin(p * Math.PI * 2) * 20).toFixed(2));
@@ -2324,25 +2324,25 @@ setVar("--sigilScale", sigilScale.toFixed(4));
         sigil.dataset.ignite = igniteSmooth > 0.35 ? "1" : "0";
 
         /* END: starts later + lifts later + expands higher */
-/* ✅ END: responsive lift + expand based on device */
-const endOn = smoothstep(range(p, 0.970, 0.993));
-const endLiftT = smoothstep(range(p, 0.985, 1.000));
+        /* ✅ END: responsive lift + expand based on device */
+        const endOn = smoothstep(range(p, 0.970, 0.993));
+        const endLiftT = smoothstep(range(p, 0.985, 1.000));
 
-// lift scales with viewport height (clamped so it never gets silly)
-const liftMax = -clamp(window.innerHeight * 0.30, 180, 360);
-const endLift = lerp(0, liftMax, endLiftT);
+        // lift scales with viewport height (clamped so it never gets silly)
+        const liftMax = -clamp(window.innerHeight * 0.30, 180, 360);
+        const endLift = lerp(0, liftMax, endLiftT);
 
-setVar("--endOn", endOn.toFixed(4));
-setVar("--endLift", endLift.toFixed(2) + "px");
-endSlate.style.setProperty("--endOn", endOn.toFixed(4));
+        setVar("--endOn", endOn.toFixed(4));
+        setVar("--endLift", endLift.toFixed(2) + "px");
+        endSlate.style.setProperty("--endOn", endOn.toFixed(4));
 
-const expandT = smoothstep(range(p, 0.982, 1.000));
+        const expandT = smoothstep(range(p, 0.982, 1.000));
 
-// expand height scales with viewport height (clamped)
-const expandMax = clamp(window.innerHeight * 0.92, 560, 980);
-const endExpand = lerp(0, expandMax, expandT);
+        // expand height scales with viewport height (clamped)
+        const expandMax = clamp(window.innerHeight * 0.92, 560, 980);
+        const endExpand = lerp(0, expandMax, expandT);
 
-setVar("--endExpand", endExpand.toFixed(2) + "px");
+        setVar("--endExpand", endExpand.toFixed(2) + "px");
 
       }
 
@@ -2359,80 +2359,92 @@ setVar("--endExpand", endExpand.toFixed(2) + "px");
       window.addEventListener("resize", () => { measureH(); requestAnimationFrame(update); }, { passive: true });
 
       (() => {
-        const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-        if (prefersReduced) return; // respect accessibility
+  const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReduced) return; // respect accessibility
 
-        const film = document.getElementById("scrollFilm"); // your tall container
-        let virtualY = window.scrollY;
-        let currentY = window.scrollY;
-        let isAnimating = false;
-        let lastTouchY = 0;
+  const film = document.getElementById("scrollFilm"); // your tall container
+  let virtualY = window.scrollY;
+  let currentY = window.scrollY;
+  let isAnimating = false;
+  let lastTouchY = 0;
 
-        const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-        function maxScroll() {
-          return Math.max(0, film.offsetHeight - innerHeight);
-        }
+  function maxScroll() {
+    return Math.max(0, film.offsetHeight - innerHeight);
+  }
 
-        function start() {
-          if (isAnimating) return;
-          isAnimating = true;
+  // --- Mobile detection + tuning ---
+  const isMobile =
+    matchMedia("(pointer: coarse)").matches ||
+    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-          const step = () => {
-            const diff = virtualY - currentY;
-            currentY += diff * 0.045;; // easing feel (0.08–0.18 range) / speed
+  // Bigger = faster scroll per gesture
+  const TOUCH_MULT = isMobile ? 1.9 : .8;   // <-- main mobile speed knob
+  const WHEEL_MULT = isMobile ? 1.25 : .8;  // mostly irrelevant on phones, but ok
 
-            // Keep real scroll synced (so address bar / history behaves)
-            window.scrollTo(0, currentY);
+  // Bigger = less "lag" / more responsive (also feels faster)
+  const FOLLOW = isMobile ? 0.075 : 0.045;   // <-- snappier follow on mobile
 
-            // Tell your animation system to update based on currentY:
-            // progress p = currentY / maxScroll
-            const p = maxScroll() ? clamp(currentY / maxScroll(), 0, 1) : 0;
-            window.__setScrollProgress?.(p); // we’ll wire this in below
+  function start() {
+    if (isAnimating) return;
+    isAnimating = true;
 
-            if (Math.abs(diff) > 0.5) {
-              requestAnimationFrame(step);
-            } else {
-              isAnimating = false;
-            }
-          };
-          requestAnimationFrame(step);
-        }
+    const step = () => {
+      const diff = virtualY - currentY;
+      currentY += diff * FOLLOW;
 
-        function onWheel(e) {
-          e.preventDefault();
-          virtualY = clamp(virtualY + e.deltaY, 0, maxScroll());
-          start();
-        }
+      // Keep real scroll synced (so address bar / history behaves)
+      window.scrollTo(0, currentY);
 
-        function onTouchStart(e) {
-          lastTouchY = e.touches[0].clientY;
-        }
+      // If you ever wire this, it will still work:
+      const p = maxScroll() ? clamp(currentY / maxScroll(), 0, 1) : 0;
+      window.__setScrollProgress?.(p);
 
-        function onTouchMove(e) {
-          e.preventDefault();
-          const touchY = e.touches[0].clientY;
-          const deltaY = lastTouchY - touchY;
-          lastTouchY = touchY;
+      if (Math.abs(diff) > 0.5) {
+        requestAnimationFrame(step);
+      } else {
+        isAnimating = false;
+      }
+    };
 
-          virtualY = clamp(virtualY + deltaY, 0, maxScroll());
-          start();
-        }
+    requestAnimationFrame(step);
+  }
 
-        // IMPORTANT: passive:false so preventDefault works
-        addEventListener("wheel", onWheel, { passive: false });
-        addEventListener("touchstart", onTouchStart, { passive: true });
-        addEventListener("touchmove", onTouchMove, { passive: false });
+  function onWheel(e) {
+    e.preventDefault();
+    virtualY = clamp(virtualY + e.deltaY * WHEEL_MULT, 0, maxScroll());
+    start();
+  }
 
-        addEventListener("resize", () => {
-          virtualY = clamp(virtualY, 0, maxScroll());
-          currentY = clamp(currentY, 0, maxScroll());
-        });
+  function onTouchStart(e) {
+    lastTouchY = e.touches[0].clientY;
+  }
 
-        // Initialize
-        const p0 = maxScroll() ? clamp(window.scrollY / maxScroll(), 0, 1) : 0;
-        window.__setScrollProgress?.(p0);
-      })();
+  function onTouchMove(e) {
+    e.preventDefault();
+    const touchY = e.touches[0].clientY;
+    const deltaY = (lastTouchY - touchY) * TOUCH_MULT; // ✅ faster on mobile
+    lastTouchY = touchY;
+
+    virtualY = clamp(virtualY + deltaY, 0, maxScroll());
+    start();
+  }
+
+  // IMPORTANT: passive:false so preventDefault works
+  addEventListener("wheel", onWheel, { passive: false });
+  addEventListener("touchstart", onTouchStart, { passive: true });
+  addEventListener("touchmove", onTouchMove, { passive: false });
+
+  addEventListener("resize", () => {
+    virtualY = clamp(virtualY, 0, maxScroll());
+    currentY = clamp(currentY, 0, maxScroll());
+  });
+
+  // Initialize
+  const p0 = maxScroll() ? clamp(window.scrollY / maxScroll(), 0, 1) : 0;
+  window.__setScrollProgress?.(p0);
+})();
 
     })();
   </script>
