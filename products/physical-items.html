@@ -51,7 +51,9 @@
       --max: 1140px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -130,7 +132,11 @@
       user-select: none;
     }
 
-    .icon svg { width: 18px; height: 18px; fill: currentColor; }
+    .icon svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
 
     .tool input,
     .tool select {
@@ -246,9 +252,17 @@
       box-shadow: 0 0 0 2px rgba(0, 0, 0, .22);
     }
 
-    .stock-in .dot { background: var(--ok); }
-    .stock-partial .dot { background: var(--warn); }
-    .stock-out .dot { background: var(--bad); }
+    .stock-in .dot {
+      background: var(--ok);
+    }
+
+    .stock-partial .dot {
+      background: var(--warn);
+    }
+
+    .stock-out .dot {
+      background: var(--bad);
+    }
 
     .badge.cat {
       background: rgba(0, 255, 198, .10);
@@ -304,7 +318,7 @@
     }
 
     .actions {
-      padding: 0 14px 14px;
+      padding: 0 14px 5px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -340,9 +354,15 @@
       box-shadow: 0 12px 28px rgba(0, 255, 153, .12);
     }
 
-    .btn.primary:hover { filter: brightness(.97); }
+    .btn.primary:hover {
+      filter: brightness(.97);
+    }
 
-    .btn svg { width: 16px; height: 16px; fill: currentColor; }
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
 
     .foot {
       margin-top: 22px;
@@ -362,12 +382,19 @@
     }
 
     @media (max-width: 980px) {
-      .card { grid-column: span 6; }
-      .toolbar { grid-template-columns: 1fr; }
+      .card {
+        grid-column: span 6;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 560px) {
-      .card { grid-column: span 12; }
+      .card {
+        grid-column: span 12;
+      }
     }
   </style>
 </head>
@@ -381,7 +408,8 @@
     <div class="hero">
       <div>
         <h1>Physical Items</h1>
-        <p class="sub">Stock is based on Printful and stored per variant in <strong>varients[].available</strong>. Click a product to view and choose a variant.</p>
+        <p class="sub">Stock is based on Printful and stored per variant in <strong>varients[].available</strong>. Click
+          a product to view and choose a variant.</p>
       </div>
     </div>
 
@@ -399,8 +427,7 @@
       <div class="tool" title="Filter">
         <div class="icon" aria-hidden="true">
           <svg viewBox="0 0 24 24">
-            <path
-              d="M4 7h10a2 2 0 104 0h2v2h-2a2 2 0 11-4 0H4V7zm0 8h2a2 2 0 104 0h10v2H10a2 2 0 11-4 0H4v-2z" />
+            <path d="M4 7h10a2 2 0 104 0h2v2h-2a2 2 0 11-4 0H4V7zm0 8h2a2 2 0 104 0h10v2H10a2 2 0 11-4 0H4v-2z" />
           </svg>
         </div>
         <select id="filter" aria-label="Category filter">
@@ -495,10 +522,68 @@
       return String(img || "");
     }
 
+    // ---- NEW: min/max price helpers (from varients[].price primarily) ----
+    function toNumPrice(v) {
+      if (v == null) return null;
+      if (typeof v === "number" && Number.isFinite(v)) return v;
+      const s = String(v).trim();
+      if (!s) return null;
+      // strip currency symbols and commas, keep digits/.- 
+      const cleaned = s.replace(/[^0-9.\-]/g, "");
+      const n = Number(cleaned);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function formatMoney(n, currency = "USD") {
+      try {
+        return new Intl.NumberFormat(undefined, { style: "currency", currency }).format(n);
+      } catch {
+        // fallback
+        return `$${n.toFixed(2)}`;
+      }
+    }
+
+    function priceRangeFromProduct(p) {
+      const vs = Array.isArray(p?.varients) ? p.varients : [];
+      const prices = [];
+      let currency = String(p?.currency || "") || "";
+
+      for (const v of vs) {
+        const n = toNumPrice(v?.price ?? v?.amount ?? v?.cost);
+        if (n != null) prices.push(n);
+        if (!currency && v?.currency) currency = String(v.currency);
+      }
+
+      // fallback to product-level price fields if variants don't have prices
+      if (prices.length === 0) {
+        const n = toNumPrice(p?.price);
+        if (n != null) prices.push(n);
+      }
+
+      if (!currency) currency = "USD";
+      if (prices.length === 0) return { min: null, max: null, currency };
+
+      let min = prices[0], max = prices[0];
+      for (const n of prices) {
+        if (n < min) min = n;
+        if (n > max) max = n;
+      }
+      return { min, max, currency };
+    }
+
     function bestPriceLabel(p) {
+      // Prefer computed min/max from variants
+      const pr = priceRangeFromProduct(p);
+      if (pr.min != null && pr.max != null) {
+        if (Math.abs(pr.max - pr.min) < 0.000001) return formatMoney(pr.min, pr.currency);
+        return `${formatMoney(pr.min, pr.currency)} – ${formatMoney(pr.max, pr.currency)}`;
+      }
+
+      // Fallback to whatever string fields you might have had before
       const pl = p?.priceLabel || p?.price_range || p?.priceRange || p?.price || "";
       return pl ? String(pl) : "";
     }
+    // ---- /NEW ----
 
     function render(products) {
       grid.innerHTML = "";
@@ -511,7 +596,7 @@
           desc: String(p?.description ?? p?.desc ?? ""),
           category: String(p?.category ?? categoryGuessFromTags(p)),
           image: bestImage(p),
-          priceLabel: bestPriceLabel(p),
+          priceLabel: bestPriceLabel(p), // now min–max
           varients: Array.isArray(p?.varients) ? p.varients : null
         }))
         .filter(p => p.id)
@@ -550,14 +635,13 @@
             <p class="desc">${esc(p.desc)}</p>
             <div class="meta">
               <div class="price">${esc(p.priceLabel)}</div>
-            </div>
-          </div>
-
-          <div class="actions">
+                        <div class="actions">
             <span class="btn primary" role="button" tabindex="-1">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6zm0 2.5L18.5 10H14V5.5zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
               View product
             </span>
+          </div>
+            </div>
           </div>
         `;
 
