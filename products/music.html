@@ -11,12 +11,14 @@
 
   <!-- Modern navbar web component -->
   <script type="module" src="/components/site-navbar.js"></script>
-    <script type="module">
+
+  <script type="module">
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
     import { getFirebase } from "/components/firebase-init.js";
+    const { auth, db } = getFirebase();
+  </script>
 
-    const { auth, db } = getFirebase();</script>
   <!-- MIDI parser -->
   <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
 
@@ -57,7 +59,7 @@
       overflow: hidden;
     }
 
-    /* ===== Loader (keeps your old vibe but cleaned up) ===== */
+    /* ===== Loader ===== */
     .loader {
       position: fixed;
       inset: 0;
@@ -129,6 +131,7 @@
     }
 
     @keyframes pulse {
+
       0%,
       100% {
         opacity: 1;
@@ -168,7 +171,6 @@
       height: calc(100vh - var(--navSpace, 56px));
       width: min(var(--maxw), calc(100% - 28px));
       margin: 14px auto;
-      margin-top: 14px;
       display: grid;
       grid-template-columns: 1.15fr 2fr;
       gap: 14px;
@@ -183,6 +185,8 @@
       -webkit-backdrop-filter: blur(12px);
       overflow: hidden;
       min-height: 0;
+      display: flex;
+      flex-direction: column;
     }
 
     .panel-header {
@@ -213,8 +217,35 @@
 
     /* ===== Left: Song list ===== */
     .song-list {
-      overflow: auto;
-      padding: 10px;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 1rem;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(184, 107, 255, 0.55) transparent;
+    }
+
+    .song-list::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .song-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .song-list::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(184, 107, 255, 0.9), rgba(103, 213, 255, 0.7));
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .song-list::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, rgba(57, 200, 145, 0.95), rgba(103, 213, 255, 0.85));
     }
 
     .song-item {
@@ -263,12 +294,19 @@
       font-weight: 800;
       letter-spacing: .04em;
       transition: transform .18s ease, background .18s ease, border-color .18s ease;
+      user-select: none;
     }
 
     .pill:hover {
       transform: translateY(-1px);
       border-color: rgba(57, 200, 145, .45);
       background: rgba(57, 200, 145, .10);
+    }
+
+    .pill-btn {
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .06);
     }
 
     .now-playing {
@@ -288,10 +326,43 @@
       text-align: center;
     }
 
+    /* ===== Section divider (TimeCat) ===== */
+    .section-divider {
+      margin: 18px 0 8px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(180, 130, 255, .18);
+      background: rgba(0, 0, 0, .16);
+      display: grid;
+      gap: 6px;
+    }
+
+    .section-kicker {
+      font-size: 11px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(233, 231, 255, .65);
+      font-weight: 900;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 950;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: rgba(233, 231, 255, .92);
+    }
+
+    .section-sub {
+      font-size: 12px;
+      color: rgba(233, 231, 255, .70);
+      line-height: 1.4;
+    }
+
     /* ===== Right: Visualizer ===== */
     .visualizer-wrap {
       display: grid;
-      grid-template-rows: 1fr auto;
+      grid-template-rows: auto 1fr auto;
       min-height: 0;
       background: rgba(0, 0, 0, .60);
     }
@@ -384,7 +455,6 @@
       background: rgba(255, 255, 255, .06);
     }
 
-    /* Responsive */
     @media (max-width: 900px) {
       body {
         overflow: auto;
@@ -439,10 +509,7 @@
 </head>
 
 <body>
-  <!-- Modern nav (cart + profile on right) -->
-  <site-navbar base=""
-    cart-href="/cart"
-    signin-href="https://unlim8ted.com/sign-in"
+  <site-navbar base="" cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
     profile-href="https://unlim8ted.com/profile"></site-navbar>
 
   <div class="shell" id="shell">
@@ -457,12 +524,15 @@
       </div>
 
       <div class="song-list">
+        <!-- Normal MIDI+MP3 tracks -->
         <div class="song-item"
           onclick="playTrack('The%20Echos%20of%20the%20Bells.mid','The%20Echos%20of%20the%20Bells.mp3','The Echos of the Bells')">
           <div class="song-name">The Echos of the Bells</div>
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/The%20Echos%20of%20the%20Bells-Score_and_Parts.pdf"
               target="_blank" rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('The%20Echos%20of%20the%20Bells.mid','The%20Echos%20of%20the%20Bells.mp3','The Echos of the Bells')">Play</span>
           </div>
         </div>
 
@@ -472,6 +542,8 @@
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/Serene%20Winter%20Night-Score_and_Parts.pdf"
               target="_blank" rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('Serene%20Winter%20Night.mid','Serene%20Winter%20Night.mp3','Serene Winter Night')">Play</span>
           </div>
         </div>
 
@@ -481,6 +553,8 @@
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/A%20Bright%20Winter-Score_and_Parts.pdf"
               target="_blank" rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('A%20Bright%20Winter.mid','A%20Bright%20Winter.mp3','A Bright Winter')">Play</span>
           </div>
         </div>
 
@@ -490,24 +564,28 @@
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/Resonating%20Magic-Score_and_Parts.pdf"
               target="_blank" rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('Resonating%20Magic.mid','Resonating%20Magic.mp3','Resonating Magic')">Play</span>
           </div>
         </div>
 
-        <div class="song-item"
-          onclick="playTrack('Blue%20Lasers.mid','Blue%20Lasers.mp3','Neon Lasers')">
+        <div class="song-item" onclick="playTrack('Blue%20Lasers.mid','Blue%20Lasers.mp3','Neon Lasers')">
           <div class="song-name">Neon Lasers</div>
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/Blue%20Lasers-Score_and_Parts.pdf" target="_blank"
               rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('Blue%20Lasers.mid','Blue%20Lasers.mp3','Neon Lasers')">Play</span>
           </div>
         </div>
 
-        <div class="song-item"
-          onclick="playTrack('Defiant%20Quiet.mid','Defiant%20Quiet.mp3','Quiet Defiance')">
+        <div class="song-item" onclick="playTrack('Defiant%20Quiet.mid','Defiant%20Quiet.mp3','Quiet Defiance')">
           <div class="song-name">Quiet Defiance</div>
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/Defiant%20Quiet-Score_and_Parts.pdf" target="_blank"
               rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('Defiant%20Quiet.mid','Defiant%20Quiet.mp3','Quiet Defiance')">Play</span>
           </div>
         </div>
 
@@ -517,6 +595,8 @@
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/Close%20to%20the%20End-Score_and_Parts.pdf"
               target="_blank" rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('Close%20to%20the%20End.mid','Close%20to%20the%20End.mp3','Close to the End')">Play</span>
           </div>
         </div>
 
@@ -525,6 +605,8 @@
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/Darkness-Score_and_Parts.pdf" target="_blank"
               rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('Darkness.mid','Darkness.mp3','Darkness')">Play</span>
           </div>
         </div>
 
@@ -534,6 +616,8 @@
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/Emergency%20Override-Score_and_Parts.pdf"
               target="_blank" rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('Emergency%20Override.mid','Emergency%20Override.mp3','Emergency Override')">Play</span>
           </div>
         </div>
 
@@ -542,6 +626,8 @@
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/Restart-Score_and_Parts.pdf" target="_blank"
               rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('Restart.mid','Restart.mp3','Restart')">Play</span>
           </div>
         </div>
 
@@ -551,15 +637,505 @@
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/Fast%20Falling%20Rain-Score_and_Parts.pdf"
               target="_blank" rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('Fast%20Falling%20Rain.mid','Fast%20Falling%20Rain.mp3','Fast Falling Rain')">Play</span>
           </div>
         </div>
 
-        <div class="song-item"
-          onclick="playTrack('Sharp%20Strings.mid','Sharp%20Strings.mp3','Sharp Strings')">
+        <div class="song-item" onclick="playTrack('Sharp%20Strings.mid','Sharp%20Strings.mp3','Sharp Strings')">
           <div class="song-name">Sharp Strings</div>
           <div class="song-actions">
             <a class="pill" href="https://unlim8ted.com/music/pdf's/Sharp%20Strings-Score_and_Parts.pdf" target="_blank"
               rel="noopener">View PDF</a>
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTrack('Sharp%20Strings.mid','Sharp%20Strings.mp3','Sharp Strings')">Play</span>
+          </div>
+        </div>
+
+        <!-- TimeCat Soundtrack (buttons only, no MIDI) -->
+        <div class="section-divider">
+          <div class="section-kicker">Soundtrack</div>
+          <div class="section-title">TimeCat</div>
+          <div class="section-sub">Audio-only tracks (no MIDI). Visualizer switches to an audio-reactive mode.</div>
+        </div>
+
+        <!-- Helper: use playTimecat('products/games/TimeCat/Music/<file>.mp3', 'Display Name') -->
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Untitled Title.mp3','Untitled Title')">
+          <div class="song-name">TRACK 01 — Untitled Title</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Untitled Title.mp3','Untitled Title')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Bu ba du ba House Cat.mp3','Bu ba du ba House Cat')">
+          <div class="song-name">TRACK 02 — Bu ba du ba House Cat</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Bu ba du ba House Cat.mp3','Bu ba du ba House Cat')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Bu ba du ba Jungle Cat.mp3','Bu ba du ba Jungle Cat')">
+          <div class="song-name">TRACK 03 — Bu ba du ba Jungle Cat</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Bu ba du ba Jungle Cat.mp3','Bu ba du ba Jungle Cat')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Entrance to the Jungle.mp3','Entrance to the Jungle')">
+          <div class="song-name">TRACK 04 — Entrance to the Jungle</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Entrance to the Jungle.mp3','Entrance to the Jungle')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Mysterious Jungle Dance.mp3','Mysterious Jungle Dance')">
+          <div class="song-name">TRACK 05 — Mysterious Jungle Dance</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Mysterious Jungle Dance.mp3','Mysterious Jungle Dance')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Ominous Jungle Dance.mp3','Ominous Jungle Dance')">
+          <div class="song-name">TRACK 06 — Ominous Jungle Dance</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Ominous Jungle Dance.mp3','Ominous Jungle Dance')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Tense Jungle Dance.mp3','Tense Jungle Dance')">
+          <div class="song-name">TRACK 07 — Tense Jungle Dance</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Tense Jungle Dance.mp3','Tense Jungle Dance')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Ominous Hawaiian Beach Dance.mp3','Ominous Hawaiian Beach Dance')">
+          <div class="song-name">TRACK 08 — Ominous Hawaiian Beach Dance</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Ominous Hawaiian Beach Dance.mp3','Ominous Hawaiian Beach Dance')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Rainy Hawaiian Beach Dance.mp3','Rainy Hawaiian Beach Dance')">
+          <div class="song-name">TRACK 09 — Rainy Hawaiian Beach Dance</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Rainy Hawaiian Beach Dance.mp3','Rainy Hawaiian Beach Dance')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/The Lab.mp3','The Lab')">
+          <div class="song-name">TRACK 10 — The Lab</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/The Lab.mp3','The Lab')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/You Ate My Button!.mp3','You Ate My Button!')">
+          <div class="song-name">TRACK 11 — You Ate My Button!</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/You Ate My Button!.mp3','You Ate My Button!')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Lab Boss Norm.mp3','Lab Boss Norm')">
+          <div class="song-name">TRACK 12 — Lab Boss Norm</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Lab Boss Norm.mp3','Lab Boss Norm')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Lab Boss Anger Spikes.mp3','Lab Boss Anger Spikes')">
+          <div class="song-name">TRACK 13 — Lab Boss Anger Spikes</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Lab Boss Anger Spikes.mp3','Lab Boss Anger Spikes')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/A New Truth.mp3','A New Truth')">
+          <div class="song-name">TRACK 14 — A New Truth</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/A New Truth.mp3','A New Truth')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Boss De Some Truth Norm.mp3','Boss De Some Truth Norm')">
+          <div class="song-name">TRACK 15 — Boss De Some Truth Norm</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Boss De Some Truth Norm.mp3','Boss De Some Truth Norm')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Boss De Some Truth Anger Spikes.mp3','Boss De Some Truth Anger Spikes')">
+          <div class="song-name">TRACK 16 — Boss De Some Truth Anger Spikes</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Boss De Some Truth Anger Spikes.mp3','Boss De Some Truth Anger Spikes')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Hot on the Trail.mp3','Hot on the Trail')">
+          <div class="song-name">TRACK 17 — Hot on the Trail</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Hot on the Trail.mp3','Hot on the Trail')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick='playTimecat("products/games/TimeCat/Music/Drop it Like its Hot It&apos;s a Boss.mp3","Drop it Like its Hot It&apos;s a Boss")'>
+          <div class="song-name">TRACK 18 — Drop it Like its Hot It's a Boss</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick='event.stopPropagation(); playTimecat("products/games/TimeCat/Music/Drop it Like its Hot It&apos;s a Boss.mp3","Drop it Like its Hot It&apos;s a Boss")'>
+              Play
+            </span>
+          </div>
+        </div>
+
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Malfunction Tango of One.mp3','Malfunction Tango of One')">
+          <div class="song-name">TRACK 19 — Malfunction Tango of One</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Malfunction Tango of One.mp3','Malfunction Tango of One')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/And a Malfunction Tango of Two.mp3','And a Malfunction Tango of Two')">
+          <div class="song-name">TRACK 20 — And a Malfunction Tango of Two</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/And a Malfunction Tango of Two.mp3','And a Malfunction Tango of Two')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Time Warp Tango of One.mp3','Time Warp Tango of One')">
+          <div class="song-name">TRACK 21 — Time Warp Tango of One</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Time Warp Tango of One.mp3','Time Warp Tango of One')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/And a Time Tango of Two.mp3','And a Time Tango of Two')">
+          <div class="song-name">TRACK 22 — And a Time Tango of Two</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/And a Time Tango of Two.mp3','And a Time Tango of Two')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Timely Daggers.mp3','Timely Daggers')">
+          <div class="song-name">TRACK 23 — Timely Daggers</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Timely Daggers.mp3','Timely Daggers')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/untimely daggers too.mp3','untimely daggers too')">
+          <div class="song-name">TRACK 24 — untimely daggers too</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/untimely daggers too.mp3','untimely daggers too')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/untimely daggers 3 - extras.mp3','untimely daggers 3 - extras')">
+          <div class="song-name">TRACK 25 — untimely daggers 3 - extras</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/untimely daggers 3 - extras.mp3','untimely daggers 3 - extras')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Entertain Some Puzzles Would You.mp3','Entertain Some Puzzles Would You')">
+          <div class="song-name">TRACK 26 — Entertain Some Puzzles Would You</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Entertain Some Puzzles Would You.mp3','Entertain Some Puzzles Would You')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Back on the Trail of Mystery.mp3','Back on the Trail of Mystery')">
+          <div class="song-name">TRACK 27 — Back on the Trail of Mystery</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Back on the Trail of Mystery.mp3','Back on the Trail of Mystery')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/More Mysterious Trails.mp3','More Mysterious Trails')">
+          <div class="song-name">TRACK 28 — More Mysterious Trails</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/More Mysterious Trails.mp3','More Mysterious Trails')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Look what the rat dragged in.mp3','Look what the rat dragged in')">
+          <div class="song-name">TRACK 29 — Look what the rat dragged in</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Look what the rat dragged in.mp3','Look what the rat dragged in')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Not So Mysterious Boss.mp3','Not So Mysterious Boss')">
+          <div class="song-name">TRACK 30 — Not So Mysterious Boss</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Not So Mysterious Boss.mp3','Not So Mysterious Boss')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Yet Another Trail Of Mystery.mp3','Yet Another Trail Of Mystery')">
+          <div class="song-name">TRACK 31 — Yet Another Trail Of Mystery</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Yet Another Trail Of Mystery.mp3','Yet Another Trail Of Mystery')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Almost Boss.mp3','Almost Boss')">
+          <div class="song-name">TRACK 32 — Almost Boss</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Almost Boss.mp3','Almost Boss')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Almost Boss Anger Spikes.mp3','Almost Boss Anger Spikes')">
+          <div class="song-name">TRACK 33 — Almost Boss Anger Spikes</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Almost Boss Anger Spikes.mp3','Almost Boss Anger Spikes')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/At The Edge Of The End.mp3','At The Edge Of The End')">
+          <div class="song-name">TRACK 34 — At The Edge Of The End</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/At The Edge Of The End.mp3','At The Edge Of The End')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/GlitchFront - The Final Boss.mp3','GlitchFront - The Final Boss')">
+          <div class="song-name">TRACK 35 — GlitchFront - The Final Boss</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/GlitchFront - The Final Boss.mp3','GlitchFront - The Final Boss')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Ur the only evil one 😈.mp3','Ur the only evil one 😈')">
+          <div class="song-name">TRACK 36 — Ur the only evil one 😈</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Ur the only evil one 😈.mp3','Ur the only evil one 😈')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Another Puzzle, Another Time, Another Game.mp3','Another Puzzle, Another Time, Another Game')">
+          <div class="song-name">TRACK 37 — Another Puzzle, Another Time, Another Game</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Another Puzzle, Another Time, Another Game.mp3','Another Puzzle, Another Time, Another Game')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-House.mp3','Title-House')">
+          <div class="song-name">TRACK 38 — Title-House</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-House.mp3','Title-House')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Title-wrapped up.mp3','Title-wrapped up')">
+          <div class="song-name">TRACK 39 — Title-wrapped up</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-wrapped up.mp3','Title-wrapped up')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Title-tech ramp 1.mp3','Title-tech ramp 1')">
+          <div class="song-name">TRACK 40 — Title-tech ramp 1</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-tech ramp 1.mp3','Title-tech ramp 1')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-1.mp3','Extras - 1')">
+          <div class="song-name">TRACK 41 — Extras - 1</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-1.mp3','Extras - 1')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-2.mp3','Extras - 2')">
+          <div class="song-name">TRACK 42 — Extras - 2</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-2.mp3','Extras - 2')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-3.mp3','Extras - 3')">
+          <div class="song-name">TRACK 43 — Extras - 3</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-3.mp3','Extras - 3')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-4.mp3','Extras - 4')">
+          <div class="song-name">TRACK 44 — Extras - 4</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-4.mp3','Extras - 4')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-5.mp3','Extras - 5')">
+          <div class="song-name">TRACK 45 — Extras - 5</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-5.mp3','Extras - 5')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-1.mp3','Extras - 6')">
+          <div class="song-name">TRACK 46 — Extras - 6</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-1.mp3','Extras - 6')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-2.mp3','Extras - 7')">
+          <div class="song-name">TRACK 47 — Extras - 7</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-2.mp3','Extras - 7')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-3.mp3','Extras - 8')">
+          <div class="song-name">TRACK 48 — Extras - 8</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-3.mp3','Extras - 8')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-4.mp3','Extras - 9')">
+          <div class="song-name">TRACK 49 — Extras - 9</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-4.mp3','Extras - 9')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-5.mp3','Extras - 10')">
+          <div class="song-name">TRACK 50 — Extras - 10</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-5.mp3','Extras - 10')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-6.mp3','Extras - 11')">
+          <div class="song-name">TRACK 51 — Extras - 11</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-6.mp3','Extras - 11')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-7a.mp3','Extras - 12a')">
+          <div class="song-name">TRACK 52 — Extras - 12a</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-7a.mp3','Extras - 12a')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-7b.mp3','Extras - 12b')">
+          <div class="song-name">TRACK 53 — Extras - 12b</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-7b.mp3','Extras - 12b')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-8.mp3','Extras - 13')">
+          <div class="song-name">TRACK 54 — Extras - 13</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-8.mp3','Extras - 13')">Play</span>
+          </div>
+        </div>
+
+        <div class="song-item"
+          onclick="playTimecat('products/games/TimeCat/Music/Unlim8ted Stinger.mp3','Unlim8ted Stinger')">
+          <div class="song-name">TRACK 55 — Unlim8ted Stinger</div>
+          <div class="song-actions">
+            <span class="pill pill-btn"
+              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Unlim8ted Stinger.mp3','Unlim8ted Stinger')">Play</span>
           </div>
         </div>
 
@@ -574,7 +1150,7 @@
       <div class="panel-header">
         <div>
           <h2 class="title">Visualizer</h2>
-          <p class="subtitle">MIDI notes falling in real-time.</p>
+          <p class="subtitle" id="vizSubtitle">MIDI notes falling in real-time.</p>
         </div>
         <div class="small">
           <span class="chip" id="statusChip">Idle</span>
@@ -604,14 +1180,13 @@
   </div>
 
   <script>
-    // Footer year
+    // Footer year + nav spacer
     document.addEventListener("DOMContentLoaded", function () {
       const currentYear = new Date().getFullYear();
       const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
       const el = document.getElementById("footer-text");
       if (el) el.innerHTML = footerText;
 
-      // track nav spacer height from web component (it inserts .site-navbar-spacer)
       const updateNavSpace = () => {
         const spacer = document.querySelector(".site-navbar-spacer");
         const h = spacer ? spacer.getBoundingClientRect().height : 56;
@@ -629,12 +1204,24 @@
     let startTime = null;
     let audio = null;
     let isPlaying = false;
-    let midiDuration = 0;
+    let durationMs = 0;
+
+    // Visualizer modes
+    let vizMode = "midi"; // "midi" | "audio"
+    let rafId = null;
+
+    // WebAudio analyser for audio-only mode (and also works fine for normal tracks)
+    let audioCtx = null;
+    let analyser = null;
+    let srcNode = null;
+    let freqData = null;
+    let timeData = null;
 
     const nowPlayingEl = document.getElementById("nowPlaying");
     const statusChip = document.getElementById("statusChip");
     const timeChip = document.getElementById("timeChip");
     const timeline = document.getElementById('timeline');
+    const vizSubtitle = document.getElementById("vizSubtitle");
 
     const colorPalette = [
       '#ff00c1', '#9600ff', '#4900ff', '#00b8ff', '#00fff9',
@@ -657,21 +1244,54 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-    }, { passive: true });
-
-    // initial sizing after layout
+    window.addEventListener('resize', resizeCanvas, { passive: true });
     setTimeout(resizeCanvas, 50);
 
-    function drawNotes() {
-      if (!isPlaying) return;
+    function stopRaf() {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+    }
 
-      const currentTime = performance.now() - startTime;
+    function ensureAnalyser() {
+      if (!audio) return;
 
-      // clear in CSS pixels (since we setTransform to DPR)
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === "suspended") {
+        // resume is allowed after a user gesture (your click handlers are user gestures)
+        audioCtx.resume().catch(() => { });
+      }
+
+      if (srcNode) { try { srcNode.disconnect(); } catch { } srcNode = null; }
+      if (!analyser) {
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 2048;
+        analyser.smoothingTimeConstant = 0.85;
+      }
+
+      srcNode = audioCtx.createMediaElementSource(audio);
+      srcNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+
+      freqData = new Uint8Array(analyser.frequencyBinCount);
+      timeData = new Uint8Array(analyser.fftSize);
+    }
+
+    function clearCanvas() {
       const w = canvas.getBoundingClientRect().width;
       const h = canvas.getBoundingClientRect().height;
+      ctx.clearRect(0, 0, w, h);
+    }
+
+    // ===== MIDI "falling notes" =====
+    function drawMidiNotes() {
+      if (!isPlaying || vizMode !== "midi") return;
+
+      const currentTime = performance.now() - startTime;
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+
       ctx.clearRect(0, 0, w, h);
 
       const noteWidth = w / 128;
@@ -690,20 +1310,148 @@
         ctx.fillRect(x, y, Math.max(1, noteWidth - 2), Math.max(1, noteHeight));
       }
 
-      requestAnimationFrame(drawNotes);
+      rafId = requestAnimationFrame(drawMidiNotes);
     }
 
+    // ===== Audio-reactive "cool" visualizer (spectrum + waveform + glow rings) =====
+    function drawAudioViz() {
+      if (!isPlaying || vizMode !== "audio" || !analyser || !freqData || !timeData) return;
+
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+
+      analyser.getByteFrequencyData(freqData);
+      analyser.getByteTimeDomainData(timeData);
+
+      // Background fade for trails
+      ctx.fillStyle = "rgba(0,0,0,0.18)";
+      ctx.fillRect(0, 0, w, h);
+
+      // Compute energy (0..1-ish)
+      let sum = 0;
+      for (let i = 0; i < freqData.length; i++) sum += freqData[i];
+      const avg = sum / (freqData.length * 255);
+      const energy = Math.min(1, Math.max(0, avg * 1.8));
+
+      // Center glow rings
+      const cx = w * 0.5;
+      const cy = h * 0.5;
+      const baseR = Math.min(w, h) * (0.10 + energy * 0.14);
+      const rings = 5;
+
+      for (let r = 0; r < rings; r++) {
+        const t = (performance.now() * 0.001) + r * 0.35;
+        const wobble = (Math.sin(t * 1.7) + Math.cos(t * 1.1)) * 0.5;
+        const radius = baseR + r * (18 + energy * 22) + wobble * (8 + energy * 10);
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, Math.max(6, radius), 0, Math.PI * 2);
+        const c1 = colorPalette[(r * 3) % colorPalette.length];
+        ctx.strokeStyle = `rgba(255,255,255,${0.05 + energy * 0.10})`;
+        ctx.lineWidth = 1 + energy * 2;
+        ctx.stroke();
+
+        // subtle colored halo
+        ctx.strokeStyle = `${c1}`;
+        ctx.globalAlpha = 0.05 + energy * 0.18;
+        ctx.lineWidth = 1 + energy * 2;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      // Spectrum bars
+      const bars = Math.min(96, freqData.length);
+      const barW = w / bars;
+      for (let i = 0; i < bars; i++) {
+        const v = freqData[i] / 255;
+        const bh = v * (h * 0.45);
+        const x = i * barW;
+        const y = h - bh;
+
+        const col = colorPalette[i % colorPalette.length];
+        ctx.globalAlpha = 0.25 + v * 0.65;
+        ctx.fillStyle = col;
+        ctx.fillRect(x + 1, y, Math.max(1, barW - 3), bh);
+      }
+      ctx.globalAlpha = 1;
+
+      // Waveform line
+      ctx.beginPath();
+      for (let i = 0; i < timeData.length; i++) {
+        const v = (timeData[i] - 128) / 128; // -1..1
+        const x = (i / (timeData.length - 1)) * w;
+        const y = cy + v * (h * 0.16 + energy * h * 0.08);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = `rgba(233,231,255,${0.35 + energy * 0.45})`;
+      ctx.stroke();
+
+      rafId = requestAnimationFrame(drawAudioViz);
+    }
+
+    function setMode(mode) {
+      vizMode = mode;
+      stopRaf();
+      clearCanvas();
+      if (mode === "midi") {
+        vizSubtitle.textContent = "MIDI notes falling in real-time.";
+        if (isPlaying) drawMidiNotes();
+      } else {
+        vizSubtitle.textContent = "Audio-reactive mode (spectrum + waveform).";
+        if (isPlaying) drawAudioViz();
+      }
+    }
+
+    function teardownAudio() {
+      stopRaf();
+
+      if (audio) {
+        try { audio.pause(); } catch { }
+        audio.src = "";
+        audio.load();
+      }
+      audio = null;
+
+      // disconnect old nodes safely (MediaElementSource can’t be reused across different audio elements)
+      if (srcNode) { try { srcNode.disconnect(); } catch { } srcNode = null; }
+      // keep analyser/audioCtx alive for next play (faster)
+    }
+
+    function setupAudioElement(audioUrl) {
+      teardownAudio();
+
+      audio = new Audio(audioUrl);
+      audio.crossOrigin = "anonymous"; // important if you ever host assets on a CDN/domain that needs it
+      audio.volume = parseFloat(document.getElementById('volume').value || "1");
+
+      audio.onended = () => {
+        isPlaying = false;
+        statusChip.textContent = "Ended";
+        stopRaf();
+      };
+
+      audio.ontimeupdate = () => {
+        timeline.value = audio.currentTime * 1000;
+        timeChip.textContent = fmtTime(audio.currentTime);
+      };
+
+      audio.onplay = () => {
+        // ensure analyser hooks only after user gesture
+        ensureAnalyser();
+      };
+    }
+
+    // ===== Normal track (MIDI + MP3) =====
     function playTrack(midiFilename, audioFilename, displayName) {
       const midiFileUrl = `https://unlim8ted.com/music/${midiFilename}`;
       const audioFileUrl = `https://unlim8ted.com/music/${audioFilename}`;
 
-      if (audio) {
-        audio.pause();
-        audio = null;
-      }
-
       statusChip.textContent = "Loading…";
       nowPlayingEl.textContent = displayName ? `Now playing: ${displayName}` : "Loading…";
+
+      setMode("midi");
 
       fetch(midiFileUrl)
         .then(r => r.arrayBuffer())
@@ -719,30 +1467,18 @@
             }))
           );
 
-          midiDuration = midi.duration * 1000;
-          timeline.max = midiDuration;
+          durationMs = midi.duration * 1000;
+          timeline.max = durationMs;
           timeline.value = 0;
 
           resizeCanvas();
-
-          audio = new Audio(audioFileUrl);
-          audio.volume = parseFloat(document.getElementById('volume').value || "1");
-
-          audio.onended = () => {
-            isPlaying = false;
-            statusChip.textContent = "Ended";
-          };
-
-          audio.ontimeupdate = () => {
-            timeline.value = audio.currentTime * 1000;
-            timeChip.textContent = fmtTime(audio.currentTime);
-          };
+          setupAudioElement(audioFileUrl);
 
           startTime = performance.now();
           audio.play().then(() => {
             isPlaying = true;
             statusChip.textContent = "Playing";
-            drawNotes();
+            drawMidiNotes();
           }).catch(err => {
             console.error("Error playing audio file:", err);
             isPlaying = false;
@@ -757,21 +1493,59 @@
         });
     }
 
+    // ===== TimeCat track (Audio-only, cool visualizer) =====
+    function playTimecat(relativePath, displayName) {
+      const audioFileUrl = `https://unlim8ted.com/${relativePath}`;
+
+      statusChip.textContent = "Loading…";
+      nowPlayingEl.textContent = displayName ? `Now playing: ${displayName}` : "Loading…";
+
+      setMode("audio");
+      resizeCanvas();
+
+      setupAudioElement(audioFileUrl);
+
+      // duration unknown until metadata loads
+      durationMs = 0;
+      timeline.value = 0;
+      timeline.max = 100;
+
+      audio.onloadedmetadata = () => {
+        durationMs = (audio.duration || 0) * 1000;
+        if (durationMs > 0) timeline.max = durationMs;
+      };
+
+      startTime = performance.now();
+      audio.play().then(() => {
+        isPlaying = true;
+        statusChip.textContent = "Playing";
+        drawAudioViz();
+      }).catch(err => {
+        console.error("Error playing TimeCat audio:", err);
+        isPlaying = false;
+        statusChip.textContent = "Error";
+        nowPlayingEl.textContent = "Playback error";
+      });
+    }
+
     function pauseTrack() {
       if (audio && isPlaying) {
         audio.pause();
         isPlaying = false;
         statusChip.textContent = "Paused";
+        stopRaf();
       }
     }
 
     function resumeTrack() {
       if (audio && !isPlaying) {
-        audio.play();
-        isPlaying = true;
-        statusChip.textContent = "Playing";
-        startTime = performance.now() - (audio.currentTime * 1000);
-        drawNotes();
+        audio.play().then(() => {
+          isPlaying = true;
+          statusChip.textContent = "Playing";
+          startTime = performance.now() - (audio.currentTime * 1000);
+          if (vizMode === "midi") drawMidiNotes();
+          else drawAudioViz();
+        }).catch(() => { });
       }
     }
 
@@ -780,28 +1554,48 @@
       audio.currentTime = 0;
       timeline.value = 0;
       startTime = performance.now();
+
       if (!isPlaying) {
-        audio.play();
-        isPlaying = true;
+        audio.play().then(() => {
+          isPlaying = true;
+          statusChip.textContent = "Playing";
+          if (vizMode === "midi") drawMidiNotes();
+          else drawAudioViz();
+        }).catch(() => { });
+      } else {
+        statusChip.textContent = "Playing";
+        if (vizMode === "midi") drawMidiNotes();
+        else drawAudioViz();
       }
-      statusChip.textContent = "Playing";
-      drawNotes();
     }
 
     function seekTrack(event) {
       const seekTime = Number(event.target.value || 0);
-      if (audio) {
-        audio.currentTime = seekTime / 1000;
-        startTime = performance.now() - seekTime;
-        if (isPlaying) drawNotes();
+      if (!audio) return;
+
+      audio.currentTime = seekTime / 1000;
+      startTime = performance.now() - seekTime;
+
+      if (isPlaying) {
+        stopRaf();
+        if (vizMode === "midi") drawMidiNotes();
+        else drawAudioViz();
       }
     }
 
     function setVolume(event) {
       if (audio) audio.volume = parseFloat(event.target.value);
     }
+
+    // expose functions for inline onclick
+    window.playTrack = playTrack;
+    window.playTimecat = playTimecat;
+    window.pauseTrack = pauseTrack;
+    window.resumeTrack = resumeTrack;
+    window.restartTrack = restartTrack;
+    window.seekTrack = seekTrack;
+    window.setVolume = setVolume;
   </script>
 </body>
 
 </html>
-v  M m mm \

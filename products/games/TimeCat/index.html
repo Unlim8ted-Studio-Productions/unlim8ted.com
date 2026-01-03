@@ -5,213 +5,213 @@
   <meta charset="UTF-8" />
   <title>TimeCat – Two timelines, One chance to fix the past…</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="/components/site-loader.js"></script>
+  <script type="module" src="/components/site-loader.js"></script>
   <site-loader text="Loading..."></site-loader>
 
-    <style>
-        /* logo */
-        .logo {
-            position: absolute;
-            z-index: 1;
-            top: 5%;
-            /* Adjust top position relative to viewport height */
-            left: 5%;
-            /* Adjust left position relative to viewport width */
-            display: block;
-        }
+  <style>
+    /* logo */
+    .logo {
+      position: absolute;
+      z-index: 1;
+      top: 5%;
+      /* Adjust top position relative to viewport height */
+      left: 5%;
+      /* Adjust left position relative to viewport width */
+      display: block;
+    }
 
-        .logo img {
-            height: 10vw;
-            /* Adjust height relative to viewport width */
-            max-height: 140px;
-            /* Set a maximum height to prevent the logo from getting too large on larger screens */
-            width: auto;
-            /* Maintain aspect ratio */
-        }
+    .logo img {
+      height: 10vw;
+      /* Adjust height relative to viewport width */
+      max-height: 140px;
+      /* Set a maximum height to prevent the logo from getting too large on larger screens */
+      width: auto;
+      /* Maintain aspect ratio */
+    }
 
-        /* Media query for small devices */
-        @media (max-width: 600px) {
-            .logo img {
-                height: 20vw;
-                /* Larger logo for smaller devices */
-            }
-        }
+    /* Media query for small devices */
+    @media (max-width: 600px) {
+      .logo img {
+        height: 20vw;
+        /* Larger logo for smaller devices */
+      }
+    }
 
-        button {
-            padding: 10px;
-            font-size: 1em;
-            background-color: #000000;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    button {
+      padding: 10px;
+      font-size: 1em;
+      background-color: #000000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-        button:hover {
-            background-color: rgb(57, 200, 145);
-        }
+    button:hover {
+      background-color: rgb(57, 200, 145);
+    }
 
-        .image {
-            max-width: 300px;
-        }
+    .image {
+      max-width: 300px;
+    }
 
-        /* Cart button and notification styles */
-        .cart-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #0056b3;
-            color: #fff;
-            padding: 5px 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1000;
-            display: block;
-            /* Initially hidden */
-        }
+    /* Cart button and notification styles */
+    .cart-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #0056b3;
+      color: #fff;
+      padding: 5px 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+      display: block;
+      /* Initially hidden */
+    }
 
-        .cart-btn:hover {
-            background-color: #4179b5;
-        }
-    </style>
-    <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
-    <style>
-        /* General body styles */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #0a0a0a;
-            color: #e0e0e0;
-        }
+    .cart-btn:hover {
+      background-color: #4179b5;
+    }
+  </style>
+  <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
+  <style>
+    /* General body styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+    }
 
-        .content-section {
-            padding: 40px;
-            text-align: center;
-        }
+    .content-section {
+      padding: 40px;
+      text-align: center;
+    }
 
-        h1 {
-            font-size: 2.5rem;
-            color: #00ffc6;
-            text-shadow: 0 0 10px #00ffc6, 0 0 20px #00ffc6;
-            margin-bottom: 30px;
-        }
+    h1 {
+      font-size: 2.5rem;
+      color: #00ffc6;
+      text-shadow: 0 0 10px #00ffc6, 0 0 20px #00ffc6;
+      margin-bottom: 30px;
+    }
 
-        .product-category {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
+    .product-category {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
 
-        .product-box {
-            text-align: center;
-            background-color: #1c1c1c;
-            padding: 20px;
-            border-radius: 10px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            text-decoration: none;
-            color: #e0e0e0;
-        }
+    .product-box {
+      text-align: center;
+      background-color: #1c1c1c;
+      padding: 20px;
+      border-radius: 10px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      text-decoration: none;
+      color: #e0e0e0;
+    }
 
-        .product-box:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(0, 255, 198, 0.7);
-        }
+    .product-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0, 255, 198, 0.7);
+    }
 
-        .product-box img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
+    .product-box img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
 
-        .product-box h2 {
-            font-size: 1.5rem;
-            color: #00ffc6;
-        }
+    .product-box h2 {
+      font-size: 1.5rem;
+      color: #00ffc6;
+    }
 
-        .product-box p {
-            font-size: 1rem;
-            color: #cccccc;
-        }
+    .product-box p {
+      font-size: 1rem;
+      color: #cccccc;
+    }
 
-        a {
-            color: #00ffc6;
-            text-decoration: none;
-        }
+    a {
+      color: #00ffc6;
+      text-decoration: none;
+    }
 
-        a:hover {
-            text-shadow: 0 0 10px #00ffc6;
-        }
+    a:hover {
+      text-shadow: 0 0 10px #00ffc6;
+    }
 
 
 
-        .product-category,
-        .item-category {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
+    .product-category,
+    .item-category {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
 
-        .product-box,
-        .item-box {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            width: 250px;
-            text-align: center;
-            text-decoration: none;
-            color: inherit;
-        }
+    .product-box,
+    .item-box {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      width: 250px;
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+    }
 
-        .product-box:hover,
-        .item-box:hover {
-            transform: scale(1.05);
-        }
+    .product-box:hover,
+    .item-box:hover {
+      transform: scale(1.05);
+    }
 
-        .product-box img,
-        .item-box img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
+    .product-box img,
+    .item-box img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
 
-        .product-box h2,
-        .item-box h3 {
-            color: #000000;
-            font-size: 1.5em;
-            margin: 10px 0;
-        }
+    .product-box h2,
+    .item-box h3 {
+      color: #000000;
+      font-size: 1.5em;
+      margin: 10px 0;
+    }
 
-        .product-box p,
-        .item-box p {
-            font-size: 1em;
-            color: #666;
-            padding: 0 10px 20px;
-        }
+    .product-box p,
+    .item-box p {
+      font-size: 1em;
+      color: #666;
+      padding: 0 10px 20px;
+    }
 
-        .search-bar {
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
+    .search-bar {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
 
-        .search-bar input[type="text"],
-        .search-bar select {
-            padding: 10px;
-            font-size: 1em;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
+    .search-bar input[type="text"],
+    .search-bar select {
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
 
   <!-- Optional fancy fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1717,53 +1717,55 @@
       color: var(--text-dim);
       margin-bottom: 0.65rem;
     }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 3;
-        }
 
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-        }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 3;
+    }
 
-        .dropdown-content a:hover {
-            background-color: #1c1d38;
-        }
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+    }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
-            z-index: 3;
-        }
+    .dropdown-content a:hover {
+      background-color: #1c1d38;
+    }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #251f1f;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        }
+    .dropdown:hover .dropdown-content {
+      display: block;
+      z-index: 3;
+    }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #251f1f;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    }
 
-        .dropdown-content a {
-            color: rgb(255, 255, 255);
-            text-decoration: none;
-            padding: 12px 16px;
-            display: block;
-        }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
 
-        .dropdown-content a:hover {
-            background-color: #2d2849;
-        }
+    .dropdown-content a {
+      color: rgb(255, 255, 255);
+      text-decoration: none;
+      padding: 12px 16px;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #2d2849;
+    }
+
     .ui-images-row {
       display: flex;
       flex-wrap: wrap;
@@ -1905,66 +1907,66 @@
     }
   </style>
   <script>
-document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
 
-  const overlay = document.getElementById("popupOverlay");
-  const trailerPopup = document.getElementById("trailerPopup");
-  const demoPopup = document.getElementById("demoPopup");
+      const overlay = document.getElementById("popupOverlay");
+      const trailerPopup = document.getElementById("trailerPopup");
+      const demoPopup = document.getElementById("demoPopup");
 
-  const watchBtn = document.getElementById("watchTrailerBtn");
-  const playDemoBtn = document.getElementById("playDemoBtn");
+      const watchBtn = document.getElementById("watchTrailerBtn");
+      const playDemoBtn = document.getElementById("playDemoBtn");
 
-  const trailerVideo = document.getElementById("popupTrailer");
-  const unityFrame = document.getElementById("unityFrame");
+      const trailerVideo = document.getElementById("popupTrailer");
+      const unityFrame = document.getElementById("unityFrame");
 
-  const closeButtons = document.querySelectorAll(".popup-close");
+      const closeButtons = document.querySelectorAll(".popup-close");
 
-  function openPopup(popup) {
-    overlay.classList.remove("hidden");
-    popup.classList.remove("hidden");
-    document.body.style.overflow = "hidden";
-  }
+      function openPopup(popup) {
+        overlay.classList.remove("hidden");
+        popup.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
 
-  function closeAllPopups() {
-    overlay.classList.add("hidden");
-    trailerPopup.classList.add("hidden");
-    demoPopup.classList.add("hidden");
-    document.body.style.overflow = "";
+      function closeAllPopups() {
+        overlay.classList.add("hidden");
+        trailerPopup.classList.add("hidden");
+        demoPopup.classList.add("hidden");
+        document.body.style.overflow = "";
 
-    // stop trailer audio
-    trailerVideo.pause();
+        // stop trailer audio
+        trailerVideo.pause();
 
-    // refresh Unity to stop audio/game loop
-    unityFrame.src = unityFrame.src;
-  }
+        // refresh Unity to stop audio/game loop
+        unityFrame.src = unityFrame.src;
+      }
 
-  // TRAILER button
-  watchBtn.addEventListener("click", () => {
-    openPopup(trailerPopup);
-    trailerVideo.currentTime = 0;
-    trailerVideo.play();
-  });
+      // TRAILER button
+      watchBtn.addEventListener("click", () => {
+        openPopup(trailerPopup);
+        trailerVideo.currentTime = 0;
+        trailerVideo.play();
+      });
 
-  // DEMO button
-  playDemoBtn.addEventListener("click", () => {
-    openPopup(demoPopup);
-  });
+      // DEMO button
+      playDemoBtn.addEventListener("click", () => {
+        openPopup(demoPopup);
+      });
 
-  // clicking overlay closes
-  overlay.addEventListener("click", closeAllPopups);
+      // clicking overlay closes
+      overlay.addEventListener("click", closeAllPopups);
 
-  // close buttons
-  closeButtons.forEach(btn =>
-    btn.addEventListener("click", closeAllPopups)
-  );
+      // close buttons
+      closeButtons.forEach(btn =>
+        btn.addEventListener("click", closeAllPopups)
+      );
 
-  // ESC closes
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") closeAllPopups();
-  });
+      // ESC closes
+      document.addEventListener("keydown", e => {
+        if (e.key === "Escape") closeAllPopups();
+      });
 
-});
-</script>
+    });
+  </script>
 
 </head>
 
@@ -2029,17 +2031,17 @@ document.addEventListener("DOMContentLoaded", () => {
             <span>Wishlist</span>
             <span>★</span>
           </button>
-            <div class="nav-item"><a href="/">Home</a></div>
-            <div class="nav-item"><a href="/products">Products</a></div>
-            <div class="nav-item"><a href="/help">Help</a></div>
-            <div class="nav-item"><a href="/about">About</a></div>
-            <div class="nav-item dropdown">
-                <a href="javascript:void(0)">More</a>
-                <div class="dropdown-content">
-                    <a href="/portfolio">Portfolio</a>
-                    <a href="/contact">Contact</a>
-                    <a href="/blog">Blog</a>
-                </div>
+          <div class="nav-item"><a href="/">Home</a></div>
+          <div class="nav-item"><a href="/products">Products</a></div>
+          <div class="nav-item"><a href="/help">Help</a></div>
+          <div class="nav-item"><a href="/about">About</a></div>
+          <div class="nav-item dropdown">
+            <a href="javascript:void(0)">More</a>
+            <div class="dropdown-content">
+              <a href="/portfolio">Portfolio</a>
+              <a href="/contact">Contact</a>
+              <a href="/blog">Blog</a>
+            </div>
             <a href="old"><button>Old site</button></a>
         </nav>
       </div>
@@ -2587,286 +2589,393 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <div class="time-rules">
 
-            <!-- 1 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 01</span>
               <h4>Untitled Title</h4>
-              <audio controls>
-                <source src="Music/Untitled Title.mp3">
+              <audio controls preload="none" src="Music/Untitled Title.mp3">
               </audio>
             </div>
 
-            <!-- 2 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 02</span>
               <h4>Bu ba du ba House Cat</h4>
-              <audio controls>
-                <source src="Music/Bu ba du ba House Cat.mp3">
+              <audio controls preload="none" src="Music/Bu ba du ba House Cat.mp3">
               </audio>
             </div>
 
-            <!-- 3 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 03</span>
-              <h4>Ominous Hawaiian Beach Dance</h4>
-              <audio controls>
-                <source src="Music/Ominous Hawaiian Beach Dance.mp3">
+              <h4>Bu ba du ba Jungle Cat</h4>
+              <audio controls preload="none" src="Music/Bu ba du ba Jungle Cat.mp3">
               </audio>
             </div>
 
-            <!-- 4 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 04</span>
-              <h4>Rainy Hawaiian Beach Dance</h4>
-              <audio controls>
-                <source src="Music/Rainy Hawaiian Beach Dance.mp3">
+              <h4>Entrance to the Jungle</h4>
+              <audio controls preload="none" src="Music/Entrance to the Jungle.mp3">
               </audio>
             </div>
 
-            <!-- 5 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 05</span>
-              <h4>The Lab</h4>
-              <audio controls>
-                <source src="Music/The Lab.mp3">
+              <h4>Mysterious Jungle Dance</h4>
+              <audio controls preload="none" src="Music/Mysterious Jungle Dance.mp3">
               </audio>
             </div>
 
-            <!-- 6 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 06</span>
-              <h4>You Ate My Button!</h4>
-              <audio controls>
-                <source src="Music/You Ate My Button!.mp3">
+              <h4>Ominous Jungle Dance</h4>
+              <audio controls preload="none" src="Music/Ominous Jungle Dance.mp3">
               </audio>
             </div>
 
-            <!-- 7 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 07</span>
-              <h4>Lab Boss Norm</h4>
-              <audio controls>
-                <source src="Music/Lab Boss Norm.mp3">
+              <h4>Tense Jungle Dance</h4>
+              <audio controls preload="none" src="Music/Tense Jungle Dance.mp3">
               </audio>
             </div>
 
-            <!-- 8 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 08</span>
-              <h4>Lab Boss Anger Spikes</h4>
-              <audio controls>
-                <source src="Music/Lab Boss Anger Spikes.mp3">
+              <h4>Ominous Hawaiian Beach Dance</h4>
+              <audio controls preload="none" src="Music/Ominous Hawaiian Beach Dance.mp3">
               </audio>
             </div>
 
-            <!-- 9 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 09</span>
-              <h4>A New Truth</h4>
-              <audio controls>
-                <source src="Music/A New Truth.mp3">
+              <h4>Rainy Hawaiian Beach Dance</h4>
+              <audio controls preload="none" src="Music/Rainy Hawaiian Beach Dance.mp3">
               </audio>
             </div>
 
-            <!-- 10 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 10</span>
-              <h4>Boss De Some Truth — Norm</h4>
-              <audio controls>
-                <source src="Music/Boss De Some Truth Norm.mp3">
+              <h4>The Lab</h4>
+              <audio controls preload="none" src="Music/The Lab.mp3">
               </audio>
             </div>
 
-            <!-- 11 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 11</span>
-              <h4>Boss De Some Truth — Anger Spikes</h4>
-              <audio controls>
-                <source src="Music/Boss De Some Truth Anger Spikes.mp3">
+              <h4>You Ate My Button!</h4>
+              <audio controls preload="none" src="Music/You Ate My Button!.mp3">
               </audio>
             </div>
 
-            <!-- 12 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 12</span>
-              <h4>Hot on the Trail</h4>
-              <audio controls>
-                <source src="Music/Hot on the Trail.mp3">
+              <h4>Lab Boss Norm</h4>
+              <audio controls preload="none" src="Music/Lab Boss Norm.mp3">
               </audio>
             </div>
 
-            <!-- 13 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 13</span>
-              <h4>Drop It Like It's Hot (It's a Boss)</h4>
-              <audio controls>
-                <source src="Music/Drop it Like its Hot It's a Boss.mp3">
+              <h4>Lab Boss Anger Spikes</h4>
+              <audio controls preload="none" src="Music/Lab Boss Anger Spikes.mp3">
               </audio>
             </div>
 
-            <!-- 14 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 14</span>
-              <h4>Malfunction Tango of One</h4>
-              <audio controls>
-                <source src="Music/Malfunction Tango of One.mp3">
+              <h4>A New Truth</h4>
+              <audio controls preload="none" src="Music/A New Truth.mp3">
               </audio>
             </div>
 
-            <!-- 15 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 15</span>
-              <h4>And a Malfunction Tango of Two</h4>
-              <audio controls>
-                <source src="Music/And a Malfunction Tango of Two.mp3">
+              <h4>Boss De Some Truth Norm</h4>
+              <audio controls preload="none" src="Music/Boss De Some Truth Norm.mp3">
               </audio>
             </div>
 
-            <!-- 16 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 16</span>
-              <h4>Time Warp Tango of One</h4>
-              <audio controls>
-                <source src="Music/Time Warp Tango of One.mp3">
+              <h4>Boss De Some Truth Anger Spikes</h4>
+              <audio controls preload="none" src="Music/Boss De Some Truth Anger Spikes.mp3">
               </audio>
             </div>
 
-            <!-- 17 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 17</span>
-              <h4>And a Time Tango of Two</h4>
-              <audio controls>
-                <source src="Music/And a Time Tango of Two.mp3">
+              <h4>Hot on the Trail</h4>
+              <audio controls preload="none" src="Music/Hot on the Trail.mp3">
               </audio>
             </div>
 
-            <!-- 18 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 18</span>
-              <h4>Timely Daggers</h4>
-              <audio controls>
-                <source src="Music/Timely Daggers.mp3">
+              <h4>Drop it Like its Hot It's a Boss</h4>
+              <audio controls preload="none" src="Music/Drop it Like its Hot It's a Boss.mp3">
               </audio>
             </div>
 
-            <!-- 19 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 19</span>
-              <h4>Entertain Some Puzzles Would You</h4>
-              <audio controls>
-                <source src="Music/Entertain Some Puzzles Would You.mp3">
+              <h4>Malfunction Tango of One</h4>
+              <audio controls preload="none" src="Music/Malfunction Tango of One.mp3">
               </audio>
             </div>
 
-            <!-- 20 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 20</span>
-              <h4>Back on the Trail of Mystery</h4>
-              <audio controls>
-                <source src="Music/Back on the Trail of Mystery.mp3">
+              <h4>And a Malfunction Tango of Two</h4>
+              <audio controls preload="none" src="Music/And a Malfunction Tango of Two.mp3">
               </audio>
             </div>
 
-            <!-- 21 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 21</span>
-              <h4>More Mysterious Trails</h4>
-              <audio controls>
-                <source src="Music/More Mysterious Trails.mp3">
+              <h4>Time Warp Tango of One</h4>
+              <audio controls preload="none" src="Music/Time Warp Tango of One.mp3">
               </audio>
             </div>
 
-            <!-- 22 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 22</span>
-              <h4>Look What the Rat Dragged In</h4>
-              <audio controls>
-                <source src="Music/Look what the rat dragged in.mp3">
+              <h4>And a Time Tango of Two</h4>
+              <audio controls preload="none" src="Music/And a Time Tango of Two.mp3">
               </audio>
             </div>
 
-            <!-- 23 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 23</span>
-              <h4>Not So Mysterious Boss</h4>
-              <audio controls>
-                <source src="Music/Not So Mysterious Boss.mp3">
+              <h4>Timely Daggers</h4>
+              <audio controls preload="none" src="Music/Timely Daggers.mp3">
               </audio>
             </div>
 
-            <!-- 24 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 24</span>
-              <h4>Yet Another Trail of Mystery</h4>
-              <audio controls>
-                <source src="Music/Yet Another Trail Of Mystery.mp3">
+              <h4>untimely daggers too</h4>
+              <audio controls preload="none" src="Music/untimely daggers too.mp3">
               </audio>
             </div>
 
-            <!-- 25 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 25</span>
-              <h4>Almost Boss</h4>
-              <audio controls>
-                <source src="Music/Almost Boss.mp3">
+              <h4>untimely daggers 3 - extras</h4>
+              <audio controls preload="none" src="Music/untimely daggers 3 - extras.mp3">
               </audio>
             </div>
 
-            <!-- 26 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 26</span>
-              <h4>Almost Boss Anger Spikes</h4>
-              <audio controls>
-                <source src="Music/Almost Boss Anger Spikes.mp3">
+              <h4>Entertain Some Puzzles Would You</h4>
+              <audio controls preload="none" src="Music/Entertain Some Puzzles Would You.mp3">
               </audio>
             </div>
 
-            <!-- 27 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 27</span>
-              <h4>At the Edge of the End</h4>
-              <audio controls>
-                <source src="Music/At The Edge Of The End.mp3">
+              <h4>Back on the Trail of Mystery</h4>
+              <audio controls preload="none" src="Music/Back on the Trail of Mystery.mp3">
               </audio>
             </div>
 
-            <!-- 28 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 28</span>
-              <h4>GlitchFront – The Final Boss</h4>
-              <audio controls>
-                <source src="Music/GlitchFront - The Final Boss.mp3">
+              <h4>More Mysterious Trails</h4>
+              <audio controls preload="none" src="Music/More Mysterious Trails.mp3">
               </audio>
             </div>
 
-            <!-- 29 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 29</span>
-              <h4>Ur the Only Evil One 😈</h4>
-              <audio controls>
-                <source src="Music/Ur the only evil one 😈.mp3">
+              <h4>Look what the rat dragged in</h4>
+              <audio controls preload="none" src="Music/Look what the rat dragged in.mp3">
               </audio>
             </div>
 
-            <!-- 30 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 30</span>
-              <h4>Another Puzzle, Another Time, Another Dream</h4>
-              <audio controls>
-                <source src="Music/Another Puzzle, Another Time, Another Dream.mp3">
+              <h4>Not So Mysterious Boss</h4>
+              <audio controls preload="none" src="Music/Not So Mysterious Boss.mp3">
               </audio>
             </div>
 
-            <!-- 31 -->
             <div class="time-rule">
               <span class="time-rule-index">TRACK 31</span>
-              <h4>Credits</h4>
-              <audio controls>
-                <source src="Music/Credits.mp3">
+              <h4>Yet Another Trail Of Mystery</h4>
+              <audio controls preload="none" src="Music/Yet Another Trail Of Mystery.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 32</span>
+              <h4>Almost Boss</h4>
+              <audio controls preload="none" src="Music/Almost Boss.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 33</span>
+              <h4>Almost Boss Anger Spikes</h4>
+              <audio controls preload="none" src="Music/Almost Boss Anger Spikes.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 34</span>
+              <h4>At The Edge Of The End</h4>
+              <audio controls preload="none" src="Music/At The Edge Of The End.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 35</span>
+              <h4>GlitchFront - The Final Boss</h4>
+              <audio controls preload="none" src="Music/GlitchFront - The Final Boss.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 36</span>
+              <h4>Ur the only evil one 😈</h4>
+              <audio controls preload="none" src="Music/Ur the only evil one 😈.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 37</span>
+              <h4>Another Puzzle, Another Time, Another Game</h4>
+              <audio controls preload="none" src="Music/Another Puzzle, Another Time, Another Game.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 38</span>
+              <h4>Title-House</h4>
+              <audio controls preload="none" src="Music/Title-House.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 39</span>
+              <h4>Title-wrapped up</h4>
+              <audio controls preload="none" src="Music/Title-wrapped up.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 40</span>
+              <h4>Title-tech ramp 1</h4>
+              <audio controls preload="none" src="Music/Title-tech ramp 1.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 41</span>
+              <h4>Extras - 1</h4>
+              <audio controls preload="none" src="Music/Title-1.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 42</span>
+              <h4>Extras - 2</h4>
+              <audio controls preload="none" src="Music/Title-2.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 43</span>
+              <h4>Extras - 3</h4>
+              <audio controls preload="none" src="Music/Title-3.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 44</span>
+              <h4>Extras - 4</h4>
+              <audio controls preload="none" src="Music/Title-4.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 45</span>
+              <h4>Extras - 5</h4>
+              <audio controls preload="none" src="Music/Title-5.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 46</span>
+              <h4>Extras - 6</h4>
+              <audio controls preload="none" src="Music/Puzzle-1.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 47</span>
+              <h4>Extras - 7</h4>
+              <audio controls preload="none" src="Music/Puzzle-2.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 48</span>
+              <h4>Extras - 8</h4>
+              <audio controls preload="none" src="Music/Puzzle-3.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 49</span>
+              <h4>Extras - 9</h4>
+              <audio controls preload="none" src="Music/Puzzle-4.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 50</span>
+              <h4>Extras - 10</h4>
+              <audio controls preload="none" src="Music/Puzzle-5.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 51</span>
+              <h4>Extras - 11</h4>
+              <audio controls preload="none" src="Music/Puzzle-6.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 52</span>
+              <h4>Extras - 12a</h4>
+              <audio controls preload="none" src="Music/Puzzle-7a.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 53</span>
+              <h4>Extras - 12b</h4>
+              <audio controls preload="none" src="Music/Puzzle-7b.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 54</span>
+              <h4>Extras - 13</h4>
+              <audio controls preload="none" src="Music/Puzzle-8.mp3">
+              </audio>
+            </div>
+
+            <div class="time-rule">
+              <span class="time-rule-index">TRACK 55</span>
+              <h4>Unlim8ted Stinger</h4>
+              <audio controls preload="none" src="Music/Unlim8ted Stinger.mp3">
               </audio>
             </div>
 
           </div>
+
         </div>
       </div>
     </section>
