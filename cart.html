@@ -1082,19 +1082,28 @@
                             <span>Items</span>
                             <strong id="q_items">0</strong>
                         </div>
+
                         <div class="row">
                             <span>Subtotal</span>
                             <strong>$<span id="q_subtotal">0.00</span></strong>
                         </div>
-                        <div class="row">
+
+                        <div class="row" id="q_ship_row" style="display:none;">
                             <span>Shipping</span>
                             <strong>$<span id="q_shipping">0.00</span></strong>
                         </div>
-                        <div class="row total">
+
+                        <div class="row" id="q_tax_row" style="display:none;">
+                            <span>Tax</span>
+                            <strong>$<span id="q_tax">0.00</span></strong>
+                        </div>
+
+                        <div class="row total" id="q_total_row" style="display:none;">
                             <span>Total</span>
                             <strong>$<span id="q_total">0.00</span></strong>
                         </div>
                     </div>
+
 
                     <div id="q_exp" class="expiry" style="display:none;">
                         Quote expires at <strong id="q_exp_time"></strong>
@@ -1481,7 +1490,10 @@
         const qTotalEl = document.getElementById("q_total");
         const qExpWrap = document.getElementById("q_exp");
         const qExpTime = document.getElementById("q_exp_time");
-
+        const qShipRow = document.getElementById("q_ship_row");
+        const qTaxRow = document.getElementById("q_tax_row");
+        const qTotalRow = document.getElementById("q_total_row");
+        const qTaxEl = document.getElementById("q_tax");
         const cardContainer = document.getElementById("card-container");
         const payHintEl = document.getElementById("payHint");
 
@@ -1610,6 +1622,11 @@
 
             shipMethodEl.innerHTML = `<option value="">Shipping options will appear after Next…</option>`;
             shipMethodEl.disabled = true;
+
+            qShipRow.style.display = "none";
+            qTaxRow.style.display = "none";
+            qTotalRow.style.display = "none";
+            qTaxEl.textContent = "0.00";
 
             clearPayStatus();
 
@@ -2151,7 +2168,13 @@
             qItemsEl.textContent = String(itemsCount);
             qSubtotalEl.textContent = centsToUsdString(subtotalCents);
             qShippingEl.textContent = "0.00";
-            qTotalEl.textContent = centsToUsdString(subtotalCents);
+            qTaxEl.textContent = "0.00";
+            qTotalEl.textContent = "0.00";
+
+            qShipRow.style.display = "none";
+            qTaxRow.style.display = "none";
+            qTotalRow.style.display = "none";
+
         }
 
         // Step 1: Next => quote
@@ -2211,11 +2234,21 @@
                 shipMethodEl.disabled = false;
 
                 const selected = shipMethodEl.value;
-                const shipCents = Number(shippingOptions.find(x => String(x.id) === String(selected))?.cost || 0);
+                const chosen = shippingOptions.find(x => String(x.id) === String(selected)) || shippingOptions[0];
+
+                const shipCents = Number(chosen?.cost || 0);
+                const taxCents = Number(chosen?.tax || 0);
+                const totalCents = Number(chosen?.total || (subtotalCents + shipCents + taxCents));
 
                 qSubtotalEl.textContent = centsToUsdString(subtotalCents);
                 qShippingEl.textContent = centsToUsdString(shipCents);
-                qTotalEl.textContent = centsToUsdString(subtotalCents + shipCents);
+                qTaxEl.textContent = centsToUsdString(taxCents);
+                qTotalEl.textContent = centsToUsdString(totalCents);
+
+                qShipRow.style.display = "";
+                qTaxRow.style.display = "";
+                qTotalRow.style.display = "";
+
 
                 setPayStatus("ok",
                     `<div style="display:flex;gap:10px;align-items:flex-start">
@@ -2243,10 +2276,16 @@
         shipMethodEl.addEventListener("change", () => {
             if (!_quote) return;
             const id = shipMethodEl.value;
-            const shipCents = Number(_quote.shippingOptions.find(x => String(x.id) === String(id))?.cost || 0);
+            const chosen = _quote.shippingOptions.find(x => String(x.id) === String(id));
+            const shipCents = Number(chosen?.cost || 0);
+            const taxCents = Number(chosen?.tax || 0);
+            const totalCents = Number(chosen?.total || (_quote.subtotalCents + shipCents + taxCents));
+
             qShippingEl.textContent = centsToUsdString(shipCents);
-            qTotalEl.textContent = centsToUsdString(_quote.subtotalCents + shipCents);
+            qTaxEl.textContent = centsToUsdString(taxCents);
+            qTotalEl.textContent = centsToUsdString(totalCents);
         });
+
 
         // Step 2: Pay
         btnPay.addEventListener("click", async () => {
@@ -2652,7 +2691,6 @@
         if (cc) cc.value = "US";
 
         btnQuote.textContent = "Next";
-        btnPay.style.display = "inline-flex";
     </script>
 </body>
 
