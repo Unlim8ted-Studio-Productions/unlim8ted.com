@@ -510,8 +510,8 @@
         }
 
         select option {
-            background: #0b0a12;
-            color: rgba(255, 255, 255, .92);
+        background: #efefef;
+        color: rgba(0, 0, 0, 0.92);
         }
 
         .hint {
@@ -2347,23 +2347,37 @@
                     const status = String(st.status || "").toLowerCase();
 
                     if (status === "paid" || status === "completed") {
-                        setPayStatus("ok",
-                            `<div style="display:flex;gap:10px;align-items:flex-start">
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;">
-                  <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <div><strong>Payment confirmed.</strong><br/>Thank you! Your order will be processed.</div>
-              </div>`
-                        );
+  setPayStatus("ok", `...`);
 
-                        try { await clearCart(); } catch { }
-                        renderCart();
-                        setTimeout(() => closeCheckoutModal(), 900);
-                        return;
-                    }
+  await openAlertModal({
+    title: "Payment confirmed",
+    kind: "ok",
+    bodyHtml: `
+      <strong>Success.</strong> Your payment was confirmed.<br/>
+      Please check your email for your Square receipt.
+    `,
+    okText: "Done"
+  });
+
+  try { await clearCart(); } catch { }
+  renderCart();
+  setTimeout(() => closeCheckoutModal(), 150); // shorter since popup already informed them
+  return;
+}
+
 
                     if (status === "failed" || status === "canceled") {
                         setPayStatus("bad", `<strong>Payment failed.</strong> Please try again.`);
+                        await openAlertModal({
+  title: "Payment not completed",
+  kind: "bad",
+  bodyHtml: `
+    <strong>Payment failed or was canceled.</strong><br/>
+    Please double-check your card details and try again.
+  `,
+  okText: "Try again"
+});
+
                         btnPay.disabled = false;
                         shipMethodEl.disabled = false;
                         return;
@@ -2379,6 +2393,16 @@
             } catch (err) {
                 console.error(err);
                 setPayStatus("bad", `<strong>Payment error:</strong> ${escapeHtml(err?.message || String(err))}`);
+                await openAlertModal({
+  title: "Payment error",
+  kind: "bad",
+  bodyHtml: `
+    <strong>We couldn’t process the payment.</strong><br/>
+    ${escapeHtml(err?.message || String(err))}
+  `,
+  okText: "OK"
+});
+
             } finally {
                 if (!expiredOverlay.classList.contains("show")) {
                     btnPay.disabled = false;
@@ -2386,6 +2410,104 @@
                 }
             }
         });
+/* =============================
+   Alert modal (success / error popups)
+   Uses existing #modalOverlay UI
+============================= */
+let _modalMode = "confirm"; // "confirm" | "alert"
+
+function setModalButtons({ showCancel, confirmText, confirmClass } = {}) {
+  modalCancel.style.display = showCancel ? "inline-flex" : "none";
+  modalConfirm.textContent = confirmText || "OK";
+  modalConfirm.className = confirmClass || "btn btn-primary";
+}
+
+// Alert-style modal: single OK button, resolves when closed
+function openAlertModal({
+  title = "Notice",
+  bodyHtml = "",
+  okText = "OK",
+  kind = "ok", // ok | warn | bad
+} = {}) {
+  _modalMode = "alert";
+  modalTitle.textContent = title;
+
+  const icon = kind === "ok"
+    ? `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;flex:0 0 auto;">
+         <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+       </svg>`
+    : kind === "warn"
+    ? `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;flex:0 0 auto;">
+         <path d="M12 9v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+         <path d="M12 17h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+         <path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+       </svg>`
+    : `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;margin-top:2px;flex:0 0 auto;">
+         <path d="M12 9v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+         <path d="M12 17h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+         <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="currentColor" stroke-width="2"/>
+       </svg>`;
+
+  const tint =
+    kind === "ok" ? "rgba(99,214,255,.14)"
+    : kind === "warn" ? "rgba(255,209,102,.14)"
+    : "rgba(255,77,77,.14)";
+
+  modalBody.innerHTML = `
+    <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 2px;">
+      <div style="color:rgba(255,255,255,.9)">${icon}</div>
+      <div style="flex:1">
+        <div style="border:1px solid rgba(255,255,255,.10);background:${tint};border-radius:14px;padding:10px 12px;">
+          ${bodyHtml}
+        </div>
+      </div>
+    </div>
+  `;
+
+  setModalButtons({
+    showCancel: false,
+    confirmText: okText,
+    confirmClass: kind === "bad" ? "btn btn-danger" : "btn btn-primary",
+  });
+
+  modalOverlay.classList.add("show");
+  modalOverlay.setAttribute("aria-hidden", "false");
+  _lastFocus = document.activeElement;
+  setTimeout(() => modalConfirm.focus(), 0);
+
+  return new Promise(resolve => { _modalResolver = resolve; });
+}
+
+// Patch closeModal to behave differently for alert vs confirm
+const _origCloseModal = closeModal;
+closeModal = function (result) {
+  modalOverlay.classList.remove("show");
+  modalOverlay.setAttribute("aria-hidden", "true");
+
+  const r = _modalResolver;
+  _modalResolver = null;
+
+  // restore confirm modal defaults so clear-cart confirm keeps working
+  if (_modalMode === "alert") {
+    _modalMode = "confirm";
+    // restore default confirm UI
+    setModalButtons({
+      showCancel: true,
+      confirmText: "Confirm",
+      confirmClass: "btn btn-danger",
+    });
+  }
+
+  if (typeof r === "function") r(result);
+  if (_lastFocus && typeof _lastFocus.focus === "function") _lastFocus.focus();
+};
+
+// For alert mode: clicking OK should resolve
+modalConfirm.addEventListener("click", () => {
+  if (modalOverlay.classList.contains("show") && _modalMode === "alert") {
+    closeModal(true);
+  }
+});
 
         /* =============================
            Render
