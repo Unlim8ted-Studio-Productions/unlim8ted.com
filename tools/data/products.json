@@ -4340,27 +4340,21 @@
     "file": "https://unlim8ted.com/products/games/TimeCat/Music/Puzzle-6.mp3"
   },
   {
-    "id": "timecat-52-extras-12a",
+    "id": "timecat-52-extras-12",
     "product-type": "music",
-    "name": "TimeCat — Extras - 12a",
-    "file": "https://unlim8ted.com/products/games/TimeCat/Music/puzzle-7a.mp3"
-  },
-  {
-    "id": "timecat-53-extras-12b",
-    "product-type": "music",
-    "name": "TimeCat — Extras - 12b",
+    "name": "TimeCat — Extras - 12",
     "file": "https://unlim8ted.com/products/games/TimeCat/Music/puzzle-7b.mp3"
   },
   {
-    "id": "timecat-54-extras-13",
+    "id": "timecat-53-extras-13",
     "product-type": "music",
     "name": "TimeCat — Extras - 13",
     "file": "https://unlim8ted.com/products/games/TimeCat/Music/puzzle-8.mp3"
   },
   {
-    "id": "timecat-55-unlim8ted-stinger",
+    "id": "1-unlim8ted-stinger",
     "product-type": "music",
-    "name": "TimeCat — Unlim8ted Stinger",
-    "file": "https://unlim8ted.com/products/games/TimeCat/Music/Unlim8ted%20Stinger.mp3"
+    "name": "Unlim8ted Stinger",
+    "file": "https://unlim8ted.com/music/Unlim8ted%20Stinger.mp3"
   }
 ]

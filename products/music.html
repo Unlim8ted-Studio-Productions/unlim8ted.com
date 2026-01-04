@@ -759,7 +759,69 @@
       .song-list {
         max-height: 32vh;
       }
-    }
+    }/* =========================
+   Pretty checkbox (Autoplay)
+   ========================= */
+.controls input[type="checkbox"]{
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+  display: inline-grid;
+  place-content: center;
+  cursor: pointer;
+  transition: transform .14s ease, background .14s ease, border-color .14s ease, box-shadow .14s ease;
+}
+
+.controls input[type="checkbox"]:hover{
+  transform: translateY(-1px);
+  border-color: rgba(57, 200, 145, .45);
+  background: rgba(57, 200, 145, .10);
+}
+
+.controls input[type="checkbox"]:focus-visible{
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(184, 107, 255, .25),
+    0 10px 25px rgba(0,0,0,.35);
+}
+
+/* The checkmark */
+.controls input[type="checkbox"]::before{
+  content: "";
+  width: 10px;
+  height: 6px;
+  border-left: 3px solid rgba(9, 8, 14, .95);
+  border-bottom: 3px solid rgba(9, 8, 14, .95);
+  transform: rotate(-45deg) scale(0);
+  transform-origin: center;
+  transition: transform .14s ease;
+}
+
+/* Checked state */
+.controls input[type="checkbox"]:checked{
+  border-color: rgba(57, 200, 145, .70);
+  background: rgba(57, 200, 145, .95);
+  box-shadow:
+    0 0 0 2px rgba(57, 200, 145, .18) inset,
+    0 10px 25px rgba(0,0,0,.35);
+}
+
+.controls input[type="checkbox"]:checked::before{
+  transform: rotate(-45deg) scale(1);
+}
+
+/* Disabled */
+.controls input[type="checkbox"]:disabled{
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+}
+
   </style>
 
   <noscript>
