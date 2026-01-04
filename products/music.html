@@ -12,13 +12,6 @@
   <!-- Modern navbar web component -->
   <script type="module" src="/components/site-navbar.js"></script>
 
-  <script type="module">
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getFirebase } from "/components/firebase-init.js";
-    const { auth, db } = getFirebase();
-  </script>
-
   <!-- MIDI parser -->
   <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
 
@@ -33,6 +26,7 @@
       --accent: rgba(184, 107, 255, .95);
       --accent2: rgba(103, 213, 255, .85);
       --good: rgba(57, 200, 145, 1);
+      --bad: rgba(255, 120, 120, .95);
       --shadow: 0 18px 70px rgba(0, 0, 0, .55);
       --radius: 18px;
       --radius2: 24px;
@@ -258,12 +252,35 @@
       transition: transform .18s ease, background .18s ease, border-color .18s ease;
       display: grid;
       gap: 8px;
+      position: relative;
+      outline: none;
     }
 
     .song-item:hover {
       transform: translateY(-1px);
       border-color: rgba(184, 107, 255, .40);
       background: rgba(255, 255, 255, .06);
+    }
+
+    .song-item.playing {
+      border-color: rgba(57, 200, 145, .70);
+      background: rgba(57, 200, 145, .10);
+      box-shadow: 0 0 0 2px rgba(57, 200, 145, .10) inset;
+    }
+
+    .song-item.playing::after {
+      content: "Now Playing";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 900;
+      color: rgba(9, 8, 14, .95);
+      background: rgba(57, 200, 145, .95);
+      padding: 6px 10px;
+      border-radius: 999px;
     }
 
     .song-name {
@@ -362,7 +379,7 @@
     /* ===== Right: Visualizer ===== */
     .visualizer-wrap {
       display: grid;
-      grid-template-rows: auto 1fr auto;
+      grid-template-rows: auto 1fr auto auto;
       min-height: 0;
       background: rgba(0, 0, 0, .60);
     }
@@ -405,6 +422,12 @@
       transform: translateY(-1px);
       border-color: rgba(57, 200, 145, .45);
       background: rgba(57, 200, 145, .10);
+    }
+
+    .btn.ghost {
+      border-color: rgba(255, 255, 255, .10);
+      background: rgba(0, 0, 0, .18);
+      color: rgba(233, 231, 255, .75);
     }
 
     .range {
@@ -455,6 +478,241 @@
       background: rgba(255, 255, 255, .06);
     }
 
+    /* ===== Epilepsy warning ===== */
+    .warning {
+      border-top: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(255, 160, 80, .10);
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .warning strong {
+      color: rgba(255, 215, 165, .98);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .warning p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: rgba(233, 231, 255, .72);
+      line-height: 1.35;
+    }
+
+    /* ===== Reviews ===== */
+    .reviews {
+      border-top: 1px solid rgba(255, 255, 255, .08);
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+      min-height: 0;
+      background: rgba(0, 0, 0, .35);
+    }
+
+    .reviewsHead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .stars {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      letter-spacing: .12em;
+      color: rgba(255, 204, 102, .95);
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .avgWrap {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    .avgNum {
+      font-size: 26px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .avgMeta {
+      display: grid;
+      gap: 2px;
+    }
+
+    .muted {
+      color: rgba(233, 231, 255, .65);
+      font-size: 12px;
+    }
+
+    .bars {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .04);
+    }
+
+    .barRow {
+      display: grid;
+      grid-template-columns: 72px 1fr 34px;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+      color: rgba(233, 231, 255, .70);
+    }
+
+    .barTrack {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .08);
+      overflow: hidden;
+    }
+
+    .barFill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(184, 107, 255, .90), rgba(103, 213, 255, .75));
+    }
+
+    .commentList {
+      max-height: 220px;
+      overflow: auto;
+      padding-right: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(184, 107, 255, 0.55) transparent;
+    }
+
+    .commentList::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .commentList::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .commentList::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(184, 107, 255, 0.9), rgba(103, 213, 255, 0.7));
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .comment {
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(0, 0, 0, .22);
+      border-radius: 16px;
+      padding: 10px 10px;
+      margin: 10px 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .commentTop {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .who {
+      font-weight: 900;
+      font-size: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .when {
+      font-size: 12px;
+      color: rgba(233, 231, 255, .55);
+    }
+
+    .commentText {
+      margin: 0;
+      font-size: 13px;
+      color: rgba(233, 231, 255, .78);
+      line-height: 1.35;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .mineBadge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(57, 200, 145, .35);
+      background: rgba(57, 200, 145, .12);
+      color: rgba(57, 200, 145, .95);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .empty {
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .03);
+      color: rgba(233, 231, 255, .65);
+      font-size: 13px;
+    }
+
+    .commentForm {
+      display: none;
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .03);
+      padding: 12px;
+      border-radius: 16px;
+    }
+
+    .fieldRow {
+      display: grid;
+      grid-template-columns: 1fr 140px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(0, 0, 0, .20);
+      color: rgba(233, 231, 255, .92);
+      padding: 10px 12px;
+      outline: none;
+      font-weight: 700;
+    }
+
+    .textarea {
+      min-height: 90px;
+      resize: vertical;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+
+    .formMsg {
+      font-size: 12px;
+      color: rgba(233, 231, 255, .65);
+    }
+
     @media (max-width: 900px) {
       body {
         overflow: auto;
@@ -473,6 +731,10 @@
       .visualizer-wrap {
         min-height: 520px;
       }
+
+      .fieldRow {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -484,18 +746,20 @@
         transition: none !important;
         scroll-behavior: auto !important;
       }
-    }/* Song list max-height rules */
-.song-list{
-  max-height: 90vh; /* not-mobile: 1/3 viewport height */
-}
+    }
 
-/* mobile: cap to half the viewport */
-@media (max-width: 900px){
-  .song-list{
-    max-height: 32vh;
-  }
-}
+    /* Song list max-height rules */
+    .song-list {
+      max-height: 90vh;
+      /* not-mobile: 1/3 viewport height */
+    }
 
+    /* mobile: cap to half the viewport */
+    @media (max-width: 900px) {
+      .song-list {
+        max-height: 32vh;
+      }
+    }
   </style>
 
   <noscript>
@@ -534,625 +798,13 @@
         <div class="now-playing" id="nowPlaying">Nothing playing</div>
       </div>
 
-      <div class="song-list">
-        <!-- Normal MIDI+MP3 tracks -->
-        <div class="song-item"
-          onclick="playTrack('The%20Echos%20of%20the%20Bells.mid','The%20Echos%20of%20the%20Bells.mp3','The Echos of the Bells')">
-          <div class="song-name">The Echos of the Bells</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/The%20Echos%20of%20the%20Bells-Score_and_Parts.pdf"
-              target="_blank" rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('The%20Echos%20of%20the%20Bells.mid','The%20Echos%20of%20the%20Bells.mp3','The Echos of the Bells')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTrack('Serene%20Winter%20Night.mid','Serene%20Winter%20Night.mp3','Serene Winter Night')">
-          <div class="song-name">Serene Winter Night</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/Serene%20Winter%20Night-Score_and_Parts.pdf"
-              target="_blank" rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('Serene%20Winter%20Night.mid','Serene%20Winter%20Night.mp3','Serene Winter Night')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTrack('A%20Bright%20Winter.mid','A%20Bright%20Winter.mp3','A Bright Winter')">
-          <div class="song-name">A Bright Winter</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/A%20Bright%20Winter-Score_and_Parts.pdf"
-              target="_blank" rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('A%20Bright%20Winter.mid','A%20Bright%20Winter.mp3','A Bright Winter')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTrack('Resonating%20Magic.mid','Resonating%20Magic.mp3','Resonating Magic')">
-          <div class="song-name">Resonating Magic</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/Resonating%20Magic-Score_and_Parts.pdf"
-              target="_blank" rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('Resonating%20Magic.mid','Resonating%20Magic.mp3','Resonating Magic')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTrack('Blue%20Lasers.mid','Blue%20Lasers.mp3','Neon Lasers')">
-          <div class="song-name">Neon Lasers</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/Blue%20Lasers-Score_and_Parts.pdf" target="_blank"
-              rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('Blue%20Lasers.mid','Blue%20Lasers.mp3','Neon Lasers')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTrack('Defiant%20Quiet.mid','Defiant%20Quiet.mp3','Quiet Defiance')">
-          <div class="song-name">Quiet Defiance</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/Defiant%20Quiet-Score_and_Parts.pdf" target="_blank"
-              rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('Defiant%20Quiet.mid','Defiant%20Quiet.mp3','Quiet Defiance')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTrack('Close%20to%20the%20End.mid','Close%20to%20the%20End.mp3','Close to the End')">
-          <div class="song-name">Close to the End</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/Close%20to%20the%20End-Score_and_Parts.pdf"
-              target="_blank" rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('Close%20to%20the%20End.mid','Close%20to%20the%20End.mp3','Close to the End')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTrack('Darkness.mid','Darkness.mp3','Darkness')">
-          <div class="song-name">Darkness</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/Darkness-Score_and_Parts.pdf" target="_blank"
-              rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('Darkness.mid','Darkness.mp3','Darkness')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTrack('Emergency%20Override.mid','Emergency%20Override.mp3','Emergency Override')">
-          <div class="song-name">Emergency Override</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/Emergency%20Override-Score_and_Parts.pdf"
-              target="_blank" rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('Emergency%20Override.mid','Emergency%20Override.mp3','Emergency Override')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTrack('Restart.mid','Restart.mp3','Restart')">
-          <div class="song-name">Restart</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/Restart-Score_and_Parts.pdf" target="_blank"
-              rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('Restart.mid','Restart.mp3','Restart')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTrack('Fast%20Falling%20Rain.mid','Fast%20Falling%20Rain.mp3','Fast Falling Rain')">
-          <div class="song-name">Fast Falling Rain</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/Fast%20Falling%20Rain-Score_and_Parts.pdf"
-              target="_blank" rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('Fast%20Falling%20Rain.mid','Fast%20Falling%20Rain.mp3','Fast Falling Rain')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTrack('Sharp%20Strings.mid','Sharp%20Strings.mp3','Sharp Strings')">
-          <div class="song-name">Sharp Strings</div>
-          <div class="song-actions">
-            <a class="pill" href="https://unlim8ted.com/music/pdf's/Sharp%20Strings-Score_and_Parts.pdf" target="_blank"
-              rel="noopener">View PDF</a>
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTrack('Sharp%20Strings.mid','Sharp%20Strings.mp3','Sharp Strings')">Play</span>
-          </div>
-        </div>
-
-        <!-- TimeCat Soundtrack (buttons only, no MIDI) -->
-        <div class="section-divider">
-          <div class="section-kicker">Soundtrack</div>
-          <div class="section-title">TimeCat</div>
-          <div class="section-sub">The soundracks to Unlim8ted's newest game in development, Time Cat.</div>
-        </div>
-
-        <!-- Helper: use playTimecat('products/games/TimeCat/Music/<file>.mp3', 'Display Name') -->
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Untitled Title.mp3','Untitled Title')">
-          <div class="song-name">TRACK 01 — Untitled Title</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Untitled Title.mp3','Untitled Title')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Bu ba du ba House Cat.mp3','Bu ba du ba House Cat')">
-          <div class="song-name">TRACK 02 — Bu ba du ba House Cat</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Bu ba du ba House Cat.mp3','Bu ba du ba House Cat')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Bu ba du ba Jungle Cat.mp3','Bu ba du ba Jungle Cat')">
-          <div class="song-name">TRACK 03 — Bu ba du ba Jungle Cat</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Bu ba du ba Jungle Cat.mp3','Bu ba du ba Jungle Cat')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Entrance to the Jungle.mp3','Entrance to the Jungle')">
-          <div class="song-name">TRACK 04 — Entrance to the Jungle</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Entrance to the Jungle.mp3','Entrance to the Jungle')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Mysterious Jungle Dance.mp3','Mysterious Jungle Dance')">
-          <div class="song-name">TRACK 05 — Mysterious Jungle Dance</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Mysterious Jungle Dance.mp3','Mysterious Jungle Dance')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Ominous Jungle Dance.mp3','Ominous Jungle Dance')">
-          <div class="song-name">TRACK 06 — Ominous Jungle Dance</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Ominous Jungle Dance.mp3','Ominous Jungle Dance')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Tense Jungle Dance.mp3','Tense Jungle Dance')">
-          <div class="song-name">TRACK 07 — Tense Jungle Dance</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Tense Jungle Dance.mp3','Tense Jungle Dance')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Ominous Hawaiian Beach Dance.mp3','Ominous Hawaiian Beach Dance')">
-          <div class="song-name">TRACK 08 — Ominous Hawaiian Beach Dance</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Ominous Hawaiian Beach Dance.mp3','Ominous Hawaiian Beach Dance')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Rainy Hawaiian Beach Dance.mp3','Rainy Hawaiian Beach Dance')">
-          <div class="song-name">TRACK 09 — Rainy Hawaiian Beach Dance</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Rainy Hawaiian Beach Dance.mp3','Rainy Hawaiian Beach Dance')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/The Lab.mp3','The Lab')">
-          <div class="song-name">TRACK 10 — The Lab</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/The Lab.mp3','The Lab')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/You Ate My Button!.mp3','You Ate My Button!')">
-          <div class="song-name">TRACK 11 — You Ate My Button!</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/You Ate My Button!.mp3','You Ate My Button!')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Lab Boss Norm.mp3','Lab Boss Norm')">
-          <div class="song-name">TRACK 12 — Lab Boss Norm</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Lab Boss Norm.mp3','Lab Boss Norm')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Lab Boss Anger Spikes.mp3','Lab Boss Anger Spikes')">
-          <div class="song-name">TRACK 13 — Lab Boss Anger Spikes</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Lab Boss Anger Spikes.mp3','Lab Boss Anger Spikes')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/A New Truth.mp3','A New Truth')">
-          <div class="song-name">TRACK 14 — A New Truth</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/A New Truth.mp3','A New Truth')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Boss De Some Truth Norm.mp3','Boss De Some Truth Norm')">
-          <div class="song-name">TRACK 15 — Boss De Some Truth Norm</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Boss De Some Truth Norm.mp3','Boss De Some Truth Norm')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Boss De Some Truth Anger Spikes.mp3','Boss De Some Truth Anger Spikes')">
-          <div class="song-name">TRACK 16 — Boss De Some Truth Anger Spikes</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Boss De Some Truth Anger Spikes.mp3','Boss De Some Truth Anger Spikes')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Hot on the Trail.mp3','Hot on the Trail')">
-          <div class="song-name">TRACK 17 — Hot on the Trail</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Hot on the Trail.mp3','Hot on the Trail')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick='playTimecat("products/games/TimeCat/Music/Drop it Like its Hot It&apos;s a Boss.mp3","Drop it Like its Hot It&apos;s a Boss")'>
-          <div class="song-name">TRACK 18 — Drop it Like its Hot It's a Boss</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick='event.stopPropagation(); playTimecat("products/games/TimeCat/Music/Drop it Like its Hot It&apos;s a Boss.mp3","Drop it Like its Hot It&apos;s a Boss")'>
-              Play
-            </span>
-          </div>
-        </div>
-
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Malfunction Tango of One.mp3','Malfunction Tango of One')">
-          <div class="song-name">TRACK 19 — Malfunction Tango of One</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Malfunction Tango of One.mp3','Malfunction Tango of One')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/And a Malfunction Tango of Two.mp3','And a Malfunction Tango of Two')">
-          <div class="song-name">TRACK 20 — And a Malfunction Tango of Two</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/And a Malfunction Tango of Two.mp3','And a Malfunction Tango of Two')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Time Warp Tango of One.mp3','Time Warp Tango of One')">
-          <div class="song-name">TRACK 21 — Time Warp Tango of One</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Time Warp Tango of One.mp3','Time Warp Tango of One')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/And a Time Tango of Two.mp3','And a Time Tango of Two')">
-          <div class="song-name">TRACK 22 — And a Time Tango of Two</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/And a Time Tango of Two.mp3','And a Time Tango of Two')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Timely Daggers.mp3','Timely Daggers')">
-          <div class="song-name">TRACK 23 — Timely Daggers</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Timely Daggers.mp3','Timely Daggers')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/untimely daggers too.mp3','untimely daggers too')">
-          <div class="song-name">TRACK 24 — untimely daggers too</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/untimely daggers too.mp3','untimely daggers too')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/untimely daggers 3 - extras.mp3','untimely daggers 3 - extras')">
-          <div class="song-name">TRACK 25 — untimely daggers 3 - extras</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/untimely daggers 3 - extras.mp3','untimely daggers 3 - extras')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Entertain Some Puzzles Would You.mp3','Entertain Some Puzzles Would You')">
-          <div class="song-name">TRACK 26 — Entertain Some Puzzles Would You</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Entertain Some Puzzles Would You.mp3','Entertain Some Puzzles Would You')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Back on the Trail of Mystery.mp3','Back on the Trail of Mystery')">
-          <div class="song-name">TRACK 27 — Back on the Trail of Mystery</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Back on the Trail of Mystery.mp3','Back on the Trail of Mystery')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/More Mysterious Trails.mp3','More Mysterious Trails')">
-          <div class="song-name">TRACK 28 — More Mysterious Trails</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/More Mysterious Trails.mp3','More Mysterious Trails')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Look what the rat dragged in.mp3','Look what the rat dragged in')">
-          <div class="song-name">TRACK 29 — Look what the rat dragged in</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Look what the rat dragged in.mp3','Look what the rat dragged in')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Not So Mysterious Boss.mp3','Not So Mysterious Boss')">
-          <div class="song-name">TRACK 30 — Not So Mysterious Boss</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Not So Mysterious Boss.mp3','Not So Mysterious Boss')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Yet Another Trail Of Mystery.mp3','Yet Another Trail Of Mystery')">
-          <div class="song-name">TRACK 31 — Yet Another Trail Of Mystery</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Yet Another Trail Of Mystery.mp3','Yet Another Trail Of Mystery')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Almost Boss.mp3','Almost Boss')">
-          <div class="song-name">TRACK 32 — Almost Boss</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Almost Boss.mp3','Almost Boss')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Almost Boss Anger Spikes.mp3','Almost Boss Anger Spikes')">
-          <div class="song-name">TRACK 33 — Almost Boss Anger Spikes</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Almost Boss Anger Spikes.mp3','Almost Boss Anger Spikes')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/At The Edge Of The End.mp3','At The Edge Of The End')">
-          <div class="song-name">TRACK 34 — At The Edge Of The End</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/At The Edge Of The End.mp3','At The Edge Of The End')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/GlitchFront - The Final Boss.mp3','GlitchFront - The Final Boss')">
-          <div class="song-name">TRACK 35 — GlitchFront - The Final Boss</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/GlitchFront - The Final Boss.mp3','GlitchFront - The Final Boss')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Ur the only evil one 😈.mp3','Ur the only evil one 😈')">
-          <div class="song-name">TRACK 36 — Ur the only evil one 😈</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Ur the only evil one 😈.mp3','Ur the only evil one 😈')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Another Puzzle, Another Time, Another Game.mp3','Another Puzzle, Another Time, Another Game')">
-          <div class="song-name">TRACK 37 — Another Puzzle, Another Time, Another Game</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Another Puzzle, Another Time, Another Game.mp3','Another Puzzle, Another Time, Another Game')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-House.mp3','Title-House')">
-          <div class="song-name">TRACK 38 — Title-House</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-House.mp3','Title-House')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Title-wrapped up.mp3','Title-wrapped up')">
-          <div class="song-name">TRACK 39 — Title-wrapped up</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-wrapped up.mp3','Title-wrapped up')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Title-tech ramp 1.mp3','Title-tech ramp 1')">
-          <div class="song-name">TRACK 40 — Title-tech ramp 1</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-tech ramp 1.mp3','Title-tech ramp 1')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-1.mp3','Extras - 1')">
-          <div class="song-name">TRACK 41 — Extras - 1</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-1.mp3','Extras - 1')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-2.mp3','Extras - 2')">
-          <div class="song-name">TRACK 42 — Extras - 2</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-2.mp3','Extras - 2')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-3.mp3','Extras - 3')">
-          <div class="song-name">TRACK 43 — Extras - 3</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-3.mp3','Extras - 3')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-4.mp3','Extras - 4')">
-          <div class="song-name">TRACK 44 — Extras - 4</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-4.mp3','Extras - 4')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Title-5.mp3','Extras - 5')">
-          <div class="song-name">TRACK 45 — Extras - 5</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Title-5.mp3','Extras - 5')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-1.mp3','Extras - 6')">
-          <div class="song-name">TRACK 46 — Extras - 6</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-1.mp3','Extras - 6')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-2.mp3','Extras - 7')">
-          <div class="song-name">TRACK 47 — Extras - 7</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-2.mp3','Extras - 7')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-3.mp3','Extras - 8')">
-          <div class="song-name">TRACK 48 — Extras - 8</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-3.mp3','Extras - 8')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-4.mp3','Extras - 9')">
-          <div class="song-name">TRACK 49 — Extras - 9</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-4.mp3','Extras - 9')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-5.mp3','Extras - 10')">
-          <div class="song-name">TRACK 50 — Extras - 10</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-5.mp3','Extras - 10')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/Puzzle-6.mp3','Extras - 11')">
-          <div class="song-name">TRACK 51 — Extras - 11</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Puzzle-6.mp3','Extras - 11')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/puzzle-7a.mp3','Extras - 12a')">
-          <div class="song-name">TRACK 52 — Extras - 12a</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/puzzle-7a.mp3','Extras - 12a')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/puzzle-7b.mp3','Extras - 12b')">
-          <div class="song-name">TRACK 53 — Extras - 12b</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/puzzle-7b.mp3','Extras - 12b')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item" onclick="playTimecat('products/games/TimeCat/Music/puzzle-8.mp3','Extras - 13')">
-          <div class="song-name">TRACK 54 — Extras - 13</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/puzzle-8.mp3','Extras - 13')">Play</span>
-          </div>
-        </div>
-
-        <div class="song-item"
-          onclick="playTimecat('products/games/TimeCat/Music/Unlim8ted Stinger.mp3','Unlim8ted Stinger')">
-          <div class="song-name">TRACK 55 — Unlim8ted Stinger</div>
-          <div class="song-actions">
-            <span class="pill pill-btn"
-              onclick="event.stopPropagation(); playTimecat('products/games/TimeCat/Music/Unlim8ted Stinger.mp3','Unlim8ted Stinger')">Play</span>
-          </div>
-        </div>
-
-        <div class="footer">
-          <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
-        </div>
+      <div class="song-list" id="songList">
+        <!-- Built from /tools/data/products.json -->
+        <div class="empty">Loading tracks…</div>
+      </div>
+
+      <div class="footer">
+        <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
       </div>
     </section>
 
@@ -1171,31 +823,116 @@
 
       <canvas id="midiCanvas"></canvas>
 
+      <!-- Epilepsy warning (dismissible) -->
+      <div class="warning" id="epWarn" style="display:none;">
+        <div>
+          <strong>Photosensitivity warning</strong>
+          <p>This visualizer contains flashing / rapidly changing visuals that may trigger seizures for people with
+            photosensitive epilepsy. Use caution, reduce brightness, or disable playback if sensitive.</p>
+        </div>
+        <button class="btn ghost" id="dismissWarn" type="button">Dismiss</button>
+      </div>
+
       <div class="controls">
         <div class="controls-row">
-          <button class="btn" onclick="pauseTrack()">Pause</button>
-          <button class="btn" onclick="resumeTrack()">Play</button>
-          <button class="btn" onclick="restartTrack()">Restart</button>
+          <button class="btn" id="pauseBtn" type="button">Pause</button>
+          <button class="btn" id="playBtn" type="button">Play</button>
+          <button class="btn" id="restartBtn" type="button">Restart</button>
         </div>
 
-        <input class="range" type="range" id="timeline" min="0" max="100" value="0" step="1" onchange="seekTrack(event)"
-          aria-label="Timeline" />
+        <input class="range" type="range" id="timeline" min="0" max="100" value="0" step="1" aria-label="Timeline" />
 
         <div class="controls-row">
           <div class="small">Volume</div>
           <input class="range" type="range" id="volume" min="0" max="1" step="0.01" value="1"
-            onchange="setVolume(event)" aria-label="Volume" />
+            aria-label="Volume" />
         </div>
+
+        <div class="controls-row">
+          <div class="small">Autoplay next</div>
+          <label class="small" style="gap:10px;">
+            <input type="checkbox" id="autoplayNext" checked />
+            On
+          </label>
+        </div>
+      </div>
+
+      <!-- Reviews / Ratings -->
+      <div class="reviews">
+        <div class="reviewsHead">
+          <div class="avgWrap">
+            <div class="avgNum" id="avgNum">—</div>
+            <div class="avgMeta">
+              <div class="stars" id="avgStarsBig">☆☆☆☆☆</div>
+              <div class="muted" id="avgLabel">Select a track</div>
+              <div class="muted" id="countLabel">0 reviews</div>
+            </div>
+          </div>
+          <div class="stars" id="avgStars">☆☆☆☆☆</div>
+        </div>
+
+        <div class="bars" id="bars"></div>
+
+        <div class="commentList" id="commentList">
+          <div class="empty">Select a track to view reviews.</div>
+        </div>
+
+        <div class="empty" id="mustSignIn" style="display:none;">
+          Sign in to post a rating and review.
+        </div>
+
+        <form class="commentForm" id="commentForm">
+          <div class="fieldRow">
+            <input class="input" id="displayName" maxlength="80" placeholder="Display name (optional)" />
+            <select class="select" id="ratingSel" aria-label="Rating">
+              <option value="5">★★★★★ (5)</option>
+              <option value="4">★★★★☆ (4)</option>
+              <option value="3">★★★☆☆ (3)</option>
+              <option value="2">★★☆☆☆ (2)</option>
+              <option value="1">★☆☆☆☆ (1)</option>
+            </select>
+          </div>
+
+          <textarea class="textarea" id="commentText" maxlength="2000"
+            placeholder="Write a review (max 2000 chars)…"></textarea>
+
+          <div class="controls-row">
+            <div class="formMsg" id="formMsg"></div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+              <button class="btn ghost" type="button" id="deleteMyReviewBtn" style="display:none;">Delete my
+                review</button>
+              <button class="btn" type="submit" id="postBtn">Post</button>
+            </div>
+          </div>
+        </form>
       </div>
     </section>
   </div>
 
-  <script>
-    // Footer year + nav spacer
+  <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import {
+      collection,
+      query,
+      orderBy,
+      onSnapshot,
+      doc,
+      setDoc,
+      getDoc,
+      deleteDoc,
+      Timestamp,
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
+
+    // ============================
+    // Basic page helpers
+    // ============================
+    const $ = (id) => document.getElementById(id);
+
     document.addEventListener("DOMContentLoaded", function () {
       const currentYear = new Date().getFullYear();
       const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
-      const el = document.getElementById("footer-text");
+      const el = $("footer-text");
       if (el) el.innerHTML = footerText;
 
       const updateNavSpace = () => {
@@ -1208,8 +945,32 @@
       setTimeout(updateNavSpace, 250);
     });
 
-    const canvas = document.getElementById('midiCanvas');
-    const ctx = canvas.getContext('2d');
+    // ============================
+    // Epilepsy warning (dismiss)
+    // ============================
+    const warnEl = $("epWarn");
+    const dismissWarnBtn = $("dismissWarn");
+    const WARN_KEY = "vizWarnDismissed_v1";
+
+    function showWarnIfNeeded() {
+      try {
+        const dismissed = localStorage.getItem(WARN_KEY) === "1";
+        warnEl.style.display = dismissed ? "none" : "flex";
+      } catch {
+        warnEl.style.display = "flex";
+      }
+    }
+    dismissWarnBtn.addEventListener("click", () => {
+      try { localStorage.setItem(WARN_KEY, "1"); } catch { }
+      warnEl.style.display = "none";
+    });
+    showWarnIfNeeded();
+
+    // ============================
+    // Visualizer + playback state
+    // ============================
+    const canvas = $("midiCanvas");
+    const ctx2d = canvas.getContext("2d");
 
     let notes = [];
     let startTime = null;
@@ -1217,27 +978,34 @@
     let isPlaying = false;
     let durationMs = 0;
 
-    // Visualizer modes
     let vizMode = "midi"; // "midi" | "audio"
     let rafId = null;
 
-    // WebAudio analyser for audio-only mode (and also works fine for normal tracks)
+    // WebAudio analyser for audio mode (also OK for normal tracks)
     let audioCtx = null;
     let analyser = null;
     let srcNode = null;
     let freqData = null;
     let timeData = null;
 
-    const nowPlayingEl = document.getElementById("nowPlaying");
-    const statusChip = document.getElementById("statusChip");
-    const timeChip = document.getElementById("timeChip");
-    const timeline = document.getElementById('timeline');
-    const vizSubtitle = document.getElementById("vizSubtitle");
+    const nowPlayingEl = $("nowPlaying");
+    const statusChip = $("statusChip");
+    const timeChip = $("timeChip");
+    const timeline = $("timeline");
+    const vizSubtitle = $("vizSubtitle");
+    const autoplayNextEl = $("autoplayNext");
+
+    const pauseBtn = $("pauseBtn");
+    const playBtn = $("playBtn");
+    const restartBtn = $("restartBtn");
+    const volumeEl = $("volume");
+
+    const songListEl = $("songList");
 
     const colorPalette = [
-      '#ff00c1', '#9600ff', '#4900ff', '#00b8ff', '#00fff9',
-      '#ff7400', '#ffcc00', '#9cff00', '#00ff6b', '#ff003c',
-      '#00ffcc', '#3c00ff', '#eaff00', '#ff0074', '#00ff96',
+      "#ff00c1", "#9600ff", "#4900ff", "#00b8ff", "#00fff9",
+      "#ff7400", "#ffcc00", "#9cff00", "#00ff6b", "#ff003c",
+      "#00ffcc", "#3c00ff", "#eaff00", "#ff0074", "#00ff96",
     ];
 
     function fmtTime(sec) {
@@ -1252,10 +1020,9 @@
       const dpr = Math.max(1, window.devicePixelRatio || 1);
       canvas.width = Math.floor(rect.width * dpr);
       canvas.height = Math.floor(rect.height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx2d.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
-
-    window.addEventListener('resize', resizeCanvas, { passive: true });
+    window.addEventListener("resize", resizeCanvas, { passive: true });
     setTimeout(resizeCanvas, 50);
 
     function stopRaf() {
@@ -1266,13 +1033,8 @@
     function ensureAnalyser() {
       if (!audio) return;
 
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === "suspended") {
-        // resume is allowed after a user gesture (your click handlers are user gestures)
-        audioCtx.resume().catch(() => { });
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === "suspended") audioCtx.resume().catch(() => { });
 
       if (srcNode) { try { srcNode.disconnect(); } catch { } srcNode = null; }
       if (!analyser) {
@@ -1281,6 +1043,7 @@
         analyser.smoothingTimeConstant = 0.85;
       }
 
+      // IMPORTANT: MediaElementSource is tied to the specific <audio> element instance.
       srcNode = audioCtx.createMediaElementSource(audio);
       srcNode.connect(analyser);
       analyser.connect(audioCtx.destination);
@@ -1292,7 +1055,7 @@
     function clearCanvas() {
       const w = canvas.getBoundingClientRect().width;
       const h = canvas.getBoundingClientRect().height;
-      ctx.clearRect(0, 0, w, h);
+      ctx2d.clearRect(0, 0, w, h);
     }
 
     // ===== MIDI "falling notes" =====
@@ -1303,7 +1066,7 @@
       const w = canvas.getBoundingClientRect().width;
       const h = canvas.getBoundingClientRect().height;
 
-      ctx.clearRect(0, 0, w, h);
+      ctx2d.clearRect(0, 0, w, h);
 
       const noteWidth = w / 128;
 
@@ -1317,14 +1080,14 @@
         const instrumentColor = colorPalette[note.instrument % colorPalette.length];
         const x = note.midi * noteWidth;
 
-        ctx.fillStyle = instrumentColor;
-        ctx.fillRect(x, y, Math.max(1, noteWidth - 2), Math.max(1, noteHeight));
+        ctx2d.fillStyle = instrumentColor;
+        ctx2d.fillRect(x, y, Math.max(1, noteWidth - 2), Math.max(1, noteHeight));
       }
 
       rafId = requestAnimationFrame(drawMidiNotes);
     }
 
-    // ===== Audio-reactive "cool" visualizer (spectrum + waveform + glow rings) =====
+    // ===== Audio-reactive "cool" visualizer =====
     function drawAudioViz() {
       if (!isPlaying || vizMode !== "audio" || !analyser || !freqData || !timeData) return;
 
@@ -1335,10 +1098,10 @@
       analyser.getByteTimeDomainData(timeData);
 
       // Background fade for trails
-      ctx.fillStyle = "rgba(0,0,0,0.18)";
-      ctx.fillRect(0, 0, w, h);
+      ctx2d.fillStyle = "rgba(0,0,0,0.18)";
+      ctx2d.fillRect(0, 0, w, h);
 
-      // Compute energy (0..1-ish)
+      // Energy (0..1-ish)
       let sum = 0;
       for (let i = 0; i < freqData.length; i++) sum += freqData[i];
       const avg = sum / (freqData.length * 255);
@@ -1355,19 +1118,19 @@
         const wobble = (Math.sin(t * 1.7) + Math.cos(t * 1.1)) * 0.5;
         const radius = baseR + r * (18 + energy * 22) + wobble * (8 + energy * 10);
 
-        ctx.beginPath();
-        ctx.arc(cx, cy, Math.max(6, radius), 0, Math.PI * 2);
+        ctx2d.beginPath();
+        ctx2d.arc(cx, cy, Math.max(6, radius), 0, Math.PI * 2);
         const c1 = colorPalette[(r * 3) % colorPalette.length];
-        ctx.strokeStyle = `rgba(255,255,255,${0.05 + energy * 0.10})`;
-        ctx.lineWidth = 1 + energy * 2;
-        ctx.stroke();
 
-        // subtle colored halo
-        ctx.strokeStyle = `${c1}`;
-        ctx.globalAlpha = 0.05 + energy * 0.18;
-        ctx.lineWidth = 1 + energy * 2;
-        ctx.stroke();
-        ctx.globalAlpha = 1;
+        ctx2d.strokeStyle = `rgba(255,255,255,${0.05 + energy * 0.10})`;
+        ctx2d.lineWidth = 1 + energy * 2;
+        ctx2d.stroke();
+
+        ctx2d.strokeStyle = `${c1}`;
+        ctx2d.globalAlpha = 0.05 + energy * 0.18;
+        ctx2d.lineWidth = 1 + energy * 2;
+        ctx2d.stroke();
+        ctx2d.globalAlpha = 1;
       }
 
       // Spectrum bars
@@ -1380,24 +1143,24 @@
         const y = h - bh;
 
         const col = colorPalette[i % colorPalette.length];
-        ctx.globalAlpha = 0.25 + v * 0.65;
-        ctx.fillStyle = col;
-        ctx.fillRect(x + 1, y, Math.max(1, barW - 3), bh);
+        ctx2d.globalAlpha = 0.25 + v * 0.65;
+        ctx2d.fillStyle = col;
+        ctx2d.fillRect(x + 1, y, Math.max(1, barW - 3), bh);
       }
-      ctx.globalAlpha = 1;
+      ctx2d.globalAlpha = 1;
 
-      // Waveform line
-      ctx.beginPath();
+      // Waveform
+      ctx2d.beginPath();
       for (let i = 0; i < timeData.length; i++) {
-        const v = (timeData[i] - 128) / 128; // -1..1
+        const v = (timeData[i] - 128) / 128;
         const x = (i / (timeData.length - 1)) * w;
         const y = cy + v * (h * 0.16 + energy * h * 0.08);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        if (i === 0) ctx2d.moveTo(x, y);
+        else ctx2d.lineTo(x, y);
       }
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = `rgba(233,231,255,${0.35 + energy * 0.45})`;
-      ctx.stroke();
+      ctx2d.lineWidth = 2;
+      ctx2d.strokeStyle = `rgba(233,231,255,${0.35 + energy * 0.45})`;
+      ctx2d.stroke();
 
       rafId = requestAnimationFrame(drawAudioViz);
     }
@@ -1425,101 +1188,322 @@
       }
       audio = null;
 
-      // disconnect old nodes safely (MediaElementSource can’t be reused across different audio elements)
       if (srcNode) { try { srcNode.disconnect(); } catch { } srcNode = null; }
-      // keep analyser/audioCtx alive for next play (faster)
+      // keep analyser/audioCtx for speed
     }
 
     function setupAudioElement(audioUrl) {
       teardownAudio();
 
       audio = new Audio(audioUrl);
-      audio.crossOrigin = "anonymous"; // important if you ever host assets on a CDN/domain that needs it
-      audio.volume = parseFloat(document.getElementById('volume').value || "1");
+      audio.crossOrigin = "anonymous";
+      audio.volume = parseFloat(volumeEl.value || "1");
 
-      audio.onended = () => {
-        isPlaying = false;
-        statusChip.textContent = "Ended";
-        stopRaf();
-      };
+      audio.onplay = () => { ensureAnalyser(); };
 
       audio.ontimeupdate = () => {
         timeline.value = audio.currentTime * 1000;
         timeChip.textContent = fmtTime(audio.currentTime);
       };
 
-      audio.onplay = () => {
-        // ensure analyser hooks only after user gesture
-        ensureAnalyser();
+      audio.onended = () => {
+        isPlaying = false;
+        statusChip.textContent = "Ended";
+        stopRaf();
+        // Auto-play next if enabled
+        if (autoplayNextEl.checked) playNext();
       };
     }
 
-    // ===== Normal track (MIDI + MP3) =====
-    function playTrack(midiFilename, audioFilename, displayName) {
-      const midiFileUrl = `https://unlim8ted.com/music/${midiFilename}`;
-      const audioFileUrl = `https://unlim8ted.com/music/${audioFilename}`;
+    pauseBtn.addEventListener("click", pauseTrack);
+    playBtn.addEventListener("click", resumeTrack);
+    restartBtn.addEventListener("click", restartTrack);
+    volumeEl.addEventListener("input", (e) => setVolume(e));
+    timeline.addEventListener("change", (e) => seekTrack(e));
 
-      statusChip.textContent = "Loading…";
-      nowPlayingEl.textContent = displayName ? `Now playing: ${displayName}` : "Loading…";
+    // ============================
+    // Products.json -> build list
+    // ============================
+    const PRODUCTS_URL = "/tools/data/products.json";
 
-      setMode("midi");
+    /** full array from products.json (only "music" items) */
+    let allMusic = [];
 
-      fetch(midiFileUrl)
-        .then(r => r.arrayBuffer())
-        .then(data => {
-          const midi = new Midi(data);
+    /** index currently selected/playing inside allMusic */
+    let currentIndex = -1;
 
-          notes = midi.tracks.flatMap((track, index) =>
-            track.notes.map(n => ({
-              midi: n.midi,
-              startTime: n.time * 1000,
-              duration: n.duration * 1000,
-              instrument: index
-            }))
-          );
-
-          durationMs = midi.duration * 1000;
-          timeline.max = durationMs;
-          timeline.value = 0;
-
-          resizeCanvas();
-          setupAudioElement(audioFileUrl);
-
-          startTime = performance.now();
-          audio.play().then(() => {
-            isPlaying = true;
-            statusChip.textContent = "Playing";
-            drawMidiNotes();
-          }).catch(err => {
-            console.error("Error playing audio file:", err);
-            isPlaying = false;
-            statusChip.textContent = "Error";
-            nowPlayingEl.textContent = "Playback error";
-          });
-        })
-        .catch(err => {
-          console.error("Error loading MIDI file:", err);
-          statusChip.textContent = "Error";
-          nowPlayingEl.textContent = "Could not load MIDI";
-        });
+    function isMidiTrack(item) {
+      return !!(item && item.midi && String(item.midi).trim());
     }
 
-    // ===== TimeCat track (Audio-only, cool visualizer) =====
-    function playTimecat(relativePath, displayName) {
-      const audioFileUrl = `https://unlim8ted.com/${relativePath}`;
+    function displayTitle(item) {
+      return (item?.name || "").trim() || "Untitled";
+    }
 
-      statusChip.textContent = "Loading…";
-      nowPlayingEl.textContent = displayName ? `Now playing: ${displayName}` : "Loading…";
+    function safeUrl(u) {
+      return String(u || "").trim();
+    }
 
+    function clearPlayingHighlight() {
+      const prev = songListEl.querySelector(".song-item.playing");
+      if (prev) prev.classList.remove("playing");
+    }
+
+    function setPlayingHighlight(index) {
+      clearPlayingHighlight();
+      const el = songListEl.querySelector(`.song-item[data-index="${index}"]`);
+      if (el) {
+        el.classList.add("playing");
+        // keep visible (especially when autoplaying)
+        el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
+    }
+
+    function buildSongItem(item, index) {
+      const wrap = document.createElement("div");
+      wrap.className = "song-item";
+      wrap.dataset.index = String(index);
+
+      const name = document.createElement("div");
+      name.className = "song-name";
+
+      // If it's TimeCat-style, keep the name as-is (you can encode TRACK numbers in name if you want)
+      name.textContent = displayTitle(item);
+
+      const actions = document.createElement("div");
+      actions.className = "song-actions";
+
+      // PDF button (only if present)
+      if (item.pdf) {
+        const a = document.createElement("a");
+        a.className = "pill";
+        a.href = safeUrl(item.pdf);
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = "View PDF";
+        actions.appendChild(a);
+      }
+
+      // Play button
+      const play = document.createElement("span");
+      play.className = "pill pill-btn";
+      play.textContent = "Play";
+      play.addEventListener("click", (e) => {
+        e.stopPropagation();
+        playByIndex(index);
+      });
+      actions.appendChild(play);
+
+      wrap.addEventListener("click", () => playByIndex(index));
+
+      wrap.appendChild(name);
+      wrap.appendChild(actions);
+      return wrap;
+    }
+
+    function buildDivider(kicker, title, sub) {
+      const d = document.createElement("div");
+      d.className = "section-divider";
+
+      const k = document.createElement("div");
+      k.className = "section-kicker";
+      k.textContent = kicker;
+
+      const t = document.createElement("div");
+      t.className = "section-title";
+      t.textContent = title;
+
+      const s = document.createElement("div");
+      s.className = "section-sub";
+      s.textContent = sub;
+
+      d.appendChild(k);
+      d.appendChild(t);
+      d.appendChild(s);
+      return d;
+    }
+
+    function inferIsTimecat(item) {
+      // No special flag in JSON, so infer by path or lack of midi (you can change this any time)
+      const file = safeUrl(item.file);
+      return file.includes("/products/games/TimeCat/") || file.includes("/TimeCat/");
+    }
+
+    function renderSongList() {
+      songListEl.innerHTML = "";
+
+      const normal = allMusic.filter(i => isMidiTrack(i));
+      const timecat = allMusic.filter(i => !isMidiTrack(i) && inferIsTimecat(i));
+      const otherAudio = allMusic.filter(i => !isMidiTrack(i) && !inferIsTimecat(i));
+
+      if (!normal.length && !timecat.length && !otherAudio.length) {
+        songListEl.innerHTML = `<div class="empty">No tracks found in products.json.</div>`;
+        return;
+      }
+
+      if (normal.length) {
+        const d = buildDivider("Library", "Scores + MIDI", "MIDI + MP3 with falling-note visuals and optional PDFs.");
+        songListEl.appendChild(d);
+        normal.forEach(item => {
+          const idx = allMusic.indexOf(item);
+          songListEl.appendChild(buildSongItem(item, idx));
+        });
+      }
+
+      if (timecat.length) {
+        const d = buildDivider("Soundtrack", "TimeCat", "The soundracks to Unlim8ted's newest game in development, Time Cat.");
+        songListEl.appendChild(d);
+        timecat.forEach(item => {
+          const idx = allMusic.indexOf(item);
+          songListEl.appendChild(buildSongItem(item, idx));
+        });
+      }
+
+      if (otherAudio.length) {
+        const d = buildDivider("Audio", "Other Tracks", "Audio-only tracks with reactive visuals.");
+        songListEl.appendChild(d);
+        otherAudio.forEach(item => {
+          const idx = allMusic.indexOf(item);
+          songListEl.appendChild(buildSongItem(item, idx));
+        });
+      }
+
+      // restore highlight if something is selected
+      if (currentIndex >= 0) setPlayingHighlight(currentIndex);
+    }
+
+    async function loadProducts() {
+      try {
+        const res = await fetch(PRODUCTS_URL, { cache: "no-store" });
+        if (!res.ok) throw new Error(`Failed to load products.json (${res.status})`);
+        const json = await res.json();
+
+        // Keep only music
+        allMusic = Array.isArray(json) ? json.filter(p => p && p["product-type"] === "music") : [];
+        renderSongList();
+
+        // If you want: auto-select first track without playing
+        if (allMusic.length && currentIndex < 0) {
+          setActiveProduct(0, { autoplay: false, keepStatus: true });
+        }
+      } catch (e) {
+        console.error("products load error:", e);
+        songListEl.innerHTML = `<div class="empty">Could not load <b>/tools/data/products.json</b>.</div>`;
+      }
+    }
+
+    // ============================
+    // Play by item (from JSON)
+    // ============================
+    async function playByIndex(index) {
+      index = Number(index);
+      if (!Number.isFinite(index) || index < 0 || index >= allMusic.length) return;
+
+      setActiveProduct(index, { autoplay: true, keepStatus: false });
+    }
+
+    function playNext() {
+      if (!allMusic.length) return;
+      const next = (currentIndex >= 0) ? (currentIndex + 1) % allMusic.length : 0;
+      // autoplay next
+      setActiveProduct(next, { autoplay: true, keepStatus: false });
+    }
+
+    async function setActiveProduct(index, opts = { autoplay: true, keepStatus: false }) {
+      const item = allMusic[index];
+      if (!item) return;
+
+      currentIndex = index;
+      setPlayingHighlight(index);
+
+      // Update "now playing" line immediately
+      const title = displayTitle(item);
+      nowPlayingEl.textContent = opts.autoplay ? `Now playing: ${title}` : `Selected: ${title}`;
+
+      // Switch reviews/rating context to this product id
+      activateReviewsFor(item);
+
+      // Start playback (or just prepare)
+      if (isMidiTrack(item)) {
+        await playMidiAndAudio(item, title, opts.autoplay);
+      } else {
+        await playAudioOnly(item, title, opts.autoplay);
+      }
+    }
+
+    // Normal track (MIDI + MP3)
+    async function playMidiAndAudio(item, title, autoplay = true) {
+      const midiFileUrl = safeUrl(item.midi);
+      const audioFileUrl = safeUrl(item.file);
+
+      statusChip.textContent = autoplay ? "Loading…" : "Ready";
+      setMode("midi");
+
+      // Reset timeline to avoid weird jump
+      timeline.value = 0;
+      timeline.max = 100;
+
+      try {
+        const r = await fetch(midiFileUrl);
+        const data = await r.arrayBuffer();
+        const midi = new Midi(data);
+
+        notes = midi.tracks.flatMap((track, index) =>
+          track.notes.map(n => ({
+            midi: n.midi,
+            startTime: n.time * 1000,
+            duration: n.duration * 1000,
+            instrument: index
+          }))
+        );
+
+        durationMs = midi.duration * 1000;
+        timeline.max = durationMs;
+        timeline.value = 0;
+
+        resizeCanvas();
+        setupAudioElement(audioFileUrl);
+
+        audio.onloadedmetadata = () => {
+          // If the MP3 duration differs, timeline still works (we keep durationMs from MIDI for visuals)
+          if (!durationMs && audio.duration) timeline.max = audio.duration * 1000;
+        };
+
+        startTime = performance.now();
+
+        if (!autoplay) {
+          isPlaying = false;
+          statusChip.textContent = "Ready";
+          clearCanvas();
+          return;
+        }
+
+        await audio.play();
+        isPlaying = true;
+        statusChip.textContent = "Playing";
+        drawMidiNotes();
+      } catch (err) {
+        console.error("Error loading/playing MIDI track:", err);
+        isPlaying = false;
+        statusChip.textContent = "Error";
+        nowPlayingEl.textContent = "Could not load MIDI/audio";
+      }
+    }
+
+    // TimeCat / audio-only track
+    async function playAudioOnly(item, title, autoplay = true) {
+      const audioFileUrl = safeUrl(item.file);
+
+      statusChip.textContent = autoplay ? "Loading…" : "Ready";
       setMode("audio");
       resizeCanvas();
-
-      setupAudioElement(audioFileUrl);
 
       // duration unknown until metadata loads
       durationMs = 0;
       timeline.value = 0;
       timeline.max = 100;
+
+      setupAudioElement(audioFileUrl);
 
       audio.onloadedmetadata = () => {
         durationMs = (audio.duration || 0) * 1000;
@@ -1527,18 +1511,30 @@
       };
 
       startTime = performance.now();
-      audio.play().then(() => {
+
+      if (!autoplay) {
+        isPlaying = false;
+        statusChip.textContent = "Ready";
+        clearCanvas();
+        return;
+      }
+
+      try {
+        await audio.play();
         isPlaying = true;
         statusChip.textContent = "Playing";
         drawAudioViz();
-      }).catch(err => {
-        console.error("Error playing TimeCat audio:", err);
+      } catch (err) {
+        console.error("Error playing audio-only track:", err);
         isPlaying = false;
         statusChip.textContent = "Error";
         nowPlayingEl.textContent = "Playback error";
-      });
+      }
     }
 
+    // ============================
+    // Controls
+    // ============================
     function pauseTrack() {
       if (audio && isPlaying) {
         audio.pause();
@@ -1575,6 +1571,7 @@
         }).catch(() => { });
       } else {
         statusChip.textContent = "Playing";
+        stopRaf();
         if (vizMode === "midi") drawMidiNotes();
         else drawAudioViz();
       }
@@ -1598,14 +1595,347 @@
       if (audio) audio.volume = parseFloat(event.target.value);
     }
 
-    // expose functions for inline onclick
-    window.playTrack = playTrack;
-    window.playTimecat = playTimecat;
-    window.pauseTrack = pauseTrack;
-    window.resumeTrack = resumeTrack;
-    window.restartTrack = restartTrack;
-    window.seekTrack = seekTrack;
-    window.setVolume = setVolume;
+    // ============================
+    // Reviews / ratings (Firestore)
+    // products/{productId}/comments
+    // ============================
+    const { auth, db } = getFirebase();
+
+    // --- DOM (comments/ratings)
+    const avgNum = $("avgNum");
+    const avgLabel = $("avgLabel");
+    const countLabel = $("countLabel");
+    const avgStars = $("avgStars");
+    const avgStarsBig = $("avgStarsBig");
+    const barsEl = $("bars");
+
+    const commentList = $("commentList");
+    const commentForm = $("commentForm");
+    const mustSignIn = $("mustSignIn");
+    const ratingSel = $("ratingSel");
+    const displayNameInput = $("displayName");
+    const commentText = $("commentText");
+    const formMsg = $("formMsg");
+    const deleteMyReviewBtn = $("deleteMyReviewBtn");
+    const postBtn = $("postBtn");
+
+    function starsText(value) {
+      const v = Math.max(0, Math.min(5, value));
+      let out = "";
+      for (let i = 1; i <= 5; i++) out += (i <= Math.round(v)) ? "★" : "☆";
+      return out;
+    }
+
+    function renderBars(counts, total) {
+      barsEl.innerHTML = "";
+      for (let star = 5; star >= 1; star--) {
+        const n = counts[star] || 0;
+        const pct = total > 0 ? (n / total) * 100 : 0;
+
+        const row = document.createElement("div");
+        row.className = "barRow";
+
+        const left = document.createElement("div");
+        left.textContent = `${star} star`;
+
+        const track = document.createElement("div");
+        track.className = "barTrack";
+
+        const fill = document.createElement("div");
+        fill.className = "barFill";
+        fill.style.width = `${pct.toFixed(1)}%`;
+
+        const right = document.createElement("div");
+        right.style.textAlign = "right";
+        right.textContent = String(n);
+
+        track.appendChild(fill);
+        row.appendChild(left);
+        row.appendChild(track);
+        row.appendChild(right);
+        barsEl.appendChild(row);
+      }
+    }
+
+    function renderComments(docs, uid) {
+      commentList.innerHTML = "";
+
+      if (!docs.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No reviews yet. Be the first.";
+        commentList.appendChild(empty);
+        return;
+      }
+
+      docs.forEach(d => {
+        const data = d.data();
+        const rating = Number(data.rating || 0);
+        const text = (data.text || "").trim();
+        const who = (data.displayName || "").trim() || "Anonymous";
+
+        let when = "";
+        const ts = data.createdAt;
+        if (ts && typeof ts.toDate === "function") when = ts.toDate().toLocaleString();
+
+        const el = document.createElement("div");
+        el.className = "comment";
+
+        const top = document.createElement("div");
+        top.className = "commentTop";
+
+        const whoEl = document.createElement("div");
+        whoEl.className = "who";
+        whoEl.style.color = "#ffcc66";
+        whoEl.textContent = `${who} • ${starsText(rating)}`;
+
+        if (uid && d.id === uid) {
+          const badge = document.createElement("span");
+          badge.className = "mineBadge";
+          badge.textContent = "Yours";
+          whoEl.appendChild(badge);
+        }
+
+        const whenEl = document.createElement("div");
+        whenEl.className = "when";
+        whenEl.textContent = when;
+
+        const p = document.createElement("p");
+        p.className = "commentText";
+        p.textContent = text;
+
+        top.appendChild(whoEl);
+        top.appendChild(whenEl);
+        el.appendChild(top);
+        el.appendChild(p);
+        commentList.appendChild(el);
+      });
+    }
+
+    function setFormBusy(busy) {
+      postBtn.disabled = busy;
+      deleteMyReviewBtn.disabled = busy;
+      ratingSel.disabled = busy;
+      displayNameInput.disabled = busy;
+      commentText.disabled = busy;
+    }
+
+    function showFormMessage(msg, isError = false) {
+      formMsg.textContent = msg || "";
+      formMsg.style.color = isError ? "rgba(255,120,120,.95)" : "rgba(255,255,255,.65)";
+    }
+
+    // State for reviews
+    let currentUid = null;
+    let myReviewCache = null;
+    let unsubComments = null;
+
+    // Track which product's comments are active
+    let activeProductId = null;
+
+    // One auth listener for the whole page
+    onAuthStateChanged(auth, async (user) => {
+      currentUid = user ? user.uid : null;
+
+      if (user) {
+        mustSignIn.style.display = "none";
+        commentForm.style.display = "grid";
+        displayNameInput.value = user.displayName || "";
+      } else {
+        myReviewCache = null;
+        commentForm.style.display = "none";
+        mustSignIn.style.display = "block";
+        deleteMyReviewBtn.style.display = "none";
+        showFormMessage("");
+      }
+
+      // Reload "my review" when auth state changes for current product
+      if (activeProductId) {
+        await loadMyReviewFor(activeProductId);
+      }
+    });
+
+    async function loadMyReviewFor(productId) {
+      const user = auth.currentUser;
+      if (!user) {
+        myReviewCache = null;
+        deleteMyReviewBtn.style.display = "none";
+        showFormMessage("");
+        return;
+      }
+
+      try {
+        const myRef = doc(db, "products", String(productId), "comments", user.uid);
+        const mySnap = await getDoc(myRef);
+
+        if (mySnap.exists()) {
+          myReviewCache = mySnap.data();
+          ratingSel.value = String(myReviewCache.rating || "5");
+          displayNameInput.value = (myReviewCache.displayName || "").trim() || (user.displayName || "");
+          commentText.value = (myReviewCache.text || "").trim();
+          deleteMyReviewBtn.style.display = "inline-block";
+          showFormMessage("Editing your review.");
+        } else {
+          myReviewCache = null;
+          ratingSel.value = "5";
+          displayNameInput.value = user.displayName || "";
+          commentText.value = "";
+          deleteMyReviewBtn.style.display = "none";
+          showFormMessage("");
+        }
+      } catch (e) {
+        console.error("load my review error:", e?.code, e?.message, e);
+        myReviewCache = null;
+        deleteMyReviewBtn.style.display = "none";
+        showFormMessage("");
+      }
+    }
+
+    function activateReviewsFor(item) {
+      const productId = String(item?.id || "");
+      if (!productId) return;
+
+      activeProductId = productId;
+
+      // Reset UI immediately
+      avgNum.textContent = "—";
+      avgLabel.textContent = "Loading ratings…";
+      countLabel.textContent = "";
+      avgStars.textContent = "☆☆☆☆☆";
+      avgStarsBig.textContent = "☆☆☆☆☆";
+      barsEl.innerHTML = "";
+      commentList.innerHTML = `<div class="empty">Loading reviews…</div>`;
+      showFormMessage("");
+      deleteMyReviewBtn.style.display = "none";
+
+      // Kill old listener
+      if (unsubComments) { try { unsubComments(); } catch { } unsubComments = null; }
+
+      // Start new listener
+      const commentsRef = collection(db, "products", productId, "comments");
+      const commentsQ = query(commentsRef, orderBy("createdAt", "desc"));
+
+      unsubComments = onSnapshot(
+        commentsQ,
+        (snap) => {
+          const docs = snap.docs;
+          const total = docs.length;
+          let sum = 0;
+          const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+          for (const d of docs) {
+            const r = Number(d.data().rating || 0);
+            if (r >= 1 && r <= 5) {
+              sum += r;
+              counts[r] = (counts[r] || 0) + 1;
+            }
+          }
+
+          const avg = total ? sum / total : 0;
+          avgNum.textContent = total ? avg.toFixed(1) : "—";
+          avgLabel.textContent = total ? "Average rating" : "No ratings yet";
+          countLabel.textContent = `${total} review${total === 1 ? "" : "s"}`;
+          avgStars.textContent = starsText(avg);
+          avgStarsBig.textContent = starsText(avg);
+
+          renderBars(counts, total);
+          renderComments(docs, currentUid);
+        },
+        (err) => {
+          console.error("Comments listener error:", err?.code, err?.message, err);
+          commentList.innerHTML = `<div class="empty">Reviews unavailable.</div>`;
+          avgLabel.textContent = "Reviews unavailable";
+        }
+      );
+
+      // Load my review state (if signed in)
+      loadMyReviewFor(productId);
+    }
+
+    // Post/edit review
+    commentForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user || !activeProductId) return;
+
+      const rating = Math.trunc(parseInt(ratingSel.value, 10) || 0);
+      const text = commentText.value.trim();
+      const rawName = displayNameInput.value.trim();
+      const finalName = rawName ? rawName : "Anonymous";
+
+      if (!text) { showFormMessage("Please write a comment.", true); return; }
+      if (text.length > 2000) { showFormMessage("Comment is too long (max 2000 chars).", true); return; }
+      if (rating < 1 || rating > 5) { showFormMessage("Please select a rating 1–5.", true); return; }
+      if (finalName.length > 80) { showFormMessage("Name too long (max 80 chars).", true); return; }
+
+      showFormMessage("Saving…");
+      setFormBusy(true);
+
+      try {
+        const myRef = doc(db, "products", String(activeProductId), "comments", user.uid);
+        const existing = await getDoc(myRef);
+
+        if (existing.exists()) {
+          await setDoc(myRef, { rating, text, displayName: finalName }, { merge: true });
+        } else {
+          await setDoc(myRef, {
+            userId: user.uid,
+            rating,
+            text,
+            displayName: finalName,
+            createdAt: Timestamp.now(),
+          });
+        }
+
+        const snap = await getDoc(myRef);
+        myReviewCache = snap.exists() ? snap.data() : null;
+
+        deleteMyReviewBtn.style.display = myReviewCache ? "inline-block" : "none";
+        showFormMessage("Saved");
+        setTimeout(() => showFormMessage(myReviewCache ? "Editing your review." : ""), 900);
+      } catch (err) {
+        console.error("save review error:", err?.code, err?.message, err);
+        showFormMessage("Failed to save review.", true);
+      } finally {
+        setFormBusy(false);
+      }
+    };
+
+    // Delete my review
+    deleteMyReviewBtn.onclick = async () => {
+      const user = auth.currentUser;
+      if (!user || !activeProductId) return;
+      if (!confirm("Delete your review?")) return;
+
+      showFormMessage("Deleting…");
+      setFormBusy(true);
+
+      try {
+        const myRef = doc(db, "products", String(activeProductId), "comments", user.uid);
+        await deleteDoc(myRef);
+
+        myReviewCache = null;
+        ratingSel.value = "5";
+        displayNameInput.value = user.displayName || "";
+        commentText.value = "";
+        deleteMyReviewBtn.style.display = "none";
+        showFormMessage("Deleted");
+        setTimeout(() => showFormMessage(""), 900);
+      } catch (err) {
+        console.error("delete review error:", err?.code, err?.message, err);
+        showFormMessage("Failed to delete.", true);
+      } finally {
+        setFormBusy(false);
+      }
+    };
+
+    // ============================
+    // Boot
+    // ============================
+    await loadProducts();
+
+    // Expose a tiny API (optional; list uses internal click listeners anyway)
+    window.playByIndex = playByIndex;
   </script>
 </body>
 
