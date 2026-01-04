@@ -484,7 +484,18 @@
         transition: none !important;
         scroll-behavior: auto !important;
       }
-    }
+    }/* Song list max-height rules */
+.song-list{
+  max-height: 90vh; /* not-mobile: 1/3 viewport height */
+}
+
+/* mobile: cap to half the viewport */
+@media (max-width: 900px){
+  .song-list{
+    max-height: 32vh;
+  }
+}
+
   </style>
 
   <noscript>
@@ -656,7 +667,7 @@
         <div class="section-divider">
           <div class="section-kicker">Soundtrack</div>
           <div class="section-title">TimeCat</div>
-          <div class="section-sub">Audio-only tracks (no MIDI). Visualizer switches to an audio-reactive mode.</div>
+          <div class="section-sub">The soundracks to Unlim8ted's newest game in development, Time Cat.</div>
         </div>
 
         <!-- Helper: use playTimecat('products/games/TimeCat/Music/<file>.mp3', 'Display Name') -->
