@@ -1,0 +1,83 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: unlim8ted.com
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Prepend snippet as the first thing in every HTML file
+      - name: Prepend snippet to HTML files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          OUT_DIR="."
+          SNIP_FILE="components/deploy-inject/head-snippet.html"
+          MARK="<!--__INJECTED_FILE_PREFIX__-->"
+
+          if [ ! -f "$SNIP_FILE" ]; then
+            echo "Snippet file not found: $SNIP_FILE" >&2
+            exit 1
+          fi
+
+          # Read snippet content once
+          SNIP="$(cat "$SNIP_FILE")"
+
+          # Iterate html files
+          find "$OUT_DIR" -type f -name "*.html" -print0 | while IFS= read -r -d '' f; do
+            # Skip the snippet file itself
+            if [ "$f" = "./$SNIP_FILE" ] || [ "$f" = "$SNIP_FILE" ]; then
+              continue
+            fi
+
+            # Prevent double injection
+            if grep -qF "$MARK" "$f"; then
+              echo "Already injected: $f"
+              continue
+            fi
+
+            tmp="$(mktemp)"
+
+            # Write marker + snippet first, then original file contents
+            {
+              printf '%s\n' "$MARK"
+              printf '%s\n' "$SNIP"
+              cat "$f"
+            } > "$tmp"
+
+            # Replace original file
+            mv "$tmp" "$f"
+            echo "Injected: $f"
+          done
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
