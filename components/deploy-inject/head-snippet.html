@@ -1,14 +1,14 @@
 <!-- ===================== START: Unlim8ted Loader ===================== -->
 <style>
   :root{
-    --u8-bg0:#05070d;
-    --u8-bg1:#070a14;
-    --u8-a:#4c6eff;
-    --u8-b:#00ffaa;
-    --u8-c:#ff3df2;
+    --u8-bg0_INJECTED_LOADER:#05070d;
+    --u8-bg1_INJECTED_LOADER:#070a14;
+    --u8-a_INJECTED_LOADER:#4c6eff;
+    --u8-b_INJECTED_LOADER:#00ffaa;
+    --u8-c_INJECTED_LOADER:#ff3df2;
   }
 
-  #u8-loader{
+  #u8-loader_INJECTED_LOADER{
     position: fixed;
     inset: 0;
     z-index: 2147483000;
@@ -18,16 +18,16 @@
       radial-gradient(1200px 700px at 50% 25%, rgba(76,110,255,0.22), transparent 60%),
       radial-gradient(950px 560px at 15% 85%, rgba(0,255,170,0.14), transparent 55%),
       radial-gradient(950px 560px at 85% 80%, rgba(255,61,242,0.12), transparent 55%),
-      linear-gradient(180deg, var(--u8-bg1), var(--u8-bg0));
+      linear-gradient(180deg, var(--u8-bg1_INJECTED_LOADER), var(--u8-bg0_INJECTED_LOADER));
     opacity: 1;
     visibility: visible;
     transition: opacity 520ms ease, visibility 0ms linear 520ms;
     pointer-events: all;
     overflow: hidden;
   }
-  #u8-loader.u8-hide{ opacity: 0; visibility: hidden; }
+  #u8-loader_INJECTED_LOADER.u8-hide_INJECTED_LOADER{ opacity: 0; visibility: hidden; }
 
-  #u8-loader:before{
+  #u8-loader_INJECTED_LOADER:before{
     content:"";
     position:absolute; inset:-2px;
     background:
@@ -43,29 +43,29 @@
     mix-blend-mode: overlay;
   }
 
-  .u8-engine{
+  .u8-engine_INJECTED_LOADER{
     width: 100%;
     height: 100%;
     display:grid;
     place-items:center;
   }
 
-  .u8-eight{
+  .u8-eight_INJECTED_LOADER{
     width: min(94vw, 840px);
     height: auto;
     display:block;
     filter:
       drop-shadow(0 0 26px rgba(76,110,255,.18))
       drop-shadow(0 0 26px rgba(0,255,170,.10));
-    animation: u8-breathe 2.4s ease-in-out infinite;
+    animation: u8-breathe_INJECTED_LOADER 2.4s ease-in-out infinite;
   }
 
-  @keyframes u8-breathe{
+  @keyframes u8-breathe_INJECTED_LOADER{
     0%,100%{ transform: translateY(0) scale(1); }
     50%{ transform: translateY(-1px) scale(1.006); }
   }
 
-  .u8-eight .tube{
+  .u8-eight_INJECTED_LOADER .tube_INJECTED_LOADER{
     stroke: rgba(255,255,255,0.12);
     stroke-width: clamp(12px, 2.6vw, 22px);
     stroke-linecap: round;
@@ -73,45 +73,44 @@
     fill: none;
   }
 
-  .u8-eight .tubeGlow{
+  .u8-eight_INJECTED_LOADER .tubeGlow_INJECTED_LOADER{
     stroke: rgba(76,110,255,0.10);
     stroke-width: clamp(10px, 2.2vw, 18px);
     stroke-linecap: round;
     stroke-linejoin: round;
     fill: none;
-    filter: url(#u8SoftGlow);
+    filter: url(#u8SoftGlow_INJECTED_LOADER);
   }
 
-  .u8-eight .spark{
-    stroke: url(#u8Grad);
+  .u8-eight_INJECTED_LOADER .spark_INJECTED_LOADER{
+    stroke: url(#u8Grad_INJECTED_LOADER);
     stroke-width: clamp(10px, 2.2vw, 18px);
     stroke-linecap: round;
     stroke-linejoin: round;
     fill: none;
-    filter: url(#u8SparkGlow);
+    filter: url(#u8SparkGlow_INJECTED_LOADER);
     stroke-dasharray: 90 520;
-    animation: u8-spark 1.15s linear infinite;
+    animation: u8-spark_INJECTED_LOADER 1.15s linear infinite;
   }
 
-  .u8-eight .spark2{
+  .u8-eight_INJECTED_LOADER .spark2_INJECTED_LOADER{
     stroke: rgba(255,61,242,0.35);
     stroke-width: clamp(8px, 1.9vw, 14px);
     stroke-linecap: round;
     stroke-linejoin: round;
     fill: none;
-    filter: url(#u8SparkGlow);
+    filter: url(#u8SparkGlow_INJECTED_LOADER);
     stroke-dasharray: 55 555;
-    animation: u8-spark 1.35s linear infinite;
+    animation: u8-spark_INJECTED_LOADER 1.35s linear infinite;
     opacity: .55;
   }
 
-  @keyframes u8-spark{
+  @keyframes u8-spark_INJECTED_LOADER{
     from { stroke-dashoffset: 610; }
     to   { stroke-dashoffset: 0; }
   }
 
- 
-  .u8-loading-text{
+  .u8-loading-text_INJECTED_LOADER{
     margin-top: clamp(28px, 4vw, 42px);
     font: 700 clamp(18px, 4.6vw, 26px)/1.15 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     letter-spacing: 0.32em;
@@ -122,53 +121,53 @@
     gap: 14px;
   }
 
-  .u8-loading-dots{
+  .u8-loading-dots_INJECTED_LOADER{
     display:inline-flex;
     gap:8px;
   }
 
-  .u8-loading-dots i{
+  .u8-loading-dots_INJECTED_LOADER i{
     width:7px;
     height:7px;
     border-radius:999px;
     background: rgba(255,255,255,0.75);
-    animation: u8-dot 1.2s infinite ease-in-out;
+    animation: u8-dot_INJECTED_LOADER 1.2s infinite ease-in-out;
   }
 
-  .u8-loading-dots i:nth-child(2){ animation-delay:.18s; }
-  .u8-loading-dots i:nth-child(3){ animation-delay:.36s; }
+  .u8-loading-dots_INJECTED_LOADER i:nth-child(2){ animation-delay:.18s; }
+  .u8-loading-dots_INJECTED_LOADER i:nth-child(3){ animation-delay:.36s; }
 
-  @keyframes u8-dot{
+  @keyframes u8-dot_INJECTED_LOADER{
     0%,100%{ opacity:.35; transform: translateY(0); }
     50%{ opacity:1; transform: translateY(-3px); }
   }
 
   @media (prefers-reduced-motion: reduce){
-    .u8-eight,
-    .u8-eight .spark,
-    .u8-eight .spark2,
-    .u8-loading-dots i{
+    .u8-eight_INJECTED_LOADER,
+    .u8-eight_INJECTED_LOADER .spark_INJECTED_LOADER,
+    .u8-eight_INJECTED_LOADER .spark2_INJECTED_LOADER,
+    .u8-loading-dots_INJECTED_LOADER i{
       animation:none !important;
     }
-    #u8-loader{ transition:none; }
+    #u8-loader_INJECTED_LOADER{ transition:none; }
   }
 </style>
 
-<div id="u8-loader" aria-hidden="true">
-  <div class="u8-engine">
-    <svg class="u8-eight" viewBox="0 0 220 300" role="img" aria-hidden="true">
+<div id="u8-loader_INJECTED_LOADER" aria-hidden="true">
+  <div class="u8-engine_INJECTED_LOADER">
+    <svg class="u8-eight_INJECTED_LOADER" viewBox="0 0 220 300" role="img" aria-hidden="true">
       <defs>
-        <linearGradient id="u8Grad" x1="0" y1="0" x2="220" y2="0">
+        <linearGradient id="u8Grad_INJECTED_LOADER" x1="0" y1="0" x2="220" y2="0">
           <stop offset="0" stop-color="rgba(76,110,255,0.98)"/>
           <stop offset="0.5" stop-color="rgba(0,255,170,0.92)"/>
           <stop offset="1" stop-color="rgba(255,61,242,0.86)"/>
         </linearGradient>
 
-        <filter id="u8SoftGlow" x="-30%" y="-30%" width="160%" height="160%">
+        <filter id="u8SoftGlow_INJECTED_LOADER" x="-30%" y="-30%" width="160%" height="160%">
           <feGaussianBlur stdDeviation="2.2"/>
         </filter>
 
-        <filter id="u8SparkGlow" x="-40%" y="-40%" width="180%" height="180%">
+        <filter id="u8SparkGlow_INJECTED_LOADER" x="-40%" y="-40%" width="180%" height="180%">
           <feGaussianBlur stdDeviation="2.8"/>
           <feMerge>
             <feMergeNode/>
@@ -177,7 +176,7 @@
         </filter>
       </defs>
 
-      <path id="u8Path" d="
+      <path id="u8Path_INJECTED_LOADER" d="
         M110,22
         C70,22 42,50 42,88
         C42,122 64,146 92,154
@@ -201,25 +200,25 @@
         C70,200 84,184 110,184
       " />
 
-      <use href="#u8Path" class="tube"/>
-      <use href="#u8Path" class="tubeGlow"/>
-      <use href="#u8Path" class="spark"/>
-      <use href="#u8Path" class="spark2"/>
+      <use href="#u8Path_INJECTED_LOADER" class="tube_INJECTED_LOADER"/>
+      <use href="#u8Path_INJECTED_LOADER" class="tubeGlow_INJECTED_LOADER"/>
+      <use href="#u8Path_INJECTED_LOADER" class="spark_INJECTED_LOADER"/>
+      <use href="#u8Path_INJECTED_LOADER" class="spark2_INJECTED_LOADER"/>
     </svg>
 
-    <div class="u8-loading-text">
+    <div class="u8-loading-text_INJECTED_LOADER">
       Loading
-      <span class="u8-loading-dots"><i></i><i></i><i></i></span>
+      <span class="u8-loading-dots_INJECTED_LOADER"><i></i><i></i><i></i></span>
     </div>
   </div>
 </div>
 
 <script>
   (function () {
-    const loader = document.getElementById('u8-loader');
+    const loader = document.getElementById('u8-loader_INJECTED_LOADER');
     if (!loader) return;
 
-    const all = document.querySelectorAll('#u8-loader');
+    const all = document.querySelectorAll('#u8-loader_INJECTED_LOADER');
     if (all.length > 1) {
       for (let i = 1; i < all.length; i++) all[i].remove();
     }
@@ -229,41 +228,41 @@
     const MIN_SHOW_MS = 520;
     const MAX_SHOW_MS = 6500;
 
-    function removeLoader(){
+    function removeLoader_INJECTED_LOADER(){
       if (removed) return;
       removed = true;
       loader.remove();
     }
 
-    function hideLoader(){
+    function hideLoader_INJECTED_LOADER(){
       if (removed) return;
       const elapsed = performance.now() - startedAt;
       const wait = Math.max(0, MIN_SHOW_MS - elapsed);
 
       setTimeout(() => {
-        loader.classList.add('u8-hide');
-        const t = setTimeout(removeLoader, 900);
+        loader.classList.add('u8-hide_INJECTED_LOADER');
+        const t = setTimeout(removeLoader_INJECTED_LOADER, 900);
         loader.addEventListener('transitionend', () => {
           clearTimeout(t);
-          removeLoader();
+          removeLoader_INJECTED_LOADER();
         }, { once:true });
       }, wait);
     }
 
-    function hideAfterPaint(){
+    function hideAfterPaint_INJECTED_LOADER(){
       requestAnimationFrame(() => {
-        requestAnimationFrame(hideLoader);
+        requestAnimationFrame(hideLoader_INJECTED_LOADER);
       });
     }
 
     if (document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', hideAfterPaint, { once:true });
+      document.addEventListener('DOMContentLoaded', hideAfterPaint_INJECTED_LOADER, { once:true });
     } else {
-      hideAfterPaint();
+      hideAfterPaint_INJECTED_LOADER();
     }
 
-    window.addEventListener('load', hideLoader, { once:true });
-    setTimeout(hideLoader, MAX_SHOW_MS);
+    window.addEventListener('load', hideLoader_INJECTED_LOADER, { once:true });
+    setTimeout(hideLoader_INJECTED_LOADER, MAX_SHOW_MS);
   })();
 </script>
 <!-- ===================== END: Unlim8ted Loader ===================== -->
