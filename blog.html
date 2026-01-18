@@ -31,26 +31,7 @@
 
     <!-- Components (match the rest of your site) -->
     <script type="module" src="/components/site-navbar.js"></script>
-    <script type="module" src="/components/site-loader.js"></script>
 
-    <!-- No-JavaScript message -->
-    <noscript>
-        <style>
-            .no-js-message {
-                background: #2c4762;
-                color: #ff4d4d;
-                font-size: 18px;
-                text-align: center;
-                padding: 16px;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                z-index: 999999999;
-            }
-        </style>
-        <div class="no-js-message">Please enable JavaScript to use this website properly.</div>
-    </noscript>
 
     <style>
         :root {
@@ -273,8 +254,7 @@
 </head>
 
 <body>
-    <!-- Component loader -->
-    <site-loader text="Loading..."></site-loader>
+
 
     <!-- Component navbar (same pattern as your cart page) -->
     <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"

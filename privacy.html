@@ -1,747 +1,585 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unlim8ted - Privacy</title>
-  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Unlim8ted — Privacy Policy</title>
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
 
-  <meta name="description"
-    content="'About Us' Unlim8ted Studio Productions is a dynamic entertainment company based in the united states . our mission is to create engaging and innovative experiences across a variety of media . the animated film follows the adventures of a meatball Learn more at Unlim8ted Studio Productions."
-    name="description" />
-  <style media="screen" type="text/css">
-    .layer1_class {
-      position: absolute;
-      z-index: 1;
-      top: 100px;
-      left: 0px;
-      visibility: visible;
-    }
+  <meta name="description" content="Privacy Policy for Unlim8ted Studio Productions." />
+  <meta property="og:title" content="Unlim8ted — Privacy Policy" />
+  <meta property="og:description" content="Privacy Policy for Unlim8ted Studio Productions." />
 
-    .layer2_class {
-      position: absolute;
-      z-index: 2;
-      top: 10px;
-      left: 10px;
-      visibility: hidden;
-    }
-
-    .loader {
-      position: fixed;
-      background-color: black;
-      opacity: 1;
-      height: 100%;
-      width: 100%;
-      top: 0;
-      left: 0%;
-      z-index: 999999988;
-      pointer-events: none;
-    }
-
-    .loaderr-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      /* To stack spinner and text vertically */
-      height: 100vh;
-      /* Full viewport height to ensure vertical centering */
-    }
-
-    .loaderr {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 8px solid transparent;
-      border-top: 8px solid #3498db;
-      border-right: 8px solid #e74c3c;
-      border-bottom: 8px solid #f1c40f;
-      border-left: 8px solid #9b59b6;
-      -webkit-animation: spin 1.5s linear infinite;
-      animation: spin 1.5s linear infinite;
-      box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
-      position: relative;
-    }
-
-    .loaderr:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 8px solid transparent;
-      border-top: 8px solid rgba(52, 152, 219, 0.7);
-      border-right: 8px solid rgba(231, 76, 60, 0.7);
-      border-bottom: 8px solid rgba(241, 196, 15, 0.7);
-      border-left: 8px solid rgba(155, 89, 182, 0.7);
-      -webkit-animation: spin-reverse 1.5s linear infinite;
-      animation: spin-reverse 1.5s linear infinite;
-    }
-
-    @-webkit-keyframes spin {
-      0% {
-        -webkit-transform: rotate(0deg);
-      }
-
-      100% {
-        -webkit-transform: rotate(360deg);
-      }
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    @-webkit-keyframes spin-reverse {
-      0% {
-        -webkit-transform: rotate(360deg);
-      }
-
-      100% {
-        -webkit-transform: rotate(0deg);
-      }
-    }
-
-    @keyframes spin-reverse {
-      0% {
-        transform: rotate(360deg);
-      }
-
-      100% {
-        transform: rotate(0deg);
-      }
-    }
-
-    /* Loading text animation */
-    .loading-text {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #3498db;
-      font-family: Arial, sans-serif;
-      letter-spacing: 2px;
-      animation: pulse 1.5s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-      0% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.5;
-      }
-
-      100% {
-        opacity: 1;
-      }
-    }
-
-
-    @-webkit-keyframes load-out {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0;
-      }
-    }
-
-    @keyframes load-out {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0;
-      }
-    }
-  </style>
-  <!-- Styles for the No-JavaScript message -->
   <style>
-    .no-js-message {
-      background: #2c4762;
-      color: red;
-      font-size: 20px;
-      text-align: center;
-      padding: 20px;
-      z-index: 999999999999999999999999999999999999999999999;
-      position: fixed;
+    :root{
+      --bg0:#070812;
+      --bg1:#0b0f17;
+      --panel: rgba(255,255,255,0.07);
+      --panel2: rgba(255,255,255,0.10);
+      --line: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+      --muted2: rgba(255,255,255,0.55);
+      --accent:#8b00ff;
+      --accent2:#39c891;
+      --danger:#ff5c7a;
+
+      --radius: 18px;
+      --radius2: 14px;
+      --shadow: 0 22px 70px rgba(0,0,0,.45);
+      --shadow2: 0 10px 24px rgba(0,0,0,.35);
+
+      --ui: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --max: 980px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:var(--ui);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(139,0,255,.25), transparent 60%),
+        radial-gradient(900px 650px at 90% 15%, rgba(57,200,145,.16), transparent 55%),
+        radial-gradient(800px 650px at 50% 95%, rgba(255,92,122,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+
+    /* Canvas particles behind everything */
+    #bgFX{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.85;
+    }
+
+    /* Navbar (your existing one, cleaned) */
+    .navbar{
+      position: sticky;
+      top:0;
+      z-index:50;
+      display:flex;
+      justify-content:center;
+      backdrop-filter: blur(14px);
+      background: rgba(10, 10, 18, 0.55);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .navbar-inner{
       width: 100%;
-      top: 0;
+      max-width: var(--max);
+      padding: 10px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
     }
-  </style>
-
-  <!-- No-JavaScript message -->
-  <noscript>
-    <div class="no-js-message">
-      Please enable JavaScript to use this website properly.
-    </div>
-  </noscript>
-  <div class="loader">
-    <div class="loaderr-container">
-      <div class="loaderr"></div>
-      <div class="loading-text">Loading...</div>
-    </div>
-  </div>
-
-  </div>
-  <script>
-    // This function will execute after the full page has finished loading
-    window.onload = function () {
-      // Trigger fade-out animation for the loader
-      document.querySelector('.loaderr').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-      document.querySelector('.loaderr').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
-
-      document.querySelector('.loading-text').style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
-      document.querySelector('.loading-text').style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
-
-      document.querySelector('.loader').style.animation = 'load-out 4s forwards';
-      document.querySelector('.loader').style.webkitAnimation = 'load-out 4s forwards';
-
+    .nav-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
     }
-  </script>
-  <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
-
-  <title>About Us</title>
-  <style>
-    /* Base styles */
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
-      cursor: none;
-      /* Hide the default cursor */
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      color:var(--text);
+      font-weight:900;
+      letter-spacing:.2px;
+      white-space:nowrap;
+    }
+    .logo{
+      width:34px; height:34px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(139,0,255,.65), rgba(57,200,145,.35));
+      box-shadow: 0 0 0 1px rgba(255,255,255,.10), 0 12px 30px rgba(0,0,0,.35);
+      display:grid; place-items:center;
+      font-family:var(--mono);
+      font-size:14px;
     }
 
-    .container {
-      max-width: 800px;
-      text-align: center;
-      padding: 20px;
-      border: 2px solid #8b00ff;
-      border-radius: 10px;
-      background: linear-gradient(145deg, #2d033b, #12001e);
-      box-shadow: 0 0 20px rgba(139, 0, 255, 0.6);
-      opacity: 0;
-      transform: translateY(100px);
-      animation: slideUp 1s ease-out forwards;
+    .navbar-toggle{
+      display:none;
+      appearance:none;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight:800;
     }
 
-    /* Slide-up animation */
-    @keyframes slideUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .nav-links{
+      list-style:none;
+      margin:0;
+      padding:0;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .nav-item a{
+      display:block;
+      color: rgba(255,255,255,.82);
+      text-decoration:none;
+      font-weight:750;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      transition: background .15s ease, border-color .15s ease, transform .15s ease;
+    }
+    .nav-item a:hover{
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.10);
+      transform: translateY(-1px);
     }
 
-    h1,
-    p,
-    a.button {
-      transition: transform 0.3s, color 0.3s;
+    .dropdown{ position:relative; }
+    .dropdown-content{
+      display:none;
+      position:absolute;
+      right:0;
+      top: calc(100% + 8px);
+      min-width: 210px;
+      padding: 8px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(10, 10, 18, 0.92);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(12px);
+    }
+    .dropdown-content a{
+      display:block;
+      padding: 10px 10px;
+      border-radius: 12px;
+      color: rgba(255,255,255,.86);
+      text-decoration:none;
+      font-weight:700;
+    }
+    .dropdown-content a:hover{
+      background: rgba(255,255,255,0.07);
+    }
+    .dropdown:hover .dropdown-content{ display:block; }
+
+    .oldbtn{
+      appearance:none;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight:800;
+    }
+    .oldbtn:hover{ background: rgba(255,255,255,0.10); }
+
+    @media (max-width: 860px){
+      .navbar-toggle{ display:block; }
+      .nav-links{ display:none; width:100%; padding-top: 10px; }
+      .nav-links.show{ display:flex; flex-direction:column; align-items:stretch; }
+      .nav-item a{ width:100%; }
+      .dropdown-content{ position: static; display:block; margin-top: 6px; }
+      .dropdown:hover .dropdown-content{ display:block; }
     }
 
-    h1 {
-      color: #ffffff;
-      text-shadow: 0 0 5px #ffffff, 0 0 10px #8b00ff, 0 0 15px #ffffff;
+    /* Layout */
+    .wrap{
+      position:relative;
+      z-index:1;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 22px 16px 70px;
+      display:grid;
+      grid-template-columns: 1fr 300px;
+      gap: 16px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .wrap{ grid-template-columns: 1fr; }
     }
 
-    p {
-      color: #ddd;
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.05));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(14px);
     }
 
-    a.button {
-      color: #8b00ff;
-      text-decoration: none;
-      font-weight: bold;
-      background: black;
-      border: 2px solid #8b00ff;
-      padding: 15px 25px;
+    .hero{ padding: 18px 18px 14px; }
+    .kicker{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+    }
+    h1{
+      margin: 12px 0 8px;
+      font-size: clamp(28px, 3.4vw, 40px);
+      letter-spacing: .2px;
+      line-height:1.12;
+      text-shadow: 0 0 8px rgba(139,0,255,.25);
+    }
+    .sub{
+      margin:0;
+      color: var(--muted);
+      line-height:1.5;
+      font-size: 15.5px;
+      max-width: 72ch;
+    }
+    .meta{
+      margin-top: 12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      color: rgba(255,255,255,.72);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    .pill{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.18);
+    }
+
+    .doc{ padding: 18px; }
+    .doc h2{
+      margin: 22px 0 10px;
       font-size: 18px;
-      border-radius: 8px;
-      display: inline-block;
-      margin-top: 20px;
+      letter-spacing:.2px;
+    }
+    .doc p{
+      margin: 0 0 12px;
+      color: rgba(255,255,255,.84);
+      line-height: 1.7;
+      font-size: 15.5px;
+    }
+    .doc ul{
+      margin: 8px 0 14px 18px;
+      padding:0;
+      color: rgba(255,255,255,.84);
+      line-height: 1.7;
+      font-size: 15.5px;
+    }
+    .doc li{ margin: 6px 0; }
+
+    .callout{
+      margin-top: 14px;
+      padding: 14px 14px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(57,200,145,.22);
+      background: linear-gradient(180deg, rgba(57,200,145,.12), rgba(255,255,255,.04));
+      color: rgba(255,255,255,.90);
+    }
+    .callout strong{ color: var(--text); }
+
+    /* Sidebar */
+    .side{
+      padding: 14px;
+      position: sticky;
+      top: 74px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    @media (max-width: 980px){
+      .side{ position: static; }
+    }
+    .card{
+      padding: 14px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.20);
+    }
+    .card h3{
+      margin:0 0 8px;
+      font-size: 14px;
+      letter-spacing:.2px;
+      color: rgba(255,255,255,.92);
+    }
+    .card p{
+      margin:0;
+      color: var(--muted);
+      line-height:1.5;
+      font-size: 13.5px;
+    }
+    .mono{
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: rgba(255,255,255,.78);
+      word-break: break-word;
     }
 
-    h1:hover,
-    p:hover,
-    a.button:hover {
-      color: #dba4ff;
-      transform: scale(1.05);
-      background-color: #1a002e;
-      box-shadow: 0 0 15px rgba(139, 0, 255, 0.5);
+    .btns{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .btn{
+      appearance:none;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor:pointer;
+      text-decoration:none;
+      font-weight: 800;
+      letter-spacing: .15px;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .btn:hover{
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+    }
+    .btn.primary{
+      border-color: rgba(139,0,255,.45);
+      background: rgba(139,0,255,.18);
+    }
+    .btn.primary:hover{ background: rgba(139,0,255,.24); }
+
+    .footer{
+      margin-top: 18px;
+      text-align:center;
+      color: var(--muted2);
+      font-size: 12.5px;
     }
 
-    .icon-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-
-    .icon {
-      position: absolute;
-      transition: transform 0.5s ease-out, opacity 0.5s ease;
-      opacity: 0;
-      /* Start icons as invisible */
-    }
-
-    .container.expanded {
-      max-height: 120%;
-      /* Example of expansion */
-      transition: max-height 0.5s ease-out;
-    }
-
-    .cursor {
-      width: 20px;
-      height: 20px;
+    /* Custom cursor only on fine pointers (desktop mouse) */
+    .cursor{
+      width: 18px; height: 18px;
       position: fixed;
       border-radius: 50%;
-      background-color: rgba(139, 0, 255, 0.7);
-      pointer-events: none;
+      background: rgba(139, 0, 255, 0.55);
+      pointer-events:none;
       transform: translate(-50%, -50%);
-      transition: transform 0.1s ease-out, width 0.1s, height 0.1s;
-      box-shadow: 0 0 10px rgba(139, 0, 255, 0.6), 0 0 15px rgba(219, 164, 255, 0.5);
-    }
-
-    h1:hover~.cursor,
-    p:hover~.cursor,
-    a.button:hover~.cursor {
-      width: 30px;
-      height: 30px;
-      background-color: rgba(219, 164, 255, 0.7);
-    }
-  </style>
-  <style>
-    /* Navigation Bar Styles */
-    .navbar {
-      display: flex;
-      justify-content: center;
-      background-color: #333333d0;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 3;
-    }
-
-    .nav-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-    }
-
-    .nav-item {
-      position: relative;
-    }
-
-    .nav-item a {
-      display: block;
-      color: white;
-      padding: 14px 20px;
-      text-decoration: none;
-      text-align: center;
-    }
-
-    .nav-item a:hover {
-      background-color: #ddd;
-      color: black;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      min-width: 160px;
-      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-      z-index: 3;
-    }
-
-    .dropdown-content a {
-      color: black;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-      text-align: left;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #f1f1f1;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-      z-index: 3;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    .dropdown-content a {
-      color: black;
-      text-decoration: none;
-      padding: 12px 16px;
-      display: block;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #ddd;
-    }
-
-    .navbar-toggle {
-      display: none;
-      background-color: #333;
-      color: white;
-      padding: 14px 20px;
-      border: none;
-      cursor: pointer;
-      font-size: 18px;
-    }
-
-    /* Responsive styles */
-    @media (max-width: 768px) {
-      .nav-links {
-        flex-direction: column;
-        display: none;
-      }
-
-      .nav-links.show {
-        display: flex;
-      }
-
-      .navbar-toggle {
-        display: block;
-      }
-    }
-  </style>
-  <script>
-    function toggleMenu() {
-      const navLinks = document.getElementById("navbarLinks");
-      navLinks.classList.toggle("show");
-    }
-  </script>
-
-
-
-  <nav class="navbar">
-    <div class="navbar-header">
-      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-      <ul class="nav-links" id="navbarLinks">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="products">Products</a></li>
-        <li class="nav-item"><a href="help">Help</a></li>
-        <li class="nav-item"><a href="about">About</a></li>
-        <li class="nav-item dropdown">
-          <a href="javascript:void(0)" class="dropbtn">More</a>
-          <div class="dropdown-content">
-            <a href="portfolio">Portfolio</a>
-            <a href="contact">Contact</a>
-            <a href="blog">Blog</a>
-            <a href="live-chat">Live Chat</a>
-            <a href="live-game">Live Chat and Game</a>
-            <a href="puzzle-squares">Puzzle Squares</a>
-          </div>
-        </li>
-        <a href="old"><button>Old site</button></a>
-      </ul>
-    </div>
-  </nav>
-  <style>
-    body {
-      background: linear-gradient(145deg, #2d033b, #12001e);
-      background-attachment: fixed;
-      background-size: cover;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      height: 100%;
-      margin: 0;
-      cursor: none;
-      overflow-y: auto;
-    }
-
-    .container {
-      max-width: 800px;
-      text-align: center;
-      padding: 20px;
-      border: 2px solid #8b00ff;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.8);
-      box-shadow: 0 0 20px rgba(139, 0, 255, 0.6);
+      box-shadow: 0 0 12px rgba(139,0,255,.55), 0 0 18px rgba(219,164,255,.35);
+      z-index: 1000;
       opacity: 0;
-      transform: translateY(100px);
-      animation: slideUp 1s ease-out forwards;
-      margin: 50px auto;
+      transition: width .12s ease, height .12s ease, opacity .2s ease;
+    }
+    @media (pointer:fine){
+      body{ cursor: none; }
+      .cursor{ opacity: 1; }
+    }
+    @media (pointer:coarse){
+      body{ cursor: auto; }
+      .cursor{ display:none; }
     }
 
-    @keyframes slideUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+    ::selection{ background: rgba(139,0,255,.35); color: white; }
 
-    h1,
-    p,
-    a.button {
-      transition: transform 0.3s, color 0.3s;
-    }
-
-    h1 {
-      color: #ffffff;
-      text-shadow: 0 0 5px #ffffff, 0 0 10px #8b00ff, 0 0 15px #ffffff;
-    }
-
-    p {
-      color: #ddd;
-    }
-
-    a.button {
-      color: #8b00ff;
-      text-decoration: none;
-      font-weight: bold;
-      background: black;
-      border: 2px solid #8b00ff;
-      padding: 15px 25px;
-      font-size: 18px;
-      border-radius: 8px;
-      display: inline-block;
-      margin-top: 20px;
-    }
-
-    h1:hover,
-    p:hover,
-    a.button:hover {
-      color: #dba4ff;
-      transform: scale(1.05);
-      background-color: #1a002e;
-      box-shadow: 0 0 15px rgba(139, 0, 255, 0.5);
-    }
-
-    .container.expanded {
-      max-height: 120%;
-      transition: max-height 0.5s ease-out;
-    }
-
-    .cursor {
-      width: 20px;
-      height: 20px;
-      position: fixed;
-      border-radius: 50%;
-      background-color: rgba(139, 0, 255, 0.7);
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: transform 0.1s ease-out, width 0.1s, height 0.1s;
-      box-shadow: 0 0 10px rgba(139, 0, 255, 0.6), 0 0 15px rgba(219, 164, 255, 0.5);
-    }
-
-    h1:hover~.cursor,
-    p:hover~.cursor,
-    a.button:hover~.cursor strong:hover~.cursor {
-      width: 30px;
-      height: 30px;
-      background-color: rgba(219, 164, 255, 0.7);
-    }
-
-    .particle {
-      position: absolute;
-      background-color: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      pointer-events: none;
-      animation: moveParticle linear infinite;
-    }
-
-    @keyframes moveParticle {
-      from {
-        transform: translateY(0) translateX(0);
-        opacity: 1;
-      }
-
-      to {
-        transform: translateY(100vh) translateX(calc(100vw * (random() - 0.5)));
-        opacity: 0;
-      }
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition:none !important; }
+      #bgFX{ display:none; }
     }
   </style>
+
+<script type="module" src="/components/site-navbar.js"></script>
+
 </head>
 
 <body>
-  <div class="container">
-    <h1>Privacy Policy for Unlim8ted Studio Productions</h1>
-    <p>At Unlim8ted Studio Productions, your privacy is a top priority. This Privacy Policy explains how we collect,
-      use, and protect your personal information across our various platforms, including our website, games, software,
-      and other digital services. By accessing our services, you consent to the practices outlined in this policy.</p>
+  <canvas id="bgFX"></canvas>
+<site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+  <main class="wrap">
+    <section>
+      <div class="panel hero">
+        <span class="kicker">Legal • Privacy</span>
+        <h1>Privacy Policy</h1>
+        <p class="sub">
+          This Privacy Policy explains how Unlim8ted Studio Productions collects, uses, and protects information across
+          our website, games, software, and other digital services.
+        </p>
+        <div class="meta">
+          <span class="pill">Last updated: <span id="lastUpdated"></span></span>
+          <span class="pill">Contact: <span class="mono">support@unlim8ted.com</span></span>
+        </div>
+        <div class="callout">
+          <strong>Quick summary:</strong> We collect only what we need to run our services, improve them, and keep them secure.
+        </div>
+      </div>
 
-    <h2>Information We Collect</h2>
-    <ul>
-      <p><strong>Personal Information:</strong> When you register for our services, we may collect details such as your
-        name, email address, and other contact information.</p>
-      <p><strong>Usage Data:</strong> Information about how you interact with our services, including pages visited,
-        time spent, and actions performed within our games and software.</p>
-      <p><strong>Device Information:</strong> Details about the device you use to access our services, such as operating
-        system, browser type, and IP address.</p>
-      <p><strong>Cookies and Tracking Data:</strong> Small files stored on your device to improve functionality, analyze
-        usage, and personalize your experience.</p>
-    </ul>
+      <article class="panel doc">
+        <h2>Information We Collect</h2>
+        <ul>
+          <li><strong>Personal information:</strong> If you create an account or contact us, we may collect your name, email address, and other contact details you provide.</li>
+          <li><strong>Usage data:</strong> Pages viewed, time spent, interactions, and basic feature usage to understand what’s working.</li>
+          <li><strong>Device information:</strong> Browser type, operating system, approximate location (from IP), and device identifiers for security and diagnostics.</li>
+          <li><strong>Cookies and similar technologies:</strong> Used to support functionality, remember preferences, and measure performance.</li>
+        </ul>
 
-    <h2>How We Use Your Information</h2>
-    <ul>
-      <p><strong>Provide and Improve Services:</strong> To deliver and enhance the quality of our games, software, and
-        digital tools.</p>
-      <p><strong>Personalization:</strong> To tailor your experience based on your preferences and usage patterns.</p>
-      <p><strong>Communication:</strong> To send updates, respond to inquiries, and share promotional content (with your
-        consent).</p>
-      <p><strong>Analytics:</strong> To understand user behavior and optimize our offerings.</p>
-      <p><strong>Security:</strong> To ensure the integrity and safety of our platforms and prevent unauthorized access.
-      </p>
-    </ul>
+        <h2>How We Use Your Information</h2>
+        <ul>
+          <li><strong>Provide and improve services:</strong> Operate features, fix bugs, and improve performance.</li>
+          <li><strong>Personalization:</strong> Remember settings and preferences where available.</li>
+          <li><strong>Communication:</strong> Respond to inquiries and send important service updates.</li>
+          <li><strong>Analytics:</strong> Measure engagement and improve the experience.</li>
+          <li><strong>Security:</strong> Detect fraud, prevent abuse, and secure accounts.</li>
+        </ul>
 
-    <h2>How We Protect Your Data</h2>
-    <ul>
-      <p><strong>Encryption:</strong> We use secure encryption methods to protect sensitive data during transmission.
-      </p>
-      <p><strong>Access Controls:</strong> Data access is limited to authorized personnel only, ensuring your
-        information is safe.</p>
-      <p><strong>Regular Audits:</strong> We perform routine checks to identify and address potential vulnerabilities.
-      </p>
-    </ul>
+        <h2>How We Protect Your Data</h2>
+        <ul>
+          <li><strong>Encryption:</strong> We use secure connections (HTTPS) and industry-standard protections where applicable.</li>
+          <li><strong>Access controls:</strong> Access to sensitive data is limited to authorized personnel and service providers.</li>
+          <li><strong>Monitoring:</strong> We monitor for suspicious activity to protect accounts and systems.</li>
+        </ul>
 
-    <h2>Sharing Your Information</h2>
-    <p>We do not sell or share your personal information with third parties except in the following situations:</p>
-    <ul>
-      <p><strong>Service Providers:</strong> Trusted third-party vendors who assist us in delivering our services (e.g.,
-        payment processors, analytics providers).</p>
-      <p><strong>Legal Requirements:</strong> When required by law or in response to valid legal requests.</p>
-      <p><strong>Consent:</strong> When you explicitly consent to sharing your information for specific purposes.</p>
-    </ul>
+        <h2>Sharing Your Information</h2>
+        <p>We do not sell your personal information. We may share information only in these cases:</p>
+        <ul>
+          <li><strong>Service providers:</strong> Vendors that help us operate services (e.g., hosting, analytics, payments) under appropriate safeguards.</li>
+          <li><strong>Legal requirements:</strong> When required by law or valid legal process.</li>
+          <li><strong>With consent:</strong> If you explicitly authorize sharing for a specific purpose.</li>
+        </ul>
 
-    <h2>Your Rights and Choices</h2>
-    <ul>
-      <p><strong>Access and Update:</strong> You have the right to access and update your personal information at any
-        time.</p>
-      <p><strong>Opt-Out:</strong> You can opt out of receiving promotional communications by following the unsubscribe
-        instructions included in emails.</p>
-      <p><strong>Data Deletion:</strong> Request the deletion of your personal data, subject to legal obligations.</p>
-    </ul>
+        <h2>Your Rights and Choices</h2>
+        <ul>
+          <li><strong>Access and update:</strong> You may request access to or correction of your information.</li>
+          <li><strong>Opt-out:</strong> You can opt out of promotional messages (if any) via unsubscribe links or by contacting us.</li>
+          <li><strong>Deletion:</strong> You may request deletion of your data, subject to legal obligations and legitimate business needs.</li>
+        </ul>
 
-    <h2>Cookies and Tracking Technologies</h2>
-    <p>We use cookies and similar tracking technologies to improve your experience on our platform. By using our
-      services, you consent to the use of these technologies unless you opt out. You can manage your cookie preferences
-      through your browser settings.</p>
+        <h2>Cookies and Tracking Technologies</h2>
+        <p>
+          We use cookies and similar tools to support functionality and understand usage. You can control cookies through your browser settings.
+        </p>
 
-    <h2>Children’s Privacy</h2>
-    <p>Our services are not directed at children under the age of 13. We do not knowingly collect personal information
-      from children. If we become aware that we have collected data from a child, we will take steps to delete it.</p>
+        <h2>Children’s Privacy</h2>
+        <p>
+          Our services are not directed to children under 13, and we do not knowingly collect personal information from children.
+          If you believe a child provided information, contact us and we’ll work to delete it.
+        </p>
 
-    <h2>Changes to This Privacy Policy</h2>
-    <p>We may update this Privacy Policy periodically to reflect changes in our practices or for legal, regulatory, or
-      operational reasons. You will be notified of significant changes through our website or by other means.</p>
+        <h2>Changes to This Privacy Policy</h2>
+        <p>
+          We may update this policy from time to time. Updates are effective when posted. If changes are significant,
+          we may provide an additional notice on the website.
+        </p>
 
-    <h2>Contact Us</h2>
-    <p>If you have any questions or concerns about this Privacy Policy or how we handle your data, please contact us:
-    </p>
-    <ul>
-      <p><strong>support@unlim8ted.com:</strong> For privacy-related inquiries or concerns.</p>
-      <p><strong>contact@unlim8ted.com:</strong> For general inquiries.</p>
-    </ul>
+        <h2>Contact Us</h2>
+        <p>If you have questions or concerns about privacy, contact:</p>
+        <ul>
+          <li><span class="mono">support@unlim8ted.com</span> — privacy/support inquiries</li>
+          <li><span class="mono">contact@unlim8ted.com</span> — general inquiries</li>
+        </ul>
 
-    <h2>Your Consent</h2>
-    <p>By using our services, you consent to the collection and use of information as outlined in this Privacy Policy.
-    </p>
-  </div>
+        <div class="footer" id="footer-text"></div>
+      </article>
+    </section>
 
+    <aside class="panel side" aria-label="Sidebar">
+      <div class="card">
+        <h3>Contact</h3>
+        <p>Questions about privacy? Email us and we’ll respond as soon as we can.</p>
+        <div class="btns">
+          <a class="btn primary" href="/contact">Contact</a>
+          <a class="btn" href="mailto:support@unlim8ted.com">Email support</a>
+        </div>
+      </div>
 
-  <a href="/#contact" class="button">Contact Us</a>
-  <!-- Copyright -->
-  <div style="margin-top: 20px;">
-    <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
-            <script>document.addEventListener("DOMContentLoaded", function () {
-                const currentYear = new Date().getFullYear();
-                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
-                document.getElementById("footer-text").innerHTML = footerText;
-            });
-            </script>
-  </div>
+      <div class="card">
+        <h3>At a glance</h3>
+        <p>We don’t sell personal info. We use data to run services, improve them, and keep things secure.</p>
+      </div>
 
-  </div>
+      <div class="card">
+        <h3>Emails</h3>
+        <p class="mono">support@unlim8ted.com<br/>contact@unlim8ted.com</p>
+      </div>
+    </aside>
+  </main>
 
-  <!-- Custom cursor element -->
   <div class="cursor" id="cursor"></div>
 
   <script>
-    // JavaScript to make the custom cursor follow the mouse
-    const cursor = document.getElementById("cursor");
-    document.addEventListener("mousemove", (e) => {
-      cursor.style.top = `${e.clientY}px`;
-      cursor.style.left = `${e.clientX}px`;
-    });
+    // Footer year + last updated
+    document.addEventListener("DOMContentLoaded", () => {
+      const y = new Date().getFullYear();
+      const ft = document.getElementById("footer-text");
+      if (ft) ft.textContent = `© 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
 
-    // Expand container based on scroll position
-    document.addEventListener("scroll", function () {
-      const scrollPercentage = window.scrollY / (document.body.offsetHeight - window.innerHeight);
-      if (scrollPercentage > 0.1) {
-        document.querySelector('.container').classList.add('expanded');
-      } else {
-        document.querySelector('.container').classList.remove('expanded');
+      const lu = document.getElementById("lastUpdated");
+      if (lu) {
+        const d = new Date();
+        lu.textContent = d.toLocaleDateString(undefined, { year:"numeric", month:"long", day:"numeric" });
       }
     });
 
-    // Particle background effect with a limit
-    const particleLimit = 100; // Maximum number of particles
-    let activeParticles = 0;
-
-    function createParticle() {
-      if (activeParticles >= particleLimit) return; // Stop if the limit is reached
-
-      const particle = document.createElement('div');
-      particle.classList.add('particle');
-      document.body.appendChild(particle);
-      activeParticles++;
-
-      const size = Math.random() * 5 + 1;
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
-      particle.style.top = `${Math.random() * window.innerHeight}px`;
-      particle.style.left = `${Math.random() * window.innerWidth}px`;
-      particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
-
-      particle.addEventListener('animationend', () => {
-        particle.remove();
-        activeParticles--; // Decrease count when particle is removed
+    // Custom cursor (desktop only)
+    const cursor = document.getElementById("cursor");
+    if (window.matchMedia("(pointer:fine)").matches && cursor) {
+      document.addEventListener("mousemove", (e) => {
+        cursor.style.top = e.clientY + "px";
+        cursor.style.left = e.clientX + "px";
       });
     }
 
-    setInterval(createParticle, 100);
+    // Lightweight particle field (canvas)
+    const canvas = document.getElementById("bgFX");
+    const ctx = canvas.getContext("2d", { alpha: true });
+
+    let W = 0, H = 0, DPR = 1;
+    function resize(){
+      DPR = Math.min(2, window.devicePixelRatio || 1);
+      W = canvas.width = Math.floor(window.innerWidth * DPR);
+      H = canvas.height = Math.floor(window.innerHeight * DPR);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    const N = 95;
+    const pts = Array.from({length:N}, () => ({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: (Math.random()*1.8 + 0.6) * DPR,
+      vx: (Math.random()*0.18 - 0.09) * DPR,
+      vy: (Math.random()*0.45 + 0.15) * DPR,
+      a: Math.random()*0.35 + 0.12
+    }));
+
+    function tick(){
+      ctx.clearRect(0,0,W,H);
+      for(const p of pts){
+        p.x += p.vx; p.y += p.vy;
+        if(p.y > H + 30*DPR) { p.y = -30*DPR; p.x = Math.random()*W; }
+        if(p.x < -30*DPR) p.x = W + 30*DPR;
+        if(p.x > W + 30*DPR) p.x = -30*DPR;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${p.a})`;
+        ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      tick();
+    } else {
+      canvas.style.display = "none";
+    }
   </script>
-
 </body>
-
 </html>

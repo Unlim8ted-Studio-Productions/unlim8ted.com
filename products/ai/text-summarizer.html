@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Unlim8ted — Summarize Text</title>
+  <meta name="description" content="Unlim8ted Summarize Text AI. Free forever no signup required. Powered by Unlim8ted Studio Productions Technology." />
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+
+  <!-- Always use your navbar component -->
+  <script type="module" src="/components/site-navbar.js"></script>
+
+  <style>
+    :root{
+      --bg0:#070812;
+      --bg1:#0b0f17;
+      --panel: rgba(255,255,255,0.07);
+      --line: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+      --muted2: rgba(255,255,255,0.55);
+      --accent:#8b00ff;
+      --accent2:#39c891;
+      --danger:#ff5c7a;
+
+      --radius: 18px;
+      --radius2: 14px;
+      --shadow2: 0 10px 24px rgba(0,0,0,.35);
+      --ui: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --max: 980px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:var(--ui);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(139,0,255,.25), transparent 60%),
+        radial-gradient(900px 650px at 90% 15%, rgba(57,200,145,.16), transparent 55%),
+        radial-gradient(800px 650px at 50% 95%, rgba(255,92,122,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+
+    /* Canvas particles behind everything */
+    #bgFX{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.85;
+    }
+
+    main{
+      position:relative;
+      z-index:1;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 22px 16px 70px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 340px;
+      gap: 16px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.05));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero{
+      padding: 18px 18px 14px;
+      margin-bottom: 16px;
+    }
+    .kicker{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+    }
+    h1{
+      margin: 12px 0 8px;
+      font-size: clamp(26px, 3.2vw, 40px);
+      letter-spacing: .2px;
+      line-height:1.12;
+      text-shadow: 0 0 8px rgba(139,0,255,.25);
+    }
+    .sub{
+      margin:0;
+      color: var(--muted);
+      line-height:1.5;
+      font-size: 15.5px;
+      max-width: 72ch;
+    }
+
+    .note{
+      margin-top: 12px;
+      padding: 12px 12px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,92,122,.22);
+      background: linear-gradient(180deg, rgba(255,92,122,.12), rgba(255,255,255,.04));
+      color: rgba(255,255,255,.90);
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .note b{ color: var(--text); }
+    .note .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: rgba(255,92,122,.9);
+      box-shadow: 0 0 14px rgba(255,92,122,.35);
+      margin-top: 5px;
+      flex: 0 0 auto;
+    }
+
+    .app{ padding: 16px; }
+
+    label{
+      display:block;
+      margin: 0 0 8px;
+      font-weight: 900;
+      letter-spacing: .15px;
+      color: rgba(255,255,255,.88);
+    }
+
+    textarea{
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.25);
+      color: var(--text);
+      padding: 12px 12px;
+      font-family: var(--ui);
+      font-size: 15px;
+      line-height: 1.55;
+      outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    textarea:focus{
+      border-color: rgba(139,0,255,.45);
+      box-shadow: 0 0 0 3px rgba(139,0,255,.18);
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top: 12px;
+    }
+
+    button{
+      appearance:none;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor:pointer;
+      text-decoration:none;
+      font-weight: 900;
+      letter-spacing: .15px;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease, opacity .12s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    button:hover{
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+    }
+    button.primary{
+      border-color: rgba(139,0,255,.45);
+      background: rgba(139,0,255,.18);
+    }
+    button.primary:hover{ background: rgba(139,0,255,.24); }
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .small{
+      font-size: 12.5px;
+      color: rgba(255,255,255,.68);
+      font-family: var(--mono);
+    }
+
+    .loading-wrap{
+      margin-top: 12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .loading-bar{
+      height: 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.22);
+      overflow:hidden;
+    }
+    .loading-bar > div{
+      height:100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(139,0,255,.95), rgba(57,200,145,.85));
+      transition: width .25s ease;
+    }
+
+    .status{
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: rgba(255,255,255,.75);
+    }
+
+    .output{
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.20);
+      white-space: pre-wrap;
+      line-height: 1.65;
+      color: rgba(255,255,255,.88);
+      min-height: 110px;
+    }
+
+    .side{
+      padding: 14px;
+      position: sticky;
+      top: 74px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    @media (max-width: 980px){
+      .side{ position: static; }
+    }
+
+    .card{
+      padding: 14px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.20);
+    }
+    .card h3{
+      margin:0 0 8px;
+      font-size: 14px;
+      letter-spacing:.2px;
+      color: rgba(255,255,255,.92);
+    }
+    .card p{
+      margin:0;
+      color: var(--muted);
+      line-height:1.5;
+      font-size: 13.5px;
+    }
+    .mono{ font-family: var(--mono); }
+
+    .footer{
+      margin-top: 18px;
+      text-align:center;
+      color: var(--muted2);
+      font-size: 12.5px;
+    }
+
+    ::selection{ background: rgba(139,0,255,.35); color:#fff; }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition:none !important; }
+      #bgFX{ display:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar component (closed properly) -->
+  <site-navbar
+    cart-href="/cart"
+    signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile">
+  </site-navbar>
+
+  <canvas id="bgFX"></canvas>
+
+  <main>
+    <div class="panel hero">
+      <span class="kicker">Tools • On-device AI</span>
+      <h1>Summarize Text</h1>
+      <p class="sub">
+        Paste text below and generate a concise summary locally in your browser. First run downloads the model.
+      </p>
+      <div class="note">
+        <span class="dot"></span>
+        <div><b>Note:</b> Running AI can use a lot of RAM/CPU and may warm your device.</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="panel app">
+        <label for="inputText">Text to summarize</label>
+        <textarea id="inputText" placeholder="Paste text here..."></textarea>
+
+        <div class="row">
+          <button class="primary" id="summarize" type="button">Summarize</button>
+          <button id="copy" type="button" disabled>Copy</button>
+          <span class="small" id="modelHint">Model: Xenova/distilbart-cnn-6-6</span>
+        </div>
+
+        <div class="loading-wrap">
+          <div class="loading-bar" aria-label="Loading">
+            <div id="loadingFill"></div>
+          </div>
+          <div class="status" id="status">Status: Ready</div>
+        </div>
+
+        <div class="output" id="output" aria-live="polite"></div>
+
+        <div class="footer" id="footer-text"></div>
+      </section>
+
+      <aside class="panel side" aria-label="Sidebar">
+        <div class="card">
+          <h3>Tips</h3>
+          <p>For best results, summarize one topic at a time and keep the input under a few thousand words.</p>
+        </div>
+
+        <div class="card">
+          <h3>Privacy</h3>
+          <p>Summarization runs on-device. Your text stays in your browser unless you paste it elsewhere.</p>
+        </div>
+
+        <div class="card">
+          <h3>Contact</h3>
+          <p class="mono">support@unlim8ted.com</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script type="module">
+    import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0";
+
+    let summarizer = null;
+    let isBusy = false;
+
+    const $ = (id) => document.getElementById(id);
+
+    const input = $("inputText");
+    const btnSum = $("summarize");
+    const btnCopy = $("copy");
+    const statusEl = $("status");
+    const outEl = $("output");
+    const fill = $("loadingFill");
+    const footer = $("footer-text");
+
+    function setStatus(msg){ statusEl.textContent = "Status: " + msg; }
+    function setProgress(pct){ fill.style.width = Math.max(0, Math.min(100, pct)) + "%"; }
+
+    function saveToCookies(key, value) {
+      const v = encodeURIComponent(value).slice(0, 3500);
+      document.cookie = `${key}=${v}; max-age=86400; path=/; SameSite=Lax`;
+    }
+
+    async function ensureModel(){
+      if (summarizer) return;
+      setStatus("Loading model (first run can take a bit)...");
+      setProgress(35);
+      summarizer = await pipeline("summarization", "Xenova/distilbart-cnn-6-6");
+      setProgress(0);
+      setStatus("Ready");
+    }
+
+    btnSum.addEventListener("click", async () => {
+      if (isBusy) return;
+      const text = (input.value || "").trim();
+      if (!text) {
+        setStatus("Please paste text to summarize.");
+        return;
+      }
+
+      try{
+        isBusy = true;
+        btnSum.disabled = true;
+        btnCopy.disabled = true;
+
+        await ensureModel();
+
+        setStatus("Summarizing...");
+        setProgress(90);
+
+        const result = await summarizer(text, { max_new_tokens: 120 });
+        const summary = result?.[0]?.summary_text ?? String(result);
+
+        outEl.textContent = summary;
+        btnCopy.disabled = !summary;
+
+        saveToCookies("summarize", summary);
+
+        setProgress(0);
+        setStatus("Ready");
+      } catch (e){
+        console.error(e);
+        setProgress(0);
+        setStatus("Error: " + (e?.message || "Summarization failed"));
+      } finally{
+        isBusy = false;
+        btnSum.disabled = false;
+      }
+    });
+
+    btnCopy.addEventListener("click", async () => {
+      const t = outEl.textContent || "";
+      if (!t) return;
+      try{
+        await navigator.clipboard.writeText(t);
+        setStatus("Copied to clipboard.");
+        setTimeout(() => setStatus("Ready"), 900);
+      } catch {
+        setStatus("Copy failed (browser blocked clipboard).");
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const y = new Date().getFullYear();
+      footer.textContent = `© 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+    });
+
+    // Canvas particle background (lightweight)
+    const canvas = $("bgFX");
+    const ctx = canvas.getContext("2d", { alpha:true });
+
+    let W=0,H=0,DPR=1;
+    function resize(){
+      DPR = Math.min(2, window.devicePixelRatio || 1);
+      W = canvas.width = Math.floor(window.innerWidth * DPR);
+      H = canvas.height = Math.floor(window.innerHeight * DPR);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    const N = 90;
+    const pts = Array.from({length:N}, () => ({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: (Math.random()*1.8 + 0.6) * DPR,
+      vx: (Math.random()*0.18 - 0.09) * DPR,
+      vy: (Math.random()*0.45 + 0.15) * DPR,
+      a: Math.random()*0.35 + 0.12
+    }));
+
+    function tick(){
+      ctx.clearRect(0,0,W,H);
+      for(const p of pts){
+        p.x += p.vx; p.y += p.vy;
+
+        if(p.y > H + 30*DPR) { p.y = -30*DPR; p.x = Math.random()*W; }
+        if(p.x < -30*DPR) p.x = W + 30*DPR;
+        if(p.x > W + 30*DPR) p.x = -30*DPR;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${p.a})`;
+        ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) tick();
+    else canvas.style.display = "none";
+  </script>
+</body>
+</html>
