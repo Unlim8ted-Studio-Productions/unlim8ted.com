@@ -25,33 +25,48 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Inject snippet right after <head> in every HTML file
-      - name: Inject snippet after <head>
+      # Prepend snippet as the first thing in every HTML file
+      - name: Prepend snippet to HTML files
+        shell: bash
         run: |
+          set -euo pipefail
+
           OUT_DIR="."
           SNIP_FILE="components/deploy-inject/head-snippet.html"
+          MARK="<!--__INJECTED_FILE_PREFIX__-->"
 
           if [ ! -f "$SNIP_FILE" ]; then
             echo "Snippet file not found: $SNIP_FILE" >&2
             exit 1
           fi
 
+          # Read snippet content once
           SNIP="$(cat "$SNIP_FILE")"
 
+          # Iterate html files
           find "$OUT_DIR" -type f -name "*.html" -print0 | while IFS= read -r -d '' f; do
-            # Skip the snippet file itself if it ends with .html (optional)
-            if [ "$f" = "./$SNIP_FILE" ]; then
+            # Skip the snippet file itself
+            if [ "$f" = "./$SNIP_FILE" ] || [ "$f" = "$SNIP_FILE" ]; then
               continue
             fi
 
             # Prevent double injection
-            if grep -q "<!--__INJECTED_HEAD_SNIPPET__-->" "$f"; then
+            if grep -qF "$MARK" "$f"; then
               echo "Already injected: $f"
               continue
             fi
 
-            # Insert immediately after <head ...>
-            perl -0777 -i -pe "s|(<head[^>]*>)|\\1\n<!--__INJECTED_HEAD_SNIPPET__-->\n$SNIP\n|i" "$f"
+            tmp="$(mktemp)"
+
+            # Write marker + snippet first, then original file contents
+            {
+              printf '%s\n' "$MARK"
+              printf '%s\n' "$SNIP"
+              cat "$f"
+            } > "$tmp"
+
+            # Replace original file
+            mv "$tmp" "$f"
             echo "Injected: $f"
           done
 
