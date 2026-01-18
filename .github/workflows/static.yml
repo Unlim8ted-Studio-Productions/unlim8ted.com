@@ -29,7 +29,7 @@ jobs:
       - name: Inject snippet after <head>
         run: |
           OUT_DIR="."
-          SNIP_FILE="deploy-inject/head-snippet.html"
+          SNIP_FILE="components/deploy-inject/head-snippet.html"
 
           if [ ! -f "$SNIP_FILE" ]; then
             echo "Snippet file not found: $SNIP_FILE" >&2
