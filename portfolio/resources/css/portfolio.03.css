@@ -99,10 +99,6 @@
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
-    /* Prevent the navbar from causing “hidden under it” issues */
-    .page {
-    }
-
     .wrap {
       width: min(1100px, calc(100% - 40px));
       margin: 0 auto;
@@ -360,8 +356,6 @@
     }
 
     @media (max-width: 620px) {
-      .page {
-      }
 
       .portfolio-card {
         grid-column: span 12;
