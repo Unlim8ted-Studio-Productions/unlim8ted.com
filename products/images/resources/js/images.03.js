@@ -4,7 +4,7 @@ fetch('https://unlim8ted.com/tools/data/images.json')
         const gallery = document.getElementById('gallery');
         images.forEach(filename => {
           const img = document.createElement('img');
-          img.src = `https://unlim8ted.com/images/Unlim8tedImages/${filename}`;
+          img.src = `https://unlim8ted.com/assets/images/Unlim8tedImages/${filename}`;
           img.alt = filename;
           gallery.appendChild(img);
         });

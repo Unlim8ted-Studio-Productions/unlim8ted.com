@@ -2,194 +2,215 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <!-- Primary Meta Tags -->
-  <title>Unlim8ted</title>
-  <meta name="title" content="Unlim8ted" />
+  <title>Unlim8ted — Portfolio</title>
+  <meta name="title" content="Unlim8ted — Portfolio" />
   <meta name="description"
     content="Unlim8ted Studio Productions offers innovative entertainment experiences, including films, music, books, games, software, and AI products." />
 
   <!-- Website / General -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://unlim8ted.com" />
-  <meta property="og:title" content="Unlim8ted" />
+  <meta property="og:title" content="Unlim8ted — Portfolio" />
   <meta property="og:description"
     content="Unlim8ted Studio Productions offers innovative entertainment experiences, including films, music, books, games, software, and AI products." />
   <meta property="og:image" content="https://unlim8ted.com/images/logo/logo.png" />
   <meta property="og:site_name" content="Unlim8ted Studio Productions" />
 
-  <!-- GitHub -->
-  <meta property="og:profile" content="GitHub" />
-  <meta property="og:url" content="https://github.com/Unlim8ted-Studio-Productions" />
-  <meta property="og:image" content="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" />
-  <meta property="og:description" content="Check out Unlim8ted Studio Productions projects on GitHub!" />
+  <!-- Icons -->
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
 
-  <!-- YouTube -->
-  <meta property="og:profile" content="YouTube" />
-  <meta property="og:url" content="https://www.youtube.com/@unlim8tedstudioproductions" />
-  <meta property="og:image" content="https://www.youtube.com/img/desktop/yt_1200.png" />
-  <meta property="og:description" content="Watch videos from Unlim8ted Studio Productions on YouTube." />
+  <!-- Navbar component -->
+  <script type="module" src="/components/site-navbar.js"></script>
 
-  <!-- Reddit 
-    <meta property="og:profile" content="Reddit" />
-    <meta property="og:url" content="https://www.reddit.com/user/Unlim8tedStudios/" />
-    <meta property="og:image" content="https://www.redditinc.com/assets/images/site/reddit-logo.png" />
-    <meta property="og:description" content="Join the conversation on Reddit with Unlim8ted Studios!" />-->
+  <!-- Page CSS (keep your existing files) -->
+  <link rel="stylesheet" href="./resources/css/portfolio.01.css" />
+  <link rel="stylesheet" href="./resources/css/portfolio.02.css" />
+  <link rel="stylesheet" href="./resources/css/portfolio.03.css" />
 
-  <!-- Optional Meta Tags for other platforms -->
-  <meta name="keywords"
-    content="films, music, books, games, software, AI products, entertainment, unlim8ted, Unlim8ted Studio Productions" />
-  <meta name="author" content="Unlim8ted Studio Productions" />
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Unlim8ted Studio Productions",
-  "url": "https://unlim8ted.com",
-  "logo": "https://unlim8ted.com/images/logo/logo.png",
-  "description": "Unlim8ted Studio Productions is a dynamic entertainment company creating innovative experiences across films, games, music, books, software, and AI products.",
-  "foundingDate": "2019",
-  "founder": {
-    "@type": "Person",
-    "name": "Anonymous Programmer"
-  },
-  "contactPoint": [
-        {
-      "@type": "ContactPoint",
-      "email": "contact@unlim8ted.com",
-      "contactType": "General Inquiry",
-      "description": "Contact for general inquiries about Unlim8ted Studio Productions."
-    },
-        {
-      "@type": "ContactPoint",
-      "email": "support@unlim8ted.com",
-      "contactType": "Customer Support",
-      "description": "Contact for customer support and assistance."
-    }
-  ],
-  "sameAs": [
-    "https://www.youtube.com/@unlim8tedstudioproductions",
-    "https://github.com/Unlim8ted-Studio-Productions",
-    "https://www.reddit.com/r/Unlim8ted/",
-    "https://discord.gg/Unlim8ted"
-  ],
-  "department": [
-    {
-      "@type": "Movie",
-      "name": "The Life of a Meatball",
-      "description": "An animated film that follows the adventures of a meatball, exploring themes of identity and belonging in a humorous and thought-provoking way.",
-      "image": "https://unlim8ted.com/images/products/films/The Life of a Meatball.jpg",
-      "datePublished": "2024-01-05",
-      "director": {
-        "@type": "Person",
-        "name": "Anonymous"
-      },
-      "voiceActors": [
-        {
-          "@type": "Person",
-          "name": "Anonymous"
-        },
-        {
-          "@type": "Person",
-          "name": "Anonymous"
-        }
-      ],
-      "genre": "Animation, Comedy",
-      "url": "https://m.youtube.com/watch?v=FiDwWp7ZteE"
-    },
-    {
-      "@type": "VideoGame",
-      "name": "Square Pixels",
-      "description": "A 2D pixelated sandbox adventure inspired by Terraria, offering a rich world filled with exploration, crafting, and action-packed adventures.",
-      "image": "https://unlim8ted.com/images/products/software/Screenshot 2023-09-21 181742(1).png",
-      "datePublished": "2025-06-15",
-      "operatingSystem": [
-        "Windows",
-        "Linux",
-        "macOS"
-      ],
-      "applicationCategory": "Game",
-      "genre": "Adventure, Sandbox",
-      "url": "https://unlim8ted.com/square-pixels",
-      "offers": {
-        "@type": "Offer",
-        "price": "19.99",
-        "priceCurrency": "USD",
-        "availability": "https://schema.org/PreOrder",
-        "url": "https://store.steampowered.com/app/123456/Square_Pixels/"
-      }
-    }
-  ]
-}
-</script>
+  <!-- Modern fonts (optional but modernizes fast) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 
-
-
-  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+  <!-- Your existing JS -->
+  <script src="./resources/js/portfolio.01.js" defer></script>
+  <script src="./resources/js/portfolio.03.js" defer></script>
 </head>
 
 <body>
-  <link rel="stylesheet" href="./resources/css/portfolio.01.css">
-  <script src="./resources/js/portfolio.01.js"></script>
-  <nav class="navbar">
-    <div class="navbar-header">
-      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
-      <ul class="nav-links" id="navbarLinks">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="products">Products</a></li>
-        <li class="nav-item"><a href="contact">Contact</a></li>
-        <li class="nav-item"><a href="about">About</a></li>
-        <li class="nav-item dropdown">
-          <a href="javascript:void(0)" class="dropbtn">More</a>
-          <div class="dropdown-content">
-            <a href="portfolio">Portfolio</a>
-            <a href="blog">Blog</a>
-          </div>
-        </li>
-        <a href="old"><button>Old site</button></a>
-      </ul>
-    </div>
-  </nav>
-  <link rel="stylesheet" href="./resources/css/portfolio.02.css">
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile"></site-navbar>
 
-  <link rel="stylesheet" href="./resources/css/portfolio.03.css">
-  <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
-
-
-  <!-- Rest of the content -->
-
-  <!-- Portfolio Section -->
-  <div id="portfolio" class="content-section">
-    <h1>Portfolio</h1>
-    <div class="portfolio-grid">
-      <div class="portfolio-item">
-        <img class="image" src="https://unlim8ted.com/images/products/software/Screenshot 2023-09-21 181742(1).png"
-          draggable="false" />
-        <h2>Square Pixels</h2>
-        <p>A groundbreaking project that explores the intersection of art and technology through pixel-based
-          design.</p>
-      </div>
-      <div class="portfolio-item">
-        <img class="image" src="https://unlim8ted.com/images/products/films/The Life of a Meatball.jpg"
-          draggable="false" />
-        <h2>Life of a Meatball</h2>
-        <p>An animated journey following the adventures of a meatball, exploring themes of identity and
-          belonging.</p>
-      </div>
-      <div class="portfolio-item">
-        <img class="image" src="https://unlim8ted.com/images/products/films/TheGlitchCover.png" draggable="false" />
-        <h2>The Glitch</h2>
-        <p>An experimental short film that delves into the nature of reality and the imperfections that make us
-          human.
+  <main class="page">
+    <section class="hero">
+      <div class="wrap">
+        <h1>Portfolio</h1>
+        <p>
+          A snapshot of what we’re building across games, films, music, books, software, and AI.
         </p>
+
+        <div class="toolbar" role="region" aria-label="Portfolio filters">
+          <div class="search" role="search">
+            <input id="portfolioSearch" type="search" placeholder="Search projects (e.g., game, film, AI)..." />
+          </div>
+
+          <div class="chips" aria-label="Category filters">
+            <button class="chip" type="button" aria-pressed="true" data-filter="all">All</button>
+            <button class="chip" type="button" aria-pressed="false" data-filter="games">Games</button>
+            <button class="chip" type="button" aria-pressed="false" data-filter="films">Films</button>
+            <button class="chip" type="button" aria-pressed="false" data-filter="software">Software</button>
+          </div>
+        </div>
       </div>
+    </section>
+
+    <section id="portfolio" class="content-section">
+      <div class="wrap">
+        <div class="portfolio-grid" id="portfolioGrid">
+          <!-- CARD 1 -->
+<!-- CARD: TimeCat -->
+<article class="portfolio-card" data-tags="games">
+  <div class="thumb">
+    <img
+      class="image"
+      src="https://unlim8ted.com/assets/images/products/games/TimeCatCover.png"
+      alt="TimeCat cover art"
+      draggable="false"
+      loading="lazy"
+    />
+  </div>
+
+  <div class="card-body">
+    <div class="card-top">
+      <h2 class="card-title">TimeCat</h2>
+      <span class="badge">Game</span>
     </div>
-    <!-- Copyright -->
-    <div style="margin-top: 100px;">
-      <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
-            <script src="./resources/js/portfolio.02.js"></script>
+
+    <p class="card-desc">
+      Fall into a lost underground lab, swallow a forbidden time button, and claw your way home by flipping the entire world between a flawless past and a ruined present.
+    </p>
+
+    <div class="card-actions">
+      <a class="btn primary" href="/timecat">View</a>
+      <a class="btn" href="/products">Browse</a>
     </div>
   </div>
-  <script src="./resources/js/portfolio.03.js"></script>
+</article>
+
+
+          <!-- CARD 2 -->
+          <article class="portfolio-card" data-tags="films">
+            <div class="thumb">
+              <img class="image" src="https://unlim8ted.com/assets/images/products/films/The Life of a Meatball.jpg"
+                alt="The Life of a Meatball poster" draggable="false" loading="lazy" />
+            </div>
+            <div class="card-body">
+              <div class="card-top">
+                <h2 class="card-title">Life of a Meatball</h2>
+                <span class="badge">Film</span>
+              </div>
+              <p class="card-desc">
+                An animated journey exploring identity, belonging, and absurd mystery—Unlim8ted style.
+              </p>
+              <div class="card-actions">
+                <a class="btn primary" href="https://m.youtube.com/watch?v=FiDwWp7ZteE">Watch</a>
+                <a class="btn" href="/films">Browse</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- CARD 3 -->
+          <article class="portfolio-card" data-tags="films">
+            <div class="thumb">
+              <img class="image" src="https://unlim8ted.com/assets/images/products/films/TheGlitchCover.png"
+                alt="The Glitch cover art" draggable="false" loading="lazy" />
+            </div>
+            <div class="card-body">
+              <div class="card-top">
+                <h2 class="card-title">The Glitch</h2>
+                <span class="badge">Film</span>
+              </div>
+              <p class="card-desc">
+                An experimental short that plays with reality, perception, and the “errors” that feel human.
+              </p>
+              <div class="card-actions">
+                <a class="btn primary" href="/films/the-glitch">View</a>
+                <a class="btn" href="/films">Browse</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- “and many more” + Browse All underneath -->
+        <div class="below-cta" aria-label="Browse all portfolio content">
+          <div class="left">
+            <h3>…and many more</h3>
+            <p>
+              Explore everything Unlim8ted is building—films, games, music, books, software, tools, and experiments.
+            </p>
+          </div>
+          <div class="right">
+            <a class="btn primary" href="/products">Browse all</a>
+          </div>
+        </div>
+
+        <footer>
+          <p id="footer-text">&copy; 2019-2026 Unlim8ted Studio Productions. All rights reserved.</p>
+        </footer>
+
+        <!-- Keep your existing extra JS file placement if you want it here -->
+        <script src="./resources/js/portfolio.02.js"></script>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightweight filtering: chips + search -->
+  <script>
+    (function () {
+      const grid = document.getElementById("portfolioGrid");
+      const cards = Array.from(grid.querySelectorAll(".portfolio-card"));
+      const chips = Array.from(document.querySelectorAll(".chip"));
+      const search = document.getElementById("portfolioSearch");
+
+      let activeFilter = "all";
+      let query = "";
+
+      function matches(card) {
+        const tags = (card.getAttribute("data-tags") || "").toLowerCase();
+        const text = (card.innerText || "").toLowerCase();
+        const filterOk = activeFilter === "all" || tags.includes(activeFilter);
+        const queryOk = !query || text.includes(query) || tags.includes(query);
+        return filterOk && queryOk;
+      }
+
+      function render() {
+        cards.forEach(card => {
+          card.style.display = matches(card) ? "" : "none";
+        });
+      }
+
+      chips.forEach(btn => {
+        btn.addEventListener("click", () => {
+          chips.forEach(b => b.setAttribute("aria-pressed", "false"));
+          btn.setAttribute("aria-pressed", "true");
+          activeFilter = btn.dataset.filter || "all";
+          render();
+        });
+      });
+
+      search.addEventListener("input", (e) => {
+        query = (e.target.value || "").trim().toLowerCase();
+        render();
+      });
+
+      render();
+    })();
+  </script>
+</body>
+
+</html>
