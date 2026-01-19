@@ -76,7 +76,7 @@
         return;
       }
 
-      audio.src = `https://unlim8ted.com/podcasts/${encodeURIComponent(fileName)}`;
+      audio.src = `https://unlim8ted.com/assets/podcasts/${encodeURIComponent(fileName)}`;
       audio.play().catch(() => {
         // Autoplay can be blocked; keep UI sane
         isPlaying = false;
