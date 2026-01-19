@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg1:#74ebd5; --bg2:#9face6;
+      --card:#ffffff; --text:#222;
+      --muted:#666; --primary:#2563eb;
+      --primary-600:#1d4ed8; --primary-700:#1e40af;
+      --accent:#22c55e; --danger:#ef4444;
+      --soft:#f3f4f6; --soft-2:#e5e7eb;
+      --shadow:0 10px 24px rgba(0,0,0,.18);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:var(--text);
+      display:flex; align-items:flex-start; justify-content:center;
+      padding:24px;
+    }
+    .container{width:min(1100px,100%); position:relative}
+    .card{
+      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:28px; margin:16px 0; animation:fade .35s ease;
+    }
+    h1{margin:0 0 10px; font-size:clamp(22px,2.4vw,28px)}
+    h2{margin:0 0 16px; font-size:clamp(18px,2vw,22px); color:#111}
+    p{color:var(--muted); margin:10px 0}
+    .row{display:flex; gap:12px; flex-wrap:wrap}
+
+    /* Buttons */
+    .btn{
+      border:0; border-radius:12px; padding:12px 18px; cursor:pointer;
+      font-weight:600; transition:.2s transform, .2s background, .2s box-shadow;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:var(--primary); color:#fff; box-shadow:0 6px 14px rgba(37,99,235,.25)}
+    .btn.primary:hover{background:var(--primary-600)}
+    .btn.ghost{background:var(--soft); color:#111}
+    .btn.ghost:hover{background:var(--soft-2)}
+    .btn.danger{background:var(--danger); color:#fff}
+    .btn.success{background:var(--accent); color:#fff}
+    .btn:disabled{opacity:.6; cursor:not-allowed; box-shadow:none}
+
+    /* File upload (custom) */
+    .file-wrap{position:relative; display:inline-flex; align-items:center}
+    .file-input{position:absolute; inset:0; opacity:0; cursor:pointer}
+    .file-label{pointer-events:none}
+
+    /* Top-right profile */
+    .profile-wrap{
+      position:fixed; top:16px; right:16px; z-index:20;
+      display:flex; align-items:center; gap:10px;
+    }
+    .avatar{
+      width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+      background:var(--primary); color:#fff; font-weight:800; letter-spacing:.5px; cursor:pointer;
+      box-shadow:0 6px 14px rgba(37,99,235,.35);
+      user-select:none;
+    }
+    .dropdown{
+      position:absolute; top:58px; right:0; background:var(--card); border-radius:12px; box-shadow:var(--shadow);
+      min-width:220px; display:none; overflow:hidden;
+    }
+    .dropdown .item{
+      padding:12px 14px; cursor:pointer; transition:.15s background; display:flex; gap:10px; align-items:center;
+    }
+    .dropdown .item:hover{background:var(--soft)}
+    .divider{height:1px; background:var(--soft-2); margin:4px 0}
+
+    /* Quiz UI */
+    .q-title{font-size:20px; margin-bottom:12px}
+    .options{display:grid; gap:10px}
+    .option{
+      padding:12px 14px; background:var(--soft); border-radius:12px; border:2px solid transparent;
+      cursor:pointer; text-align:left; font-weight:600; transition:.2s border-color, .2s background, .2s transform;
+    }
+    .option:hover{transform:translateY(-1px); background:#eef2ff}
+    .option.correct{background:#dcfce7;border-color:#16a34a}
+    .option.wrong{background:#fee2e2;border-color:#ef4444}
+    .footer-row{display:flex; align-items:center; justify-content:space-between; margin-top:16px}
+    .progress{
+      height:14px; background:var(--soft-2); border-radius:999px; overflow:hidden; width:50%;
+    }
+    .bar{height:100%; width:0%; background:linear-gradient(90deg,#60a5fa,#2563eb); transition:width .3s}
+
+    /* Editor */
+    .editor-area{
+      width:100%; height:360px; border-radius:12px; border:1px solid var(--soft-2); padding:14px; font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      background:#0b1220; color:#d1e4ff; line-height:1.45; box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
+    }
+    .list{list-style:none; padding:0; margin:12px 0}
+    .list li{display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:var(--soft); border-radius:10px; margin-bottom:8px}
+
+    /* Modal (custom) */
+    .modal-backdrop{
+      position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:50;
+    }
+    .modal{
+      width:min(560px,92vw); background:var(--card); border-radius:16px; padding:22px; box-shadow:var(--shadow); animation:pop .2s ease;
+    }
+    .modal h3{margin:0 0 10px}
+    .modal p{margin:8px 0 16px}
+    .modal .actions{display:flex; justify-content:flex-end; gap:10px; margin-top:14px}
+    .input, .select{
+      width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--soft-2); background:var(--soft);
+      font-size:15px;
+    }
+
+    @keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+    @keyframes pop{from{opacity:0; transform:scale(.96)} to{opacity:1; transform:none}}
+  </style>
+</head>
+<body>
+  <div class="profile-wrap" id="profileWrap">
+    <div class="avatar" id="avatar">?</div>
+    <div class="dropdown" id="profileMenu">
+      <div class="item" onclick="navTo('profile')">👤 Profile</div>
+      <div class="item" onclick="navTo('settings')">⚙️ Settings</div>
+      <div class="divider"></div>
+      <div class="item" onclick="navTo('saved')">💾 Saved Quizzes</div>
+      <div class="divider"></div>
+      <div class="item" onclick="doLogout()">🚪 Logout</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- HOME -->
+    <div class="card" id="homeView">
+      <h1>Quiz Platform</h1>
+      <p>Create, edit, save, and practice quizzes — with spaced retries for mistakes.</p>
+      <div class="row">
+        <label class="file-wrap">
+          <input class="file-input" type="file" id="fileInput" accept=".json" />
+          <span class="btn primary file-label">📤 Upload Quiz JSON</span>
+        </label>
+        <button class="btn ghost" onclick="navTo('editor')">📝 Open Editor</button>
+        <button class="btn ghost" onclick="navTo('saved')">💾 Saved Quizzes</button>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="card" id="quizView" style="display:none;">
+      <h2 id="quizTitle">Quiz</h2>
+      <div class="q-title" id="questionText">Loading…</div>
+      <div class="options" id="options"></div>
+      <div class="footer-row">
+        <div class="progress"><div class="bar" id="progressBar"></div></div>
+        <div>
+          <button class="btn ghost" onclick="navTo('home')">🏠 Home</button>
+          <button class="btn primary" id="nextBtn" disabled>Next ▶</button>
+        </div>
+      </div>
+      <p id="progressText"></p>
+    </div>
+
+    <!-- EDITOR -->
+    <div class="card" id="editorView" style="display:none;">
+      <h2>Quiz Editor</h2>
+      <p>Paste or edit your full quiz JSON array here (e.g., <code>[{ "quiz_section": "...", "questions":[...] }]</code>), then Save or Start.</p>
+      <textarea id="editorArea" class="editor-area" spellcheck="false"></textarea>
+      <div class="row">
+        <button class="btn primary" onclick="saveQuizFlow()">💾 Save Quiz</button>
+        <button class="btn success" onclick="startQuizFromEditor()">▶ Start Quiz</button>
+        <button class="btn ghost" onclick="navTo('home')">🏠 Home</button>
+      </div>
+    </div>
+
+    <!-- SAVED -->
+    <div class="card" id="savedView" style="display:none;">
+      <h2>Saved Quizzes</h2>
+      <ul id="savedList" class="list"></ul>
+      <button class="btn ghost" onclick="navTo('home')">🏠 Home</button>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="card" id="profileView" style="display:none;">
+      <h2>Profile</h2>
+      <p><b>Username:</b> <span id="profileName">Guest</span></p>
+      <p><b>Scores (latest 20):</b></p>
+      <ul id="scoreList" class="list"></ul>
+      <button class="btn ghost" onclick="navTo('home')">🏠 Home</button>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="card" id="settingsView" style="display:none;">
+      <h2>Settings</h2>
+      <label for="usernameInput"><b>Username</b></label>
+      <input id="usernameInput" class="input" placeholder="Enter a display name" />
+      <div class="row">
+        <button class="btn primary" onclick="saveSettings()">Save</button>
+        <button class="btn ghost" onclick="navTo('home')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-backdrop" id="modalBg">
+    <div class="modal" id="modal">
+      <h3 id="modalTitle">Title</h3>
+      <p id="modalBody">Body</p>
+      <div id="modalInputWrap" style="display:none; margin-top:8px;">
+        <input id="modalInput" class="input" />
+      </div>
+      <div class="actions">
+        <button class="btn ghost" id="modalCancel">Cancel</button>
+        <button class="btn primary" id="modalOk">OK</button>
+      </div>
+    </div>
+  </div>
+<script>
+  /***************
+   * Storage utils (localStorage)
+   ***************/
+  function setStorage(key, value){
+    if (value === null || value === undefined){
+      localStorage.removeItem(key);
+    } else {
+      localStorage.setItem(key, value);
+    }
+  }
+  function getStorage(key){
+    return localStorage.getItem(key);
+  }
+  function eraseStorage(key){
+    localStorage.removeItem(key);
+  }
+
+  /***************
+   * State
+   ***************/
+  let profile = { username:"", scores:[] }; // {quizId, score, total, date}
+  let savedIndex = []; // [{id, name, date}]
+  let currentQuizId = null;
+  let currentQuizTitle = "Quiz";
+  let quizData = []; // flattened questions
+  let questions = [];
+  let currentQuestion = null;
+  let wrongQueue = [];
+  let retryMode = false;
+
+  /***************
+   * Modal helpers (no native alert/prompt)
+   ***************/
+  function showModal({title, body, withInput=false, placeholder="", okText="OK", cancelText="Cancel"}){
+    return new Promise(resolve=>{
+      const bg = document.getElementById("modalBg");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalBody = document.getElementById("modalBody");
+      const inputWrap = document.getElementById("modalInputWrap");
+      const input = document.getElementById("modalInput");
+      const okBtn = document.getElementById("modalOk");
+      const cancelBtn = document.getElementById("modalCancel");
+      modalTitle.textContent = title;
+      modalBody.textContent = body;
+      inputWrap.style.display = withInput ? "block":"none";
+      input.value = "";
+      input.placeholder = placeholder || "";
+      okBtn.textContent = okText;
+      cancelBtn.textContent = cancelText;
+      function clean(res){ bg.style.display="none"; okBtn.onclick=null; cancelBtn.onclick=null; resolve(res); }
+      okBtn.onclick = ()=> clean(withInput ? input.value.trim() : true);
+      cancelBtn.onclick = ()=> clean(false);
+      bg.style.display = "flex";
+      if(withInput){ setTimeout(()=>input.focus(), 50); }
+    });
+  }
+  function toast(body){ return showModal({title:"Notice", body, withInput:false, okText:"OK", cancelText:"Close"}); }
+
+  /***************
+   * Navigation & profile menu
+   ***************/
+  const views = ["home","quiz","editor","saved","profile","settings"];
+  function navTo(view){
+    for(const v of views){
+      const el = document.getElementById(v+"View");
+      if(el) el.style.display = (v===view) ? "block" : "none";
+    }
+    // close dropdown
+    document.getElementById("profileMenu").style.display = "none";
+    if(view==="saved") renderSaved();
+    if(view==="profile") renderProfile();
+    if(view==="settings") document.getElementById("usernameInput").value = profile.username || "";
+  }
+  document.getElementById("avatar").addEventListener("click", ()=>{
+    const m = document.getElementById("profileMenu");
+    m.style.display = (m.style.display==="block") ? "none":"block";
+  });
+  window.addEventListener("click", (e)=>{
+    const menu = document.getElementById("profileMenu");
+    const avatar = document.getElementById("avatar");
+    if(!menu.contains(e.target) && !avatar.contains(e.target)){
+      menu.style.display="none";
+    }
+  });
+
+  function doLogout(){
+    showModal({title:"Logout", body:"This only clears your current session (local data remains). Continue?"})
+      .then(ok=>{
+        if(ok){
+          currentQuizId=null;
+          quizData=[]; questions=[]; wrongQueue=[]; retryMode=false;
+          navTo("home");
+        }
+      });
+  }
+
+  /***************
+   * Persistence (localStorage)
+   ***************/
+async function loadAll(){
+  try{
+    const pf = getStorage("qp_profile");
+    if(pf) profile = JSON.parse(pf);
+    const idx = getStorage("qp_saved_index");
+    if(idx) savedIndex = JSON.parse(idx);
+  }catch{}
+  if(!profile || typeof profile!=="object") profile = {username:"",scores:[]};
+  if(!Array.isArray(savedIndex)) savedIndex = [];
+
+  // if no quizzes saved yet, load the default example one
+  if(savedIndex.length === 0){
+    try {
+      const res = await fetch("https://unlim8ted.com/tools/study-testing/combined_quiz.json");
+      if(res.ok){
+        const text = await res.text();
+        // validate
+        JSON.parse(text);
+        const name = "Honors World History 9th Grade Unit 3 World Religions";
+        const id = slugify(name);
+        savedIndex.push({id, name, date:new Date().toISOString()});
+        saveIndex();
+        saveQuizData(id, text);
+      }
+    } catch (e) {
+      console.warn("Could not fetch default quiz:", e);
+    }
+  }
+
+  updateAvatar();
+}
+
+  function saveProfile(){
+    setStorage("qp_profile", JSON.stringify(profile));
+    updateAvatar();
+  }
+  function saveIndex(){
+    setStorage("qp_saved_index", JSON.stringify(savedIndex));
+  }
+  function updateAvatar(){
+    const a = document.getElementById("avatar");
+    const initial = (profile.username||"Guest").trim().charAt(0).toUpperCase() || "?";
+    a.textContent = initial;
+  }
+
+  function slugify(name){
+    return name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"quiz";
+  }
+
+  function saveQuizData(id, data){
+    setStorage("qp_quiz_"+id, data);
+  }
+  function loadQuizData(id){
+    return getStorage("qp_quiz_"+id);
+  }
+  function deleteQuizData(id){
+    eraseStorage("qp_quiz_"+id);
+  }
+
+  /***************
+   * Home: upload -> editor
+   ***************/
+  document.getElementById("fileInput").addEventListener("change", async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const text = await file.text();
+    try{
+      JSON.parse(text); // basic validation
+    }catch{
+      await toast("That file isn't valid JSON.");
+      return;
+    }
+    document.getElementById("editorArea").value = text;
+    navTo("editor");
+    await toast("Quiz loaded into the editor — make any changes, then Save or Start.");
+  });
+
+  /***************
+   * Editor actions
+   ***************/
+  async function saveQuizFlow(){
+    const text = document.getElementById("editorArea").value.trim();
+    let arr;
+    try{
+      arr = JSON.parse(text);
+      if(!Array.isArray(arr)) throw new Error("Root must be an array");
+    }catch{
+      await toast("Invalid JSON. Make sure the root value is an array of sections.");
+      return;
+    }
+    const name = await showModal({
+      title:"Save Quiz",
+      body:"Enter a name for this quiz:",
+      withInput:true,
+      placeholder:"e.g., Unit 2: Religions and Philosophies",
+      okText:"Save"
+    });
+    if(!name) return;
+    const id = slugify(String(name));
+    // upsert index
+    const existing = savedIndex.find(x=>x.id===id);
+    if(existing){
+      existing.name = String(name);
+      existing.date = new Date().toISOString();
+    }else{
+      savedIndex.push({id, name:String(name), date:new Date().toISOString()});
+    }
+    saveIndex();
+    saveQuizData(id, text);
+    await toast("Saved.");
+    currentQuizId = id;
+    currentQuizTitle = String(name);
+  }
+
+  async function startQuizFromEditor(){
+    const text = document.getElementById("editorArea").value.trim();
+    let data;
+    try{
+      data = JSON.parse(text);
+      if(!Array.isArray(data)) throw new Error("Root must be an array");
+    }catch{
+      await toast("Invalid JSON — please fix in editor.");
+      return;
+    }
+    // flatten questions
+    quizData = data.flatMap(sec => (sec?.questions)||[]);
+    if(quizData.length===0){
+      await toast("No questions found.");
+      return;
+    }
+    currentQuizTitle = (data[0]?.quiz_section) ? "Quiz: " + data[0].quiz_section : "Quiz";
+    initQuiz();
+    navTo("quiz");
+  }
+
+  /***************
+   * Saved quizzes
+   ***************/
+  function renderSaved(){
+    const ul = document.getElementById("savedList");
+    ul.innerHTML = "";
+    if(savedIndex.length===0){
+      ul.innerHTML = "<li>No saved quizzes yet.</li>";
+      return;
+    }
+    for(const item of savedIndex){
+      const li = document.createElement("li");
+      const left = document.createElement("div");
+      left.innerHTML = `<b>${item.name}</b><br><small>${new Date(item.date).toLocaleString()}</small>`;
+      const right = document.createElement("div");
+      const openBtn = document.createElement("button");
+      openBtn.className="btn primary";
+      openBtn.textContent="Open";
+      openBtn.onclick = async ()=>{
+        const raw = loadQuizData(item.id);
+        if(!raw){ await toast("Could not load this quiz."); return; }
+        document.getElementById("editorArea").value = raw;
+        currentQuizId = item.id;
+        currentQuizTitle = item.name;
+        navTo("editor");
+      };
+      const renameBtn = document.createElement("button");
+      renameBtn.className="btn ghost";
+      renameBtn.textContent="Rename";
+      renameBtn.onclick = async ()=>{
+        const newName = await showModal({title:"Rename", body:"Enter a new name:", withInput:true, placeholder:item.name, okText:"Rename"});
+        if(!newName) return;
+        item.name = String(newName);
+        item.date = new Date().toISOString();
+        saveIndex(); renderSaved();
+      };
+      const delBtn = document.createElement("button");
+      delBtn.className="btn danger";
+      delBtn.textContent="Delete";
+      delBtn.onclick = async ()=>{
+        const ok = await showModal({title:"Delete Quiz", body:`Delete “${item.name}”? This cannot be undone.`, okText:"Delete", cancelText:"Cancel"});
+        if(!ok) return;
+        deleteQuizData(item.id);
+        savedIndex = savedIndex.filter(x=>x.id!==item.id);
+        saveIndex(); renderSaved();
+      };
+      right.append(openBtn, renameBtn, delBtn);
+      li.append(left, right);
+      ul.appendChild(li);
+    }
+  }
+
+  /***************
+   * Profile & settings
+   ***************/
+  function renderProfile(){
+    document.getElementById("profileName").textContent = profile.username || "Guest";
+    const ul = document.getElementById("scoreList");
+    ul.innerHTML = "";
+    if(!profile.scores?.length){
+      ul.innerHTML = "<li>No scores yet.</li>";
+    } else {
+      const recent = profile.scores.slice(-20).reverse();
+      for(const s of recent){
+        const li = document.createElement("li");
+        li.innerHTML = `<span><b>${s.quiz}</b> — ${s.score}/${s.total}</span><span>${new Date(s.date).toLocaleString()}</span>`;
+        ul.appendChild(li);
+      }
+    }
+  }
+  async function ensureUsername(){
+    if(profile.username) return;
+    const name = await showModal({title:"Welcome!", body:"Choose a username to personalize your profile:", withInput:true, placeholder:"e.g., Ella", okText:"Save"});
+    profile.username = (name && name.trim()) ? name.trim() : "Guest";
+    saveProfile();
+  }
+  function saveSettings(){
+    const v = document.getElementById("usernameInput").value.trim() || "Guest";
+    profile.username = v;
+    saveProfile();
+    toast("Settings saved.");
+    navTo("home");
+  }
+
+  /***************
+   * Quiz engine
+   ***************/
+  function initQuiz(){
+    wrongQueue = [];
+    retryMode = false;
+    questions = shuffle([...quizData]); // random order
+    document.getElementById("quizTitle").textContent = currentQuizTitle || "Quiz";
+    nextBtnState(false);
+    nextQuestion();
+  }
+  function nextBtnState(disabled){
+    document.getElementById("nextBtn").disabled = disabled;
+  }
+  document.getElementById("nextBtn").addEventListener("click", nextQuestion);
+
+  function nextQuestion(){
+    nextBtnState(true);
+    if(retryMode){
+      renderQuestion(currentQuestion);
+      return;
+    }
+    if(wrongQueue.length>0){
+      currentQuestion = wrongQueue.shift();
+    } else if(questions.length>0){
+      currentQuestion = questions.pop();
+    } else {
+      const score = quizData.length;
+      profile.scores = profile.scores || [];
+      profile.scores.push({quiz: currentQuizTitle || (currentQuizId||"Quiz"), score, total: quizData.length, date:new Date().toISOString()});
+      saveProfile();
+      showModal({title:"All done!", body:"You’ve mastered all questions. Want to restart?"})
+        .then(ok=>{
+          if(ok){ initQuiz(); } else { navTo("home"); }
+        });
+      return;
+    }
+    renderQuestion(currentQuestion);
+  }
+
+  function renderQuestion(q){
+    const qEl = document.getElementById("questionText");
+    const optWrap = document.getElementById("options");
+    qEl.textContent = q.question;
+    optWrap.innerHTML = "";
+    const shuffled = shuffle([...q.options]);
+    for(const opt of shuffled){
+      const btn = document.createElement("button");
+      btn.className="option";
+      btn.textContent = opt;
+      btn.onclick = ()=> handleAnswer(btn, q.answer);
+      optWrap.appendChild(btn);
+    }
+    updateProgress();
+  }
+
+  function handleAnswer(btn, correct){
+    const btns = [...document.querySelectorAll(".option")];
+    btns.forEach(b=>{
+      b.disabled = true;
+      if(b.textContent===correct) b.classList.add("correct");
+    });
+    if(btn.textContent===correct){
+      retryMode = false;
+    } else {
+      btn.classList.add("wrong");
+      wrongQueue.push(currentQuestion);
+      retryMode = true;
+    }
+    nextBtnState(false);
+    updateProgress();
+  }
+
+  function updateProgress(){
+    const total = quizData.length;
+    const mastered = total - (questions.length + wrongQueue.length + (retryMode ? 1 : 0));
+    document.getElementById("progressText").textContent = `Mastered: ${mastered}/${total}`;
+    document.getElementById("progressBar").style.width = ((mastered/Math.max(1,total))*100).toFixed(1) + "%";
+  }
+
+  function shuffle(a){
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  /***************
+   * Init
+   ***************/
+  (async function init(){
+    loadAll();
+    await ensureUsername();
+    navTo("home");
+  })();
+</script>
+
+</body>
+</html>
+

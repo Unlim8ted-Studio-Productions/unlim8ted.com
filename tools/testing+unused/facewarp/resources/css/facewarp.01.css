@@ -1,0 +1,63 @@
+body {
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #111;
+    }
+
+    video, canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #effects-panel {
+  position: fixed;
+  bottom: 20px; /* Adjust to avoid covering important parts */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Responsive grid */
+  gap: 10px;
+  justify-items: center;
+  width: 90%; /* Fit within the screen */
+  max-width: 600px;
+  z-index: 1000; /* Ensure it stays on top */
+}
+
+
+    .effect-checkbox {
+      color: white;
+      background-color: #333;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    /* Loading bar */
+    #loading-bar {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50%;
+      height: 10px;
+      background-color: #555;
+    }
+
+    #loading-progress {
+      width: 0;
+      height: 100%;
+      background-color: #0f0;
+    }
+
+    /* Hide loading bar when model is loaded */
+    #loading-bar.hidden {
+      display: none;
+    }

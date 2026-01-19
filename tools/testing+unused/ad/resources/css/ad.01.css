@@ -1,0 +1,124 @@
+/* Basic Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(45deg, #1a1a2e, #282a36, #1a1a2e);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        font-family: Arial, sans-serif;
+        color: #fff;
+        overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Container */
+    .container {
+        width: 80%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 350px;
+    }
+
+    /* Product Squares with Increased Spacing */
+    .product {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin: 350px 0; /* Increased spacing for tilt-shift effect */
+        position: relative;
+        opacity: 0.6;
+        transition: opacity 0.3s, transform 0.3s;
+    }
+    
+
+    .product.active {
+        opacity: 1;
+        transform: scale(1.1); /* Slightly larger glow effect */
+    }
+
+    /* Alternating Layout */
+    .product:nth-child(even) .product-box {
+        order: 2;
+    }
+
+    .product-box {
+        width: 250px;
+        height: 250px;
+        background-color: #333;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #00ffff;
+        box-shadow: 0 0 25px rgba(144, 0, 255, 0.7);
+        transition: box-shadow 0.3s;
+        overflow: hidden; /* Prevents overflow */
+        position: relative; /* Needed for absolute positioning of the img */
+    }
+    
+
+    .product-box img {
+        width: 100%;      /* Ensures the image covers the full width of the box */
+        height: 100%;     /* Ensures the image covers the full height of the box */
+        object-fit: cover; /* Ensures the image covers the box without distortion */
+        position: absolute; /* Positions the image correctly within the box */
+        top: 50%;          /* These two lines center the image vertically */
+        left: 50%;
+        transform: translate(-50%, -50%); /* Centers the image perfectly */
+    }
+    
+    /* Description Box */
+    .product-details {
+        background: #282a36;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+        width: 50%;
+    }
+
+    .product-details h2 {
+        color: #ff00ff;
+        margin: 0 0 10px 0;
+    }
+
+    .product-details p {
+        color: #c0c0c0;
+        margin: 10px 0;
+    }
+
+    .product-details .price {
+        font-size: 20px;
+        color: #ff00ff;
+        font-weight: bold;
+    }
+
+    /* Connecting Lines */
+    .line {
+        width: 2px;
+        height: 150px; /* Increased height for added spacing */
+        background: linear-gradient(180deg, rgba(144, 0, 255, 0.7), rgba(0, 255, 255, 0.7));
+        position: absolute;
+    }
+
+    /* Positioning lines to alternate sides */
+    .product:nth-child(odd) .line {
+        left: 280px;
+    }
+    
+    .product:nth-child(even) .line {
+        right: 280px;
+    }

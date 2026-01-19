@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Unlim8ted</title>
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+  <meta name="description"
+    content="Unlim8ted Studios builds films, games, music, books, software, and AI—crafted as cinematic experiences with no creative limits." />
+
+  <link rel="stylesheet" href="./resources/css/about-us.01.css">
+</head>
+
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="base"></div>
+    <div class="nebula"></div>
+    <div class="grain"></div>
+  </div>
+
+  <div class="scroll-film" id="scrollFilm">
+    <div class="stage" id="stage">
+      <div class="fadeTop"></div>
+      <div class="grain"></div>
+
+      <nav class="nav" aria-label="Primary">
+        <div class="nav-center">
+          <a href="/">Home</a>
+          <a href="/products/">Products</a>
+          <a href="/portfolio">Portfolio</a>
+          <a href="/blog">Blog</a>
+          <a href="/contact">Contact</a>
+        </div>
+
+        <div class="nav-right">
+          <!-- Cart -->
+          <div class="nav-wrap">
+            <button class="icon-btn" id="cartBtn" type="button" title="Cart" aria-label="Cart">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"></path>
+              </svg>
+              <span id="cartBadge" class="badge hidden">0</span>
+            </button>
+
+            <div class="menu" id="cartMenu" aria-label="Cart menu">
+              <div class="meta" id="cartMeta">Cart</div>
+              <div class="cart-items" id="cartItems"></div>
+              <div class="cart-actions">
+                <a href="/cart">View cart</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile -->
+          <div class="nav-wrap">
+            <button class="icon-btn" id="profileBtn" type="button" title="Account" aria-label="Account">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 21a8 8 0 0 0-16 0"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </button>
+
+            <div class="menu" id="profileMenu" role="menu" aria-label="Account menu">
+              <div class="meta" id="menuMeta">Not signed in</div>
+              <a id="menuPrimary" href="/sign-in" role="menuitem">Sign In</a>
+              <button id="menuSignOut" type="button" role="menuitem" style="display:none;">Sign out</button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+
+      <div class="camera" id="camera">
+
+        <!-- HERO -->
+        <section class="hero" aria-label="About Unlim8ted">
+          <div class="hero-inner" id="heroInner">
+            <div class="kicker">
+              <span class="dot" aria-hidden="true"></span>
+              <span>Unlim8ted Studios</span>
+            </div>
+            <h1>Creativity, with no finish line.</h1>
+            <p>
+              Unlim8ted is a small studio building <strong>films</strong>, <strong>games</strong>,
+              <strong>music</strong>, <strong>books</strong>,
+              <strong>software</strong>, and <strong>AI tools</strong>—crafted like cinematic moments: bold, playful,
+              and always pushing forward.
+            </p>
+            <div class="hero-cta">
+              <a class="btn primary" href="/sign-in">Get Started</a>
+              <a class="btn" href="/products/">See products</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- BEAT: “What we make” -->
+        <div class="beat" id="beat1" style="top: 18vh;">
+          <h3>We make worlds across mediums.</h3>
+          <p>
+            Each project is a different doorway—animation, gameplay, audio, story, tools—built with the same obsession:
+            make it feel alive.
+          </p>
+        </div>
+
+        <!-- PANEL: offerings -->
+        <div class="panel" id="panel1" style="top: 34vh;">
+          <div class="panel-row">
+            <div class="card">
+              <h2>Films</h2>
+              <p>
+                Animated and experimental stories—sometimes heartfelt, sometimes chaotic—always character-driven.
+                (Yes, the meatball has lore.)
+              </p>
+              <div class="chips">
+                <span class="chip">Animation</span>
+                <span class="chip">Short-form</span>
+                <span class="chip">Mockumentary vibes</span>
+              </div>
+            </div>
+            <div class="card">
+              <h2>Games</h2>
+              <p>
+                Retro energy, modern feel. Exploration, procedural systems, and mechanics that surprise you when you
+                push them.
+              </p>
+              <div class="chips">
+                <span class="chip">2D worlds</span>
+                <span class="chip">Sandbox</span>
+                <span class="chip">Community feedback</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-row">
+            <div class="card">
+              <h2>Music & Podcasts</h2>
+              <p>
+                Tracks and stories that live somewhere between cinematic and personal—built for headphones and big
+                scenes.
+              </p>
+              <div class="chips">
+                <span class="chip">Releases</span>
+                <span class="chip">Sound design</span>
+                <span class="chip">Storytelling</span>
+              </div>
+            </div>
+            <div class="card">
+              <h2>Software & AI</h2>
+              <p>
+                Tools that make creation easier: UI builders, modding utilities, creative assistants, generators—shared
+                openly when possible.
+              </p>
+              <div class="chips">
+                <span class="chip">Dev tools</span>
+                <span class="chip">Generators</span>
+                <span class="chip">Open experiments</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BEAT: “Community” -->
+        <div class="beat" id="beat2" style="top: 22vh;">
+          <h3>We build with the community.</h3>
+          <p>
+            Updates, prototypes, feedback loops. The best ideas tend to show up in comments, chats, and late-night
+            messages.
+          </p>
+        </div>
+
+        <div class="panel" id="panel2" style="top: 42vh;">
+          <div class="panel-row">
+            <div class="card">
+              <h2>Where we show up</h2>
+              <p>
+                GitHub for code, Discord for collaboration, YouTube for dev moments, and wherever people want to talk
+                about making things.
+              </p>
+              <div class="chips">
+                <span class="chip">GitHub</span>
+                <span class="chip">Discord</span>
+                <span class="chip">YouTube</span>
+                <span class="chip">Reddit</span>
+              </div>
+            </div>
+            <div class="card">
+              <h2>How it works</h2>
+              <p>
+                Ship → listen → iterate. We treat every release like a living thing that grows with the people who use
+                it.
+              </p>
+              <div class="chips">
+                <span class="chip">Prototype</span>
+                <span class="chip">Playtest</span>
+                <span class="chip">Refine</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEW: SIDEWAYS PRODUCTS SECTION (before the eight animation) -->
+        <div class="hsection" id="hsection" style="top: 80vh;">
+          <div class="hwrap">
+            <div class="hheader">
+              <div>
+                <h3>Featured creations</h3>
+                <p>Scroll down to drift sideways through a few categories. Tap any card to jump to the right page.</p>
+              </div>
+              <a class="btn primary" href="/products/">Browse all</a>
+            </div>
+
+            <div class="htrack" id="htrack" aria-label="Featured products">
+              <!-- Use assets you already have -->
+              <article class="pCard">
+                <img class="pMedia" src="/assets/images/products/games/TimeCatCover.png" alt="TimeCat cover">
+                <div class="pBody">
+                  <h4 class="pTitle">TimeCat</h4>
+                  <p class="pDesc">A time-bending cat adventure with systems that fight back (in a good way).</p>
+                  <div class="pActions">
+                    <a class="btn primary" href="/products/games/">Games</a>
+                    <a class="btn" href="/products/">All products</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="pCard">
+                <img class="pMedia" src="/assets/images/products/films/TheGlitchCover.png" alt="The Glitch cover">
+                <div class="pBody">
+                  <h4 class="pTitle">The Glitch</h4>
+                  <p class="pDesc">Short-form film experiments—mystery, style, and a little reality distortion.</p>
+                  <div class="pActions">
+                    <a class="btn primary" href="/products/films.html">Films</a>
+                    <a class="btn" href="/portfolio.html">See work</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="pCard">
+                <img class="pMedia" src="/assets/images/products/software/star_tracker_icon_square.png"
+                  alt="Star Tracker icon">
+                <div class="pBody">
+                  <h4 class="pTitle">Star Tracker</h4>
+                  <p class="pDesc">Tools and experiments that make creation feel like a game.</p>
+                  <div class="pActions">
+                    <a class="btn primary" href="/products/software.html">Software</a>
+                    <a class="btn" href="/products/">All products</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="pCard">
+                <img class="pMedia" src="/assets/images/products/ai/ai%20icon.png" alt="AI icon">
+                <div class="pBody">
+                  <h4 class="pTitle">AI Tools</h4>
+                  <p class="pDesc">Creative utilities, generators, and helpers—built to be used, not just demoed.</p>
+                  <div class="pActions">
+                    <a class="btn primary" href="/products/ai.html">AI</a>
+                    <a class="btn" href="/products/">All products</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="pCard">
+                <img class="pMedia" src="/assets/images/products/music/music%20icon.png" alt="Music icon">
+                <div class="pBody">
+                  <h4 class="pTitle">Music</h4>
+                  <p class="pDesc">Soundtracks, scenes, and headphone worlds.</p>
+                  <div class="pActions">
+                    <a class="btn primary" href="/products/music.html">Music</a>
+                    <a class="btn" href="/podcasts/ad.html">Podcasts</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <!-- FIGURE EIGHT (sigil) -->
+        <div class="sigil" id="sigil" aria-hidden="true">
+          <svg id="sigilSvg" viewBox="-66 -111 132 222" role="presentation">
+            <path id="eightPath" class="glow" d="
+M 0 0
+C 23.19596 0, 42 -18.80404, 42 -42
+C 42 -65.19596, 23.19596 -84, 0 -84
+C -23.19596 -84, -42 -65.19596, -42 -42
+C -42 -18.80404, -23.19596 0, 0 0
+C 23.19596 0, 42 18.80404, 42 42
+C 42 65.19596, 23.19596 84, 0 84
+C -23.19596 84, -42 65.19596, -42 42
+C -42 18.80404, -23.19596 0, 0 0
+Z
+" />
+            style="stroke-dasharray:1473.41px;stroke-dashoffset:1473.41px;" />
+
+            style="stroke-dasharray:1473.41px;stroke-dashoffset:1473.41px;" />
+            <path id="eightCore" class="core" d="
+M 0.000 -87.000
+C 23.196 -87.000, 42.000 -68.196, 42.000 -45.000
+C 42.000 -21.804, 23.196 -3.000, 0.000 -3.000
+C -23.196 -3.000, -42.000 -21.804, -42.000 -45.000
+C -42.000 -68.196, -23.196 -87.000, 0.000 -87.000
+Z
+M 0.000 3.000
+C 23.196 3.000, 42.000 21.804, 42.000 45.000
+C 42.000 68.196, 23.196 87.000, 0.000 87.000
+C -23.196 87.000, -42.000 68.196, -42.000 45.000
+C -42.000 21.804, -23.196 3.000, 0.000 3.000
+Z
+" style="stroke-dasharray:1473.41px;stroke-dashoffset:1473.41px;" />
+            <path id="eightFire" class="fire" d="
+M 0.000 -87.000
+C 23.196 -87.000, 42.000 -68.196, 42.000 -45.000
+C 42.000 -21.804, 23.196 -3.000, 0.000 -3.000
+C -23.196 -3.000, -42.000 -21.804, -42.000 -45.000
+C -42.000 -68.196, -23.196 -87.000, 0.000 -87.000
+Z
+M 0.000 3.000
+C 23.196 3.000, 42.000 21.804, 42.000 45.000
+C 42.000 68.196, 23.196 87.000, 0.000 87.000
+C -23.196 87.000, -42.000 68.196, -42.000 45.000
+C -42.000 21.804, -23.196 3.000, 0.000 3.000
+Z
+" style="stroke-dasharray:1473.41px;stroke-dashoffset:1473.41px;" />
+          </svg>
+        </div>
+
+        <!-- End Slate (now lifts upward over the eight) -->
+        <div class="end-slate" id="endSlate">
+          <div class="end-box" id="endBox">
+            <div class="end-inner">
+              <div class="end-grid">
+                <div>
+                  <h4>The sky is not the limit.</h4>
+                  <p>
+                    If you want to collaborate, ask a question, or just say hi, reach out. We read everything.
+                  </p>
+                  <div class="copyright" id="copyright"></div>
+                </div>
+                <div class="contacts" aria-label="Contact links">
+                  <a class="mini" href="mailto:support@unlim8ted.com">support@unlim8ted.com</a>
+                  <a class="mini" href="mailto:contact@unlim8ted.com">contact@unlim8ted.com</a>
+                  <a class="mini" href="mailto:enquiries@unlim8ted.com">enquiries@unlim8ted.com</a>
+                  <a class="mini" href="mailto:news@unlim8ted.com">news@unlim8ted.com</a>
+                  <a class="mini" href="/contact.html">Contact page</a>
+                </div>
+              </div>
+            </div>
+            <div class="sponsors">
+              <div class="sponsors-label">In collaboration with</div>
+
+              <div class="sponsor-logos">
+                <img src="https://unlim8ted.com/images/logo/Zipper Line Logo.png" alt="Zipper Line" draggable="false">
+
+                <img src="https://unlim8ted.com/images/logo/Bnacintech Industries logo.png" alt="Bnacintech Industries"
+                  draggable="false">
+
+                <img src="https://unlim8ted.com/images/logo/Sky Tale Media Logo.png" alt="Bnacintech Industries"
+                  draggable="false">
+
+                <img src="https://unlim8ted.com/images/logo/LMMH_LOGO+BLACK.webp" alt="Bnacintech Industries"
+                  draggable="false">
+
+                <img src="https://unlim8ted.com/images/logo/New Heights Logo.png" alt="Bnacintech Industries"
+                  draggable="false">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./resources/js/about-us.01.js"></script>
+
+  <script src="./resources/js/about-us.02.js"></script>
+</body>
+
+</html>

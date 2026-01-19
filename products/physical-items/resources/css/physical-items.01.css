@@ -1,0 +1,369 @@
+:root {
+      --bg0: #05040a;
+      --bg1: #0c0620;
+      --ink: rgba(255, 255, 255, .92);
+      --muted: rgba(255, 255, 255, .68);
+
+      --glass: rgba(20, 18, 30, .68);
+      --glass2: rgba(28, 26, 42, .78);
+      --stroke: rgba(255, 255, 255, .12);
+
+      --accent: #00ffc6;
+      --accent2: #63d6ff;
+
+      --ok: #00ff99;
+      --warn: #ffd166;
+      --bad: #ff4d4d;
+
+      --shadow: 0 16px 44px rgba(0, 0, 0, .55);
+      --r: 18px;
+      --r2: 22px;
+
+      --max: 1140px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 20% 20%, rgba(0, 255, 198, .10), transparent 60%),
+        radial-gradient(900px 500px at 80% 30%, rgba(99, 214, 255, .10), transparent 62%),
+        radial-gradient(900px 700px at 50% 95%, rgba(255, 0, 119, .08), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1) 70%, #060512);
+      padding-top: 56px;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 26px 16px 64px;
+    }
+
+    .hero {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 6px 0 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      letter-spacing: .2px;
+      color: rgba(255, 255, 255, .96);
+      text-shadow: 0 0 14px rgba(0, 255, 198, .14);
+    }
+
+    .sub {
+      margin: 10px 0 0;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--muted);
+      max-width: 900px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+      margin: 18px 0 10px;
+    }
+
+    .tool {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .10);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, .20);
+      backdrop-filter: blur(10px);
+    }
+
+    .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 255, 198, .10);
+      border: 1px solid rgba(0, 255, 198, .18);
+      color: var(--accent);
+      flex: 0 0 auto;
+      user-select: none;
+    }
+
+    .icon svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .tool input,
+    .tool select {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    select {
+      background: rgba(10, 10, 16, .92) !important;
+      color: rgba(255, 255, 255, .92) !important;
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 12px;
+      padding: 10px 10px;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: rgba(0, 255, 153, .45);
+      box-shadow: 0 0 0 3px rgba(0, 255, 153, .12);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .card {
+      grid-column: span 4;
+      position: relative;
+      border-radius: var(--r2);
+      background: linear-gradient(180deg, rgba(28, 26, 42, .72), rgba(20, 18, 30, .62));
+      border: 1px solid rgba(255, 255, 255, .10);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transform: translateZ(0);
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0, 255, 198, .22);
+      box-shadow: 0 22px 54px rgba(0, 0, 0, .62);
+    }
+
+    .thumb {
+      aspect-ratio: 4 / 3;
+      background: rgba(255, 255, 255, .06);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(600px 260px at 50% 0%, rgba(0, 255, 198, .10), transparent 60%);
+      pointer-events: none;
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.06) contrast(1.05);
+    }
+
+    .badges {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .badge {
+      pointer-events: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: .2px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(0, 0, 0, .38);
+      backdrop-filter: blur(10px);
+      color: rgba(255, 255, 255, .92);
+      text-shadow: 0 1px 0 rgba(0, 0, 0, .25);
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .70);
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, .22);
+    }
+
+    .stock-in .dot {
+      background: var(--ok);
+    }
+
+    .stock-partial .dot {
+      background: var(--warn);
+    }
+
+    .stock-out .dot {
+      background: var(--bad);
+    }
+
+    .badge.cat {
+      background: rgba(0, 255, 198, .10);
+      border-color: rgba(0, 255, 198, .22);
+      color: rgba(0, 255, 198, .95);
+    }
+
+    .info {
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1 1 auto;
+    }
+
+    .title {
+      margin: 0;
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: .2px;
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.38;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 34px;
+    }
+
+    .meta {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+
+    .price {
+      font-weight: 900;
+      color: rgba(255, 255, 255, .94);
+      font-size: 13px;
+    }
+
+    .actions {
+      padding: 0 14px 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 12px;
+      border-radius: 16px;
+      font-weight: 900;
+      text-decoration: none;
+      user-select: none;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .92);
+      transition: filter .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, .09);
+      border-color: rgba(0, 255, 198, .20);
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, rgba(0, 255, 153, .92), rgba(0, 255, 198, .85));
+      color: #07101a;
+      border: none;
+      box-shadow: 0 12px 28px rgba(0, 255, 153, .12);
+    }
+
+    .btn.primary:hover {
+      filter: brightness(.97);
+    }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .foot {
+      margin-top: 22px;
+      text-align: center;
+      color: rgba(255, 255, 255, .60);
+      font-size: 13px;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      border-radius: var(--r2);
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .05);
+      padding: 18px;
+      color: rgba(255, 255, 255, .86);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .30);
+    }
+
+    @media (max-width: 980px) {
+      .card {
+        grid-column: span 6;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .card {
+        grid-column: span 12;
+      }
+    }

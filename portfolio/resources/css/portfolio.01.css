@@ -1,0 +1,108 @@
+/* Navigation Bar Styles */
+    .navbar {
+      display: flex;
+      justify-content: center;
+      background-color: #333333d0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 3;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-item a {
+      display: block;
+      color: white;
+      padding: 14px 20px;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .nav-item a:hover {
+      background-color: #15131f;
+      color: rgb(51, 207, 103);
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 3;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #1c1d38;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+      z-index: 3;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown-content a {
+      color: rgb(255, 255, 255);
+      text-decoration: none;
+      padding: 12px 16px;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #2d2849;
+    }
+
+    .navbar-toggle {
+      display: none;
+      background-color: #333;
+      color: white;
+      padding: 14px 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .nav-links {
+        flex-direction: column;
+        display: none;
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .navbar-toggle {
+        display: block;
+      }
+    }

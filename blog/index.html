@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta Tags -->
+    <title>Blog - Unlim8ted Studio Productions</title>
+    <meta name="title" content="Unlim8ted - Blog" />
+    <meta name="description"
+        content="Stay updated with the latest blogs from Unlim8ted Studio Productions, covering creativity, entertainment, and behind-the-scenes insights." />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://unlim8ted.com/blog/">
+    <meta property="og:title" content="Blog - Unlim8ted Studio Productions">
+    <meta property="og:description"
+        content="Stay updated with the latest blogs from Unlim8ted Studio Productions, covering creativity, entertainment, and behind-the-scenes insights.">
+    <meta property="og:image" content="https://unlim8ted.com/images/blog-meta-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://unlim8ted.com/blog/">
+    <meta property="twitter:title" content="Blog - Unlim8ted Studio Productions">
+    <meta property="twitter:description"
+        content="Stay updated with the latest blogs from Unlim8ted Studio Productions, covering creativity, entertainment, and behind-the-scenes insights.">
+    <meta property="twitter:image" content="https://unlim8ted.com/images/blog-meta-image.jpg">
+
+    <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+
+    <!-- Components (match the rest of your site) -->
+    <script type="module" src="/components/site-navbar.js"></script>
+
+
+    <link rel="stylesheet" href="./resources/css/blog.01.css">
+</head>
+
+<body>
+
+
+    <!-- Component navbar (same pattern as your cart page) -->
+    <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
+        profile-href="https://unlim8ted.com/profile">
+    </site-navbar>
+
+    <main class="page">
+        <section class="hero">
+            <h1>Blog</h1>
+            <p>Stay updated with the latest blogs from Unlim8ted Studio Productions, covering creativity, entertainment,
+                and behind-the-scenes insights.</p>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="blog-grid" aria-label="Blog posts">
+            <article class="blog-post">
+                <div class="inner">
+                    <h2>Embracing Creativity: How to Find Inspiration in the Everyday</h2>
+                    <p>Discover how to tap into your creative potential by finding inspiration in the world around
+                        you...</p>
+                    <div class="post-row">
+                        <span class="tag">Creativity</span>
+                        <a class="readmore" href="#">
+                            Read more
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-post">
+                <div class="inner">
+                    <h2>The Future of Entertainment: What to Expect from the Industry</h2>
+                    <p>Explore the latest trends in the entertainment industry and what they mean for creators and
+                        audiences alike...</p>
+                    <div class="post-row">
+                        <span class="tag">Entertainment</span>
+                        <a class="readmore" href="#">
+                            Read more
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-post">
+                <div class="inner">
+                    <h2>Behind the Scenes: The Making of 'Life of a Meatball'</h2>
+                    <p>Get an inside look at the creative process behind one of our most beloved projects...</p>
+                    <div class="post-row">
+                        <span class="tag">Behind the Scenes</span>
+                        <a class="readmore" href="#">
+                            Read more
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section class="newsletter" aria-label="Newsletter signup">
+            <h2>Newsletter Signup</h2>
+            <p>Get updates when new posts drop (and occasional behind-the-scenes extras).</p>
+            <form id="newsletterForm" class="newsletter-form" novalidate>
+                <input id="newsletterEmail" type="email" placeholder="Enter your email" required />
+                <button type="submit">Subscribe</button>
+
+                <!-- Honeypot (bots fill this, humans don’t) -->
+                <input id="website" type="text" autocomplete="off" tabindex="-1"
+                    style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
+
+                <div id="newsletterMsg" class="newsletter-msg" role="status" aria-live="polite"></div>
+            </form>
+
+            <link rel="stylesheet" href="./resources/css/blog.02.css">
+
+        </section>
+
+        <footer class="footer">
+            <div id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</div>
+        </footer>
+    </main>
+    <script type="module" src="./resources/js/blog.01.js"></script>
+
+    <script src="./resources/js/blog.02.js"></script>
+</body>
+
+</html>

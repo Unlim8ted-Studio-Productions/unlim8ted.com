@@ -1,0 +1,96 @@
+/* General Styling */
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    #toolbar {
+      background: #1a1a1a;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #00ffcc;
+    }
+
+    #toolbar select,
+    #toolbar input[type="file"],
+    #toolbar button {
+      background: #333;
+      color: #fff;
+      border: 1px solid #00ffcc;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    #toolbar button:hover {
+      background: #00ffcc;
+      color: #000;
+    }
+
+    #viewport {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #00ffcc;
+      margin: 10px;
+      overflow: hidden;
+    }
+
+    iframe {
+      background: #ffffff;
+      border: none;
+      transform-origin: top left;
+    }
+
+    .export-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      background: #1a1a1a;
+      padding: 10px 20px;
+    }
+
+    #export-css {
+      background: #333;
+      color: #fff;
+      border: 1px solid #ff0077;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #export-css:hover {
+      background: #ff0077;
+      color: #000;
+    }
+
+    /* Draggable and Resizable Styles */
+    .resizable {
+      position: absolute;
+      border: 2px dashed #00ffcc;
+      box-shadow: 0 0 10px #00ffcc;
+    }
+
+    .resizable .resize-handle {
+      width: 10px;
+      height: 10px;
+      background: #ff0077;
+      position: absolute;
+      cursor: pointer;
+    }
+
+    .resize-handle.bottom-right {
+      right: 0;
+      bottom: 0;
+      cursor: se-resize;
+    }

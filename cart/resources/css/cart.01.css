@@ -1,0 +1,973 @@
+:root {
+            --bg0: #05040a;
+            --bg1: #0c0620;
+            --ink: rgba(233, 231, 255, .92);
+            --muted: rgba(233, 231, 255, .72);
+            --glass: rgba(0, 0, 0, .38);
+            --glass2: rgba(255, 255, 255, .04);
+            --stroke: rgba(180, 130, 255, .24);
+            --stroke2: rgba(255, 255, 255, .10);
+            --accent: #b86bff;
+            --accent2: #63d6ff;
+            --danger: #ff4d4d;
+            --warn: #ffd166;
+            --shadow: 0 18px 40px rgba(0, 0, 0, .45);
+            --r: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background:
+                radial-gradient(900px 600px at 20% 15%, rgba(184, 107, 255, .16), transparent 55%),
+                radial-gradient(900px 650px at 80% 25%, rgba(99, 214, 255, .14), transparent 60%),
+                radial-gradient(900px 700px at 55% 95%, rgba(255, 77, 45, .08), transparent 60%),
+                linear-gradient(180deg, var(--bg0), var(--bg1));
+            min-height: 100vh;
+            padding-top: 56px;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        #notice {
+            max-width: 1100px;
+            margin: 14px auto 0;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .06);
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.35;
+            display: none;
+        }
+
+        #notice strong {
+            color: rgba(255, 255, 255, .92);
+        }
+
+        #notice.ok {
+            border-color: rgba(99, 214, 255, .22);
+            background: rgba(99, 214, 255, .08);
+            color: rgba(255, 255, 255, .82);
+        }
+
+        #notice.warn {
+            border-color: rgba(255, 209, 102, .22);
+            background: rgba(255, 209, 102, .08);
+            color: rgba(255, 255, 255, .78);
+        }
+
+        #notice.bad {
+            border-color: rgba(255, 77, 77, .28);
+            background: rgba(255, 77, 77, .10);
+            color: rgba(255, 255, 255, .86);
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 18px 16px 70px;
+        }
+
+        .pageHeader {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 10px 0 14px;
+        }
+
+        .pageHeader h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: .2px;
+        }
+
+        .pageHeader p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.35;
+        }
+
+        .cartPanel {
+            background: var(--glass);
+            border: 1px solid var(--stroke);
+            border-radius: var(--r);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            padding: 14px;
+        }
+
+        .empty {
+            padding: 18px;
+            color: var(--muted);
+        }
+
+        .cartList {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item {
+            display: grid;
+            grid-template-columns: 88px 1fr auto;
+            gap: 14px;
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .06);
+            align-items: center;
+        }
+
+        .thumb {
+            width: 88px;
+            height: 88px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, .07);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, .55);
+            font-size: 12px;
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .meta {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .title {
+            font-size: 15px;
+            font-weight: 850;
+            letter-spacing: .2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mini {
+            font-size: 12px;
+            color: rgba(255, 255, 255, .64);
+        }
+
+        .row2 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .price {
+            font-weight: 900;
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .price .free {
+            color: rgba(99, 214, 255, .95);
+            letter-spacing: .3px;
+            font-weight: 950;
+        }
+
+        .qty {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 999px;
+            padding: 6px 10px;
+        }
+
+        .qty button {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            background: rgba(255, 255, 255, .08);
+            color: var(--ink);
+            font-size: 18px;
+            line-height: 0;
+        }
+
+        .qty button:hover {
+            background: rgba(184, 107, 255, .16);
+            color: rgba(184, 107, 255, 1);
+        }
+
+        .qty input {
+            width: 42px;
+            border: none;
+            background: transparent;
+            color: var(--ink);
+            text-align: center;
+            outline: none;
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .iconbtn {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .05);
+            color: rgba(255, 255, 255, .88);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .iconbtn:hover {
+            border-color: rgba(255, 77, 77, .35);
+            background: rgba(255, 77, 77, .12);
+            color: var(--danger);
+        }
+
+        .cartSummary {
+            margin-top: 12px;
+            padding: 12px 12px 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .cartSummary .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 2px;
+            color: var(--muted);
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .cartSummary .row strong {
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .cartSummary .row.total {
+            border-bottom: 0;
+            padding-top: 12px;
+            font-size: 16px;
+            font-weight: 950;
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .cartActions {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-weight: 950;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            filter: grayscale(.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, rgba(184, 107, 255, 1), rgba(99, 214, 255, 1));
+            color: #071022;
+            box-shadow: 0 12px 26px rgba(184, 107, 255, .16);
+        }
+
+        .btn-primary:hover {
+            filter: brightness(.98);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, .05);
+            color: var(--ink);
+            border: 1px solid rgba(255, 255, 255, .10);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, .08);
+        }
+
+        .btn-danger {
+            background: rgba(255, 77, 77, .16);
+            color: rgba(255, 255, 255, .92);
+            border: 1px solid rgba(255, 77, 77, .30);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 77, 77, .22);
+            border-color: rgba(255, 77, 77, .38);
+        }
+
+        .footer {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 22px 16px 28px;
+            color: rgba(255, 255, 255, .60);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* Overlays + modals */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .62);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 9999;
+            overflow: auto;
+        }
+
+        .overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: min(740px, 100%);
+            background: rgba(10, 8, 18, .88);
+            border: 1px solid rgba(180, 130, 255, .28);
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .55);
+            overflow: hidden;
+            max-height: calc(100vh - 32px);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal.wide {
+            width: min(980px, 100%);
+        }
+
+        .modalClose {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .05);
+            color: rgba(255, 255, 255, .9);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .modalClose:hover {
+            background: rgba(255, 255, 255, .08);
+        }
+
+        .modal>h3,
+        .modal>h2 {
+            margin: 0;
+            padding: 16px 54px 10px 16px;
+            font-weight: 950;
+            letter-spacing: .2px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .04);
+        }
+
+        .modal>p {
+            margin: 0;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, .82);
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .modalBody {
+            padding: 14px 16px;
+            color: rgba(255, 255, 255, .82);
+            line-height: 1.35;
+            font-size: 13px;
+            flex: 1 1 auto;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .modalActions {
+            padding: 14px 16px 16px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            border-top: 1px solid rgba(255, 255, 255, .08);
+            flex: 0 0 auto;
+            position: sticky;
+            bottom: 0;
+            background: rgba(10, 8, 18, .92);
+            backdrop-filter: blur(10px);
+        }
+
+        #modalBody {
+            padding: 12px 16px 4px;
+            color: rgba(255, 255, 255, .82);
+            font-size: 13px;
+            line-height: 1.35;
+            flex: 1 1 auto;
+            overflow: auto;
+        }
+
+        #modalTitle {
+            margin: 0;
+            padding: 16px 54px 10px 16px;
+            font-weight: 950;
+            letter-spacing: .2px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .04);
+        }
+
+        #donateOverlay label {
+            display: block;
+            padding: 12px 16px 0;
+            color: rgba(255, 255, 255, .82);
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        select,
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(10, 8, 18, .72);
+            color: rgba(255, 255, 255, .92);
+            padding: 10px 12px;
+            outline: none;
+            font-weight: 850;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 8px;
+        }
+
+        select option {
+        background: #efefef;
+        color: rgba(0, 0, 0, 0.92);
+        }
+
+        .hint {
+            margin-top: 8px;
+            color: rgba(255, 255, 255, .62);
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .expiry {
+            display: inline-flex;
+            margin-top: 10px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .06);
+            color: rgba(255, 255, 255, .85);
+            font-weight: 900;
+            font-size: 12px;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .modalBody.twoCol {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 14px;
+            align-items: start;
+        }
+
+        .leftCol,
+        .rightCol {
+            background: rgba(255, 255, 255, .02);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 16px;
+            padding: 12px;
+        }
+
+        .leftCol h2,
+        .rightCol h2 {
+            margin: 0 0 10px;
+            font-size: 14px;
+            font-weight: 950;
+            letter-spacing: .2px;
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .leftCol h3 {
+            margin: 12px 0 8px;
+            font-size: 13px;
+            font-weight: 950;
+            letter-spacing: .2px;
+            color: rgba(255, 255, 255, .90);
+        }
+
+        .formGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .formGrid input#ship_address1,
+        .formGrid input#ship_address2 {
+            grid-column: 1 / -1;
+        }
+
+        .summaryBox {
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .03);
+            padding: 10px 12px;
+        }
+
+        .summaryBox .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 0;
+            color: var(--muted);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            font-size: 14px;
+        }
+
+        .summaryBox .row strong {
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .summaryBox .row.total {
+            border-bottom: 0;
+            padding-top: 12px;
+            font-size: 16px;
+            font-weight: 950;
+            color: rgba(255, 255, 255, .92);
+        }
+
+        .cardContainer {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .03);
+            min-height: 70px;
+        }
+
+        #card-container iframe {
+            border-radius: 14px !important;
+        }
+
+        @media (max-width: 900px) {
+            #notice {
+                margin-left: 16px;
+                margin-right: 16px;
+            }
+
+            .item {
+                grid-template-columns: 74px 1fr;
+                grid-template-rows: auto auto;
+                align-items: start;
+            }
+
+            .actions {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .modalBody.twoCol {
+                grid-template-columns: 1fr;
+            }
+
+            .formGrid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* =========================
+   Form controls (make inputs not terrible)
+========================= */
+
+        :root {
+            --fieldBg: rgba(10, 8, 18, .58);
+            --fieldBg2: rgba(255, 255, 255, .04);
+            --fieldStroke: rgba(255, 255, 255, .14);
+            --fieldStroke2: rgba(184, 107, 255, .26);
+            --fieldGlow: 0 0 0 4px rgba(184, 107, 255, .14);
+        }
+
+        /* consistent typography + smoothing */
+        input,
+        select,
+        textarea,
+        button {
+            font: inherit;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid var(--fieldStroke);
+            background: linear-gradient(180deg, var(--fieldBg), rgba(10, 8, 18, .72));
+            color: rgba(233, 231, 255, .92);
+            padding: 11px 12px;
+            outline: none;
+            font-weight: 800;
+            letter-spacing: .15px;
+
+            /* nicer depth */
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, .06),
+                0 10px 24px rgba(0, 0, 0, .18);
+
+            transition:
+                border-color .15s ease,
+                box-shadow .15s ease,
+                background .15s ease,
+                transform .06s ease;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: rgb(0, 0, 0);
+        }
+
+        input:hover,
+        select:hover,
+        textarea:hover {
+            border-color: rgba(255, 255, 255, .22);
+            background: linear-gradient(180deg, rgba(10, 8, 18, .66), rgba(10, 8, 18, .78));
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--fieldStroke2);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, .06),
+                0 12px 26px rgba(184, 107, 255, .10),
+                var(--fieldGlow);
+        }
+
+        /* Disabled states */
+        input:disabled,
+        select:disabled,
+        textarea:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            filter: grayscale(.15);
+        }
+
+        /* Fix autofill yellow/blue nonsense (Chrome/Edge) */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: rgba(233, 231, 255, .92) !important;
+            box-shadow: 0 0 0px 1000px rgba(10, 8, 18, .78) inset !important;
+            transition: background-color 9999s ease-in-out 0s;
+        }
+
+        /* Make selects look like your UI */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+
+            padding-right: 40px;
+
+            /* custom caret */
+            background-image:
+                linear-gradient(180deg, rgba(10, 8, 18, .58), rgba(10, 8, 18, .72)),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 10l5 5 5-5' stroke='rgba(233,231,255,.75)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat, no-repeat;
+            background-position: 0 0, right 12px center;
+            background-size: auto, 18px 18px;
+        }
+
+        select option {
+            background: #0b0a12;
+            color: rgba(8, 3, 68, 0.92);
+        }
+
+        /* Tighter + prettier checkout form layout */
+        .formGrid input,
+        .formGrid select {
+            height: 44px;
+        }
+
+        .formGrid input#ship_address1,
+        .formGrid input#ship_address2 {
+            height: 44px;
+        }
+
+        /* Small label spacing inside donate modal */
+        #donateOverlay label {
+            padding-top: 10px;
+        }
+
+        #donateOverlay label select {
+            margin-top: 6px;
+        }
+
+        /* ===== Shipping form (nebula) ===== */
+
+        .leftCol h2,
+        .leftCol h3 {
+            margin: 0 0 10px;
+            color: rgba(233, 231, 255, .92);
+            letter-spacing: .01em;
+        }
+
+        .leftCol h3 {
+            margin-top: 18px;
+            font-size: 14px;
+            color: rgba(233, 231, 255, .80);
+        }
+
+        /* Grid layout */
+        .formGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Full-width rows */
+        #ship_address1,
+        #ship_address2 {
+            grid-column: 1 / -1;
+        }
+
+        /* Make country sit nicely next to zip on desktop */
+        #ship_country_code {
+            grid-column: 2 / 3;
+        }
+
+        /* Base control styling */
+        .formGrid input,
+        .formGrid select,
+        #ship_method {
+            height: 44px;
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 10px 12px;
+            border-radius: 14px;
+
+            color: rgba(233, 231, 255, .92);
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .10);
+
+            outline: none;
+            transition: border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .18s ease;
+        }
+
+        /* Better placeholder */
+        .formGrid input::placeholder {
+            color: rgba(233, 231, 255, .45);
+        }
+
+        /* Hover */
+        .formGrid input:hover,
+        .formGrid select:hover,
+        #ship_method:hover {
+            background: rgba(255, 255, 255, .075);
+            border-color: rgba(184, 107, 255, .20);
+        }
+
+        /* Focus ring */
+        .formGrid input:focus,
+        .formGrid select:focus,
+        #ship_method:focus {
+            border-color: rgba(184, 107, 255, .55);
+            box-shadow:
+                0 0 0 3px rgba(184, 107, 255, .18),
+                0 12px 30px rgba(0, 0, 0, .35);
+            background: rgba(255, 255, 255, .085);
+        }
+
+        /* Slight pressed feel */
+        .formGrid input:active,
+        .formGrid select:active {
+            transform: translateY(0.5px);
+        }
+
+        /* Select dropdown arrow polish */
+        .formGrid select,
+        #ship_method {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, rgba(233, 231, 255, .75) 50%),
+                linear-gradient(135deg, rgba(233, 231, 255, .75) 50%, transparent 50%),
+                linear-gradient(to right, transparent, transparent);
+            background-position:
+                calc(100% - 18px) 50%,
+                calc(100% - 12px) 50%,
+                0 0;
+            background-size:
+                6px 6px,
+                6px 6px,
+                100% 100%;
+            background-repeat: no-repeat;
+            padding-right: 38px;
+        }
+
+        /* Disabled states */
+        .formGrid input:disabled,
+        .formGrid select:disabled,
+        #ship_method:disabled {
+            opacity: .60;
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, .04);
+            border-color: rgba(255, 255, 255, .08);
+            box-shadow: none;
+        }
+
+        /* Autofill (Chrome) */
+        .formGrid input:-webkit-autofill {
+            -webkit-text-fill-color: rgba(233, 231, 255, .92);
+            transition: background-color 99999s ease-in-out 0s;
+            box-shadow: 0 0 0px 1000px rgba(255, 255, 255, .06) inset;
+            border: 1px solid rgba(255, 255, 255, .12);
+        }
+
+        /* Shipping method block spacing */
+        #ship_method {
+            margin-top: 8px;
+        }
+
+        .hint,
+        #quoteHint {
+            margin-top: 10px;
+            font-size: 12px;
+            color: rgba(233, 231, 255, .65);
+            line-height: 1.35;
+        }
+
+        /* Optional: subtle section divider feel */
+        .leftCol {
+            --glowA: rgba(184, 107, 255, .22);
+            --glowB: rgba(103, 213, 255, .16);
+        }
+
+        .leftCol .formGrid {
+            padding: 2px;
+        }
+
+        /* Mobile layout */
+        @media (max-width: 560px) {
+            .formGrid {
+                grid-template-columns: 1fr;
+            }
+
+            #ship_address1,
+            #ship_address2,
+            #ship_country_code {
+                grid-column: auto;
+            }
+        }
+
+        /* === Fix the 2-col layout + header spanning both columns === */
+
+        .modalBody.twoCol {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            align-items: start;
+            /* <— important: top-align both columns */
+        }
+
+        /* Your step header is the first child inside .modalBody */
+        .modalBody.twoCol> :first-child {
+            grid-column: 1 / -1;
+            /* <— header spans both columns */
+            margin-bottom: 2px;
+        }
+
+        /* Make sure columns don’t add random top spacing */
+        .leftCol,
+        .rightCol {
+            align-self: start;
+            min-width: 0;
+        }
+
+        /* Normalize headings so one side isn't "visually lower" */
+        .leftCol h2,
+        .rightCol h2 {
+            margin: 0 0 10px;
+        }
+
+        /* Optional: keep both columns visually consistent (same panel feel) */
+        .leftCol,
+        .rightCol {
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 18px;
+            padding: 14px;
+        }
+
+        /* Mobile */
+        @media (max-width: 900px) {
+            .modalBody.twoCol {
+                grid-template-columns: 1fr;
+            }
+
+            .modalBody.twoCol> :first-child {
+                grid-column: 1 / 2;
+            }
+        }

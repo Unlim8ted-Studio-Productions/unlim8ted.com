@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Unlim8ted Chess</title>
+  <meta property="og:title" content="Unlim8ted Chess" />
+  <meta name="description"
+    content="Play chess against different difficulties of AI. Watch AI play against itself. Learn to play chess. Customizable visuals. Unlim8ted Chess — always free, no sign up required. Powered by Unlim8ted Studio Productions." />
+
+  <script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
+  <script type="module" src="./resources/js/chess.01.js"></script>
+
+  <link rel="stylesheet" href="./resources/css/chess.01.css">
+</head>
+
+<body class="theme-default">
+  <site-navbar cart-href="https://unlim8ted.com/sign-in/cart" signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile"></site-navbar>
+
+  <div class="app">
+    <div class="hud panel">
+      <div class="hud-left">
+        <div class="brand">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2a10 10 0 1 0 10 10A10.01 10.01 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8a8.01 8.01 0 0 1-8 8Z"/>
+            <path d="M12 6a1 1 0 0 0-1 1v4.2l-2.4 2.4a1 1 0 1 0 1.4 1.4l2.7-2.7A1 1 0 0 0 13 12V7a1 1 0 0 0-1-1Z"/>
+          </svg>
+          <b>Unlim8ted Chess</b>
+        </div>
+        <span class="pill"><span id="modePill">Mode: <strong>Menu</strong></span></span>
+        <span class="pill">Difficulty: <strong id="diffPill">Medium</strong></span>
+      </div>
+
+      <div class="hud-right">
+        <button class="ghost" id="menuBtn">Menu</button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings">
+          <!-- modern SVG gear -->
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M19.14 12.94a7.49 7.49 0 0 0 .05-.94 7.49 7.49 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.28 7.28 0 0 0-1.63-.94l-.36-2.54A.5.5 0 0 0 13.9 1h-3.8a.5.5 0 0 0-.49.42l-.36 2.54c-.58.23-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L1.71 7.48a.5.5 0 0 0 .12.64l2.03 1.58c-.03.31-.05.63-.05.94s.02.63.05.94L1.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.5.4 1.05.71 1.63.94l.36 2.54a.5.5 0 0 0 .49.42h3.8a.5.5 0 0 0 .49-.42l.36-2.54c.58-.23 1.12-.54 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64ZM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5Z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="board-card panel">
+        <div class="board-wrap">
+          <div class="board" id="board" aria-label="Chessboard" role="grid"></div>
+          <div class="coords">
+            <div>Files: a b c d e f g h</div>
+            <div id="turnText">Turn: White</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="side panel">
+        <div class="row">
+          <div class="stat">Time: <strong id="timer">00:00</strong></div>
+          <div class="stat">Eval: <strong id="evalText">—</strong></div>
+        </div>
+
+        <div class="status" id="status">
+          Open the menu to start.
+          <small>Tip: enable “Show legal moves” in Settings.</small>
+        </div>
+
+        <div class="row">
+          <button class="primary" id="newGameBtn">New Game</button>
+          <button class="ghost" id="flipBtn" title="Flip board">Flip</button>
+        </div>
+
+        <div class="log" aria-label="Move log">
+          <ul id="moveLog"></ul>
+        </div>
+
+        <div class="footer" id="footer-text">© 2019-2026 Unlim8ted Studio Productions. All rights reserved.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN MENU -->
+  <div class="overlay" id="menuOverlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h1>Challenge an AI to Chess</h1>
+      <p>Modern UI + a real(ish) chess engine: legal moves, check/checkmate, castling, en passant, promotion, and AI that actually changes with difficulty.</p>
+
+      <div class="menu-grid">
+        <div class="menu-card">
+          <h3>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7v3a7 7 0 1 0 14 0V9a7 7 0 0 0-7-7Zm5 10a5 5 0 1 1-10 0V9a5 5 0 0 1 10 0Z"/></svg>
+            Play vs AI
+          </h3>
+          <small>Pick difficulty, play as White by default.</small>
+          <div class="menu-actions">
+            <button class="primary" data-start="ai" data-diff="easy">Easy</button>
+            <button class="primary" data-start="ai" data-diff="medium">Medium</button>
+            <button class="primary" data-start="ai" data-diff="hard">Hard</button>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <h3>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 1 0-8 0a4 4 0 0 0 8 0Zm-8 7a6 6 0 0 1 12 0v2H8Z"/></svg>
+            Play vs Player
+          </h3>
+          <small>Local 2-player on one device.</small>
+          <div class="menu-actions">
+            <button class="primary" data-start="pvp">Start PvP</button>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <h3>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10v2H7Zm-2 4h14v14H5Zm2 2v10h10V8Z"/></svg>
+            AI vs AI
+          </h3>
+          <small>Watch two AIs play. Uses chosen difficulty for both.</small>
+          <div class="menu-actions">
+            <button class="primary" data-start="aivai" data-diff="easy">Easy</button>
+            <button class="primary" data-start="aivai" data-diff="medium">Medium</button>
+            <button class="primary" data-start="aivai" data-diff="hard">Hard</button>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <h3>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10A10.01 10.01 0 0 0 12 2Zm1 15h-2v-2h2Zm0-4h-2V7h2Z"/></svg>
+            Tutorial
+          </h3>
+          <small>Short guided basics (WIP) — still playable.</small>
+          <div class="menu-actions">
+            <button class="primary" data-start="tutorial">Start Tutorial</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px; justify-content:space-between">
+        <span class="pill">Keyboard: <span class="kbd">Esc</span> closes modals</span>
+        <button class="ghost" id="closeMenuBtn">Close</button>
+      </div>
+
+      <div class="footer" style="margin-top:10px">
+        <span id="footer-text-2"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="overlay" id="settingsOverlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h2>Settings</h2>
+      <p>Visual theme + gameplay helpers. Pieces are emojis (fast + consistent); UI icons are SVG.</p>
+
+      <div class="settings-grid">
+        <div class="field">
+          <h4>Board Theme</h4>
+
+          <label class="radio" data-theme="default">
+            <input type="radio" name="theme" value="default" checked />
+            <span>Default</span>
+            <span class="swatches" aria-hidden="true">
+              <span class="swatch" style="background:#f0d9b5"></span>
+              <span class="swatch" style="background:#b58863"></span>
+              <span class="swatch" style="background:rgba(57,200,145,.35)"></span>
+            </span>
+          </label>
+
+          <label class="radio" data-theme="neon">
+            <input type="radio" name="theme" value="neon" />
+            <span>Neon</span>
+            <span class="swatches" aria-hidden="true">
+              <span class="swatch" style="background:#141414"></span>
+              <span class="swatch" style="background:#000000"></span>
+              <span class="swatch" style="background:rgba(0,255,120,.30)"></span>
+            </span>
+          </label>
+
+          <label class="radio" data-theme="forest">
+            <input type="radio" name="theme" value="forest" />
+            <span>Forest</span>
+            <span class="swatches" aria-hidden="true">
+              <span class="swatch" style="background:#c9dbc5"></span>
+              <span class="swatch" style="background:#769656"></span>
+              <span class="swatch" style="background:rgba(247,226,107,.45)"></span>
+            </span>
+          </label>
+        </div>
+
+        <div class="field">
+          <h4>Gameplay</h4>
+          <label class="toggle">
+            <input type="checkbox" id="showMovesToggle" />
+            <span>Show legal moves</span>
+          </label>
+
+          <label class="toggle" style="margin-top:10px">
+            <input type="checkbox" id="autoQueenToggle" checked />
+            <span>Auto-queen on promotion</span>
+          </label>
+
+          <label class="toggle" style="margin-top:10px">
+            <input type="checkbox" id="soundToggle" />
+            <span>Sounds (optional)</span>
+          </label>
+
+          <div style="margin-top:12px">
+            <div class="stat">AI strength is real:</div>
+            <div class="stat" style="margin-top:6px">
+              <strong>Easy</strong> = shallow search + randomness<br>
+              <strong>Medium</strong> = deeper + less random<br>
+              <strong>Hard</strong> = deeper alpha-beta, basic evaluation
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px; justify-content:flex-end">
+        <button class="ghost" id="closeSettingsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Promotion (only if auto-queen disabled) -->
+  <div class="overlay" id="promoOverlay" role="dialog" aria-modal="true">
+    <div class="modal" style="width:min(520px,96vw)">
+      <h2>Promote pawn</h2>
+      <p>Choose a piece:</p>
+      <div class="row" style="justify-content:center; gap:12px; margin-top:10px">
+        <button class="primary" data-promote="q">Queen ♕</button>
+        <button class="primary" data-promote="r">Rook ♖</button>
+        <button class="primary" data-promote="b">Bishop ♗</button>
+        <button class="primary" data-promote="n">Knight ♘</button>
+      </div>
+      <div class="row" style="margin-top:12px; justify-content:flex-end">
+        <button class="ghost" id="cancelPromoBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./resources/js/chess.02.js"></script>
+</body>
+</html>

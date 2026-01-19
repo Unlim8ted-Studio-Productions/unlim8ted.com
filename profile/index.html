@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unlim8ted - Profile</title>
+  <meta name="description" content="Manage your Unlim8ted account profile." />
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+
+  <!-- Components -->
+  <script type="module" src="/components/site-navbar.js"></script>
+
+  <link rel="stylesheet" href="./resources/css/profile.01.css">
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="container">
+      <img id="profilePic" class="profile-pic" src="https://via.placeholder.com/110" alt="Profile picture" />
+      <h1 id="displayName">Loading…</h1>
+      <div class="meta">Email: <span id="email">Loading…</span></div>
+
+      <div class="panel">
+        <label for="username">
+          <span>Username</span>
+          <span class="hint" id="nameHint"></span>
+        </label>
+        <input id="username" type="text" placeholder="Enter a username" />
+
+        <label for="photoUrl">
+          <span>Profile photo URL (optional)</span>
+          <span class="hint" id="urlHint"></span>
+        </label>
+        <input id="photoUrl" type="url" placeholder="https://…" />
+      </div>
+
+      <div class="actions">
+        <button id="saveBtn" class="btn">Save Profile</button>
+        <button id="productsBtn" class="btn secondary">Browse Products</button>
+        <button id="logoutBtn" class="btn logout">Log Out</button>
+      </div>
+
+      <div id="status" class="status"></div>
+
+      <div class="footer">
+        <span id="footerText"></span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./resources/js/profile.01.js"></script>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Unlim8ted — Summarize Text</title>
+  <meta name="description" content="Unlim8ted Summarize Text AI. Free forever no signup required. Powered by Unlim8ted Studio Productions Technology." />
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+
+  <!-- Always use your navbar component -->
+  <script type="module" src="/components/site-navbar.js"></script>
+
+  <link rel="stylesheet" href="./resources/css/text-summarizer.01.css">
+</head>
+
+<body>
+  <!-- Navbar component (closed properly) -->
+  <site-navbar
+    cart-href="/cart"
+    signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile">
+  </site-navbar>
+
+  <canvas id="bgFX"></canvas>
+
+  <main>
+    <div class="panel hero">
+      <span class="kicker">Tools • On-device AI</span>
+      <h1>Summarize Text</h1>
+      <p class="sub">
+        Paste text below and generate a concise summary locally in your browser. First run downloads the model.
+      </p>
+      <div class="note">
+        <span class="dot"></span>
+        <div><b>Note:</b> Running AI can use a lot of RAM/CPU and may warm your device.</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="panel app">
+        <label for="inputText">Text to summarize</label>
+        <textarea id="inputText" placeholder="Paste text here..."></textarea>
+
+        <div class="row">
+          <button class="primary" id="summarize" type="button">Summarize</button>
+          <button id="copy" type="button" disabled>Copy</button>
+          <span class="small" id="modelHint">Model: Xenova/distilbart-cnn-6-6</span>
+        </div>
+
+        <div class="loading-wrap">
+          <div class="loading-bar" aria-label="Loading">
+            <div id="loadingFill"></div>
+          </div>
+          <div class="status" id="status">Status: Ready</div>
+        </div>
+
+        <div class="output" id="output" aria-live="polite"></div>
+
+        <div class="footer" id="footer-text"></div>
+      </section>
+
+      <aside class="panel side" aria-label="Sidebar">
+        <div class="card">
+          <h3>Tips</h3>
+          <p>For best results, summarize one topic at a time and keep the input under a few thousand words.</p>
+        </div>
+
+        <div class="card">
+          <h3>Privacy</h3>
+          <p>Summarization runs on-device. Your text stays in your browser unless you paste it elsewhere.</p>
+        </div>
+
+        <div class="card">
+          <h3>Contact</h3>
+          <p class="mono">support@unlim8ted.com</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script type="module" src="./resources/js/text-summarizer.01.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+.no-js-message {
+      background: #2c4762;
+      color: red;
+      font-size: 20px;
+      text-align: center;
+      padding: 20px;
+      z-index: 999999999999999999999999999999999999999999999;
+      position: fixed;
+      width: 100%;
+      top: 0;
+    }

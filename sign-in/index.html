@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unlim8ted Sign-In</title>
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="./resources/css/sign-in.01.css">
+
+  <script src="./resources/js/sign-in.01.js"></script>
+
+  <nav class="navbar">
+    <div class="navbar-header">
+      <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
+      <ul class="nav-links" id="navbarLinks">
+        <li class="nav-item"><a href="/">Home</a></li>
+        <li class="nav-item"><a href="products">Products</a></li>
+        <li class="nav-item"><a href="contact">Contact</a></li>
+        <li class="nav-item"><a href="about">About</a></li>
+        <li class="nav-item dropdown">
+          <a href="javascript:void(0)">More</a>
+          <div class="dropdown-content">
+            <a href="portfolio">Portfolio</a>
+            <a href="blog">Blog</a>
+          </div>
+        </li>
+        <li class="old-site-btn"><a href="old"><button type="button">Old site</button></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <script type="module" src="./resources/js/sign-in.02.js"></script>
+</head>
+
+<body>
+  <div class="background">
+    <span style="top: 20%; left: 10%; animation-delay: 0s;"></span>
+    <span style="top: 40%; left: 70%; animation-delay: 2s;"></span>
+    <span style="top: 70%; left: 30%; animation-delay: 4s;"></span>
+    <span style="top: 50%; left: 90%; animation-delay: 1.5s;"></span>
+    <span style="top: 80%; left: 50%; animation-delay: 3s;"></span>
+  </div>
+
+  <div class="container">
+    <div class="logo">Unlim8ted</div>
+    <p class="subtitle">Sign in or create an account to continue.</p>
+
+    <div id="form-mode" style="font-weight:700; margin-bottom: 10px;">Sign In</div>
+
+    <button id="google-signin-btn" type="button">
+      <img
+        src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA"
+        alt="Google Logo" />
+      Sign in with Google
+    </button>
+
+    <div class="divider">Or</div>
+
+    <form id="email-signin-form">
+      <input type="email" id="email" placeholder="Email" autocomplete="email" required />
+      <input type="password" id="password" placeholder="Password" autocomplete="current-password" required />
+
+      <div class="row">
+        <label class="remember" for="rememberMe">
+          <input id="rememberMe" type="checkbox" checked />
+          Remember me
+        </label>
+      </div>
+
+      <button id="form-submit" type="submit">Sign In</button>
+
+      <div class="info">
+        <span id="toggle-text" class="toggle">Don't have an account? Create one.</span>
+        <p>An account is needed to comment, rate products, and add things to your cart, but it is not required.</p>
+        <p>If you'd prefer not to create an account, you can visit our <a href="products">Products</a> or <a href="about">About Us</a> pages.</p>
+        <p id="footer-text"></p>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unlim8ted - Product</title>
+  <meta name="description" content="Unlim8ted Product page. Powered by Unlim8ted Studio Productions" />
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+
+  <!-- Components -->
+  <script type="module" src="/components/site-navbar.js"></script>
+
+  <link rel="stylesheet" href="./resources/css/product.01.css">
+</head>
+
+<body>
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile"></site-navbar>
+
+  <div class="page">
+    <div class="topbar">
+      <a class="back" href="#" onclick="history.back(); return false;">← Back</a>
+      <h1 class="title">Product</h1>
+      <div style="width:72px"></div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: product media + description -->
+      <section class="card">
+        <div class="card-inner">
+          <div class="media">
+            <div class="hero" id="hero"></div>
+            <div class="thumbs" id="thumbs"></div>
+          </div>
+
+          <div class="product" style="margin-top:14px;">
+            <h2 id="pName">Loading…</h2>
+            <p class="desc" id="pDesc"></p>
+
+            <div class="price-row">
+              <div class="price" id="pPrice">$—</div>
+              <div class="stars" id="avgStars" aria-label="Average rating stars"></div>
+            </div>
+
+            <div class="btns">
+              <a class="btn secondary" id="buyBtn" href="#" rel="noopener">Buy Now</a>
+              <button class="btn" id="addBtn">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: ratings + comments -->
+      <aside class="card">
+        <div class="card-inner ratingBox">
+          <div class="avgRow">
+            <div class="avg">
+              <div class="avgNum" id="avgNum">—</div>
+              <div class="avgMeta">
+                <div id="avgLabel">No ratings yet</div>
+                <div id="countLabel">0 reviews</div>
+              </div>
+            </div>
+            <div class="stars" id="avgStarsBig"></div>
+          </div>
+
+          <div class="bars" id="bars"></div>
+
+          <div class="commentsCard">
+            <h3>Reviews</h3>
+
+            <div id="mustSignIn" class="empty" style="display:none;">
+              Sign in to leave a review.
+            </div>
+
+            <form class="commentForm" id="commentForm" style="display:none;">
+              <div class="row2">
+                <div>
+                  <label for="ratingSel">Rating</label>
+                  <select id="ratingSel" required>
+                    <option value="5">5 - Great</option>
+                    <option value="4">4 - Good</option>
+                    <option value="3">3 - Okay</option>
+                    <option value="2">2 - Not great</option>
+                    <option value="1">1 - Bad</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="displayName">Name (optional)</label>
+                  <input id="displayName" type="text" placeholder="Anonymous" />
+                </div>
+              </div>
+
+              <div>
+                <label for="commentText">Comment</label>
+                <textarea id="commentText" placeholder="Write a review…" required></textarea>
+              </div>
+
+              <div class="formActions">
+                <button class="btn" id="postBtn" type="submit">Post Review</button>
+                <button class="smallBtn dangerBtn" id="deleteMyReviewBtn" type="button" style="display:none;">Delete my
+                  review</button>
+              </div>
+
+              <div id="formMsg" class="empty" style="text-align:left;"></div>
+            </form>
+
+            <div class="commentList" id="commentList"></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="footer">
+      <span id="footerText"></span>
+    </div>
+  </div>
+
+  <script type="module" src="./resources/js/product.01.js"></script>
+</body>
+
+</html>
