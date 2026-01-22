@@ -131,31 +131,35 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           persist-credentials: false
 
-      - name: Sync assets/ -> assets repo root (no injection)
-        shell: bash
-        run: |
-          set -euo pipefail
-          rsync -a --delete "${ASSETS_DIR}/" "target-assets/"
-
-      - name: Commit & push assets repo
+      - name: Sync + commit + push assets repo (no injection)
         shell: bash
         env:
           GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
+
           cd target-assets
 
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Clean & update FIRST
           git fetch origin "${TARGET_BRANCH}"
           git checkout "${TARGET_BRANCH}"
           git reset --hard "origin/${TARGET_BRANCH}"
 
+          # Now sync files AFTER reset
+          rsync -a --delete "${GITHUB_WORKSPACE}/${ASSETS_DIR}/" "./"
+
           if git status --porcelain | grep -q .; then
             git add -A
             git commit -m "Deploy assets from unlim8ted.com (${GITHUB_SHA})"
-            git push --force-with-lease "https://x-access-token:${GH_APP_TOKEN}@github.com/Unlim8ted-Studio-Productions/assets.unlim8ted.com.git" "${TARGET_BRANCH}"
+
+            # Authenticated origin (since persist-credentials=false)
+            git remote set-url origin "https://x-access-token:${GH_APP_TOKEN}@github.com/${ASSETS_REPO}.git"
+
+            # Normal push (avoids protected-branch force-push blocks)
+            git push origin "${TARGET_BRANCH}"
           else
             echo "No changes to push to assets repo."
           fi
@@ -170,31 +174,35 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           persist-credentials: false
 
-      - name: Sync public api/ -> api repo root (no injection)
-        shell: bash
-        run: |
-          set -euo pipefail
-          rsync -a --delete "${PUBLIC_API_DIR}/" "target-api/"
-
-      - name: Commit & push api repo
+      - name: Sync + commit + push api repo (no injection)
         shell: bash
         env:
           GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
+
           cd target-api
 
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Clean & update FIRST
           git fetch origin "${TARGET_BRANCH}"
           git checkout "${TARGET_BRANCH}"
           git reset --hard "origin/${TARGET_BRANCH}"
 
+          # Now sync files AFTER reset
+          rsync -a --delete "${GITHUB_WORKSPACE}/${PUBLIC_API_DIR}/" "./"
+
           if git status --porcelain | grep -q .; then
             git add -A
             git commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
-            git push --force-with-lease "https://x-access-token:${GH_APP_TOKEN}@github.com/Unlim8ted-Studio-Productions/api.unlim8ted.com.git" "${TARGET_BRANCH}"
+
+            # Authenticated origin (since persist-credentials=false)
+            git remote set-url origin "https://x-access-token:${GH_APP_TOKEN}@github.com/${API_REPO}.git"
+
+            # Normal push (avoids protected-branch force-push blocks)
+            git push origin "${TARGET_BRANCH}"
           else
             echo "No changes to push to api repo."
           fi
