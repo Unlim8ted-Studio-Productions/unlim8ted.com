@@ -38,16 +38,44 @@ jobs:
           git config --global user.name  "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # Put these in repo/org secrets:
-      # - GH_APP_ID
-      # - GH_APP_PRIVATE_KEY
+      - name: Validate GitHub App inputs (fail fast)
+        shell: bash
+        env:
+          GH_APP_ID: ${{ vars.GH_APP_ID }}
+          GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${GH_APP_ID:-}" ]; then
+            echo "ERROR: vars.GH_APP_ID is not set (should be your GitHub App ID, e.g. 2709663)."
+            exit 1
+          fi
+
+          # Don't print key; just check it's non-empty
+          if [ -z "${GH_APP_PRIVATE_KEY:-}" ]; then
+            echo "ERROR: secrets.GH_APP_PRIVATE_KEY is not set (paste the GitHub App private key PEM)."
+            exit 1
+          fi
+
+          # Optional: ensure GH_APP_ID is numeric
+          if ! [[ "${GH_APP_ID}" =~ ^[0-9]+$ ]]; then
+            echo "ERROR: vars.GH_APP_ID must be numeric. Got: '${GH_APP_ID}'"
+            exit 1
+          fi
+
+          echo "App inputs look present."
+
       - name: Create GitHub App token
         id: app-token
         uses: actions/create-github-app-token@v2
         with:
-          app-id: ${{ secrets.GH_APP_ID }}
+          app-id: ${{ vars.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: Unlim8ted-Studio-Productions
+          # Optional: scope it tighter (recommended). Uncomment:
+          # repositories: |
+          #   assets.unlim8ted.com
+          #   api.unlim8ted.com
 
       - name: Fail if any file > 95MB in assets or public api
         shell: bash
@@ -94,44 +122,33 @@ jobs:
             local WORKDIR
             WORKDIR="$(mktemp -d)"
             echo "Workdir (${LABEL}): $WORKDIR"
-
-            # Clean up on return from function
-            # shellcheck disable=SC2064
             trap "rm -rf \"$WORKDIR\"" RETURN
 
             local PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
 
             git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
 
-            # sanity: ensure .git exists
             if [ ! -d "${WORKDIR}/repo/.git" ]; then
               echo "ERROR: Clone did not produce a git repo at ${WORKDIR}/repo" >&2
               ls -la "${WORKDIR}/repo" || true
               exit 1
             fi
 
-            # Ensure clean branch state
             git -C "${WORKDIR}/repo" fetch origin "${BRANCH}"
             git -C "${WORKDIR}/repo" checkout "${BRANCH}"
             git -C "${WORKDIR}/repo" reset --hard "origin/${BRANCH}"
             git -C "${WORKDIR}/repo" clean -fdx
 
-            # Mirror content into repo root WITHOUT nuking .git (or .github if you keep workflows in target repos)
+            # IMPORTANT: do not delete .git; also protect .github unless you intentionally mirror it
             rsync -a --delete \
               --exclude='.git/' \
               --exclude='.github/' \
               "${SRC_PATH}/" "${WORKDIR}/repo/"
 
-            # Commit + push only if changed (robust; no command-substitution gotchas)
-            if git -C "${WORKDIR}/repo" diff --quiet && git -C "${WORKDIR}/repo" diff --cached --quiet; then
-              echo "No changes to push to ${REPO}."
-              return 0
-            fi
-
-            # Stage and see if staging actually produces changes
             git -C "${WORKDIR}/repo" add -A
+
             if git -C "${WORKDIR}/repo" diff --cached --quiet; then
-              echo "No staged changes after add; nothing to push to ${REPO}."
+              echo "No changes to push to ${REPO}."
               return 0
             fi
 
