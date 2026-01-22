@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Primary Meta Tags -->
+    <title>Unlim8ted - Products</title>
+    <meta name="title" content="Products - Unlim8ted" />
+    <meta name="description"
+        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more." />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://unlim8ted.com/products/">
+    <meta property="og:title" content="Products - Unlim8ted Studio Productions">
+    <meta property="og:description"
+        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
+    <meta property="og:image" content="assets.unlim8ted.com/images/products-meta-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://unlim8ted.com/products/">
+    <meta property="twitter:title" content="Products - Unlim8ted Studio Productions">
+    <meta property="twitter:description"
+        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
+    <meta property="twitter:image" content="assets.unlim8ted.com/images/products-meta-image.jpg">
+  <script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
+      <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getFirebase } from "/components/firebase-init.js";
+
+    const { auth, db } = getFirebase();</script>
+    <link rel="stylesheet" href="resources/css/main.css">
+    <script src="resources/js/smooth-scroll.js"></script>
+</head>
+<script>
+
+</script>
+
+
+<body>
+  <site-navbar cart-href="https://unlim8ted.com/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+    <div id="products" class="content-section">
+        <h1>Our Products</h1>
+        <p>Discover our amazing products.</p>
+        <div class="product-category">
+            <a href="films" class="product-box">
+                <img src="assets.unlim8ted.com/images/products/films/The Life of a Meatball.jpg" alt="Films">
+                <h2>Films</h2>
+                <p>Explore our latest films.</p>
+            </a>
+            <a href="music" class="product-box">
+                <img src="assets.unlim8ted.com/images/products/music/music icon.png" alt="Music">
+                <h2>Music</h2>
+                <p>Listen to our newest music releases.</p>
+            </a>
+            <a href="podcasts" class="product-box">
+                <img src="assets.unlim8ted.com/images/products/podcasts/podcasts icon.png" alt="Podcast">
+                <h2>Podcasts</h2>
+                <p>Listen to our newest podcasts.</p>
+            </a>
+            <a href="books" class="product-box">
+                <img src="assets.unlim8ted.com/images/products/books/book icon.png" alt="Books">
+                <h2>Books</h2>
+                <p>Read our latest books.</p>
+            </a>
+            <a href="games" class="product-box">
+                <img src="assets.unlim8ted.com/images/products/games/air-hockey-preview.webp" alt="Games">
+                <h2>Games</h2>
+                <p>Play fun and challenging games.</p>
+            </a>
+            <a href="physical-items" class="product-box">
+                <img src="assets.unlim8ted.com/images/products/clothes/image.webp" alt="Clothes">
+                <h2>Physical Items</h2>
+                <p>Check out our stylish clothes.</p>
+            </a>
+            <a href="software" class="product-box">
+                <img src="assets.unlim8ted.com/images/products/software/Screenshot 2023-09-21 181742(1).png"
+                    alt="Software">
+                <h2>Software</h2>
+                <p>Explore our apps and video games.</p>
+            </a>
+            <a href="ai" class="product-box">
+                <img src="assets.unlim8ted.com/images/products/ai/ai icon.png" alt="AI">
+                <h2>AI</h2>
+                <p>Explore our AI products.</p>
+            </a>
+            <a href="images" class="product-box">
+                <img src="assets.unlim8ted.com/images/Unlim8tedImages/space with foregroudn.jpg" alt="Images">
+                <h2>Images</h2>
+                <p>Explore some of our best images.</p>
+            </a>
+            <div>
+                <style>
+                    h1 {
+                        margin-bottom: 30px;
+                    }
+
+                    .spinner-container {
+                        position: relative;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+
+                    .spinner {
+                        position: relative;
+                        width: 60vw;
+                        max-width: 300px;
+                        height: 60vw;
+                        max-height: 300px;
+                        border-radius: 50%;
+                        border: 10px solid #ddd;
+                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                        overflow: hidden;
+                    }
+
+                    .spinner-wheel {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        width: 100%;
+                        height: 100%;
+                        transform: translate(-50%, -50%);
+                        border-radius: 50%;
+                    }
+
+                    .spinner-choice {
+                        position: absolute;
+                        width: 50%;
+                        height: 50%;
+                        text-align: center;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transform-origin: bottom right;
+                        font-weight: bold;
+                        font-size: 1vw;
+                        color: white;
+                    }
+
+                    .spinner-choice span {
+                        transform: rotate(-45deg);
+                        /* Undo the rotation to make text readable */
+                        display: block;
+                        width: 100px;
+                    }
+
+                    .selector-triangle {
+                        position: absolute;
+                        top: 0%;
+                        width: 0;
+                        height: 0;
+                        border-left: 20px solid transparent;
+                        border-right: 20px solid transparent;
+                        border-bottom: 40px solid red;
+                        z-index: 2;
+                        rotate: 180deg
+                    }
+
+                    .spin-btn {
+                        margin-top: 20px;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        background-color: #3498db;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                    }
+
+                    .spin-btn:hover {
+                        background-color: #2980b9;
+                    }
+
+                    .popup {
+                        display: none;
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background-color: #fff;
+                        border: 2px solid #ddd;
+                        padding: 20px;
+                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                        z-index: 10;
+                    }
+
+                    .popup a {
+                        color: #3498db;
+                        text-decoration: none;
+                        font-weight: bold;
+                    }
+
+                    .popup a:hover {
+                        text-decoration: underline;
+                    }
+
+                    .overlay {
+                        display: none;
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        z-index: 9;
+                    }
+
+                    /* Media query to adjust font size on smaller screens */
+                    @media (max-width: 768px) {
+                        .spinner-choice {
+                            font-size: 3vw;
+                        }
+                    }
+                </style>
+
+                <h1>Don't know what to get? Let the spinner choose for you!</h1>
+
+                <div class="spinner-container">
+                    <div class="selector-triangle"></div>
+                    <div class="spinner">
+                        <div class="spinner-wheel"></div>
+                    </div>
+                </div>
+
+                <button class="spin-btn">Spin the Wheel!</button>
+
+                <div class="overlay" id="overlay"></div>
+                <div class="popup" id="popup">
+                    <h2 id="popup-text"></h2>
+                    <a href="#" id="popup-link">Visit the page</a>
+                </div>
+
+                <script>
+                    let options = [];
+                    let isSpinning = false; // Track whether the spinner is currently spinning
+
+                    // Fetch the spinner data from JSON file
+                    fetch('assets.unlim8ted.com/data/spinner.json')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json(); // Automatically parses JSON if valid
+                        })
+                        .then(data => {
+                            options = data;
+                            loadSpinnerChoices(options); // Populate the spinner with the fetched options
+                        })
+                        .catch(error => console.error('Error loading spinner data:', error));
+
+                    // Function to load the spinner choices visually
+                    function loadSpinnerChoices(options) {
+                        const spinnerWheel = document.querySelector('.spinner-wheel');
+                        const numberOfOptions = options.length;
+                        const angleIncrement = 360 / numberOfOptions; // Divide the circle into equal parts
+
+                        spinnerWheel.innerHTML = ''; // Clear previous content
+
+                        options.forEach((option, index) => {
+                            const spinnerChoice = document.createElement('div');
+                            spinnerChoice.classList.add('spinner-choice');
+
+                            // Set each segment's rotation and color dynamically
+                            spinnerChoice.style.transform = `rotate(${index * angleIncrement}deg) skewY(${90 - angleIncrement}deg)`;
+                            spinnerChoice.style.backgroundColor = getRandomColor();
+                            spinnerChoice.innerHTML = `<span>${option.name}</span>`;
+
+                            spinnerWheel.appendChild(spinnerChoice);
+                        });
+                    }
+
+                    // Function to trigger the spin
+                    function spin() {
+                        if (isSpinning) return; // Prevent spinning if already in progress
+
+                        isSpinning = true; // Set the spinning flag
+                        const spinnerWheel = document.querySelector('.spinner-wheel');
+                        const spinBtn = document.querySelector('.spin-btn');
+                        const randomDegree = Math.floor(Math.random() * 360) + 360; // Ensure at least one full rotation
+
+                        // Disable the button while spinning
+                        spinBtn.disabled = true;
+                        spinnerWheel.style.transition = 'transform 4s ease-out';
+                        spinnerWheel.style.transform = `translate(-50%, -50%) rotate(${randomDegree}deg)`;
+
+                        const selectedOption = options[Math.floor(Math.random() * options.length)];
+
+                        // After the spin is complete, show the popup and re-enable the button
+                        setTimeout(() => {
+                            showPopup(selectedOption);
+                            spinBtn.disabled = false; // Re-enable the spin button
+                            isSpinning = false; // Reset spinning flag
+                        }, 4000); // Match the spin duration
+                    }
+                    // Show the popup with the result
+                    function showPopup(option) {
+                        const popup = document.getElementById('popup');
+                        const overlay = document.getElementById('overlay');
+                        const popupText = document.getElementById('popup-text');
+                        const popupLink = document.getElementById('popup-link');
+
+                        popupText.innerHTML = `According to the wheel, you should go and get your very own ${option.name}`;
+                        popupLink.href = option.link;
+                        popupLink.innerHTML = 'Visit the page';
+
+                        overlay.style.display = 'block';
+                        popup.style.display = 'block';
+                    }
+
+                    // Function to generate random colors for the segments
+                    function getRandomColor() {
+                        const letters = '0123456789ABCDEF';
+                        let color = '#';
+                        for (let i = 0; i < 6; i++) {
+                            color += letters[Math.floor(Math.random() * 16)];
+                        }
+                        return color;
+                    }
+
+                    // Close popup when clicking the overlay
+                    document.getElementById('overlay').onclick = function () {
+                        document.getElementById('popup').style.display = 'none';
+                        document.getElementById('overlay').style.display = 'none';
+                    }
+
+                    // Add click event to the spin button
+                    document.querySelector('.spin-btn').onclick = spin;
+                </script>
+
+            </div>
+        </div>
+        <!-- Copyright -->
+        <div style="margin-top: 20px;">
+            <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
+            <script>document.addEventListener("DOMContentLoaded", function () {
+                const currentYear = new Date().getFullYear();
+                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
+                document.getElementById("footer-text").innerHTML = footerText;
+            });
+            </script>
+        </div>
+    </div>
+
+</body>
+
+</html>

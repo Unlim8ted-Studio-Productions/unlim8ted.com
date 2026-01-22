@@ -1,5 +1,4 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Deploy unlim8ted.com + update subdomain repos
 
 on:
   push:
@@ -15,57 +14,69 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  # Source folders in THIS repo
+  FRONTEND_DIR: "frontend"
+  ASSETS_DIR: "assets"
+  PUBLIC_API_DIR: "public api"
+
+  # Injection snippet (only applied to frontend HTML)
+  SNIP_FILE: "components/deploy-inject/head-snippet.html"
+  MARK: "<!--__INJECTED_FILE_PREFIX__-->"
+
+  # Target repos for subdomains
+  ASSETS_REPO: "Unlim8ted-Studio-Productions/assets.unlim8ted.com"
+  API_REPO: "Unlim8ted-Studio-Productions/api.unlim8ted.com"
+  TARGET_BRANCH: "main"
+
 jobs:
-  deploy:
+  deploy_main_site:
+    name: Deploy unlim8ted.com (from /frontend, with injection)
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: unlim8ted.com
-    runs-on: ubuntu-latest
+      url: https://unlim8ted.com
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Prepend snippet as the first thing in every HTML file
-      - name: Prepend snippet to HTML files
+      - name: Prepare dist (frontend only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dist
+          mkdir -p dist/frontend
+          rsync -a --delete "${FRONTEND_DIR}/" "dist/frontend/"
+
+      - name: Prepend snippet to frontend HTML files ONLY
         shell: bash
         run: |
           set -euo pipefail
 
-          OUT_DIR="."
-          SNIP_FILE="components/deploy-inject/head-snippet.html"
-          MARK="<!--__INJECTED_FILE_PREFIX__-->"
+          OUT_DIR="dist/frontend"
+          SNIP_FILE="${SNIP_FILE}"
+          MARK="${MARK}"
 
           if [ ! -f "$SNIP_FILE" ]; then
             echo "Snippet file not found: $SNIP_FILE" >&2
             exit 1
           fi
 
-          # Read snippet content once
           SNIP="$(cat "$SNIP_FILE")"
 
-          # Iterate html files
           find "$OUT_DIR" -type f -name "*.html" -print0 | while IFS= read -r -d '' f; do
-            # Skip the snippet file itself
-            if [ "$f" = "./$SNIP_FILE" ] || [ "$f" = "$SNIP_FILE" ]; then
-              continue
-            fi
-
-            # Prevent double injection
             if grep -qF "$MARK" "$f"; then
               echo "Already injected: $f"
               continue
             fi
 
             tmp="$(mktemp)"
-
-            # Write marker + snippet first, then original file contents
             {
               printf '%s\n' "$MARK"
               printf '%s\n' "$SNIP"
               cat "$f"
             } > "$tmp"
-
-            # Replace original file
             mv "$tmp" "$f"
             echo "Injected: $f"
           done
@@ -76,8 +87,90 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "dist/frontend"
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  update_subdomain_repos:
+    name: Sync /assets and /public api into their repos (GitHub App auth)
+    runs-on: ubuntu-latest
+    needs: [deploy_main_site]
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout THIS repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Create GitHub App token (cross-repo pushes)
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ vars.GH_APP_OWNER }}
+
+      # ---------- Assets repo ----------
+      - name: Checkout assets.unlim8ted.com
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.ASSETS_REPO }}
+          ref: ${{ env.TARGET_BRANCH }}
+          path: target-assets
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Sync assets/ -> assets repo root (no injection)
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -a --delete "${ASSETS_DIR}/" "target-assets/"
+
+      - name: Commit & push assets repo
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd target-assets
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git status --porcelain | grep -q .; then
+            git add -A
+            git commit -m "Deploy assets from unlim8ted.com (${GITHUB_SHA})"
+            git push origin "${TARGET_BRANCH}"
+          else
+            echo "No changes to push to assets repo."
+          fi
+
+      # ---------- API repo ----------
+      - name: Checkout api.unlim8ted.com
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.API_REPO }}
+          ref: ${{ env.TARGET_BRANCH }}
+          path: target-api
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Sync public api/ -> api repo root (no injection)
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -a --delete "${PUBLIC_API_DIR}/" "target-api/"
+
+      - name: Commit & push api repo
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd target-api
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git status --porcelain | grep -q .; then
+            git add -A
+            git commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
+            git push origin "${TARGET_BRANCH}"
+          else
+            echo "No changes to push to api repo."
+          fi

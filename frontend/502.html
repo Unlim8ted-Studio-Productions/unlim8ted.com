@@ -1,0 +1,126 @@
+<!-- Save this as /usr/share/nginx/html/502.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+ 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unlim8ted - 502 Bad Gateway</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8d7da;
+      text-align: center;
+      padding: 50px;
+    }
+
+    h1 {
+      font-size: 50px;
+      color: #721c24;
+    }
+
+    p {
+      font-size: 18px;
+      color: #856404;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      margin: 20px 0;
+    }
+
+    .refresh-button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .refresh-button:hover {
+      background-color: #0056b3;
+    }
+
+    .funny-text {
+      font-size: 14px;
+      color: #666;
+      margin-top: 20px;
+    }
+  </style>
+  <style>
+    /* logo */
+    .logo {
+      position: absolute;
+      z-index: 1;
+      top: 5%;
+      /* Adjust top position relative to viewport height */
+      left: 5%;
+      /* Adjust left position relative to viewport width */
+      display: block;
+    }
+
+    .logo img {
+      height: 10vw;
+      /* Adjust height relative to viewport width */
+      max-height: 140px;
+      /* Set a maximum height to prevent the logo from getting too large on larger screens */
+      width: auto;
+      /* Maintain aspect ratio */
+    }
+
+    /* Media query for small devices */
+    @media (max-width: 600px) {
+      .logo img {
+        height: 20vw;
+        /* Larger logo for smaller devices */
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="inner-wrap">
+    <div class="logo" style="z-index: 2;">
+      <a href="/">
+        <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
+      </a>
+    </div>
+    <div class="container">
+      <h1>502 Bad Gateway</h1>
+      <p>Looks like something went wrong between the servers. Again. 🙄</p>
+      <img src="images\error\not_found.png" alt="Error Image">
+      <p>But don't worry, you can try refreshing the page or come back later when the servers are in a better mood!</p>
+      <a href="javascript:location.reload()" class="refresh-button">Refresh the Page</a>
+      <a href="javascript:history.back()" class="refresh-button">Go backwards in time?</a>
+      <p class="funny-text">If refreshing doesn’t help, maybe go make a cup of tea? ☕</p>
+    </div>
+</body>
+<!-- Copyright -->
+<div style="margin-top: 20px;">
+  <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+      const currentYear = new Date().getFullYear();
+      const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
+      document.getElementById("footer-text").innerHTML = footerText;
+  });
+  </script>
+</div>
+</div>
+
+</html>
