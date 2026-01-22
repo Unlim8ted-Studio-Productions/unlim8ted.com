@@ -15,20 +15,23 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  # Source folders in THIS repo
   FRONTEND_DIR: "frontend"
   ASSETS_DIR: "assets"
   PUBLIC_API_DIR: "public api"
 
+  # Injection snippet (only applied to frontend HTML)
   SNIP_FILE: "frontend/components/deploy-inject/head-snippet.html"
   MARK: "<!--__INJECTED_FILE_PREFIX__-->"
 
+  # Target repos for subdomains
   ASSETS_REPO: "Unlim8ted-Studio-Productions/assets.unlim8ted.com"
   API_REPO: "Unlim8ted-Studio-Productions/api.unlim8ted.com"
   TARGET_BRANCH: "main"
 
 jobs:
   deploy_main_site:
-    name: Deploy unlim8ted.com
+    name: Deploy unlim8ted.com (from /frontend, with injection)
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -46,71 +49,77 @@ jobs:
           mkdir -p dist/frontend
           rsync -a --delete "${FRONTEND_DIR}/" "dist/frontend/"
 
-      - name: Inject head snippet (frontend HTML only)
+      - name: Prepend snippet to frontend HTML files ONLY
         shell: bash
         run: |
           set -euo pipefail
 
           OUT_DIR="dist/frontend"
-          SNIP="${SNIP_FILE}"
+          SNIP_PATH="${SNIP_FILE}"
           MARK="${MARK}"
 
-          if [ ! -f "$SNIP" ]; then
-            echo "Snippet not found: $SNIP" >&2
+          if [ ! -f "$SNIP_PATH" ]; then
+            echo "Snippet file not found: $SNIP_PATH" >&2
             exit 1
           fi
 
-          SNIP_CONTENT="$(cat "$SNIP")"
+          SNIP="$(cat "$SNIP_PATH")"
           SNIP_DIST_PATH="dist/frontend/components/deploy-inject/head-snippet.html"
 
           find "$OUT_DIR" -type f -name "*.html" -print0 | while IFS= read -r -d '' f; do
+            # Skip the snippet file itself
             if [ "$f" = "$SNIP_DIST_PATH" ]; then
               continue
             fi
 
+            # Prevent double injection
             if grep -qF "$MARK" "$f"; then
+              echo "Already injected: $f"
               continue
             fi
 
             tmp="$(mktemp)"
             {
               printf '%s\n' "$MARK"
-              printf '%s\n' "$SNIP_CONTENT"
+              printf '%s\n' "$SNIP"
               cat "$f"
             } > "$tmp"
             mv "$tmp" "$f"
+            echo "Injected: $f"
           done
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload Pages artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/frontend
+          path: "dist/frontend"
 
-      - name: Deploy Pages
+      - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
 
   update_subdomain_repos:
-    name: Sync assets + api subdomains
+    name: Sync /assets and /public api into their repos (GitHub App auth)
     runs-on: ubuntu-latest
-    needs: deploy_main_site
+    needs: [deploy_main_site]
     permissions:
       contents: read
 
     steps:
-      - name: Checkout source repo
+      - name: Checkout THIS repo
         uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: Configure git identity
+        shell: bash
         run: |
+          set -euo pipefail
           git config --global user.name  "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Create GitHub App token
+      - name: Create GitHub App token (cross-repo pushes)
         id: app-token
         uses: actions/create-github-app-token@v2
         with:
@@ -118,88 +127,111 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ vars.GH_APP_OWNER }}
 
-      # ---------------- ASSETS ----------------
+      # ----------------------------
+      # Helper: mirror a folder into a target repo and push safely
+      # Uses absolute source paths from $GITHUB_WORKSPACE
+      # ----------------------------
+
       - name: Sync assets.unlim8ted.com
         shell: bash
         env:
           GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
           REPO: ${{ env.ASSETS_REPO }}
-          SRC: ${{ env.ASSETS_DIR }}
           BRANCH: ${{ env.TARGET_BRANCH }}
+          SRC_DIR: ${{ env.ASSETS_DIR }}
+          DEST_PATH: target-assets
         run: |
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
 
-          push_url="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
+          PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
+          SRC_PATH="${GITHUB_WORKSPACE}/${SRC_DIR}"
+
+          if [ ! -d "${SRC_PATH}" ]; then
+            echo "Source folder not found: ${SRC_PATH}" >&2
+            ls -la "${GITHUB_WORKSPACE}"
+            exit 1
+          fi
 
           sync_and_push () {
-            rm -rf target-assets
-            git clone --depth 1 --branch "${BRANCH}" "${push_url}" target-assets
-            cd target-assets
+            rm -rf "${DEST_PATH}"
+            git clone --depth 1 --branch "${BRANCH}" "${PUSH_URL}" "${DEST_PATH}"
+
+            pushd "${DEST_PATH}" >/dev/null
 
             git fetch origin "${BRANCH}" --depth 1
             git checkout "${BRANCH}"
             git reset --hard "origin/${BRANCH}"
             git clean -fdx
 
-            rsync -a --delete "../${SRC}/" "./"
+            # Mirror contents from SOURCE repo folder -> target repo root
+            rsync -a --delete "${SRC_PATH}/" "./"
 
             if git status --porcelain | grep -q .; then
               git add -A
               git commit -m "Deploy assets from unlim8ted.com (${GITHUB_SHA})"
-
-              # Re-fetch immediately before push (race-safe) then push with lease
               git fetch origin "${BRANCH}" --depth 1
-              git push --force-with-lease "${push_url}" "HEAD:${BRANCH}"
+              git push --force-with-lease "${PUSH_URL}" "HEAD:${BRANCH}"
             else
-              echo "No asset changes."
+              echo "No changes to push to ${REPO}."
             fi
+
+            popd >/dev/null
           }
 
           if ! sync_and_push; then
-            echo "First attempt failed (remote likely moved). Retrying once..."
+            echo "First push attempt failed (remote likely moved). Retrying once..."
             sync_and_push
           fi
 
-      # ---------------- API ----------------
       - name: Sync api.unlim8ted.com
         shell: bash
         env:
           GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
           REPO: ${{ env.API_REPO }}
-          SRC: ${{ env.PUBLIC_API_DIR }}
           BRANCH: ${{ env.TARGET_BRANCH }}
+          SRC_DIR: ${{ env.PUBLIC_API_DIR }}
+          DEST_PATH: target-api
         run: |
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
 
-          push_url="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
+          PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
+          SRC_PATH="${GITHUB_WORKSPACE}/${SRC_DIR}"
+
+          if [ ! -d "${SRC_PATH}" ]; then
+            echo "Source folder not found: ${SRC_PATH}" >&2
+            ls -la "${GITHUB_WORKSPACE}"
+            exit 1
+          fi
 
           sync_and_push () {
-            rm -rf target-api
-            git clone --depth 1 --branch "${BRANCH}" "${push_url}" target-api
-            cd target-api
+            rm -rf "${DEST_PATH}"
+            git clone --depth 1 --branch "${BRANCH}" "${PUSH_URL}" "${DEST_PATH}"
+
+            pushd "${DEST_PATH}" >/dev/null
 
             git fetch origin "${BRANCH}" --depth 1
             git checkout "${BRANCH}"
             git reset --hard "origin/${BRANCH}"
             git clean -fdx
 
-            rsync -a --delete "../${SRC}/" "./"
+            # Mirror contents from SOURCE repo folder -> target repo root
+            rsync -a --delete "${SRC_PATH}/" "./"
 
             if git status --porcelain | grep -q .; then
               git add -A
               git commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
-
-              # Re-fetch immediately before push (race-safe) then push with lease
               git fetch origin "${BRANCH}" --depth 1
-              git push --force-with-lease "${push_url}" "HEAD:${BRANCH}"
+              git push --force-with-lease "${PUSH_URL}" "HEAD:${BRANCH}"
             else
-              echo "No API changes."
+              echo "No changes to push to ${REPO}."
             fi
+
+            popd >/dev/null
           }
 
           if ! sync_and_push; then
-            echo "First attempt failed (remote likely moved). Retrying once..."
+            echo "First push attempt failed (remote likely moved). Retrying once..."
             sync_and_push
           fi
