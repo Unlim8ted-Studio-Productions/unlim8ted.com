@@ -113,7 +113,7 @@ jobs:
         with:
           persist-credentials: false
 
-      # IMPORTANT: set author identity BEFORE any commits happen anywhere
+      # Set git identity ONCE for this job (prevents "Author identity unknown")
       - name: Configure git identity
         shell: bash
         run: |
@@ -129,88 +129,97 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ vars.GH_APP_OWNER }}
 
-      # ---------- Assets repo ----------
-      - name: Checkout assets.unlim8ted.com
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.ASSETS_REPO }}
-          ref: ${{ env.TARGET_BRANCH }}
-          path: target-assets
-          token: ${{ steps.app-token.outputs.token }}
-          persist-credentials: false
-
-      - name: Sync + commit + push assets repo (no injection)
+      # ----------------------------
+      # Helper: mirror a folder into a target repo and push safely
+      # ----------------------------
+      - name: Sync assets.unlim8ted.com
         shell: bash
         env:
           GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
+          REPO: ${{ env.ASSETS_REPO }}
+          BRANCH: ${{ env.TARGET_BRANCH }}
+          SRC_DIR: ${{ env.ASSETS_DIR }}
+          DEST_PATH: target-assets
+          COMMIT_MSG: Deploy assets from unlim8ted.com
         run: |
           set -euo pipefail
 
-          cd target-assets
+          # Fresh checkout of target repo
+          rm -rf "${DEST_PATH}"
+          git clone --depth 1 --branch "${BRANCH}" "https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git" "${DEST_PATH}"
 
-          # Local identity too (belt + suspenders)
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          sync_and_push () {
+            cd "${DEST_PATH}"
 
-          # Ensure we're exactly on remote branch state first
-          git fetch origin "${TARGET_BRANCH}"
-          git checkout "${TARGET_BRANCH}"
-          git reset --hard "origin/${TARGET_BRANCH}"
+            # Ensure we are based on the latest remote head
+            git fetch origin "${BRANCH}" --depth 1
+            git checkout "${BRANCH}"
+            git reset --hard "origin/${BRANCH}"
+            git clean -fdx
 
-          # Sync AFTER reset
-          rsync -a --delete "${GITHUB_WORKSPACE}/${ASSETS_DIR}/" "./"
+            # Mirror contents
+            rsync -a --delete "../${SRC_DIR}/" "./"
 
-          if git status --porcelain | grep -q .; then
-            git add -A
-            git commit -m "Deploy assets from unlim8ted.com (${GITHUB_SHA})"
+            if git status --porcelain | grep -q .; then
+              git add -A
+              git commit -m "${COMMIT_MSG} (${GITHUB_SHA})"
 
-            # Authenticated origin (persist-credentials=false)
-            git remote set-url origin "https://x-access-token:${GH_APP_TOKEN}@github.com/${ASSETS_REPO}.git"
+              # Push (race-safe)
+              git push --force-with-lease origin "${BRANCH}"
+            else
+              echo "No changes to push to ${REPO}."
+            fi
+          }
 
-            git push origin "${TARGET_BRANCH}"
-          else
-            echo "No changes to push to assets repo."
+          # Try once, then retry once if remote moved meanwhile
+          if ! sync_and_push; then
+            echo "First push attempt failed (likely remote moved). Retrying once..."
+            cd ..
+            sync_and_push
           fi
 
-      # ---------- API repo ----------
-      - name: Checkout api.unlim8ted.com
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.API_REPO }}
-          ref: ${{ env.TARGET_BRANCH }}
-          path: target-api
-          token: ${{ steps.app-token.outputs.token }}
-          persist-credentials: false
-
-      - name: Sync + commit + push api repo (no injection)
+      - name: Sync api.unlim8ted.com
         shell: bash
         env:
           GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
+          REPO: ${{ env.API_REPO }}
+          BRANCH: ${{ env.TARGET_BRANCH }}
+          SRC_DIR: ${{ env.PUBLIC_API_DIR }}
+          DEST_PATH: target-api
+          COMMIT_MSG: Deploy public api from unlim8ted.com
         run: |
           set -euo pipefail
 
-          cd target-api
+          # Fresh checkout of target repo
+          rm -rf "${DEST_PATH}"
+          git clone --depth 1 --branch "${BRANCH}" "https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git" "${DEST_PATH}"
 
-          # Local identity too (belt + suspenders)
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          sync_and_push () {
+            cd "${DEST_PATH}"
 
-          # Ensure we're exactly on remote branch state first
-          git fetch origin "${TARGET_BRANCH}"
-          git checkout "${TARGET_BRANCH}"
-          git reset --hard "origin/${TARGET_BRANCH}"
+            # Ensure we are based on the latest remote head
+            git fetch origin "${BRANCH}" --depth 1
+            git checkout "${BRANCH}"
+            git reset --hard "origin/${BRANCH}"
+            git clean -fdx
 
-          # Sync AFTER reset
-          rsync -a --delete "${GITHUB_WORKSPACE}/${PUBLIC_API_DIR}/" "./"
+            # Mirror contents
+            rsync -a --delete "../${SRC_DIR}/" "./"
 
-          if git status --porcelain | grep -q .; then
-            git add -A
-            git commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
+            if git status --porcelain | grep -q .; then
+              git add -A
+              git commit -m "${COMMIT_MSG} (${GITHUB_SHA})"
 
-            # Authenticated origin (persist-credentials=false)
-            git remote set-url origin "https://x-access-token:${GH_APP_TOKEN}@github.com/${API_REPO}.git"
+              # Push (race-safe)
+              git push --force-with-lease origin "${BRANCH}"
+            else
+              echo "No changes to push to ${REPO}."
+            fi
+          }
 
-            git push origin "${TARGET_BRANCH}"
-          else
-            echo "No changes to push to api repo."
+          # Try once, then retry once if remote moved meanwhile
+          if ! sync_and_push; then
+            echo "First push attempt failed (likely remote moved). Retrying once..."
+            cd ..
+            sync_and_push
           fi
