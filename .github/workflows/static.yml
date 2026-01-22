@@ -148,10 +148,14 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          git fetch origin "${TARGET_BRANCH}"
+          git checkout "${TARGET_BRANCH}"
+          git reset --hard "origin/${TARGET_BRANCH}"
+
           if git status --porcelain | grep -q .; then
             git add -A
             git commit -m "Deploy assets from unlim8ted.com (${GITHUB_SHA})"
-            git push "https://x-access-token:${GH_APP_TOKEN}@github.com/Unlim8ted-Studio-Productions/assets.unlim8ted.com.git" "${TARGET_BRANCH}"
+            git push --force-with-lease "https://x-access-token:${GH_APP_TOKEN}@github.com/Unlim8ted-Studio-Productions/assets.unlim8ted.com.git" "${TARGET_BRANCH}"
           else
             echo "No changes to push to assets repo."
           fi
@@ -183,10 +187,14 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          git fetch origin "${TARGET_BRANCH}"
+          git checkout "${TARGET_BRANCH}"
+          git reset --hard "origin/${TARGET_BRANCH}"
+
           if git status --porcelain | grep -q .; then
             git add -A
             git commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
-            git push "https://x-access-token:${GH_APP_TOKEN}@github.com/Unlim8ted-Studio-Productions/api.unlim8ted.com.git" "${TARGET_BRANCH}"
+            git push --force-with-lease "https://x-access-token:${GH_APP_TOKEN}@github.com/Unlim8ted-Studio-Productions/api.unlim8ted.com.git" "${TARGET_BRANCH}"
           else
             echo "No changes to push to api repo."
           fi
