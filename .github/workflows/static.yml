@@ -113,6 +113,14 @@ jobs:
         with:
           persist-credentials: false
 
+      # IMPORTANT: set author identity BEFORE any commits happen anywhere
+      - name: Configure git identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config --global user.name  "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Create GitHub App token (cross-repo pushes)
         id: app-token
         uses: actions/create-github-app-token@v2
@@ -140,25 +148,25 @@ jobs:
 
           cd target-assets
 
+          # Local identity too (belt + suspenders)
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Clean & update FIRST
+          # Ensure we're exactly on remote branch state first
           git fetch origin "${TARGET_BRANCH}"
           git checkout "${TARGET_BRANCH}"
           git reset --hard "origin/${TARGET_BRANCH}"
 
-          # Now sync files AFTER reset
+          # Sync AFTER reset
           rsync -a --delete "${GITHUB_WORKSPACE}/${ASSETS_DIR}/" "./"
 
           if git status --porcelain | grep -q .; then
             git add -A
             git commit -m "Deploy assets from unlim8ted.com (${GITHUB_SHA})"
 
-            # Authenticated origin (since persist-credentials=false)
+            # Authenticated origin (persist-credentials=false)
             git remote set-url origin "https://x-access-token:${GH_APP_TOKEN}@github.com/${ASSETS_REPO}.git"
 
-            # Normal push (avoids protected-branch force-push blocks)
             git push origin "${TARGET_BRANCH}"
           else
             echo "No changes to push to assets repo."
@@ -183,25 +191,25 @@ jobs:
 
           cd target-api
 
+          # Local identity too (belt + suspenders)
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Clean & update FIRST
+          # Ensure we're exactly on remote branch state first
           git fetch origin "${TARGET_BRANCH}"
           git checkout "${TARGET_BRANCH}"
           git reset --hard "origin/${TARGET_BRANCH}"
 
-          # Now sync files AFTER reset
+          # Sync AFTER reset
           rsync -a --delete "${GITHUB_WORKSPACE}/${PUBLIC_API_DIR}/" "./"
 
           if git status --porcelain | grep -q .; then
             git add -A
             git commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
 
-            # Authenticated origin (since persist-credentials=false)
+            # Authenticated origin (persist-credentials=false)
             git remote set-url origin "https://x-access-token:${GH_APP_TOKEN}@github.com/${API_REPO}.git"
 
-            # Normal push (avoids protected-branch force-push blocks)
             git push origin "${TARGET_BRANCH}"
           else
             echo "No changes to push to api repo."
