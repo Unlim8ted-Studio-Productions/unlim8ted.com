@@ -21,7 +21,7 @@ env:
   PUBLIC_API_DIR: "public api"
 
   # Injection snippet (only applied to frontend HTML)
-  SNIP_FILE: "components/deploy-inject/head-snippet.html"
+  SNIP_FILE: "frontend/components/deploy-inject/head-snippet.html"
   MARK: "<!--__INJECTED_FILE_PREFIX__-->"
 
   # Target repos for subdomains
