@@ -1,5 +1,5 @@
 # .github/workflows/sync-assets-and-public-api.yml
-name: Sync /assets and /public api into their repos (GitHub App auth)
+name: Sync /assets and /public api into their repos + publish /frontend to GitHub Pages (GitHub App auth)
 
 on:
   push:
@@ -10,16 +10,20 @@ permissions:
   contents: write
 
 concurrency:
-  group: sync-assets-api
+  group: sync-assets-api-frontend
   cancel-in-progress: false
 
 env:
   ASSETS_DIR: assets
   PUBLIC_API_DIR: public api
+  FRONTEND_DIR: frontend
 
   ASSETS_REPO: Unlim8ted-Studio-Productions/assets.unlim8ted.com
   API_REPO: Unlim8ted-Studio-Productions/api.unlim8ted.com
   TARGET_BRANCH: main
+
+  # GitHub Pages branch in THIS repo
+  PAGES_BRANCH: gh-pages
 
 jobs:
   sync:
@@ -38,7 +42,7 @@ jobs:
           git config --global user.name  "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # Figure out whether assets/ and/or public api/ changed in THIS push
+      # Figure out whether assets/ and/or public api/ and/or frontend/ changed in THIS push
       - name: Detect changed paths
         id: changes
         shell: bash
@@ -65,6 +69,7 @@ jobs:
 
           assets_changed=false
           api_changed=false
+          frontend_changed=false
 
           if echo "$CHANGED" | grep -qE '^assets/'; then
             assets_changed=true
@@ -76,17 +81,23 @@ jobs:
             api_changed=true
           fi
 
+          if echo "$CHANGED" | grep -qE '^frontend/'; then
+            frontend_changed=true
+          fi
+
           echo "assets_changed=$assets_changed"
           echo "api_changed=$api_changed"
+          echo "frontend_changed=$frontend_changed"
 
           echo "assets_changed=$assets_changed" >> "$GITHUB_OUTPUT"
           echo "api_changed=$api_changed" >> "$GITHUB_OUTPUT"
+          echo "frontend_changed=$frontend_changed" >> "$GITHUB_OUTPUT"
 
-      - name: Skip (no assets/api changes)
-        if: steps.changes.outputs.assets_changed != 'true' && steps.changes.outputs.api_changed != 'true'
+      - name: Skip (no assets/api/frontend changes)
+        if: steps.changes.outputs.assets_changed != 'true' && steps.changes.outputs.api_changed != 'true' && steps.changes.outputs.frontend_changed != 'true'
         shell: bash
         run: |
-          echo "No changes under '${ASSETS_DIR}/' or '${PUBLIC_API_DIR}/' — nothing to sync."
+          echo "No changes under '${ASSETS_DIR}/', '${PUBLIC_API_DIR}/', or '${FRONTEND_DIR}/' — nothing to sync."
 
       - name: Validate GitHub App inputs (fail fast)
         if: steps.changes.outputs.assets_changed == 'true' || steps.changes.outputs.api_changed == 'true'
@@ -122,13 +133,12 @@ jobs:
           app-id: ${{ vars.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: Unlim8ted-Studio-Productions
-          # Tight scope is better (recommended):
           repositories: |
             assets.unlim8ted.com
             api.unlim8ted.com
 
-      - name: Fail if any file > 95MB in assets or public api (only when needed)
-        if: steps.changes.outputs.assets_changed == 'true' || steps.changes.outputs.api_changed == 'true'
+      - name: Fail if any file > 95MB in assets or public api or frontend (only when needed)
+        if: steps.changes.outputs.assets_changed == 'true' || steps.changes.outputs.api_changed == 'true' || steps.changes.outputs.frontend_changed == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -152,6 +162,9 @@ jobs:
           fi
           if [ "${{ steps.changes.outputs.api_changed }}" = "true" ]; then
             check_dir "${PUBLIC_API_DIR}"
+          fi
+          if [ "${{ steps.changes.outputs.frontend_changed }}" = "true" ]; then
+            check_dir "${FRONTEND_DIR}"
           fi
 
       - name: Sync assets repo (only if assets changed)
@@ -179,7 +192,6 @@ jobs:
           git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
           test -d "${WORKDIR}/repo/.git"
 
-          # Mirror content into repo root (but keep .git and the target repo's workflows if you want)
           rsync -a --delete \
             --exclude='.git/' \
             --exclude='.github/' \
@@ -234,5 +246,58 @@ jobs:
           fi
 
           git -C "${WORKDIR}/repo" commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
+          git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"
+          rm -rf "$WORKDIR"
+
+      # NEW: Publish frontend folder to GitHub Pages branch in THIS repo
+      - name: Publish frontend to gh-pages (only if frontend changed)
+        if: steps.changes.outputs.frontend_changed == 'true'
+        shell: bash
+        env:
+          BRANCH: ${{ env.PAGES_BRANCH }}
+          SRC_DIR: ${{ env.FRONTEND_DIR }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          export GIT_TERMINAL_PROMPT=0
+
+          SRC_PATH="${GITHUB_WORKSPACE}/${SRC_DIR}"
+          if [ ! -d "${SRC_PATH}" ]; then
+            echo "Source folder not found: ${SRC_PATH}" >&2
+            exit 1
+          fi
+
+          WORKDIR="$(mktemp -d)"
+          echo "Workdir (pages): $WORKDIR"
+
+          PUSH_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          # Clone gh-pages if it exists, otherwise create it.
+          if git ls-remote --exit-code --heads "${PUSH_URL}" "${BRANCH}" >/dev/null 2>&1; then
+            git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
+          else
+            git clone --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
+            (cd "${WORKDIR}/repo" && git checkout --orphan "${BRANCH}" && git rm -rf . || true)
+          fi
+
+          test -d "${WORKDIR}/repo/.git"
+
+          # Mirror frontend/ into gh-pages root.
+          # Keep .git only. If you have a CNAME you want preserved, you can add: --exclude='CNAME'
+          rsync -a --delete \
+            --exclude='.git/' \
+            "${SRC_PATH}/" "${WORKDIR}/repo/"
+
+          # Optional but common for Pages (prevents Jekyll processing)
+          touch "${WORKDIR}/repo/.nojekyll"
+
+          git -C "${WORKDIR}/repo" add -A
+          if git -C "${WORKDIR}/repo" diff --cached --quiet; then
+            echo "No changes to push to ${GITHUB_REPOSITORY}:${BRANCH}."
+            rm -rf "$WORKDIR"
+            exit 0
+          fi
+
+          git -C "${WORKDIR}/repo" commit -m "Deploy frontend to GitHub Pages (${GITHUB_SHA})"
           git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"
           rm -rf "$WORKDIR"
