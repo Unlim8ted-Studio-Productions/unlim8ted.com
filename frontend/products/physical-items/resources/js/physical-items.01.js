@@ -38,8 +38,8 @@ const grid = document.getElementById("grid");
     }
 
     async function loadCatalog() {
-      const r = await fetch("assets.unlim8ted.com/data/products.json", { cache: "no-store" });
-      if (!r.ok) throw new Error(`Failed to load assets.unlim8ted.com/data/products.json (${r.status})`);
+      const r = await fetch("https://assets.unlim8ted.com/data/products.json", { cache: "no-store" });
+      if (!r.ok) throw new Error(`Failed to load https://assets.unlim8ted.com/data/products.json (${r.status})`);
       const data = await r.json();
       const list = Array.isArray(data) ? data : (Array.isArray(data?.products) ? data.products : []);
       return list;

@@ -1,7 +1,7 @@
 /* =========================================================
            cart.js (ESM) — Unlim8ted custom checkout
            IMPORTANT UPDATE:
-           - assets.unlim8ted.com/data/products.json varients[].id IS the Printful catalog variant id (printful_catalog_variant_id).
+           - https://assets.unlim8ted.com/data/products.json varients[].id IS the Printful catalog variant id (printful_catalog_variant_id).
            - Cart item variantId is expected to be that same Printful variant id.
            - Worker expects items: { printfulVariantId, qty } where printfulVariantId is that id.
         ========================================================= */
@@ -45,7 +45,7 @@
         };
 
         /* =============================
-           assets.unlim8ted.com/data/products.json cache/index
+           https://assets.unlim8ted.com/data/products.json cache/index
         ============================= */
         let _productsLoaded = false;
         let _productsLoading = null;
@@ -66,15 +66,15 @@
 
             _productsLoading = (async () => {
                 try {
-                    const r = await fetch("assets.unlim8ted.com/data/products.json", { cache: "no-store" });
-                    if (!r.ok) throw new Error("Failed to load assets.unlim8ted.com/data/products.json");
+                    const r = await fetch("https://assets.unlim8ted.com/data/products.json", { cache: "no-store" });
+                    if (!r.ok) throw new Error("Failed to load https://assets.unlim8ted.com/data/products.json");
                     const data = await r.json();
                     const products = Array.isArray(data) ? data : (data?.products || []);
                     _productsArray = Array.isArray(products) ? products : [];
                     indexProducts(_productsArray);
                     _productsLoaded = true;
                 } catch (e) {
-                    console.warn("assets.unlim8ted.com/data/products.json load failed:", e);
+                    console.warn("https://assets.unlim8ted.com/data/products.json load failed:", e);
                 } finally {
                     _productsLoading = null;
                 }
@@ -88,7 +88,7 @@
             _variantByKey = new Map();
 
             for (const p of (products || [])) {
-                // ✅ YOUR assets.unlim8ted.com/data/products.json uses "id" as the product key
+                // ✅ YOUR https://assets.unlim8ted.com/data/products.json uses "id" as the product key
                 const pid = String(p.id ?? p.productId ?? p.printful_sync_id ?? "").trim();
                 if (!pid) continue;
 
@@ -952,7 +952,7 @@
             if (missingVariant.length) {
                 setNotice("warn",
                     `<strong>Some paid items can’t be checked out yet.</strong><br/>
-           These need productId + variantId (Printful catalog variant id) in your cart assets.unlim8ted.com/data/products.json:<br/>
+           These need productId + variantId (Printful catalog variant id) in your cart https://assets.unlim8ted.com/data/products.json:<br/>
            <div style="margin-top:6px;opacity:.9">${missingVariant.map(m => `• ${escapeHtml(m.title)}`).join("<br/>")}</div>`
                 );
                 return;
@@ -962,7 +962,7 @@
             if (missingPfid.length) {
                 setNotice("warn",
                     `<strong>Missing Printful catalog variant id.</strong><br/>
-           Make sure your cart item <code>variantId</code> is the Printful catalog variant id (assets.unlim8ted.com/data/products.json varient.id).<br/>
+           Make sure your cart item <code>variantId</code> is the Printful catalog variant id (https://assets.unlim8ted.com/data/products.json varient.id).<br/>
            <div style="margin-top:6px;opacity:.9">${missingPfid.map(m => `• ${escapeHtml(m.title)} (${escapeHtml(m.variantLabel || "")})`).join("<br/>")}</div>`
                 );
                 return;
@@ -1544,7 +1544,7 @@ modalConfirm.addEventListener("click", () => {
                 renderCart();
                 setNotice("warn",
                     `<strong>This product can’t be purchased yet.</strong><br/>
-           Missing varient.id (Printful catalog variant id) in assets.unlim8ted.com/data/products.json for <strong>${escapeHtml(pid || productKey)}</strong>.`
+           Missing varient.id (Printful catalog variant id) in https://assets.unlim8ted.com/data/products.json for <strong>${escapeHtml(pid || productKey)}</strong>.`
                 );
                 return;
             }
@@ -1554,7 +1554,7 @@ modalConfirm.addEventListener("click", () => {
                 renderCart();
                 setNotice("warn",
                     `<strong>This free item is missing its link.</strong><br/>
-           Add <code>accessUrl</code> (or <code>downloadUrl/url/link</code>) in assets.unlim8ted.com/data/products.json.`
+           Add <code>accessUrl</code> (or <code>downloadUrl/url/link</code>) in https://assets.unlim8ted.com/data/products.json.`
                 );
                 return;
             }

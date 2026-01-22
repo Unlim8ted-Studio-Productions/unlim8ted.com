@@ -1509,7 +1509,7 @@
             <div class="htrack" id="htrack" aria-label="Featured products">
               <!-- Use assets you already have -->
               <article class="pCard">
-                <img class="pMedia" src="assetsassets.unlim8ted.com/images/products/games/TimeCatCover.png" alt="TimeCat cover">
+                <img class="pMedia" src="assetshttps://assets.unlim8ted.com/images/products/games/TimeCatCover.png" alt="TimeCat cover">
                 <div class="pBody">
                   <h4 class="pTitle">TimeCat</h4>
                   <p class="pDesc">A time-bending cat adventure with systems that fight back (in a good way).</p>
@@ -1521,7 +1521,7 @@
               </article>
 
               <article class="pCard">
-                <img class="pMedia" src="assetsassets.unlim8ted.com/images/products/films/TheGlitchCover.png" alt="The Glitch cover">
+                <img class="pMedia" src="assetshttps://assets.unlim8ted.com/images/products/films/TheGlitchCover.png" alt="The Glitch cover">
                 <div class="pBody">
                   <h4 class="pTitle">The Glitch</h4>
                   <p class="pDesc">Short-form film experiments—mystery, style, and a little reality distortion.</p>
@@ -1533,7 +1533,7 @@
               </article>
 
               <article class="pCard">
-                <img class="pMedia" src="assetsassets.unlim8ted.com/images/products/software/star_tracker_icon_square.png"
+                <img class="pMedia" src="assetshttps://assets.unlim8ted.com/images/products/software/star_tracker_icon_square.png"
                   alt="Star Tracker icon">
                 <div class="pBody">
                   <h4 class="pTitle">Star Tracker</h4>
@@ -1546,7 +1546,7 @@
               </article>
 
               <article class="pCard">
-                <img class="pMedia" src="assetsassets.unlim8ted.com/images/products/ai/ai%20icon.png" alt="AI icon">
+                <img class="pMedia" src="assetshttps://assets.unlim8ted.com/images/products/ai/ai%20icon.png" alt="AI icon">
                 <div class="pBody">
                   <h4 class="pTitle">AI Tools</h4>
                   <p class="pDesc">Creative utilities, generators, and helpers—built to be used, not just demoed.</p>
@@ -1558,13 +1558,13 @@
               </article>
 
               <article class="pCard">
-                <img class="pMedia" src="assetsassets.unlim8ted.com/images/products/music/music%20icon.png" alt="Music icon">
+                <img class="pMedia" src="assetshttps://assets.unlim8ted.com/images/products/music/music%20icon.png" alt="Music icon">
                 <div class="pBody">
                   <h4 class="pTitle">Music</h4>
                   <p class="pDesc">Soundtracks, scenes, and headphone worlds.</p>
                   <div class="pActions">
-                    <a class="btn primary" href="/productsassets.unlim8ted.com/music.html">Music</a>
-                    <a class="btn" href="assets.unlim8ted.com/podcasts/ad.html">Podcasts</a>
+                    <a class="btn primary" href="/productshttps://assets.unlim8ted.com/music.html">Music</a>
+                    <a class="btn" href="https://assets.unlim8ted.com/podcasts/ad.html">Podcasts</a>
                   </div>
                 </div>
               </article>
@@ -1646,18 +1646,18 @@ Z
               <div class="sponsors-label">In collaboration with</div>
 
               <div class="sponsor-logos">
-                <img src="assets.unlim8ted.com/images/logo/Zipper Line Logo.png" alt="Zipper Line" draggable="false">
+                <img src="https://assets.unlim8ted.com/images/logo/Zipper Line Logo.png" alt="Zipper Line" draggable="false">
 
-                <img src="assets.unlim8ted.com/images/logo/Bnacintech Industries logo.png" alt="Bnacintech Industries"
+                <img src="https://assets.unlim8ted.com/images/logo/Bnacintech Industries logo.png" alt="Bnacintech Industries"
                   draggable="false">
 
-                <img src="assets.unlim8ted.com/images/logo/Sky Tale Media Logo.png" alt="Bnacintech Industries"
+                <img src="https://assets.unlim8ted.com/images/logo/Sky Tale Media Logo.png" alt="Bnacintech Industries"
                   draggable="false">
 
-                <img src="assets.unlim8ted.com/images/logo/LMMH_LOGO+BLACK.webp" alt="Bnacintech Industries"
+                <img src="https://assets.unlim8ted.com/images/logo/LMMH_LOGO+BLACK.webp" alt="Bnacintech Industries"
                   draggable="false">
 
-                <img src="assets.unlim8ted.com/images/logo/New Heights Logo.png" alt="Bnacintech Industries"
+                <img src="https://assets.unlim8ted.com/images/logo/New Heights Logo.png" alt="Bnacintech Industries"
                   draggable="false">
               </div>
             </div>
@@ -1693,7 +1693,7 @@ Z
     let unsubCart = null;
     let cartItems = [];
 
-    // ===== assets.unlim8ted.com/data/products.json cache/index =====
+    // ===== https://assets.unlim8ted.com/data/products.json cache/index =====
     let PRODUCTS_LOADED = false;
     let PRODUCTS_LOADING = null;
     let PRODUCT_BY_ID = new Map();
@@ -1745,14 +1745,14 @@ Z
 
       PRODUCTS_LOADING = (async () => {
         try {
-          const r = await fetch("assets.unlim8ted.com/data/products.json", { cache: "no-store" });
-          if (!r.ok) throw new Error("Failed to load assets.unlim8ted.com/data/products.json");
+          const r = await fetch("https://assets.unlim8ted.com/data/products.json", { cache: "no-store" });
+          if (!r.ok) throw new Error("Failed to load https://assets.unlim8ted.com/data/products.json");
           const data = await r.json();
           const products = Array.isArray(data) ? data : (data?.products || []);
           indexProducts(products);
           PRODUCTS_LOADED = true;
         } catch (e) {
-          console.warn("assets.unlim8ted.com/data/products.json load failed:", e);
+          console.warn("https://assets.unlim8ted.com/data/products.json load failed:", e);
         } finally {
           PRODUCTS_LOADING = null;
         }

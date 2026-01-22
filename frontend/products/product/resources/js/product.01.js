@@ -219,8 +219,8 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
     // ----------------------------
     let productsCache = null;
     async function loadProducts() {
-      const r = await fetch("assets.unlim8ted.com/data/products.json", { cache: "no-store" });
-      if (!r.ok) throw new Error("Failed to load assets.unlim8ted.com/data/products.json");
+      const r = await fetch("https://assets.unlim8ted.com/data/products.json", { cache: "no-store" });
+      if (!r.ok) throw new Error("Failed to load https://assets.unlim8ted.com/data/products.json");
       return await r.json();
     }
     async function getProductsOnce() {

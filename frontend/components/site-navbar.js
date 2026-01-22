@@ -17,7 +17,7 @@ class SiteNavbar extends HTMLElement {
     this._isMobile = false;
     this._focusTrapHandler = null;
 
-    // assets.unlim8ted.com/data/products.json cache/index
+    // https://assets.unlim8ted.com/data/products.json cache/index
     this._productsLoaded = false;
     this._productsLoading = null;
     this._productById = new Map();
@@ -534,7 +534,7 @@ class SiteNavbar extends HTMLElement {
     // ---- state ----
     this._isMobile = window.matchMedia("(max-width: 820px)").matches;
 
-    // Preload assets.unlim8ted.com/data/products.json (cart display will re-render when ready)
+    // Preload https://assets.unlim8ted.com/data/products.json (cart display will re-render when ready)
     this.loadProducts().then(() => {
       this.renderCartMenu();
     }).catch(() => { });
@@ -644,7 +644,7 @@ class SiteNavbar extends HTMLElement {
     this._onWinResize = null;
   }
 
-  // ===== assets.unlim8ted.com/data/products.json =====
+  // ===== https://assets.unlim8ted.com/data/products.json =====
   safeUrl(u) {
     const s = String(u || "").trim();
     if (!s) return "";
@@ -658,14 +658,14 @@ class SiteNavbar extends HTMLElement {
 
     this._productsLoading = (async () => {
       try {
-        const r = await fetch("assets.unlim8ted.com/data/products.json", { cache: "no-store" });
-        if (!r.ok) throw new Error("Failed to load assets.unlim8ted.com/data/products.json");
+        const r = await fetch("https://assets.unlim8ted.com/data/products.json", { cache: "no-store" });
+        if (!r.ok) throw new Error("Failed to load https://assets.unlim8ted.com/data/products.json");
         const data = await r.json();
         const products = Array.isArray(data) ? data : (data?.products || []);
         this.indexProducts(products);
         this._productsLoaded = true;
       } catch (e) {
-        console.warn("Navbar assets.unlim8ted.com/data/products.json load failed:", e);
+        console.warn("Navbar https://assets.unlim8ted.com/data/products.json load failed:", e);
       } finally {
         this._productsLoading = null;
       }
@@ -726,7 +726,7 @@ resolveCartDisplay(it) {
   // pick best source
   const picked = parsedItem || parsedVar || parsedProd;
 
-  // Sometimes your assets.unlim8ted.com/data/products.json uses dollars (major units) like 23.0
+  // Sometimes your https://assets.unlim8ted.com/data/products.json uses dollars (major units) like 23.0
   // Sometimes Square returns cents (minor units) like 2300
   // Heuristic: if picked is from objects (isMinor=true) treat as cents; otherwise treat as dollars.
   const priceAmount = picked ? picked.amount : null;

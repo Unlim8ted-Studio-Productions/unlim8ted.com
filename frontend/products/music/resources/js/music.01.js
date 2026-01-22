@@ -310,11 +310,11 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
     timeline.addEventListener("change", (e) => seekTrack(e));
 
     // ============================
-    // assets.unlim8ted.com/data/products.json -> build list
+    // https://assets.unlim8ted.com/data/products.json -> build list
     // ============================
-    const PRODUCTS_URL = "assets.unlim8ted.com/data/products.json";
+    const PRODUCTS_URL = "https://assets.unlim8ted.com/data/products.json";
 
-    /** full array from assets.unlim8ted.com/data/products.json (only "music" items) */
+    /** full array from https://assets.unlim8ted.com/data/products.json (only "music" items) */
     let allMusic = [];
 
     /** index currently selected/playing inside allMusic */
@@ -425,7 +425,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
       const otherAudio = allMusic.filter(i => !isMidiTrack(i) && !inferIsTimecat(i));
 
       if (!normal.length && !timecat.length && !otherAudio.length) {
-        songListEl.innerHTML = `<div class="empty">No tracks found in assets.unlim8ted.com/data/products.json.</div>`;
+        songListEl.innerHTML = `<div class="empty">No tracks found in https://assets.unlim8ted.com/data/products.json.</div>`;
         return;
       }
 
@@ -463,7 +463,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
     async function loadProducts() {
       try {
         const res = await fetch(PRODUCTS_URL, { cache: "no-store" });
-        if (!res.ok) throw new Error(`Failed to load assets.unlim8ted.com/data/products.json (${res.status})`);
+        if (!res.ok) throw new Error(`Failed to load https://assets.unlim8ted.com/data/products.json (${res.status})`);
         const json = await res.json();
 
         // Keep only music
@@ -476,7 +476,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
         }
       } catch (e) {
         console.error("products load error:", e);
-        songListEl.innerHTML = `<div class="empty">Could not load <b>assets.unlim8ted.com/data/products.json</b>.</div>`;
+        songListEl.innerHTML = `<div class="empty">Could not load <b>https://assets.unlim8ted.com/data/products.json</b>.</div>`;
       }
     }
 

@@ -32,12 +32,12 @@
     const provider = new GoogleAuthProvider();
 
     // Where products are loaded from
-    const PRODUCTS_URL = "assets.unlim8ted.com/data/products.json";
+    const PRODUCTS_URL = "https://assets.unlim8ted.com/data/products.json";
 
     async function fetchProducts() {
       const res = await fetch(PRODUCTS_URL, { cache: "no-store" });
       if (!res.ok) {
-        throw new Error(`Failed to fetch assets.unlim8ted.com/data/products.json (${res.status} ${res.statusText})`);
+        throw new Error(`Failed to fetch https://assets.unlim8ted.com/data/products.json (${res.status} ${res.statusText})`);
       }
       const data = await res.json();
 
@@ -45,7 +45,7 @@
       const products = Array.isArray(data) ? data : data?.products;
 
       if (!Array.isArray(products)) {
-        throw new Error("assets.unlim8ted.com/data/products.json must be an array, or an object with a 'products' array.");
+        throw new Error("https://assets.unlim8ted.com/data/products.json must be an array, or an object with a 'products' array.");
       }
       return products;
     }
