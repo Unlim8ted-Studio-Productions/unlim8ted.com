@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unlim8ted — Puzzle Square</title>
+  <meta name="description" content="Fun puzzles. Always free. No sign up required. Powered by Unlim8ted Studio Productions" />
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+
+  <!-- Navbar component -->
+  <script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
+
+  <!-- Firebase (kept as-is, but wrapped safely) -->
+  <script type="module" src="./resources/js/puzzle-squares.01.js"></script>
+
+  <link rel="stylesheet" href="./resources/css/puzzle-squares.01.css">
+</head>
+
+<body>
+  <site-navbar
+    cart-href="https://unlim8ted.com/sign-in/cart"
+    signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile">
+  </site-navbar>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <h1>Puzzle Square</h1>
+        <p>Fun puzzles. Always free. No sign up required. Powered by Unlim8ted Studio Productions.</p>
+      </div>
+      <div class="badge"><span class="dot"></span> live puzzles</div>
+    </section>
+
+    <section class="grid">
+      <!-- LEFT: PUZZLES -->
+      <article class="card">
+        <div class="cardHeader">
+          <h2>Puzzles</h2>
+          <span class="chip">Tip: answers are not auto-checked yet</span>
+        </div>
+        <div class="cardBody">
+
+          <!-- ========= PUZZLE SQUARE ONE ========= -->
+<h2 class="sectionTitle">
+  <u>P</u>u<u>z</u>zle Squ<u>a</u>re One
+</h2>
+          <p class="subtle">Work through each part. Use hints only if you get stuck.</p>
+
+          <div class="puzzleBlock">
+            <h3><span class="chip">Part 1</span> Targets RID</h3>
+
+            <div class="monoBox mono">
+              <div><strong>Targets RID (Robot Identification Number):</strong></div>
+              <div>^=2,1,12,3,5,4,23,13,14,10,21,8,8,21,7,12|||5,2,1,7,2,3,3,2,1,7,8,19</div>
+              <div style="margin-top:10px; color: var(--muted);">Left → right</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="monoBox mono">
+              <div><strong>Targets Encrypted Unlim8ted Password:</strong></div>
+              <div style="margin-top:10px;">
+                <span>AwMnRiX&nbsp;&nbsp;pIjWhCyFrLp–&nbsp;&nbsp;OjTmIwS&nbsp;&nbsp;RxSnAkOgPoP&nbsp;&nbsp;EnQt–sQxRiQbK!N</span>
+              </div>
+            </div>
+
+            <p class="subtle" style="margin-top:12px;">
+              Task: Unencrypt the first password recovery hint using the target's encrypted password.
+            </p>
+
+            <label class="subtle" for="ans1">Extracted password recovery hint:</label>
+            <input id="ans1" class="answerInput" type="text" placeholder="Type your answer…" />
+
+            <div class="row">
+              <button class="btn" id="hint1"
+                onclick="this.textContent='Our sources tell us that ^ may refer to exponent which refers to superscript characters.'">
+                I need a hint
+              </button>
+              <button class="btn" id="hint2"
+                onclick="this.textContent='Our sources tell us that the numbers in ^ may refer to indexes in the password.'">
+                I need a hint
+              </button>
+            </div>
+          </div>
+
+          <div class="puzzleBlock">
+            <h3><span class="chip">Part 2</span> Leak Message</h3>
+
+            <p class="subtle">
+              Recently Unlim8ted Studio Productions had a data leak and the hacker responsible sent us pieces of data that may be helpful in obtaining the complete password.
+            </p>
+
+            <div class="monoBox mono">
+              <div>⬜4=1</div>
+              <div>_2=26</div>
+              <div style="margin-top:10px; color: var(--muted);">Use with opposite of ^ and remember our name…</div>
+            </div>
+
+            <label class="subtle" for="ans2" style="margin-top:12px;">What it means:</label>
+            <input id="ans2" class="answerInput" type="text" placeholder="Type your answer…" />
+
+            <div class="row">
+              <button class="btn" id="hint3" onclick="this.textContent='Think about the title.'">I need a hint</button>
+            </div>
+          </div>
+
+          <div class="puzzleBlock">
+            <h3><span class="chip">Part 3</span> Code Discovery</h3>
+
+            <p class="subtle">Deep in Unlim8ted’s code we found something that may help in decoding the password.</p>
+
+            <div class="monoBox mono">
+              <div><strong>The info found:</strong></div>
+              <div>Code = ^[28,18,12] any of ^</div>
+            </div>
+
+            <label class="subtle" for="ans3" style="margin-top:12px;">Code =</label>
+            <input id="ans3" class="answerInput" type="text" placeholder="Type your answer…" />
+
+            <div class="row">
+              <button class="btn" id="hint4"
+                onclick="this.textContent='Our experts theorize that the stuff in the brackets may be the same as what you did in the first part.'">
+                I need a hint
+              </button>
+              <button class="btn" id="hint5"
+                onclick="this.textContent='Any of the ^\'s may refer to the list with ^ in the beginning according to our other hackers.'">
+                I need a hint
+              </button>
+            </div>
+          </div>
+
+          <div class="puzzleBlock">
+            <h3><span class="chip">Part 4</span> Final Decrypt</h3>
+
+            <p class="subtle">
+              Now you must use all the information you have found in collaboration with the last thing we know about Unlim8ted’s password encryption.
+            </p>
+
+            <div class="monoBox mono">
+              <div><strong>Our last piece of info:</strong></div>
+              <div style="margin-top:10px;">wrappable</div>
+              <div>|</div>
+              <div>\ /</div>
+              <div><span style="color:var(--muted)">Code</span> + <span style="color:var(--muted)">effector</span> = answer</div>
+            </div>
+
+            <label class="subtle" for="ans4" style="margin-top:12px;">Unencrypted Password:</label>
+            <input id="ans4" class="answerInput" type="text" placeholder="Type your answer…" />
+
+            <div class="row">
+              <button class="btn" id="hint6"
+                onclick="this.textContent='Our experts ask you to think about what matrix you were given.'">
+                I need a hint
+              </button>
+              <button class="btn" id="hint7"
+                onclick="this.textContent='You may need to convert the code into numeric form.'">
+                I need a hint
+              </button>
+              <button class="btn btnPrimary" id="answer"
+                onclick="this.textContent='You solved the first puzzle!'">
+                Click to see answer
+              </button>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- ========= PUZZLE SQUARE TWO ========= -->
+          <h2 class="sectionTitle">Puzzle Square Two (unfinished)</h2>
+
+          <div class="puzzleBlock">
+            <h3><span class="chip">Part 1</span> Notes on the Wall</h3>
+
+            <p class="subtle">You wake up sweating and notice a note plastered to your wall.</p>
+            <p class="subtle">On the note you find many music notes like the ones you might find on a music sheet.</p>
+
+            <div class="monoBox" style="display:flex; justify-content:center;">
+              <img
+                src="puzzle square/images/image1.png"
+                alt="Music-note puzzle"
+                style="max-width:100%; height:auto; border-radius:12px; border:1px solid rgba(255,255,255,.12);"
+              />
+            </div>
+
+            <p class="subtle" style="margin-top:12px;">
+              The paper reads:
+              <span class="mono">-1=a</span> &nbsp; <span class="mono">10=k</span>
+            </p>
+
+            <label class="subtle" for="ans5">What does it mean?</label>
+            <input id="ans5" class="answerInput" type="text" placeholder="Type your answer…" />
+
+            <div class="row">
+              <button class="btn" id="hint8"
+                onclick="this.textContent='You think to yourself and decide that negative one may refer to the bottom line.'">
+                I need a hint
+              </button>
+            </div>
+          </div>
+
+          <div class="puzzleBlock">
+            <h3><span class="chip">Part 2</span> (WIP)</h3>
+            <p class="subtle">Story: (add your text here)</p>
+
+            <label class="subtle" for="ans6">What does it mean?</label>
+            <input id="ans6" class="answerInput" type="text" placeholder="Type your answer…" />
+
+            <div class="row">
+              <button class="btn" id="hint9"
+                onclick="this.textContent='You think to yourself and decide that negative one may refer to the bottom line.'">
+                I need a hint
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </article>
+
+      <!-- RIGHT: NOTES -->
+      <aside class="card">
+        <div class="cardHeader">
+          <h2>Notes</h2>
+          <span class="chip">local only</span>
+        </div>
+        <div class="cardBody">
+          <textarea id="notes" placeholder="Type here…"></textarea>
+          <div class="row" style="margin-top:12px;">
+            <button class="btn" id="saveNotes">Save</button>
+            <button class="btn" id="clearNotes">Clear</button>
+          </div>
+          <p class="subtle" style="margin-top:10px;">
+            Notes are stored in your browser (localStorage).
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      <p id="footer-text">© 2019-2026 Unlim8ted Studio Productions. All rights reserved.</p>
+    </footer>
+  </main>
+
+  <script src="./resources/js/puzzle-squares.02.js"></script>
+</body>
+</html>

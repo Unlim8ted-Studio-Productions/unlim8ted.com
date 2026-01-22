@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary Meta Tags -->
+  <title>Contact - Unlim8ted Studio Productions</title>
+  <meta name="title" content="Contact - Unlim8ted Studio Productions" />
+  <meta name="description"
+    content="Get in touch with Unlim8ted Studio Productions for inquiries, support, or collaboration opportunities." />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://unlim8ted.com/contact/" />
+  <meta property="og:title" content="Contact - Unlim8ted Studio Productions" />
+  <meta property="og:description"
+    content="Get in touch with Unlim8ted Studio Productions for inquiries, support, or collaboration opportunities." />
+  <meta property="og:image" content="https://unlim8ted.com/images/contact-meta-image.jpg" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://unlim8ted.com/contact/" />
+  <meta property="twitter:title" content="Contact - Unlim8ted Studio Productions" />
+  <meta property="twitter:description"
+    content="Get in touch with Unlim8ted Studio Productions for inquiries, support, or collaboration opportunities." />
+  <meta property="twitter:image" content="https://unlim8ted.com/images/contact-meta-image.jpg" />
+
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+
+  <!-- Components -->
+  <script type="module" src="/components/site-navbar.js"></script>
+
+
+
+  <link rel="stylesheet" href="./resources/css/contact.01.css">
+</head>
+
+<body>
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile">
+  </site-navbar>
+
+  <main class="page">
+    <div class="hero">
+      <div>
+        <h1>Contact</h1>
+        <p class="sub">For inquiries, support, or collaboration—send a message or email us directly.</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- Form -->
+      <section class="card">
+        <div class="card-head">
+          <h2>Send a message</h2>
+          <span class="badge">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 2l7 4v6c0 5-3.5 9-7 10-3.5-1-7-5-7-10V6l7-4Z" stroke="currentColor"
+                stroke-width="2" />
+              <path d="M9 12l2 2 4-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            Processed Securely
+          </span>
+        </div>
+        <div class="card-body">
+          <form id="contactForm" novalidate>
+            <div class="two">
+              <div>
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" autocomplete="name" required />
+              </div>
+              <div>
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required />
+              </div>
+            </div>
+
+            <div>
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+
+            <!-- Honeypot -->
+            <input id="website" name="website" type="text" autocomplete="off" tabindex="-1"
+              style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
+
+            <div class="actions">
+              <button id="submitBtn" class="btn" type="submit">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M4 12l16-8-6 16-2.6-6.2L4 12Z" stroke="currentColor" stroke-width="2"
+                    stroke-linejoin="round" />
+                  <path d="M20 4L11.4 13.8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Submit
+              </button>
+              <div class="note">We reply via email. Please double-check your address.</div>
+            </div>
+
+            <div id="status" class="status" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Direct info -->
+      <aside class="card">
+        <div class="card-head">
+          <h2>Direct contact</h2>
+        </div>
+        <div class="card-body">
+          <div class="rows">
+            <div class="line">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 7.5A3.5 3.5 0 0 1 7.5 4h9A3.5 3.5 0 0 1 20 7.5v9A3.5 3.5 0 0 1 16.5 20h-9A3.5 3.5 0 0 1 4 16.5v-9Z"
+                  stroke="currentColor" stroke-width="2" />
+                <path d="M6.5 8l5.5 4 5.5-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <div>Email: <a href="mailto:support@unlim8ted.com">support@unlim8ted.com</a></div>
+            </div>
+
+            <div class="line">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6.5 3h11A2.5 2.5 0 0 1 20 5.5v13A2.5 2.5 0 0 1 17.5 21h-11A2.5 2.5 0 0 1 4 18.5v-13A2.5 2.5 0 0 1 6.5 3Z"
+                  stroke="currentColor" stroke-width="2" />
+                <path d="M8 7h8M8 11h8M8 15h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <div>Good for: support, orders, collaboration, licensing.</div>
+            </div>
+
+            <div class="line">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z"
+                  stroke="currentColor" stroke-width="2" />
+                <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <div>Typical response: 1–2 business days.</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      <div id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</div>
+    </footer>
+  </main>
+
+  <script src="./resources/js/contact.01.js"></script>
+
+  <!-- Firebase submit -->
+  <script type="module" src="./resources/js/contact.02.js"></script>
+</body>
+
+</html>

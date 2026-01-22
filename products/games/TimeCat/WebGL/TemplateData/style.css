@@ -1,0 +1,235 @@
+/* ------------------------------
+   GLOBAL RESET
+------------------------------ */
+body {
+  padding: 0;
+  margin: 0;
+  background: #0e0e0e;
+  font-family: "Inter", Arial, sans-serif;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* ------------------------------
+   CONTAINER
+------------------------------ */
+#unity-container {
+  position: relative;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+
+  /* Canvas expands, footer sits below */
+  justify-content: flex-start;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+}
+
+
+#unity-container.unity-desktop {
+  padding: 0;
+}
+
+#unity-container.unity-mobile {
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------
+   CANVAS
+------------------------------ */
+#unity-canvas {
+  background: #000;
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+
+  /* Prevent blurring on mobile rotation */
+  touch-action: none;
+}
+
+.unity-mobile #unity-canvas {
+  width: 100%;
+  height: 100%;
+}
+/* Ensure the popup centers */
+.demo-content {
+  width: 90vw;
+  height: 90vh;
+  max-width: none;
+  max-height: none;
+
+  display: flex;
+  align-items: center;     /* vertical centering */
+  justify-content: center; /* horizontal centering */
+
+  overflow: hidden;
+  position: relative;
+}
+
+/* Let Unity container scale to fit */
+#unity-container {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Preserve aspect ratio while scaling */
+  aspect-ratio: 16 / 9; /* or your project’s aspect ratio */
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Canvas auto-scales */
+#unity-canvas {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain; /* IMPORTANT: scales without stretching */
+  background: #000;
+}
+
+/* ------------------------------
+   LOADING BAR
+------------------------------ */
+#unity-loading-bar {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  text-align: center;
+}
+
+/* ------------------------------
+   UNITY LOGO (NO CROPPING)
+------------------------------ */
+#unity-logo {
+  width: auto;
+  height: 130px;
+  margin: 0 auto;
+
+  /* Prevent cropping */
+  background-image: url('unity-logo-dark.png');
+  background-repeat: no-repeat;
+  background-size: contain; /* Key line for no cropping */
+  background-position: center;
+}
+
+/* ------------------------------
+   PROGRESS BAR
+------------------------------ */
+#unity-progress-bar-empty,
+#unity-progress-bar-full {
+  height: 18px;
+  margin-top: 10px;
+  border-radius: 6px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#unity-progress-bar-empty {
+  width: 200px;
+  background-image: url('progress-bar-empty-dark.png');
+}
+
+#unity-progress-bar-full {
+  width: 0%;
+  background-image: url('progress-bar-full-dark.png');
+  transition: width 0.3s ease-out;
+}
+/* Progress bar container */
+#unity-progress-bar-empty {
+  width: 240px;
+  height: 20px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 5px;
+}
+
+/* Actual filled bar */
+#unity-progress-bar-full {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #4c9cff, #1e90ff);
+  border-radius: 10px;
+  transition: width 0.25s ease-out;
+  margin-top: 0px;
+}
+/* ------------------------------
+   FOOTER (DESKTOP ONLY)
+------------------------------ */
+#unity-footer {
+  width: 100%;
+  max-width: 900px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+
+  /* Push footer down slightly from canvas */
+  margin: 12px auto 20px; 
+}
+
+.unity-mobile #unity-footer {
+  display: none;
+}
+
+/* WebGL logo */
+#unity-webgl-logo {
+  width: 180px;
+  height: 38px;
+  background: url('webgl-logo.png') no-repeat center;
+  background-size: contain;
+}
+
+/* Build title */
+#unity-build-title {
+  font-size: 16px;
+  line-height: 38px;
+  margin-right: 12px;
+}
+
+/* Fullscreen button */
+#unity-fullscreen-button {
+  width: 38px;
+  height: 38px;
+  background: url('fullscreen-button.png') no-repeat center;
+  background-size: contain;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+#unity-fullscreen-button:hover {
+  opacity: 0.8;
+}
+
+/* ------------------------------
+   WARNING BOX
+------------------------------ */
+#unity-warning {
+  position: absolute;
+  left: 50%;
+  top: 5%;
+  transform: translateX(-50%);
+  padding: 14px 18px;
+  background: #fff;
+  color: #000;
+  font-size: 14px;
+  border-radius: 6px;
+  display: none;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}

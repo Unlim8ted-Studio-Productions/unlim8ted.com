@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>Unlim8ted - Air Hockey</title>
+    <meta name="description"
+        content="Online air hockey / pinball-style game, retro, customizable settings, powered by Unlim8ted Studio Production." />
+    <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+
+    <!-- Navbar -->
+    <script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
+
+    <!-- Firebase (kept, but not used directly here) -->
+    <script type="module" src="./resources/js/air-hockey.01.js"></script>
+
+    <link rel="stylesheet" href="./resources/css/air-hockey.01.css">
+</head>
+
+<body>
+    <site-navbar cart-href="https://unlim8ted.com/sign-in/cart" signin-href="https://unlim8ted.com/sign-in"
+        profile-href="https://unlim8ted.com/profile"></site-navbar>
+
+    <div class="app">
+        <div class="topbar">
+            <div class="hud">
+                <div class="score" id="scoreBoard">
+                    <span class="chip player" id="scoreP1">Player: 0</span>
+                    <span class="chip ai" id="scoreAI">AI: 0</span>
+                    <span class="chip p3" id="scoreP3" style="display:none">P3: 0</span>
+                    <span class="chip p4" id="scoreP4" style="display:none">P4: 0</span>
+                </div>
+                <div class="controls">
+                    <button id="btnSettings" title="Settings (Esc)">⚙️ Settings</button>
+                    <button id="btnHelp" class="secondary" title="Help (?)">❓ Help</button>
+                    <button id="btnReset" class="danger" title="Reset scores">↻ Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="stage">
+            <canvas id="gameCanvas" width="1125" height="600"></canvas>
+        </div>
+
+        <div class="footer" id="footerText"></div>
+    </div>
+
+    <!-- Help -->
+    <div class="overlay" id="helpOverlay" aria-hidden="true">
+        <div class="panel">
+            <h2>How to Play</h2>
+            <ul>
+                <li>Move your paddle with <b>mouse</b> / <b>touch</b> (right side).</li>
+                <li>Score by hitting the puck into the <b style="color:var(--gold)">gold goal</b>.</li>
+                <li>First to <b>10</b> wins.</li>
+                <li><b>Left click / hold</b> = Power Shot</li>
+                <li><b>Right click</b> = Speed Boost</li>
+                <li><span class="kbd">R</span> toggles orientation (if enabled)</li>
+                <li><span class="kbd">?</span> shows this help</li>
+                <li><span class="kbd">Esc</span> closes overlays</li>
+            </ul>
+            <p>
+                Tip: Paddle hits increase puck speed, wall hits reduce speed (friction).
+            </p>
+            <div class="actions">
+                <button class="secondary" id="closeHelp">Close</button>
+                <button id="playNow">Play</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="overlay" id="settingsOverlay" aria-hidden="true">
+        <div class="panel">
+            <h2>Settings</h2>
+
+            <div class="row">
+                <div class="field">
+                    <label>Color Theme</label>
+                    <select id="colorTheme">
+                        <option value="classic" selected>Classic Neon</option>
+                        <option value="retro">Retro Arcade</option>
+                        <option value="ocean">Ocean Deep</option>
+                        <option value="sunset">Sunset Vibes</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Game Mode</label>
+                    <select id="gameMode">
+                        <option value="classic" selected>Classic</option>
+                        <option value="magnets">Magnets</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label>Ball Speed <span id="ballSpeedLabel"></span></label>
+                    <input type="range" id="ballSpeed" min="0.6" max="2.0" step="0.05" value="1.0" />
+                </div>
+
+                <div class="field">
+                    <label>Wall Friction <span id="wallFrictionLabel"></span></label>
+                    <input type="range" id="wallFriction" min="0.60" max="1.00" step="0.02" value="0.90" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label>AI Difficulty</label>
+                    <select id="aiDifficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="impossible">Impossible</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Paddle Size <span id="paddleSizeLabel"></span></label>
+                    <input type="range" id="paddleSize" min="0.6" max="1.6" step="0.05" value="1.0" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label>Players</label>
+                    <select id="playerCount">
+                        <option value="2" selected>2 Players</option>
+                        <option value="3">3 Players (Experimental)</option>
+                        <option value="4">4 Players (Experimental)</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Paddle Shape</label>
+                    <select id="paddleShape">
+                        <option value="rectangle" selected>Rectangle</option>
+                        <option value="circle">Circle</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label>Enable Rotation (R)</label>
+                    <select id="rotationEnabled">
+                        <option value="true" selected>Enabled</option>
+                        <option value="false">Disabled</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Enable Super Hit</label>
+                    <select id="superHitEnabled">
+                        <option value="true">Enabled</option>
+                        <option value="false" selected>Disabled</option>
+                    </select>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label>Particle Effects</label>
+                    <select id="particleEffects">
+                        <option value="ultra">Ultra High (Rings)</option>
+                        <option value="high" selected>High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                        <option value="off">Off</option>
+                    </select>
+
+                </div>
+
+                <div class="field">
+                    <label>SFX Volume (placeholder)</label>
+                    <input type="range" id="sfxVolume" min="0" max="1" step="0.05" value="0.5" />
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="secondary" id="closeSettings">Close</button>
+                <button id="applySettings">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./resources/js/air-hockey.02.js"></script>
+</body>
+
+</html>

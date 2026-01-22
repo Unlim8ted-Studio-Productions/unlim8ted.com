@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unlim8ted - Cart</title>
+    <meta name="description" content="View your Unlim8ted cart, powered by Unlim8ted Studio Productions" />
+    <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+
+    <!-- Components -->
+    <script type="module" src="/components/site-navbar.js"></script>
+    <script src="https://web.squarecdn.com/v1/square.js"></script>
+
+    <link rel="stylesheet" href="./resources/css/cart.01.css">
+</head>
+
+<body>
+    <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
+        profile-href="https://unlim8ted.com/profile"></site-navbar>
+
+    <!-- NOTICE -->
+    <div id="notice" class="notice"></div>
+
+    <!-- CART PAGE -->
+    <main class="page">
+        <header class="pageHeader">
+            <h1 id="pageTitle">Your Cart</h1>
+            <p id="pageSub">Review your items before checkout.</p>
+        </header>
+
+        <section class="cartPanel">
+            <div id="cartEmpty" class="empty" style="display:none;">
+                Your cart is empty.
+            </div>
+
+            <div id="cartList" class="cartList"></div>
+
+            <div class="cartSummary">
+                <div class="row">
+                    <span>Items</span>
+                    <strong id="itemsCount">0</strong>
+                </div>
+                <div class="row">
+                    <span>Subtotal</span>
+                    <strong>$<span id="subtotal">0.00</span></strong>
+                </div>
+                <div class="row total">
+                    <span>Total</span>
+                    <strong>$<span id="total">0.00</span></strong>
+                </div>
+            </div>
+
+            <div class="cartActions">
+                <a id="continueBtn" href="/products" class="btn btn-ghost">Continue shopping</a>
+                <button id="openDonate" class="btn btn-ghost" type="button">Donate</button>
+                <button id="clearBtn" class="btn btn-ghost" type="button">Clear cart</button>
+                <button id="checkoutBtn" class="btn btn-primary" type="button">Checkout</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkoutOverlay" class="overlay" aria-hidden="true">
+        <div class="modal wide">
+            <button id="checkoutClose" class="modalClose" aria-label="Close">×</button>
+
+            <div class="modalBody twoCol">
+                <!-- LEFT -->
+                <div class="leftCol">
+                    <h2>Shipping address</h2>
+
+                    <div class="formGrid">
+                        <input id="ship_full_name" placeholder="Full name">
+                        <input id="ship_email" placeholder="Email">
+                        <input id="ship_phone" placeholder="Phone">
+
+                        <input id="ship_address1" placeholder="Address line 1">
+                        <input id="ship_address2" placeholder="Address line 2">
+
+                        <input id="ship_city" placeholder="City">
+                        <input id="ship_state_code" placeholder="State">
+                        <input id="ship_zip" placeholder="ZIP / Postal code">
+
+                        <select id="ship_country_code">
+                            <option value="US">United States</option>
+                        </select>
+                    </div>
+
+                    <h3>Shipping method</h3>
+                    <select id="ship_method" disabled>
+                        <option value="">Shipping options will appear after Next…</option>
+                    </select>
+
+                    <div id="quoteHint" class="hint">
+                        Enter your address, then click Next to calculate shipping.
+                    </div>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="rightCol">
+                    <h2>Order summary</h2>
+
+                    <div class="summaryBox">
+                        <div class="row">
+                            <span>Items</span>
+                            <strong id="q_items">0</strong>
+                        </div>
+
+                        <div class="row">
+                            <span>Subtotal</span>
+                            <strong>$<span id="q_subtotal">0.00</span></strong>
+                        </div>
+
+                        <div class="row" id="q_ship_row" style="display:none;">
+                            <span>Shipping</span>
+                            <strong>$<span id="q_shipping">0.00</span></strong>
+                        </div>
+
+                        <div class="row" id="q_tax_row" style="display:none;">
+                            <span>Tax</span>
+                            <strong>$<span id="q_tax">0.00</span></strong>
+                        </div>
+
+                        <div class="row total" id="q_total_row" style="display:none;">
+                            <span>Total</span>
+                            <strong>$<span id="q_total">0.00</span></strong>
+                        </div>
+                    </div>
+
+
+                    <div id="q_exp" class="expiry" style="display:none;">
+                        Quote expires at <strong id="q_exp_time"></strong>
+                    </div>
+
+                    <div id="payStatus" class="notice" style="display:none; margin-top:10px;"></div>
+
+                    <div id="card-container" class="cardContainer" style="display:none; background-color: white;"></div>
+
+                    <div id="payHint" class="hint">
+                        Secure payment will appear after shipping is calculated.
+                    </div>
+                </div>
+            </div>
+
+            <div class="modalActions">
+                <button id="btnQuote" class="btn btn-primary" type="button">Next</button>
+                <button id="btnPay" class="btn btn-primary" type="button" disabled>Pay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIRM MODAL -->
+    <div id="modalOverlay" class="overlay" aria-hidden="true">
+        <div class="modal">
+            <button id="modalClose" class="modalClose">×</button>
+            <h3 id="modalTitle">Confirm</h3>
+            <div id="modalBody"></div>
+            <div class="modalActions">
+                <button id="modalCancel" class="btn btn-ghost">Cancel</button>
+                <button id="modalConfirm" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DONATION MODAL -->
+    <div id="donateOverlay" class="overlay" aria-hidden="true">
+        <div class="modal">
+            <button id="donateClose" class="modalClose">×</button>
+            <h3>Support Unlim8ted</h3>
+
+            <label>
+                Frequency
+                <select id="donateFreq">
+                    <option value="one_time">One-time</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="annual">Annual</option>
+                </select>
+            </label>
+
+            <label>
+                Amount
+                <select id="donateAmount">
+                    <option value="custom">Custom</option>
+                    <option value="1">$1</option>
+                    <option value="5">$5</option>
+                    <option value="10">$10</option>
+                </select>
+            </label>
+
+            <div class="modalActions">
+                <button id="donateCancel" class="btn btn-ghost">Cancel</button>
+                <button id="donateGo" class="btn btn-primary">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPIRED MODAL -->
+    <div id="expiredOverlay" class="overlay" aria-hidden="true">
+        <div class="modal">
+            <button id="expiredClose" class="modalClose">×</button>
+            <h3>Quote expired</h3>
+            <p>Your shipping quote has expired. Please restart checkout.</p>
+            <div class="modalActions">
+                <button id="expiredReload" class="btn btn-primary">Reload</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div id="footer-text"></div>
+    </footer>
+
+    <script type="module" src="./resources/js/cart.01.js"></script>
+</body>
+
+</html>

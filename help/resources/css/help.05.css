@@ -1,0 +1,103 @@
+/* General body styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+        }
+
+        .content-section {
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00ffc6;
+            text-shadow: 0 0 10px #00ffc6, 0 0 20px #00ffc6;
+            margin-bottom: 30px;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #cccccc;
+        }
+
+        a {
+            color: #00ffc6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-shadow: 0 0 10px #00ffc6;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #121212;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        label {
+            font-size: 1rem;
+            color: #e0e0e0;
+            text-align: left;
+        }
+
+        input,
+        textarea,
+        button {
+            font-size: 1rem;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        input,
+        textarea {
+            background-color: #1c1c1c;
+            color: #e0e0e0;
+            border: 1px solid #333;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #00ffc6;
+            box-shadow: 0 0 10px #00ffc6;
+        }
+
+        button {
+            background-color: #00ffc6;
+            color: #0a0a0a;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            background-color: #00cc9e;
+            box-shadow: 0 0 10px #00ffc6;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Footer styles */
+        .content-section>div p {
+            font-size: 0.9rem;
+            color: #666666;
+        }
+
+        .content-section>div p:hover {
+            color: #00ffc6;
+            text-shadow: 0 0 10px #00ffc6;
+        }

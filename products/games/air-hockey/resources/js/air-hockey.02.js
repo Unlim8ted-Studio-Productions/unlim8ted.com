@@ -1,0 +1,814 @@
+// -----------------------------
+        // THEMES -> CSS variables
+        // -----------------------------
+        const themes = {
+            classic: { bg: "#061225", border: "#0077be", glow: "#00eeff", player: "#2ecc71", ai: "#e74c3c" },
+            retro: { bg: "#000000", border: "#ff00ff", glow: "#00ff00", player: "#ffff00", ai: "#ff0000" },
+            ocean: { bg: "#001f3f", border: "#006994", glow: "#00ffff", player: "#2196f3", ai: "#3f51b5" },
+            sunset: { bg: "#2c1810", border: "#ff6b6b", glow: "#ffd93d", player: "#ff8c00", ai: "#ff4757" },
+        };
+
+        function applyTheme(name) {
+            const t = themes[name] || themes.classic;
+            document.documentElement.style.setProperty("--bg", t.bg);
+            document.documentElement.style.setProperty("--accent2", t.border);
+            document.documentElement.style.setProperty("--accent", t.glow);
+            document.documentElement.style.setProperty("--player", t.player);
+            document.documentElement.style.setProperty("--ai", t.ai);
+
+            // Update canvas visual border/glow
+            canvas.style.borderColor = "rgba(0, 238, 255, 0.35)";
+            canvas.style.boxShadow = `0 0 18px rgba(0, 238, 255, 0.22), 0 0 40px rgba(0, 238, 255, 0.18)`;
+        }
+
+        // -----------------------------
+        // UI / OVERLAYS
+        // -----------------------------
+        const helpOverlay = document.getElementById("helpOverlay");
+        const settingsOverlay = document.getElementById("settingsOverlay");
+        const btnHelp = document.getElementById("btnHelp");
+        const btnSettings = document.getElementById("btnSettings");
+        const btnReset = document.getElementById("btnReset");
+
+        const closeHelp = document.getElementById("closeHelp");
+        const playNow = document.getElementById("playNow");
+        const closeSettings = document.getElementById("closeSettings");
+        const applySettingsBtn = document.getElementById("applySettings");
+
+        function showOverlay(el) {
+            el.classList.add("show");
+            el.setAttribute("aria-hidden", "false");
+            paused = true;
+        }
+
+        function hideOverlay(el) {
+            el.classList.remove("show");
+            el.setAttribute("aria-hidden", "true");
+            // Only unpause if no overlay is open
+            paused = helpOverlay.classList.contains("show") || settingsOverlay.classList.contains("show");
+        }
+
+        function closeAllOverlays() {
+            hideOverlay(helpOverlay);
+            hideOverlay(settingsOverlay);
+        }
+
+        btnHelp.addEventListener("click", () => showOverlay(helpOverlay));
+        btnSettings.addEventListener("click", () => showOverlay(settingsOverlay));
+        closeHelp.addEventListener("click", () => hideOverlay(helpOverlay));
+        playNow.addEventListener("click", () => hideOverlay(helpOverlay));
+        closeSettings.addEventListener("click", () => hideOverlay(settingsOverlay));
+
+        // Esc closes overlays
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeAllOverlays();
+            if (e.key === "?") showOverlay(helpOverlay);
+        });
+
+        // Footer year
+        const footerText = document.getElementById("footerText");
+        footerText.innerHTML = `&copy; 2019-${new Date().getFullYear()} Unlim8ted Studio Productions. All rights reserved.`;
+
+        // -----------------------------
+        // CANVAS + GAME (fixed "world" size, scale render)
+        // -----------------------------
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Fixed simulation space
+        const WORLD = { w: 1125, h: 600 };
+        // Render scale
+        let scale = 1;
+
+        function resizeCanvasToFit() {
+            const maxW = window.innerWidth * 0.96;
+            const maxH = (window.innerHeight - 160) * 0.98;
+            const aspect = WORLD.w / WORLD.h;
+
+            let w = Math.min(maxW, WORLD.w);
+            let h = w / aspect;
+            if (h > maxH) { h = maxH; w = h * aspect; }
+
+            canvas.style.width = `${Math.floor(w)}px`;
+            canvas.style.height = `${Math.floor(h)}px`;
+
+            // internal drawing is still WORLD size
+            canvas.width = WORLD.w;
+            canvas.height = WORLD.h;
+
+            scale = w / WORLD.w;
+        }
+
+        window.addEventListener("resize", resizeCanvasToFit);
+        resizeCanvasToFit();
+
+        // -----------------------------
+        // SETTINGS (state)
+        // -----------------------------
+        const ui = {
+            colorTheme: document.getElementById("colorTheme"),
+            ballSpeed: document.getElementById("ballSpeed"),
+            wallFriction: document.getElementById("wallFriction"),
+            aiDifficulty: document.getElementById("aiDifficulty"),
+            paddleSize: document.getElementById("paddleSize"),
+            playerCount: document.getElementById("playerCount"),
+            paddleShape: document.getElementById("paddleShape"),
+            rotationEnabled: document.getElementById("rotationEnabled"),
+            superHitEnabled: document.getElementById("superHitEnabled"),
+            particleEffects: document.getElementById("particleEffects"),
+            sfxVolume: document.getElementById("sfxVolume"),
+            gameMode: document.getElementById("gameMode"),
+            ballSpeedLabel: document.getElementById("ballSpeedLabel"),
+            wallFrictionLabel: document.getElementById("wallFrictionLabel"),
+            paddleSizeLabel: document.getElementById("paddleSizeLabel"),
+        };
+
+        // -----------------------------
+        // GAME STATE
+        // -----------------------------
+        let paused = false;
+
+        let cfg = {
+            simulationSpeed: 1.0,
+            wallFriction: 0.90,
+            aiSpeed: 2.0,
+            paddleSize: 1.0,
+            playerCount: 2,
+            paddleShape: "rectangle",
+            rotationEnabled: true,
+            superHitEnabled: false,
+            particleLevel: "medium",
+            gameMode: "classic",
+            magnetForce: 0.5,
+        };
+
+        const score = { p1: 0, ai: 0, p3: 0, p4: 0 };
+        const WIN_SCORE = 10;
+
+        // Table / goals (2p classic)
+        const goal = { height: 150 };
+        const pocket = { w: 30, h: 90 };
+
+        const DEFAULT_PADDLE_H = 100;
+        const paddle = { w: 25, h: DEFAULT_PADDLE_H, x: WORLD.w - 60, y: WORLD.h / 2 - DEFAULT_PADDLE_H / 2 };
+        const aiPaddle = { w: 25, h: DEFAULT_PADDLE_H, x: 35, y: WORLD.h / 2 - DEFAULT_PADDLE_H / 2 };
+
+        const puck = {
+            r: 15,
+            x: WORLD.w / 2,
+            y: WORLD.h / 2,
+            dx: 0,
+            dy: 0,
+            baseSpeed: 3.1,
+            maxSpeed: 18,
+            speed: 3.1
+        };
+
+        // Effects
+        let particles = [];
+        let wave = [];
+        let powerShot = false;
+        let powerBoost = 1;
+        let mouseSpeed = 0;
+
+        // Countdown / serve
+        let lastScoreAt = performance.now();
+        let served = false;
+
+        // Game over
+        let gameOver = false;
+        let winner = "";
+
+        // Rotation
+        let rotated = false;
+
+        // Trail
+        const puckTrail = [];
+        const TRAIL_MAX = 10;
+
+        // -----------------------------
+        // APPLY SETTINGS
+        // -----------------------------
+        function updateLabels() {
+            ui.ballSpeedLabel.textContent = `(${Number(ui.ballSpeed.value).toFixed(2)}x)`;
+            ui.wallFrictionLabel.textContent = `(${Number(ui.wallFriction.value).toFixed(2)})`;
+            ui.paddleSizeLabel.textContent = `(${Number(ui.paddleSize.value).toFixed(2)}x)`;
+        }
+        // -----------------------------
+        // SCORE UI
+        // -----------------------------
+        const scoreP1 = document.getElementById("scoreP1");
+        const scoreAI = document.getElementById("scoreAI");
+        const scoreP3 = document.getElementById("scoreP3");
+        const scoreP4 = document.getElementById("scoreP4");
+
+        function updateScoreUI() {
+            scoreP1.textContent = `Player: ${score.p1}`;
+            scoreAI.textContent = `AI: ${score.ai}`;
+
+            scoreP3.style.display = cfg.playerCount > 2 ? "inline-flex" : "none";
+            scoreP4.style.display = cfg.playerCount > 3 ? "inline-flex" : "none";
+
+            scoreP3.textContent = `P3: ${score.p3}`;
+            scoreP4.textContent = `P4: ${score.p4}`;
+        }
+
+        btnReset.addEventListener("click", () => {
+            score.p1 = score.ai = score.p3 = score.p4 = 0;
+            gameOver = false;
+            winner = "";
+            hardResetRound();
+            updateScoreUI();
+        });
+        function applySettings() {
+            cfg.simulationSpeed = Number(ui.ballSpeed.value);
+            cfg.wallFriction = Number(ui.wallFriction.value);
+            cfg.paddleSize = Number(ui.paddleSize.value);
+            cfg.playerCount = Number(ui.playerCount.value);
+            cfg.paddleShape = ui.paddleShape.value;
+            cfg.rotationEnabled = ui.rotationEnabled.value === "true";
+            cfg.superHitEnabled = ui.superHitEnabled.value === "true";
+            cfg.particleLevel = ui.particleEffects.value;
+            cfg.gameMode = ui.gameMode.value;
+
+            // AI difficulty
+            const diff = ui.aiDifficulty.value;
+            cfg.aiSpeed = diff === "easy" ? 1.6 : diff === "medium" ? 2.1 : diff === "hard" ? 2.7 : 3.2;
+
+            // Force circle for 3/4 players (keeps it sane)
+            if (cfg.playerCount > 2) {
+                cfg.paddleShape = "circle";
+                ui.paddleShape.value = "circle";
+                ui.paddleShape.disabled = true;
+            } else {
+                ui.paddleShape.disabled = false;
+            }
+
+            // Paddle dims
+            paddle.h = DEFAULT_PADDLE_H * cfg.paddleSize;
+            aiPaddle.h = DEFAULT_PADDLE_H * cfg.paddleSize;
+
+            if (cfg.paddleShape === "circle") {
+                paddle.w = paddle.h;
+                aiPaddle.w = aiPaddle.h;
+            } else {
+                paddle.w = 25;
+                aiPaddle.w = 25;
+            }
+
+            applyTheme(ui.colorTheme.value);
+            updateScoreUI();
+            updateLabels();
+
+            // Reset serve when settings apply (clean restart feeling)
+            softResetServe();
+        }
+
+        // live labels
+        ["ballSpeed", "wallFriction", "paddleSize"].forEach(id => ui[id].addEventListener("input", updateLabels));
+        applySettingsBtn.addEventListener("click", () => {
+            applySettings();
+            hideOverlay(settingsOverlay);
+        });
+
+        // Theme changes instantly
+        ui.colorTheme.addEventListener("change", () => applyTheme(ui.colorTheme.value));
+
+        // Apply once at load
+        applyTheme(ui.colorTheme.value);
+        updateLabels();
+        applySettings();
+
+
+
+        // -----------------------------
+        // INPUT
+        // -----------------------------
+        function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+        function setPaddleFromPointer(clientX, clientY) {
+            const rect = canvas.getBoundingClientRect();
+            const x = (clientX - rect.left) * (WORLD.w / rect.width);
+            const y = (clientY - rect.top) * (WORLD.h / rect.height);
+
+            // Right half only (classic)
+            const minX = WORLD.w / 2;
+            const maxX = WORLD.w - paddle.w;
+            const minY = 0;
+            const maxY = WORLD.h - paddle.h;
+
+            const newX = clamp(x - paddle.w / 2, minX, maxX);
+            const newY = clamp(y - paddle.h / 2, minY, maxY);
+
+            const dx = newX - paddle.x;
+            const dy = newY - paddle.y;
+            mouseSpeed = Math.hypot(dx, dy);
+
+            paddle.x = newX;
+            paddle.y = newY;
+        }
+
+        document.addEventListener("mousemove", (e) => setPaddleFromPointer(e.clientX, e.clientY), { passive: true });
+        document.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            const t = e.touches[0];
+            setPaddleFromPointer(t.clientX, t.clientY);
+        }, { passive: false });
+
+        // Power shot (LMB hold)
+        canvas.addEventListener("mousedown", (e) => { if (e.button === 0) powerShot = true; });
+        document.addEventListener("mouseup", (e) => { if (e.button === 0) powerShot = false; });
+
+        // Speed boost (RMB click)
+        canvas.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            powerBoost = 1.5;
+            setTimeout(() => powerBoost = 1, 350);
+        });
+
+        // Rotation
+        document.addEventListener("keydown", (e) => {
+            if (!cfg.rotationEnabled) return;
+            if (e.key === "r" || e.key === "R") {
+                rotated = !rotated;
+                softResetServe();
+            }
+        });
+
+        // -----------------------------
+        // GAME HELPERS
+        // -----------------------------
+        function softResetServe() {
+            puck.x = WORLD.w / 2;
+            puck.y = WORLD.h / 2;
+            puck.dx = 0;
+            puck.dy = 0;
+            lastScoreAt = performance.now();
+            served = false;
+
+            // reposition paddles
+            paddle.x = WORLD.w - 60;
+            paddle.y = WORLD.h / 2 - paddle.h / 2;
+            aiPaddle.x = 35;
+            aiPaddle.y = WORLD.h / 2 - aiPaddle.h / 2;
+        }
+
+        function hardResetRound() {
+            particles.length = 0;
+            wave.length = 0;
+            puckTrail.length = 0;
+            softResetServe();
+        }
+
+        function servePuck() {
+            const angle = Math.random() * Math.PI * 2;
+            const s = Math.min(puck.baseSpeed, puck.maxSpeed);
+            puck.speed = s;
+            puck.dx = Math.cos(angle) * s;
+            puck.dy = Math.sin(angle) * s;
+            served = true;
+        }
+
+function makeExplosion(x, y, goalBoom) {
+  if (cfg.particleLevel === "off") return;
+
+  let count;
+  if (cfg.particleLevel === "ultra") count = goalBoom ? 260 : 70;
+  else if (cfg.particleLevel === "high") count = goalBoom ? 160 : 40;
+  else if (cfg.particleLevel === "medium") count = goalBoom ? 90 : 22;
+  else count = goalBoom ? 45 : 10;
+
+  for (let i = 0; i < count; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const sp = Math.random() * 3 + (goalBoom ? 3 : 1.5);
+    particles.push({
+      x, y,
+      vx: Math.cos(a) * sp,
+      vy: Math.sin(a) * sp,
+      r: Math.random() * 2.6 + 1,
+      life: Math.random() * 50 + (goalBoom ? 70 : 45),
+      hue: Math.floor(Math.random() * 360),
+    });
+  }
+}
+
+
+function makeWave() {
+  if (cfg.particleLevel !== "ultra") return;
+  wave = [];
+  for (let i = 0; i < 18; i++) {
+    wave.push({ x: puck.x, y: puck.y, r: i * 2, a: 1 - i / 18 });
+  }
+}
+
+
+        // -----------------------------
+        // PHYSICS / COLLISIONS
+        // -----------------------------
+        function circleHit(cx, cy, cr, x, y, w, h, isCircle) {
+            if (isCircle) {
+                const px = x + w / 2, py = y + h / 2;
+                return Math.hypot(cx - px, cy - py) < (cr + w / 2);
+            }
+            return (
+                cx + cr > x &&
+                cx - cr < x + w &&
+                cy + cr > y &&
+                cy - cr < y + h
+            );
+        }
+
+        function reflectFromPaddle(pad, isPlayer) {
+            const centerX = pad.x + pad.w / 2;
+            const centerY = pad.y + pad.h / 2;
+
+            const ang = Math.atan2(puck.y - centerY, puck.x - centerX);
+            const baseMult = cfg.superHitEnabled ? 1.45 : 1.18;
+            const powerMult = powerShot && isPlayer ? 1.20 : 1.0;
+
+            // speed grows with hits + movement, but capped
+            puck.speed = Math.min(puck.speed * baseMult + mouseSpeed * 0.02, puck.maxSpeed) * powerBoost * powerMult;
+
+            puck.dx = Math.cos(ang) * puck.speed;
+            puck.dy = Math.sin(ang) * puck.speed;
+
+            makeExplosion(puck.x, puck.y, false);
+            makeWave();
+        }
+
+        function applyMagnets() {
+            const pCenter = { x: paddle.x + paddle.w / 2, y: paddle.y + paddle.h / 2 };
+            const aCenter = { x: aiPaddle.x + aiPaddle.w / 2, y: aiPaddle.y + aiPaddle.h / 2 };
+
+            const dP = Math.max(55, Math.hypot(puck.x - pCenter.x, puck.y - pCenter.y));
+            const dA = Math.max(55, Math.hypot(puck.x - aCenter.x, puck.y - aCenter.y));
+
+            const fp = cfg.magnetForce / dP;
+            const fa = cfg.magnetForce / dA;
+
+            puck.dx += (pCenter.x - puck.x) * fp;
+            puck.dy += (pCenter.y - puck.y) * fp;
+            puck.dx += (aCenter.x - puck.x) * fa;
+            puck.dy += (aCenter.y - puck.y) * fa;
+        }
+
+        function wallCollisions() {
+            // top/bottom
+            if (puck.y - puck.r <= 0 && puck.dy < 0) {
+                puck.y = puck.r;
+                puck.dy = -puck.dy * cfg.wallFriction;
+            }
+            if (puck.y + puck.r >= WORLD.h && puck.dy > 0) {
+                puck.y = WORLD.h - puck.r;
+                puck.dy = -puck.dy * cfg.wallFriction;
+            }
+
+            // left/right excluding goal opening for 2p
+            if (cfg.playerCount === 2) {
+                const goalTop = (WORLD.h - goal.height) / 2;
+                const goalBottom = (WORLD.h + goal.height) / 2;
+
+                // Left wall except goal mouth
+                if (puck.x - puck.r <= 0 && (puck.y < goalTop || puck.y > goalBottom) && puck.dx < 0) {
+                    puck.x = puck.r;
+                    puck.dx = -puck.dx * cfg.wallFriction;
+                }
+                // Right wall except goal mouth
+                if (puck.x + puck.r >= WORLD.w && (puck.y < goalTop || puck.y > goalBottom) && puck.dx > 0) {
+                    puck.x = WORLD.w - puck.r;
+                    puck.dx = -puck.dx * cfg.wallFriction;
+                }
+            } else {
+                // for experimental modes, keep puck in bounds simply
+                if (puck.x - puck.r <= 0 && puck.dx < 0) { puck.x = puck.r; puck.dx = -puck.dx * cfg.wallFriction; }
+                if (puck.x + puck.r >= WORLD.w && puck.dx > 0) { puck.x = WORLD.w - puck.r; puck.dx = -puck.dx * cfg.wallFriction; }
+            }
+        }
+function checkGoals() {
+  if (cfg.playerCount !== 2) return null;
+
+  const goalTop = (WORLD.h - goal.height) / 2;
+  const goalBottom = (WORLD.h + goal.height) / 2;
+
+  const inMouth = (puck.y + puck.r > goalTop) && (puck.y - puck.r < goalBottom);
+
+  // Touching left goal area
+  if (inMouth && puck.x - puck.r <= 0 && puck.dx < 0) return "p1";
+
+  // Touching right goal area
+  if (inMouth && puck.x + puck.r >= WORLD.w && puck.dx > 0) return "ai";
+
+  return null;
+}
+
+
+        // -----------------------------
+        // AI
+        // -----------------------------
+        function moveAI(dt) {
+            // Simple: track puck when puck is on left side, otherwise drift center
+            const speed = cfg.aiSpeed * cfg.simulationSpeed;
+            const targetY = puck.x < WORLD.w * 0.55 ? (puck.y - aiPaddle.h / 2) : (WORLD.h / 2 - aiPaddle.h / 2);
+
+            aiPaddle.y += clamp(targetY - aiPaddle.y, -speed * dt, speed * dt);
+            aiPaddle.y = clamp(aiPaddle.y, 0, WORLD.h - aiPaddle.h);
+
+            // Keep AI on left half
+            aiPaddle.x = 35;
+        }
+
+        // -----------------------------
+        // RENDERING
+        // -----------------------------
+        function drawTable2P() {
+            // Background
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
+            ctx.fillRect(0, 0, WORLD.w, WORLD.h);
+
+            // Center line
+            ctx.strokeStyle = "rgba(0, 198, 255, 0.25)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(WORLD.w / 2, 0);
+            ctx.lineTo(WORLD.w / 2, WORLD.h);
+            ctx.stroke();
+
+            // Center circle
+            ctx.beginPath();
+            ctx.arc(WORLD.w / 2, WORLD.h / 2, 56, 0, Math.PI * 2);
+            ctx.strokeStyle = "rgba(0, 198, 255, 0.30)";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Goals (gold)
+            const gTop = (WORLD.h - goal.height) / 2;
+            ctx.save();
+            ctx.shadowBlur = 18;
+            ctx.shadowColor = "#FFD700";
+            ctx.fillStyle = "#FFD700";
+            ctx.fillRect(-8, gTop, pocket.w, goal.height);
+            ctx.fillRect(WORLD.w - pocket.w + 8, gTop, pocket.w, goal.height);
+            ctx.restore();
+        }
+
+        function drawPaddle(pad, isPlayer) {
+            const color = isPlayer
+                ? getComputedStyle(document.documentElement).getPropertyValue("--player").trim()
+                : getComputedStyle(document.documentElement).getPropertyValue("--ai").trim();
+
+            ctx.save();
+            ctx.shadowBlur = 18;
+            ctx.shadowColor = color;
+            ctx.fillStyle = color;
+
+            if (cfg.paddleShape === "circle") {
+                const r = pad.w / 2;
+                ctx.beginPath();
+                ctx.arc(pad.x + r, pad.y + r, r, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                ctx.fillRect(pad.x, pad.y, pad.w, pad.h);
+            }
+            ctx.restore();
+        }
+
+        function drawPuck() {
+            // Trail
+            puckTrail.unshift({ x: puck.x, y: puck.y });
+            if (puckTrail.length > TRAIL_MAX) puckTrail.pop();
+
+            const trailColor = puck.dx > 0
+                ? getComputedStyle(document.documentElement).getPropertyValue("--player").trim()
+                : getComputedStyle(document.documentElement).getPropertyValue("--ai").trim();
+
+            ctx.save();
+            ctx.shadowBlur = 16;
+            ctx.shadowColor = trailColor;
+            ctx.beginPath();
+            for (let i = 0; i < puckTrail.length; i++) {
+                const p = puckTrail[i];
+                const a = 1 - i / puckTrail.length;
+                ctx.globalAlpha = a * 0.35;
+                ctx.lineWidth = (puck.r * (1 - i / puckTrail.length)) * 0.9;
+                if (i === 0) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+            }
+            ctx.strokeStyle = trailColor;
+            ctx.stroke();
+            ctx.restore();
+
+            // Puck body
+            ctx.save();
+            ctx.globalAlpha = 1;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "rgba(0,238,255,0.7)";
+            ctx.fillStyle = "#ecf0f1";
+            ctx.beginPath();
+            ctx.arc(puck.x, puck.y, puck.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.strokeStyle = "#bdc3c7";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(puck.x, puck.y, puck.r * 0.8, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawParticles(dt) {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.life -= 1 * cfg.simulationSpeed;
+                if (p.life <= 0) { particles.splice(i, 1); continue; }
+                p.x += p.vx * dt;
+                p.y += p.vy * dt;
+                p.vx *= 0.98;
+                p.vy *= 0.98;
+
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, Math.min(1, p.life / 100));
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = `hsl(${p.hue} 100% 60%)`;
+                ctx.fillStyle = `hsl(${p.hue} 100% 60%)`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function drawWave(dt) {
+            for (let i = wave.length - 1; i >= 0; i--) {
+                const w = wave[i];
+                w.r += 80 * (dt / 16.7);
+                w.a -= 0.025 * (dt / 16.7);
+                if (w.a <= 0) { wave.splice(i, 1); continue; }
+                ctx.save();
+                ctx.globalAlpha = w.a;
+                ctx.beginPath();
+                ctx.arc(w.x, w.y, w.r, 0, Math.PI * 2);
+                ctx.strokeStyle = "rgba(0,238,255,0.9)";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        function drawCountdown(elapsed) {
+            // 0-3s countdown, then "GO!" briefly
+            ctx.save();
+            ctx.fillStyle = "rgba(0,0,0,0.35)";
+            ctx.fillRect(0, 0, WORLD.w, WORLD.h);
+
+            let text = "";
+            if (elapsed < 1000) text = "3";
+            else if (elapsed < 2000) text = "2";
+            else if (elapsed < 3000) text = "1";
+            else if (elapsed < 3500) text = "GO!";
+
+            ctx.font = "800 92px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.shadowBlur = 24;
+            ctx.shadowColor = "rgba(0,238,255,0.9)";
+            ctx.fillStyle = "rgba(0,238,255,0.95)";
+            ctx.fillText(text, WORLD.w / 2, WORLD.h / 2);
+            ctx.restore();
+        }
+
+        function drawGameOver() {
+            ctx.save();
+            ctx.fillStyle = "rgba(0,0,0,0.55)";
+            ctx.fillRect(0, 0, WORLD.w, WORLD.h);
+
+            ctx.font = "900 56px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.shadowBlur = 22;
+            ctx.shadowColor = "rgba(0,238,255,0.85)";
+            ctx.fillStyle = "rgba(0,238,255,0.95)";
+            ctx.fillText(`Game Over! ${winner} wins!`, WORLD.w / 2, WORLD.h / 2 - 20);
+
+            ctx.shadowBlur = 0;
+            ctx.font = "700 22px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+            ctx.fillStyle = "rgba(234,246,255,0.85)";
+            ctx.fillText("Click / tap to play again", WORLD.w / 2, WORLD.h / 2 + 40);
+            ctx.restore();
+        }
+
+        // -----------------------------
+        // MAIN LOOP
+        // -----------------------------
+        let lastT = performance.now();
+
+        function step(now) {
+            const dt = Math.min(32, now - lastT);
+            lastT = now;
+
+            ctx.clearRect(0, 0, WORLD.w, WORLD.h);
+
+            if (rotated) {
+                ctx.save();
+                ctx.translate(WORLD.w, 0);
+                ctx.rotate(Math.PI / 2);
+                // Note: for simplicity, still draw in same world coordinates (this is visual-only).
+                // If you want true rotated collision, that’s a bigger refactor.
+            }
+
+            // Table
+            drawTable2P();
+
+            // Puck + paddles
+            drawPaddle(paddle, true);
+            drawPaddle(aiPaddle, false);
+            drawPuck();
+
+            // FX
+            drawParticles(dt);
+            drawWave(dt);
+
+            if (rotated) ctx.restore();
+
+            // Update game only if not paused
+            if (!paused) {
+                if (gameOver) {
+                    // nothing
+                } else {
+                    const since = now - lastScoreAt;
+
+                    // Serve logic (fixed: no equality checks)
+                    if (since < 3500) {
+                        drawCountdown(since);
+                        if (since >= 3500 - dt && !served) servePuck();
+                    } else {
+                        if (!served) servePuck();
+
+                        // physics step
+                        const sim = cfg.simulationSpeed;
+                        puck.x += puck.dx * sim * (dt / 16.7);
+                        puck.y += puck.dy * sim * (dt / 16.7);
+
+                        // Walls
+// Goals (touch = score)
+const who = checkGoals();
+if (who) {
+  if (who === "p1") score.p1++;
+  if (who === "ai") score.ai++;
+
+  updateScoreUI();
+  makeExplosion(WORLD.w / 2, WORLD.h / 2, true);
+  softResetServe();
+
+  if (score.p1 >= WIN_SCORE || score.ai >= WIN_SCORE) {
+    gameOver = true;
+    winner = score.p1 >= WIN_SCORE ? "Player" : "AI";
+  }
+
+  requestAnimationFrame(step);
+  return; // prevent extra physics this frame
+}
+
+// Walls
+wallCollisions();
+
+
+                        // Mode forces
+                        if (cfg.gameMode === "magnets") {
+                            applyMagnets();
+                        } else {
+                            // Paddle collision
+                            const isCircle = (cfg.paddleShape === "circle");
+                            const hitP = circleHit(puck.x, puck.y, puck.r, paddle.x, paddle.y, paddle.w, paddle.h, isCircle);
+                            const hitA = circleHit(puck.x, puck.y, puck.r, aiPaddle.x, aiPaddle.y, aiPaddle.w, aiPaddle.h, isCircle);
+
+                            if (hitP) reflectFromPaddle(paddle, true);
+                            else if (hitA) reflectFromPaddle(aiPaddle, false);
+                        }
+
+                        // AI movement
+                        moveAI(dt / 16.7);
+                    }
+                }
+            }
+
+            // Game over overlay rendering
+            if (gameOver) drawGameOver();
+
+            requestAnimationFrame(step);
+        }
+
+        requestAnimationFrame(step);
+
+        // Restart on click when game over
+        canvas.addEventListener("click", () => {
+            if (!gameOver) return;
+            score.p1 = score.ai = score.p3 = score.p4 = 0;
+            gameOver = false;
+            winner = "";
+            updateScoreUI();
+            hardResetRound();
+        });
+
+        // Show help once on load (like your old version)
+        window.addEventListener("load", () => showOverlay(helpOverlay));

@@ -1,0 +1,268 @@
+<!-- ===================== START: Unlim8ted Loader ===================== -->
+<style>
+  :root{
+    --u8-bg0_INJECTED_LOADER:#05070d;
+    --u8-bg1_INJECTED_LOADER:#070a14;
+    --u8-a_INJECTED_LOADER:#4c6eff;
+    --u8-b_INJECTED_LOADER:#00ffaa;
+    --u8-c_INJECTED_LOADER:#ff3df2;
+  }
+
+  #u8-loader_INJECTED_LOADER{
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(1200px 700px at 50% 25%, rgba(76,110,255,0.22), transparent 60%),
+      radial-gradient(950px 560px at 15% 85%, rgba(0,255,170,0.14), transparent 55%),
+      radial-gradient(950px 560px at 85% 80%, rgba(255,61,242,0.12), transparent 55%),
+      linear-gradient(180deg, var(--u8-bg1_INJECTED_LOADER), var(--u8-bg0_INJECTED_LOADER));
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 520ms ease, visibility 0ms linear 520ms;
+    pointer-events: all;
+    overflow: hidden;
+  }
+  #u8-loader_INJECTED_LOADER.u8-hide_INJECTED_LOADER{ opacity: 0; visibility: hidden; }
+
+  #u8-loader_INJECTED_LOADER:before{
+    content:"";
+    position:absolute; inset:-2px;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.05) 0px,
+        rgba(255,255,255,0.05) 1px,
+        rgba(0,0,0,0.00) 3px,
+        rgba(0,0,0,0.00) 7px
+      );
+    opacity: .10;
+    pointer-events:none;
+    mix-blend-mode: overlay;
+  }
+
+  .u8-engine_INJECTED_LOADER{
+    width: 100%;
+    height: 100%;
+    display:grid;
+    place-items:center;
+  }
+
+  .u8-eight_INJECTED_LOADER{
+    width: min(94vw, 840px);
+    height: auto;
+    display:block;
+    filter:
+      drop-shadow(0 0 26px rgba(76,110,255,.18))
+      drop-shadow(0 0 26px rgba(0,255,170,.10));
+    animation: u8-breathe_INJECTED_LOADER 2.4s ease-in-out infinite;
+  }
+
+  @keyframes u8-breathe_INJECTED_LOADER{
+    0%,100%{ transform: translateY(0) scale(1); }
+    50%{ transform: translateY(-1px) scale(1.006); }
+  }
+
+  .u8-eight_INJECTED_LOADER .tube_INJECTED_LOADER{
+    stroke: rgba(255,255,255,0.12);
+    stroke-width: clamp(12px, 2.6vw, 22px);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+
+  .u8-eight_INJECTED_LOADER .tubeGlow_INJECTED_LOADER{
+    stroke: rgba(76,110,255,0.10);
+    stroke-width: clamp(10px, 2.2vw, 18px);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    filter: url(#u8SoftGlow_INJECTED_LOADER);
+  }
+
+  .u8-eight_INJECTED_LOADER .spark_INJECTED_LOADER{
+    stroke: url(#u8Grad_INJECTED_LOADER);
+    stroke-width: clamp(10px, 2.2vw, 18px);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    filter: url(#u8SparkGlow_INJECTED_LOADER);
+    stroke-dasharray: 90 520;
+    animation: u8-spark_INJECTED_LOADER 1.15s linear infinite;
+  }
+
+  .u8-eight_INJECTED_LOADER .spark2_INJECTED_LOADER{
+    stroke: rgba(255,61,242,0.35);
+    stroke-width: clamp(8px, 1.9vw, 14px);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    filter: url(#u8SparkGlow_INJECTED_LOADER);
+    stroke-dasharray: 55 555;
+    animation: u8-spark_INJECTED_LOADER 1.35s linear infinite;
+    opacity: .55;
+  }
+
+  @keyframes u8-spark_INJECTED_LOADER{
+    from { stroke-dashoffset: 610; }
+    to   { stroke-dashoffset: 0; }
+  }
+
+  .u8-loading-text_INJECTED_LOADER{
+    margin-top: clamp(28px, 4vw, 42px);
+    font: 700 clamp(18px, 4.6vw, 26px)/1.15 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.82);
+    display:flex;
+    align-items:center;
+    gap: 14px;
+  }
+
+  .u8-loading-dots_INJECTED_LOADER{
+    display:inline-flex;
+    gap:8px;
+  }
+
+  .u8-loading-dots_INJECTED_LOADER i{
+    width:7px;
+    height:7px;
+    border-radius:999px;
+    background: rgba(255,255,255,0.75);
+    animation: u8-dot_INJECTED_LOADER 1.2s infinite ease-in-out;
+  }
+
+  .u8-loading-dots_INJECTED_LOADER i:nth-child(2){ animation-delay:.18s; }
+  .u8-loading-dots_INJECTED_LOADER i:nth-child(3){ animation-delay:.36s; }
+
+  @keyframes u8-dot_INJECTED_LOADER{
+    0%,100%{ opacity:.35; transform: translateY(0); }
+    50%{ opacity:1; transform: translateY(-3px); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .u8-eight_INJECTED_LOADER,
+    .u8-eight_INJECTED_LOADER .spark_INJECTED_LOADER,
+    .u8-eight_INJECTED_LOADER .spark2_INJECTED_LOADER,
+    .u8-loading-dots_INJECTED_LOADER i{
+      animation:none !important;
+    }
+    #u8-loader_INJECTED_LOADER{ transition:none; }
+  }
+</style>
+
+<div id="u8-loader_INJECTED_LOADER" aria-hidden="true">
+  <div class="u8-engine_INJECTED_LOADER">
+    <svg class="u8-eight_INJECTED_LOADER" viewBox="0 0 220 300" role="img" aria-hidden="true">
+      <defs>
+        <linearGradient id="u8Grad_INJECTED_LOADER" x1="0" y1="0" x2="220" y2="0">
+          <stop offset="0" stop-color="rgba(76,110,255,0.98)"/>
+          <stop offset="0.5" stop-color="rgba(0,255,170,0.92)"/>
+          <stop offset="1" stop-color="rgba(255,61,242,0.86)"/>
+        </linearGradient>
+
+        <filter id="u8SoftGlow_INJECTED_LOADER" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="2.2"/>
+        </filter>
+
+        <filter id="u8SparkGlow_INJECTED_LOADER" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="2.8"/>
+          <feMerge>
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+
+      <path id="u8Path_INJECTED_LOADER" d="
+        M110,22
+        C70,22 42,50 42,88
+        C42,122 64,146 92,154
+        C62,163 42,188 42,222
+        C42,260 70,288 110,288
+        C150,288 178,260 178,222
+        C178,188 158,163 128,154
+        C156,146 178,122 178,88
+        C178,50 150,22 110,22
+
+        M110,50
+        C136,50 150,66 150,88
+        C150,110 136,126 110,126
+        C84,126 70,110 70,88
+        C70,66 84,50 110,50
+
+        M110,184
+        C136,184 150,200 150,222
+        C150,244 136,260 110,260
+        C84,260 70,244 70,222
+        C70,200 84,184 110,184
+      " />
+
+      <use href="#u8Path_INJECTED_LOADER" class="tube_INJECTED_LOADER"/>
+      <use href="#u8Path_INJECTED_LOADER" class="tubeGlow_INJECTED_LOADER"/>
+      <use href="#u8Path_INJECTED_LOADER" class="spark_INJECTED_LOADER"/>
+      <use href="#u8Path_INJECTED_LOADER" class="spark2_INJECTED_LOADER"/>
+    </svg>
+
+    <div class="u8-loading-text_INJECTED_LOADER">
+      Loading
+      <span class="u8-loading-dots_INJECTED_LOADER"><i></i><i></i><i></i></span>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const loader = document.getElementById('u8-loader_INJECTED_LOADER');
+    if (!loader) return;
+
+    const all = document.querySelectorAll('#u8-loader_INJECTED_LOADER');
+    if (all.length > 1) {
+      for (let i = 1; i < all.length; i++) all[i].remove();
+    }
+
+    let removed = false;
+    const startedAt = performance.now();
+    const MIN_SHOW_MS = 520;
+    const MAX_SHOW_MS = 6500;
+
+    function removeLoader_INJECTED_LOADER(){
+      if (removed) return;
+      removed = true;
+      loader.remove();
+    }
+
+    function hideLoader_INJECTED_LOADER(){
+      if (removed) return;
+      const elapsed = performance.now() - startedAt;
+      const wait = Math.max(0, MIN_SHOW_MS - elapsed);
+
+      setTimeout(() => {
+        loader.classList.add('u8-hide_INJECTED_LOADER');
+        const t = setTimeout(removeLoader_INJECTED_LOADER, 900);
+        loader.addEventListener('transitionend', () => {
+          clearTimeout(t);
+          removeLoader_INJECTED_LOADER();
+        }, { once:true });
+      }, wait);
+    }
+
+    function hideAfterPaint_INJECTED_LOADER(){
+      requestAnimationFrame(() => {
+        requestAnimationFrame(hideLoader_INJECTED_LOADER);
+      });
+    }
+
+    if (document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', hideAfterPaint_INJECTED_LOADER, { once:true });
+    } else {
+      hideAfterPaint_INJECTED_LOADER();
+    }
+
+    window.addEventListener('load', hideLoader_INJECTED_LOADER, { once:true });
+    setTimeout(hideLoader_INJECTED_LOADER, MAX_SHOW_MS);
+  })();
+</script>
+<!-- ===================== END: Unlim8ted Loader ===================== -->

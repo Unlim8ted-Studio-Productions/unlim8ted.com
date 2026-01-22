@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Unlim8ted — Generate Text</title>
+  <meta name="description" content="Unlim8ted Generate Text AI. Free forever no signup required. Powered by Unlim8ted Studio Productions Technology." />
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+
+  <!-- Your navbar component -->
+  <script type="module" src="/components/site-navbar.js"></script>
+
+  <link rel="stylesheet" href="./resources/css/text-generator.01.css">
+</head>
+
+<body>
+  <!-- Always use your navbar component (and CLOSE IT!) -->
+  <site-navbar
+    cart-href="/cart"
+    signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile">
+  </site-navbar>
+
+  <canvas id="bgFX"></canvas>
+
+  <main>
+    <div class="panel hero">
+      <span class="kicker">Tools • On-device AI</span>
+      <h1>Generate Text</h1>
+      <p class="sub">
+        Runs locally in your browser (no signup). First run downloads the model and may take a bit.
+      </p>
+      <div class="note">
+        <span class="dot"></span>
+        <div>
+          <b>Note:</b> Running AI can use a lot of RAM/CPU and may warm your device.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="panel app">
+        <label for="inputText">Prompt</label>
+        <textarea id="inputText" placeholder="Enter text here..."></textarea>
+
+        <div class="row">
+          <button class="primary" id="generate" type="button">Generate</button>
+          <button id="copy" type="button" disabled>Copy</button>
+          <span class="small" id="modelHint">Model: Xenova/LaMini-Flan-T5-783M</span>
+        </div>
+
+        <div class="loading-wrap">
+          <div class="loading-bar" aria-label="Loading">
+            <div id="loadingFill"></div>
+          </div>
+          <div class="status" id="status">Status: Ready</div>
+        </div>
+
+        <div class="output" id="output" aria-live="polite"></div>
+
+        <div class="footer" id="footer-text"></div>
+      </section>
+
+      <aside class="panel side" aria-label="Sidebar">
+        <div class="card">
+          <h3>Tips</h3>
+          <p>
+            Try: “Write a short story about…” or “Summarize this:” or “Explain like I’m 12: …”
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Privacy</h3>
+          <p>
+            Generation runs on-device. Your prompt stays in your browser unless you paste it elsewhere.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Contact</h3>
+          <p class="mono">support@unlim8ted.com</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script type="module" src="./resources/js/text-generator.01.js"></script>
+</body>
+</html>

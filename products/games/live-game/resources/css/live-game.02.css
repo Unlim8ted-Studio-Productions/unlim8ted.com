@@ -1,0 +1,21 @@
+/* logo */
+    .logo {
+        position: absolute;
+        z-index: 1;
+        top: 5%;  /* Adjust top position relative to viewport height */
+        left: 5%; /* Adjust left position relative to viewport width */
+        display: block;
+    }
+
+    .logo img {
+        height: 10vw; /* Adjust height relative to viewport width */
+        max-height: 140px; /* Set a maximum height to prevent the logo from getting too large on larger screens */
+        width: auto; /* Maintain aspect ratio */
+    }
+
+    /* Media query for small devices */
+    @media (max-width: 600px) {
+        .logo img {
+            height: 20vw; /* Larger logo for smaller devices */
+        }
+    }

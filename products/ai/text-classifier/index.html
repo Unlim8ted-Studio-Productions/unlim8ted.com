@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Unlim8ted — Classify Toxicity</title>
+  <meta name="description" content="Unlim8ted Classify Text Toxicity AI. Free forever no signup required. Powered by Unlim8ted Studio Productions Technology." />
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+
+  <!-- Always use your navbar component -->
+  <script type="module" src="/components/site-navbar.js"></script>
+
+  <link rel="stylesheet" href="./resources/css/text-classifier.01.css">
+</head>
+
+<body>
+  <!-- Navbar component -->
+  <site-navbar
+    cart-href="/cart"
+    signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile">
+  </site-navbar>
+
+  <canvas id="bgFX"></canvas>
+
+  <main>
+    <div class="panel hero">
+      <span class="kicker">Tools • On-device AI</span>
+      <h1>Classify Text Toxicity</h1>
+      <p class="sub">
+        Paste text below and get a breakdown of toxicity categories locally in your browser. First run downloads the model.
+      </p>
+      <div class="note">
+        <span class="dot"></span>
+        <div><b>Note:</b> Running AI can use a lot of RAM/CPU and may warm your device.</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="panel app">
+        <label for="inputText">Text to classify</label>
+        <textarea id="inputText" placeholder="Enter text here..."></textarea>
+
+        <div class="row">
+          <button class="primary" id="classify" type="button">Classify</button>
+          <button id="copy" type="button" disabled>Copy results</button>
+          <span class="small" id="modelHint">Model: Xenova/toxic-bert</span>
+        </div>
+
+        <div class="loading-wrap">
+          <div class="loading-bar" aria-label="Loading">
+            <div id="loadingFill"></div>
+          </div>
+          <div class="status" id="status">Status: Ready</div>
+        </div>
+
+        <div class="results" id="results" hidden>
+          <div class="head">
+            <span>Label</span>
+            <span>Score</span>
+          </div>
+          <div id="resultsBody"></div>
+        </div>
+
+        <div class="footer" id="footer-text"></div>
+      </section>
+
+      <aside class="panel side" aria-label="Sidebar">
+        <div class="card">
+          <h3>How to read this</h3>
+          <p>
+            Higher % means the model thinks that category is more present. It’s not perfect—use as a signal, not a verdict.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Privacy</h3>
+          <p>Your text stays on-device. Nothing is uploaded by this page.</p>
+        </div>
+
+        <div class="card">
+          <h3>Contact</h3>
+          <p class="mono">support@unlim8ted.com</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script type="module" src="./resources/js/text-classifier.01.js"></script>
+</body>
+</html>

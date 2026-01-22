@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Unlim8ted - Physical Items</title>
+  <meta name="title" content="Products - Unlim8ted" />
+  <meta name="description" content="Explore Unlim8ted's physical items and merch." />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://unlim8ted.com/products/" />
+  <meta property="og:title" content="Products - Unlim8ted Studio Productions" />
+  <meta property="og:description" content="Explore a wide range of products from Unlim8ted Studio Productions." />
+  <meta property="og:image" content="https://unlim8ted.com/images/products-meta-image.jpg" />
+
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://unlim8ted.com/products/" />
+  <meta property="twitter:title" content="Products - Unlim8ted Studio Productions" />
+  <meta property="twitter:description" content="Explore a wide range of products from Unlim8ted Studio Productions." />
+  <meta property="twitter:image" content="https://unlim8ted.com/images/products-meta-image.jpg" />
+
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+
+  <script type="module" src="/components/site-navbar.js"></script>
+
+  <link rel="stylesheet" href="./resources/css/physical-items.01.css">
+</head>
+
+<body>
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile"></site-navbar>
+
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <h1>Physical Items</h1>
+        <p class="sub">Stock is based on Printful and stored per variant in <strong>varients[].available</strong>. Click
+          a product to view and choose a variant.</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="tool" title="Search">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M10 4a6 6 0 104.472 10.01l4.759 4.758a1 1 0 001.414-1.414l-4.758-4.759A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z" />
+          </svg>
+        </div>
+        <input type="text" id="search" placeholder="Search items…" />
+      </div>
+
+      <div class="tool" title="Filter">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 7h10a2 2 0 104 0h2v2h-2a2 2 0 11-4 0H4V7zm0 8h2a2 2 0 104 0h10v2H10a2 2 0 11-4 0H4v-2z" />
+          </svg>
+        </div>
+        <select id="filter" aria-label="Category filter">
+          <option value="all">All categories</option>
+          <option value="t-shirts">T-Shirts</option>
+          <option value="hoodies">Hoodies</option>
+          <option value="stickers">Stickers</option>
+          <option value="accessories">Accessories</option>
+          <option value="home">Home</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="grid" class="grid"></div>
+
+    <div class="foot">
+      <span id="footer-text"></span>
+    </div>
+  </div>
+
+  <script type="module" src="./resources/js/physical-items.01.js"></script>
+
+  <script src="./resources/js/physical-items.02.js"></script>
+</body>
+
+</html>
