@@ -264,7 +264,7 @@ jobs:
           set -euo pipefail
 
           OUT_DIR="${{ env.FRONTEND_DIR }}"
-          SNIP_FILE="components/deploy-inject/head-snippet.html"
+          SNIP_FILE="frontend/components/deploy-inject/head-snippet.html"
           MARK="<!--__INJECTED_FILE_PREFIX__-->"
 
           if [ ! -d "$OUT_DIR" ]; then
