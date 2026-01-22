@@ -1,4 +1,5 @@
-name: Deploy unlim8ted.com + update subdomain repos
+# .github/workflows/sync-assets-and-public-api.yml
+name: Sync /assets and /public api into their repos (GitHub App auth)
 
 on:
   push:
@@ -6,112 +7,25 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: "pages"
+  group: sync-assets-api
   cancel-in-progress: false
 
 env:
-  # Source folders in THIS repo
-  FRONTEND_DIR: "frontend"
-  ASSETS_DIR: "assets"
-  PUBLIC_API_DIR: "public api"
+  ASSETS_DIR: assets
+  PUBLIC_API_DIR: public api
 
-  # Injection snippet (only applied to frontend HTML)
-  SNIP_FILE: "frontend/components/deploy-inject/head-snippet.html"
-  MARK: "<!--__INJECTED_FILE_PREFIX__-->"
-
-  # Target repos for subdomains
-  ASSETS_REPO: "Unlim8ted-Studio-Productions/assets.unlim8ted.com"
-  API_REPO: "Unlim8ted-Studio-Productions/api.unlim8ted.com"
-  TARGET_BRANCH: "main"
+  ASSETS_REPO: Unlim8ted-Studio-Productions/assets.unlim8ted.com
+  API_REPO: Unlim8ted-Studio-Productions/api.unlim8ted.com
+  TARGET_BRANCH: main
 
 jobs:
-  deploy_main_site:
-    name: Deploy unlim8ted.com (from /frontend, with injection)
+  sync:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: https://unlim8ted.com
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Prepare dist (frontend only)
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -rf dist
-          mkdir -p dist/frontend
-          rsync -a --delete "${FRONTEND_DIR}/" "dist/frontend/"
-
-      - name: Prepend snippet to frontend HTML files ONLY
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          OUT_DIR="dist/frontend"
-          SNIP_PATH="${SNIP_FILE}"
-          MARK="${MARK}"
-
-          if [ ! -f "$SNIP_PATH" ]; then
-            echo "Snippet file not found: $SNIP_PATH" >&2
-            exit 1
-          fi
-
-          SNIP="$(cat "$SNIP_PATH")"
-          SNIP_DIST_PATH="dist/frontend/components/deploy-inject/head-snippet.html"
-
-          find "$OUT_DIR" -type f -name "*.html" -print0 | while IFS= read -r -d '' f; do
-            # Skip the snippet file itself
-            if [ "$f" = "$SNIP_DIST_PATH" ]; then
-              continue
-            fi
-
-            # Prevent double injection
-            if grep -qF "$MARK" "$f"; then
-              echo "Already injected: $f"
-              continue
-            fi
-
-            tmp="$(mktemp)"
-            {
-              printf '%s\n' "$MARK"
-              printf '%s\n' "$SNIP"
-              cat "$f"
-            } > "$tmp"
-            mv "$tmp" "$f"
-            echo "Injected: $f"
-          done
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: "dist/frontend"
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
-
-  update_subdomain_repos:
-    name: Sync /assets and /public api into their repos (GitHub App auth)
-    runs-on: ubuntu-latest
-    needs: [deploy_main_site]
-    permissions:
-      contents: write
-
-    concurrency:
-      group: "sync-subdomain-repos"
-      cancel-in-progress: true
-
-    steps:
-      - name: Checkout THIS repo
+      - name: Checkout main repo
         uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -123,25 +37,24 @@ jobs:
           set -euo pipefail
           git config --global user.name  "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global advice.detachedHead false
 
-      - name: Create GitHub App token (cross-repo pushes)
+      # Put these in repo/org secrets:
+      # - GH_APP_ID
+      # - GH_APP_PRIVATE_KEY
+      - name: Create GitHub App token
         id: app-token
         uses: actions/create-github-app-token@v2
         with:
-          app-id: ${{ vars.GH_APP_ID }}
+          app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ vars.GH_APP_OWNER }}
+          owner: Unlim8ted-Studio-Productions
 
-      # Optional: fail early if any single file is too large for GitHub normal git (100MB hard cap).
-      # Adjust threshold if you want (e.g. 95M).
-      - name: Size guard (optional)
+      - name: Fail if any file > 95MB in assets or public api
         shell: bash
         run: |
           set -euo pipefail
           THRESHOLD_BYTES=$((95 * 1024 * 1024))
           echo "Checking for files over $THRESHOLD_BYTES bytes..."
-          # Check assets + public api
           for DIR in "${ASSETS_DIR}" "${PUBLIC_API_DIR}"; do
             if [ -d "$DIR" ]; then
               BIG="$(find "$DIR" -type f -printf '%s %p\n' | awk -v t="$THRESHOLD_BYTES" '$1>t{print}')"
@@ -153,108 +66,90 @@ jobs:
             fi
           done
 
-      - name: Sync assets.unlim8ted.com
+      - name: Sync assets + public api into their repos
         shell: bash
         env:
           GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
-          REPO: ${{ env.ASSETS_REPO }}
+          ASSETS_REPO: ${{ env.ASSETS_REPO }}
+          API_REPO: ${{ env.API_REPO }}
           BRANCH: ${{ env.TARGET_BRANCH }}
-          SRC_DIR: ${{ env.ASSETS_DIR }}
+          ASSETS_DIR: ${{ env.ASSETS_DIR }}
+          PUBLIC_API_DIR: ${{ env.PUBLIC_API_DIR }}
         run: |
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
 
-          SRC_PATH="${GITHUB_WORKSPACE}/${SRC_DIR}"
-          if [ ! -d "${SRC_PATH}" ]; then
-            echo "Source folder not found: ${SRC_PATH}" >&2
-            ls -la "${GITHUB_WORKSPACE}"
-            exit 1
-          fi
+          sync_dir_to_repo () {
+            local SRC_DIR="$1"
+            local REPO="$2"
+            local LABEL="$3"
 
-          WORKDIR="$(mktemp -d)"
-          echo "Workdir: $WORKDIR"
+            local SRC_PATH="${GITHUB_WORKSPACE}/${SRC_DIR}"
+            if [ ! -d "${SRC_PATH}" ]; then
+              echo "Source folder not found: ${SRC_PATH}" >&2
+              ls -la "${GITHUB_WORKSPACE}"
+              exit 1
+            fi
 
-          PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
+            local WORKDIR
+            WORKDIR="$(mktemp -d)"
+            echo "Workdir (${LABEL}): $WORKDIR"
 
-          git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
+            # Clean up on return from function
+            # shellcheck disable=SC2064
+            trap "rm -rf \"$WORKDIR\"" RETURN
 
-          # Ensure clean branch state
-          git -C "${WORKDIR}/repo" fetch origin "${BRANCH}"
-          git -C "${WORKDIR}/repo" checkout "${BRANCH}"
-          git -C "${WORKDIR}/repo" reset --hard "origin/${BRANCH}"
-          git -C "${WORKDIR}/repo" clean -fdx
+            local PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
 
-          # Mirror content into repo root
-          rsync -a --delete "${SRC_PATH}/" "${WORKDIR}/repo/"
+            git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
 
-          # Commit + push only if changed
-          if [ -n "$(git -C "${WORKDIR}/repo" status --porcelain)" ]; then
+            # sanity: ensure .git exists
+            if [ ! -d "${WORKDIR}/repo/.git" ]; then
+              echo "ERROR: Clone did not produce a git repo at ${WORKDIR}/repo" >&2
+              ls -la "${WORKDIR}/repo" || true
+              exit 1
+            fi
+
+            # Ensure clean branch state
+            git -C "${WORKDIR}/repo" fetch origin "${BRANCH}"
+            git -C "${WORKDIR}/repo" checkout "${BRANCH}"
+            git -C "${WORKDIR}/repo" reset --hard "origin/${BRANCH}"
+            git -C "${WORKDIR}/repo" clean -fdx
+
+            # Mirror content into repo root WITHOUT nuking .git (or .github if you keep workflows in target repos)
+            rsync -a --delete \
+              --exclude='.git/' \
+              --exclude='.github/' \
+              "${SRC_PATH}/" "${WORKDIR}/repo/"
+
+            # Commit + push only if changed (robust; no command-substitution gotchas)
+            if git -C "${WORKDIR}/repo" diff --quiet && git -C "${WORKDIR}/repo" diff --cached --quiet; then
+              echo "No changes to push to ${REPO}."
+              return 0
+            fi
+
+            # Stage and see if staging actually produces changes
             git -C "${WORKDIR}/repo" add -A
-            git -C "${WORKDIR}/repo" commit -m "Deploy assets from unlim8ted.com (${GITHUB_SHA})"
+            if git -C "${WORKDIR}/repo" diff --cached --quiet; then
+              echo "No staged changes after add; nothing to push to ${REPO}."
+              return 0
+            fi
 
-            # Push with retry
+            git -C "${WORKDIR}/repo" commit -m "Deploy ${LABEL} from unlim8ted.com (${GITHUB_SHA})"
+
             for i in 1 2 3; do
               echo "Attempt $i: pushing ${REPO}@${BRANCH}..."
               if git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"; then
-                exit 0
+                echo "Pushed successfully."
+                return 0
               fi
               echo "Push failed; retrying..."
               sleep 5
             done
 
             echo "Failed to push to ${REPO} after retries." >&2
-            exit 1
-          else
-            echo "No changes to push to ${REPO}."
-          fi
+            return 1
+          }
 
-      - name: Sync api.unlim8ted.com
-        shell: bash
-        env:
-          GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
-          REPO: ${{ env.API_REPO }}
-          BRANCH: ${{ env.TARGET_BRANCH }}
-          SRC_DIR: ${{ env.PUBLIC_API_DIR }}
-        run: |
-          set -euo pipefail
-          export GIT_TERMINAL_PROMPT=0
-
-          SRC_PATH="${GITHUB_WORKSPACE}/${SRC_DIR}"
-          if [ ! -d "${SRC_PATH}" ]; then
-            echo "Source folder not found: ${SRC_PATH}" >&2
-            ls -la "${GITHUB_WORKSPACE}"
-            exit 1
-          fi
-
-          WORKDIR="$(mktemp -d)"
-          echo "Workdir: $WORKDIR"
-
-          PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
-
-          git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
-
-          git -C "${WORKDIR}/repo" fetch origin "${BRANCH}"
-          git -C "${WORKDIR}/repo" checkout "${BRANCH}"
-          git -C "${WORKDIR}/repo" reset --hard "origin/${BRANCH}"
-          git -C "${WORKDIR}/repo" clean -fdx
-
-          rsync -a --delete "${SRC_PATH}/" "${WORKDIR}/repo/"
-
-          if [ -n "$(git -C "${WORKDIR}/repo" status --porcelain)" ]; then
-            git -C "${WORKDIR}/repo" add -A
-            git -C "${WORKDIR}/repo" commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
-
-            for i in 1 2 3; do
-              echo "Attempt $i: pushing ${REPO}@${BRANCH}..."
-              if git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"; then
-                exit 0
-              fi
-              echo "Push failed; retrying..."
-              sleep 5
-            done
-
-            echo "Failed to push to ${REPO} after retries." >&2
-            exit 1
-          else
-            echo "No changes to push to ${REPO}."
-          fi
+          sync_dir_to_repo "${ASSETS_DIR}"     "${ASSETS_REPO}" "assets"
+          sync_dir_to_repo "${PUBLIC_API_DIR}" "${API_REPO}"    "public api"
