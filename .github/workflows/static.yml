@@ -104,9 +104,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [deploy_main_site]
     permissions:
-      contents: write   # must be write to allow pushes
+      contents: write
 
-    # Prevent simultaneous runs fighting each other
     concurrency:
       group: "sync-subdomain-repos"
       cancel-in-progress: true
@@ -116,6 +115,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 1
 
       - name: Configure git identity
         shell: bash
@@ -123,6 +123,7 @@ jobs:
           set -euo pipefail
           git config --global user.name  "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global advice.detachedHead false
 
       - name: Create GitHub App token (cross-repo pushes)
         id: app-token
@@ -132,9 +133,26 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ vars.GH_APP_OWNER }}
 
-      # ----------------------------
-      # Mirror /assets -> assets.unlim8ted.com (deployment mirror)
-      # ----------------------------
+      # Optional: fail early if any single file is too large for GitHub normal git (100MB hard cap).
+      # Adjust threshold if you want (e.g. 95M).
+      - name: Size guard (optional)
+        shell: bash
+        run: |
+          set -euo pipefail
+          THRESHOLD_BYTES=$((95 * 1024 * 1024))
+          echo "Checking for files over $THRESHOLD_BYTES bytes..."
+          # Check assets + public api
+          for DIR in "${ASSETS_DIR}" "${PUBLIC_API_DIR}"; do
+            if [ -d "$DIR" ]; then
+              BIG="$(find "$DIR" -type f -printf '%s %p\n' | awk -v t="$THRESHOLD_BYTES" '$1>t{print}')"
+              if [ -n "$BIG" ]; then
+                echo "ERROR: Found files too large for a normal git push:"
+                echo "$BIG"
+                exit 1
+              fi
+            fi
+          done
+
       - name: Sync assets.unlim8ted.com
         shell: bash
         env:
@@ -142,78 +160,54 @@ jobs:
           REPO: ${{ env.ASSETS_REPO }}
           BRANCH: ${{ env.TARGET_BRANCH }}
           SRC_DIR: ${{ env.ASSETS_DIR }}
-          DEST_PATH: target-assets
-          COMMIT_MSG: Deploy assets from unlim8ted.com
         run: |
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
 
-          PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
           SRC_PATH="${GITHUB_WORKSPACE}/${SRC_DIR}"
-
           if [ ! -d "${SRC_PATH}" ]; then
             echo "Source folder not found: ${SRC_PATH}" >&2
             ls -la "${GITHUB_WORKSPACE}"
             exit 1
           fi
 
-          rm -rf "${DEST_PATH}"
+          WORKDIR="$(mktemp -d)"
+          echo "Workdir: $WORKDIR"
 
-          # Install git-lfs (best-effort; migrating history to LFS is separate)
-          git lfs install || true
+          PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
 
-          # Clone without shallow depth to avoid pack/index issues on push
-          git clone --branch "${BRANCH}" "${PUSH_URL}" "${DEST_PATH}"
+          git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
 
-          (
-            cd "${DEST_PATH}"
+          # Ensure clean branch state
+          git -C "${WORKDIR}/repo" fetch origin "${BRANCH}"
+          git -C "${WORKDIR}/repo" checkout "${BRANCH}"
+          git -C "${WORKDIR}/repo" reset --hard "origin/${BRANCH}"
+          git -C "${WORKDIR}/repo" clean -fdx
 
-            # Ensure we are on the branch and match remote
-            git fetch origin "${BRANCH}"
-            git checkout "${BRANCH}"
-            git reset --hard "origin/${BRANCH}"
-            git clean -fdx
+          # Mirror content into repo root
+          rsync -a --delete "${SRC_PATH}/" "${WORKDIR}/repo/"
 
-            # Helpful git settings for large transfers
-            git config http.postBuffer 524288000
-            git config --local core.compression 0 || true
-            git config --local pack.windowMemory 100m || true
+          # Commit + push only if changed
+          if [ -n "$(git -C "${WORKDIR}/repo" status --porcelain)" ]; then
+            git -C "${WORKDIR}/repo" add -A
+            git -C "${WORKDIR}/repo" commit -m "Deploy assets from unlim8ted.com (${GITHUB_SHA})"
 
-            rsync -a --delete "${SRC_PATH}/" "./"
-
-            if git status --porcelain | grep -q .; then
-              git add -A
-              git commit -m "${COMMIT_MSG} (${GITHUB_SHA})"
-
-              # Repack/gc to create optimized pack to send to remote
-              git repack -a -d -f --window=250 --max-pack-size=20m || true
-              git gc --aggressive --prune=now || true
-
-              # Retry push (helps with transient remote index-pack failures)
-              set +e
-              PUSH_SUCCESS=1
-              for i in 1 2 3; do
-                echo "Attempt $i: pushing to ${REPO}..."
-                git push --force "${PUSH_URL}" "HEAD:${BRANCH}" && { PUSH_SUCCESS=0; break; }
-                echo "Push failed, running git gc and retrying..."
-                git repack -a -d -f --window=250 --max-pack-size=20m || true
-                git gc --aggressive --prune=now || true
-                sleep 5
-              done
-              set -e
-
-              if [ "${PUSH_SUCCESS}" -ne 0 ]; then
-                echo "Failed to push to ${REPO} after retries." >&2
-                exit 1
+            # Push with retry
+            for i in 1 2 3; do
+              echo "Attempt $i: pushing ${REPO}@${BRANCH}..."
+              if git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"; then
+                exit 0
               fi
-            else
-              echo "No changes to push to ${REPO}."
-            fi
-          )
+              echo "Push failed; retrying..."
+              sleep 5
+            done
 
-      # ----------------------------
-      # Mirror /public api -> api.unlim8ted.com (deployment mirror)
-      # ----------------------------
+            echo "Failed to push to ${REPO} after retries." >&2
+            exit 1
+          else
+            echo "No changes to push to ${REPO}."
+          fi
+
       - name: Sync api.unlim8ted.com
         shell: bash
         env:
@@ -221,64 +215,46 @@ jobs:
           REPO: ${{ env.API_REPO }}
           BRANCH: ${{ env.TARGET_BRANCH }}
           SRC_DIR: ${{ env.PUBLIC_API_DIR }}
-          DEST_PATH: target-api
-          COMMIT_MSG: Deploy public api from unlim8ted.com
         run: |
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
 
-          PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
           SRC_PATH="${GITHUB_WORKSPACE}/${SRC_DIR}"
-
           if [ ! -d "${SRC_PATH}" ]; then
             echo "Source folder not found: ${SRC_PATH}" >&2
             ls -la "${GITHUB_WORKSPACE}"
             exit 1
           fi
 
-          rm -rf "${DEST_PATH}"
+          WORKDIR="$(mktemp -d)"
+          echo "Workdir: $WORKDIR"
 
-          git lfs install || true
-          git clone --branch "${BRANCH}" "${PUSH_URL}" "${DEST_PATH}"
+          PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
 
-          (
-            cd "${DEST_PATH}"
+          git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
 
-            git fetch origin "${BRANCH}"
-            git checkout "${BRANCH}"
-            git reset --hard "origin/${BRANCH}"
-            git clean -fdx
+          git -C "${WORKDIR}/repo" fetch origin "${BRANCH}"
+          git -C "${WORKDIR}/repo" checkout "${BRANCH}"
+          git -C "${WORKDIR}/repo" reset --hard "origin/${BRANCH}"
+          git -C "${WORKDIR}/repo" clean -fdx
 
-            git config http.postBuffer 524288000
-            git config --local core.compression 0 || true
-            git config --local pack.windowMemory 100m || true
+          rsync -a --delete "${SRC_PATH}/" "${WORKDIR}/repo/"
 
-            rsync -a --delete "${SRC_PATH}/" "./"
+          if [ -n "$(git -C "${WORKDIR}/repo" status --porcelain)" ]; then
+            git -C "${WORKDIR}/repo" add -A
+            git -C "${WORKDIR}/repo" commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
 
-            if git status --porcelain | grep -q .; then
-              git add -A
-              git commit -m "${COMMIT_MSG} (${GITHUB_SHA})"
-
-              git repack -a -d -f --window=250 --max-pack-size=20m || true
-              git gc --aggressive --prune=now || true
-
-              set +e
-              PUSH_SUCCESS=1
-              for i in 1 2 3; do
-                echo "Attempt $i: pushing to ${REPO}..."
-                git push --force "${PUSH_URL}" "HEAD:${BRANCH}" && { PUSH_SUCCESS=0; break; }
-                echo "Push failed, running git gc and retrying..."
-                git repack -a -d -f --window=250 --max-pack-size=20m || true
-                git gc --aggressive --prune=now || true
-                sleep 5
-              done
-              set -e
-
-              if [ "${PUSH_SUCCESS}" -ne 0 ]; then
-                echo "Failed to push to ${REPO} after retries." >&2
-                exit 1
+            for i in 1 2 3; do
+              echo "Attempt $i: pushing ${REPO}@${BRANCH}..."
+              if git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"; then
+                exit 0
               fi
-            else
-              echo "No changes to push to ${REPO}."
-            fi
-          )
+              echo "Push failed; retrying..."
+              sleep 5
+            done
+
+            echo "Failed to push to ${REPO} after retries." >&2
+            exit 1
+          else
+            echo "No changes to push to ${REPO}."
+          fi
