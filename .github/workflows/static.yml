@@ -106,6 +106,11 @@ jobs:
     permissions:
       contents: read
 
+    # Prevent simultaneous runs fighting each other
+    concurrency:
+      group: "sync-subdomain-repos"
+      cancel-in-progress: true
+
     steps:
       - name: Checkout THIS repo
         uses: actions/checkout@v4
@@ -128,10 +133,8 @@ jobs:
           owner: ${{ vars.GH_APP_OWNER }}
 
       # ----------------------------
-      # Helper: mirror a folder into a target repo and push safely
-      # Uses absolute source paths from $GITHUB_WORKSPACE
+      # Mirror /assets -> assets.unlim8ted.com (deployment mirror)
       # ----------------------------
-
       - name: Sync assets.unlim8ted.com
         shell: bash
         env:
@@ -140,6 +143,7 @@ jobs:
           BRANCH: ${{ env.TARGET_BRANCH }}
           SRC_DIR: ${{ env.ASSETS_DIR }}
           DEST_PATH: target-assets
+          COMMIT_MSG: Deploy assets from unlim8ted.com
         run: |
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
@@ -153,37 +157,33 @@ jobs:
             exit 1
           fi
 
-          sync_and_push () {
-            rm -rf "${DEST_PATH}"
-            git clone --depth 1 --branch "${BRANCH}" "${PUSH_URL}" "${DEST_PATH}"
+          rm -rf "${DEST_PATH}"
+          git clone --depth 1 --branch "${BRANCH}" "${PUSH_URL}" "${DEST_PATH}"
 
-            pushd "${DEST_PATH}" >/dev/null
+          (
+            cd "${DEST_PATH}"
 
             git fetch origin "${BRANCH}" --depth 1
             git checkout "${BRANCH}"
             git reset --hard "origin/${BRANCH}"
             git clean -fdx
 
-            # Mirror contents from SOURCE repo folder -> target repo root
             rsync -a --delete "${SRC_PATH}/" "./"
 
             if git status --porcelain | grep -q .; then
               git add -A
-              git commit -m "Deploy assets from unlim8ted.com (${GITHUB_SHA})"
-              git fetch origin "${BRANCH}" --depth 1
-              git push --force-with-lease "${PUSH_URL}" "HEAD:${BRANCH}"
+              git commit -m "${COMMIT_MSG} (${GITHUB_SHA})"
+
+              # Deployment mirror semantics: overwrite remote to match source exactly
+              git push --force "${PUSH_URL}" "HEAD:${BRANCH}"
             else
               echo "No changes to push to ${REPO}."
             fi
+          )
 
-            popd >/dev/null
-          }
-
-          if ! sync_and_push; then
-            echo "First push attempt failed (remote likely moved). Retrying once..."
-            sync_and_push
-          fi
-
+      # ----------------------------
+      # Mirror /public api -> api.unlim8ted.com (deployment mirror)
+      # ----------------------------
       - name: Sync api.unlim8ted.com
         shell: bash
         env:
@@ -192,6 +192,7 @@ jobs:
           BRANCH: ${{ env.TARGET_BRANCH }}
           SRC_DIR: ${{ env.PUBLIC_API_DIR }}
           DEST_PATH: target-api
+          COMMIT_MSG: Deploy public api from unlim8ted.com
         run: |
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
@@ -205,33 +206,26 @@ jobs:
             exit 1
           fi
 
-          sync_and_push () {
-            rm -rf "${DEST_PATH}"
-            git clone --depth 1 --branch "${BRANCH}" "${PUSH_URL}" "${DEST_PATH}"
+          rm -rf "${DEST_PATH}"
+          git clone --depth 1 --branch "${BRANCH}" "${PUSH_URL}" "${DEST_PATH}"
 
-            pushd "${DEST_PATH}" >/dev/null
+          (
+            cd "${DEST_PATH}"
 
             git fetch origin "${BRANCH}" --depth 1
             git checkout "${BRANCH}"
             git reset --hard "origin/${BRANCH}"
             git clean -fdx
 
-            # Mirror contents from SOURCE repo folder -> target repo root
             rsync -a --delete "${SRC_PATH}/" "./"
 
             if git status --porcelain | grep -q .; then
               git add -A
-              git commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
-              git fetch origin "${BRANCH}" --depth 1
-              git push --force-with-lease "${PUSH_URL}" "HEAD:${BRANCH}"
+              git commit -m "${COMMIT_MSG} (${GITHUB_SHA})"
+
+              # Deployment mirror semantics: overwrite remote to match source exactly
+              git push --force "${PUSH_URL}" "HEAD:${BRANCH}"
             else
               echo "No changes to push to ${REPO}."
             fi
-
-            popd >/dev/null
-          }
-
-          if ! sync_and_push; then
-            echo "First push attempt failed (remote likely moved). Retrying once..."
-            sync_and_push
-          fi
+          )
