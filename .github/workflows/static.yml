@@ -26,9 +26,6 @@ env:
   API_REPO: "Unlim8ted-Studio-Productions/api.unlim8ted.com"
   TARGET_BRANCH: "main"
 
-# ------------------------------------------------------------
-# DEPLOY MAIN SITE (GitHub Pages)
-# ------------------------------------------------------------
 jobs:
   deploy_main_site:
     name: Deploy unlim8ted.com
@@ -95,9 +92,6 @@ jobs:
       - name: Deploy Pages
         uses: actions/deploy-pages@v4
 
-# ------------------------------------------------------------
-# SYNC SUBDOMAIN REPOS (GitHub App auth, no prompts)
-# ------------------------------------------------------------
   update_subdomain_repos:
     name: Sync assets + api subdomains
     runs-on: ubuntu-latest
@@ -136,23 +130,35 @@ jobs:
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
 
-          rm -rf target-assets
-          git clone "https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git" target-assets
-          cd target-assets
+          push_url="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
 
-          git checkout "${BRANCH}"
-          git fetch origin "${BRANCH}"
-          git reset --hard "origin/${BRANCH}"
-          git clean -fdx
+          sync_and_push () {
+            rm -rf target-assets
+            git clone --depth 1 --branch "${BRANCH}" "${push_url}" target-assets
+            cd target-assets
 
-          rsync -a --delete "../${SRC}/" "./"
+            git fetch origin "${BRANCH}" --depth 1
+            git checkout "${BRANCH}"
+            git reset --hard "origin/${BRANCH}"
+            git clean -fdx
 
-          if git status --porcelain | grep -q .; then
-            git add -A
-            git commit -m "Deploy assets from unlim8ted.com (${GITHUB_SHA})"
-            git push "https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git" "${BRANCH}"
-          else
-            echo "No asset changes."
+            rsync -a --delete "../${SRC}/" "./"
+
+            if git status --porcelain | grep -q .; then
+              git add -A
+              git commit -m "Deploy assets from unlim8ted.com (${GITHUB_SHA})"
+
+              # Re-fetch immediately before push (race-safe) then push with lease
+              git fetch origin "${BRANCH}" --depth 1
+              git push --force-with-lease "${push_url}" "HEAD:${BRANCH}"
+            else
+              echo "No asset changes."
+            fi
+          }
+
+          if ! sync_and_push; then
+            echo "First attempt failed (remote likely moved). Retrying once..."
+            sync_and_push
           fi
 
       # ---------------- API ----------------
@@ -167,21 +173,33 @@ jobs:
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
 
-          rm -rf target-api
-          git clone "https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git" target-api
-          cd target-api
+          push_url="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
 
-          git checkout "${BRANCH}"
-          git fetch origin "${BRANCH}"
-          git reset --hard "origin/${BRANCH}"
-          git clean -fdx
+          sync_and_push () {
+            rm -rf target-api
+            git clone --depth 1 --branch "${BRANCH}" "${push_url}" target-api
+            cd target-api
 
-          rsync -a --delete "../${SRC}/" "./"
+            git fetch origin "${BRANCH}" --depth 1
+            git checkout "${BRANCH}"
+            git reset --hard "origin/${BRANCH}"
+            git clean -fdx
 
-          if git status --porcelain | grep -q .; then
-            git add -A
-            git commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
-            git push "https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git" "${BRANCH}"
-          else
-            echo "No API changes."
+            rsync -a --delete "../${SRC}/" "./"
+
+            if git status --porcelain | grep -q .; then
+              git add -A
+              git commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
+
+              # Re-fetch immediately before push (race-safe) then push with lease
+              git fetch origin "${BRANCH}" --depth 1
+              git push --force-with-lease "${push_url}" "HEAD:${BRANCH}"
+            else
+              echo "No API changes."
+            fi
+          }
+
+          if ! sync_and_push; then
+            echo "First attempt failed (remote likely moved). Retrying once..."
+            sync_and_push
           fi
