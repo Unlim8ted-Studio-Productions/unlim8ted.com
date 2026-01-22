@@ -1,13 +1,9 @@
-# .github/workflows/sync-assets-and-public-api.yml
 name: Sync /assets and /public api into their repos + publish /frontend to GitHub Pages (GitHub App auth)
 
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 concurrency:
   group: sync-assets-api-frontend
@@ -22,12 +18,72 @@ env:
   API_REPO: Unlim8ted-Studio-Productions/api.unlim8ted.com
   TARGET_BRANCH: main
 
-  # GitHub Pages branch in THIS repo
-  PAGES_BRANCH: gh-pages
-
 jobs:
-  sync:
+  detect:
+    name: Detect changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      assets_changed: ${{ steps.changes.outputs.assets_changed }}
+      api_changed: ${{ steps.changes.outputs.api_changed }}
+      frontend_changed: ${{ steps.changes.outputs.frontend_changed }}
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed paths
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.sha }}"
+
+          # workflow_dispatch doesn't always have a usable "before"
+          if [ -z "${BEFORE}" ] || [ "${BEFORE}" = "0000000000000000000000000000000000000000" ]; then
+            if git rev-parse "${AFTER}~1" >/dev/null 2>&1; then
+              BEFORE="$(git rev-parse "${AFTER}~1")"
+            else
+              BEFORE="${AFTER}"
+            fi
+          fi
+
+          echo "Diff range: $BEFORE..$AFTER"
+          CHANGED="$(git diff --name-only "$BEFORE" "$AFTER" || true)"
+          echo "$CHANGED" | sed 's/^/ - /' || true
+
+          assets_changed=false
+          api_changed=false
+          frontend_changed=false
+
+          if echo "$CHANGED" | grep -qE '^assets/'; then
+            assets_changed=true
+          fi
+
+          # folder is literally "public api" (space)
+          if echo "$CHANGED" | grep -qE '^public api/'; then
+            api_changed=true
+          fi
+
+          if echo "$CHANGED" | grep -qE '^frontend/'; then
+            frontend_changed=true
+          fi
+
+          echo "assets_changed=$assets_changed"   | tee -a "$GITHUB_OUTPUT"
+          echo "api_changed=$api_changed"         | tee -a "$GITHUB_OUTPUT"
+          echo "frontend_changed=$frontend_changed" | tee -a "$GITHUB_OUTPUT"
+
+  sync:
+    name: Sync assets + public api
+    runs-on: ubuntu-latest
+    needs: [detect]
+    if: needs.detect.outputs.assets_changed == 'true' || needs.detect.outputs.api_changed == 'true'
+    permissions:
+      contents: write
     steps:
       - name: Checkout main repo
         uses: actions/checkout@v4
@@ -42,65 +98,7 @@ jobs:
           git config --global user.name  "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # Figure out whether assets/ and/or public api/ and/or frontend/ changed in THIS push
-      - name: Detect changed paths
-        id: changes
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          BEFORE="${{ github.event.before }}"
-          AFTER="${{ github.sha }}"
-
-          # workflow_dispatch doesn't always have a usable "before"
-          if [ -z "${BEFORE}" ] || [ "${BEFORE}" = "0000000000000000000000000000000000000000" ]; then
-            # Best-effort: compare against previous commit if available
-            if git rev-parse "${AFTER}~1" >/dev/null 2>&1; then
-              BEFORE="$(git rev-parse "${AFTER}~1")"
-            else
-              BEFORE="${AFTER}"
-            fi
-          fi
-
-          echo "Diff range: $BEFORE..$AFTER"
-
-          CHANGED="$(git diff --name-only "$BEFORE" "$AFTER" || true)"
-          echo "$CHANGED" | sed 's/^/ - /' || true
-
-          assets_changed=false
-          api_changed=false
-          frontend_changed=false
-
-          if echo "$CHANGED" | grep -qE '^assets/'; then
-            assets_changed=true
-          fi
-
-          # PUBLIC_API_DIR is literally "public api" (space),
-          # so paths will be like "public api/whatever.json"
-          if echo "$CHANGED" | grep -qE '^public api/'; then
-            api_changed=true
-          fi
-
-          if echo "$CHANGED" | grep -qE '^frontend/'; then
-            frontend_changed=true
-          fi
-
-          echo "assets_changed=$assets_changed"
-          echo "api_changed=$api_changed"
-          echo "frontend_changed=$frontend_changed"
-
-          echo "assets_changed=$assets_changed" >> "$GITHUB_OUTPUT"
-          echo "api_changed=$api_changed" >> "$GITHUB_OUTPUT"
-          echo "frontend_changed=$frontend_changed" >> "$GITHUB_OUTPUT"
-
-      - name: Skip (no assets/api/frontend changes)
-        if: steps.changes.outputs.assets_changed != 'true' && steps.changes.outputs.api_changed != 'true' && steps.changes.outputs.frontend_changed != 'true'
-        shell: bash
-        run: |
-          echo "No changes under '${ASSETS_DIR}/', '${PUBLIC_API_DIR}/', or '${FRONTEND_DIR}/' — nothing to sync."
-
       - name: Validate GitHub App inputs (fail fast)
-        if: steps.changes.outputs.assets_changed == 'true' || steps.changes.outputs.api_changed == 'true'
         shell: bash
         env:
           GH_APP_ID: ${{ vars.GH_APP_ID }}
@@ -126,7 +124,6 @@ jobs:
           echo "App inputs look present."
 
       - name: Create GitHub App token
-        if: steps.changes.outputs.assets_changed == 'true' || steps.changes.outputs.api_changed == 'true'
         id: app-token
         uses: actions/create-github-app-token@v2
         with:
@@ -137,8 +134,7 @@ jobs:
             assets.unlim8ted.com
             api.unlim8ted.com
 
-      - name: Fail if any file > 95MB in assets or public api or frontend (only when needed)
-        if: steps.changes.outputs.assets_changed == 'true' || steps.changes.outputs.api_changed == 'true' || steps.changes.outputs.frontend_changed == 'true'
+      - name: Fail if any file > 95MB in assets or public api (only when needed)
         shell: bash
         run: |
           set -euo pipefail
@@ -157,18 +153,15 @@ jobs:
             fi
           }
 
-          if [ "${{ steps.changes.outputs.assets_changed }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.assets_changed }}" = "true" ]; then
             check_dir "${ASSETS_DIR}"
           fi
-          if [ "${{ steps.changes.outputs.api_changed }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.api_changed }}" = "true" ]; then
             check_dir "${PUBLIC_API_DIR}"
-          fi
-          if [ "${{ steps.changes.outputs.frontend_changed }}" = "true" ]; then
-            check_dir "${FRONTEND_DIR}"
           fi
 
       - name: Sync assets repo (only if assets changed)
-        if: steps.changes.outputs.assets_changed == 'true'
+        if: needs.detect.outputs.assets_changed == 'true'
         shell: bash
         env:
           GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
@@ -209,7 +202,7 @@ jobs:
           rm -rf "$WORKDIR"
 
       - name: Sync public api repo (only if public api changed)
-        if: steps.changes.outputs.api_changed == 'true'
+        if: needs.detect.outputs.api_changed == 'true'
         shell: bash
         env:
           GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
@@ -249,55 +242,68 @@ jobs:
           git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"
           rm -rf "$WORKDIR"
 
-      # NEW: Publish frontend folder to GitHub Pages branch in THIS repo
-      - name: Publish frontend to gh-pages (only if frontend changed)
-        if: steps.changes.outputs.frontend_changed == 'true'
+  deploy_pages:
+    name: Deploy frontend to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: [detect]
+    if: needs.detect.outputs.frontend_changed == 'true'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Prepend snippet as the first thing in every HTML file *inside frontend/*
+      - name: Prepend snippet to frontend HTML files
         shell: bash
-        env:
-          BRANCH: ${{ env.PAGES_BRANCH }}
-          SRC_DIR: ${{ env.FRONTEND_DIR }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          export GIT_TERMINAL_PROMPT=0
 
-          SRC_PATH="${GITHUB_WORKSPACE}/${SRC_DIR}"
-          if [ ! -d "${SRC_PATH}" ]; then
-            echo "Source folder not found: ${SRC_PATH}" >&2
+          OUT_DIR="${{ env.FRONTEND_DIR }}"
+          SNIP_FILE="components/deploy-inject/head-snippet.html"
+          MARK="<!--__INJECTED_FILE_PREFIX__-->"
+
+          if [ ! -d "$OUT_DIR" ]; then
+            echo "Frontend folder not found: $OUT_DIR" >&2
             exit 1
           fi
 
-          WORKDIR="$(mktemp -d)"
-          echo "Workdir (pages): $WORKDIR"
-
-          PUSH_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-
-          # Clone gh-pages if it exists, otherwise create it.
-          if git ls-remote --exit-code --heads "${PUSH_URL}" "${BRANCH}" >/dev/null 2>&1; then
-            git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
-          else
-            git clone --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
-            (cd "${WORKDIR}/repo" && git checkout --orphan "${BRANCH}" && git rm -rf . || true)
+          if [ ! -f "$SNIP_FILE" ]; then
+            echo "Snippet file not found: $SNIP_FILE" >&2
+            exit 1
           fi
 
-          test -d "${WORKDIR}/repo/.git"
+          SNIP="$(cat "$SNIP_FILE")"
 
-          # Mirror frontend/ into gh-pages root.
-          # Keep .git only. If you have a CNAME you want preserved, you can add: --exclude='CNAME'
-          rsync -a --delete \
-            --exclude='.git/' \
-            "${SRC_PATH}/" "${WORKDIR}/repo/"
+          find "$OUT_DIR" -type f -name "*.html" -print0 | while IFS= read -r -d '' f; do
+            if grep -qF "$MARK" "$f"; then
+              echo "Already injected: $f"
+              continue
+            fi
 
-          # Optional but common for Pages (prevents Jekyll processing)
-          touch "${WORKDIR}/repo/.nojekyll"
+            tmp="$(mktemp)"
+            {
+              printf '%s\n' "$MARK"
+              printf '%s\n' "$SNIP"
+              cat "$f"
+            } > "$tmp"
 
-          git -C "${WORKDIR}/repo" add -A
-          if git -C "${WORKDIR}/repo" diff --cached --quiet; then
-            echo "No changes to push to ${GITHUB_REPOSITORY}:${BRANCH}."
-            rm -rf "$WORKDIR"
-            exit 0
-          fi
+            mv "$tmp" "$f"
+            echo "Injected: $f"
+          done
 
-          git -C "${WORKDIR}/repo" commit -m "Deploy frontend to GitHub Pages (${GITHUB_SHA})"
-          git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"
-          rm -rf "$WORKDIR"
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "${{ env.FRONTEND_DIR }}"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
