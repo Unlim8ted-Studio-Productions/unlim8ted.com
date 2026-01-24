@@ -1,4 +1,4 @@
-name: Sync /assets and /public api into their repos + publish /frontend to GitHub Pages (GitHub App auth)
+name: Sync /assets and /services into their repos + publish /frontend to GitHub Pages (GitHub App auth)
 
 on:
   push:
@@ -11,11 +11,11 @@ concurrency:
 
 env:
   ASSETS_DIR: assets
-  PUBLIC_API_DIR: public api
+  PUBLIC_API_DIR: services
   FRONTEND_DIR: frontend
 
   ASSETS_REPO: Unlim8ted-Studio-Productions/assets.unlim8ted.com
-  API_REPO: Unlim8ted-Studio-Productions/api.unlim8ted.com
+  API_REPO: Unlim8ted-Studio-Productions/services.unlim8ted.com
   TARGET_BRANCH: main
 
 jobs:
@@ -64,8 +64,8 @@ jobs:
             assets_changed=true
           fi
 
-          # folder is literally "public api" (space)
-          if echo "$CHANGED" | grep -qE '^public api/'; then
+          # folder is literally "services" (space)
+          if echo "$CHANGED" | grep -qE '^services/'; then
             api_changed=true
           fi
 
@@ -78,7 +78,7 @@ jobs:
           echo "frontend_changed=$frontend_changed" | tee -a "$GITHUB_OUTPUT"
 
   sync:
-    name: Sync assets + public api
+    name: Sync assets + services
     runs-on: ubuntu-latest
     needs: [detect]
     if: needs.detect.outputs.assets_changed == 'true' || needs.detect.outputs.api_changed == 'true'
@@ -134,7 +134,7 @@ jobs:
             assets.unlim8ted.com
             api.unlim8ted.com
 
-      - name: Fail if any file > 95MB in assets or public api (only when needed)
+      - name: Fail if any file > 95MB in assets or services (only when needed)
         shell: bash
         run: |
           set -euo pipefail
@@ -201,7 +201,7 @@ jobs:
           git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"
           rm -rf "$WORKDIR"
 
-      - name: Sync public api repo (only if public api changed)
+      - name: Sync services repo (only if services changed)
         if: needs.detect.outputs.api_changed == 'true'
         shell: bash
         env:
@@ -220,7 +220,7 @@ jobs:
           fi
 
           WORKDIR="$(mktemp -d)"
-          echo "Workdir (public api): $WORKDIR"
+          echo "Workdir (services): $WORKDIR"
           PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
 
           git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
@@ -238,7 +238,7 @@ jobs:
             exit 0
           fi
 
-          git -C "${WORKDIR}/repo" commit -m "Deploy public api from unlim8ted.com (${GITHUB_SHA})"
+          git -C "${WORKDIR}/repo" commit -m "Deploy services from unlim8ted.com (${GITHUB_SHA})"
           git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"
           rm -rf "$WORKDIR"
 
