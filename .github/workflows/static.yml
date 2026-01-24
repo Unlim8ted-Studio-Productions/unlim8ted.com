@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: sync-assets-api-frontend
+  group: sync-assets-services-frontend
   cancel-in-progress: false
 
 env:
@@ -132,7 +132,7 @@ jobs:
           owner: Unlim8ted-Studio-Productions
           repositories: |
             assets.unlim8ted.com
-            api.unlim8ted.com
+            services.unlim8ted.com
 
       - name: Fail if any file > 95MB in assets or services (only when needed)
         shell: bash
