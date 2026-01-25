@@ -25,7 +25,8 @@
     "description": "Lets you chat with your friends with entertaining visuals and easy to use UI's. Python • 0 • 0 • 0 • 0 • Updated Mar 8, 2024",
     "price": 0,
     "type": "Entertainment",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/ChatApp"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/ChatApp",
+    "product-type": "software"
   },
   {
     "id": "ChessVR",
@@ -37,7 +38,8 @@
     "description": "ChessVR repository. No further description available.",
     "price": 0,
     "type": "Entertainment",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/ChessVR"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/ChessVR",
+    "product-type": "video-game"
   },
   {
     "id": "Download-Any-Youtube-Video",
@@ -49,7 +51,8 @@
     "description": "Python script to download any YouTube video, either for watching it later, or using it in a project. Python • 0 • 1 • 0 • 0 • Updated Jun 9, 2024",
     "price": 0,
     "type": "Entertainment",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/Download-Any-Youtube-Video"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/Download-Any-Youtube-Video",
+    "product-type": "software"
   },
   {
     "id": "Easy_pygame_UI-Maker",
@@ -61,7 +64,8 @@
     "description": "Pygame UI Designer for creating and customizing UI elements and menues. HTML • 0 • 0 • 0 • 0 • Updated Mar 21, 2024",
     "price": 0,
     "type": "Productivity",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/Easy_pygame_UI-Maker"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/Easy_pygame_UI-Maker",
+    "product-type": "software"
   },
   {
     "id": "Face-Stuff",
@@ -73,7 +77,8 @@
     "description": "Various face experiments using AI technology to apply various fun effects to your face and even controll your computer with your hands. No further description available. Python • 0 • 0 • 0 • 0 • Updated May 18, 2024",
     "price": 0,
     "type": "Entertainment",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/Face-Stuff"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/Face-Stuff",
+    "product-type": "software"
   },
   {
     "id": "FTL-ChooseYourSide",
@@ -85,7 +90,8 @@
     "description": "An FTL mod made using the FTL-Node-Based-Modding tool. No further description available. Python • 0 • 0 • 0 • 0 • Updated Feb 5, 2024",
     "price": 0,
     "type": "Entertainment",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/FTL-ChooseYourSide"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/FTL-ChooseYourSide",
+    "product-type": "video-game"
   },
   {
     "id": "FTL-Node-Based-Modding",
@@ -97,7 +103,8 @@
     "description": "A tool to create FTL mods through a visual node based system, dramatically speeding up the proccess of writing FTL XML code. Python • 0 • 0 • 0 • 0 • Updated Feb 25, 2024",
     "price": 0,
     "type": "Productivity",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/FTL-Node-Based-Modding"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/FTL-Node-Based-Modding",
+    "product-type": "software"
   },
   {
     "id": "Kindel-E-ink-games",
@@ -109,7 +116,8 @@
     "description": "Kindel-E-ink-games repository. No further description available. JavaScript • 0 • 0 • 0 • 0 • Updated Mar 3, 2024",
     "price": 0,
     "type": "Entertainment",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/Kindel-E-ink-games"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/Kindel-E-ink-games",
+    "product-type": "video-game"
   },
   {
     "id": "Multiplayer-Physics-Simulator",
@@ -121,7 +129,8 @@
     "description": "Multiplayer-Physics-Simulator repository. No further description available. Python • 0 • 0 • 0 • 0 • Updated Apr 16, 2024",
     "price": 0,
     "type": "Entertainment",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/Multiplayer-Physics-Simulator"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/Multiplayer-Physics-Simulator",
+    "product-type": "software"
   },
   {
     "id": "Music-AI-Gen",
@@ -133,7 +142,8 @@
     "description": "Music-AI-Gen repository. No further description available. Python • 0 • 0 • 0 • 0 • Updated Feb 14, 2024",
     "price": 0,
     "type": "Entertainment",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/Music-AI-Gen"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/Music-AI-Gen",
+    "product-type": "software"
   },
   {
     "id": "Organisms_Sim",
@@ -146,7 +156,7 @@
     "price": 0,
     "type": "Entertainment",
     "link": "https://github.com/Unlim8ted-Studio-Productions/Organisms_Sim",
-    "product-type": "app"
+    "product-type": "video-game"
   },
   {
     "id": "paint-app-v5.9",
@@ -159,7 +169,7 @@
     "price": 0,
     "type": "Entertainment",
     "link": "https://github.com/Unlim8ted-Studio-Productions/paint-app-v5.9",
-    "product-type": "app"
+    "product-type": "software"
   },
   {
     "id": "Square-Pixels",
@@ -187,7 +197,8 @@
     "description": "turbo-octo-funicular repository. No further description available.",
     "price": 0,
     "type": "Entertainment",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/turbo-octo-funicular"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/turbo-octo-funicular",
+    "product-type": "video-game"
   },
   {
     "id": "wrighting",
@@ -199,7 +210,8 @@
     "description": "wrighting repository. No further description available. HTML • 0 • 0 • 0 • 0 • Updated Mar 3, 2024",
     "price": 0,
     "type": "Productivity",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/wrighting"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/wrighting",
+    "product-type": "software"
   },
   {
     "id": "life",
@@ -210,7 +222,8 @@
     "name": "life",
     "description": "card game",
     "price": 0,
-    "type": "Entertainment"
+    "type": "Entertainment",
+    "product-type": "card-game"
   },
   {
     "id": "PuzzleSquare1",
@@ -271,7 +284,8 @@
     "name": "The Glitch (the book)",
     "description": "In progress...",
     "price": 0,
-    "type": "Entertainment"
+    "type": "Entertainment",
+    "product-type": "book"
   },
   {
     "id": "theglitchscreenplay",
@@ -283,7 +297,8 @@
     "description": "The screen play for the short film 'The Glitch'.",
     "price": 0,
     "type": "Entertainment",
-    "link": "https://docs.google.com/document/d/1SYcF4x2AdHc1DwZstHEIL2uV-Fe5pHN3iR-lZnyupso/edit?usp=sharing"
+    "link": "https://docs.google.com/document/d/1SYcF4x2AdHc1DwZstHEIL2uV-Fe5pHN3iR-lZnyupso/edit?usp=sharing",
+    "product-type": "book"
   },
   {
     "id": "Copy-Keyframes-to-Selected-Blender-Addon",
@@ -295,7 +310,8 @@
     "description": "A Blender Addon that makes it easy to copy keyframes to multiple objects from in the N-Panel",
     "price": 0,
     "type": "Productivity",
-    "link": "https://github.com/Unlim8ted-Studio-Productions/Blender-Copy-Keyframe-Addon"
+    "link": "https://github.com/Unlim8ted-Studio-Productions/Blender-Copy-Keyframe-Addon",
+    "product-type": "software"
   },
   {
     "id": "unlim8ted-cork-back-coaster",

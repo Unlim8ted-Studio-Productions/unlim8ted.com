@@ -2,8 +2,9 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <!-- Primary Meta Tags -->
     <title>Unlim8ted - Products</title>
     <meta name="title" content="Products - Unlim8ted" />
@@ -11,340 +12,1085 @@
         content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more." />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://unlim8ted.com/products/">
-    <meta property="og:title" content="Products - Unlim8ted Studio Productions">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://unlim8ted.com/products/" />
+    <meta property="og:title" content="Products - Unlim8ted Studio Productions" />
     <meta property="og:description"
-        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
-    <meta property="og:image" content="https://assets.unlim8ted.com/images/products-meta-image.jpg">
+        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more." />
+    <meta property="og:image" content="https://assets.unlim8ted.com/images/products-meta-image.jpg" />
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://unlim8ted.com/products/">
-    <meta property="twitter:title" content="Products - Unlim8ted Studio Productions">
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://unlim8ted.com/products/" />
+    <meta property="twitter:title" content="Products - Unlim8ted Studio Productions" />
     <meta property="twitter:description"
-        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
-    <meta property="twitter:image" content="https://assets.unlim8ted.com/images/products-meta-image.jpg">
-  <script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
-      <script type="module">
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getFirebase } from "/components/firebase-init.js";
+        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more." />
+    <meta property="twitter:image" content="https://assets.unlim8ted.com/images/products-meta-image.jpg" />
 
-    const { auth, db } = getFirebase();</script>
-    <link rel="stylesheet" href="resources/css/main.css">
+    <!-- Navbar component -->
+    <script type="module" src="/components/site-navbar.js"></script>
+
+    <!-- Firebase (kept as-is) -->
+    <script type="module">
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+        import { collection, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+        import { getFirebase } from "/components/firebase-init.js";
+        const { auth, db } = getFirebase();
+    </script>
+
+    <link rel="stylesheet" href="resources/css/main.css" />
     <script src="resources/js/smooth-scroll.js"></script>
+
+    <!-- Page-specific polish -->
+    <style>
+        :root {
+            --bg: #0b0f14;
+            --panel: rgba(255, 255, 255, 0.06);
+            --panel2: rgba(255, 255, 255, 0.08);
+            --text: rgba(255, 255, 255, 0.92);
+            --muted: rgba(255, 255, 255, 0.72);
+            --border: rgba(255, 255, 255, 0.12);
+            --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+            --radius: 18px;
+            --max: 1100px;
+            --focus: 0 0 0 3px rgba(85, 170, 255, 0.35);
+            --accent: #55aaff;
+            --accent2: #9b7bff;
+            --good: #2dd4bf;
+            --warn: #fbbf24;
+        }
+
+        body {
+            background: radial-gradient(1100px 600px at 20% -10%, rgba(85, 170, 255, 0.22), transparent 60%),
+                radial-gradient(900px 500px at 95% 10%, rgba(155, 123, 255, 0.18), transparent 55%),
+                radial-gradient(700px 500px at 30% 120%, rgba(45, 212, 191, 0.14), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        /* Keep content below your navbar (custom element) */
+        .page {
+            padding: clamp(18px, 3vw, 34px) 16px 40px;
+        }
+
+        .wrap {
+            max-width: var(--max);
+            margin: 0 auto;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 18px;
+            align-items: stretch;
+            margin-top: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .heroCard {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: clamp(18px, 3.5vw, 28px);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .heroCard::before {
+            content: "";
+            position: absolute;
+            inset: -40px -60px auto auto;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle at 30% 30%, rgba(85, 170, 255, 0.35), transparent 60%);
+            filter: blur(6px);
+            pointer-events: none;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            font-size: clamp(28px, 3.2vw, 42px);
+            letter-spacing: 0.2px;
+            line-height: 1.06;
+        }
+
+        .sub {
+            margin: 0;
+            color: var(--muted);
+            font-size: clamp(14px, 1.25vw, 16px);
+            line-height: 1.5;
+            max-width: 62ch;
+        }
+
+        .pillRow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 999px;
+            font-size: 13px;
+            color: var(--muted);
+            user-select: none;
+        }
+
+        .pillDot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 0 3px rgba(85, 170, 255, 0.18);
+        }
+
+        .sectionTitle {
+            margin: 26px 0 12px;
+            font-size: 18px;
+            letter-spacing: 0.2px;
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        /* Category grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        @media (max-width: 980px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 560px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            display: grid;
+            grid-template-columns: 92px 1fr;
+            gap: 12px;
+            align-items: center;
+
+            padding: 14px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.055);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+            text-decoration: none;
+            color: inherit;
+            transition: transform 150ms ease, background 150ms ease, border-color 150ms ease;
+            min-height: 96px;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .card:focus-visible {
+            outline: none;
+            box-shadow: var(--shadow), var(--focus);
+        }
+
+        .thumb {
+            width: 92px;
+            height: 72px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card h2 {
+            margin: 0 0 4px;
+            font-size: 16px;
+            letter-spacing: 0.2px;
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        /* Spinner area */
+        .spinnerCard {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 18px;
+            display: grid;
+            grid-template-rows: auto auto auto;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spinnerCard::before {
+            content: "";
+            position: absolute;
+            inset: auto auto -120px -120px;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle at 55% 45%, rgba(45, 212, 191, 0.25), transparent 60%);
+            filter: blur(8px);
+            pointer-events: none;
+        }
+
+        .spinnerHeader {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .spinnerHeader strong {
+            font-size: 16px;
+            letter-spacing: 0.2px;
+        }
+
+        .spinnerHeader span {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.35;
+        }
+
+        .spinnerWrap {
+            display: grid;
+            place-items: center;
+            padding: 6px 0 2px;
+        }
+
+        .wheelShell {
+            position: relative;
+            width: min(360px, 72vw);
+            aspect-ratio: 1 / 1;
+        }
+
+        .selector {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-bottom: 22px solid var(--warn);
+            filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45));
+            z-index: 3;
+        }
+
+        .wheel {
+            position: absolute;
+            inset: 0;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: inset 0 0 0 10px rgba(255, 255, 255, 0.05), 0 16px 38px rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+        }
+
+        .wheelInner {
+            position: absolute;
+            inset: 0;
+            border-radius: 999px;
+            transform: rotate(0deg);
+            will-change: transform;
+        }
+
+        /* Each slice is a clipped block */
+        .slice {
+            position: absolute;
+            inset: 0;
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 50% 50%);
+            transform-origin: 50% 50%;
+            display: grid;
+            place-items: center;
+        }
+
+        .sliceLabel {
+            position: absolute;
+            top: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            text-align: center;
+            font-weight: 700;
+            font-size: clamp(11px, 2.4vw, 13px);
+            color: rgba(255, 255, 255, 0.92);
+            text-shadow: 0 8px 18px rgba(0, 0, 0, 0.55);
+            line-height: 1.1;
+            user-select: none;
+            padding: 6px 8px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(6px);
+        }
+
+        .sliceSmall {
+            margin-top: 6px;
+            display: block;
+            font-weight: 600;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .spinRow {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: linear-gradient(180deg, rgba(85, 170, 255, 0.95), rgba(85, 170, 255, 0.72));
+            color: #07121f;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 150ms ease, filter 150ms ease, opacity 150ms ease;
+            min-width: 170px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+        }
+
+        .btn:active {
+            transform: translateY(0px) scale(0.99);
+            filter: brightness(0.98);
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.65;
+            transform: none;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.35;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* Popup */
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.58);
+            backdrop-filter: blur(6px);
+            z-index: 999999;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000000;
+            padding: 18px;
+        }
+
+        .modalCard {
+            max-width: 560px;
+            margin: 10vh auto 0;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(15, 20, 28, 0.88);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+            overflow: hidden;
+        }
+
+        .modalTop {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 14px;
+            padding: 14px;
+            align-items: center;
+        }
+
+        @media (max-width: 520px) {
+            .modalTop {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .modalImg {
+            width: 120px;
+            height: 90px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .modalImg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .modalText h3 {
+            margin: 0 0 6px;
+            font-size: 18px;
+            letter-spacing: 0.2px;
+            line-height: 1.2;
+        }
+
+        .modalText p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .modalActions {
+            display: flex;
+            gap: 10px;
+            padding: 0 14px 14px;
+            flex-wrap: wrap;
+        }
+
+        .linkBtn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.92);
+            font-weight: 700;
+        }
+
+        .linkBtn:hover {
+            background: rgba(255, 255, 255, 0.11);
+        }
+
+        .closeBtn {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .footer {
+            margin-top: 18px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* A11y */
+        @media (prefers-reduced-motion: reduce) {
+            .wheelInner {
+                transition: none !important;
+            }
+
+            .card,
+            .btn {
+                transition: none !important;
+            }
+        }
+    </style>
 </head>
-<script>
-
-</script>
-
 
 <body>
-  <site-navbar cart-href="https://unlim8ted.com/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
-    <div id="products" class="content-section">
-        <h1>Our Products</h1>
-        <p>Discover our amazing products.</p>
-        <div class="product-category">
-            <a href="films" class="product-box">
-                <img src="https://assets.unlim8ted.com/images/products/films/The Life of a Meatball.jpg" alt="Films">
-                <h2>Films</h2>
-                <p>Explore our latest films.</p>
-            </a>
-            <a href="music" class="product-box">
-                <img src="https://assets.unlim8ted.com/images/products/music/music icon.png" alt="Music">
-                <h2>Music</h2>
-                <p>Listen to our newest music releases.</p>
-            </a>
-            <a href="podcasts" class="product-box">
-                <img src="https://assets.unlim8ted.com/images/products/podcasts/podcasts icon.png" alt="Podcast">
-                <h2>Podcasts</h2>
-                <p>Listen to our newest podcasts.</p>
-            </a>
-            <a href="books" class="product-box">
-                <img src="https://assets.unlim8ted.com/images/products/books/book icon.png" alt="Books">
-                <h2>Books</h2>
-                <p>Read our latest books.</p>
-            </a>
-            <a href="games" class="product-box">
-                <img src="https://assets.unlim8ted.com/images/products/games/air-hockey-preview.webp" alt="Games">
-                <h2>Games</h2>
-                <p>Play fun and challenging games.</p>
-            </a>
-            <a href="physical-items" class="product-box">
-                <img src="https://assets.unlim8ted.com/images/products/clothes/image.webp" alt="Clothes">
-                <h2>Physical Items</h2>
-                <p>Check out our stylish clothes.</p>
-            </a>
-            <a href="software" class="product-box">
-                <img src="https://assets.unlim8ted.com/images/products/software/Screenshot 2023-09-21 181742(1).png"
-                    alt="Software">
-                <h2>Software</h2>
-                <p>Explore our apps and video games.</p>
-            </a>
-            <a href="ai" class="product-box">
-                <img src="https://assets.unlim8ted.com/images/products/ai/ai icon.png" alt="AI">
-                <h2>AI</h2>
-                <p>Explore our AI products.</p>
-            </a>
-            <a href="images" class="product-box">
-                <img src="https://assets.unlim8ted.com/images/Unlim8tedImages/space with foregroudn.jpg" alt="Images">
-                <h2>Images</h2>
-                <p>Explore some of our best images.</p>
-            </a>
-            <div>
-                <style>
-                    h1 {
-                        margin-bottom: 30px;
-                    }
+    <site-navbar cart-href="https://unlim8ted.com/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
 
-                    .spinner-container {
-                        position: relative;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                    }
+    <main class="page">
+        <div class="wrap">
 
-                    .spinner {
-                        position: relative;
-                        width: 60vw;
-                        max-width: 300px;
-                        height: 60vw;
-                        max-height: 300px;
-                        border-radius: 50%;
-                        border: 10px solid #ddd;
-                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-                        overflow: hidden;
-                    }
+            <section class="hero">
+                <div class="heroCard">
+                    <h1>Our Products</h1>
+                    <p class="sub">
+                        Discover what Unlim8ted is building—films, music, games, software, physical items, and more.
+                        Want something random? Spin the wheel and we’ll pick a category and a specific item for you.
+                    </p>
+                    <div class="pillRow" aria-hidden="true">
+                        <span class="pill"><span class="pillDot"></span> Always evolving</span>
+                        <span class="pill"><span class="pillDot" style="background: var(--accent2)"></span> Works great
+                            on mobile</span>
+                        <span class="pill"><span class="pillDot" style="background: var(--good)"></span> Powered by
+                            products.json</span>
+                    </div>
 
-                    .spinner-wheel {
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        width: 100%;
-                        height: 100%;
-                        transform: translate(-50%, -50%);
-                        border-radius: 50%;
-                    }
+                    <div class="sectionTitle">Browse by category</div>
 
-                    .spinner-choice {
-                        position: absolute;
-                        width: 50%;
-                        height: 50%;
-                        text-align: center;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        transform-origin: bottom right;
-                        font-weight: bold;
-                        font-size: 1vw;
-                        color: white;
-                    }
+                    <div class="grid" id="categoryGrid">
+                        <!-- You can keep these hard-coded cards (fast) OR generate later from products.json.
+                 Keeping them as-is but styled nicer. -->
 
-                    .spinner-choice span {
-                        transform: rotate(-45deg);
-                        /* Undo the rotation to make text readable */
-                        display: block;
-                        width: 100px;
-                    }
+                        <a href="films" class="card">
+                            <div class="thumb"><img
+                                    src="https://assets.unlim8ted.com/images/products/films/The%20Life%20of%20a%20Meatball.jpg"
+                                    alt="Films" /></div>
+                            <div>
+                                <h2>Films</h2>
+                                <p>Explore our latest films.</p>
+                            </div>
+                        </a>
 
-                    .selector-triangle {
-                        position: absolute;
-                        top: 0%;
-                        width: 0;
-                        height: 0;
-                        border-left: 20px solid transparent;
-                        border-right: 20px solid transparent;
-                        border-bottom: 40px solid red;
-                        z-index: 2;
-                        rotate: 180deg
-                    }
+                        <a href="music" class="card">
+                            <div class="thumb"><img
+                                    src="https://assets.unlim8ted.com/images/products/music/music%20icon.png"
+                                    alt="Music" />
+                            </div>
+                            <div>
+                                <h2>Music</h2>
+                                <p>Listen to our newest music releases.</p>
+                            </div>
+                        </a>
 
-                    .spin-btn {
-                        margin-top: 20px;
-                        padding: 10px 20px;
-                        font-size: 16px;
-                        cursor: pointer;
-                        background-color: #3498db;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                    }
+                        <a href="podcasts" class="card">
+                            <div class="thumb"><img
+                                    src="https://assets.unlim8ted.com/images/products/podcasts/podcasts%20icon.png"
+                                    alt="Podcasts" /></div>
+                            <div>
+                                <h2>Podcasts</h2>
+                                <p>Listen to our newest podcasts.</p>
+                            </div>
+                        </a>
 
-                    .spin-btn:hover {
-                        background-color: #2980b9;
-                    }
+                        <a href="books" class="card">
+                            <div class="thumb"><img
+                                    src="https://assets.unlim8ted.com/images/products/books/book%20icon.png"
+                                    alt="Books" />
+                            </div>
+                            <div>
+                                <h2>Books</h2>
+                                <p>Read our latest books.</p>
+                            </div>
+                        </a>
 
-                    .popup {
-                        display: none;
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background-color: #fff;
-                        border: 2px solid #ddd;
-                        padding: 20px;
-                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-                        z-index: 10;
-                    }
+                        <a href="games" class="card">
+                            <div class="thumb"><img
+                                    src="https://assets.unlim8ted.com/images/products/games/air-hockey-preview.webp"
+                                    alt="Games" /></div>
+                            <div>
+                                <h2>Games</h2>
+                                <p>Play fun and challenging games.</p>
+                            </div>
+                        </a>
 
-                    .popup a {
-                        color: #3498db;
-                        text-decoration: none;
-                        font-weight: bold;
-                    }
+                        <a href="physical-items" class="card">
+                            <div class="thumb"><img
+                                    src="https://assets.unlim8ted.com/images/products/clothes/image.webp"
+                                    alt="Physical Items" /></div>
+                            <div>
+                                <h2>Physical Items</h2>
+                                <p>Check out our stylish items.</p>
+                            </div>
+                        </a>
 
-                    .popup a:hover {
-                        text-decoration: underline;
-                    }
+                        <a href="software" class="card">
+                            <div class="thumb"><img
+                                    src="https://assets.unlim8ted.com/images/products/software/Screenshot%202023-09-21%20181742(1).png"
+                                    alt="Software" /></div>
+                            <div>
+                                <h2>Software</h2>
+                                <p>Explore our apps and tools.</p>
+                            </div>
+                        </a>
 
-                    .overlay {
-                        display: none;
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background-color: rgba(0, 0, 0, 0.5);
-                        z-index: 9;
-                    }
+                        <a href="ai" class="card">
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/ai/ai%20icon.png"
+                                    alt="AI" /></div>
+                            <div>
+                                <h2>AI</h2>
+                                <p>Explore our AI products.</p>
+                            </div>
+                        </a>
 
-                    /* Media query to adjust font size on smaller screens */
-                    @media (max-width: 768px) {
-                        .spinner-choice {
-                            font-size: 3vw;
-                        }
-                    }
-                </style>
-
-                <h1>Don't know what to get? Let the spinner choose for you!</h1>
-
-                <div class="spinner-container">
-                    <div class="selector-triangle"></div>
-                    <div class="spinner">
-                        <div class="spinner-wheel"></div>
+                        <a href="images" class="card">
+                            <div class="thumb"><img
+                                    src="https://assets.unlim8ted.com/images/Unlim8tedImages/space%20with%20foregroudn.jpg"
+                                    alt="Images" /></div>
+                            <div>
+                                <h2>Images</h2>
+                                <p>Explore some of our best images.</p>
+                            </div>
+                        </a>
                     </div>
                 </div>
 
-                <button class="spin-btn">Spin the Wheel!</button>
+                <aside class="spinnerCard">
+                    <div class="spinnerHeader">
+                        <strong>Not sure what to get?</strong>
+                        <span>Spin the wheel. We’ll pick a category from <code>products.json</code> and recommend
+                            something.</span>
+                    </div>
 
-                <div class="overlay" id="overlay"></div>
-                <div class="popup" id="popup">
-                    <h2 id="popup-text"></h2>
-                    <a href="#" id="popup-link">Visit the page</a>
-                </div>
+                    <div class="spinnerWrap">
+                        <div class="wheelShell" aria-label="Product wheel">
+                            <div class="selector" aria-hidden="true"></div>
+                            <div class="wheel" aria-hidden="true">
+                                <div class="wheelInner" id="wheelInner">
+                                    <!-- slices injected -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <script>
-                    let options = [];
-                    let isSpinning = false; // Track whether the spinner is currently spinning
+                    <div class="spinRow">
+                        <button class="btn" id="spinBtn" disabled>Loading products…</button>
+                        <div class="hint" id="spinHint">
+                            Tip: the wheel is category-based (so you don’t land on “random URL soup”). Then we pick a
+                            specific item inside
+                            that category.
+                        </div>
+                    </div>
+                </aside>
+            </section>
 
-                    // Fetch the spinner data from JSON file
-                    fetch('https://assets.unlim8ted.com/data/spinner.json')
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json(); // Automatically parses JSON if valid
-                        })
-                        .then(data => {
-                            options = data;
-                            loadSpinnerChoices(options); // Populate the spinner with the fetched options
-                        })
-                        .catch(error => console.error('Error loading spinner data:', error));
-
-                    // Function to load the spinner choices visually
-                    function loadSpinnerChoices(options) {
-                        const spinnerWheel = document.querySelector('.spinner-wheel');
-                        const numberOfOptions = options.length;
-                        const angleIncrement = 360 / numberOfOptions; // Divide the circle into equal parts
-
-                        spinnerWheel.innerHTML = ''; // Clear previous content
-
-                        options.forEach((option, index) => {
-                            const spinnerChoice = document.createElement('div');
-                            spinnerChoice.classList.add('spinner-choice');
-
-                            // Set each segment's rotation and color dynamically
-                            spinnerChoice.style.transform = `rotate(${index * angleIncrement}deg) skewY(${90 - angleIncrement}deg)`;
-                            spinnerChoice.style.backgroundColor = getRandomColor();
-                            spinnerChoice.innerHTML = `<span>${option.name}</span>`;
-
-                            spinnerWheel.appendChild(spinnerChoice);
-                        });
-                    }
-
-                    // Function to trigger the spin
-                    function spin() {
-                        if (isSpinning) return; // Prevent spinning if already in progress
-
-                        isSpinning = true; // Set the spinning flag
-                        const spinnerWheel = document.querySelector('.spinner-wheel');
-                        const spinBtn = document.querySelector('.spin-btn');
-                        const randomDegree = Math.floor(Math.random() * 360) + 360; // Ensure at least one full rotation
-
-                        // Disable the button while spinning
-                        spinBtn.disabled = true;
-                        spinnerWheel.style.transition = 'transform 4s ease-out';
-                        spinnerWheel.style.transform = `translate(-50%, -50%) rotate(${randomDegree}deg)`;
-
-                        const selectedOption = options[Math.floor(Math.random() * options.length)];
-
-                        // After the spin is complete, show the popup and re-enable the button
-                        setTimeout(() => {
-                            showPopup(selectedOption);
-                            spinBtn.disabled = false; // Re-enable the spin button
-                            isSpinning = false; // Reset spinning flag
-                        }, 4000); // Match the spin duration
-                    }
-                    // Show the popup with the result
-                    function showPopup(option) {
-                        const popup = document.getElementById('popup');
-                        const overlay = document.getElementById('overlay');
-                        const popupText = document.getElementById('popup-text');
-                        const popupLink = document.getElementById('popup-link');
-
-                        popupText.innerHTML = `According to the wheel, you should go and get your very own ${option.name}`;
-                        popupLink.href = option.link;
-                        popupLink.innerHTML = 'Visit the page';
-
-                        overlay.style.display = 'block';
-                        popup.style.display = 'block';
-                    }
-
-                    // Function to generate random colors for the segments
-                    function getRandomColor() {
-                        const letters = '0123456789ABCDEF';
-                        let color = '#';
-                        for (let i = 0; i < 6; i++) {
-                            color += letters[Math.floor(Math.random() * 16)];
-                        }
-                        return color;
-                    }
-
-                    // Close popup when clicking the overlay
-                    document.getElementById('overlay').onclick = function () {
-                        document.getElementById('popup').style.display = 'none';
-                        document.getElementById('overlay').style.display = 'none';
-                    }
-
-                    // Add click event to the spin button
-                    document.querySelector('.spin-btn').onclick = spin;
-                </script>
-
+            <div class="footer">
+                <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
             </div>
         </div>
-        <!-- Copyright -->
-        <div style="margin-top: 20px;">
-            <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
-            <script>document.addEventListener("DOMContentLoaded", function () {
-                const currentYear = new Date().getFullYear();
-                const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
-                document.getElementById("footer-text").innerHTML = footerText;
-            });
-            </script>
+    </main>
+
+    <!-- Popup -->
+    <div class="overlay" id="overlay" aria-hidden="true"></div>
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"
+        aria-describedby="modalDesc">
+        <div class="modalCard">
+            <div class="modalTop">
+                <div class="modalImg" id="modalImgWrap" aria-hidden="true">
+                    <img id="modalImg" alt="" />
+                </div>
+                <div class="modalText">
+                    <h3 id="modalTitle">Recommendation</h3>
+                    <p id="modalDesc"></p>
+                </div>
+            </div>
+            <div class="modalActions">
+                <a class="linkBtn" href="#" id="modalLink">Go to it</a>
+                <button class="linkBtn closeBtn" id="modalClose" type="button">Close</button>
+            </div>
         </div>
     </div>
 
+    <script>
+        // Footer year
+        document.addEventListener("DOMContentLoaded", function () {
+            const currentYear = new Date().getFullYear();
+            const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
+            document.getElementById("footer-text").innerHTML = footerText;
+        });
+    </script>
+
+    <script>
+        /*****************************************************************
+         * PRODUCTS.JSON → CATEGORY WHEEL
+         *****************************************************************/
+
+        const PRODUCTS_URL = "https://assets.unlim8ted.com/data/products.json";
+
+        const wheelInner = document.getElementById("wheelInner");
+        const spinBtn = document.getElementById("spinBtn");
+        const spinHint = document.getElementById("spinHint");
+
+        const overlay = document.getElementById("overlay");
+        const modal = document.getElementById("modal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalDesc = document.getElementById("modalDesc");
+        const modalLink = document.getElementById("modalLink");
+        const modalClose = document.getElementById("modalClose");
+        const modalImg = document.getElementById("modalImg");
+        const modalImgWrap = document.getElementById("modalImgWrap");
+
+        let categories = []; // [{ key, label, link, products: [...] }]
+        let currentRotation = 0;
+        let isSpinning = false;
+
+        // Map product-type → category destination + voice
+        function normalizeType(t) {
+            return String(t || "")
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g, "-");
+        }
+
+        function categoryForProduct(product) {
+            const id = product?.id || "";
+            const type = normalizeType(product?.["product-type"]);
+
+            // Your rules:
+            // music -> /products/music
+            // image -> /products/images
+            // physical or film or software or video-game or book -> their category pages
+            // else -> /products/product#{id}
+            if (type === "music") return { key: "music", label: "Music", link: "/products/music" };
+            if (type === "image" || type === "images") return { key: "images", label: "Images", link: "/products/images" };
+            if (type === "film" || type === "films") return { key: "films", label: "Films", link: "/products/films" };
+            if (type === "physical" || type === "clothes" || type === "merch" || type === "apparel") {
+                return { key: "physical-items", label: "Physical Items", link: "/products/physical-items" };
+            }
+            if (type === "software") return { key: "software", label: "Software", link: "/products/software" };
+            if (type === "video-game" || type === "videogame" || type === "game" || type === "games") {
+                return { key: "games", label: "Games", link: "/products/games" };
+            }
+            if (type === "book" || type === "books") return { key: "books", label: "Books", link: "/products/books" };
+            if (type === "podcast" || type === "podcasts") return { key: "podcasts", label: "Podcasts", link: "/products/podcasts" };
+            if (type === "ai") return { key: "ai", label: "AI", link: "/products/ai" };
+
+            // fallback
+            return { key: "other", label: "Surprise", link: `/products/product#${encodeURIComponent(id)}` };
+        }
+
+        function getPrimaryImage(product) {
+            // Prefer product.image, else music/image "file" if it's an image, else variant image, else null
+            if (product?.image) return product.image;
+            const type = normalizeType(product?.["product-type"]);
+            if ((type === "image" || type === "images") && product?.file) return product.file;
+            if (Array.isArray(product?.images) && product.images.length) return product.images[0];
+            if (Array.isArray(product?.additional_images) && product.additional_images.length) return product.additional_images[0];
+            if (Array.isArray(product?.varients) && product.varients.length && product.varients[0]?.image) return product.varients[0].image;
+            return null;
+        }
+
+        function buildMessage(product) {
+            const name = product?.name || "this";
+            const id = product?.id || "";
+            const type = normalizeType(product?.["product-type"]);
+            // Styled message depending on type
+
+            if (type === "music") {
+                return {
+                    title: `You should go listen to “${name}”.`,
+                    desc: `Your wheel pick landed on Music — go check out the music section${name ? ` and look for “${name}”.` : "."}`,
+                };
+            }
+
+            if (type === "image" || type === "images") {
+                return {
+                    title: `You should go check out “${name}”.`,
+                    desc: `Your wheel pick landed on Images — browse the images section${name ? ` and find “${name}”.` : "."}`,
+                };
+            }
+
+            if (type === "film" || type === "films") {
+                return {
+                    title: `You should go watch “${name}”.`,
+                    desc: `Your wheel pick landed on Films — explore the films section${name ? ` and queue up “${name}”.` : "."}`,
+                };
+            }
+
+            if (type === "software") {
+                return {
+                    title: `You should go try “${name}”.`,
+                    desc: `Your wheel pick landed on Software — check out the software section${name ? ` and open “${name}”.` : "."}`,
+                };
+            }
+
+            if (type === "video-game" || type === "videogame" || type === "game" || type === "games") {
+                return {
+                    title: `You should go play “${name}”.`,
+                    desc: `Your wheel pick landed on Games — jump into the games section${name ? ` and try “${name}”.` : "."}`,
+                };
+            }
+
+            if (type === "physical" || type === "clothes" || type === "merch" || type === "apparel") {
+                return {
+                    title: `You should go grab “${name}”.`,
+                    desc: `Your wheel pick landed on Physical Items — browse the shop${name ? ` and check out “${name}”.` : "."}`,
+                };
+            }
+
+            if (type === "book" || type === "books") {
+                return {
+                    title: `You should go read “${name}”.`,
+                    desc: `Your wheel pick landed on Books — browse the books section${name ? ` and look for “${name}”.` : "."}`,
+                };
+            }
+
+            if (type === "card-game") {
+                return {
+                    title: `You should go play “${name}”.`,
+                    desc: `Your wheel pick landed on Card Games — head to the card games section${name ? ` and start “${name}”.` : "."}`,
+                };
+            }
+
+            if (type === "instant") {
+                return {
+                    title: `You should go solve “${name}”.`,
+                    desc: `Your wheel pick landed on Instant Games — launch “${name}” right now.`,
+                };
+            }
+
+            if (type === "ai") {
+                return {
+                    title: `You should go explore “${name}”.`,
+                    desc: `Your wheel pick landed on AI — visit the AI section${name ? ` and check out “${name}”.` : "."}`,
+                };
+            }
+
+            if (type === "podcast" || type === "podcasts") {
+                return {
+                    title: `You should go listen to “${name}”.`,
+                    desc: `Your wheel pick landed on Podcasts — head to the podcasts section${name ? ` and start “${name}”.` : "."}`,
+                };
+            }
+
+
+            // fallback
+            return {
+                title: `You should check out “${name}”.`,
+                desc: `This one doesn’t have a mapped category yet, so we’ll take you to its product anchor: #${id}`,
+            };
+        }
+
+        function pickProductWithinCategory(cat) {
+            if (!cat?.products?.length) return null;
+            return cat.products[Math.floor(Math.random() * cat.products.length)];
+        }
+
+        function hashColorFromKey(key) {
+            // Deterministic, not random per refresh
+            let h = 0;
+            for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+            const hue = h % 360;
+            return `hsl(${hue} 85% 52%)`;
+        }
+
+        function renderWheel(cats) {
+            wheelInner.innerHTML = "";
+            if (!cats.length) return;
+
+            const n = cats.length;
+            const sliceAngle = 360 / n;
+
+            cats.forEach((cat, i) => {
+                const slice = document.createElement("div");
+                slice.className = "slice";
+
+                // Rotate each slice to its angle position
+                const rotateDeg = i * sliceAngle;
+                slice.style.transform = `rotate(${rotateDeg}deg)`;
+
+                // Background color per category
+                const color = hashColorFromKey(cat.key);
+                slice.style.background = `linear-gradient(180deg, ${color}, rgba(0,0,0,0.15))`;
+
+                const label = document.createElement("div");
+                label.className = "sliceLabel";
+                label.innerHTML = `
+          ${cat.label}
+          <span class="sliceSmall">${cat.products.length} item${cat.products.length === 1 ? "" : "s"}</span>
+        `;
+
+                // Counter-rotate label so it reads upright-ish
+                label.style.transform = `translateX(-50%) rotate(${-rotateDeg}deg)`;
+                slice.appendChild(label);
+
+                wheelInner.appendChild(slice);
+            });
+        }
+
+        function buildCategoriesFromProducts(products) {
+            const map = new Map();
+
+            for (const p of products || []) {
+                const cat = categoryForProduct(p);
+
+                if (!map.has(cat.key)) {
+                    map.set(cat.key, {
+                        key: cat.key,
+                        label: cat.label,
+                        link: cat.link,
+                        products: [],
+                    });
+                }
+                map.get(cat.key).products.push(p);
+            }
+
+            // Sort: put "other" last; otherwise alphabetical by label
+            const arr = Array.from(map.values()).sort((a, b) => {
+                if (a.key === "other") return 1;
+                if (b.key === "other") return -1;
+                return a.label.localeCompare(b.label);
+            });
+
+            return arr;
+        }
+
+        function showRecommendation(product) {
+            const cat = categoryForProduct(product);
+            const primaryLink = (function () {
+                const type = normalizeType(product?.["product-type"]);
+                if (type === "music") return "/products/music";
+                if (type === "image" || type === "images") return "/products/images";
+                if (type === "film" || type === "films") return "/products/films";
+                if (type === "physical" || type === "clothes" || type === "merch" || type === "apparel") return "/products/physical-items";
+                if (type === "software") return "/products/software";
+                if (type === "video-game" || type === "videogame" || type === "game" || type === "games") return "/products/games";
+                if (type === "book" || type === "books") return "/products/books";
+                if (type === "podcast" || type === "podcasts") return "/products/podcasts";
+                if (type === "ai") return "/products/ai";
+                return `/products/product#${encodeURIComponent(product?.id || "")}`;
+            })();
+
+            const msg = buildMessage(product);
+            modalTitle.textContent = msg.title;
+            modalDesc.textContent = msg.desc;
+
+            modalLink.href = primaryLink;
+            modalLink.textContent = `Go to ${cat.label}`;
+
+            const img = getPrimaryImage(product);
+            if (img) {
+                modalImg.src = img;
+                modalImg.alt = product?.name ? `${product.name} preview` : "Product preview";
+                modalImgWrap.style.display = "";
+            } else {
+                modalImgWrap.style.display = "none";
+            }
+
+            overlay.style.display = "block";
+            modal.style.display = "block";
+            overlay.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            overlay.style.display = "none";
+            modal.style.display = "none";
+            overlay.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+        }
+
+        overlay.addEventListener("click", closeModal);
+        modalClose.addEventListener("click", closeModal);
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && modal.style.display === "block") closeModal();
+        });
+
+        function getSelectedCategoryIndex(finalRotationDeg, n) {
+            // Selector is at the top. Our slices start at 0deg at the top-right quadrant due to clip.
+            // We'll use a simple approach: compute "needle angle" (top = 0), then shift by half slice.
+            const normalized = ((finalRotationDeg % 360) + 360) % 360; // 0..359
+            const sliceAngle = 360 / n;
+
+            // When the wheel rotates clockwise, the content rotates clockwise.
+            // The top selector effectively points at angle (360 - normalized).
+            const needleAngle = (360 - normalized) % 360;
+
+            // Shift by half slice so boundaries feel fair
+            const idx = Math.floor((needleAngle + sliceAngle / 2) / sliceAngle) % n;
+            return idx;
+        }
+
+        function spin() {
+            if (isSpinning || !categories.length) return;
+            isSpinning = true;
+            spinBtn.disabled = true;
+            spinBtn.textContent = "Spinning…";
+
+            const n = categories.length;
+            const extraTurns = 5 + Math.floor(Math.random() * 4); // 5–8 turns
+            const randomOffset = Math.random() * 360;
+
+            const targetRotation = currentRotation + extraTurns * 360 + randomOffset;
+
+            // Animate
+            wheelInner.style.transition = "transform 4200ms cubic-bezier(0.1, 0.85, 0.15, 1)";
+            wheelInner.style.transform = `rotate(${targetRotation}deg)`;
+
+            // When done, compute selected slice based on final rotation
+            const onDone = () => {
+                wheelInner.removeEventListener("transitionend", onDone);
+
+                currentRotation = targetRotation;
+
+                const selectedIdx = getSelectedCategoryIndex(currentRotation, n);
+                const selectedCat = categories[selectedIdx];
+
+                const picked = pickProductWithinCategory(selectedCat);
+
+                // If category is "other", still show the item (fallback link rules apply in showRecommendation)
+                if (picked) {
+                    showRecommendation(picked);
+                } else {
+                    // Extremely unlikely, but safe
+                    showRecommendation({ id: "unknown", name: selectedCat?.label || "Something", "product-type": selectedCat?.key || "other" });
+                }
+
+                spinBtn.disabled = false;
+                spinBtn.textContent = "Spin the wheel";
+                isSpinning = false;
+            };
+
+            wheelInner.addEventListener("transitionend", onDone, { once: true });
+        }
+
+        spinBtn.addEventListener("click", spin);
+
+        // Load products.json and build wheel
+        (async function initWheel() {
+            try {
+                const res = await fetch(PRODUCTS_URL, { cache: "no-store" });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const products = await res.json();
+
+                categories = buildCategoriesFromProducts(products);
+
+                // If there is only 1 category, add a "Surprise" fallback slice to keep wheel fun
+                if (categories.length === 1) {
+                    categories.push({ key: "other", label: "Surprise", link: "/products", products: products.slice() });
+                }
+
+                renderWheel(categories);
+
+                spinBtn.disabled = false;
+                spinBtn.textContent = "Spin the wheel";
+                spinHint.textContent = `Loaded ${products.length} product(s) across ${categories.length} wheel category slice(s).`;
+            } catch (err) {
+                console.error("Error loading products.json:", err);
+                spinBtn.disabled = true;
+                spinBtn.textContent = "Couldn’t load products";
+                spinHint.textContent = "Make sure products.json is reachable and valid JSON.";
+            }
+        })();
+    </script>
 </body>
 
 </html>
