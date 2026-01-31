@@ -3,88 +3,160 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Serverless WebRTC Multiplayer (Encrypted QR/Link)</title>
+  <title>Serverless WebRTC Multiplayer (Multi-Guest, Encrypted Links)</title>
   <style>
-    html, body { margin:0; height:100%; background:#0b0f14; color:#e7eef7; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
-    .wrap { display:grid; grid-template-columns: 420px 1fr; height:100%; }
-    .panel { padding:16px; border-right:1px solid #18212b; overflow:auto; }
+    :root{
+      --bg:#0b0f14; --panel:#0f1520; --line:#223041; --txt:#e7eef7; --mut:#9bb0c6;
+      --ok:#2a6b3a; --warn:#6b5a2a; --bad:#6b2a2a; --btn:#121c2a; --btnh:#152238;
+    }
+    html, body { margin:0; height:100%; background:var(--bg); color:var(--txt); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    .wrap { display:grid; grid-template-columns: 430px 1fr; height:100%; }
+    .panel { padding:16px; border-right:1px solid #18212b; overflow:auto; background:linear-gradient(180deg, #0b0f14, #070a0e); }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:14px; margin:12px 0; }
+    h1 { font-size:16px; margin:0 0 10px; }
+    h2 { font-size:13px; margin:0 0 8px; color:var(--mut); font-weight:600; letter-spacing:.2px;}
+    .small { font-size:12px; color:var(--mut); line-height:1.4; }
+    label { display:block; font-size:12px; color:var(--mut); margin:10px 0 6px; }
+    input, textarea, button {
+      width:100%; box-sizing:border-box; border-radius:14px; border:1px solid var(--line);
+      background:var(--panel); color:var(--txt); padding:10px 12px; font-size:14px;
+    }
+    textarea { min-height:84px; resize:vertical; }
+    button { cursor:pointer; border:1px solid #2b3d55; background:var(--btn); }
+    button:hover { background:var(--btnh); }
+    button:disabled { opacity:.5; cursor:not-allowed; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .pill { display:inline-block; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:var(--panel); font-size:12px; }
+    .ok { border-color:var(--ok); }
+    .warn { border-color:var(--warn); }
+    .bad { border-color:var(--bad); }
+    .status { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
     .game { position:relative; }
     canvas { display:block; width:100%; height:100%; }
-    h1 { font-size:16px; margin:0 0 10px; opacity:.95; }
-    label { display:block; font-size:12px; opacity:.85; margin:10px 0 6px; }
-    input, textarea, button {
-      width:100%; box-sizing:border-box; border-radius:12px; border:1px solid #223041;
-      background:#0f1520; color:#e7eef7; padding:10px 12px; font-size:14px;
-    }
-    textarea { min-height:86px; resize:vertical; }
-    button { cursor:pointer; border:1px solid #2b3d55; background:#121c2a; }
-    button:hover { background:#152238; }
-    .row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .small { font-size:12px; opacity:.8; line-height:1.4; }
-    .pill { display:inline-block; padding:6px 10px; border-radius:999px; border:1px solid #223041; background:#0f1520; font-size:12px; }
-    .status { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-    .ok { border-color:#2a6b3a; }
-    .warn { border-color:#6b5a2a; }
-    .bad { border-color:#6b2a2a; }
-    .qr { display:grid; place-items:center; margin-top:10px; }
-    .qr canvas { width:260px; height:260px; border-radius:14px; background:#fff; }
-    .divider { height:1px; background:#18212b; margin:14px 0; }
-    .chat { display:grid; grid-template-columns:1fr auto; gap:10px; margin-top:10px; }
-    .log { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; white-space:pre-wrap; background:#0f1520; border:1px solid #223041; border-radius:12px; padding:10px; }
+    .log { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; white-space:pre-wrap;
+           background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:10px; color:#cfe0ff; }
+    .inlineBtn { width:auto; padding:9px 12px; }
+    .inline { display:flex; gap:10px; align-items:center; }
+    .hidden { display:none !important; }
+    .bigAction { font-size:15px; padding:12px 14px; border-radius:16px; }
+    .copyRow { display:grid; grid-template-columns:1fr auto; gap:10px; }
+    .hint { margin-top:8px; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="panel">
-      <h1>Encrypted Serverless WebRTC Multiplayer</h1>
+      <h1>Serverless WebRTC Multiplayer (Host + Multiple Guests)</h1>
       <div class="small">
-        1) Host creates an <b>Offer</b> link/QR (encrypted with room passphrase).<br/>
-        2) Guest opens/scans it, generates an <b>Answer</b> link/QR back.<br/>
-        3) Host pastes/scans answer → connected.<br/><br/>
-        Movement: <b>WASD / Arrow Keys</b>. Host is authoritative.
+        No server. No time pressure. Links can be sent whenever.
+        <br/>Host invites guests <b>one-at-a-time</b> (each guest has their own offer/answer).
       </div>
 
-      <label>Room passphrase (required, used to encrypt signaling)</label>
-      <input id="pass" type="password" placeholder="something long + unique" autocomplete="off"/>
-
-      <div class="row" style="margin-top:10px;">
-        <button id="hostBtn">I am Host (Create Offer)</button>
-        <button id="joinBtn">I am Guest (Open Offer)</button>
+      <div class="card">
+        <h2>Room Passphrase (required)</h2>
+        <div class="small">This encrypts the offer/answer links. Everyone must use the exact same passphrase.</div>
+        <label>Passphrase</label>
+        <input id="pass" type="password" placeholder="long + unique (e.g. cobalt-otter-99-river-lamp)" autocomplete="off"/>
+        <div class="hint small">Tip: Use a long phrase. If auth fails, it’s almost always a mismatch.</div>
       </div>
 
-      <div class="divider"></div>
-
-      <label>Signal link (paste here)</label>
-      <textarea id="signalIn" placeholder="Paste offer/answer link here (or it auto-detects from URL hash)"></textarea>
-
-      <div class="row" style="margin-top:10px;">
-        <button id="processBtn">Process Link</button>
-        <button id="clearBtn">Clear</button>
+      <div class="card" id="modeCard">
+        <h2>Choose your role</h2>
+        <div class="row">
+          <button id="beHost" class="bigAction">I’m the Host</button>
+          <button id="beGuest" class="bigAction">I’m a Guest</button>
+        </div>
       </div>
 
-      <label>Generated link</label>
-      <textarea id="signalOut" readonly placeholder="Generated encrypted offer/answer link will appear here"></textarea>
+      <!-- HOST WIZARD -->
+      <div class="card hidden" id="hostCard">
+        <h2 id="hostTitle">Host</h2>
 
-      <div class="qr" id="qrBox"></div>
+        <!-- Host step A: create invite -->
+        <div id="hostStepInvite">
+          <div class="small">
+            Create an invite for the <b>next guest</b>. Send them the offer link. There is <b>no expiry</b>.
+          </div>
+          <button id="hostCreateInvite" class="bigAction" style="margin-top:10px;">Create Invite for Next Guest</button>
 
-      <div class="status" id="status"></div>
+          <div class="hidden" id="hostOfferBox" style="margin-top:12px;">
+            <label>Offer link to send to guest</label>
+            <div class="copyRow">
+              <textarea id="hostOfferOut" readonly></textarea>
+              <button id="copyOffer" class="inlineBtn">Copy</button>
+            </div>
+            <div class="small hint">Send this to exactly one guest. Then wait as long as you want for their answer.</div>
+          </div>
+        </div>
 
-      <div class="divider"></div>
+        <!-- Host step B: waiting for answer -->
+        <div class="hidden" id="hostStepWait">
+          <div class="small">
+            When your guest sends back an <b>Answer link</b>, paste it below and apply it.
+          </div>
+          <label>Paste guest’s Answer link here</label>
+          <textarea id="hostAnswerIn" placeholder="…#answer.XXXX"></textarea>
 
-      <div class="small"><b>Test DataChannel chat</b> (optional)</div>
-      <div class="chat">
-        <input id="chatMsg" placeholder="type a message"/>
-        <button id="chatSend">Send</button>
+          <div class="row" style="margin-top:10px;">
+            <button id="hostApplyAnswer" class="bigAction">Apply Answer (Connect Guest)</button>
+            <button id="hostBackToInvite">Invite Another Guest</button>
+          </div>
+
+          <div class="small hint">
+            If you need to invite a different guest instead, click “Invite Another Guest” — it doesn’t break existing guests.
+          </div>
+        </div>
+
+        <div class="status" id="hostStatus"></div>
       </div>
-      <div style="margin-top:10px" class="log" id="log"></div>
 
-      <div class="divider"></div>
-      <div class="small">
-        Notes:
-        <ul>
-          <li>DataChannel traffic is already encrypted by WebRTC (DTLS). We still use an authenticated handshake to reject wrong-pass peers.</li>
-          <li>If you need “works everywhere”, add TURN later (still can keep signaling serverless).</li>
-        </ul>
+      <!-- GUEST WIZARD -->
+      <div class="card hidden" id="guestCard">
+        <h2 id="guestTitle">Guest</h2>
+
+        <!-- Guest step A: has offer -->
+        <div id="guestStepOffer">
+          <div class="small">
+            Paste the host’s <b>Offer link</b>, generate an Answer link, and send it back. No rush.
+          </div>
+          <label>Paste Host Offer link</label>
+          <textarea id="guestOfferIn" placeholder="…#offer.XXXX"></textarea>
+
+          <button id="guestMakeAnswer" class="bigAction" style="margin-top:10px;">Generate Answer Link</button>
+
+          <div class="hidden" id="guestAnswerBox" style="margin-top:12px;">
+            <label>Answer link to send back to Host</label>
+            <div class="copyRow">
+              <textarea id="guestAnswerOut" readonly></textarea>
+              <button id="copyAnswer" class="inlineBtn">Copy</button>
+            </div>
+            <div class="small hint">Send this to the Host. Once they apply it, you’ll connect automatically.</div>
+          </div>
+        </div>
+
+        <!-- Guest step B: waiting -->
+        <div class="hidden" id="guestStepWait">
+          <div class="small">Waiting for Host to apply your answer… keep this page open.</div>
+        </div>
+
+        <div class="status" id="guestStatus"></div>
+      </div>
+
+      <div class="card">
+        <h2>Quick checks</h2>
+        <div class="small">
+          If it doesn’t connect:
+          <ul>
+            <li>Try phone hotspot (some networks block P2P).</li>
+            <li>Confirm passphrase matches exactly.</li>
+            <li>Make sure host pasted an <b>answer</b>, guest pasted an <b>offer</b>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Log</h2>
+        <div class="log" id="log"></div>
       </div>
     </div>
 
@@ -95,99 +167,41 @@
 
 <script>
 /* =========================
-   Tiny QR generator (no external files)
-   - Minimal QR for URLs (Version auto-ish)
-   - This is intentionally compact, not a full QR spec implementation.
-   - Good enough for typical offer/answer links in many cases.
-   If you hit huge links, use copy/paste or swap in a full QR lib.
-========================= */
-function drawPseudoQR(text, size=260){
-  // Not a true QR code; it's a deterministic visual code you can still scan? No.
-  // Browsers need a real QR for camera scanning.
-  // So we implement a simple real QR using a tiny embedded implementation:
-  // For reliability, we will instead use the built-in "barcode detector" trick? Not reliable.
-  // Practical: we’ll render a *real* QR via a tiny implementation below (qrcodegen).
-  // ---- We'll use qrcodegen (compact) embedded.
-}
-
-/* =========================
-   qrcodegen (compact, public domain / permissive)
-   Source: Nayuki QR Code generator (trimmed for brevity)
-   This is a shortened embed to keep single-file.
-========================= */
-const qrcodegen = (() => {
-  // Minimal subset of Nayuki's qrcodegen to encode text -> modules
-  // License: Public Domain (Nayuki) - acceptable to embed.
-  // This is still a bit of code, but keeps things serverless.
-  function QrCode(){}
-
-  // --- Begin tiny implementation (trimmed) ---
-  // This is a deliberately small implementation for alphanumeric/byte mode.
-  // If encoding fails (data too big), we gracefully show "QR too large".
-  function encodeText(text, ecl="M"){
-    const data = new TextEncoder().encode(text);
-    return encodeBytes(data, ecl);
-  }
-
-  // Very small QR builder: supports versions 1..10 with byte mode, M level.
-  // Not exhaustive but works for many links. If too large, throws.
-  function encodeBytes(bytes, ecl="M"){
-    // We’ll use a very simple approach: try versions 1..10 until it fits.
-    for (let ver=1; ver<=10; ver++){
-      try { return buildQr(ver, bytes); } catch(e){}
-    }
-    throw new Error("QR too large for embedded encoder.");
-  }
-
-  // Helper: capacity table for byte mode, ECC M, versions 1..10 (approx, payload bytes)
-  const CAP_M = {1:14,2:26,3:42,4:62,5:84,6:106,7:122,8:152,9:180,10:213};
-
-  function buildQr(version, bytes){
-    const cap = CAP_M[version];
-    if (!cap || bytes.length > cap) throw new Error("too big");
-    // Fake-but-scan-like QR is not acceptable; needs actual spec.
-    // Instead of pretending, we’ll render a fallback:
-    // We'll throw for now and rely on copy/paste if too big,
-    // but we *can* still render a QR-like code that many scanners won't read.
-    // So: for correctness, we won't mislead. We'll only show QR if small enough AND encoded.
-    // Implementing full QR spec here would be too long; we’ll do a clear fallback.
-    // We'll return a simple matrix that is NOT a QR - no.
-    // => We'll not provide QR if not using a full encoder. We'll do a safe fallback.
-    throw new Error("Embedded QR encoder intentionally disabled for correctness.");
-  }
-
-  return { encodeText };
-})();
-
-/* =========================
-   Utilities: logging + status
+   Helpers / UI
 ========================= */
 const el = (id) => document.getElementById(id);
 const logEl = el("log");
 function log(...args){
-  const s = args.map(a => typeof a === "string" ? a : JSON.stringify(a, null, 2)).join(" ");
+  const s = args.map(a => typeof a === "string" ? a : JSON.stringify(a)).join(" ");
   logEl.textContent = (logEl.textContent + "\n" + s).trim();
   logEl.scrollTop = logEl.scrollHeight;
 }
-function setStatus(items){
-  const box = el("status");
+function show(id, on=true){ el(id).classList.toggle("hidden", !on); }
+function setStatus(boxId, items){
+  const box = el(boxId);
   box.innerHTML = "";
-  for (const it of items){
+  items.forEach(it=>{
     const d = document.createElement("div");
     d.className = `pill ${it.kind||""}`;
     d.textContent = it.text;
     box.appendChild(d);
-  }
+  });
+}
+async function copyText(text){
+  try { await navigator.clipboard.writeText(text); return true; }
+  catch { return false; }
+}
+function requirePass(){
+  const pass = el("pass").value;
+  if (!pass){ alert("Set a room passphrase first."); return null; }
+  return pass;
 }
 
 /* =========================
-   Crypto: AES-GCM link payload
-   - Derive key from passphrase using PBKDF2
-   - Encrypt JSON payload -> base64url
+   Crypto: AES-GCM signaling
 ========================= */
 function b64urlEncodeBytes(bytes){
-  let bin = "";
-  bytes.forEach(b => bin += String.fromCharCode(b));
+  let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b));
   return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
 }
 function b64urlDecodeToBytes(b64url){
@@ -195,35 +209,26 @@ function b64urlDecodeToBytes(b64url){
   const bin = atob(b64);
   return new Uint8Array([...bin].map(ch => ch.charCodeAt(0)));
 }
-
 async function deriveKey(pass, salt){
   const enc = new TextEncoder();
-  const baseKey = await crypto.subtle.importKey(
-    "raw", enc.encode(pass), { name:"PBKDF2" }, false, ["deriveKey"]
-  );
+  const baseKey = await crypto.subtle.importKey("raw", enc.encode(pass), { name:"PBKDF2" }, false, ["deriveKey"]);
   return crypto.subtle.deriveKey(
     { name:"PBKDF2", salt, iterations: 150000, hash:"SHA-256" },
     baseKey,
     { name:"AES-GCM", length: 256 },
-    false,
-    ["encrypt","decrypt"]
+    false, ["encrypt","decrypt"]
   );
 }
-
 async function encryptJsonToB64url(pass, obj){
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const iv   = crypto.getRandomValues(new Uint8Array(12));
   const key  = await deriveKey(pass, salt);
   const pt   = new TextEncoder().encode(JSON.stringify(obj));
   const ct   = new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM", iv}, key, pt));
-  // pack: salt|iv|ct
   const packed = new Uint8Array(salt.length + iv.length + ct.length);
-  packed.set(salt, 0);
-  packed.set(iv, salt.length);
-  packed.set(ct, salt.length + iv.length);
+  packed.set(salt,0); packed.set(iv,16); packed.set(ct,28);
   return b64urlEncodeBytes(packed);
 }
-
 async function decryptB64urlToJson(pass, packedB64url){
   const packed = b64urlDecodeToBytes(packedB64url);
   const salt = packed.slice(0,16);
@@ -233,12 +238,9 @@ async function decryptB64urlToJson(pass, packedB64url){
   const pt   = new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM", iv}, key, ct));
   return JSON.parse(new TextDecoder().decode(pt));
 }
-
-function makeSignalLink(type, encryptedPayload){
-  // Use hash so it doesn’t get sent in HTTP requests by default
-  return `${location.origin}${location.pathname}#${type}.${encryptedPayload}`;
+function makeSignalLink(type, payload){
+  return `${location.origin}${location.pathname}#${type}.${payload}`;
 }
-
 function parseSignalHash(hash){
   const h = hash.startsWith("#") ? hash.slice(1) : hash;
   const [type, payload] = h.split(".", 2);
@@ -248,202 +250,372 @@ function parseSignalHash(hash){
 }
 
 /* =========================
-   WebRTC (non-trickle ICE)
+   WebRTC core (multi-guest)
+   Host keeps many PeerConnections:
+   - one PC per guestId
+   - one DataChannel per PC
 ========================= */
-let pc = null;
-let dc = null;
-let role = "none"; // host|guest
-let peerId = null;
-let myId = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
-
-function makePc(){
-  pc = new RTCPeerConnection({
-    iceServers: [{ urls:"stun:stun.l.google.com:19302" }]
-  });
-
-  pc.onconnectionstatechange = () => {
-    log("pc.connectionState =", pc.connectionState);
-    updateUiState();
-  };
-
-  pc.ondatachannel = (e) => {
-    dc = e.channel;
-    wireDataChannel();
-  };
-
-  return pc;
-}
+const ICE_SERVERS = [{ urls:"stun:stun.l.google.com:19302" }];
 
 function waitForIceGatheringComplete(pc){
   if (pc.iceGatheringState === "complete") return Promise.resolve();
-  return new Promise((resolve) => {
-    const check = () => {
+  return new Promise((resolve)=>{
+    const on = () => {
       if (pc.iceGatheringState === "complete"){
-        pc.removeEventListener("icegatheringstatechange", check);
+        pc.removeEventListener("icegatheringstatechange", on);
         resolve();
       }
     };
-    pc.addEventListener("icegatheringstatechange", check);
+    pc.addEventListener("icegatheringstatechange", on);
   });
 }
 
-function wireDataChannel(){
-  dc.onopen = () => {
-    log("DataChannel open");
-    // Auth handshake: prove we used the same passphrase without sending it.
-    // We send an HMAC-like token derived from passphrase+nonce using SHA-256.
-    doAuthHandshake();
-    updateUiState();
-  };
-  dc.onclose = () => { log("DataChannel closed"); updateUiState(); };
-  dc.onmessage = (e) => onNetMessage(e.data);
-}
+let mode = "none"; // host | guest
+const myId = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+
+// HOST state
+let inviteCounter = 0;
+let pendingInvite = null; // {inviteId, pc, dc}
+const hostPeers = new Map(); // guestId -> {pc, dc, authOk, lastInput}
+
+// GUEST state
+let guestPc = null;
+let guestDc = null;
+let guestAuthOk = false;
+let hostId = null;
 
 /* =========================
-   Auth handshake (peer match)
-   - Derive a token from passphrase and a random nonce
-   - If tokens don’t match expectation, disconnect
+   Auth handshake (passphrase proof)
+   - DTLS already encrypts DataChannel.
+   - This handshake blocks wrong-pass peers early.
 ========================= */
-let authOk = false;
-
 async function sha256Hex(str){
   const b = new TextEncoder().encode(str);
   const d = new Uint8Array(await crypto.subtle.digest("SHA-256", b));
   return [...d].map(x => x.toString(16).padStart(2,"0")).join("");
 }
-
-async function doAuthHandshake(){
-  authOk = false;
+async function sendAuthHello(dc){
   const pass = el("pass").value;
-  if (!pass) return;
-
-  // Each side sends a nonce and token(pass+nonce).
   const nonce = crypto.getRandomValues(new Uint32Array(2));
   const nonceStr = `${nonce[0].toString(16)}${nonce[1].toString(16)}`;
   const token = await sha256Hex(pass + "|" + nonceStr);
-
-  sendNet({ t:"auth_hello", from: myId, nonce: nonceStr, token });
+  dc.send(JSON.stringify({ t:"auth_hello", from: myId, nonce: nonceStr, token }));
 }
-
-async function handleAuthHello(msg){
+async function handleAuthHello(msg, replyDc){
   const pass = el("pass").value;
-  if (!pass) return;
-
   const expected = await sha256Hex(pass + "|" + msg.nonce);
   if (expected !== msg.token){
-    log("AUTH FAILED (wrong passphrase). Closing.");
-    setStatus([{text:"Auth failed", kind:"bad"}]);
-    try { dc?.close(); } catch {}
-    try { pc?.close(); } catch {}
-    return;
+    log("AUTH FAILED from peer (wrong pass). Closing peer.");
+    try { replyDc.close(); } catch {}
+    return false;
+  }
+  replyDc.send(JSON.stringify({ t:"auth_ok", from: myId }));
+  return true;
+}
+
+/* =========================
+   HOST: create invite offer for next guest
+   - Each invite is for ONE guest.
+========================= */
+async function hostCreateInvite(){
+  const pass = requirePass(); if (!pass) return;
+
+  // Clean up any previous pending invite (if never used)
+  if (pendingInvite?.pc){
+    try { pendingInvite.dc?.close(); } catch {}
+    try { pendingInvite.pc.close(); } catch {}
   }
 
-  // Send acknowledgement
-  sendNet({ t:"auth_ok", from: myId });
-}
+  inviteCounter++;
+  const inviteId = `inv${inviteCounter}-${Date.now()}`;
 
-function handleAuthOk(msg){
-  authOk = true;
-  peerId = msg.from || "peer";
-  log("AUTH OK with peer:", peerId);
-  updateUiState();
-}
+  const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+  const dc = pc.createDataChannel("game", { ordered:false, maxRetransmits:0 });
 
-/* =========================
-   Messaging helpers
-========================= */
-function sendNet(obj){
-  if (!dc || dc.readyState !== "open") return;
-  dc.send(JSON.stringify(obj));
-}
-function onNetMessage(data){
-  let msg;
-  try { msg = JSON.parse(data); } catch { return; }
+  dc.onopen = async () => {
+    log("Host DC open for pending invite:", inviteId);
+    await sendAuthHello(dc);
+    updateHostStatus();
+  };
+  dc.onclose = () => { log("Host DC closed (invite):", inviteId); updateHostStatus(); };
+  dc.onmessage = (e) => hostOnMessage(inviteId, e.data);
 
-  if (msg.t === "auth_hello") return handleAuthHello(msg);
-  if (msg.t === "auth_ok")    return handleAuthOk(msg);
-
-  // Game messages:
-  if (msg.t === "input")   return onRemoteInput(msg);
-  if (msg.t === "state")   return onStateSnapshot(msg);
-  if (msg.t === "chat")    return log(`[peer] ${msg.text}`);
-}
-
-/* =========================
-   Signaling: Host/Guest flows
-========================= */
-async function hostCreateOffer(){
-  role = "host";
-  makePc();
-  dc = pc.createDataChannel("game", { ordered:false, maxRetransmits:0 });
-  wireDataChannel();
+  pc.onconnectionstatechange = () => {
+    log("Host PC state (invite)", inviteId, "=", pc.connectionState);
+    updateHostStatus();
+  };
 
   const offer = await pc.createOffer();
   await pc.setLocalDescription(offer);
   await waitForIceGatheringComplete(pc);
 
-  return pc.localDescription; // full SDP + ICE (non-trickle)
-}
+  const payload = await encryptJsonToB64url(pass, {
+    v:1, inviteId, hostId: myId, desc: pc.localDescription
+  });
 
-async function guestAcceptOfferAndCreateAnswer(offerDesc){
-  role = "guest";
-  makePc();
-  await pc.setRemoteDescription(offerDesc);
+  pendingInvite = { inviteId, pc, dc, authOk:false, guestId:null };
+  const link = makeSignalLink("offer", payload);
 
-  const answer = await pc.createAnswer();
-  await pc.setLocalDescription(answer);
-  await waitForIceGatheringComplete(pc);
+  el("hostOfferOut").value = link;
+  show("hostOfferBox", true);
 
-  return pc.localDescription;
-}
+  // Wizard: now show waiting step
+  show("hostStepInvite", false);
+  show("hostStepWait", true);
 
-async function hostAcceptAnswer(answerDesc){
-  if (!pc) throw new Error("Host must create offer first.");
-  await pc.setRemoteDescription(answerDesc);
+  log("Host created offer invite:", inviteId);
+  updateHostStatus();
 }
 
 /* =========================
-   Game: authoritative host simulation
-   - Clients send inputs; host simulates and broadcasts snapshots
-   - Clients predict their own movement locally for smoothness
-   - Others are interpolated to snapshots
+   HOST: apply guest answer to connect
+========================= */
+async function hostApplyAnswer(){
+  const pass = requirePass(); if (!pass) return;
+  if (!pendingInvite?.pc){ alert("Create an invite first."); return; }
+
+  const txt = el("hostAnswerIn").value.trim();
+  const hash = txt.includes("#") ? txt.slice(txt.indexOf("#")) : txt;
+  const parsed = parseSignalHash(hash);
+  if (!parsed || parsed.type !== "answer"){
+    alert("Paste a valid Answer link (…#answer.XXXX).");
+    return;
+  }
+
+  let obj;
+  try { obj = await decryptB64urlToJson(pass, parsed.payload); }
+  catch { alert("Could not decrypt answer. Wrong passphrase or corrupted link."); return; }
+
+  if (!obj?.inviteId || !obj?.guestId || !obj?.desc){
+    alert("Answer payload missing fields.");
+    return;
+  }
+  if (obj.inviteId !== pendingInvite.inviteId){
+    alert("This answer is for a different invite. Ask the guest for the matching answer link.");
+    return;
+  }
+
+  // Apply answer
+  await pendingInvite.pc.setRemoteDescription(obj.desc);
+
+  // Promote pending invite to active peer
+  pendingInvite.guestId = obj.guestId;
+  hostPeers.set(obj.guestId, pendingInvite);
+
+  log("Host connected guest:", obj.guestId, "for", obj.inviteId);
+
+  // Reset wizard to invite next guest (but keep peers connected)
+  el("hostAnswerIn").value = "";
+  show("hostStepWait", false);
+  show("hostStepInvite", true);
+  show("hostOfferBox", false);
+  pendingInvite = null;
+
+  updateHostStatus();
+}
+
+/* =========================
+   HOST: per-peer message handling
+========================= */
+const hostPlayerInputs = new Map(); // guestId -> input state
+function hostOnMessage(inviteId, data){
+  let msg;
+  try { msg = JSON.parse(data); } catch { return; }
+
+  // Find which peer this message belongs to
+  // (pending invite uses inviteId, active uses guestId map)
+  let peer = null;
+  if (pendingInvite && pendingInvite.inviteId === inviteId) peer = pendingInvite;
+  // If active, we don't know inviteId (messages still come in on dc); so fallback below:
+  if (!peer){
+    // find by matching datachannel reference is hard here, so we embed guestId in messages.
+    // We'll rely on msg.from for routing.
+    peer = hostPeers.get(msg.from);
+  }
+
+  if (msg.t === "auth_hello"){
+    // verify passphrase match; on success, mark authOk
+    (async()=>{
+      const ok = await handleAuthHello(msg, (peer?.dc));
+      if (!ok) return;
+
+      if (peer){
+        peer.authOk = true;
+        // Tell host the guestId if it's pending
+        if (!peer.guestId) peer.guestId = msg.from;
+        log("Host auth ok with:", msg.from);
+        updateHostStatus();
+      }
+    })();
+    return;
+  }
+
+  if (msg.t === "auth_ok"){
+    // Guest acknowledged our hello
+    if (peer){
+      peer.authOk = true;
+      if (!peer.guestId) peer.guestId = msg.from;
+      log("Host auth confirmed by:", msg.from);
+      updateHostStatus();
+    }
+    return;
+  }
+
+  if (msg.t === "input" && msg.from){
+    // rate limit basic
+    hostPlayerInputs.set(msg.from, msg.inp);
+    return;
+  }
+
+  if (msg.t === "chat" && msg.from){
+    log(`[guest ${msg.from}] ${msg.text}`);
+    return;
+  }
+}
+
+function hostBroadcast(obj){
+  const s = JSON.stringify(obj);
+  for (const [guestId, p] of hostPeers){
+    if (p?.dc?.readyState === "open" && p.authOk){
+      p.dc.send(s);
+    }
+  }
+}
+
+/* =========================
+   GUEST: process offer -> create answer link
+========================= */
+async function guestGenerateAnswer(){
+  const pass = requirePass(); if (!pass) return;
+
+  const txt = el("guestOfferIn").value.trim() || location.href;
+  const hash = txt.includes("#") ? txt.slice(txt.indexOf("#")) : txt;
+  const parsed = parseSignalHash(hash);
+  if (!parsed || parsed.type !== "offer"){
+    alert("Paste a valid Offer link (…#offer.XXXX).");
+    return;
+  }
+
+  let obj;
+  try { obj = await decryptB64urlToJson(pass, parsed.payload); }
+  catch { alert("Could not decrypt offer. Wrong passphrase or corrupted link."); return; }
+
+  if (!obj?.inviteId || !obj?.hostId || !obj?.desc){
+    alert("Offer payload missing fields.");
+    return;
+  }
+
+  // Build guest PC
+  if (guestPc){
+    try { guestDc?.close(); } catch {}
+    try { guestPc.close(); } catch {}
+  }
+  hostId = obj.hostId;
+
+  guestPc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+  guestAuthOk = false;
+
+  guestPc.ondatachannel = (e) => {
+    guestDc = e.channel;
+    guestDc.onopen = async () => {
+      log("Guest DC open. Sending auth hello…");
+      await sendAuthHello(guestDc);
+      updateGuestStatus();
+      // wizard: waiting for host to apply answer / finish connect
+      show("guestStepOffer", false);
+      show("guestStepWait", true);
+    };
+    guestDc.onclose = () => { log("Guest DC closed."); updateGuestStatus(); };
+    guestDc.onmessage = (ev) => guestOnMessage(ev.data);
+  };
+
+  guestPc.onconnectionstatechange = () => {
+    log("Guest PC state =", guestPc.connectionState);
+    updateGuestStatus();
+  };
+
+  await guestPc.setRemoteDescription(obj.desc);
+  const answer = await guestPc.createAnswer();
+  await guestPc.setLocalDescription(answer);
+  await waitForIceGatheringComplete(guestPc);
+
+  const payload = await encryptJsonToB64url(pass, {
+    v:1, inviteId: obj.inviteId, guestId: myId, desc: guestPc.localDescription
+  });
+  const answerLink = makeSignalLink("answer", payload);
+
+  el("guestAnswerOut").value = answerLink;
+  show("guestAnswerBox", true);
+
+  log("Guest generated answer for invite:", obj.inviteId);
+  updateGuestStatus();
+}
+
+async function guestOnMessage(data){
+  let msg;
+  try { msg = JSON.parse(data); } catch { return; }
+
+  if (msg.t === "auth_hello"){
+    const ok = await handleAuthHello(msg, guestDc);
+    if (ok){
+      guestAuthOk = true;
+      log("Guest auth ok with host.");
+      updateGuestStatus();
+    }
+    return;
+  }
+  if (msg.t === "auth_ok"){
+    guestAuthOk = true;
+    log("Guest auth confirmed by host.");
+    updateGuestStatus();
+    return;
+  }
+
+  // Game snapshots from host
+  if (msg.t === "state"){
+    onStateSnapshot(msg);
+    return;
+  }
+  if (msg.t === "chat"){
+    log(`[host] ${msg.text}`);
+    return;
+  }
+}
+
+/* =========================
+   Game: Host authoritative, multi guests
 ========================= */
 const canvas = el("c");
 const ctx = canvas.getContext("2d");
-
 function resize(){
   const r = canvas.getBoundingClientRect();
   canvas.width = Math.max(1, Math.floor(r.width * devicePixelRatio));
   canvas.height = Math.max(1, Math.floor(r.height * devicePixelRatio));
 }
-addEventListener("resize", resize);
-resize();
+addEventListener("resize", resize); resize();
 
-// Simulation params
-const TICK_HZ = 60;
+const SPEED = 240;
 const SNAP_HZ = 20;
-const SPEED = 240; // px/s
+let lastTime = performance.now();
+let snapAcc = 0;
 
-const players = new Map(); // id -> {x,y,vx,vy,lastSnapTime, targetX,targetY, targetTime}
+const players = new Map(); // id -> {x,y,targetX,targetY,_lastInp}
 function ensurePlayer(id){
   if (!players.has(id)){
     players.set(id, {
       id,
-      x: 200 + Math.random()*200,
-      y: 200 + Math.random()*200,
-      vx: 0, vy: 0,
-      lastInputSeq: 0,
-      lastSnapTime: performance.now(),
-      targetX: null, targetY: null, targetTime: null
+      x: 160 + Math.random()*260,
+      y: 160 + Math.random()*260,
+      targetX: null,
+      targetY: null,
+      _lastInp: {up:false,down:false,left:false,right:false}
     });
   }
   return players.get(id);
 }
 ensurePlayer(myId);
 
-let inputSeq = 0;
 let inputState = { up:false, down:false, left:false, right:false };
-
 function setKey(e, down){
   const k = e.key.toLowerCase();
   if (k === "w" || k === "arrowup") inputState.up = down;
@@ -455,101 +627,87 @@ addEventListener("keydown", (e)=> setKey(e, true));
 addEventListener("keyup",   (e)=> setKey(e, false));
 
 function computeVel(inp){
-  let vx = 0, vy = 0;
+  let vx=0, vy=0;
   if (inp.left) vx -= 1;
   if (inp.right) vx += 1;
   if (inp.up) vy -= 1;
   if (inp.down) vy += 1;
-  // normalize diagonal
-  const len = Math.hypot(vx, vy);
-  if (len > 0){ vx /= len; vy /= len; }
-  return { vx, vy };
+  const len = Math.hypot(vx,vy);
+  if (len>0){ vx/=len; vy/=len; }
+  return {vx,vy};
+}
+function simStep(p, dt, inp){
+  const v = computeVel(inp);
+  p.x += v.vx * SPEED * dt;
+  p.y += v.vy * SPEED * dt;
+
+  const W = canvas.width / devicePixelRatio;
+  const H = canvas.height / devicePixelRatio;
+  p.x = Math.max(20, Math.min(W-20, p.x));
+  p.y = Math.max(20, Math.min(H-20, p.y));
 }
 
-function simStep(p, dt, vel){
-  p.x += vel.vx * SPEED * dt;
-  p.y += vel.vy * SPEED * dt;
+function hostSimAndBroadcast(dt){
+  // Host simulates ALL players using last-known inputs
+  // Host's own player uses local inputState.
+  for (const [id, p] of players){
+    const inp = (id === myId) ? inputState : (hostPlayerInputs.get(id) || p._lastInp || {up:false,down:false,left:false,right:false});
+    p._lastInp = inp;
+    simStep(p, dt, inp);
+  }
 
-  // bounds
-  const w = canvas.width / devicePixelRatio;
-  const h = canvas.height / devicePixelRatio;
-  p.x = Math.max(20, Math.min(w-20, p.x));
-  p.y = Math.max(20, Math.min(h-20, p.y));
+  snapAcc += dt;
+  const snapInterval = 1 / SNAP_HZ;
+  if (snapAcc >= snapInterval){
+    snapAcc %= snapInterval;
+    const snapshot = [];
+    for (const [id,p] of players){
+      snapshot.push({ id, x:p.x, y:p.y });
+    }
+    hostBroadcast({ t:"state", snapshot, time: performance.now() });
+  }
 }
 
-let lastTime = performance.now();
-let snapAcc = 0;
-
-function tick(){
-  const now = performance.now();
-  const dt = Math.min(0.05, (now - lastTime)/1000);
-  lastTime = now;
-
-  // local prediction (always)
-  const me = ensurePlayer(myId);
-  const v = computeVel(inputState);
-  simStep(me, dt, v);
-
-  // If guest, send inputs to host at tick rate
-  if (role === "guest" && dc?.readyState === "open" && authOk){
-    inputSeq++;
-    sendNet({ t:"input", from: myId, seq: inputSeq, inp: inputState, clientTime: now });
-    me.lastInputSeq = inputSeq;
-  }
-
-  // If host: simulate others based on latest received inputs
-  if (role === "host"){
-    // their sim is driven in onRemoteInput using last-known input state, we just advance here:
-    for (const [id, p] of players){
-      if (id === myId) continue;
-      const inp = p._lastInp || {up:false,down:false,left:false,right:false};
-      const vv = computeVel(inp);
-      simStep(p, dt, vv);
-    }
-
-    // broadcast snapshots at SNAP_HZ
-    snapAcc += dt;
-    const snapInterval = 1 / SNAP_HZ;
-    if (snapAcc >= snapInterval && dc?.readyState === "open" && authOk){
-      snapAcc %= snapInterval;
-      const snapshot = [];
-      for (const [id, p] of players){
-        snapshot.push({ id, x:p.x, y:p.y, lastInputSeq: p.lastInputSeq||0 });
-      }
-      sendNet({ t:"state", from: myId, time: now, snapshot });
-    }
-  }
-
-  // Interpolate remote players toward targets (clients)
-  if (role === "guest"){
-    for (const [id, p] of players){
-      if (id === myId) continue;
-      if (p.targetX != null){
-        // simple exponential smoothing
-        const alpha = 1 - Math.pow(0.0001, dt); // smooth but responsive
-        p.x += (p.targetX - p.x) * alpha;
-        p.y += (p.targetY - p.y) * alpha;
-      }
-    }
-  }
-
-  render(now);
-  requestAnimationFrame(tick);
+function guestSendInputs(){
+  if (!guestDc || guestDc.readyState !== "open" || !guestAuthOk) return;
+  // basic send; you can throttle if you want
+  guestDc.send(JSON.stringify({ t:"input", from: myId, inp: inputState, time: performance.now() }));
 }
-requestAnimationFrame(tick);
 
-function render(now){
-  const w = canvas.width;
-  const h = canvas.height;
+function onStateSnapshot(msg){
+  // Everyone (guest side) updates targets for interpolation
+  for (const s of msg.snapshot){
+    const p = ensurePlayer(s.id);
+    if (mode === "guest" && s.id === myId){
+      // gentle reconciliation
+      p.x += (s.x - p.x) * 0.12;
+      p.y += (s.y - p.y) * 0.12;
+    } else {
+      p.targetX = s.x;
+      p.targetY = s.y;
+    }
+  }
+}
+
+function interpolateRemotes(dt){
+  for (const [id, p] of players){
+    if (id === myId) continue;
+    if (p.targetX != null){
+      const alpha = 1 - Math.pow(0.0001, dt);
+      p.x += (p.targetX - p.x) * alpha;
+      p.y += (p.targetY - p.y) * alpha;
+    }
+  }
+}
+
+function render(){
+  const w = canvas.width, h = canvas.height;
   ctx.clearRect(0,0,w,h);
-
-  // scale for DPR
   ctx.save();
   ctx.scale(devicePixelRatio, devicePixelRatio);
-
   const W = w/devicePixelRatio, H = h/devicePixelRatio;
 
-  // background grid
+  // grid
   ctx.globalAlpha = 0.35;
   ctx.beginPath();
   for (let x=0; x<=W; x+=40){ ctx.moveTo(x,0); ctx.lineTo(x,H); }
@@ -560,192 +718,147 @@ function render(now){
   ctx.globalAlpha = 1;
 
   // players
-  for (const [id, p] of players){
-    const isMe = id === myId;
+  for (const [id,p] of players){
+    const isMe = (id === myId);
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 14, 0, Math.PI*2);
+    ctx.arc(p.x,p.y,14,0,Math.PI*2);
     ctx.fillStyle = isMe ? "#e7eef7" : "#7fb3ff";
     ctx.fill();
 
-    // label
     ctx.font = "12px system-ui";
     ctx.fillStyle = "#cfe0ff";
-    ctx.fillText(isMe ? `you (${role})` : `peer`, p.x + 18, p.y + 4);
+    const label = isMe ? `you (${mode})` : (mode==="host" ? "guest" : "peer");
+    ctx.fillText(label, p.x + 18, p.y + 4);
   }
 
   // HUD
   ctx.fillStyle = "#e7eef7";
   ctx.font = "13px system-ui";
-  const st = [
-    `role: ${role}`,
-    `webrtc: ${pc?.connectionState || "idle"}`,
-    `dc: ${dc?.readyState || "idle"}`,
-    `auth: ${authOk ? "ok" : "pending"}`,
-  ].join("  |  ");
-  ctx.fillText(st, 14, 20);
+  const peerCount = (mode==="host") ? hostPeers.size : 1;
+  const hud = `mode: ${mode}  |  you: ${myId}  |  peers: ${peerCount}`;
+  ctx.fillText(hud, 14, 20);
 
   ctx.restore();
 }
 
-function onRemoteInput(msg){
-  // Host receives guest inputs
-  if (role !== "host") return;
-  const p = ensurePlayer(msg.from);
-  p._lastInp = msg.inp;
-  p.lastInputSeq = msg.seq;
-}
+function loop(){
+  const now = performance.now();
+  const dt = Math.min(0.05, (now - lastTime)/1000);
+  lastTime = now;
 
-function onStateSnapshot(msg){
-  // Guest receives authoritative state from host
-  if (role !== "guest") return;
-  for (const s of msg.snapshot){
-    const p = ensurePlayer(s.id);
-    if (s.id === myId){
-      // Optional reconciliation:
-      // For simplicity, we just gently nudge toward host truth instead of full replay.
-      const alpha = 0.15;
-      p.x += (s.x - p.x) * alpha;
-      p.y += (s.y - p.y) * alpha;
-      continue;
+  ensurePlayer(myId);
+
+  // Local prediction
+  simStep(players.get(myId), dt, inputState);
+
+  if (mode === "host"){
+    // Ensure all connected guests exist as players
+    for (const [guestId, peer] of hostPeers){
+      ensurePlayer(guestId);
     }
-    p.targetX = s.x;
-    p.targetY = s.y;
-    p.targetTime = msg.time;
+    // Simulate & broadcast
+    hostSimAndBroadcast(dt);
+  } else if (mode === "guest"){
+    guestSendInputs();
+    interpolateRemotes(dt);
   }
+
+  render();
+  requestAnimationFrame(loop);
 }
+requestAnimationFrame(loop);
 
 /* =========================
-   UI actions
+   Status + Wizard controls
 ========================= */
-function updateUiState(){
+function updateHostStatus(){
   const items = [];
   items.push({ text:`You: ${myId}`, kind:"ok" });
-  items.push({ text:`Role: ${role}`, kind: role==="none"?"warn":"ok" });
-  items.push({ text:`WebRTC: ${pc?.connectionState || "idle"}`, kind: pc?.connectionState==="connected"?"ok": (pc? "warn":"warn") });
-  items.push({ text:`DataChannel: ${dc?.readyState || "idle"}`, kind: dc?.readyState==="open"?"ok": "warn" });
-  items.push({ text:`Auth: ${authOk ? "ok" : "pending"}`, kind: authOk?"ok":"warn" });
-  setStatus(items);
-}
-updateUiState();
+  items.push({ text:`Guests connected: ${hostPeers.size}`, kind: hostPeers.size>0 ? "ok" : "warn" });
+  items.push({ text:`Pending invite: ${pendingInvite ? pendingInvite.inviteId : "none"}`, kind: pendingInvite ? "warn" : "ok" });
 
-function renderQr(link){
-  // We’ll attempt QR. If too big, show message and rely on copy/paste.
-  const box = el("qrBox");
-  box.innerHTML = "";
-  const hint = document.createElement("div");
-  hint.className = "small";
-  hint.style.marginTop = "6px";
-
-  // Because we intentionally disabled a fake QR encoder above for correctness,
-  // we will show a clear fallback:
-  const canQR = false;
-
-  if (!canQR){
-    hint.textContent = "QR not rendered in this single-file build (to avoid fake/non-scan QR). Use copy/paste link, or I can provide a version with a full embedded QR encoder.";
-    box.appendChild(hint);
-    return;
+  // show per-guest quick states (collapsed into pills)
+  for (const [gid, p] of hostPeers){
+    const st = p.pc?.connectionState || "unknown";
+    const dc = p.dc?.readyState || "unknown";
+    const kind = (st==="connected" && dc==="open" && p.authOk) ? "ok" : "warn";
+    items.push({ text:`${gid}: ${st}/${dc}${p.authOk ? "" : " (auth…)"}`, kind });
   }
+
+  setStatus("hostStatus", items);
+}
+function updateGuestStatus(){
+  const items = [];
+  items.push({ text:`You: ${myId}`, kind:"ok" });
+  items.push({ text:`Host: ${hostId || "unknown"}`, kind: hostId ? "ok" : "warn" });
+  items.push({ text:`WebRTC: ${guestPc?.connectionState || "idle"}`, kind: guestPc?.connectionState==="connected" ? "ok" : "warn" });
+  items.push({ text:`DataChannel: ${guestDc?.readyState || "idle"}`, kind: guestDc?.readyState==="open" ? "ok" : "warn" });
+  items.push({ text:`Auth: ${guestAuthOk ? "ok" : "pending"}`, kind: guestAuthOk ? "ok" : "warn" });
+  setStatus("guestStatus", items);
 }
 
-el("clearBtn").onclick = () => {
-  el("signalIn").value = "";
-  el("signalOut").value = "";
-  history.replaceState(null, "", location.pathname);
-  el("qrBox").innerHTML = "";
-};
+function setMode(newMode){
+  mode = newMode;
+  show("modeCard", false);
 
-el("hostBtn").onclick = async () => {
-  try{
-    const pass = el("pass").value;
-    if (!pass) { alert("Set a room passphrase first."); return; }
-
-    log("Hosting: creating offer...");
-    const desc = await hostCreateOffer();
-    const payload = await encryptJsonToB64url(pass, { v:1, desc, created: Date.now() });
-    const link = makeSignalLink("offer", payload);
-
-    el("signalOut").value = link;
-    renderQr(link);
-
-    log("Offer created. Send link to guest.");
-    updateUiState();
-  }catch(e){
-    console.error(e);
-    alert(e.message || e);
+  if (mode === "host"){
+    show("hostCard", true);
+    show("guestCard", false);
+    show("hostStepInvite", true);
+    show("hostStepWait", false);
+    show("hostOfferBox", false);
+    updateHostStatus();
+    log("Mode = host");
+  } else {
+    show("hostCard", false);
+    show("guestCard", true);
+    show("guestStepOffer", true);
+    show("guestStepWait", false);
+    show("guestAnswerBox", false);
+    updateGuestStatus();
+    log("Mode = guest");
   }
+}
+
+el("beHost").onclick = () => setMode("host");
+el("beGuest").onclick = () => setMode("guest");
+
+el("hostCreateInvite").onclick = hostCreateInvite;
+el("hostApplyAnswer").onclick = hostApplyAnswer;
+el("hostBackToInvite").onclick = () => {
+  // allow skipping waiting; keep pending invite (offer link) visible
+  show("hostStepWait", false);
+  show("hostStepInvite", true);
+  show("hostOfferBox", pendingInvite != null);
 };
 
-el("joinBtn").onclick = async () => {
-  // Guest uses Process Link (offer) -> Generate answer automatically there.
-  role = "guest";
-  updateUiState();
-  log("Guest mode. Paste offer link then click Process Link.");
+el("guestMakeAnswer").onclick = guestGenerateAnswer;
+
+// Copy buttons
+el("copyOffer").onclick = async () => {
+  const ok = await copyText(el("hostOfferOut").value);
+  if (!ok) alert("Copy failed. Long-press and copy manually.");
+};
+el("copyAnswer").onclick = async () => {
+  const ok = await copyText(el("guestAnswerOut").value);
+  if (!ok) alert("Copy failed. Long-press and copy manually.");
 };
 
-el("processBtn").onclick = async () => {
-  try{
-    const pass = el("pass").value;
-    if (!pass) { alert("Set a room passphrase first."); return; }
-
-    const txt = (el("signalIn").value || "").trim();
-    const fromHash = parseSignalHash(location.hash);
-    const link = txt || (fromHash ? location.href : "");
-
-    if (!link) { alert("Paste a signal link (offer/answer)."); return; }
-
-    // Extract hash from pasted link
-    const hash = link.includes("#") ? link.slice(link.indexOf("#")) : "";
-    const parsed = parseSignalHash(hash);
-    if (!parsed) { alert("Not a valid signal link."); return; }
-
-    const obj = await decryptB64urlToJson(pass, parsed.payload);
-    if (!obj?.desc) { alert("Decrypted payload missing desc."); return; }
-
-    if (parsed.type === "offer"){
-      log("Processing OFFER (guest): creating answer...");
-      const answerDesc = await guestAcceptOfferAndCreateAnswer(obj.desc);
-
-      const payload = await encryptJsonToB64url(pass, { v:1, desc: answerDesc, created: Date.now() });
-      const answerLink = makeSignalLink("answer", payload);
-
-      el("signalOut").value = answerLink;
-      renderQr(answerLink);
-
-      log("Answer created. Send link back to host.");
-      updateUiState();
-      return;
-    }
-
-    if (parsed.type === "answer"){
-      log("Processing ANSWER (host): accepting...");
-      await hostAcceptAnswer(obj.desc);
-      log("Answer accepted. Waiting for DataChannel/auth...");
-      updateUiState();
-      return;
-    }
-  }catch(e){
-    console.error(e);
-    alert("Failed to process link. Likely wrong passphrase or corrupted link.");
-  }
-};
-
-// Auto-detect link from URL hash if present
-(function autoFromHash(){
+// Auto-fill offer/answer if page opened with hash
+(function autoFillFromHash(){
   const parsed = parseSignalHash(location.hash);
   if (!parsed) return;
-  el("signalIn").value = location.href;
-  log("Detected signal link in URL. Set passphrase then click Process Link.");
+  // Don’t show all steps; just put link in the right box once user chooses mode.
+  const full = location.href;
+  // Heuristic: if it’s an offer, likely guest; if answer, likely host.
+  if (parsed.type === "offer"){
+    log("Detected OFFER link in URL. Choose Guest mode, then generate Answer.");
+    el("guestOfferIn").value = full;
+  } else {
+    log("Detected ANSWER link in URL. Choose Host mode, then apply Answer.");
+    el("hostAnswerIn").value = full;
+  }
 })();
-
-// Chat
-el("chatSend").onclick = () => {
-  const t = el("chatMsg").value.trim();
-  if (!t) return;
-  log(`[you] ${t}`);
-  sendNet({ t:"chat", text:t });
-  el("chatMsg").value = "";
-};
-
 </script>
 </body>
 </html>
