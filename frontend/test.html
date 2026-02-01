@@ -36,11 +36,10 @@
     .log { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; white-space:pre-wrap;
            background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:10px; color:#cfe0ff; }
     .inlineBtn { width:auto; padding:9px 12px; }
-    .inline { display:flex; gap:10px; align-items:center; }
-    .hidden { display:none !important; }
     .bigAction { font-size:15px; padding:12px 14px; border-radius:16px; }
     .copyRow { display:grid; grid-template-columns:1fr auto; gap:10px; }
     .hint { margin-top:8px; }
+    .hidden { display:none !important; }
   </style>
 </head>
 <body>
@@ -72,38 +71,52 @@
       <div class="card hidden" id="hostCard">
         <h2 id="hostTitle">Host</h2>
 
-        <!-- Host step A: create invite -->
+        <!-- Host step 1: create invite -->
         <div id="hostStepInvite">
           <div class="small">
-            Create an invite for the <b>next guest</b>. Send them the offer link. There is <b>no expiry</b>.
+            Create an invite for the <b>next guest</b>. You’ll get a link you can send anytime.
           </div>
           <button id="hostCreateInvite" class="bigAction" style="margin-top:10px;">Create Invite for Next Guest</button>
+        </div>
 
-          <div class="hidden" id="hostOfferBox" style="margin-top:12px;">
-            <label>Offer link to send to guest</label>
-            <div class="copyRow">
-              <textarea id="hostOfferOut" readonly></textarea>
-              <button id="copyOffer" class="inlineBtn">Copy</button>
-            </div>
-            <div class="small hint">Send this to exactly one guest. Then wait as long as you want for their answer.</div>
+        <!-- Host step 2: show offer link (ONLY) -->
+        <div class="hidden" id="hostStepOffer">
+          <div class="small">
+            Send this <b>Offer link</b> to exactly one guest. No expiry. Take as long as you want.
+          </div>
+
+          <label>Offer link to send</label>
+          <div class="copyRow">
+            <textarea id="hostOfferOut" readonly></textarea>
+            <button id="copyOffer" class="inlineBtn">Copy</button>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <button id="hostReadyForAnswer" class="bigAction">I sent it — Ready for Answer</button>
+            <button id="hostCancelInvite">Cancel Invite</button>
+          </div>
+
+          <div class="small hint">
+            You can leave this screen up forever. When the guest replies with an Answer link, click “Ready for Answer”.
           </div>
         </div>
 
-        <!-- Host step B: waiting for answer -->
+        <!-- Host step 3: paste answer -->
         <div class="hidden" id="hostStepWait">
           <div class="small">
-            When your guest sends back an <b>Answer link</b>, paste it below and apply it.
+            Paste the guest’s <b>Answer link</b> below and connect them.
           </div>
+
           <label>Paste guest’s Answer link here</label>
           <textarea id="hostAnswerIn" placeholder="…#answer.XXXX"></textarea>
 
           <div class="row" style="margin-top:10px;">
             <button id="hostApplyAnswer" class="bigAction">Apply Answer (Connect Guest)</button>
-            <button id="hostBackToInvite">Invite Another Guest</button>
+            <button id="hostBackToOffer">Back to Offer</button>
           </div>
 
           <div class="small hint">
-            If you need to invite a different guest instead, click “Invite Another Guest” — it doesn’t break existing guests.
+            Wrong answer / wrong guest? Go back to Offer and verify what you sent.
           </div>
         </div>
 
@@ -251,9 +264,6 @@ function parseSignalHash(hash){
 
 /* =========================
    WebRTC core (multi-guest)
-   Host keeps many PeerConnections:
-   - one PC per guestId
-   - one DataChannel per PC
 ========================= */
 const ICE_SERVERS = [{ urls:"stun:stun.l.google.com:19302" }];
 
@@ -275,8 +285,8 @@ const myId = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
 
 // HOST state
 let inviteCounter = 0;
-let pendingInvite = null; // {inviteId, pc, dc}
-const hostPeers = new Map(); // guestId -> {pc, dc, authOk, lastInput}
+let pendingInvite = null; // {inviteId, pc, dc, authOk, guestId}
+const hostPeers = new Map(); // guestId -> pendingInvite-like object
 
 // GUEST state
 let guestPc = null;
@@ -285,9 +295,7 @@ let guestAuthOk = false;
 let hostId = null;
 
 /* =========================
-   Auth handshake (passphrase proof)
-   - DTLS already encrypts DataChannel.
-   - This handshake blocks wrong-pass peers early.
+   Auth handshake
 ========================= */
 async function sha256Hex(str){
   const b = new TextEncoder().encode(str);
@@ -315,12 +323,11 @@ async function handleAuthHello(msg, replyDc){
 
 /* =========================
    HOST: create invite offer for next guest
-   - Each invite is for ONE guest.
 ========================= */
 async function hostCreateInvite(){
   const pass = requirePass(); if (!pass) return;
 
-  // Clean up any previous pending invite (if never used)
+  // Close previous pending invite if it was never used
   if (pendingInvite?.pc){
     try { pendingInvite.dc?.close(); } catch {}
     try { pendingInvite.pc.close(); } catch {}
@@ -333,7 +340,7 @@ async function hostCreateInvite(){
   const dc = pc.createDataChannel("game", { ordered:false, maxRetransmits:0 });
 
   dc.onopen = async () => {
-    log("Host DC open for pending invite:", inviteId);
+    log("Host DC open for invite:", inviteId);
     await sendAuthHello(dc);
     updateHostStatus();
   };
@@ -357,11 +364,11 @@ async function hostCreateInvite(){
   const link = makeSignalLink("offer", payload);
 
   el("hostOfferOut").value = link;
-  show("hostOfferBox", true);
 
-  // Wizard: now show waiting step
+  // Wizard: show OFFER only (do NOT skip)
   show("hostStepInvite", false);
-  show("hostStepWait", true);
+  show("hostStepOffer", true);
+  show("hostStepWait", false);
 
   log("Host created offer invite:", inviteId);
   updateHostStatus();
@@ -395,20 +402,19 @@ async function hostApplyAnswer(){
     return;
   }
 
-  // Apply answer
   await pendingInvite.pc.setRemoteDescription(obj.desc);
 
-  // Promote pending invite to active peer
+  // Promote to active peer
   pendingInvite.guestId = obj.guestId;
   hostPeers.set(obj.guestId, pendingInvite);
 
   log("Host connected guest:", obj.guestId, "for", obj.inviteId);
 
-  // Reset wizard to invite next guest (but keep peers connected)
+  // Reset wizard to invite next guest
   el("hostAnswerIn").value = "";
   show("hostStepWait", false);
+  show("hostStepOffer", false);
   show("hostStepInvite", true);
-  show("hostOfferBox", false);
   pendingInvite = null;
 
   updateHostStatus();
@@ -418,30 +424,22 @@ async function hostApplyAnswer(){
    HOST: per-peer message handling
 ========================= */
 const hostPlayerInputs = new Map(); // guestId -> input state
+
 function hostOnMessage(inviteId, data){
   let msg;
   try { msg = JSON.parse(data); } catch { return; }
 
-  // Find which peer this message belongs to
-  // (pending invite uses inviteId, active uses guestId map)
+  // Identify peer record by msg.from
   let peer = null;
   if (pendingInvite && pendingInvite.inviteId === inviteId) peer = pendingInvite;
-  // If active, we don't know inviteId (messages still come in on dc); so fallback below:
-  if (!peer){
-    // find by matching datachannel reference is hard here, so we embed guestId in messages.
-    // We'll rely on msg.from for routing.
-    peer = hostPeers.get(msg.from);
-  }
+  if (!peer && msg.from) peer = hostPeers.get(msg.from);
 
   if (msg.t === "auth_hello"){
-    // verify passphrase match; on success, mark authOk
     (async()=>{
-      const ok = await handleAuthHello(msg, (peer?.dc));
+      const ok = await handleAuthHello(msg, peer?.dc);
       if (!ok) return;
-
       if (peer){
         peer.authOk = true;
-        // Tell host the guestId if it's pending
         if (!peer.guestId) peer.guestId = msg.from;
         log("Host auth ok with:", msg.from);
         updateHostStatus();
@@ -451,7 +449,6 @@ function hostOnMessage(inviteId, data){
   }
 
   if (msg.t === "auth_ok"){
-    // Guest acknowledged our hello
     if (peer){
       peer.authOk = true;
       if (!peer.guestId) peer.guestId = msg.from;
@@ -462,7 +459,6 @@ function hostOnMessage(inviteId, data){
   }
 
   if (msg.t === "input" && msg.from){
-    // rate limit basic
     hostPlayerInputs.set(msg.from, msg.inp);
     return;
   }
@@ -511,9 +507,9 @@ async function guestGenerateAnswer(){
     try { guestPc.close(); } catch {}
   }
   hostId = obj.hostId;
+  guestAuthOk = false;
 
   guestPc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
-  guestAuthOk = false;
 
   guestPc.ondatachannel = (e) => {
     guestDc = e.channel;
@@ -521,7 +517,8 @@ async function guestGenerateAnswer(){
       log("Guest DC open. Sending auth hello…");
       await sendAuthHello(guestDc);
       updateGuestStatus();
-      // wizard: waiting for host to apply answer / finish connect
+
+      // wizard: waiting after generating answer
       show("guestStepOffer", false);
       show("guestStepWait", true);
     };
@@ -571,7 +568,6 @@ async function guestOnMessage(data){
     return;
   }
 
-  // Game snapshots from host
   if (msg.t === "state"){
     onStateSnapshot(msg);
     return;
@@ -648,8 +644,12 @@ function simStep(p, dt, inp){
 }
 
 function hostSimAndBroadcast(dt){
-  // Host simulates ALL players using last-known inputs
-  // Host's own player uses local inputState.
+  // Ensure all connected guests exist as players
+  for (const [guestId] of hostPeers){
+    ensurePlayer(guestId);
+  }
+
+  // Host simulates ALL players
   for (const [id, p] of players){
     const inp = (id === myId) ? inputState : (hostPlayerInputs.get(id) || p._lastInp || {up:false,down:false,left:false,right:false});
     p._lastInp = inp;
@@ -670,12 +670,10 @@ function hostSimAndBroadcast(dt){
 
 function guestSendInputs(){
   if (!guestDc || guestDc.readyState !== "open" || !guestAuthOk) return;
-  // basic send; you can throttle if you want
   guestDc.send(JSON.stringify({ t:"input", from: myId, inp: inputState, time: performance.now() }));
 }
 
 function onStateSnapshot(msg){
-  // Everyone (guest side) updates targets for interpolation
   for (const s of msg.snapshot){
     const p = ensurePlayer(s.id);
     if (mode === "guest" && s.id === myId){
@@ -735,7 +733,7 @@ function render(){
   ctx.fillStyle = "#e7eef7";
   ctx.font = "13px system-ui";
   const peerCount = (mode==="host") ? hostPeers.size : 1;
-  const hud = `mode: ${mode}  |  you: ${myId}  |  peers: ${peerCount}`;
+  const hud = `mode: ${mode}  |  you: ${myId}  |  guests: ${peerCount}`;
   ctx.fillText(hud, 14, 20);
 
   ctx.restore();
@@ -752,11 +750,6 @@ function loop(){
   simStep(players.get(myId), dt, inputState);
 
   if (mode === "host"){
-    // Ensure all connected guests exist as players
-    for (const [guestId, peer] of hostPeers){
-      ensurePlayer(guestId);
-    }
-    // Simulate & broadcast
     hostSimAndBroadcast(dt);
   } else if (mode === "guest"){
     guestSendInputs();
@@ -777,14 +770,12 @@ function updateHostStatus(){
   items.push({ text:`Guests connected: ${hostPeers.size}`, kind: hostPeers.size>0 ? "ok" : "warn" });
   items.push({ text:`Pending invite: ${pendingInvite ? pendingInvite.inviteId : "none"}`, kind: pendingInvite ? "warn" : "ok" });
 
-  // show per-guest quick states (collapsed into pills)
   for (const [gid, p] of hostPeers){
     const st = p.pc?.connectionState || "unknown";
     const dc = p.dc?.readyState || "unknown";
     const kind = (st==="connected" && dc==="open" && p.authOk) ? "ok" : "warn";
     items.push({ text:`${gid}: ${st}/${dc}${p.authOk ? "" : " (auth…)"}`, kind });
   }
-
   setStatus("hostStatus", items);
 }
 function updateGuestStatus(){
@@ -804,17 +795,21 @@ function setMode(newMode){
   if (mode === "host"){
     show("hostCard", true);
     show("guestCard", false);
+
     show("hostStepInvite", true);
+    show("hostStepOffer", false);
     show("hostStepWait", false);
-    show("hostOfferBox", false);
+
     updateHostStatus();
     log("Mode = host");
   } else {
     show("hostCard", false);
     show("guestCard", true);
+
     show("guestStepOffer", true);
     show("guestStepWait", false);
     show("guestAnswerBox", false);
+
     updateGuestStatus();
     log("Mode = guest");
   }
@@ -825,11 +820,28 @@ el("beGuest").onclick = () => setMode("guest");
 
 el("hostCreateInvite").onclick = hostCreateInvite;
 el("hostApplyAnswer").onclick = hostApplyAnswer;
-el("hostBackToInvite").onclick = () => {
-  // allow skipping waiting; keep pending invite (offer link) visible
+
+// New host wizard buttons
+el("hostReadyForAnswer").onclick = () => {
+  show("hostStepOffer", false);
+  show("hostStepWait", true);
+};
+el("hostBackToOffer").onclick = () => {
+  show("hostStepWait", false);
+  show("hostStepOffer", true);
+};
+el("hostCancelInvite").onclick = () => {
+  if (pendingInvite?.pc){
+    try { pendingInvite.dc?.close(); } catch {}
+    try { pendingInvite.pc.close(); } catch {}
+  }
+  pendingInvite = null;
+  el("hostOfferOut").value = "";
+  el("hostAnswerIn").value = "";
+  show("hostStepOffer", false);
   show("hostStepWait", false);
   show("hostStepInvite", true);
-  show("hostOfferBox", pendingInvite != null);
+  updateHostStatus();
 };
 
 el("guestMakeAnswer").onclick = guestGenerateAnswer;
@@ -848,9 +860,7 @@ el("copyAnswer").onclick = async () => {
 (function autoFillFromHash(){
   const parsed = parseSignalHash(location.hash);
   if (!parsed) return;
-  // Don’t show all steps; just put link in the right box once user chooses mode.
   const full = location.href;
-  // Heuristic: if it’s an offer, likely guest; if answer, likely host.
   if (parsed.type === "offer"){
     log("Detected OFFER link in URL. Choose Guest mode, then generate Answer.");
     el("guestOfferIn").value = full;
