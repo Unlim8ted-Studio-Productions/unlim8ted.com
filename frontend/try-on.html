@@ -1,0 +1,2150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fit Certainty — Neon Scrolly (Single File)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@200;400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- GSAP + plugins (NOTE: SplitText + ScrollSmoother are Club plugins; production should self-host + license) -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollSmoother.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/SplitText.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#06070b;
+      --fg:#f5f7ff;
+      --muted:rgba(245,247,255,.68);
+
+      --n1:#00e5ff;
+      --n2:#7c4dff;
+      --n3:#ff2bd6;
+      --n4:#ffe14a;
+      --n5:#32ff7e;
+      --n6:#ff7a18;
+
+      --ease:cubic-bezier(.2,.7,.2,1);
+      --shadow: 0 20px 80px rgba(0,0,0,.65);
+
+      --max: 1180px;
+      --thick: clamp(3px, .55vw, 10px);
+      --round: clamp(18px, 2vw, 34px);
+
+      /* navbar offsets (adjust if your web component already handles positioning) */
+      --nav-inset: 14px;
+      --nav-space: 96px; /* reserved vertical space so hero doesn't collide */
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:
+        radial-gradient(1100px 800px at 12% 12%, rgba(124,77,255,.14), transparent 60%),
+        radial-gradient(900px 700px at 92% 18%, rgba(0,229,255,.10), transparent 62%),
+        radial-gradient(900px 700px at 65% 95%, rgba(255,43,214,.10), transparent 62%),
+        linear-gradient(180deg, var(--bg) 0%, #03040a 100%);
+      color:var(--fg);
+      overflow-x:hidden;
+      font-family: Antonio, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      scrollbar-width: none;
+    }
+    body::-webkit-scrollbar{ display:none; }
+    a{ color:inherit; text-decoration:none; }
+    button{ font:inherit; }
+
+    .wrap{ width:min(var(--max), calc(100% - 44px)); margin:0 auto; }
+    .para{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+    .muted{ color:var(--muted); }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    #smooth-wrapper{ position:relative; }
+    #smooth-content{ position:relative; }
+
+    /* Navbar web component placement (safe default; remove if your component already positions itself) */
+    site-navbar{
+      position: fixed;
+      inset: var(--nav-inset) var(--nav-inset) auto var(--nav-inset);
+      z-index: 60;
+      pointer-events: auto;
+    }
+
+    #dust{
+      position:fixed; inset:0;
+      width:100%; height:100%;
+      pointer-events:none;
+      z-index:0;
+      opacity:.85;
+      mix-blend-mode:screen;
+    }
+
+    .neon{
+      background: linear-gradient(90deg, var(--n1), var(--n2), var(--n3), var(--n4), var(--n5), var(--n6), var(--n1));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      filter: drop-shadow(0 0 16px rgba(0,229,255,.18)) drop-shadow(0 0 18px rgba(255,43,214,.12));
+      background-size: 240% 100%;
+      background-position: 0% 50%;
+      will-change: background-position;
+    }
+
+    /* --- Decorative SVG Orbits (background fillers) --- */
+    .decor {
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:1; /* behind content, above bg */
+      overflow:hidden;
+    }
+    .orbit {
+      position:absolute;
+      width:min(680px, 70vw);
+      height:auto;
+      opacity:.35;
+      filter: drop-shadow(0 18px 60px rgba(0,0,0,.55));
+      mix-blend-mode: screen;
+      transform-origin: 50% 50%;
+    }
+    .orbit svg { width:100%; height:auto; display:block; }
+    .orbit .stroke {
+      fill:none;
+      stroke-width:1.2;
+      stroke-linecap:round;
+      stroke-dasharray: 10 10;
+      opacity:.9;
+    }
+    .orbit .soft {
+      fill:none;
+      stroke-width:10;
+      opacity:.18;
+      filter: blur(0.5px);
+    }
+    @media (prefers-reduced-motion: no-preference){
+      .orbit.spin { animation: orbitSpin 18s linear infinite; }
+      .orbit.float { animation: orbitFloat 8s var(--ease) infinite alternate; }
+    }
+    @keyframes orbitSpin { to { transform: rotate(360deg); } }
+    @keyframes orbitFloat { from { transform: translateY(0px); } to { transform: translateY(-18px); } }
+
+    /* Slider card SVG accents */
+    .cardIcon{
+      position:absolute;
+      right:-70px;
+      top:-70px;
+      width:min(320px, 55vw);
+      height:auto;
+      opacity:.22;
+      mix-blend-mode: screen;
+      pointer-events:none;
+      filter: drop-shadow(0 0 22px rgba(0,229,255,.10)) drop-shadow(0 0 26px rgba(255,43,214,.10));
+      transform: rotate(var(--icon-rot, 10deg));
+    }
+    .cardIcon .s1{ fill:none; stroke-width:2.2; stroke-linecap:round; stroke-dasharray: 16 12; }
+    .cardIcon .s2{ fill:none; stroke-width:2.2; stroke-linecap:round; stroke-dasharray: 12 10; opacity:.75; }
+    .cardIcon .fillGlow{ opacity:.35; }
+
+    /* HERO */
+    .hero-container{
+      position:relative;
+      width:100vw;
+      height:100dvh;
+      overflow:hidden;
+      z-index:1;
+      background:
+        radial-gradient(900px 700px at 50% 80%, rgba(0,229,255,.12), transparent 62%),
+        radial-gradient(800px 650px at 20% 30%, rgba(124,77,255,.12), transparent 62%),
+        radial-gradient(800px 650px at 85% 25%, rgba(255,43,214,.10), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.10));
+    }
+    .hero-bg{
+      position:absolute; inset:-10%;
+      background:
+        radial-gradient(1200px 800px at 30% 30%, rgba(255,225,74,.08), transparent 62%),
+        radial-gradient(1100px 750px at 70% 30%, rgba(50,255,126,.08), transparent 64%),
+        conic-gradient(from 180deg at 50% 50%, rgba(0,229,255,.05), rgba(124,77,255,.05), rgba(255,43,214,.05), rgba(255,225,74,.04), rgba(50,255,126,.04), rgba(255,122,24,.04), rgba(0,229,255,.05));
+      opacity:.9;
+      transform: scale(1.05);
+    }
+    .hero-grid{
+      position:absolute; inset:0;
+      background:
+        linear-gradient(transparent 0 96%, rgba(255,255,255,.04) 96% 100%),
+        linear-gradient(90deg, transparent 0 96%, rgba(255,255,255,.03) 96% 100%);
+      background-size: 64px 64px, 64px 64px;
+      opacity:.10;
+      mix-blend-mode:screen;
+      pointer-events:none;
+    }
+    .hero-content{
+      position:relative;
+      z-index:10;
+      width:100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding-top: var(--nav-space);
+      transform: translateY(40px);
+      opacity:0;
+    }
+    .hero-title{
+      text-align:center;
+      text-transform:uppercase;
+      font-weight:900;
+      letter-spacing:-.35vw;
+      line-height: clamp(42px, 9vw, 140px);
+      font-size: clamp(46px, 8.4vw, 140px);
+      text-shadow: var(--shadow);
+      margin-bottom: 10px;
+    }
+    .hero-text-scroll{
+      transform: rotate(-3deg);
+      border: var(--thick) solid rgba(255,255,255,.16);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      margin-bottom: 18px;
+      background: rgba(0,0,0,.22);
+    }
+    .hero-subtitle{
+      background: linear-gradient(90deg, rgba(0,229,255,.20), rgba(124,77,255,.20), rgba(255,43,214,.18));
+    }
+    .hero-text-scroll h1{
+      margin:0;
+      padding: clamp(10px, 1.2vw, 18px) clamp(12px, 1.6vw, 22px);
+      text-transform:uppercase;
+      font-weight:900;
+      letter-spacing:-.35vw;
+      line-height: clamp(42px, 9vw, 140px);
+      font-size: clamp(46px, 8.4vw, 140px);
+      color: rgba(245,247,255,.92);
+      text-shadow: 0 30px 120px rgba(0,0,0,.85);
+    }
+    .hero-lede{
+      margin: 4px 0 0;
+      text-align:center;
+      max-width: 680px;
+      padding: 0 18px;
+      font-size: 18px;
+      line-height: 1.25;
+      letter-spacing: -.02em;
+      color: rgba(245,247,255,.78);
+    }
+    .hero-button{
+      margin-top: 28px;
+      border-radius: 999px;
+      padding: 14px 30px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 18px 70px rgba(0,0,0,.55);
+      text-transform: uppercase;
+      font-weight:900;
+      letter-spacing: -.02em;
+      user-select:none;
+      cursor:pointer;
+    }
+    .hero-button .arrow{
+      display:inline-block;
+      margin-left: 10px;
+      width: 10px; height: 10px;
+      border-right: 2px solid rgba(255,255,255,.88);
+      border-bottom: 2px solid rgba(255,255,255,.88);
+      transform: rotate(45deg) translateY(-1px);
+      opacity:.8;
+    }
+
+    /* MESSAGE */
+    .message-content{
+      position:relative;
+      min-height:100dvh;
+      overflow:hidden;
+      z-index:2;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(900px 700px at 20% 10%, rgba(0,229,255,.10), transparent 60%),
+        radial-gradient(900px 700px at 90% 80%, rgba(255,43,214,.10), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.22));
+    }
+    .msg-wrapper{
+      display:flex;
+      flex-direction:column;
+      gap: clamp(40px, 9vw, 110px);
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      padding: 110px 0;
+    }
+    .msg-wrapper h1{
+      margin:0;
+      max-width: min(92vw, 1100px);
+      text-align:center;
+      color: rgba(245,247,255,.3);
+      text-transform:uppercase;
+      font-weight:900;
+      letter-spacing:-.35vw;
+      line-height: .95;
+      font-size: clamp(54px, 9.4vw, 150px);
+    }
+    .stripBox{
+      position:absolute;
+      z-index:10;
+      border: var(--thick) solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+      width: min(1400px, 96vw);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%) rotate(3deg);
+    }
+    .strip{
+      display:flex;
+      gap: 32px;
+      padding: 14px 20px;
+      align-items:center;
+      white-space:nowrap;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:-.25vw;
+      font-size: clamp(26px, 4.4vw, 70px);
+      color: rgba(245,247,255,.94);
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: linear-gradient(90deg, var(--n1), var(--n3));
+      box-shadow: 0 0 18px rgba(255,43,214,.25);
+      flex:none;
+    }
+    .msg-sub{
+      position:absolute;
+      bottom: 26px;
+      width:100%;
+      text-align:center;
+      font-size: 15px;
+      line-height:1.35;
+      letter-spacing:-.01em;
+      color: rgba(245,247,255,.72);
+      padding: 0 18px 10px;
+    }
+
+    /* SLIDER */
+    .flavor-section{
+      position:relative;
+      min-height:100dvh;
+      z-index:2;
+      background:
+        radial-gradient(900px 700px at 10% 10%, rgba(124,77,255,.12), transparent 60%),
+        radial-gradient(900px 700px at 90% 90%, rgba(50,255,126,.08), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.20));
+      overflow:hidden;
+    }
+    .flavor-strip{
+      position:absolute;
+      z-index:10;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-3deg);
+      border: var(--thick) solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      width: min(1500px, 96vw);
+    }
+    .slider-wrapper{
+      width:100%;
+      min-height:100dvh;
+      padding-top: 170px;
+      display:flex;
+      align-items:center;
+    }
+    .flavors{
+      display:flex;
+      align-items:center;
+      gap: clamp(18px, 5vw, 72px);
+      padding: 0 clamp(18px, 4vw, 64px);
+      will-change: transform;
+    }
+    .card{
+      position:relative;
+      width: min(52vw, 640px);
+      height: min(70vh, 560px);
+      flex:none;
+      border-radius: var(--round);
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      transform-origin: 50% 80%;
+      isolation:isolate;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-1px;
+      background:
+        radial-gradient(680px 420px at 20% 10%, rgba(0,229,255,.14), transparent 70%),
+        radial-gradient(640px 520px at 90% 90%, rgba(255,43,214,.12), transparent 70%);
+      opacity:.75;
+      pointer-events:none;
+    }
+    .card .bg{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(800px 480px at 20% 20%, rgba(255,225,74,.12), transparent 60%),
+        radial-gradient(760px 520px at 80% 85%, rgba(124,77,255,.12), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.18));
+      opacity:.95;
+      mix-blend-mode:screen;
+    }
+    .card .glow{
+      position:absolute; inset:-30%;
+      background: conic-gradient(from 90deg, rgba(0,229,255,.0), rgba(0,229,255,.18), rgba(124,77,255,.0), rgba(255,43,214,.18), rgba(255,225,74,.0), rgba(50,255,126,.18), rgba(255,122,24,.0));
+      filter: blur(26px);
+      opacity:.55;
+      transform: rotate(12deg);
+      pointer-events:none;
+    }
+    .card h1{
+      position:absolute;
+      left: 18px;
+      bottom: 18px;
+      margin:0;
+      text-transform:uppercase;
+      font-weight:900;
+      letter-spacing:-.08em;
+      font-size: clamp(26px, 3.8vw, 58px);
+      color: rgba(245,247,255,.92);
+      text-shadow: 0 28px 90px rgba(0,0,0,.75);
+      line-height: .92;
+      max-width: 12ch;
+      z-index:3;
+    }
+    .card p{
+      position:absolute;
+      left: 18px;
+      top: 18px;
+      margin:0;
+      max-width: 46ch;
+      color: rgba(245,247,255,.78);
+      font-size: 14.5px;
+      line-height: 1.35;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      z-index:3;
+    }
+    .badge{
+      position:absolute;
+      right: 16px;
+      top: 16px;
+      border-radius:999px;
+      padding: 10px 12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      font-weight:900;
+      letter-spacing:-.02em;
+      text-transform:uppercase;
+      font-size: 12px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      z-index:4;
+    }
+    .badge i{
+      width:10px;height:10px;border-radius:999px;
+      background: linear-gradient(90deg, var(--n1), var(--n3));
+      box-shadow: 0 0 16px rgba(0,229,255,.22), 0 0 18px rgba(255,43,214,.14);
+      display:inline-block;
+    }
+
+    /* BENEFITS + DEMO */
+    .benefit-section{
+      position:relative;
+      min-height:100dvh;
+      z-index:3;
+      margin-top: -10vh; /* will be reset to 0px in JS buildSlider() */
+      background:
+        radial-gradient(900px 700px at 10% 90%, rgba(0,229,255,.10), transparent 60%),
+        radial-gradient(900px 700px at 90% 10%, rgba(255,43,214,.10), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.24));
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap: 18px;
+      padding-bottom: 90px;
+    }
+    .title-stack{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap: clamp(10px, 2.3vw, 18px);
+      margin: 0 auto 12px;
+      padding-top: 70px;
+    }
+    .title-stack .t{
+      margin:0;
+      text-align:center;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:-.35vw;
+      line-height: .92;
+      font-size: clamp(44px, 7.2vw, 120px);
+      color: rgba(245,247,255,.90);
+      text-shadow: var(--shadow);
+    }
+    .title-stack .t.one{ transform: rotate(3deg); }
+    .title-stack .t.two{ transform: rotate(-1deg); }
+    .title-stack .t.three{ transform: rotate(1deg); }
+    .title-stack .t.four{ transform: rotate(-5deg); }
+
+    .benefit-lede{
+      text-align:center;
+      font-size: 16.5px;
+      line-height: 1.35;
+      max-width: 860px;
+      margin: 0 auto 10px;
+      color: rgba(245,247,255,.78);
+      padding: 0 18px;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+
+    .demo-shell{
+      width:min(1100px, calc(100% - 44px));
+      margin: 0 auto;
+      border-radius: var(--round);
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+    .demo-shell::before{
+      content:"";
+      position:absolute; inset:-25%;
+      background: conic-gradient(from 90deg, rgba(0,229,255,.0), rgba(0,229,255,.18), rgba(124,77,255,.0), rgba(255,43,214,.18), rgba(255,225,74,.0), rgba(50,255,126,.18), rgba(255,122,24,.0));
+      opacity:.5;
+      filter: blur(26px);
+      transform: rotate(8deg);
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .demo{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 0;
+      min-height: min(72vh, 600px);
+    }
+    @media (max-width: 980px){
+      .demo{ grid-template-columns: 1fr; min-height: auto; }
+    }
+
+    .demo-left{
+      padding: 18px;
+      border-right: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.02);
+    }
+    @media (max-width: 980px){
+      .demo-left{ border-right:0; border-bottom: 1px solid rgba(255,255,255,.10); }
+    }
+
+    .demo-right{
+      padding: 18px;
+      background: rgba(0,0,0,.18);
+    }
+
+    .demo-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 12px;
+      flex-wrap:wrap;
+    }
+    .demo-top > div:first-child{
+      min-width: min(520px, 100%);
+      flex: 1 1 520px;
+    }
+    .demo-badges{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      flex: 0 1 auto;
+      margin-left:auto;
+    }
+    @media (max-width: 620px){
+      .demo-badges{ width:100%; justify-content:flex-start; margin-left:0; }
+    }
+
+    .demo-title{
+      text-transform:uppercase;
+      font-weight:900;
+      letter-spacing:-.08em;
+      font-size: clamp(24px, 3.8vw, 44px);
+      line-height:1.02;
+      margin: 0;
+      padding-right: 6px;
+    }
+    .demo-sub{
+      margin: 6px 0 0;
+      font-size: 13.5px;
+      line-height:1.35;
+      color: rgba(245,247,255,.72);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      max-width: 62ch;
+    }
+
+    .pill{
+      border-radius:999px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      font-weight:900;
+      letter-spacing:-.02em;
+      text-transform:uppercase;
+      font-size: 12px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      white-space:nowrap;
+    }
+    .pill i{
+      width:10px;height:10px;border-radius:999px;
+      background: linear-gradient(90deg, var(--n1), var(--n3));
+      box-shadow: 0 0 16px rgba(0,229,255,.22), 0 0 18px rgba(255,43,214,.14);
+      display:inline-block;
+    }
+
+    .modelStage{
+      position:relative;
+      border-radius: calc(var(--round) - 8px);
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(900px 520px at 30% 25%, rgba(0,229,255,.16), transparent 60%),
+        radial-gradient(900px 600px at 70% 80%, rgba(255,43,214,.14), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.18));
+      overflow:hidden;
+      box-shadow: 0 18px 70px rgba(0,0,0,.55);
+      min-height: 360px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .avatarWrap{
+      position:relative;
+      width: min(520px, 100%);
+      height: 320px;
+      display:grid;
+      place-items:center;
+    }
+    .avatar{
+      width: 220px;
+      height: 280px;
+      border-radius: 999px 999px 54px 54px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);
+      position:relative;
+      overflow:hidden;
+      transform-origin: 50% 80%;
+      z-index:2;
+    }
+    .avatar::before{
+      content:"";
+      position:absolute; inset:-20%;
+      background: conic-gradient(from 90deg, rgba(0,229,255,.0), rgba(0,229,255,.18), rgba(124,77,255,.0), rgba(255,43,214,.18), rgba(255,225,74,.0), rgba(50,255,126,.18), rgba(255,122,24,.0));
+      opacity:.55;
+      filter: blur(18px);
+      transform: rotate(12deg);
+    }
+    .bodyShape{
+      position:absolute;
+      left:50%;
+      top:54%;
+      transform: translate(-50%,-50%);
+      width: 130px;
+      height: 190px;
+      border-radius: 80px 80px 50px 50px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
+    }
+    .garmentShape{
+      position:absolute;
+      left:50%;
+      top:55%;
+      transform: translate(-50%,-50%);
+      width: 150px;
+      height: 170px;
+      border-radius: 26px 26px 30px 30px;
+      background: rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,.25) inset,
+        0 18px 70px rgba(0,0,0,.35);
+      overflow:hidden;
+    }
+    .garmentShape::before{
+      content:"";
+      position:absolute; inset:-20%;
+      background: linear-gradient(90deg, rgba(0,229,255,.18), rgba(124,77,255,.16), rgba(255,43,214,.16));
+      opacity:.55;
+      filter: blur(10px);
+      transform: translateX(-20%);
+      mix-blend-mode: screen;
+    }
+
+    .fitRing{
+      position:absolute;
+      left:50%; top:50%;
+      transform: translate(-50%,-50%);
+      width: 290px; height: 290px;
+      border-radius:999px;
+      border: 2px solid rgba(255,255,255,.10);
+      box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset;
+      pointer-events:none;
+      z-index:1;
+    }
+    .fitRing::after{
+      content:"";
+      position:absolute; inset:-18%;
+      border-radius:999px;
+      background: conic-gradient(from 90deg, rgba(0,229,255,.0), rgba(0,229,255,.22), rgba(124,77,255,.0), rgba(255,43,214,.22), rgba(255,225,74,.0), rgba(50,255,126,.22), rgba(255,122,24,.0));
+      filter: blur(22px);
+      opacity:.55;
+      transform: rotate(20deg);
+      mix-blend-mode: screen;
+    }
+
+    .meterRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    @media (max-width: 520px){ .meterRow{ grid-template-columns:1fr; } }
+
+    .field{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      padding: 12px 12px 10px;
+    }
+    .field label{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      color: rgba(245,247,255,.76);
+      font-size: 12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:-.02em;
+      margin-bottom: 10px;
+    }
+    input[type="range"]{ width:100%; accent-color: #fff; }
+
+    .resultBox{
+      margin-top: 14px;
+      border-radius: calc(var(--round) - 10px);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+      box-shadow: 0 18px 70px rgba(0,0,0,.45);
+    }
+    .resultHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      flex-wrap:wrap;
+    }
+    .fitLabel{
+      margin:0;
+      text-transform:uppercase;
+      font-weight:900;
+      letter-spacing:-.10em;
+      font-size: 36px;
+      line-height: 1;
+      padding-right: 8px;
+    }
+    .confidence{
+      border-radius:999px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      font-weight:900;
+      text-transform:uppercase;
+      font-size: 12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      white-space:nowrap;
+    }
+    .confidence i{
+      width:10px;height:10px;border-radius:999px;
+      background: var(--n5);
+      box-shadow: 0 0 16px rgba(50,255,126,.25);
+      display:inline-block;
+    }
+    .resultBody{
+      padding: 14px 14px 16px;
+      color: rgba(245,247,255,.80);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      line-height: 1.5;
+      font-size: 14.5px;
+    }
+    .resultBody .line{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(255,255,255,.10);
+    }
+    .resultBody .line:last-child{ border-bottom:0; }
+    .k{ color: rgba(245,247,255,.72); font-weight:650; }
+    .v{ font-weight:800; color: rgba(245,247,255,.92); }
+
+    .demo-right .para{
+      font-size: 14.6px;
+      line-height: 1.45;
+      color: rgba(245,247,255,.78);
+    }
+    .bullets{
+      margin: 12px 0 0;
+      padding:0;
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .bullets li{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      padding: 12px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      position:relative;
+      overflow:hidden;
+    }
+    .bullets li::before{
+      content:"";
+      width:10px;height:10px;border-radius:999px;
+      background: linear-gradient(90deg, var(--n1), var(--n3));
+      box-shadow: 0 0 16px rgba(0,229,255,.22), 0 0 18px rgba(255,43,214,.14);
+      flex:none;
+      margin-top: 4px;
+    }
+    .bullets b{
+      text-transform:uppercase;
+      letter-spacing:-.02em;
+      font-weight:900;
+      font-size: 12px;
+    }
+    .bullets span{
+      display:block;
+      margin-top: 4px;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: rgba(245,247,255,.74);
+      font-size: 13.5px;
+      line-height: 1.35;
+    }
+
+    .demo-ctaRow{
+      margin-top: 12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border-radius:999px;
+      padding:12px 14px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 18px 70px rgba(0,0,0,.35);
+      text-transform:uppercase;
+      font-weight:900;
+      color:white;
+      letter-spacing:-.02em;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .22s var(--ease), background .22s var(--ease), border-color .22s var(--ease);
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.22); }
+
+    /* TRUST */
+    .nutrition-section{
+      position:relative;
+      min-height:100dvh;
+      z-index:2;
+      overflow:hidden;
+      background:
+        radial-gradient(900px 700px at 50% 100%, rgba(255,225,74,.08), transparent 62%),
+        radial-gradient(900px 700px at 10% 15%, rgba(0,229,255,.10), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.20));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 90px 0 70px;
+    }
+    .nutrition-inner{
+      position:relative;
+      width:min(1200px, calc(100% - 44px));
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap: 22px;
+      z-index:2;
+    }
+    .nutrition-title{
+      text-align:center;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:-.35vw;
+      line-height:.92;
+      font-size: clamp(44px, 7.8vw, 128px);
+      margin:0;
+    }
+    .nutrition-strip{
+      border: var(--thick) solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      box-shadow: var(--shadow);
+      transform: rotate(-3deg);
+      overflow:hidden;
+      opacity:0;
+    }
+    .nutrition-box{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin-top: 10px;
+    }
+    .list-wrapper{
+      width:min(1100px, 100%);
+      border-radius:999px;
+      border: var(--thick) solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.26);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 2.2vw, 26px) clamp(18px, 2.5vw, 32px);
+      display:grid;
+      grid-template-columns: repeat(6, minmax(0,1fr));
+      gap: 14px;
+      align-items:center;
+    }
+    @media (max-width: 980px){
+      .list-wrapper{ grid-template-columns: repeat(2, minmax(0,1fr)); border-radius: 28px; }
+    }
+    .pillItem{
+      padding: 10px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      text-align:center;
+      overflow:hidden;
+    }
+    .pillItem b{
+      display:block;
+      text-transform:uppercase;
+      font-weight:900;
+      letter-spacing:-.03em;
+      font-size: 13px;
+      color: rgba(245,247,255,.88);
+    }
+    .pillItem span{
+      display:block;
+      margin-top: 6px;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      font-size: 12.5px;
+      line-height: 1.2;
+      color: rgba(245,247,255,.72);
+    }
+
+    /* Footer CTA */
+    .footer{
+      position:relative;
+      z-index:2;
+      padding: 84px 0 70px;
+      text-align:center;
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.28));
+      overflow:hidden;
+    }
+    .cta{
+      width:min(980px, calc(100% - 44px));
+      margin:0 auto;
+      border-radius: var(--round);
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.26);
+      box-shadow: var(--shadow);
+      padding: 28px 20px;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+    .cta::before{
+      content:"";
+      position:absolute; inset:-25%;
+      background: conic-gradient(from 90deg, rgba(0,229,255,.0), rgba(0,229,255,.18), rgba(124,77,255,.0), rgba(255,43,214,.18), rgba(255,225,74,.0), rgba(50,255,126,.18), rgba(255,122,24,.0));
+      opacity:.55;
+      filter: blur(26px);
+      transform: rotate(-8deg);
+      pointer-events:none;
+      z-index:0;
+    }
+    .cta h2{
+      position:relative;
+      margin:0;
+      font-weight:900;
+      text-transform:uppercase;
+      font-size: clamp(28px, 4.6vw, 62px);
+      line-height: .95;
+      text-shadow: 0 30px 120px rgba(0,0,0,.85);
+      z-index:1;
+    }
+    .cta p{
+      position:relative;
+      margin: 14px auto 0;
+      max-width: 72ch;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: rgba(245,247,255,.78);
+      line-height:1.5;
+      font-size: 15.5px;
+      z-index:1;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="dust"></canvas>
+
+  <!-- IMPORTANT: script before navbar (as requested) -->
+  <script type="module" src="/components/site-navbar.js"></script>
+
+  <!-- Your production navbar -->
+  <site-navbar
+    cart-href="/cart"
+    signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile">
+  </site-navbar>
+
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
+
+      <!-- HERO -->
+      <section id="top" class="hero-container">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="hero-grid" aria-hidden="true"></div>
+
+        <!-- Decorative SVG fillers -->
+        <div class="decor" aria-hidden="true">
+          <div class="orbit spin" style="left:-8%; top:8%;">
+            <svg viewBox="0 0 600 600" role="presentation">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="rgba(0,229,255,.95)"/>
+                  <stop offset=".5" stop-color="rgba(255,43,214,.95)"/>
+                  <stop offset="1" stop-color="rgba(255,225,74,.95)"/>
+                </linearGradient>
+              </defs>
+              <circle cx="300" cy="300" r="190" class="soft" stroke="url(#g1)"/>
+              <circle cx="300" cy="300" r="190" class="stroke" stroke="url(#g1)"/>
+              <circle cx="300" cy="300" r="110" class="stroke" stroke="rgba(124,77,255,.9)"/>
+              <circle cx="300" cy="300" r="62"  class="stroke" stroke="rgba(50,255,126,.9)"/>
+            </svg>
+          </div>
+
+          <div class="orbit float" style="right:-10%; bottom:-6%; width:min(760px, 78vw); opacity:.28;">
+            <svg viewBox="0 0 800 520" role="presentation">
+              <defs>
+                <radialGradient id="g2" cx="40%" cy="40%" r="70%">
+                  <stop offset="0" stop-color="rgba(124,77,255,.9)"/>
+                  <stop offset=".6" stop-color="rgba(0,229,255,.45)"/>
+                  <stop offset="1" stop-color="rgba(0,0,0,0)"/>
+                </radialGradient>
+              </defs>
+              <path d="M40,260 C160,80 320,60 460,140 C620,232 730,210 780,60"
+                    fill="none" stroke="rgba(255,43,214,.75)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="14 10"/>
+              <ellipse cx="440" cy="280" rx="330" ry="170" fill="url(#g2)" opacity=".65"/>
+              <path d="M20,360 C220,520 470,500 780,320"
+                    fill="none" stroke="rgba(50,255,126,.7)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="12 12"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="hero-content">
+          <div class="hero-title hero-title-split">
+            <h1 class="neon">FIT CERTAINTY</h1>
+          </div>
+
+          <div class="hero-text-scroll" id="heroStrip" style="clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%);">
+            <div class="hero-subtitle">
+              <h1>CERTAINTY IS MONEY</h1>
+            </div>
+          </div>
+
+          <p class="hero-lede para">
+            We’re building a fit decision engine — a clear, reliable size decision at the moment of purchase.
+          </p>
+
+          <div class="hero-button" id="heroBtn" role="button" aria-label="Scroll for more">
+            Scroll for more <span class="arrow" aria-hidden="true"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MESSAGE -->
+      <section id="msg" class="message-content">
+        <div class="wrap msg-wrapper">
+          <h1>Every brand has the same hidden tax.</h1>
+          <h1>Returns are the tax.</h1>
+        </div>
+
+        <div class="stripBox" aria-hidden="true" id="msgStrip">
+          <div class="strip">
+            <span class="dot"></span><span class="neon">NOT MARKETING</span>
+            <span class="dot"></span><span class="neon">NOT MANUFACTURING</span>
+            <span class="dot"></span><span class="neon">RETURNS</span>
+            <span class="dot"></span><span class="neon">UNCERTAINTY</span>
+            <span class="dot"></span><span class="neon">GUESSWORK</span>
+            <span class="dot"></span><span class="neon">MARGIN LEAK</span>
+            <span class="dot"></span><span class="neon">TRUST LOSS</span>
+          </div>
+        </div>
+
+        <!-- Decorative SVG filler -->
+        <div class="decor" aria-hidden="true">
+          <div class="orbit spin" style="left:6%; bottom:-10%; width:min(520px, 62vw); opacity:.18;">
+            <svg viewBox="0 0 600 600" role="presentation">
+              <circle cx="300" cy="300" r="210" class="stroke" stroke="rgba(0,229,255,.9)"/>
+              <circle cx="300" cy="300" r="145" class="stroke" stroke="rgba(255,43,214,.9)"/>
+              <circle cx="300" cy="300" r="86"  class="stroke" stroke="rgba(255,225,74,.9)"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="msg-sub para">
+          A shopper buys a shirt. It doesn’t fit. They send it back. The brand pays shipping twice, loses margin, and risks losing the customer entirely.
+          Multiply that by millions of orders and sizing becomes one of the most expensive inefficiencies in e-commerce.
+        </div>
+      </section>
+
+      <!-- SLIDER -->
+<!-- SLIDER (UPDATED again: each card gets 2 BIG SVG layers: (A) abstract neon field + (B) “meaning” icon that matches the text) -->
+<section id="slider" class="flavor-section">
+  <div class="flavor-strip" aria-hidden="true">
+    <div class="strip" id="sliderStrip">
+      <span class="dot"></span><span class="neon">Most returns aren’t about style</span>
+      <span class="dot"></span><span class="neon">They’re about uncertainty</span>
+      <span class="dot"></span><span class="neon">Will this actually fit me?</span>
+      <span class="dot"></span><span class="neon">Guesswork costs billions</span>
+      <span class="dot"></span><span class="neon">Reliability beats realism</span>
+    </div>
+  </div>
+
+  <div class="slider-wrapper">
+    <div class="flavors" id="sliderTrack">
+
+      <!-- Card 1 — Question: “Will this actually fit me?” (target / measurement rings) -->
+      <article class="card" data-rot="-3">
+        <div class="bg"></div><div class="glow"></div>
+
+        <!-- (A) BIG ambient neon field -->
+        <svg class="bigCardSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="b1a" cx="30%" cy="25%" r="70%">
+              <stop offset="0" stop-color="rgba(0,229,255,.55)"/>
+              <stop offset=".55" stop-color="rgba(124,77,255,.18)"/>
+              <stop offset="1" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+            <linearGradient id="b1b" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(0,229,255,.95)"/>
+              <stop offset=".5" stop-color="rgba(255,43,214,.95)"/>
+              <stop offset="1" stop-color="rgba(255,225,74,.95)"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="760" cy="380" rx="520" ry="320" fill="url(#b1a)" opacity=".9"/>
+          <path d="M170,520 C260,220 560,140 780,230 C980,310 1030,520 920,660 C760,860 380,840 240,650 C190,585 165,560 170,520 Z"
+                fill="none" stroke="url(#b1b)" stroke-width="6" stroke-linecap="round"
+                stroke-dasharray="18 14" opacity=".55"/>
+        </svg>
+
+        <!-- (B) BIG meaning SVG: target + ruler ticks -->
+        <svg class="meaningSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="m1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(0,229,255,.95)"/>
+              <stop offset=".55" stop-color="rgba(255,43,214,.95)"/>
+              <stop offset="1" stop-color="rgba(255,225,74,.95)"/>
+            </linearGradient>
+            <filter id="mGlow1" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="8" result="b"/>
+              <feMerge>
+                <feMergeNode in="b"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Target rings -->
+          <g opacity=".55" filter="url(#mGlow1)">
+            <circle cx="820" cy="470" r="220" fill="none" stroke="url(#m1)" stroke-width="6" stroke-dasharray="20 16"/>
+            <circle cx="820" cy="470" r="150" fill="none" stroke="rgba(50,255,126,.85)" stroke-width="5" stroke-dasharray="14 12"/>
+            <circle cx="820" cy="470" r="85"  fill="none" stroke="rgba(124,77,255,.85)" stroke-width="5" stroke-dasharray="12 12"/>
+            <circle cx="820" cy="470" r="10"  fill="rgba(245,247,255,.55)"/>
+          </g>
+
+          <!-- Measurement ticks (ruler) -->
+          <g opacity=".38" stroke-linecap="round">
+            <path d="M140 710 H640" stroke="rgba(245,247,255,.55)" stroke-width="6" opacity=".25"/>
+            <g stroke="rgba(0,229,255,.7)" stroke-width="5">
+              <path d="M180 710 V650"/><path d="M220 710 V675"/><path d="M260 710 V650"/>
+              <path d="M300 710 V675"/><path d="M340 710 V650"/><path d="M380 710 V675"/>
+              <path d="M420 710 V650"/><path d="M460 710 V675"/><path d="M500 710 V650"/>
+              <path d="M540 710 V675"/><path d="M580 710 V650"/><path d="M620 710 V675"/>
+            </g>
+          </g>
+        </svg>
+
+        <div class="badge"><i></i> Question</div>
+        <p class="para">Shoppers aren’t asking “Will I look good in this?”</p>
+        <h1>Will this actually fit me?</h1>
+      </article>
+
+      <!-- Card 2 — Behavior: “They guess.” (question marks + decision branches) -->
+      <article class="card" data-rot="2">
+        <div class="bg"></div><div class="glow"></div>
+
+        <!-- (A) ambient -->
+        <svg class="bigCardSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="b2a" cx="65%" cy="28%" r="70%">
+              <stop offset="0" stop-color="rgba(255,43,214,.50)"/>
+              <stop offset=".55" stop-color="rgba(0,229,255,.16)"/>
+              <stop offset="1" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+            <linearGradient id="b2b" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="rgba(255,43,214,.95)"/>
+              <stop offset=".5" stop-color="rgba(0,229,255,.95)"/>
+              <stop offset="1" stop-color="rgba(124,77,255,.95)"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="540" cy="410" rx="560" ry="340" fill="url(#b2a)" opacity=".9"/>
+          <path d="M120,300 C240,120 420,90 610,170 C760,235 905,210 1050,90"
+                fill="none" stroke="url(#b2b)" stroke-width="6" stroke-linecap="round"
+                stroke-dasharray="20 14" opacity=".55"/>
+        </svg>
+
+        <!-- (B) meaning: branching decision + ? marks -->
+        <svg class="meaningSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="m2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(255,43,214,.95)"/>
+              <stop offset=".55" stop-color="rgba(0,229,255,.95)"/>
+              <stop offset="1" stop-color="rgba(255,225,74,.95)"/>
+            </linearGradient>
+            <filter id="mGlow2" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="8" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <g opacity=".55" filter="url(#mGlow2)" fill="none" stroke-linecap="round">
+            <!-- decision tree -->
+            <path d="M240 260 C360 360 420 420 520 520" stroke="url(#m2)" stroke-width="7" stroke-dasharray="18 14"/>
+            <path d="M240 260 C420 340 520 380 740 420" stroke="rgba(50,255,126,.85)" stroke-width="6" stroke-dasharray="14 12" opacity=".7"/>
+            <path d="M240 260 C420 240 580 210 860 190" stroke="rgba(124,77,255,.85)" stroke-width="6" stroke-dasharray="14 12" opacity=".7"/>
+
+            <!-- nodes -->
+            <circle cx="240" cy="260" r="16" stroke="rgba(245,247,255,.55)" stroke-width="6"/>
+            <circle cx="520" cy="520" r="14" stroke="rgba(245,247,255,.45)" stroke-width="6"/>
+            <circle cx="740" cy="420" r="14" stroke="rgba(245,247,255,.45)" stroke-width="6"/>
+            <circle cx="860" cy="190" r="14" stroke="rgba(245,247,255,.45)" stroke-width="6"/>
+          </g>
+
+          <!-- big question marks -->
+          <g opacity=".26" fill="rgba(245,247,255,.65)">
+            <path d="M940 640c0-58-46-104-120-104-46 0-86 16-112 42l36 40c20-18 44-28 72-28 34 0 56 18 56 46 0 30-20 44-48 60-34 18-56 40-56 86v14h60v-10c0-28 12-40 38-54 44-22 74-50 74-92Zm-104 238a38 38 0 1 0 0-76 38 38 0 0 0 0 76Z"/>
+            <path d="M430 710c0-50-40-90-104-90-40 0-74 14-96 36l31 35c17-15 38-24 61-24 30 0 48 16 48 40 0 26-17 38-42 52-29 16-48 35-48 75v12h52v-9c0-24 10-34 34-46 38-19 64-43 64-81Zm-90 206a33 33 0 1 0 0-66 33 33 0 0 0 0 66Z"/>
+          </g>
+        </svg>
+
+        <div class="badge"><i></i> Behavior</div>
+        <p class="para">They read reviews. Compare charts. Try to decode sizing language.</p>
+        <h1>They guess.</h1>
+      </article>
+
+      <!-- Card 3 — Behavior: “Insurance purchase.” (two boxes / two sizes + return arrow) -->
+      <article class="card" data-rot="-2">
+        <div class="bg"></div><div class="glow"></div>
+
+        <!-- (A) ambient -->
+        <svg class="bigCardSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="b3a" cx="40%" cy="40%" r="70%">
+              <stop offset="0" stop-color="rgba(255,122,24,.45)"/>
+              <stop offset=".55" stop-color="rgba(0,229,255,.14)"/>
+              <stop offset="1" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+            <linearGradient id="b3b" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(50,255,126,.95)"/>
+              <stop offset=".55" stop-color="rgba(0,229,255,.95)"/>
+              <stop offset="1" stop-color="rgba(255,43,214,.95)"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="660" cy="430" rx="560" ry="350" fill="url(#b3a)" opacity=".95"/>
+          <path d="M190,640 C140,430 220,250 440,190 C630,140 860,240 960,410 C1060,580 980,750 800,810 C540,900 250,820 190,640 Z"
+                fill="none" stroke="url(#b3b)" stroke-width="6" stroke-linecap="round"
+                stroke-dasharray="22 16" opacity=".55"/>
+        </svg>
+
+        <!-- (B) meaning: two sizes + return loop -->
+        <svg class="meaningSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="m3" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(0,229,255,.95)"/>
+              <stop offset=".55" stop-color="rgba(255,43,214,.95)"/>
+              <stop offset="1" stop-color="rgba(50,255,126,.95)"/>
+            </linearGradient>
+            <filter id="mGlow3" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="8" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <g opacity=".55" filter="url(#mGlow3)">
+            <!-- two “package” boxes -->
+            <rect x="220" y="260" width="320" height="260" rx="28" fill="rgba(0,0,0,.10)" stroke="url(#m3)" stroke-width="6" stroke-dasharray="18 14"/>
+            <rect x="520" y="320" width="320" height="260" rx="28" fill="rgba(0,0,0,.10)" stroke="rgba(255,225,74,.85)" stroke-width="6" stroke-dasharray="16 12" opacity=".75"/>
+
+            <!-- size tags -->
+            <g fill="rgba(245,247,255,.75)" font-family="Antonio, system-ui" font-weight="900" font-size="72" letter-spacing="-3">
+              <text x="330" y="410">M</text>
+              <text x="635" y="470">L</text>
+            </g>
+
+            <!-- return arrow loop -->
+            <path d="M870 610c60-40 94-94 94-160 0-120-108-210-260-230"
+                  fill="none" stroke="rgba(0,229,255,.75)" stroke-width="7" stroke-linecap="round" opacity=".7"/>
+            <path d="M706 216l-66 34 62 42" fill="none" stroke="rgba(0,229,255,.75)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </svg>
+
+        <div class="badge"><i></i> Behavior</div>
+        <p class="para">They order two sizes and return one. Not because they want to — because they have to.</p>
+        <h1>Insurance purchase.</h1>
+      </article>
+
+      <!-- Card 4 — Cost: “Billions in waste.” (sankey-ish flow + $) -->
+      <article class="card" data-rot="3">
+        <div class="bg"></div><div class="glow"></div>
+
+        <!-- (A) ambient -->
+        <svg class="bigCardSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="b4a" cx="55%" cy="30%" r="70%">
+              <stop offset="0" stop-color="rgba(255,225,74,.40)"/>
+              <stop offset=".55" stop-color="rgba(255,43,214,.14)"/>
+              <stop offset="1" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+            <linearGradient id="b4b" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="rgba(255,225,74,.95)"/>
+              <stop offset=".5" stop-color="rgba(255,43,214,.95)"/>
+              <stop offset="1" stop-color="rgba(0,229,255,.95)"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="600" cy="420" rx="580" ry="360" fill="url(#b4a)" opacity=".95"/>
+          <path d="M160,510 L1040,220" stroke="url(#b4b)" stroke-width="6" stroke-linecap="round" opacity=".55"/>
+        </svg>
+
+        <!-- (B) meaning: “leaks” / flow + big $ -->
+        <svg class="meaningSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="m4" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(255,225,74,.95)"/>
+              <stop offset=".55" stop-color="rgba(255,43,214,.95)"/>
+              <stop offset="1" stop-color="rgba(0,229,255,.95)"/>
+            </linearGradient>
+            <filter id="mGlow4" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="8" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <g opacity=".55" filter="url(#mGlow4)" fill="none" stroke-linecap="round">
+            <!-- flow bands -->
+            <path d="M120 320 C320 280 420 280 560 340 C720 410 860 410 1100 330"
+                  stroke="url(#m4)" stroke-width="14" opacity=".45"/>
+            <path d="M120 450 C320 410 430 410 590 470 C760 540 900 540 1100 460"
+                  stroke="rgba(50,255,126,.85)" stroke-width="12" opacity=".35"/>
+            <path d="M120 580 C330 560 450 560 620 610 C780 660 930 660 1100 600"
+                  stroke="rgba(0,229,255,.75)" stroke-width="10" opacity=".28"/>
+
+            <!-- “leak” drops -->
+            <circle cx="650" cy="610" r="10" fill="rgba(255,43,214,.55)" stroke="none"/>
+            <circle cx="720" cy="640" r="8"  fill="rgba(255,225,74,.55)" stroke="none"/>
+            <circle cx="780" cy="680" r="7"  fill="rgba(0,229,255,.55)" stroke="none"/>
+          </g>
+
+          <!-- big $ -->
+          <g opacity=".20" fill="rgba(245,247,255,.8)">
+            <path d="M360 750v-58c-70-8-122-44-146-96l78-34c20 38 62 62 114 62 52 0 84-18 84-48 0-24-18-38-96-54-98-20-164-54-164-140 0-76 58-124 156-134v-58h66v60c62 10 108 42 130 88l-74 38c-18-34-50-56-104-56-48 0-76 18-76 44 0 24 20 36 100 54 104 22 160 60 160 142 0 80-60 128-158 140v50h-66Z"/>
+          </g>
+        </svg>
+
+        <div class="badge"><i></i> Cost</div>
+        <p class="para">That guesswork compounds into shipping, discounting, support time, and lost trust.</p>
+        <h1>Billions in waste.</h1>
+      </article>
+
+      <!-- Card 5 — Mistake: “Realism ≠ trust.” (camera crossed + shield) -->
+      <article class="card" data-rot="-4">
+        <div class="bg"></div><div class="glow"></div>
+
+        <!-- (A) ambient -->
+        <svg class="bigCardSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="b5a" cx="38%" cy="42%" r="70%">
+              <stop offset="0" stop-color="rgba(124,77,255,.45)"/>
+              <stop offset=".55" stop-color="rgba(0,229,255,.14)"/>
+              <stop offset="1" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+            <linearGradient id="b5b" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(124,77,255,.95)"/>
+              <stop offset=".55" stop-color="rgba(0,229,255,.95)"/>
+              <stop offset="1" stop-color="rgba(50,255,126,.95)"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="680" cy="430" rx="560" ry="360" fill="url(#b5a)" opacity=".95"/>
+          <path d="M210,250 C320,140 520,110 690,170 C850,230 960,360 980,520 C1000,690 900,820 730,860 C510,910 300,770 240,600 C180,430 150,320 210,250 Z"
+                fill="none" stroke="url(#b5b)" stroke-width="6" stroke-linecap="round"
+                stroke-dasharray="20 14" opacity=".55"/>
+        </svg>
+
+        <!-- (B) meaning: crossed camera + shield -->
+        <svg class="meaningSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="m5" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(124,77,255,.95)"/>
+              <stop offset=".55" stop-color="rgba(0,229,255,.95)"/>
+              <stop offset="1" stop-color="rgba(255,43,214,.95)"/>
+            </linearGradient>
+            <filter id="mGlow5" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="8" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <g opacity=".55" filter="url(#mGlow5)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <!-- camera -->
+            <rect x="250" y="300" width="520" height="320" rx="42" stroke="url(#m5)" stroke-width="7" stroke-dasharray="18 14" opacity=".7"/>
+            <rect x="340" y="250" width="180" height="90" rx="26" stroke="rgba(255,225,74,.85)" stroke-width="7" opacity=".55"/>
+            <circle cx="510" cy="460" r="110" stroke="rgba(0,229,255,.75)" stroke-width="7" stroke-dasharray="14 12"/>
+            <circle cx="510" cy="460" r="55"  stroke="rgba(50,255,126,.75)" stroke-width="7" stroke-dasharray="12 12"/>
+
+            <!-- cross line -->
+            <path d="M220 680 L820 220" stroke="rgba(255,43,214,.8)" stroke-width="10" opacity=".7"/>
+
+            <!-- shield (trust) -->
+            <path d="M930 290c-90 0-150-60-150-60s-60 60-150 60c0 260 150 360 150 360s150-100 150-360Z"
+                  stroke="rgba(245,247,255,.55)" stroke-width="7" opacity=".5"/>
+            <path d="M720 430l55 55 110-130" stroke="rgba(50,255,126,.85)" stroke-width="9" opacity=".65"/>
+          </g>
+        </svg>
+
+        <div class="badge"><i></i> Mistake</div>
+        <p class="para">The industry chased photorealism. The core problem is reliability.</p>
+        <h1>Realism ≠ trust.</h1>
+      </article>
+
+      <!-- Card 6 — Fix: “Not a gimmick. A decision.” (checkmark + gauge) -->
+      <article class="card" data-rot="2">
+        <div class="bg"></div><div class="glow"></div>
+
+        <!-- (A) ambient -->
+        <svg class="bigCardSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="b6a" cx="60%" cy="35%" r="70%">
+              <stop offset="0" stop-color="rgba(50,255,126,.45)"/>
+              <stop offset=".55" stop-color="rgba(0,229,255,.14)"/>
+              <stop offset="1" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+            <linearGradient id="b6b" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="rgba(0,229,255,.95)"/>
+              <stop offset=".5" stop-color="rgba(255,225,74,.95)"/>
+              <stop offset="1" stop-color="rgba(255,122,24,.95)"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="610" cy="420" rx="590" ry="360" fill="url(#b6a)" opacity=".95"/>
+          <path d="M150,520 C280 870 430 860 260 700 C170 615 125 585 150 520 Z"
+                fill="none" stroke="url(#b6b)" stroke-width="6" stroke-linecap="round"
+                stroke-dasharray="22 16" opacity=".55"/>
+        </svg>
+
+        <!-- (B) meaning: gauge + checkmark (decision + confidence) -->
+        <svg class="meaningSvg" viewBox="0 0 1200 900" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="m6" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(0,229,255,.95)"/>
+              <stop offset=".5" stop-color="rgba(50,255,126,.95)"/>
+              <stop offset="1" stop-color="rgba(255,225,74,.95)"/>
+            </linearGradient>
+            <filter id="mGlow6" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="8" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <g opacity=".55" filter="url(#mGlow6)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <!-- gauge arc -->
+            <path d="M260 610 A320 320 0 0 1 900 610" stroke="url(#m6)" stroke-width="12" stroke-dasharray="18 14" opacity=".65"/>
+            <path d="M340 610 A240 240 0 0 1 820 610" stroke="rgba(255,43,214,.65)" stroke-width="10" stroke-dasharray="14 12" opacity=".35"/>
+
+            <!-- ticks -->
+            <g stroke="rgba(245,247,255,.45)" stroke-width="6" opacity=".35">
+              <path d="M260 610 L240 650"/>
+              <path d="M340 522 L320 556"/>
+              <path d="M460 452 L444 486"/>
+              <path d="M600 430 L600 468"/>
+              <path d="M740 452 L756 486"/>
+              <path d="M860 522 L880 556"/>
+              <path d="M900 610 L920 650"/>
+            </g>
+
+            <!-- needle -->
+            <path d="M600 610 L785 500" stroke="rgba(50,255,126,.85)" stroke-width="10" opacity=".7"/>
+            <circle cx="600" cy="610" r="18" stroke="rgba(245,247,255,.55)" stroke-width="8" opacity=".55"/>
+
+            <!-- checkmark -->
+            <path d="M720 700 l60 60 160-190" stroke="rgba(50,255,126,.9)" stroke-width="14" opacity=".7"/>
+          </g>
+        </svg>
+
+        <div class="badge"><i></i> Fix</div>
+        <p class="para">We output: tight / true / loose — size up/down — confidence.</p>
+        <h1>Not a gimmick. A decision.</h1>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- Add this CSS once (put in your main <style>, not inside the section in prod) -->
+  <style>
+    /* Layer A: ambient field */
+    .bigCardSvg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      opacity:.72;
+      mix-blend-mode: screen;
+      pointer-events:none;
+      z-index:2; /* above bg/glow */
+      filter: blur(.15px) drop-shadow(0 0 18px rgba(0,229,255,.10));
+      transform: translateZ(0);
+    }
+
+    /* Layer B: meaning iconography (slightly clearer than ambient) */
+    .meaningSvg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      opacity:.62;
+      mix-blend-mode: screen;
+      pointer-events:none;
+      z-index:3; /* below text, above ambient */
+      filter: drop-shadow(0 0 22px rgba(0,229,255,.10)) drop-shadow(0 0 22px rgba(255,43,214,.08));
+      transform: translateZ(0);
+    }
+
+    /* Keep text/badges above both SVG layers */
+    .card p, .card h1, .badge{ position:absolute; z-index:5; }
+    .badge{ z-index:6; }
+
+    /* Optional: slightly increase contrast behind text */
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(520px 360px at 26% 16%, rgba(0,0,0,.18), transparent 60%),
+                  radial-gradient(520px 360px at 30% 86%, rgba(0,0,0,.22), transparent 60%);
+      z-index:4;
+      pointer-events:none;
+    }
+  </style>
+</section>
+
+      <!-- BENEFITS + DEMO -->
+      <section id="benefits" class="benefit-section">
+        <div class="wrap">
+          <div class="title-stack">
+            <h2 class="t one">We’re building</h2>
+            <h2 class="t two"><span class="neon">a fit decision</span></h2>
+            <h2 class="t three">engine.</h2>
+            <h2 class="t four">Infrastructure.</h2>
+          </div>
+
+          <p class="benefit-lede">
+            A drop-in script. No backend risk. No asset hosting. No compliance burden. Installed in minutes — reducing guesswork at the exact moment returns are born.
+          </p>
+        </div>
+
+        <div class="demo-shell" id="demoShell">
+          <div class="demo" id="demo">
+            <div class="demo-left">
+              <div class="demo-top">
+                <div>
+                  <h3 class="demo-title">Fit Preview Demo</h3>
+                  <p class="demo-sub">
+                    Adjust the shopper profile and garment data. The engine outputs a clear decision: tight / true / loose, size up/down, and confidence.
+                  </p>
+                </div>
+                <div class="demo-badges">
+                  <div class="pill"><i></i><span class="mono">privacy-first</span></div>
+                  <div class="pill"><i></i><span class="mono">no photos stored</span></div>
+                </div>
+              </div>
+
+              <div class="modelStage">
+                <div class="avatarWrap" aria-label="Abstract body and garment visualization">
+                  <div class="fitRing" aria-hidden="true"></div>
+                  <div class="avatar" id="avatar">
+                    <div class="bodyShape" id="bodyShape"></div>
+                    <div class="garmentShape" id="garmentShape"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="meterRow">
+                <div class="field">
+                  <label><span>Body profile</span><span class="mono" id="bodyOut">M / athletic</span></label>
+                  <input id="body" type="range" min="0" max="100" value="55" />
+                </div>
+                <div class="field">
+                  <label><span>Garment fit</span><span class="mono" id="garmentOut">true-to-size</span></label>
+                  <input id="garment" type="range" min="0" max="100" value="50" />
+                </div>
+              </div>
+
+              <div class="meterRow">
+                <div class="field">
+                  <label><span>Preference</span><span class="mono" id="prefOut">balanced</span></label>
+                  <input id="pref" type="range" min="0" max="100" value="50" />
+                </div>
+                <div class="field">
+                  <label><span>Data quality</span><span class="mono" id="qualityOut">high</span></label>
+                  <input id="quality" type="range" min="0" max="100" value="78" />
+                </div>
+              </div>
+
+              <div class="resultBox" aria-label="Decision output">
+                <div class="resultHead">
+                  <h4 class="fitLabel neon" id="fitLabel">TRUE</h4>
+                  <div class="confidence"><i id="confDot"></i><span class="mono" id="confOut">CONFIDENCE 84%</span></div>
+                </div>
+                <div class="resultBody">
+                  <div class="line"><div class="k">Recommendation</div><div class="v" id="recOut">Buy your usual size.</div></div>
+                  <div class="line"><div class="k">Alternate</div><div class="v" id="altOut">Size up for comfort.</div></div>
+                  <div class="line"><div class="k">Reason</div><div class="v" id="whyOut">Garment and profile align.</div></div>
+                  <div class="line"><div class="k">Decision</div><div class="v neon" id="decisionOut">Not a gimmick. A decision.</div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="demo-right">
+              <p class="para">
+                For merchants, this is infrastructure. A single embed drops into the product page and reduces guesswork at checkout — where returns are born.
+              </p>
+
+              <ul class="bullets">
+                <li><div><b>Drop-in script</b><span>Installed in minutes. No backend work. No asset hosting.</span></div></li>
+                <li><div><b>No compliance burden</b><span>Privacy-first profile. No stored photos required.</span></div></li>
+                <li><div><b>Bottom-line impact</b><span>Even a 5–10% reduction in size-related returns can save millions at mid-size scale.</span></div></li>
+                <li><div><b>Gets smarter over time</b><span>Cross-brand translation layer: if you wear M here → buy L there.</span></div></li>
+              </ul>
+
+              <div class="demo-ctaRow">
+                <button class="btn" id="randomize" type="button">Randomize</button>
+                <button class="btn" id="reset" type="button">Reset</button>
+                <button class="btn" id="jumpTrust" type="button">Jump to Trust</button>
+              </div>
+
+              <div class="para muted" style="margin-top:14px; font-size:12.8px; line-height:1.45;">
+                This demo is illustrative — it shows the decision UX: fit label + size guidance + confidence from measurement + profile alignment.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRUST -->
+      <section id="trust" class="nutrition-section">
+        <div class="decor" aria-hidden="true">
+          <div class="orbit float" style="right:2%; top:-12%; width:min(560px, 64vw); opacity:.16;">
+            <svg viewBox="0 0 700 500" role="presentation">
+              <path d="M40,250 C160,40 540,40 660,250 C540,460 160,460 40,250 Z"
+                    fill="none" stroke="rgba(124,77,255,.9)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="16 12"/>
+              <path d="M120,250 C210,120 490,120 580,250 C490,380 210,380 120,250 Z"
+                    fill="none" stroke="rgba(0,229,255,.85)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="14 12"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="nutrition-inner">
+          <h2 class="nutrition-title"><span class="neon">Trust</span> is the product.</h2>
+
+          <div class="nutrition-strip" id="trustStrip" aria-hidden="true">
+            <div class="strip">
+              <span class="dot"></span><span class="neon">If AI disappears tomorrow, the product still works</span>
+              <span class="dot"></span><span class="neon">AI realism is optional decoration</span>
+              <span class="dot"></span><span class="neon">The fit engine is the product</span>
+              <span class="dot"></span><span class="neon">Certainty is money</span>
+            </div>
+          </div>
+
+          <div class="nutrition-box">
+            <div class="list-wrapper" aria-label="Decision outputs">
+              <div class="pillItem"><b class="neon">tight</b><span>compressed fit</span></div>
+              <div class="pillItem"><b class="neon">true</b><span>expected fit</span></div>
+              <div class="pillItem"><b class="neon">loose</b><span>relaxed fit</span></div>
+              <div class="pillItem"><b class="neon">size up</b><span>comfort bias</span></div>
+              <div class="pillItem"><b class="neon">size down</b><span>tailored bias</span></div>
+              <div class="pillItem"><b class="neon">confidence</b><span>decision strength</span></div>
+            </div>
+          </div>
+
+          <div class="para muted" style="text-align:center; max-width: 82ch; line-height:1.5; font-size:15.5px; padding: 0 18px;">
+            Over time, the system gets smarter. We learn how brands actually fit — building a cross-brand translation layer:
+            <span class="mono" style="color:rgba(245,247,255,.88)">If you wear M here → buy L there.</span>
+            A universal sizing graph that travels with the shopper across stores.
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer CTA -->
+      <section class="footer">
+        <div class="cta">
+          <h2>
+            We’re not selling virtual try-on.<br>
+            We’re selling <span class="neon">fit certainty.</span><br>
+            <span style="display:inline-block; margin-top:.18em;">And certainty is money.</span>
+          </h2>
+          <p>
+            The value isn’t photorealism — it’s trust. A decision engine that reduces returns, lifts conversion,
+            and compounds into a cross-brand sizing network.
+          </p>
+        </div>
+        <div class="para muted" style="margin-top: 18px; font-size:12.5px;">
+          Single-file demo • GSAP ScrollTrigger • ScrollSmoother • SplitText
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+<script>
+(() => {
+  const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  gsap.registerPlugin(ScrollTrigger);
+  const hasSplitText = typeof SplitText !== "undefined";
+  const hasSmoother = typeof ScrollSmoother !== "undefined";
+
+  // ===== Neon dust canvas =====
+  const c = document.getElementById("dust");
+  const ctx = c.getContext("2d", { alpha: true });
+  const DPR = Math.min(2, window.devicePixelRatio || 1);
+  let W=0,H=0, P=[];
+  const colors = [[0,229,255],[124,77,255],[255,43,214],[255,225,74],[50,255,126],[255,122,24]];
+
+  function spawn(init=false){
+    const col = colors[(Math.random()*colors.length)|0];
+    return {
+      x: Math.random()*W, y: Math.random()*H,
+      vx: (Math.random()*2-1) * (init?0.22:0.48) * DPR,
+      vy: (Math.random()*2-1) * (init?0.22:0.48) * DPR,
+      r: (Math.random()*2.1 + 0.9) * DPR,
+      a: Math.random()*0.55 + 0.12,
+      col, tw: Math.random()*Math.PI*2
+    };
+  }
+
+  function resize(){
+    W = c.width = Math.floor(innerWidth * DPR);
+    H = c.height = Math.floor(innerHeight * DPR);
+    c.style.width = innerWidth + "px";
+    c.style.height = innerHeight + "px";
+    const n = Math.round(Math.max(70, Math.min(170, (innerWidth*innerHeight)/22000)));
+    P = Array.from({length:n}, ()=>spawn(true));
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    ctx.globalCompositeOperation = "lighter";
+    for (let i=0;i<P.length;i++){
+      const p=P[i];
+      p.tw += 0.012;
+      const sway = Math.sin(p.tw) * 0.18 * DPR;
+      p.x += (p.vx + sway);
+      p.y += (p.vy - sway*0.3);
+      if (p.x < -20) p.x = W+20;
+      if (p.x > W+20) p.x = -20;
+      if (p.y < -20) p.y = H+20;
+      if (p.y > H+20) p.y = -20;
+
+      const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*7);
+      g.addColorStop(0, `rgba(${p.col[0]},${p.col[1]},${p.col[2]},${p.a})`);
+      g.addColorStop(1, `rgba(${p.col[0]},${p.col[1]},${p.col[2]},0)`);
+      ctx.fillStyle=g;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r*7,0,Math.PI*2);
+      ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  resize();
+  addEventListener("resize", resize, { passive:true });
+  requestAnimationFrame(tick);
+
+  // ===== ScrollSmoother =====
+  if (!prefersReduced && hasSmoother){
+    try{
+      ScrollSmoother.create({
+        wrapper: "#smooth-wrapper",
+        content: "#smooth-content",
+        smooth: 1.05,
+        effects: true,
+        normalizeScroll: true
+      });
+    }catch(e){}
+  }
+
+  function scrollToEl(el){
+    const smoother = (!prefersReduced && hasSmoother && ScrollSmoother.get) ? ScrollSmoother.get() : null;
+    if (smoother) smoother.scrollTo(el, true, "top top");
+    else el.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth" });
+  }
+
+  // Hero click
+  const heroBtn = document.getElementById("heroBtn");
+  if (heroBtn){
+    heroBtn.addEventListener("click", () => {
+      const el = document.getElementById("msg");
+      if (el) scrollToEl(el);
+    }, { passive:true });
+  }
+
+  // Intro
+  const heroTitleEl = document.querySelector(".hero-title-split h1");
+  const heroContent = document.querySelector(".hero-content");
+  const heroStrip = document.getElementById("heroStrip");
+
+  if (!prefersReduced && hasSplitText && heroTitleEl && heroContent && heroStrip){
+    const split = SplitText.create(heroTitleEl, { type:"chars" });
+
+    gsap.timeline({ delay: 0.8 })
+      .to(heroContent, { opacity:1, y:0, duration:0.9, ease:"power1.inOut" })
+      .to(heroStrip, { duration: 1.0, clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", ease: "circ.out" }, "-=0.55")
+      .from(split.chars, { yPercent: 200, stagger: 0.02, duration: 0.85, ease: "power2.out" }, "-=0.55");
+
+    gsap.timeline({
+      scrollTrigger:{ trigger: ".hero-container", start: "1% top", end: "bottom top", scrub: true }
+    }).to(".hero-container", { rotate: 7, scale: 0.9, yPercent: 30, ease:"power1.inOut" });
+
+    gsap.to(".neon", { backgroundPosition: "200% 50%", duration: 5, ease:"none", repeat:-1 });
+  } else {
+    if (heroContent){
+      heroContent.style.opacity = 1;
+      heroContent.style.transform = "translateY(0)";
+    }
+    if (heroStrip){
+      heroStrip.style.clipPath = "polygon(0 0,100% 0,100% 100%,0 100%)";
+    }
+  }
+
+  // Message strip drift
+  if (!prefersReduced){
+    gsap.to("#msgStrip .strip", {
+      xPercent: -18,
+      ease:"none",
+      scrollTrigger:{ trigger: "#msg", start: "top bottom", end: "bottom top", scrub: true }
+    });
+    gsap.to(".msg-wrapper", {
+      yPercent: 8,
+      ease:"none",
+      scrollTrigger:{ trigger: "#msg", start: "top bottom", end: "bottom top", scrub: true }
+    });
+  }
+
+  // Slider: horizontal pinned
+  const sliderTrack = document.getElementById("sliderTrack");
+  const cards = Array.from(document.querySelectorAll(".card"));
+  cards.forEach((c)=>{ c.style.transform = `rotate(${c.getAttribute("data-rot")||0}deg)`; });
+
+  function buildSlider(){
+    if (!sliderTrack) return;
+
+    const benefits = document.getElementById("benefits");
+    if (benefits) benefits.style.marginTop = "0px";
+
+    const scrollAmount = sliderTrack.scrollWidth - window.innerWidth;
+
+    ScrollTrigger.getAll().forEach(st => {
+      const id = st.vars && st.vars.id;
+      if (id === "sliderPin" || id === "sliderStripOnFix") st.kill();
+    });
+    gsap.killTweensOf("#sliderStrip");
+
+    if (!prefersReduced && scrollAmount > 40){
+      const extra = 0;
+
+      const tl = gsap.timeline({
+        scrollTrigger:{
+          id:"sliderPin",
+          trigger: ".flavor-section",
+          start: "2% top",
+          end: `+=${scrollAmount + extra}px`,
+          scrub: true,
+          pin: true,
+          anticipatePin: 1
+        }
+      });
+
+      tl.to(".flavors", { x: `-${scrollAmount + extra}px`, ease:"power1.inOut" }, 0);
+
+      cards.forEach((card)=>{
+        gsap.fromTo(card, { scale:0.95 }, {
+          scale:1.02,
+          ease:"none",
+          scrollTrigger:{
+            trigger: card,
+            containerAnimation: tl,
+            start: "left 70%",
+            end: "left 35%",
+            scrub: true
+          }
+        });
+        gsap.to(card, {
+          rotateY: 10,
+          transformPerspective: 900,
+          ease:"none",
+          scrollTrigger:{
+            trigger: card,
+            containerAnimation: tl,
+            start: "left 80%",
+            end: "left 30%",
+            scrub: true
+          }
+        });
+      });
+
+      const fixCard = cards[cards.length - 1];
+      const stripTween = gsap.to("#sliderStrip", {
+        xPercent: -22,
+        ease: "none",
+        paused: true
+      });
+
+      ScrollTrigger.create({
+        id: "sliderStripOnFix",
+        trigger: fixCard,
+        containerAnimation: tl,
+        start: "left left",
+        end: "right left",
+        scrub: true,
+        onUpdate: (self) => stripTween.progress(self.progress)
+      });
+
+    } else {
+      gsap.set(".flavors", { clearProps:"transform" });
+    }
+  }
+
+  buildSlider();
+  function debounce(fn, delay=180){
+  let t;
+  return (...args)=>{
+    clearTimeout(t);
+    t = setTimeout(()=>fn(...args), delay);
+  };
+}
+
+addEventListener("resize", debounce(buildSlider, 180), { passive:true });
+
+  // Demo logic
+  const $ = (id)=>document.getElementById(id);
+  const sliders = { body:$("body"), garment:$("garment"), pref:$("pref"), quality:$("quality") };
+  const out = {
+    bodyOut:$("bodyOut"), garmentOut:$("garmentOut"), prefOut:$("prefOut"), qualityOut:$("qualityOut"),
+    fitLabel:$("fitLabel"), confOut:$("confOut"), confDot:$("confDot"),
+    recOut:$("recOut"), altOut:$("altOut"), whyOut:$("whyOut"), decisionOut:$("decisionOut"),
+    avatar:$("avatar"), bodyShape:$("bodyShape"), garmentShape:$("garmentShape")
+  };
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+
+  function labels(){
+    const b = +sliders.body.value, g = +sliders.garment.value, p = +sliders.pref.value, q = +sliders.quality.value;
+
+    out.bodyOut.textContent = b < 30 ? "S / slim" : b < 68 ? "M / athletic" : "L / broad";
+    out.garmentOut.textContent = g < 40 ? "runs small" : g < 62 ? "true-to-size" : "runs big";
+    out.prefOut.textContent = p < 35 ? "tailored" : p < 68 ? "balanced" : "relaxed";
+    out.qualityOut.textContent = q < 35 ? "low" : q < 70 ? "medium" : "high";
+
+    const deltaBase = (b - 50) * 1.05 - (g - 50) * 1.0;
+    const prefBias = (p - 50) * -0.55;
+    const delta = deltaBase + prefBias;
+
+    const closeness = 1 - Math.min(1, Math.abs(delta) / 70);
+    const conf = clamp01(0.25 + (q/100)*0.55 + closeness*0.28 + (Math.random()*0.03 - 0.015));
+    const confPct = Math.round(conf * 100);
+
+    let label = "TRUE";
+    let rec = "Buy your usual size.";
+    let alt = "Size up for comfort.";
+    let why = "Garment and profile align.";
+
+    if (delta > 22){
+      label = "TIGHT";
+      rec = "Size up.";
+      alt = "Stay true if you prefer a snug fit.";
+      why = "Profile + preference indicates a tighter fit in this garment.";
+    } else if (delta < -22){
+      label = "LOOSE";
+      rec = "Size down.";
+      alt = "Stay true if you prefer room.";
+      why = "Garment runs larger relative to the body profile.";
+    } else {
+      if (p > 70){
+        alt = "Size up if you want extra drape.";
+        why = "Neutral fit with a relaxed preference.";
+      } else if (p < 30){
+        alt = "Size down for a tailored silhouette.";
+        why = "Neutral fit with a tailored preference.";
+      }
+    }
+
+    out.fitLabel.textContent = label;
+
+    if (confPct >= 85){
+      out.confDot.style.background = "var(--n5)";
+      out.confDot.style.boxShadow = "0 0 16px rgba(50,255,126,.35)";
+    } else if (confPct >= 70){
+      out.confDot.style.background = "var(--n4)";
+      out.confDot.style.boxShadow = "0 0 16px rgba(255,225,74,.35)";
+    } else {
+      out.confDot.style.background = "var(--n3)";
+      out.confDot.style.boxShadow = "0 0 16px rgba(255,43,214,.35)";
+    }
+
+    out.confOut.textContent = `CONFIDENCE ${confPct}%`;
+    out.recOut.textContent = rec;
+    out.altOut.textContent = alt;
+    out.whyOut.textContent = why;
+    out.decisionOut.textContent = "Not a gimmick. A decision.";
+
+    const bodyW = 118 + (b - 50) * 0.62;
+    const garmentW = 140 + (g - 50) * 0.72;
+    out.bodyShape.style.width = `${bodyW}px`;
+    out.garmentShape.style.width = `${garmentW}px`;
+
+    const garmentH = 160 + (g - 50) * 0.25;
+    out.garmentShape.style.height = `${garmentH}px`;
+
+    gsap.to(out.avatar, { rotateZ: (delta / 90) * 4, duration: 0.35, ease:"power2.out" });
+    gsap.to(out.garmentShape, { y: (delta / 90) * 6, duration: 0.35, ease:"power2.out" });
+    gsap.to(out.bodyShape, { y: -(delta / 90) * 3, duration: 0.35, ease:"power2.out" });
+  }
+
+  Object.values(sliders).forEach(r => r && r.addEventListener("input", labels));
+  labels();
+
+  const randomize = $("randomize");
+  if (randomize){
+    randomize.addEventListener("click", () => {
+      sliders.body.value = Math.round(Math.random()*100);
+      sliders.garment.value = Math.round(Math.random()*100);
+      sliders.pref.value = Math.round(Math.random()*100);
+      sliders.quality.value = Math.round(40 + Math.random()*60);
+      labels();
+      if (!prefersReduced){
+        gsap.fromTo("#demoShell", { filter:"blur(4px)", scale:0.985 }, { filter:"blur(0px)", scale:1, duration:0.55, ease:"power3.out" });
+      }
+    });
+  }
+
+  const reset = $("reset");
+  if (reset){
+    reset.addEventListener("click", () => {
+      sliders.body.value = 55; sliders.garment.value = 50; sliders.pref.value = 50; sliders.quality.value = 78;
+      labels();
+    });
+  }
+
+  const jumpTrust = $("jumpTrust");
+  if (jumpTrust){
+    jumpTrust.addEventListener("click", () => {
+      const el = document.getElementById("trust");
+      if (el) scrollToEl(el);
+    });
+  }
+
+  // Benefits pin + reveal
+  if (!prefersReduced){
+    gsap.timeline({
+      scrollTrigger:{
+        trigger: "#benefits",
+        start: "top top",
+        end: "+=120%",
+        scrub: true,
+        pin: true,
+        anticipatePin: 1
+      }
+    })
+    .fromTo("#demoShell", { scale:0.96, opacity:0.55, filter:"blur(6px)" }, { scale:1, opacity:1, filter:"blur(0px)", ease:"power2.out" }, 0)
+    .fromTo(".title-stack .t", { y: 26, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.05, ease:"power2.out" }, 0.05)
+    .fromTo(".benefit-lede", { y: 18, opacity: 0 }, { y: 0, opacity: 1, ease:"power2.out" }, 0.12);
+
+    gsap.to("#demoShell", {
+      yPercent: -6,
+      ease:"none",
+      scrollTrigger:{ trigger:"#benefits", start:"top bottom", end:"bottom top", scrub:true }
+    });
+  }
+
+  // Trust strip
+  const trustStrip = document.getElementById("trustStrip");
+  if (!prefersReduced && trustStrip){
+    gsap.to("#trustStrip", {
+      opacity: 1,
+      duration: 0.8,
+      ease:"power2.out",
+      scrollTrigger:{ trigger: "#trust", start: "top 65%", toggleActions: "play none none reverse" }
+    });
+    gsap.to("#trustStrip .strip", {
+      xPercent: -16,
+      ease:"none",
+      scrollTrigger:{ trigger: "#trust", start: "top bottom", end: "bottom top", scrub: true }
+    });
+  } else if (trustStrip){
+    trustStrip.style.opacity = 1;
+  }
+})();
+</script>
+</body>
+  </html>
