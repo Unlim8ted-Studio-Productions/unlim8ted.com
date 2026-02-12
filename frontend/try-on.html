@@ -199,7 +199,6 @@
       text-transform:uppercase;
       font-weight:900;
       letter-spacing:-.35vw;
-      line-height: clamp(42px, 9vw, 140px);
       font-size: clamp(46px, 8.4vw, 140px);
       text-shadow: var(--shadow);
       margin-bottom: 10px;
@@ -222,7 +221,7 @@
       text-transform:uppercase;
       font-weight:900;
       letter-spacing:-.35vw;
-      line-height: clamp(42px, 9vw, 140px);
+
       font-size: clamp(46px, 8.4vw, 140px);
       color: rgba(245,247,255,.92);
       text-shadow: 0 30px 120px rgba(0,0,0,.85);
@@ -1368,6 +1367,70 @@
 }
 .hero-content{
   padding-top: var(--nav-space); /* 96px */
+}/* Coming Soon badge in hero (upper-right) */
+.comingSoon{
+  position: absolute;
+  top: calc(var(--nav-space) + 14px); /* clears the fixed navbar */
+  right: 18px;
+  z-index: 12;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 12px;
+  border-radius: 999px;
+
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(0,0,0,.22);
+  box-shadow: var(--shadow);
+
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: -.02em;
+  font-size: 12px;
+  color: rgba(245,247,255,.92);
+  user-select: none;
+}
+
+/* Pure-CSS price tag icon */
+.tagIcon{
+  width: 14px;
+  height: 14px;
+  position: relative;
+  display: inline-block;
+  transform: rotate(-18deg);
+  opacity: .95;
+}
+
+.tagIcon::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: 4px;
+  border: 2px solid rgba(245,247,255,.85);
+  clip-path: polygon(18% 0%, 100% 0%, 100% 100%, 18% 100%, 0% 50%);
+  box-shadow:
+    0 0 16px rgba(0,229,255,.16),
+    0 0 16px rgba(255,43,214,.10);
+}
+
+.tagIcon::after{
+  content:"";
+  position:absolute;
+  left: 4px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  background: rgba(245,247,255,.85);
+  box-shadow: 0 0 10px rgba(255,225,74,.18);
+}
+
+.comingSoonText{
+  line-height: 1;
+  white-space: nowrap;
 }
 
   </style>
@@ -1429,6 +1492,11 @@
         </div>
 
         <div class="hero-content">
+            <!-- Coming Soon badge (upper-right of hero) -->
+<div class="comingSoon" aria-label="Coming soon">
+  <span class="tagIcon" aria-hidden="true"></span>
+  <span class="comingSoonText">Coming soon</span>
+</div>
           <div class="hero-title hero-title-split">
             <h1 class="neon">WearWise</h1>
           </div>
@@ -1873,7 +1941,7 @@
                 <div>
                   <h3 class="demo-title">Fit Preview Demo</h3>
                   <p class="demo-sub">
-                    UX flow: (1) add your sizes from other brands or dimensions → (2) optional refinement (sliders and/or image upload) → (3) output decision + cross-brand sizing. If an image was used, “Generate try-on” becomes available (stub hook for your image model).
+                    UX flow: (1) add your sizes from other brands or dimensions → (2) optional refinement (sliders and/or image upload) → (3) output decision + cross-brand sizing. If an image was used, “Generate try-on” becomes available which generates an image of the user in the clothing on client.
                   </p>
                 </div>
                 <div class="demo-badges">
@@ -1919,7 +1987,6 @@
 
                     <div class="hint">
                       Add 1–3 references. The engine builds a cross-brand “body profile index” from what you already wear.
-                      (This is illustrative: real production uses the brand’s true fit curves + item-level data.)
                     </div>
 
                     <div class="refList" id="refList" aria-label="Added references"></div>
@@ -2073,7 +2140,7 @@
               </div>
 
               <div class="para muted" style="margin-top:14px; font-size:12.8px; line-height:1.45;">
-                This is an illustrative UX. Replace the “brand fit curves” with your real measurements + return labels.
+ This is an illustrative UX demo. In production, the system would use the brand’s actual fit curves and item-level data. Users could optionally refine their sizing by uploading an image. If an image is uploaded, there is also an option to generate a preview of the user wearing the clothing, processed locally on the client.
               </div>
             </div>
           </div>
