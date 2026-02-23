@@ -10,25 +10,12 @@
 
   <script src="./resources/js/sign-in.01.js"></script>
 
-  <nav class="navbar">
-    <div class="navbar-header">
-      <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
-      <ul class="nav-links" id="navbarLinks">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="products">Products</a></li>
-        <li class="nav-item"><a href="contact">Contact</a></li>
-        <li class="nav-item"><a href="about">About</a></li>
-        <li class="nav-item dropdown">
-          <a href="javascript:void(0)">More</a>
-          <div class="dropdown-content">
-            <a href="portfolio">Portfolio</a>
-            <a href="blog">Blog</a>
-          </div>
-        </li>
-        <li class="old-site-btn"><a href="old"><button type="button">Old site</button></a></li>
-      </ul>
-    </div>
-  </nav>
+<script type="module" src="/components/site-navbar.js"></script>
+<site-navbar
+  cart-href="/cart"
+  signin-href="/sign-in"
+  profile-href="/profile">
+</site-navbar>
 
   <script type="module" src="./resources/js/sign-in.02.js"></script>
 </head>
