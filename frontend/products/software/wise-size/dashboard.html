@@ -672,7 +672,7 @@
     // -----------------------------
     // Redirect if not signed in
     // -----------------------------
-    const SIGNIN_PATH = "/signin"; // adjust if your sign-in page is elsewhere
+    const SIGNIN_PATH = "/sign-in"; // adjust if your sign-in page is elsewhere
     function redirectToSignIn() {
       const current = encodeURIComponent(window.location.href);
       window.location.href = `${SIGNIN_PATH}?redirect=${current}`;
