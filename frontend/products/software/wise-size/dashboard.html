@@ -6,31 +6,48 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WiseSize — Merchant Dashboard</title>
 
-  <!-- Optional but recommended: basic CSP.
-       If you move inline styles/scripts to separate files, you can tighten this further. -->
+  <!-- Don't let this dashboard get indexed -->
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <!-- Optional CSP (adjust if you move inline styles/scripts) -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     img-src 'self' data: https:;
     style-src 'self' 'unsafe-inline';
     script-src 'self' https://www.gstatic.com 'unsafe-inline';
     connect-src 'self' https:;">
-  <meta name="referrer" content="strict-origin-when-cross-origin" />
 
   <style>
     :root {
       --bg: #0b0c10;
       --panel: rgba(20, 22, 28, .92);
       --card: rgba(255, 255, 255, .05);
-      --border: rgba(255, 255, 255, .10);
+      --border: rgba(255, 255, 255, .12);
+      --border2: rgba(255, 255, 255, .18);
       --muted: rgba(255, 255, 255, .72);
+
+      --field: rgba(255, 255, 255, .06);
+      --field2: rgba(255, 255, 255, .08);
+      --focus: rgba(255, 255, 255, .28);
+
       --good: #4ade80;
       --warn: #fbbf24;
       --bad: #fb7185;
+
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
 
     * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: #e8e8ea; }
+    html { color-scheme: dark; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 700px at 20% -10%, rgba(255,255,255,.06), transparent 55%),
+        radial-gradient(900px 550px at 90% 0%, rgba(255,255,255,.04), transparent 60%),
+        var(--bg);
+      color: #e8e8ea;
+    }
     a { color: #e8e8ea; }
 
     .topbar {
@@ -38,7 +55,7 @@
       display: flex; align-items: center; gap: 14px;
       padding: 14px 16px;
       background: var(--panel);
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(255, 255, 255, .12);
       backdrop-filter: blur(10px);
     }
 
@@ -64,11 +81,13 @@
       align-items: center;
     }
 
-    .container { max-width: 1240px; margin: 0 auto; padding: 18px 16px; }
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .container { max-width: min(1600px, calc(100vw - 32px)); margin: 0 auto; padding: 18px 16px; }
+    .grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 16px; }
+    @media (min-width: 1400px) { .grid { grid-template-columns: 1.35fr 1fr; } }
+    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
 
     .card {
-      background: var(--card);
+      background: rgba(255,255,255,.045);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 14px;
@@ -80,26 +99,48 @@
 
     .muted { color: var(--muted); font-size: 12px; line-height: 1.35; }
     .row { display: grid; gap: 8px; margin: 10px 0; }
-    label { font-size: 13px; opacity: .9; }
+    label { font-size: 12.5px; opacity: .92; }
 
     input, textarea, select, button {
       border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, .14);
-      background: rgba(0, 0, 0, .25);
+      border: 1px solid var(--border);
+      background: var(--field);
       color: #fff;
       padding: 10px 12px;
       font-size: 14px;
+      outline: none;
+      transition: border-color .12s ease, background .12s ease, transform .04s ease;
     }
 
+    input::placeholder, textarea::placeholder { color: rgba(255,255,255,.45); }
+    input:focus, textarea:focus, select:focus { border-color: var(--focus); background: var(--field2); }
+
     textarea { width: 100%; }
-    button { cursor: pointer; font-weight: 850; background: rgba(255, 255, 255, .10); }
-    button:hover { background: rgba(255, 255, 255, .14); }
-    button.primary { background: #fff; color: #000; border-color: rgba(255, 255, 255, .35); }
-    button.primary:hover { opacity: .92; }
+
+    button { cursor: pointer; font-weight: 850; background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.16); }
+    button:hover { background: rgba(255,255,255,.13); }
+    button:active { transform: translateY(1px); }
+    button.primary { background: #fff; color: #000; border-color: rgba(255,255,255,.35); }
+    button.primary:hover { opacity: .93; }
     button.ghost { background: transparent; }
     button:disabled { opacity: .6; cursor: not-allowed; }
 
-    hr { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    /* Dropdown arrow polish */
+    select{
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(255,255,255,.65) 50%),
+        linear-gradient(135deg, rgba(255,255,255,.65) 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) calc(1em + 2px),
+        calc(100% - 13px) calc(1em + 2px);
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 36px;
+    }
+    select option { background: #0f1116; color: #e8e8ea; }
+
+    hr { border: none; border-top: 1px solid rgba(255,255,255,.12); margin: 12px 0; }
 
     .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
     .pill {
@@ -108,7 +149,7 @@
       gap: 6px;
       padding: 4px 9px;
       border-radius: 999px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255, 255, 255, .14);
       background: rgba(255, 255, 255, .06);
       font-size: 12px;
     }
@@ -117,7 +158,7 @@
     .pill.bad { border-color: rgba(251, 113, 133, .35); }
 
     .list { display: grid; gap: 10px; }
-    .item { border: 1px solid var(--border); background: rgba(255, 255, 255, .04); border-radius: 14px; padding: 12px; }
+    .item { border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); border-radius: 14px; padding: 12px; }
     .itemTop { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
     .itemTitle { font-weight: 950; }
 
@@ -126,7 +167,7 @@
     .code {
       margin-top: 10px;
       background: rgba(0, 0, 0, .35);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255, 255, 255, .12);
       border-radius: 12px;
       padding: 10px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -142,12 +183,12 @@
     .progressWrap {
       margin-top: 10px;
       height: 10px;
-      background: rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .06);
       border-radius: 999px;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, .10);
     }
-    .progressBar { height: 100%; width: 0%; background: rgba(255, 255, 255, .85); }
+    .progressBar { height: 100%; width: 0%; background: linear-gradient(90deg, rgba(255,255,255,.92), rgba(255,255,255,.75)); }
 
     .route { display: none; }
     .route.active { display: block; }
@@ -187,7 +228,8 @@
       border-spacing: 0;
       overflow: hidden;
       border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, .10);
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(0,0,0,.12);
     }
     .table th, .table td {
       padding: 10px;
@@ -195,7 +237,7 @@
       border-right: 1px solid rgba(255, 255, 255, .08);
       font-size: 13px;
     }
-    .table th { text-align: left; background: rgba(255, 255, 255, .05); }
+    .table th { text-align: left; background: rgba(255, 255, 255, .06); border-bottom: 1px solid rgba(255,255,255,.10); }
     .table tr:last-child td { border-bottom: none; }
     .table th:last-child, .table td:last-child { border-right: none; }
 
@@ -207,9 +249,10 @@
     }
 
     .kpiGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-    .kpi { border: 1px solid var(--border); background: rgba(255, 255, 255, .04); border-radius: 14px; padding: 10px; }
+    .kpi { border: 1px solid rgba(255,255,255,.12); background: rgba(255, 255, 255, .04); border-radius: 14px; padding: 10px; }
     .kpi .n { font-size: 20px; font-weight: 950; }
     .kpi .t { font-size: 12px; color: var(--muted); }
+    @media (max-width: 980px) { .kpiGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
     .toastWrap {
       position: fixed; right: 16px; bottom: 16px; z-index: 999;
@@ -226,9 +269,43 @@
     .toast .t { font-weight: 900; }
     .toast .d { margin-top: 4px; color: var(--muted); font-size: 12px; line-height: 1.35; }
 
-    @media (max-width: 980px) {
-      .grid { grid-template-columns: 1fr; }
-      .kpiGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    /* Horizontal Size Selector */
+    .sizesRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .sizePill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      user-select: none;
+      transition: all .15s ease;
+    }
+
+    .sizePill:hover { background: rgba(255,255,255,.12); }
+    .sizePill.active {
+      background: #fff;
+      color: #000;
+      border-color: rgba(255,255,255,.45);
+    }
+
+    .pillActions {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top: 6px;
+    }
+    .pillActions button{
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
     }
   </style>
 </head>
@@ -313,21 +390,13 @@
             </div>
 
             <div class="control">
-              <label for="sizesSelect">Sizes (select one or more)</label>
-              <select id="sizesSelect" multiple size="5"></select>
-              <div class="muted">Tip: Ctrl/⌘ click to multi-select.</div>
-            </div>
-
-            <div class="control">
-              <label for="measuresPreset">Measures</label>
-              <select id="measuresPreset">
-                <option value="auto" selected>Auto from category</option>
-                <option value="top">Top: chest, waist, shoulder, length</option>
-                <option value="bottom">Bottom: waist, hip, inseam, rise</option>
-                <option value="outerwear">Outerwear: chest, waist, shoulder, length</option>
-                <option value="dress">Dress: bust, waist, hip, length</option>
-                <option value="custom">Custom…</option>
-              </select>
+              <label>Sizes (select one or more)</label>
+              <div class="pillActions">
+                <button id="btnSizesAll" type="button">Select all</button>
+                <button id="btnSizesNone" type="button" class="ghost">Select none</button>
+              </div>
+              <div id="sizesSelect" class="sizesRow"></div>
+              <div class="muted">Tip: click pills to toggle. Rebuild table to change columns.</div>
             </div>
 
             <div class="control" id="customMeasuresWrap" style="display:none;">
@@ -430,6 +499,11 @@
           <div id="verifyBox" class="notice" style="display:none; margin-top:10px;">
             <div style="font-weight:950; margin-bottom:6px;">Instructions</div>
             <div id="verifyInstructions" class="muted"></div>
+
+            <div class="actions" style="margin-top:8px;">
+              <button id="btnCopyVerifyToken">Copy token</button>
+            </div>
+
             <div id="verifyTokenLabel" class="code"></div>
             <div id="verifyState" class="muted" style="margin-top:8px;"></div>
           </div>
@@ -540,7 +614,7 @@
           <div class="row">
             <label for="settingsWorkerOrigin">Worker API origin</label>
             <input id="settingsWorkerOrigin" placeholder="https://api.yourdomain.com" inputmode="url" />
-            <div class="muted">Used for website verification. Stored in browser localStorage (not security-sensitive).</div>
+            <div class="muted">Stored in browser localStorage (not security-sensitive).</div>
           </div>
 
           <div class="actions">
@@ -596,22 +670,23 @@
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     // -----------------------------
-    // Configuration (adjust if needed)
+    // Redirect if not signed in
+    // -----------------------------
+    const SIGNIN_PATH = "/signin"; // adjust if your sign-in page is elsewhere
+    function redirectToSignIn() {
+      const current = encodeURIComponent(window.location.href);
+      window.location.href = `${SIGNIN_PATH}?redirect=${current}`;
+    }
+
+    // -----------------------------
+    // Configuration
     // -----------------------------
     const WS_ROOT_COLLECTION = "wise-size";
     const WS_ROOT_DOC_ID = "app";
 
-    // Document root: wise-size/app
-    function wsRootDoc(db) {
-      return doc(db, WS_ROOT_COLLECTION, WS_ROOT_DOC_ID);
-    }
-    function wsCollection(db, name) {
-      // wise-size/app/{name}
-      return collection(wsRootDoc(db), name);
-    }
-    function wsDoc(db, name, id) {
-      return doc(wsRootDoc(db), name, id);
-    }
+    function wsRootDoc(db) { return doc(db, WS_ROOT_COLLECTION, WS_ROOT_DOC_ID); }
+    function wsCollection(db, name) { return collection(wsRootDoc(db), name); }
+    function wsDoc(db, name, id) { return doc(wsRootDoc(db), name, id); }
 
     const SIZE_SETS = {
       alpha: ["XS", "S", "M", "L", "XL"],
@@ -648,11 +723,27 @@
     const WORKER_ORIGIN_KEY = "wisesize_worker_origin";
     let WORKER_API_ORIGIN = localStorage.getItem(WORKER_ORIGIN_KEY) || "";
 
-    // Embed script URL relative to this dashboard
-    const EMBED_SCRIPT_URL = "services.unlim8ted.com/wisesize/v1/embed.js";
+    // IMPORTANT: include protocol so snippet works everywhere
+    const EMBED_SCRIPT_URL = "https://services.unlim8ted.com/wisesize/v1/embed.js";
 
     function buildEmbedSnippet(merchant, item) {
       return `<script src="${EMBED_SCRIPT_URL}" data-wisesize-merchant="${merchant}" data-wisesize-item="${item}" defer><\\/script>`;
+    }
+
+    // Verification token persistence (per host + method)
+    function safeHostFromUrl(u) {
+      try { return new URL(u).host; }
+      catch { return String(u || "").replace(/^https?:\/\//, "").split("/")[0]; }
+    }
+    function verifyTokenKey(website, method) {
+      const host = safeHostFromUrl(website);
+      return `wisesize_verify_token:${method}:${host}`;
+    }
+    function saveLastVerifyToken(website, method, token) {
+      try { localStorage.setItem(verifyTokenKey(website, method), token); } catch {}
+    }
+    function loadLastVerifyToken(website, method) {
+      try { return localStorage.getItem(verifyTokenKey(website, method)); } catch { return null; }
     }
 
     // -----------------------------
@@ -685,6 +776,7 @@
     const verifyInstructions = document.getElementById("verifyInstructions");
     const verifyTokenLabel = document.getElementById("verifyTokenLabel");
     const verifyState = document.getElementById("verifyState");
+    const btnCopyVerifyToken = document.getElementById("btnCopyVerifyToken");
     let lastVerifyToken = null;
 
     // Builder
@@ -695,7 +787,6 @@
     const chartUnit = document.getElementById("chartUnit");
     const sizeSet = document.getElementById("sizeSet");
     const sizesSelect = document.getElementById("sizesSelect");
-    const measuresPreset = document.getElementById("measuresPreset");
     const customMeasuresWrap = document.getElementById("customMeasuresWrap");
     const customMeasures = document.getElementById("customMeasures");
     const btnBuildTable = document.getElementById("btnBuildTable");
@@ -705,6 +796,10 @@
     const itemSizeChart = document.getElementById("itemSizeChart");
     const btnSubmitItem = document.getElementById("btnSubmitItem");
     const itemMsg = document.getElementById("itemMsg");
+
+    // Size select all/none
+    const btnSizesAll = document.getElementById("btnSizesAll");
+    const btnSizesNone = document.getElementById("btnSizesNone");
 
     // Items list
     const filterSearch = document.getElementById("filterSearch");
@@ -753,11 +848,6 @@
       return String(s ?? "").replace(/[&<>"']/g, (m) => ({
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
       }[m]));
-    }
-
-    function safeHostFromUrl(u) {
-      try { return new URL(u).host; }
-      catch { return String(u || "").replace(/^https?:\/\//, "").split("/")[0]; }
     }
 
     function isValidHttpUrl(u) {
@@ -839,19 +929,37 @@
       return map[lower] || raw;
     }
 
-    function getSelectedSizes() {
-      return Array.from(sizesSelect.selectedOptions).map(o => o.value).filter(Boolean);
-    }
-
     function fillSizesOptions(list) {
       sizesSelect.innerHTML = "";
       list.forEach(sz => {
-        const opt = document.createElement("option");
-        opt.value = sz;
-        opt.textContent = sz;
-        sizesSelect.appendChild(opt);
+        const el = document.createElement("div");
+        el.className = "sizePill active"; // default selected
+        el.textContent = sz;
+        el.dataset.value = sz;
+
+        el.addEventListener("click", () => {
+          el.classList.toggle("active");
+          if (document.getElementById("builderTable")) {
+            btnBuildTable.click();
+          } else {
+            syncJsonFromTable();
+          }
+        });
+
+        sizesSelect.appendChild(el);
       });
-      Array.from(sizesSelect.options).forEach(o => o.selected = true); // default all
+    }
+
+    function setAllSizes(active) {
+      sizesSelect.querySelectorAll(".sizePill").forEach(p => p.classList.toggle("active", !!active));
+      if (document.getElementById("builderTable")) btnBuildTable.click();
+      else syncJsonFromTable();
+    }
+
+    function getSelectedSizes() {
+      return Array.from(
+        sizesSelect.querySelectorAll(".sizePill.active")
+      ).map(el => el.dataset.value);
     }
 
     function refreshSizesFromSet() {
@@ -860,7 +968,7 @@
     }
 
     function getMeasuresForBuilder() {
-      const preset = measuresPreset.value;
+      const preset = "auto";
       const cat = itemCategory.value;
 
       let base;
@@ -881,7 +989,6 @@
 
       const sizes = chart.sizes || [];
 
-      // Validate each measurement key
       Object.entries(chart).forEach(([k, v]) => {
         if (k === "sizes" || k === "unit" || k === "type") return;
         if (!v || typeof v !== "object") return;
@@ -895,14 +1002,12 @@
           if (!Number.isFinite(min) || !Number.isFinite(max)) issues.push(`${k}.${sz} must be numbers.`);
           if (min > max) issues.push(`${k}.${sz} min > max.`);
 
-          // Plausibility checks only meaningful when unit is cm and we know the key
           if (chart.unit === "cm" && PLAUSIBLE_RANGES_CM[k]) {
             const [lo, hi] = PLAUSIBLE_RANGES_CM[k];
             if (min < lo || max > hi) issues.push(`${k}.${sz} out of plausible range (${lo}-${hi}cm).`);
           }
         });
 
-        // Monotonic check (by midpoints)
         let prev = null;
         for (let i = 0; i < sizes.length; i++) {
           const sz = sizes[i];
@@ -972,7 +1077,15 @@
 
     function syncJsonFromTable() {
       const tbl = document.getElementById("builderTable");
-      if (!tbl) return;
+      if (!tbl) {
+        // still keep sizes selection synced into JSON even without table
+        const chart = safeJsonParse(itemSizeChart.value) || {};
+        chart.sizes = getSelectedSizes();
+        chart.unit = chartUnit.value;
+        chart.type = chartType.value;
+        itemSizeChart.value = JSON.stringify(chart, null, 2);
+        return;
+      }
 
       const isBody = tbl.dataset.body === "1";
       const unit = tbl.dataset.unit;
@@ -1035,24 +1148,13 @@
     });
 
     // -----------------------------
-    // Auth
+    // Auth buttons (fallback UX)
     // -----------------------------
-    btnSignIn.addEventListener("click", async () => {
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (e) {
-        console.error(e);
-        toast("Sign-in failed", "Check popup blockers and Firebase Auth settings.");
-      }
-    });
+    btnSignIn.addEventListener("click", () => redirectToSignIn());
 
     btnSignOut.addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-      } catch (e) {
-        console.error(e);
-        toast("Sign-out failed");
-      }
+      try { await signOut(auth); }
+      catch (e) { console.error(e); toast("Sign-out failed"); }
     });
 
     // -----------------------------
@@ -1099,6 +1201,16 @@
 
         merchantMsg.textContent = "Saved ✓";
         verifyWebsite.value = website;
+
+        // If there is a cached token for this website, show it (nice UX)
+        const cached = loadLastVerifyToken(website, verifyMethod.value);
+        if (cached) {
+          lastVerifyToken = cached;
+          verifyBox.style.display = "";
+          renderVerifyInstructions(website, verifyMethod.value, cached);
+          verifyState.textContent = "Token loaded from this browser. Click Check verification after adding proof.";
+        }
+
         toast("Saved", "Merchant profile updated.");
       } catch (e) {
         console.error(e);
@@ -1141,6 +1253,8 @@
         if (!data.ok) throw new Error(data.error || "start not ok");
 
         lastVerifyToken = data.token;
+        saveLastVerifyToken(website, verifyMethod.value, data.token);
+
         verifyBox.style.display = "";
         renderVerifyInstructions(website, verifyMethod.value, data.token);
         verifyState.textContent = "Add the proof, then click Check verification.";
@@ -1161,6 +1275,13 @@
 
         const website = (verifyWebsite.value.trim() || settingsWebsite.value.trim());
         if (!website) { toast("Website required"); return; }
+        if (!isValidHttpUrl(website)) { toast("Invalid website URL"); return; }
+
+        // If we lost token in memory, try loading cached token for this host
+        if (!lastVerifyToken) {
+          const cached = loadLastVerifyToken(website, verifyMethod.value);
+          if (cached) lastVerifyToken = cached;
+        }
         if (!lastVerifyToken) { toast("Start verification first"); return; }
 
         setBusy(btnCheckVerify, true, "Checking…");
@@ -1200,6 +1321,13 @@
       }
     });
 
+    btnCopyVerifyToken.addEventListener("click", async () => {
+      const t = (verifyTokenLabel.textContent || "").trim();
+      if (!t) { toast("No token to copy"); return; }
+      await copyText(t);
+      toast("Copied ✓");
+    });
+
     function renderVerifyInstructions(website, method, token) {
       const host = safeHostFromUrl(website);
 
@@ -1210,34 +1338,45 @@
              <li><b>Type:</b> TXT</li>
              <li><b>Name/Host:</b> <code>wisesize-verify</code> (or <code>wisesize-verify.${escapeHtml(host)}</code>)</li>
              <li><b>Value:</b> (copy below)</li>
-           </ul>`;
+           </ul>
+           <div class="muted" style="margin-top:8px;">Tip: DNS can take time to propagate.</div>`;
       } else {
         verifyInstructions.innerHTML =
           `<div class="muted">Create a public file on your website:</div>
            <ul class="muted" style="margin:8px 0 0 18px;">
              <li><b>Path:</b> <code>/.well-known/wisesize-verification.txt</code></li>
              <li><b>Contents:</b> (copy below)</li>
-           </ul>`;
+           </ul>
+           <div class="muted" style="margin-top:8px;">Tip: The file must be reachable without auth and return 200.</div>`;
       }
 
       verifyTokenLabel.textContent = token;
     }
 
+    // When method changes, try to load a cached token for current website
+    verifyMethod.addEventListener("change", () => {
+      const website = (verifyWebsite.value.trim() || settingsWebsite.value.trim());
+      if (!website) return;
+      const cached = loadLastVerifyToken(website, verifyMethod.value);
+      if (cached) {
+        lastVerifyToken = cached;
+        verifyBox.style.display = "";
+        renderVerifyInstructions(website, verifyMethod.value, cached);
+        verifyState.textContent = "Token loaded from this browser. Click Check verification after adding proof.";
+      }
+    });
+
     // -----------------------------
     // Builder events
     // -----------------------------
-    measuresPreset.addEventListener("change", () => {
-      customMeasuresWrap.style.display = (measuresPreset.value === "custom") ? "" : "none";
-    });
-
     sizeSet.addEventListener("change", () => {
       refreshSizesFromSet();
-      // If table exists, rebuild to reflect sizes selection
       const tbl = document.getElementById("builderTable");
-      if (tbl) {
-        btnBuildTable.click();
-      }
+      if (tbl) btnBuildTable.click();
     });
+
+    btnSizesAll.addEventListener("click", () => setAllSizes(true));
+    btnSizesNone.addEventListener("click", () => setAllSizes(false));
 
     btnClearTable.addEventListener("click", () => {
       tableWrap.innerHTML = '<div class="notice muted">Build a table to start.</div>';
@@ -1298,15 +1437,13 @@
           name,
           category,
 
-          // Store the chart exactly as validated
           sizeChart: chart,
 
-          // Normalized measurement metadata
           measurement: {
             type: chart.type === "garment" ? "garment" : "body_recommended",
             unit: chart.unit,
             method: "merchant_entered",
-            tolerances: {} // for future extension
+            tolerances: {}
           },
 
           publishStatus: "submitted",
@@ -1361,7 +1498,6 @@
 
       itemsList.innerHTML = '<div class="muted">Loading…</div>';
 
-      // NOTE: This query requires an index if you later add more where/orderBy combinations.
       const qy = query(
         wsCollection(db, "items"),
         where("merchantId", "==", merchantId),
@@ -1407,7 +1543,6 @@
         const el = document.createElement("div");
         el.className = "item";
 
-        // IMPORTANT: Use escaped HTML for dynamic text.
         el.innerHTML =
           `<div class="itemTop">
              <div style="min-width:0">
@@ -1433,7 +1568,6 @@
            </div>
            <div class="code" data-embed></div>`;
 
-        // render code as text
         el.querySelector('[data-embed]').textContent = embedSnippet;
 
         el.querySelector('[data-act="view"]').addEventListener("click", () => openDrawer(it));
@@ -1657,28 +1791,33 @@
       settingsFeatTryOn.checked = !!(m.features && m.features.aiTryOnEnabled);
       verifyWebsite.value = m.website || "";
       merchantMsg.textContent = m.websiteVerified ? "Loaded. Website verified ✓" : "Loaded.";
+
+      // If this browser has a cached token for current website, show it
+      const website = (verifyWebsite.value || "").trim();
+      if (website && isValidHttpUrl(website)) {
+        const cached = loadLastVerifyToken(website, verifyMethod.value);
+        if (cached) {
+          lastVerifyToken = cached;
+          verifyBox.style.display = "";
+          renderVerifyInstructions(website, verifyMethod.value, cached);
+          verifyState.textContent = "Token loaded from this browser. Click Check verification after adding proof.";
+        }
+      }
     }
 
     // -----------------------------
     // Auth boot
     // -----------------------------
     onAuthStateChanged(auth, async (u) => {
-      // Signed out
+      // Signed out: redirect to sign-in with ?redirect=
       if (!u) {
         merchantId = null;
         authStateEl.textContent = "Signed out";
         btnSignIn.style.display = "";
         btnSignOut.style.display = "none";
 
-        itemsList.innerHTML = '<div class="muted">Sign in to manage items.</div>';
-        queueList.innerHTML = '<div class="muted">Sign in to manage verification.</div>';
-        usageList.innerHTML = '<div class="muted">Sign in to see usage.</div>';
-        topItems.innerHTML = "";
-        merchantMsg.textContent = "";
-        itemMsg.textContent = "";
-        verifyBox.style.display = "none";
-        lastVerifyToken = null;
-
+        // Hard redirect (so “like it should”)
+        redirectToSignIn();
         return;
       }
 
@@ -1692,8 +1831,6 @@
         await loadMerchant();
         await loadItems();
         await loadQueue();
-        // Usage loads on demand, but you can preload if you want:
-        // await loadUsage();
       } catch (e) {
         console.error(e);
         toast("Load failed", "Check Firestore indexes/rules.");
