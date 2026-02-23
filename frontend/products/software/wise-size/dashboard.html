@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WiseSize — Merchant Dashboard</title>
 
-  <!-- Keep this out of search engines -->
   <meta name="robots" content="noindex,nofollow" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
@@ -285,6 +284,21 @@
     }
     .toast .t{ font-weight: 950; }
     .toast .d{ margin-top:4px; color: var(--muted); font-size:12px; line-height:1.35; }
+
+    /* Stepper */
+    .stepper{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .step{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-size:12px; font-weight:900;
+    }
+    .step.active{ background:#fff; color:#000; border-color: rgba(255,255,255,.35); }
+    .step.done{ border-color: rgba(74,222,128,.35); }
+    .step small{ font-weight:800; opacity:.85; }
+    .stepPane{ display:none; }
+    .stepPane.active{ display:block; }
   </style>
 </head>
 
@@ -292,11 +306,9 @@
   <div class="topbar">
     <div class="brand">WiseSize</div>
 
-    <!-- NOTE: tabs are gated by onboarding (merchant profile + website verification) -->
     <div class="tabs" id="tabs" role="tablist" aria-label="Dashboard tabs">
       <button class="tab active" data-route="onboarding" role="tab" aria-selected="true">Onboarding</button>
       <button class="tab" data-route="items" role="tab">Items</button>
-      <button class="tab" data-route="verification" role="tab">Verification</button>
       <button class="tab" data-route="usage" role="tab">Usage</button>
       <button class="tab" data-route="docs" role="tab">Docs</button>
       <button class="tab" data-route="settings" role="tab">Settings</button>
@@ -310,17 +322,17 @@
   </div>
 
   <div class="container">
-    <!-- ONBOARDING (gated first-time flow) -->
+    <!-- ONBOARDING (step-based) -->
     <section class="route active" id="route-onboarding">
       <div class="grid">
         <div class="card">
-          <h1>Set up your merchant account</h1>
+          <h1>Onboarding</h1>
           <div class="muted">
-            Before you can access the dashboard, we need:
+            We only ask for what’s needed to unlock the dashboard:
             <ul>
-              <li><b>Merchant profile</b>: store name + website</li>
-              <li><b>Worker origin</b>: where your verification endpoints live</li>
-              <li><b>Website ownership verification</b></li>
+              <li>Step 1: Store profile</li>
+              <li>Step 2: Verify your website</li>
+              <li>Step 3: Done</li>
             </ul>
           </div>
 
@@ -333,91 +345,96 @@
             <div id="setupMsg" class="muted" style="margin-top:8px;"></div>
           </div>
 
-          <hr />
-
-          <h2>1) Merchant profile</h2>
-          <div class="row">
-            <label for="settingsName">Store name</label>
-            <input id="settingsName" placeholder="Your store name" />
+          <div class="stepper" id="onboardingSteps" aria-label="Onboarding steps" style="margin-top:12px;">
+            <div class="step active" data-step="1"><small>1</small> Profile</div>
+            <div class="step" data-step="2"><small>2</small> Verify website</div>
+            <div class="step" data-step="3"><small>3</small> Done</div>
           </div>
-          <div class="row">
-            <label for="settingsWebsite">Website</label>
-            <input id="settingsWebsite" placeholder="https://example.com" inputmode="url" />
-          </div>
-
-          <div class="actions">
-            <button id="btnSaveMerchant" class="primary">Save profile</button>
-          </div>
-          <div id="merchantMsg" class="muted" style="margin-top:10px" aria-live="polite"></div>
 
           <hr />
 
-          <h2>2) Worker API origin</h2>
-          <div class="row">
-            <label for="settingsWorkerOrigin">Worker origin</label>
-            <input id="settingsWorkerOrigin" placeholder="https://api.yourdomain.com" inputmode="url" />
-            <div class="muted">This is used only for verification endpoints.</div>
-          </div>
-          <div class="actions">
-            <button id="btnSaveWorkerOrigin">Save Worker Origin</button>
-          </div>
-          <div id="workerMsg" class="muted" style="margin-top:10px" aria-live="polite"></div>
+          <!-- STEP 1 -->
+          <div class="stepPane active" id="step-1">
+            <h2>Step 1 — Store profile</h2>
 
-          <hr />
-
-          <h2>3) Verify website ownership</h2>
-
-          <div class="row">
-            <label for="verifyWebsite">Website to verify</label>
-            <input id="verifyWebsite" placeholder="https://example.com" inputmode="url" />
-            <div class="muted">We default this to the website from your profile.</div>
-          </div>
-
-          <div class="row">
-            <label for="verifyMethod">Verification method</label>
-            <select id="verifyMethod">
-              <option value="dns" selected>DNS TXT record (recommended)</option>
-              <option value="wellknown">HTTP file: /.well-known/wisesize-verification.txt</option>
-            </select>
-          </div>
-
-          <div class="actions">
-            <button id="btnStartVerify">Start verification</button>
-            <button id="btnCheckVerify">Check verification</button>
-          </div>
-
-          <div id="verifyBox" class="notice" style="display:none; margin-top:10px;">
-            <div style="font-weight:950; margin-bottom:6px;">Instructions</div>
-            <div id="verifyInstructions" class="muted"></div>
-            <div class="actions" style="margin-top:8px;">
-              <button id="btnCopyVerifyToken">Copy token</button>
+            <div class="row">
+              <label for="settingsName">Store name</label>
+              <input id="settingsName" placeholder="Your store name" />
             </div>
-            <div id="verifyTokenLabel" class="code"></div>
-            <div id="verifyState" class="muted" style="margin-top:8px;"></div>
+
+            <div class="row">
+              <label for="settingsWebsite">Website</label>
+              <input id="settingsWebsite" placeholder="https://example.com" inputmode="url" />
+            </div>
+
+            <div class="actions">
+              <button id="btnSaveMerchant" class="primary">Save profile</button>
+              <button id="btnNextToVerify">Next</button>
+            </div>
+            <div id="merchantMsg" class="muted" style="margin-top:10px" aria-live="polite"></div>
+
+            <div class="muted" style="margin-top:10px;">
+              Tip: Use your canonical domain (no trailing slash).
+            </div>
           </div>
 
-          <div class="actions" style="margin-top:14px;">
-            <button id="btnContinue" class="primary" disabled>Continue to dashboard</button>
+          <!-- STEP 2 -->
+          <div class="stepPane" id="step-2">
+            <h2>Step 2 — Verify website ownership</h2>
+
+            <div class="row">
+              <label for="verifyWebsite">Website to verify</label>
+              <input id="verifyWebsite" placeholder="https://example.com" inputmode="url" />
+              <div class="muted">Defaults to the website from your profile.</div>
+            </div>
+
+            <div class="row">
+              <label for="verifyMethod">Verification method</label>
+              <select id="verifyMethod">
+                <option value="dns" selected>DNS TXT record (recommended)</option>
+                <option value="wellknown">HTTP file: /.well-known/wisesize-verification.txt</option>
+              </select>
+            </div>
+
+            <div class="actions">
+              <button id="btnStartVerify">Start verification</button>
+              <button id="btnCheckVerify" class="primary">Check verification</button>
+              <button id="btnBackToProfile" class="ghost">Back</button>
+            </div>
+
+            <div id="verifyBox" class="notice" style="display:none; margin-top:10px;">
+              <div style="font-weight:950; margin-bottom:6px;">Instructions</div>
+              <div id="verifyInstructions" class="muted"></div>
+              <div class="actions" style="margin-top:8px;">
+                <button id="btnCopyVerifyToken">Copy token</button>
+              </div>
+              <div id="verifyTokenLabel" class="code"></div>
+              <div id="verifyState" class="muted" style="margin-top:8px;"></div>
+            </div>
+
+            <div class="muted" style="margin-top:10px;">
+              When verified, we unlock Items/Usage/Docs automatically.
+            </div>
           </div>
-          <div class="muted" style="margin-top:8px;">
-            This button unlocks automatically when the website is verified.
+
+          <!-- STEP 3 -->
+          <div class="stepPane" id="step-3">
+            <h2>Step 3 — Done</h2>
+            <div class="notice">
+              <div style="font-weight:950">You’re verified ✓</div>
+              <div class="muted" style="margin-top:6px;">
+                You can now submit items and embed WiseSize on your product pages.
+              </div>
+
+              <div class="actions" style="margin-top:10px;">
+                <button id="btnContinue" class="primary">Go to Items</button>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="card">
-          <h1>What happens next?</h1>
-          <div class="muted">
-            After verification:
-            <ul>
-              <li>You can submit items and embed WiseSize on your product pages.</li>
-              <li>Submitted items go through auto + proof + human review stages.</li>
-              <li>You’ll see usage signals and top recommended items.</li>
-            </ul>
-          </div>
-
-          <hr />
-
-          <h2>Embed snippet preview</h2>
+          <h1>Embed snippet preview</h1>
           <div class="muted">Per item you’ll copy something like this:</div>
           <div class="code" id="docsEmbedSnippet"></div>
 
@@ -425,7 +442,7 @@
 
           <h2>Security notes</h2>
           <div class="muted">
-            This dashboard is <b>noindex</b>. Access is gated by Firebase auth + website ownership.
+            This dashboard is <b>noindex</b>. Access is gated by Firebase Auth + server-side website verification.
           </div>
         </div>
       </div>
@@ -558,59 +575,12 @@
       </div>
     </section>
 
-    <!-- VERIFICATION (items queue) -->
-    <section class="route" id="route-verification">
-      <div class="grid">
-        <div class="card">
-          <h1>Verification queue</h1>
-          <div class="muted">Submitted items that need proof, failed checks, or human review.</div>
-          <div class="actions">
-            <button id="btnRefreshQueue">Refresh</button>
-          </div>
-          <div id="queueList" class="list" style="margin-top:10px"></div>
-        </div>
-
-        <div class="card">
-          <h1>Website ownership</h1>
-          <div class="muted">This is completed during onboarding. If needed, you can re-run it here.</div>
-
-          <div class="row">
-            <label for="verifyWebsite2">Website</label>
-            <input id="verifyWebsite2" placeholder="https://example.com" inputmode="url" />
-          </div>
-
-          <div class="row">
-            <label for="verifyMethod2">Method</label>
-            <select id="verifyMethod2">
-              <option value="dns" selected>DNS TXT record</option>
-              <option value="wellknown">HTTP file</option>
-            </select>
-          </div>
-
-          <div class="actions">
-            <button id="btnStartVerify2">Start verification</button>
-            <button id="btnCheckVerify2">Check verification</button>
-          </div>
-
-          <div id="verifyBox2" class="notice" style="display:none; margin-top:10px;">
-            <div style="font-weight:950; margin-bottom:6px;">Instructions</div>
-            <div id="verifyInstructions2" class="muted"></div>
-            <div class="actions" style="margin-top:8px;">
-              <button id="btnCopyVerifyToken2">Copy token</button>
-            </div>
-            <div id="verifyTokenLabel2" class="code"></div>
-            <div id="verifyState2" class="muted" style="margin-top:8px;"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- USAGE -->
     <section class="route" id="route-usage">
       <div class="grid">
         <div class="card">
           <h1>Usage overview</h1>
-          <div class="muted">Last 100 raw events (for MVP). Add rollups later for scale.</div>
+          <div class="muted">Last 100 raw events (MVP). Add rollups later for scale.</div>
           <div class="actions">
             <button id="btnRefreshUsage">Refresh</button>
           </div>
@@ -657,12 +627,12 @@
       </div>
     </section>
 
-    <!-- SETTINGS (still accessible after onboarding; profile edits etc.) -->
+    <!-- SETTINGS -->
     <section class="route" id="route-settings">
       <div class="grid">
         <div class="card">
           <h1>Merchant profile</h1>
-          <div class="muted">Edits here update your onboarding profile too.</div>
+          <div class="muted">Edits here update onboarding too.</div>
 
           <div class="row">
             <label for="settingsName2">Store name</label>
@@ -683,18 +653,12 @@
 
         <div class="card">
           <h1>System</h1>
-
-          <div class="row">
-            <label for="settingsWorkerOrigin2">Worker API origin</label>
-            <input id="settingsWorkerOrigin2" placeholder="https://api.yourdomain.com" inputmode="url" />
-            <div class="muted">Stored in browser localStorage (not security-sensitive).</div>
+          <div class="notice">
+            <div style="font-weight:950;">No merchant “API URL” required</div>
+            <div class="muted" style="margin-top:6px;">
+              Website verification is handled by the WiseSize verification service.
+            </div>
           </div>
-
-          <div class="actions">
-            <button id="btnSaveWorkerOrigin2">Save Worker Origin</button>
-          </div>
-
-          <div id="workerMsg2" class="muted" style="margin-top:10px" aria-live="polite"></div>
         </div>
       </div>
     </section>
@@ -721,24 +685,17 @@
   <script type="module">
     import { getFirebase } from "/components/firebase-init.js";
 
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import {
-      signOut,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-    import {
-      doc,
-      getDoc,
-      setDoc,
-      addDoc,
-      collection,
-      query,
-      where,
-      orderBy,
-      limit,
-      getDocs,
+      doc, getDoc, setDoc, addDoc,
+      collection, query, where, orderBy, limit, getDocs,
       serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // -----------------------------
+    // IMPORTANT: your verification service (hosted by YOU)
+    // -----------------------------
+    const VERIFY_API_ORIGIN = "https://api.wisesize.com"; // <- change to your Cloud Run / Functions URL
 
     // -----------------------------
     // Redirect if not signed in
@@ -750,13 +707,18 @@
     }
 
     // -----------------------------
-    // Firestore path helpers
+    // Firestore path helpers (robust)
+    // /wise-size/app/{subcollection}/{docId}
     // -----------------------------
     const WS_ROOT_COLLECTION = "wise-size";
     const WS_ROOT_DOC_ID = "app";
-    function wsRootDoc(db) { return doc(db, WS_ROOT_COLLECTION, WS_ROOT_DOC_ID); }
-    function wsCollection(db, name) { return collection(wsRootDoc(db), name); }
-    function wsDoc(db, name, id) { return doc(wsRootDoc(db), name, id); }
+
+    function wsCollection(db, sub) {
+      return collection(db, WS_ROOT_COLLECTION, WS_ROOT_DOC_ID, sub);
+    }
+    function wsDoc(db, sub, id) {
+      return doc(db, WS_ROOT_COLLECTION, WS_ROOT_DOC_ID, sub, id);
+    }
 
     // -----------------------------
     // Constants
@@ -786,33 +748,13 @@
       inseamCm:[40,120], shoulderCm:[30,80], lengthCm:[40,160], riseCm:[10,60]
     };
 
-    // Worker origin in localStorage (not security-sensitive)
-    const WORKER_ORIGIN_KEY = "wisesize_worker_origin";
-    let WORKER_API_ORIGIN = localStorage.getItem(WORKER_ORIGIN_KEY) || "";
-
-    // Verification token cache (per host + method)
-    function safeHostFromUrl(u) {
-      try { return new URL(u).host; }
-      catch { return String(u || "").replace(/^https?:\/\//, "").split("/")[0]; }
-    }
-    function verifyTokenKey(website, method) {
-      const host = safeHostFromUrl(website);
-      return `wisesize_verify_token:${method}:${host}`;
-    }
-    function saveLastVerifyToken(website, method, token) {
-      try { localStorage.setItem(verifyTokenKey(website, method), token); } catch {}
-    }
-    function loadLastVerifyToken(website, method) {
-      try { return localStorage.getItem(verifyTokenKey(website, method)); } catch { return null; }
-    }
-
     // -----------------------------
     // App bootstrap
     // -----------------------------
     const { auth, db } = getFirebase();
     if (!auth || !db) {
       alert("firebase-init.js must export auth and db via getFirebase()");
-      throw new Error("Missing firebase init");
+      throw new Error("Missing firebase init (auth/db)");
     }
 
     // -----------------------------
@@ -830,19 +772,27 @@
     const setupMsg = document.getElementById("setupMsg");
     const btnContinue = document.getElementById("btnContinue");
 
-    // Onboarding profile inputs
+    // Stepper
+    const stepsEl = document.getElementById("onboardingSteps");
+    const step1 = document.getElementById("step-1");
+    const step2 = document.getElementById("step-2");
+    const step3 = document.getElementById("step-3");
+    const btnNextToVerify = document.getElementById("btnNextToVerify");
+    const btnBackToProfile = document.getElementById("btnBackToProfile");
+
+    // Profile inputs
     const settingsName = document.getElementById("settingsName");
     const settingsWebsite = document.getElementById("settingsWebsite");
     const btnSaveMerchant = document.getElementById("btnSaveMerchant");
     const merchantMsg = document.getElementById("merchantMsg");
 
-    // Onboarding worker origin
-    const settingsWorkerOrigin = document.getElementById("settingsWorkerOrigin");
-    const btnSaveWorkerOrigin = document.getElementById("btnSaveWorkerOrigin");
-    const workerMsg = document.getElementById("workerMsg");
-    settingsWorkerOrigin.value = WORKER_API_ORIGIN;
+    // Settings tab duplicate inputs
+    const settingsName2 = document.getElementById("settingsName2");
+    const settingsWebsite2 = document.getElementById("settingsWebsite2");
+    const btnSaveMerchant2 = document.getElementById("btnSaveMerchant2");
+    const merchantMsg2 = document.getElementById("merchantMsg2");
 
-    // Onboarding verification
+    // Verification
     const verifyWebsite = document.getElementById("verifyWebsite");
     const verifyMethod = document.getElementById("verifyMethod");
     const btnStartVerify = document.getElementById("btnStartVerify");
@@ -853,29 +803,6 @@
     const verifyState = document.getElementById("verifyState");
     const btnCopyVerifyToken = document.getElementById("btnCopyVerifyToken");
     let lastVerifyToken = null;
-
-    // "Re-run verification" section in Verification tab
-    const verifyWebsite2 = document.getElementById("verifyWebsite2");
-    const verifyMethod2 = document.getElementById("verifyMethod2");
-    const btnStartVerify2 = document.getElementById("btnStartVerify2");
-    const btnCheckVerify2 = document.getElementById("btnCheckVerify2");
-    const verifyBox2 = document.getElementById("verifyBox2");
-    const verifyInstructions2 = document.getElementById("verifyInstructions2");
-    const verifyTokenLabel2 = document.getElementById("verifyTokenLabel2");
-    const verifyState2 = document.getElementById("verifyState2");
-    const btnCopyVerifyToken2 = document.getElementById("btnCopyVerifyToken2");
-    let lastVerifyToken2 = null;
-
-    // Settings tab duplicated inputs (keep in sync)
-    const settingsName2 = document.getElementById("settingsName2");
-    const settingsWebsite2 = document.getElementById("settingsWebsite2");
-    const btnSaveMerchant2 = document.getElementById("btnSaveMerchant2");
-    const merchantMsg2 = document.getElementById("merchantMsg2");
-
-    const settingsWorkerOrigin2 = document.getElementById("settingsWorkerOrigin2");
-    const btnSaveWorkerOrigin2 = document.getElementById("btnSaveWorkerOrigin2");
-    const workerMsg2 = document.getElementById("workerMsg2");
-    settingsWorkerOrigin2.value = WORKER_API_ORIGIN;
 
     // Builder
     const itemBrand = document.getElementById("itemBrand");
@@ -901,8 +828,6 @@
     const filterNeedsAction = document.getElementById("filterNeedsAction");
     const btnRefreshItems = document.getElementById("btnRefreshItems");
     const itemsList = document.getElementById("itemsList");
-    const btnRefreshQueue = document.getElementById("btnRefreshQueue");
-    const queueList = document.getElementById("queueList");
 
     // Usage
     const btnRefreshUsage = document.getElementById("btnRefreshUsage");
@@ -989,19 +914,16 @@
     }
 
     // -----------------------------
-    // Flow gating: merchant onboarding required
+    // Flow gating
     // -----------------------------
     function isMerchantReady(m) {
-      // "Ready" means: profile saved + worker origin set + website verified
       const hasName = !!(m && String(m.name || "").trim());
       const hasWebsite = !!(m && isValidHttpUrl(m.website || ""));
-      const hasWorker = !!(WORKER_API_ORIGIN && isValidHttpUrl(WORKER_API_ORIGIN));
       const verified = !!(m && m.websiteVerified === true);
-      return { hasName, hasWebsite, hasWorker, verified, ready: (hasName && hasWebsite && hasWorker && verified) };
+      return { hasName, hasWebsite, verified, ready: (hasName && hasWebsite && verified) };
     }
 
     function setTabsEnabled(ready) {
-      // Onboarding always enabled
       document.querySelectorAll(".tab").forEach(t => {
         const r = t.dataset.route;
         if (r === "onboarding") { t.disabled = false; return; }
@@ -1014,33 +936,52 @@
       document.querySelectorAll(".route").forEach(r => r.classList.toggle("active", r.id === "route-" + route));
     }
 
+    function setStep(n) {
+      const panes = [step1, step2, step3];
+      panes.forEach((p, i) => p.classList.toggle("active", i === (n-1)));
+      stepsEl.querySelectorAll(".step").forEach(el => {
+        const k = Number(el.dataset.step);
+        el.classList.toggle("active", k === n);
+      });
+    }
+
     function renderOnboardingStatus(m) {
       const st = isMerchantReady(m);
 
       setupPills.innerHTML = [
         `<span class="pill ${st.hasName && st.hasWebsite ? "good":"warn"}">profile: ${st.hasName && st.hasWebsite ? "ok":"needed"}</span>`,
-        `<span class="pill ${st.hasWorker ? "good":"warn"}">worker: ${st.hasWorker ? "ok":"needed"}</span>`,
         `<span class="pill ${st.verified ? "good":"warn"}">website: ${st.verified ? "verified":"not verified"}</span>`
       ].join("");
 
       const pct = Math.round(
-        (Number(st.hasName && st.hasWebsite) + Number(st.hasWorker) + Number(st.verified)) / 3 * 100
+        (Number(st.hasName && st.hasWebsite) + Number(st.verified)) / 2 * 100
       );
       setupProgress.style.width = `${pct}%`;
 
       if (st.ready) {
         setupMsg.textContent = "Setup complete ✓ You can access the dashboard.";
         btnContinue.disabled = false;
+        setTabsEnabled(true);
+        // show done step
+        setStep(3);
+        stepsEl.querySelector('[data-step="1"]').classList.add("done");
+        stepsEl.querySelector('[data-step="2"]').classList.add("done");
       } else {
         const missing = [];
         if (!(st.hasName && st.hasWebsite)) missing.push("profile");
-        if (!st.hasWorker) missing.push("worker origin");
         if (!st.verified) missing.push("website verification");
         setupMsg.textContent = "Complete: " + missing.join(", ") + ".";
         btnContinue.disabled = true;
-      }
+        setTabsEnabled(false);
 
-      setTabsEnabled(st.ready);
+        // auto-step logic
+        if (!(st.hasName && st.hasWebsite)) setStep(1);
+        else setStep(2);
+
+        stepsEl.querySelector('[data-step="1"]').classList.toggle("done", (st.hasName && st.hasWebsite));
+        stepsEl.querySelector('[data-step="2"]').classList.toggle("done", st.verified);
+        stepsEl.querySelector('[data-step="3"]').classList.remove("done");
+      }
     }
 
     btnContinue.addEventListener("click", () => {
@@ -1075,18 +1016,17 @@
     });
 
     // -----------------------------
-    // Merchant doc: create on first visit
+    // Merchant doc: create on first visit (RULES-COMPATIBLE)
     // -----------------------------
     async function ensureMerchantDoc() {
       const ref = wsDoc(db, "merchants", merchantId);
       const snap = await getDoc(ref);
 
       if (!snap.exists()) {
-        // First time: create merchant doc right away (merchant account creation flow)
+        // Only write fields your rules allow on create:
         await setDoc(ref, {
           ownerUid: merchantId,
           createdAt: serverTimestamp(),
-          status: "pending_setup",
           websiteVerified: false
         }, { merge: true });
 
@@ -1102,15 +1042,10 @@
 
       settingsName2.value = m?.name || "";
       settingsWebsite2.value = m?.website || "";
-      verifyWebsite2.value = m?.website || "";
-
-      // also set worker fields from localStorage
-      settingsWorkerOrigin.value = WORKER_API_ORIGIN || "";
-      settingsWorkerOrigin2.value = WORKER_API_ORIGIN || "";
     }
 
     // -----------------------------
-    // Save profile (both tabs use same writer)
+    // Save profile (both tabs)
     // -----------------------------
     async function saveMerchantProfileFromInputs(name, website, msgEls=[]) {
       requireAuth();
@@ -1120,17 +1055,15 @@
 
       const ref = wsDoc(db, "merchants", merchantId);
       await setDoc(ref, {
-        ownerUid: merchantId,
+        ownerUid: merchantId, // keep stable
         name: String(name).trim(),
         website: String(website).trim().replace(/\/+$/, ""),
-        updatedAt: serverTimestamp(),
-        status: "pending_setup"
+        updatedAt: serverTimestamp()
       }, { merge: true });
 
       msgEls.forEach(el => { el.textContent = "Saved ✓"; setTimeout(() => el.textContent = "", 1400); });
       toast("Saved", "Merchant profile updated.");
 
-      // refresh cached merchant doc
       const snap = await getDoc(ref);
       merchantDocCache = snap.data();
       syncSettingsUIFromMerchant(merchantDocCache);
@@ -1167,35 +1100,36 @@
       }
     });
 
+    // Stepper nav buttons
+    btnNextToVerify.addEventListener("click", async () => {
+      // Don’t force save, but encourage it
+      const ok = (merchantDocCache && isMerchantReady(merchantDocCache).hasName && isMerchantReady(merchantDocCache).hasWebsite);
+      if (!ok) {
+        toast("Save your profile first");
+        return;
+      }
+      setStep(2);
+    });
+    btnBackToProfile.addEventListener("click", () => setStep(1));
+
     // -----------------------------
-    // Save worker origin (both tabs)
+    // Verification token cache (per host + method)
     // -----------------------------
-    function saveWorkerOrigin(v, msgEls=[]) {
-      const x = String(v || "").trim();
-      if (!x) { toast("Worker origin required"); return false; }
-      if (!isValidHttpUrl(x)) { toast("Invalid URL", "Worker origin must be https://..."); return false; }
-
-      WORKER_API_ORIGIN = x.replace(/\/+$/, "");
-      localStorage.setItem(WORKER_ORIGIN_KEY, WORKER_API_ORIGIN);
-
-      msgEls.forEach(el => { el.textContent = "Saved ✓"; setTimeout(() => el.textContent = "", 1400); });
-      toast("Saved", "Worker origin updated.");
-
-      // reflect in both inputs
-      settingsWorkerOrigin.value = WORKER_API_ORIGIN;
-      settingsWorkerOrigin2.value = WORKER_API_ORIGIN;
-
-      // update onboarding status (worker is local, but still part of flow)
-      renderOnboardingStatus(merchantDocCache || {});
-      return true;
+    function safeHostFromUrl(u) {
+      try { return new URL(u).host; }
+      catch { return String(u || "").replace(/^https?:\/\//, "").split("/")[0]; }
+    }
+    function verifyTokenKey(website, method) {
+      const host = safeHostFromUrl(website);
+      return `wisesize_verify_token:${method}:${host}`;
+    }
+    function saveLastVerifyToken(website, method, token) {
+      try { localStorage.setItem(verifyTokenKey(website, method), token); } catch {}
+    }
+    function loadLastVerifyToken(website, method) {
+      try { return localStorage.getItem(verifyTokenKey(website, method)); } catch { return null; }
     }
 
-    btnSaveWorkerOrigin.addEventListener("click", () => saveWorkerOrigin(settingsWorkerOrigin.value, [workerMsg]));
-    btnSaveWorkerOrigin2.addEventListener("click", () => saveWorkerOrigin(settingsWorkerOrigin2.value, [workerMsg2]));
-
-    // -----------------------------
-    // Verification (shared helpers)
-    // -----------------------------
     function renderVerifyInstructions(website, method, token, outEl) {
       const host = safeHostFromUrl(website);
 
@@ -1219,9 +1153,8 @@
       }
     }
 
-    async function startVerifyFlow({ website, method, setBusyBtn, boxEl, instrEl, tokenEl, stateEl, setToken, saveToken }) {
+    async function startVerifyFlow({ website, method, setBusyBtn, boxEl, instrEl, tokenEl, stateEl, setToken }) {
       requireAuth();
-      if (!WORKER_API_ORIGIN) { toast("Set Worker origin first"); return; }
       if (!website) { toast("Website required"); return; }
       if (!isValidHttpUrl(website)) { toast("Invalid website URL"); return; }
 
@@ -1230,7 +1163,7 @@
 
       try {
         const idToken = await auth.currentUser.getIdToken(true);
-        const res = await fetch(WORKER_API_ORIGIN + "/v1/merchant/verify/start", {
+        const res = await fetch(VERIFY_API_ORIGIN + "/v1/merchant/verify/start", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({
@@ -1245,7 +1178,7 @@
         if (!data.ok) throw new Error(data.error || "start not ok");
 
         setToken(data.token);
-        saveToken(website, method, data.token);
+        saveLastVerifyToken(website, method, data.token);
 
         boxEl.style.display = "";
         renderVerifyInstructions(website, method, data.token, instrEl);
@@ -1255,15 +1188,14 @@
       } catch (e) {
         console.error(e);
         stateEl.textContent = "Failed to start verification.";
-        toast("Verification start failed", "Check Worker origin + endpoint logs.");
+        toast("Verification start failed", "Check VERIFY_API_ORIGIN + server logs.");
       } finally {
         setBusy(setBusyBtn, false);
       }
     }
 
-    async function checkVerifyFlow({ website, method, token, setBusyBtn, stateEl, onVerified }) {
+    async function checkVerifyFlow({ website, method, token, setBusyBtn, stateEl }) {
       requireAuth();
-      if (!WORKER_API_ORIGIN) { toast("Set Worker origin first"); return; }
       if (!website) { toast("Website required"); return; }
       if (!isValidHttpUrl(website)) { toast("Invalid website URL"); return; }
       if (!token) { toast("Start verification first"); return; }
@@ -1273,7 +1205,7 @@
 
       try {
         const idToken = await auth.currentUser.getIdToken(true);
-        const res = await fetch(WORKER_API_ORIGIN + "/v1/merchant/verify/check", {
+        const res = await fetch(VERIFY_API_ORIGIN + "/v1/merchant/verify/check", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({
@@ -1291,20 +1223,15 @@
         if (data.verified === true) {
           stateEl.textContent = "Verified ✓";
 
-          // Update merchant doc: websiteVerified = true (so the flow unlocks)
+          // IMPORTANT: server should update /wise-size/app/merchants/{merchantId}.websiteVerified = true
+          // Client just reloads it.
           const ref = wsDoc(db, "merchants", merchantId);
-          await setDoc(ref, {
-            websiteVerified: true,
-            verifiedAt: serverTimestamp(),
-            status: "active"
-          }, { merge: true });
-
           const snap = await getDoc(ref);
           merchantDocCache = snap.data();
+
           renderOnboardingStatus(merchantDocCache);
 
           toast("Verified ✓", "Website ownership confirmed.");
-          if (onVerified) onVerified();
         } else {
           stateEl.textContent = "Not found yet. DNS can take time—try again.";
           toast("Not found yet", "DNS and caches can take time.");
@@ -1312,13 +1239,12 @@
       } catch (e) {
         console.error(e);
         stateEl.textContent = "Verification check failed.";
-        toast("Verification check failed", "Check Worker logs + proof placement.");
+        toast("Verification check failed", "Check server logs + proof placement.");
       } finally {
         setBusy(setBusyBtn, false);
       }
     }
 
-    // Onboarding verification hooks
     btnStartVerify.addEventListener("click", () => {
       const website = (verifyWebsite.value.trim() || settingsWebsite.value.trim());
       startVerifyFlow({
@@ -1329,8 +1255,7 @@
         instrEl: verifyInstructions,
         tokenEl: verifyTokenLabel,
         stateEl: verifyState,
-        setToken: (t) => lastVerifyToken = t,
-        saveToken: saveLastVerifyToken
+        setToken: (t) => lastVerifyToken = t
       });
     });
 
@@ -1345,11 +1270,7 @@
         method: verifyMethod.value,
         token: lastVerifyToken,
         setBusyBtn: btnCheckVerify,
-        stateEl: verifyState,
-        onVerified: () => {
-          // after verified, we can auto-continue if you want:
-          // activateRoute("items");
-        }
+        stateEl: verifyState
       });
     });
 
@@ -1360,46 +1281,8 @@
       toast("Copied ✓");
     });
 
-    // Verification tab (re-run)
-    btnStartVerify2.addEventListener("click", () => {
-      const website = (verifyWebsite2.value.trim() || settingsWebsite2.value.trim());
-      startVerifyFlow({
-        website,
-        method: verifyMethod2.value,
-        setBusyBtn: btnStartVerify2,
-        boxEl: verifyBox2,
-        instrEl: verifyInstructions2,
-        tokenEl: verifyTokenLabel2,
-        stateEl: verifyState2,
-        setToken: (t) => lastVerifyToken2 = t,
-        saveToken: saveLastVerifyToken
-      });
-    });
-
-    btnCheckVerify2.addEventListener("click", async () => {
-      const website = (verifyWebsite2.value.trim() || settingsWebsite2.value.trim());
-      if (!lastVerifyToken2) {
-        const cached = loadLastVerifyToken(website, verifyMethod2.value);
-        if (cached) lastVerifyToken2 = cached;
-      }
-      await checkVerifyFlow({
-        website,
-        method: verifyMethod2.value,
-        token: lastVerifyToken2,
-        setBusyBtn: btnCheckVerify2,
-        stateEl: verifyState2
-      });
-    });
-
-    btnCopyVerifyToken2.addEventListener("click", async () => {
-      const t = (verifyTokenLabel2.textContent || "").trim();
-      if (!t) { toast("No token to copy"); return; }
-      await copyText(t);
-      toast("Copied ✓");
-    });
-
     // -----------------------------
-    // Builder logic (unchanged core)
+    // Builder logic
     // -----------------------------
     function normMeasureKey(k) {
       const raw = String(k).trim();
@@ -1634,7 +1517,7 @@
     refreshSizesFromSet();
 
     // -----------------------------
-    // Items list / queue / usage (same as before; gated by onboarding)
+    // Items list / usage (gated)
     // -----------------------------
     function chip(label, value) {
       const v = String(value ?? "—");
@@ -1642,8 +1525,7 @@
         (label === "publish" && v === "published") ? "good" :
         (label === "publish" && v === "rejected") ? "bad" :
         (label === "status" && v === "pass") ? "good" :
-        (label === "status" && v === "fail") ? "bad" :
-        (label === "stage" && (v === "human" || v === "source_proof")) ? "warn" : "";
+        (label === "status" && v === "fail") ? "bad" : "";
       return `<span class="pill ${cls}">${escapeHtml(label)}: ${escapeHtml(v)}</span>`;
     }
 
@@ -1708,14 +1590,7 @@
                </div>
                <div class="pills">
                  ${chip("publish", it.publishStatus || "draft")}
-                 ${chip("stage", v.stage || "—")}
-                 ${chip("status", v.status || "—")}
-                 ${chip("progress", String((v.progress ?? 0)) + "%")}
                </div>
-               <div class="progressWrap">
-                 <div class="progressBar" style="width:${Math.max(0, Math.min(100, Number(v.progress || 0)))}%"></div>
-               </div>
-               ${v.nextAction ? `<div class="muted" style="margin-top:8px;"><b>Next:</b> ${escapeHtml(v.nextAction)}</div>` : ""}
              </div>
              <div class="inline" style="align-items:flex-start;">
                <button data-act="view">View</button>
@@ -1734,58 +1609,6 @@
         });
 
         itemsList.appendChild(el);
-      });
-    }
-
-    async function loadQueue() {
-      if (!merchantId) {
-        queueList.innerHTML = '<div class="muted">Sign in to manage verification.</div>';
-        return;
-      }
-
-      queueList.innerHTML = '<div class="muted">Loading…</div>';
-
-      const qy = query(
-        wsCollection(db, "items"),
-        where("merchantId", "==", merchantId),
-        orderBy("createdAt", "desc"),
-        limit(80)
-      );
-
-      const snap = await getDocs(qy);
-      const items = snap.docs.map(d => Object.assign({ id: d.id }, d.data()))
-        .filter(it => {
-          const v = it.verification || {};
-          if ((it.publishStatus || "") !== "submitted") return false;
-          return !!v.nextAction || ["source_proof", "human"].includes(v.stage) || v.status === "fail";
-        });
-
-      queueList.innerHTML = "";
-      if (!items.length) {
-        queueList.innerHTML = '<div class="muted">Queue is empty ✓</div>';
-        return;
-      }
-
-      items.forEach(it => {
-        const v = it.verification || {};
-        const el = document.createElement("div");
-        el.className = "item";
-        el.innerHTML =
-          `<div class="itemTop">
-             <div style="min-width:0">
-               <div class="itemTitle">${escapeHtml(it.brand)} — ${escapeHtml(it.name)}</div>
-               <div class="muted" style="margin-top:2px;">stage: <b>${escapeHtml(v.stage || "—")}</b> • status: <b>${escapeHtml(v.status || "—")}</b></div>
-               ${v.nextAction ? `<div class="muted" style="margin-top:6px;"><b>Next action:</b> ${escapeHtml(v.nextAction)}</div>` : ""}
-               <div class="progressWrap" style="margin-top:8px;">
-                 <div class="progressBar" style="width:${Math.max(0, Math.min(100, Number(v.progress || 0)))}%"></div>
-               </div>
-             </div>
-             <div class="inline" style="align-items:flex-start;">
-               <button data-act="view">View</button>
-             </div>
-           </div>`;
-        el.querySelector('[data-act="view"]').addEventListener("click", () => openDrawer(it));
-        queueList.appendChild(el);
       });
     }
 
@@ -1875,15 +1698,13 @@
       el.addEventListener("change", () => renderItems(itemsCache));
     });
     btnRefreshItems.addEventListener("click", loadItems);
-    btnRefreshQueue.addEventListener("click", loadQueue);
     btnRefreshUsage.addEventListener("click", loadUsage);
 
-    // Submit item
+    // Submit item (gated)
     btnSubmitItem.addEventListener("click", async () => {
       try {
         requireAuth();
 
-        // Gate at action-level too (in case user hacks UI)
         if (!merchantDocCache || !isMerchantReady(merchantDocCache).ready) {
           toast("Complete onboarding", "Verify your website to submit items.");
           activateRoute("onboarding");
@@ -1914,16 +1735,13 @@
           name,
           category,
           sizeChart: chart,
-
           measurement: {
             type: chart.type === "garment" ? "garment" : "body_recommended",
             unit: chart.unit,
             method: "merchant_entered",
             tolerances: {}
           },
-
           publishStatus: "submitted",
-
           verification: {
             stage: "auto_schema",
             status: "pending",
@@ -1933,7 +1751,6 @@
             humanRequired: false,
             lastUpdatedAt: serverTimestamp()
           },
-
           createdAt: serverTimestamp()
         });
 
@@ -1944,7 +1761,6 @@
         itemName.value = "";
 
         await loadItems();
-        await loadQueue();
       } catch (e) {
         console.error(e);
         itemMsg.textContent = "Submit failed.";
@@ -1967,22 +1783,11 @@
       drawerBack.classList.add("show");
       drawerBack.setAttribute("aria-hidden", "false");
 
-      const v = item.verification || {};
       const embedSnippet = buildEmbedSnippet(merchantId, item.id);
 
       drawerBody.innerHTML =
         `<div class="card" style="margin-bottom:12px;">
-           <h2>Status</h2>
-           <div class="pills">
-             ${chip("publish", item.publishStatus || "draft")}
-             ${chip("stage", v.stage || "—")}
-             ${chip("status", v.status || "—")}
-             ${chip("progress", String((v.progress ?? 0)) + "%")}
-           </div>
-           <div class="progressWrap">
-             <div class="progressBar" style="width:${Math.max(0, Math.min(100, Number(v.progress || 0)))}%"></div>
-           </div>
-           ${v.nextAction ? `<div class="muted" style="margin-top:8px;"><b>Next action:</b> ${escapeHtml(v.nextAction)}</div>` : ""}
+           <h2>Embed</h2>
            <div class="actions"><button id="drawerCopyEmbed">Copy embed</button></div>
            <div class="code" id="drawerEmbedCode"></div>
          </div>
@@ -2007,10 +1812,7 @@
     }
 
     // -----------------------------
-    // Auth boot (FULL FLOW)
-    // 1) if signed out -> redirect to /signin?redirect=
-    // 2) if signed in -> ensure merchant doc exists (creates merchant account on first visit)
-    // 3) gate dashboard until websiteVerified + profile + worker origin
+    // Auth boot
     // -----------------------------
     onAuthStateChanged(auth, async (u) => {
       if (!u) {
@@ -2028,11 +1830,10 @@
       btnSignOut.style.display = "";
 
       try {
-        // Create / load merchant doc
         merchantDocCache = await ensureMerchantDoc();
         syncSettingsUIFromMerchant(merchantDocCache);
 
-        // If we have cached tokens, show them to reduce friction
+        // Load cached verification token for this browser (reduce friction)
         const website = (merchantDocCache.website || "").trim();
         if (website && isValidHttpUrl(website)) {
           const cached = loadLastVerifyToken(website, verifyMethod.value);
@@ -2043,35 +1844,21 @@
             verifyTokenLabel.textContent = cached;
             verifyState.textContent = "Token loaded from this browser. Click Check verification after adding proof.";
           }
-
-          const cached2 = loadLastVerifyToken(website, verifyMethod2.value);
-          if (cached2) {
-            lastVerifyToken2 = cached2;
-            verifyBox2.style.display = "";
-            renderVerifyInstructions(website, verifyMethod2.value, cached2, verifyInstructions2);
-            verifyTokenLabel2.textContent = cached2;
-            verifyState2.textContent = "Token loaded from this browser. Click Check verification after adding proof.";
-          }
         }
 
-        // Render gating
         renderOnboardingStatus(merchantDocCache);
 
-        // If not ready -> force onboarding route
         const st = isMerchantReady(merchantDocCache);
         if (!st.ready) {
           activateRoute("onboarding");
           return;
         }
 
-        // Ready -> load core data, default route to items
         activateRoute("items");
         await loadItems();
-        await loadQueue();
       } catch (e) {
         console.error(e);
-        toast("Load failed", "Check Firestore rules/indexes.");
-        // safest fallback: keep user on onboarding so they can at least see what's wrong
+        toast("Load failed", "Check Firestore rules/indexes + firebase-init.js.");
         activateRoute("onboarding");
       }
     });
