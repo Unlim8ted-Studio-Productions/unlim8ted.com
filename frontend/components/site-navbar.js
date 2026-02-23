@@ -30,6 +30,13 @@ class SiteNavbar extends HTMLElement {
     const signInHref = this.getAttribute("signin-href") || "https://unlim8ted.com/sign-in";
     const profileHref = this.getAttribute("profile-href") || "https://unlim8ted.com/profile";
 
+    // ✅ NEW: no-spacer option (use: <site-navbar no-spacer="true">)
+    const noSpacerAttr = this.getAttribute("no-spacer");
+    const thisNoSpacer =
+      noSpacerAttr !== null &&
+      String(noSpacerAttr).toLowerCase() !== "false" &&
+      String(noSpacerAttr).trim() !== "0";
+
     const firebaseConfig = {
       apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
       authDomain: "unlim8ted-db.firebaseapp.com",
@@ -100,14 +107,13 @@ class SiteNavbar extends HTMLElement {
           user-select:none;
         }
 
-      .brand-logo{
-  width:26px;
-  height:26px;
-  display:block;
-  flex:0 0 auto;
-  filter: drop-shadow(0 0 14px rgba(184,107,255,.25));
-}
-
+        .brand-logo{
+          width:26px;
+          height:26px;
+          display:block;
+          flex:0 0 auto;
+          filter: drop-shadow(0 0 14px rgba(184,107,255,.25));
+        }
 
         .navbar-toggle{
           display:none;
@@ -194,6 +200,21 @@ class SiteNavbar extends HTMLElement {
         /* hover on desktop, click on mobile */
         .dropdown:hover .dropdown-content{ display:block; }
         .dropdown.open .dropdown-content{ display:block; }
+
+        /* Add an invisible hover bridge filling the gap */
+        .dropdown::after{
+          content:"";
+          position:absolute;
+          left: 0;
+          right: 0;
+          top: 100%;
+          height: 12px;          /* >= your gap (8px) */
+          background: transparent;
+        }
+        .dropdown:hover .dropdown-content,
+        .dropdown:focus-within .dropdown-content{
+          display:block;
+        }
 
         /* Right icons */
         .right-icons{
@@ -348,7 +369,7 @@ class SiteNavbar extends HTMLElement {
         @media (max-width: 820px){
           :host{ --nav-h: 56px; }
 
-          .brand{ display:none; } /* keeps layout clean on mobile */
+          .brand{ display:none; }
 
           .navbar-header{
             justify-content:flex-start;
@@ -384,91 +405,52 @@ class SiteNavbar extends HTMLElement {
             max-width: 380px;
           }
 
-          /* disable hover dropdown; click toggles .open */
           .dropdown:hover .dropdown-content{ display:none; }
         }
 
-        /* reduced motion */
         @media (prefers-reduced-motion: reduce){
           *{ transition:none !important; animation:none !important; }
-        }/* Keep your existing positioning */
-.dropdown-content{
-  top: calc(100% + 8px);
-}
-
-/* Add an invisible hover bridge filling the gap */
-.dropdown::after{
-  content:"";
-  position:absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  height: 12px;          /* >= your gap (8px) */
-  background: transparent;
-}
-
-/* Also keep it open when hovering the menu itself */
-.dropdown:hover .dropdown-content,
-.dropdown:focus-within .dropdown-content{
-  display:block;
-}
-
+        }
       </style>
 
       <nav class="navbar" role="navigation" aria-label="Primary">
         <div class="navbar-header">
-       <a class="brand" href="${base}/" aria-label="Unlim8ted Home">
-  <svg class="brand-logo" viewBox="0 0 960 720" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-    <clipPath id="p.0">
-      <path d="m0 0l960 0l0 720l-960 0l0 -720z" clip-rule="nonzero"></path>
-    </clipPath>
-    <g clip-path="url(#p.0)">
-      <path fill="#000000" fill-opacity="0.0" d="m0 0l960 0l0 720l-960 0z" fill-rule="evenodd"></path>
-
-      <path fill="#f22632" d="m502.70752 74.00787l1.7294617 1.9808502l-171.06903 153.4367l-63.916504 -54.968704l113.68451 -99.98256z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m502.70752 74.00787l1.7294617 1.9808502l-171.06903 153.4367l-63.916504 -54.968704l113.68451 -99.98256z" fill-rule="evenodd"></path>
-
-      <path fill="#febd29" d="m613.6493 175.20947l-61.49231 54.221115l-109.47186 -96.60121l62.181396 -56.327393z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m613.6493 175.20947l-61.49231 54.221115l-109.47186 -96.60121l62.181396 -56.327393z" fill-rule="evenodd"></path>
-
-      <path fill="#2a47aa" d="m519.24677 341.0839l96.66144 86.29483l-57.24939 49.61026l-95.90024 -85.46564z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m519.24677 341.0839l96.66144 86.29483l-57.24939 49.61026l-95.90024 -85.46564z" fill-rule="evenodd"></path>
-
-      <path fill="#69ba40" d="m613.6493 176.00478l0.07550049 108.24129l-109.4718 96.48282l-60.699524 -54.47946z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m613.6493 176.00478l0.07550049 108.24129l-109.4718 96.48282l-60.699524 -54.47946z" fill-rule="evenodd"></path>
-
-      <path fill="#ef3da7" d="m615.6588 427.50406l-0.37530518 111.92465l-45.398926 40.016296l-129.62732 1.4278564z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m615.6588 427.50406l-0.37530518 111.92465l-45.398926 40.016296l-129.62732 1.4278564z" fill-rule="evenodd"></path>
-
-      <path fill="#2a46aa" d="m569.32025 580.18134l-66.8504 58.009827l-62.299194 -56.554993z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m569.32025 580.18134l-66.8504 58.009827l-62.299194 -56.554993z" fill-rule="evenodd"></path>
-
-      <path fill="#211f83" d="m502.084 639.04425l-127.03937 -0.89801025l64.76376 -56.65381z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m502.084 639.04425l-127.03937 -0.89801025l64.76376 -56.65381z" fill-rule="evenodd"></path>
-
-      <path fill="#8031a6" d="m373.72177 638.9666l-112.66403 -100.28021l-0.43569946 -113.576996l178.93701 155.87729z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m373.72177 638.9666l-112.66403 -100.28021l-0.43569946 -113.576996l178.93701 155.87729z" fill-rule="evenodd"></path>
-
-      <path fill="#fea226" d="m320.99475 477.1177l95.50131 -82.75659l-59.275604 -53.1904l-96.375305 83.741425z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m320.99475 477.1177l95.50131 -82.75659l-59.275604 -53.1904l-96.375305 83.741425z" fill-rule="evenodd"></path>
-
-      <path fill="#2746ab" d="m359.01837 341.86877l55.989502 1.0452881l-26.641876 26.007477z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m359.01837 341.86877l55.989502 1.0452881l-26.641876 26.007477z" fill-rule="evenodd"></path>
-
-      <path fill="#0e2767" d="m415.90817 342.4668l50.362183 45.123108l-3.8110046 3.918396l2.312317 2.2810059l-48.624664 -0.35620117l-27.776886 -25.162842z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m415.90817 342.4668l50.362183 45.123108l-3.8110046 3.918396l2.312317 2.2810059l-48.624664 -0.35620117l-27.776886 -25.162842z" fill-rule="evenodd"></path>
-
-      <path fill="#176030" d="m415.00787 349.85483l28.407196 -25.051636l61.01953 54.375183l-27.981598 25.037415z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m415.00787 349.85483l28.407196 -25.051636l61.01953 54.375183l-27.981598 25.037415z" fill-rule="evenodd"></path>
-
-      <path fill="#f4388c" d="m414.09113 351.08453l-68.079315 -0.59664917l-76.18378 -67.51694l-0.3765869 -108.62448l173.80118 150.51797z" fill-rule="evenodd"></path>
-      <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m414.09113 351.08453l-68.079315 -0.59664917l-76.18378 -67.51694l-0.3765869 -108.62448l173.80118 150.51797z" fill-rule="evenodd"></path>
-    </g>
-  </svg>
-
-  <span>Unlim8ted</span>
-</a>
-
+          <a class="brand" href="${base}/" aria-label="Unlim8ted Home">
+            <svg class="brand-logo" viewBox="0 0 960 720" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10"
+                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <clipPath id="p.0"><path d="m0 0l960 0l0 720l-960 0l0 -720z" clip-rule="nonzero"></path></clipPath>
+              <g clip-path="url(#p.0)">
+                <path fill="#000000" fill-opacity="0.0" d="m0 0l960 0l0 720l-960 0z" fill-rule="evenodd"></path>
+                <path fill="#f22632" d="m502.70752 74.00787l1.7294617 1.9808502l-171.06903 153.4367l-63.916504 -54.968704l113.68451 -99.98256z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m502.70752 74.00787l1.7294617 1.9808502l-171.06903 153.4367l-63.916504 -54.968704l113.68451 -99.98256z" fill-rule="evenodd"></path>
+                <path fill="#febd29" d="m613.6493 175.20947l-61.49231 54.221115l-109.47186 -96.60121l62.181396 -56.327393z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m613.6493 175.20947l-61.49231 54.221115l-109.47186 -96.60121l62.181396 -56.327393z" fill-rule="evenodd"></path>
+                <path fill="#2a47aa" d="m519.24677 341.0839l96.66144 86.29483l-57.24939 49.61026l-95.90024 -85.46564z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m519.24677 341.0839l96.66144 86.29483l-57.24939 49.61026l-95.90024 -85.46564z" fill-rule="evenodd"></path>
+                <path fill="#69ba40" d="m613.6493 176.00478l0.07550049 108.24129l-109.4718 96.48282l-60.699524 -54.47946z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m613.6493 176.00478l0.07550049 108.24129l-109.4718 96.48282l-60.699524 -54.47946z" fill-rule="evenodd"></path>
+                <path fill="#ef3da7" d="m615.6588 427.50406l-0.37530518 111.92465l-45.398926 40.016296l-129.62732 1.4278564z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m615.6588 427.50406l-0.37530518 111.92465l-45.398926 40.016296l-129.62732 1.4278564z" fill-rule="evenodd"></path>
+                <path fill="#2a46aa" d="m569.32025 580.18134l-66.8504 58.009827l-62.299194 -56.554993z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m569.32025 580.18134l-66.8504 58.009827l-62.299194 -56.554993z" fill-rule="evenodd"></path>
+                <path fill="#211f83" d="m502.084 639.04425l-127.03937 -0.89801025l64.76376 -56.65381z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m502.084 639.04425l-127.03937 -0.89801025l64.76376 -56.65381z" fill-rule="evenodd"></path>
+                <path fill="#8031a6" d="m373.72177 638.9666l-112.66403 -100.28021l-0.43569946 -113.576996l178.93701 155.87729z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m373.72177 638.9666l-112.66403 -100.28021l-0.43569946 -113.576996l178.93701 155.87729z" fill-rule="evenodd"></path>
+                <path fill="#fea226" d="m320.99475 477.1177l95.50131 -82.75659l-59.275604 -53.1904l-96.375305 83.741425z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m320.99475 477.1177l95.50131 -82.75659l-59.275604 -53.1904l-96.375305 83.741425z" fill-rule="evenodd"></path>
+                <path fill="#2746ab" d="m359.01837 341.86877l55.989502 1.0452881l-26.641876 26.007477z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m359.01837 341.86877l55.989502 1.0452881l-26.641876 26.007477z" fill-rule="evenodd"></path>
+                <path fill="#0e2767" d="m415.90817 342.4668l50.362183 45.123108l-3.8110046 3.918396l2.312317 2.2810059l-48.624664 -0.35620117l-27.776886 -25.162842z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m415.90817 342.4668l50.362183 45.123108l-3.8110046 3.918396l2.312317 2.2810059l-48.624664 -0.35620117l-27.776886 -25.162842z" fill-rule="evenodd"></path>
+                <path fill="#176030" d="m415.00787 349.85483l28.407196 -25.051636l61.01953 54.375183l-27.981598 25.037415z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m415.00787 349.85483l28.407196 -25.051636l61.01953 54.375183l-27.981598 25.037415z" fill-rule="evenodd"></path>
+                <path fill="#f4388c" d="m414.09113 351.08453l-68.079315 -0.59664917l-76.18378 -67.51694l-0.3765869 -108.62448l173.80118 150.51797z" fill-rule="evenodd"></path>
+                <path stroke="#000000" stroke-width="1.1994750656167978" stroke-linejoin="round" stroke-linecap="butt" d="m414.09113 351.08453l-68.079315 -0.59664917l-76.18378 -67.51694l-0.3765869 -108.62448l173.80118 150.51797z" fill-rule="evenodd"></path>
+              </g>
+            </svg>
+            <span>Unlim8ted</span>
+          </a>
 
           <button class="navbar-toggle" id="toggleBtn" aria-label="Toggle menu" aria-expanded="false">☰</button>
 
@@ -528,16 +510,17 @@ class SiteNavbar extends HTMLElement {
       </nav>
     `;
 
-    // ---- spacer below fixed nav ----
-    this.syncSpacer();
+    // ✅ spacer below fixed nav (skippable)
+    if (!thisNoSpacer) this.syncSpacer();
+    else this.removeSpacer();
 
     // ---- state ----
     this._isMobile = window.matchMedia("(max-width: 820px)").matches;
 
-    // Preload https://assets.unlim8ted.com/data/products.json (cart display will re-render when ready)
+    // Preload products
     this.loadProducts().then(() => {
       this.renderCartMenu();
-    }).catch(() => { });
+    }).catch(() => {});
 
     // Mobile toggle
     const toggleBtn = this.shadowRoot.getElementById("toggleBtn");
@@ -545,14 +528,14 @@ class SiteNavbar extends HTMLElement {
     toggleBtn.addEventListener("click", () => {
       const open = links.classList.toggle("show");
       toggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
-      this.ensureSpacer();
+      if (!thisNoSpacer) this.ensureSpacer();
     });
 
     // “More” dropdown click on mobile
     const moreDropdown = this.shadowRoot.getElementById("moreDropdown");
     const moreBtn = this.shadowRoot.getElementById("moreBtn");
     moreBtn.addEventListener("click", (e) => {
-      if (!window.matchMedia("(max-width: 820px)").matches) return; // desktop hover handles it
+      if (!window.matchMedia("(max-width: 820px)").matches) return;
       e.preventDefault();
       const open = moreDropdown.classList.toggle("open");
       moreBtn.setAttribute("aria-expanded", open ? "true" : "false");
@@ -564,7 +547,7 @@ class SiteNavbar extends HTMLElement {
       try {
         const href = new URL(a.getAttribute("href"), window.location.origin).pathname.replace(/\/$/, "");
         if (href === path) a.classList.add("active");
-      } catch { }
+      } catch {}
     });
 
     // Menus
@@ -582,7 +565,6 @@ class SiteNavbar extends HTMLElement {
       setExpanded(profileBtn, false);
     };
 
-    // Cart toggle
     cartBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       profileMenu.classList.remove("open");
@@ -591,7 +573,6 @@ class SiteNavbar extends HTMLElement {
       setExpanded(cartBtn, open);
     });
 
-    // Profile toggle
     profileBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       cartMenu.classList.remove("open");
@@ -600,10 +581,7 @@ class SiteNavbar extends HTMLElement {
       setExpanded(profileBtn, open);
     });
 
-    // Outside click / ESC close
-    const onEsc = (e) => {
-      if (e.key === "Escape") closeMenus();
-    };
+    const onEsc = (e) => { if (e.key === "Escape") closeMenus(); };
 
     window.addEventListener("click", closeMenus);
     document.addEventListener("keydown", onEsc);
@@ -642,6 +620,24 @@ class SiteNavbar extends HTMLElement {
 
     if (this._onWinResize) window.removeEventListener("resize", this._onWinResize);
     this._onWinResize = null;
+
+    // ✅ if unmounted, remove spacer as well
+    this.removeSpacer();
+  }
+
+  // ✅ NEW: allow toggling no-spacer dynamically if attribute changes
+  static get observedAttributes() {
+    return ["no-spacer"];
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name !== "no-spacer") return;
+    const noSpacer =
+      newValue !== null &&
+      String(newValue).toLowerCase() !== "false" &&
+      String(newValue).trim() !== "0";
+
+    if (noSpacer) this.removeSpacer();
+    else this.syncSpacer();
   }
 
   // ===== https://assets.unlim8ted.com/data/products.json =====
@@ -684,7 +680,6 @@ class SiteNavbar extends HTMLElement {
 
       this._productById.set(pid, p);
 
-      // your json uses "varients" (typo); support both
       const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
       for (const v of vars) {
         const vid = String(v.id ?? v.variantId ?? "").trim();
@@ -694,61 +689,57 @@ class SiteNavbar extends HTMLElement {
     }
   }
 
-resolveCartDisplay(it) {
-  const productId = String(it.productId || "").trim();
-  const variantId = String(it.variantId || "").trim();
+  resolveCartDisplay(it) {
+    const productId = String(it.productId || "").trim();
+    const variantId = String(it.variantId || "").trim();
 
-  const p = productId ? (this._productById.get(productId) || null) : null;
-  const v = (productId && variantId) ? (this._variantByKey.get(`${productId}::${variantId}`) || null) : null;
+    const p = productId ? (this._productById.get(productId) || null) : null;
+    const v = (productId && variantId) ? (this._variantByKey.get(`${productId}::${variantId}`) || null) : null;
 
-  const title =
-    String(it.title || it.name || "").trim() ||
-    String(p?.name || p?.title || productId || it.id || "Item").trim();
+    const title =
+      String(it.title || it.name || "").trim() ||
+      String(p?.name || p?.title || productId || it.id || "Item").trim();
 
-  const variantLabel =
-    String(it.variantLabel || "").trim() ||
-    String(v?.name || "").trim();
+    const variantLabel =
+      String(it.variantLabel || "").trim() ||
+      String(v?.name || "").trim();
 
-  // --- Price resolution (cart item wins, then variant, then product) ---
-  const parsedItem = this.parsePriceAny(it.price);
-  const parsedVar  = this.parsePriceAny(v?.price);
-  const parsedProd = this.parsePriceAny(p?.price);
+    const parsedItem = this.parsePriceAny(it.price);
+    const parsedVar  = this.parsePriceAny(v?.price);
+    const parsedProd = this.parsePriceAny(p?.price);
 
-  // currency preference: item -> variant -> product -> USD
-  const currency =
-    (parsedItem?.currency) ||
-    (v?.currency) ||
-    (parsedVar?.currency) ||
-    (p?.currency) ||
-    (parsedProd?.currency) ||
-    "USD";
+    const currency =
+      (parsedItem?.currency) ||
+      (v?.currency) ||
+      (parsedVar?.currency) ||
+      (p?.currency) ||
+      (parsedProd?.currency) ||
+      "USD";
 
-  // pick best source
-  const picked = parsedItem || parsedVar || parsedProd;
+    const picked = parsedItem || parsedVar || parsedProd;
+    const priceAmount = picked ? picked.amount : null;
+    const priceIsMinor = picked ? !!picked.isMinor : false;
 
-  // Sometimes your https://assets.unlim8ted.com/data/products.json uses dollars (major units) like 23.0
-  // Sometimes Square returns cents (minor units) like 2300
-  // Heuristic: if picked is from objects (isMinor=true) treat as cents; otherwise treat as dollars.
-  const priceAmount = picked ? picked.amount : null;
-  const priceIsMinor = picked ? !!picked.isMinor : false;
+    let image = this.safeUrl(it.image || it.imageUrl || "");
+    if (!image && Array.isArray(v?.images) && v.images.length) image = this.safeUrl(v.images[0]);
+    if (!image) image = this.safeUrl(v?.image || "");
+    if (!image) image = this.safeUrl(p?.image || "");
 
-  let image = this.safeUrl(it.image || it.imageUrl || "");
-  if (!image && Array.isArray(v?.images) && v.images.length) image = this.safeUrl(v.images[0]);
-  if (!image) image = this.safeUrl(v?.image || ""); // <- add support for v.image (your json uses image)
-  if (!image) image = this.safeUrl(p?.image || "");
-
-  return {
-    title,
-    variantLabel,
-    priceAmount,
-    priceCurrency: currency,
-    priceIsMinor,
-    image
-  };
-}
-
+    return { title, variantLabel, priceAmount, priceCurrency: currency, priceIsMinor, image };
+  }
 
   // ----- spacer logic -----
+  removeSpacer() {
+    const spacer = this.nextElementSibling;
+    if (spacer && spacer.classList && spacer.classList.contains("site-navbar-spacer")) {
+      spacer.remove();
+    }
+    if (this._resizeObs) this._resizeObs.disconnect();
+    this._resizeObs = null;
+    if (this._onWinResize) window.removeEventListener("resize", this._onWinResize);
+    this._onWinResize = null;
+  }
+
   ensureSpacer() {
     let spacer = this.nextElementSibling;
     if (!spacer || !spacer.classList.contains("site-navbar-spacer")) {
@@ -807,7 +798,7 @@ resolveCartDisplay(it) {
 
     if (!user) {
       this.cartItems = this.getLocalCartItems();
-      this.loadProducts().then(() => this.renderCartMenu()).catch(() => { });
+      this.loadProducts().then(() => this.renderCartMenu()).catch(() => {});
       this.renderCartMenu();
       this.updateCartBadge(this.countCart(this.cartItems));
       return;
@@ -838,7 +829,7 @@ resolveCartDisplay(it) {
       (err) => {
         console.error("Cart listener error:", err);
         this.cartItems = this.getLocalCartItems();
-        this.loadProducts().then(() => this.renderCartMenu()).catch(() => { });
+        this.loadProducts().then(() => this.renderCartMenu()).catch(() => {});
         this.renderCartMenu();
         this.updateCartBadge(this.countCart(this.cartItems));
       }
@@ -856,57 +847,51 @@ resolveCartDisplay(it) {
     badge.textContent = n > 99 ? "99+" : String(n);
     badge.classList.toggle("hidden", n === 0);
   }
-parsePriceAny(val) {
-  // Handles: 23, "23", "$23.00", {amount: 2300}, {amount_money:{amount:2300,currency:"USD"}}
-  if (val == null) return null;
 
-  // Square-like money objects
-  if (typeof val === "object") {
-    if (val.amount_money && typeof val.amount_money.amount === "number") {
-      return { amount: val.amount_money.amount, currency: val.amount_money.currency || "USD", isMinor: true };
+  parsePriceAny(val) {
+    if (val == null) return null;
+
+    if (typeof val === "object") {
+      if (val.amount_money && typeof val.amount_money.amount === "number") {
+        return { amount: val.amount_money.amount, currency: val.amount_money.currency || "USD", isMinor: true };
+      }
+      if (typeof val.amount === "number") {
+        return { amount: val.amount, currency: val.currency || "USD", isMinor: true };
+      }
+      if (val.money && typeof val.money.amount === "number") {
+        return { amount: val.money.amount, currency: val.money.currency || "USD", isMinor: true };
+      }
     }
-    if (typeof val.amount === "number") {
-      return { amount: val.amount, currency: val.currency || "USD", isMinor: true };
+
+    if (typeof val === "number" && Number.isFinite(val)) {
+      return { amount: val, currency: "USD", isMinor: false };
     }
-    // sometimes { money: { amount, currency } }
-    if (val.money && typeof val.money.amount === "number") {
-      return { amount: val.money.amount, currency: val.money.currency || "USD", isMinor: true };
+
+    if (typeof val === "string") {
+      const s = val.trim();
+      if (!s) return null;
+      const n = Number(s.replace(/[^0-9.\-]/g, ""));
+      if (Number.isFinite(n)) return { amount: n, currency: "USD", isMinor: false };
+    }
+
+    return null;
+  }
+
+  formatMoney(amount, currency = "USD", isMinor = false) {
+    let major = Number(amount);
+    if (!Number.isFinite(major)) return "";
+    if (isMinor) major = major / 100;
+
+    try {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 2,
+      }).format(major);
+    } catch {
+      return `$${major.toFixed(2)}`;
     }
   }
-
-  // Numeric
-  if (typeof val === "number" && Number.isFinite(val)) {
-    return { amount: val, currency: "USD", isMinor: false };
-  }
-
-  // String like "$23.00" or "23.00"
-  if (typeof val === "string") {
-    const s = val.trim();
-    if (!s) return null;
-    const n = Number(s.replace(/[^0-9.\-]/g, ""));
-    if (Number.isFinite(n)) return { amount: n, currency: "USD", isMinor: false };
-  }
-
-  return null;
-}
-
-formatMoney(amount, currency = "USD", isMinor = false) {
-  // If isMinor, amount is cents (USD minor units). Convert to major units.
-  let major = Number(amount);
-  if (!Number.isFinite(major)) return "";
-  if (isMinor) major = major / 100;
-
-  try {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency,
-      maximumFractionDigits: 2,
-    }).format(major);
-  } catch {
-    // fallback if Intl currency fails
-    return `$${major.toFixed(2)}`;
-  }
-}
 
   renderCartMenu() {
     const meta = this.shadowRoot.getElementById("cartMeta");
@@ -928,34 +913,31 @@ formatMoney(amount, currency = "USD", isMinor = false) {
     }
 
     const show = items.slice(0, 5);
-    list.innerHTML = show
-      .map((it) => {
-        const r = this.resolveCartDisplay(it);
-        const qty = Number(it.qty) || 1;
+    list.innerHTML = show.map((it) => {
+      const r = this.resolveCartDisplay(it);
+      const qty = Number(it.qty) || 1;
 
-        const subLeft = r.variantLabel ? `Qty: ${qty} • ${this.escapeHtml(r.variantLabel)}` : `Qty: ${qty}`;
-        const subRight =
-  (r.priceAmount != null)
-    ? this.escapeHtml(this.formatMoney(r.priceAmount, r.priceCurrency, r.priceIsMinor))
-    : "";
+      const subLeft = r.variantLabel ? `Qty: ${qty} • ${this.escapeHtml(r.variantLabel)}` : `Qty: ${qty}`;
+      const subRight =
+        (r.priceAmount != null)
+          ? this.escapeHtml(this.formatMoney(r.priceAmount, r.priceCurrency, r.priceIsMinor))
+          : "";
 
-
-        return `
-          <div class="cart-item">
-            <div class="thumb">
-              ${r.image ? `<img src="${this.escapeHtml(r.image)}" alt="">` : "Item"}
-            </div>
-            <div class="ci-main">
-              <div class="ci-title">${this.escapeHtml(r.title)}</div>
-              <div class="ci-sub">
-                <span>${subLeft}</span>
-                <span>${subRight}</span>
-              </div>
+      return `
+        <div class="cart-item">
+          <div class="thumb">
+            ${r.image ? `<img src="${this.escapeHtml(r.image)}" alt="">` : "Item"}
+          </div>
+          <div class="ci-main">
+            <div class="ci-title">${this.escapeHtml(r.title)}</div>
+            <div class="ci-sub">
+              <span>${subLeft}</span>
+              <span>${subRight}</span>
             </div>
           </div>
-        `;
-      })
-      .join("");
+        </div>
+      `;
+    }).join("");
 
     if (items.length > show.length) {
       list.innerHTML += `
@@ -978,8 +960,6 @@ formatMoney(amount, currency = "USD", isMinor = false) {
         productId: it.productId || it.pid || null,
         variantId: it.variantId || it.vid || null,
         qty: Number(it.qty) || 1,
-
-        // legacy optional fields (if present, ok)
         title: it.title || it.name || it.productName || "",
         variantLabel: it.variantLabel || "",
         price: it.price ?? null,
