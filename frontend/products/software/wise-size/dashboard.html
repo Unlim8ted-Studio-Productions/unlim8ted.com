@@ -1,0 +1,1705 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WiseSize — Merchant Dashboard</title>
+
+  <!-- Optional but recommended: basic CSP.
+       If you move inline styles/scripts to separate files, you can tighten this further. -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    img-src 'self' data: https:;
+    style-src 'self' 'unsafe-inline';
+    script-src 'self' https://www.gstatic.com 'unsafe-inline';
+    connect-src 'self' https:;">
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --panel: rgba(20, 22, 28, .92);
+      --card: rgba(255, 255, 255, .05);
+      --border: rgba(255, 255, 255, .10);
+      --muted: rgba(255, 255, 255, .72);
+      --good: #4ade80;
+      --warn: #fbbf24;
+      --bad: #fb7185;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: #e8e8ea; }
+    a { color: #e8e8ea; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand { font-weight: 900; letter-spacing: .35px; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .tab {
+      cursor: pointer;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .07);
+      color: #fff;
+      padding: 8px 10px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .tab.active { background: #fff; color: #000; }
+
+    .auth {
+      margin-left: auto;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .container { max-width: 1240px; margin: 0 auto; padding: 18px 16px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+    }
+
+    h1 { margin: 0 0 10px; font-size: 20px; }
+    h2 { margin: 0 0 8px; font-size: 16px; }
+
+    .muted { color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .row { display: grid; gap: 8px; margin: 10px 0; }
+    label { font-size: 13px; opacity: .9; }
+
+    input, textarea, select, button {
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(0, 0, 0, .25);
+      color: #fff;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    textarea { width: 100%; }
+    button { cursor: pointer; font-weight: 850; background: rgba(255, 255, 255, .10); }
+    button:hover { background: rgba(255, 255, 255, .14); }
+    button.primary { background: #fff; color: #000; border-color: rgba(255, 255, 255, .35); }
+    button.primary:hover { opacity: .92; }
+    button.ghost { background: transparent; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+
+    .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .06);
+      font-size: 12px;
+    }
+    .pill.good { border-color: rgba(74, 222, 128, .35); }
+    .pill.warn { border-color: rgba(251, 191, 36, .35); }
+    .pill.bad { border-color: rgba(251, 113, 133, .35); }
+
+    .list { display: grid; gap: 10px; }
+    .item { border: 1px solid var(--border); background: rgba(255, 255, 255, .04); border-radius: 14px; padding: 12px; }
+    .itemTop { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+    .itemTitle { font-weight: 950; }
+
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+
+    .code {
+      margin-top: 10px;
+      background: rgba(0, 0, 0, .35);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      overflow: auto;
+    }
+
+    .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; }
+    .control { min-width: 200px; flex: 1; }
+    .inline { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+    .progressWrap {
+      margin-top: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, .08);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .10);
+    }
+    .progressBar { height: 100%; width: 0%; background: rgba(255, 255, 255, .85); }
+
+    .route { display: none; }
+    .route.active { display: block; }
+
+    .drawerBack {
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(0, 0, 0, .55);
+      display: none;
+      padding: 16px;
+    }
+    .drawerBack.show { display: flex; justify-content: flex-end; }
+
+    .drawer {
+      width: min(720px, 100%);
+      height: 100%;
+      background: #0f1116;
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 18px;
+      overflow: auto;
+      box-shadow: 0 20px 70px rgba(0, 0, 0, .45);
+    }
+
+    .drawerHead {
+      position: sticky; top: 0;
+      background: rgba(15, 17, 22, .94);
+      border-bottom: 1px solid rgba(255, 255, 255, .10);
+      padding: 12px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .drawerBody { padding: 12px; }
+
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .10);
+    }
+    .table th, .table td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      border-right: 1px solid rgba(255, 255, 255, .08);
+      font-size: 13px;
+    }
+    .table th { text-align: left; background: rgba(255, 255, 255, .05); }
+    .table tr:last-child td { border-bottom: none; }
+    .table th:last-child, .table td:last-child { border-right: none; }
+
+    .notice {
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .04);
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    .kpiGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .kpi { border: 1px solid var(--border); background: rgba(255, 255, 255, .04); border-radius: 14px; padding: 10px; }
+    .kpi .n { font-size: 20px; font-weight: 950; }
+    .kpi .t { font-size: 12px; color: var(--muted); }
+
+    .toastWrap {
+      position: fixed; right: 16px; bottom: 16px; z-index: 999;
+      display: grid; gap: 10px;
+      max-width: min(520px, calc(100vw - 32px));
+    }
+    .toast {
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(15, 17, 22, .96);
+      border-radius: 14px;
+      padding: 10px 12px;
+      box-shadow: 0 20px 70px rgba(0, 0, 0, .45);
+    }
+    .toast .t { font-weight: 900; }
+    .toast .d { margin-top: 4px; color: var(--muted); font-size: 12px; line-height: 1.35; }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      .kpiGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="brand">WiseSize</div>
+    <div class="tabs" id="tabs" role="tablist" aria-label="Dashboard tabs">
+      <button class="tab active" data-route="items" role="tab" aria-selected="true">Items</button>
+      <button class="tab" data-route="verification" role="tab">Verification</button>
+      <button class="tab" data-route="usage" role="tab">Usage</button>
+      <button class="tab" data-route="docs" role="tab">Docs</button>
+      <button class="tab" data-route="settings" role="tab">Settings</button>
+    </div>
+
+    <div class="auth">
+      <span id="authState" class="muted" aria-live="polite"></span>
+      <button id="btnSignIn">Sign in</button>
+      <button id="btnSignOut" style="display:none;">Sign out</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- ITEMS -->
+    <section class="route active" id="route-items">
+      <div class="grid">
+        <div class="card">
+          <h1>Submit a product</h1>
+          <div class="muted">Build a chart below (recommended). JSON is auto-generated.</div>
+
+          <div class="row">
+            <label for="itemBrand">Brand</label>
+            <input id="itemBrand" placeholder="Brand" autocomplete="organization" />
+          </div>
+
+          <div class="row">
+            <label for="itemName">Product name</label>
+            <input id="itemName" placeholder="Product name" autocomplete="off" />
+          </div>
+
+          <div class="row">
+            <label for="itemCategory">Category</label>
+            <select id="itemCategory">
+              <option value="top">Top</option>
+              <option value="bottom">Bottom</option>
+              <option value="outerwear">Outerwear</option>
+              <option value="dress">Dress</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <label for="chartType">Chart represents</label>
+            <select id="chartType">
+              <option value="body" selected>Body measurements (recommended sizing chart)</option>
+              <option value="garment">Garment measurements (flat-lay product measurements)</option>
+            </select>
+            <div class="muted">Body chart uses min/max ranges. Garment chart uses value ± tolerance (stored as min/max).</div>
+          </div>
+
+          <div class="row">
+            <label for="chartUnit">Units</label>
+            <select id="chartUnit">
+              <option value="cm" selected>cm</option>
+              <option value="in">in</option>
+            </select>
+          </div>
+
+          <hr />
+
+          <h2>Size chart builder</h2>
+
+          <div class="controls">
+            <div class="control">
+              <label for="sizeSet">Size set</label>
+              <select id="sizeSet">
+                <option value="alpha" selected>Alpha (XS–XL)</option>
+                <option value="alpha_extended">Alpha (XXS–3XL)</option>
+                <option value="women_us">Women US (0–16)</option>
+                <option value="women_us_extended">Women US (00–24)</option>
+                <option value="men_waist">Men waist (28–40)</option>
+              </select>
+            </div>
+
+            <div class="control">
+              <label for="sizesSelect">Sizes (select one or more)</label>
+              <select id="sizesSelect" multiple size="5"></select>
+              <div class="muted">Tip: Ctrl/⌘ click to multi-select.</div>
+            </div>
+
+            <div class="control">
+              <label for="measuresPreset">Measures</label>
+              <select id="measuresPreset">
+                <option value="auto" selected>Auto from category</option>
+                <option value="top">Top: chest, waist, shoulder, length</option>
+                <option value="bottom">Bottom: waist, hip, inseam, rise</option>
+                <option value="outerwear">Outerwear: chest, waist, shoulder, length</option>
+                <option value="dress">Dress: bust, waist, hip, length</option>
+                <option value="custom">Custom…</option>
+              </select>
+            </div>
+
+            <div class="control" id="customMeasuresWrap" style="display:none;">
+              <label for="customMeasures">Custom measures (comma-separated keys)</label>
+              <input id="customMeasures" placeholder="chestCm,waistCm,hipCm" />
+              <div class="muted">Use keys like chestCm, waistCm, hipCm, inseamCm, shoulderCm, lengthCm.</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="btnBuildTable">Build table</button>
+            <button id="btnClearTable" class="ghost">Clear</button>
+            <button id="btnValidate">Validate</button>
+          </div>
+
+          <div class="row">
+            <div id="tableWrap" class="notice muted">Build a table to start.</div>
+          </div>
+
+          <textarea id="itemSizeChart" style="display:none;">{}</textarea>
+
+          <div class="actions">
+            <button id="btnSubmitItem" class="primary">Submit item</button>
+          </div>
+
+          <div id="itemMsg" class="muted" style="margin-top:10px" aria-live="polite"></div>
+        </div>
+
+        <div class="card">
+          <h1>Your items</h1>
+
+          <div class="controls">
+            <div class="control">
+              <label for="filterSearch">Search</label>
+              <input id="filterSearch" placeholder="Search name/brand/itemId" />
+            </div>
+            <div class="control">
+              <label for="filterPublish">Publish status</label>
+              <select id="filterPublish">
+                <option value="all" selected>All</option>
+                <option value="draft">draft</option>
+                <option value="submitted">submitted</option>
+                <option value="published">published</option>
+                <option value="rejected">rejected</option>
+              </select>
+            </div>
+            <div class="control">
+              <label for="filterNeedsAction">Needs action</label>
+              <select id="filterNeedsAction">
+                <option value="all" selected>All</option>
+                <option value="yes">Yes (has nextAction)</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="btnRefreshItems">Refresh</button>
+          </div>
+
+          <div id="itemsList" class="list" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VERIFICATION -->
+    <section class="route" id="route-verification">
+      <div class="grid">
+        <div class="card">
+          <h1>Verification queue</h1>
+          <div class="muted">Submitted items that need proof, failed checks, or human review.</div>
+          <div class="actions">
+            <button id="btnRefreshQueue">Refresh</button>
+          </div>
+          <div id="queueList" class="list" style="margin-top:10px"></div>
+        </div>
+
+        <div class="card">
+          <h1>Website ownership</h1>
+          <div class="muted">Uses your Worker endpoints: /v1/merchant/verify/start and /v1/merchant/verify/check</div>
+
+          <div class="row">
+            <label for="verifyWebsite">Website</label>
+            <input id="verifyWebsite" placeholder="https://example.com" inputmode="url" />
+          </div>
+
+          <div class="row">
+            <label for="verifyMethod">Method</label>
+            <select id="verifyMethod">
+              <option value="dns" selected>DNS TXT record (recommended)</option>
+              <option value="wellknown">HTTP file: /.well-known/wisesize-verification.txt</option>
+            </select>
+          </div>
+
+          <div class="actions">
+            <button id="btnStartVerify">Start verification</button>
+            <button id="btnCheckVerify">Check verification</button>
+          </div>
+
+          <div id="verifyBox" class="notice" style="display:none; margin-top:10px;">
+            <div style="font-weight:950; margin-bottom:6px;">Instructions</div>
+            <div id="verifyInstructions" class="muted"></div>
+            <div id="verifyTokenLabel" class="code"></div>
+            <div id="verifyState" class="muted" style="margin-top:8px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- USAGE -->
+    <section class="route" id="route-usage">
+      <div class="grid">
+        <div class="card">
+          <h1>Usage overview</h1>
+          <div class="muted">Last 100 raw events (for MVP). Add rollups later for scale.</div>
+          <div class="actions">
+            <button id="btnRefreshUsage">Refresh</button>
+          </div>
+
+          <div class="kpiGrid" style="margin-top:10px;">
+            <div class="kpi">
+              <div class="n" id="kpiTotal">—</div>
+              <div class="t">Events (last 100)</div>
+            </div>
+            <div class="kpi">
+              <div class="n" id="kpiOpens">—</div>
+              <div class="t">open_embed</div>
+            </div>
+            <div class="kpi">
+              <div class="n" id="kpiRecs">—</div>
+              <div class="t">recommendation</div>
+            </div>
+            <div class="kpi">
+              <div class="n" id="kpiSaves">—</div>
+              <div class="t">save_profile</div>
+            </div>
+          </div>
+
+          <div id="usageList" class="list" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="card">
+          <h1>Top items (by recommendations)</h1>
+          <div class="muted">Computed from last 100 events.</div>
+          <div id="topItems" class="list" style="margin-top:10px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOCS -->
+    <section class="route" id="route-docs">
+      <div class="grid">
+        <div class="card">
+          <h1>Embed instructions</h1>
+          <div class="muted">Copy the snippet shown per item. Only merchantId + itemId are required.</div>
+          <div class="code" id="docsEmbedSnippet"></div>
+        </div>
+
+        <div class="card">
+          <h1>Measurement verification</h1>
+          <div class="muted">
+            Recommended pipeline:
+            <ul>
+              <li><b>Auto checks</b>: plausibility, monotonic sizing, unit normalization.</li>
+              <li><b>Proof</b>: flat-lay photo with tape, or manufacturer PDF.</li>
+              <li><b>Sampling</b>: human review a % based on trust & complaints.</li>
+              <li><b>User feedback</b>: tight/ok/loose signals flag bad charts.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="route" id="route-settings">
+      <div class="grid">
+        <div class="card">
+          <h1>Merchant profile</h1>
+
+          <div class="row">
+            <label for="settingsName">Store name</label>
+            <input id="settingsName" placeholder="Your store name" />
+          </div>
+
+          <div class="row">
+            <label for="settingsWebsite">Website</label>
+            <input id="settingsWebsite" placeholder="https://example.com" inputmode="url" />
+          </div>
+
+          <div class="row">
+            <label>Features</label>
+            <div style="display:grid; gap:8px">
+              <label class="inline"><input type="checkbox" id="settingsFeatSave" style="width:auto" />
+                Enable “Save profile”</label>
+              <label class="inline"><input type="checkbox" id="settingsFeatTryOn" style="width:auto" />
+                Enable AI Try-On</label>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="btnSaveMerchant" class="primary">Save</button>
+          </div>
+
+          <div id="merchantMsg" class="muted" style="margin-top:10px" aria-live="polite"></div>
+        </div>
+
+        <div class="card">
+          <h1>System</h1>
+
+          <div class="row">
+            <label for="settingsWorkerOrigin">Worker API origin</label>
+            <input id="settingsWorkerOrigin" placeholder="https://api.yourdomain.com" inputmode="url" />
+            <div class="muted">Used for website verification. Stored in browser localStorage (not security-sensitive).</div>
+          </div>
+
+          <div class="actions">
+            <button id="btnSaveWorkerOrigin">Save Worker Origin</button>
+          </div>
+
+          <div id="workerMsg" class="muted" style="margin-top:10px" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ITEM DRAWER -->
+  <div class="drawerBack" id="drawerBack" aria-hidden="true">
+    <div class="drawer" role="dialog" aria-modal="true">
+      <div class="drawerHead">
+        <div style="min-width:0">
+          <div id="drawerTitle" style="font-weight:950; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Item</div>
+          <div id="drawerSub" class="muted" style="margin-top:2px"></div>
+        </div>
+        <div style="margin-left:auto" class="inline">
+          <button class="ghost" id="btnCloseDrawer">Close</button>
+        </div>
+      </div>
+      <div class="drawerBody" id="drawerBody"></div>
+    </div>
+  </div>
+
+  <div class="toastWrap" id="toastWrap" aria-live="polite"></div>
+
+  <script type="module">
+    import { getFirebase } from "/components/firebase-init.js";
+
+    import {
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    import {
+      doc,
+      getDoc,
+      setDoc,
+      addDoc,
+      collection,
+      query,
+      where,
+      orderBy,
+      limit,
+      getDocs,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // -----------------------------
+    // Configuration (adjust if needed)
+    // -----------------------------
+    const WS_ROOT_COLLECTION = "wise-size";
+    const WS_ROOT_DOC_ID = "app";
+
+    // Document root: wise-size/app
+    function wsRootDoc(db) {
+      return doc(db, WS_ROOT_COLLECTION, WS_ROOT_DOC_ID);
+    }
+    function wsCollection(db, name) {
+      // wise-size/app/{name}
+      return collection(wsRootDoc(db), name);
+    }
+    function wsDoc(db, name, id) {
+      return doc(wsRootDoc(db), name, id);
+    }
+
+    const SIZE_SETS = {
+      alpha: ["XS", "S", "M", "L", "XL"],
+      alpha_extended: ["XXS", "XS", "S", "M", "L", "XL", "XXL", "3XL"],
+      women_us: ["0", "2", "4", "6", "8", "10", "12", "14", "16"],
+      women_us_extended: ["00", "0", "2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24"],
+      men_waist: ["28", "29", "30", "31", "32", "33", "34", "35", "36", "38", "40"]
+    };
+
+    const MEASURE_PRESETS = {
+      top: ["chest", "waist", "shoulder", "length"],
+      bottom: ["waist", "hip", "inseam", "rise"],
+      outerwear: ["chest", "waist", "shoulder", "length"],
+      dress: ["bust", "waist", "hip", "length"]
+    };
+
+    const PLAUSIBLE_RANGES_CM = {
+      chestCm: [50, 200], bustCm: [50, 200], waistCm: [40, 180], hipCm: [50, 220],
+      inseamCm: [40, 120], shoulderCm: [30, 80], lengthCm: [40, 160], riseCm: [10, 60]
+    };
+
+    // -----------------------------
+    // App bootstrap
+    // -----------------------------
+    const { auth, db } = getFirebase();
+    if (!auth || !db) {
+      alert("firebase-init.js must export auth and db via getFirebase()");
+      throw new Error("Missing firebase init");
+    }
+
+    const provider = new GoogleAuthProvider();
+
+    // Worker origin in localStorage (not security-sensitive)
+    const WORKER_ORIGIN_KEY = "wisesize_worker_origin";
+    let WORKER_API_ORIGIN = localStorage.getItem(WORKER_ORIGIN_KEY) || "";
+
+    // Embed script URL relative to this dashboard
+    const EMBED_SCRIPT_URL = "services.unlim8ted.com/wisesize/v1/embed.js";
+
+    function buildEmbedSnippet(merchant, item) {
+      return `<script src="${EMBED_SCRIPT_URL}" data-wisesize-merchant="${merchant}" data-wisesize-item="${item}" defer><\\/script>`;
+    }
+
+    // -----------------------------
+    // UI refs
+    // -----------------------------
+    const tabsEl = document.getElementById("tabs");
+    const authStateEl = document.getElementById("authState");
+    const btnSignIn = document.getElementById("btnSignIn");
+    const btnSignOut = document.getElementById("btnSignOut");
+
+    // Settings
+    const settingsName = document.getElementById("settingsName");
+    const settingsWebsite = document.getElementById("settingsWebsite");
+    const settingsFeatSave = document.getElementById("settingsFeatSave");
+    const settingsFeatTryOn = document.getElementById("settingsFeatTryOn");
+    const btnSaveMerchant = document.getElementById("btnSaveMerchant");
+    const merchantMsg = document.getElementById("merchantMsg");
+
+    const settingsWorkerOrigin = document.getElementById("settingsWorkerOrigin");
+    const btnSaveWorkerOrigin = document.getElementById("btnSaveWorkerOrigin");
+    const workerMsg = document.getElementById("workerMsg");
+    settingsWorkerOrigin.value = WORKER_API_ORIGIN;
+
+    // Website verification
+    const verifyWebsite = document.getElementById("verifyWebsite");
+    const verifyMethod = document.getElementById("verifyMethod");
+    const btnStartVerify = document.getElementById("btnStartVerify");
+    const btnCheckVerify = document.getElementById("btnCheckVerify");
+    const verifyBox = document.getElementById("verifyBox");
+    const verifyInstructions = document.getElementById("verifyInstructions");
+    const verifyTokenLabel = document.getElementById("verifyTokenLabel");
+    const verifyState = document.getElementById("verifyState");
+    let lastVerifyToken = null;
+
+    // Builder
+    const itemBrand = document.getElementById("itemBrand");
+    const itemName = document.getElementById("itemName");
+    const itemCategory = document.getElementById("itemCategory");
+    const chartType = document.getElementById("chartType");
+    const chartUnit = document.getElementById("chartUnit");
+    const sizeSet = document.getElementById("sizeSet");
+    const sizesSelect = document.getElementById("sizesSelect");
+    const measuresPreset = document.getElementById("measuresPreset");
+    const customMeasuresWrap = document.getElementById("customMeasuresWrap");
+    const customMeasures = document.getElementById("customMeasures");
+    const btnBuildTable = document.getElementById("btnBuildTable");
+    const btnClearTable = document.getElementById("btnClearTable");
+    const btnValidate = document.getElementById("btnValidate");
+    const tableWrap = document.getElementById("tableWrap");
+    const itemSizeChart = document.getElementById("itemSizeChart");
+    const btnSubmitItem = document.getElementById("btnSubmitItem");
+    const itemMsg = document.getElementById("itemMsg");
+
+    // Items list
+    const filterSearch = document.getElementById("filterSearch");
+    const filterPublish = document.getElementById("filterPublish");
+    const filterNeedsAction = document.getElementById("filterNeedsAction");
+    const btnRefreshItems = document.getElementById("btnRefreshItems");
+    const itemsList = document.getElementById("itemsList");
+
+    // Queue
+    const btnRefreshQueue = document.getElementById("btnRefreshQueue");
+    const queueList = document.getElementById("queueList");
+
+    // Usage
+    const btnRefreshUsage = document.getElementById("btnRefreshUsage");
+    const usageList = document.getElementById("usageList");
+    const topItems = document.getElementById("topItems");
+    const kpiTotal = document.getElementById("kpiTotal");
+    const kpiOpens = document.getElementById("kpiOpens");
+    const kpiRecs = document.getElementById("kpiRecs");
+    const kpiSaves = document.getElementById("kpiSaves");
+
+    // Drawer
+    const drawerBack = document.getElementById("drawerBack");
+    const btnCloseDrawer = document.getElementById("btnCloseDrawer");
+    const drawerTitle = document.getElementById("drawerTitle");
+    const drawerSub = document.getElementById("drawerSub");
+    const drawerBody = document.getElementById("drawerBody");
+
+    // Docs snippet
+    document.getElementById("docsEmbedSnippet").textContent =
+      buildEmbedSnippet("YOUR_MERCHANT_ID", "YOUR_ITEM_ID");
+
+    // Toast
+    const toastWrap = document.getElementById("toastWrap");
+
+    // -----------------------------
+    // State
+    // -----------------------------
+    let merchantId = null;
+    let itemsCache = [];
+
+    // -----------------------------
+    // Utilities
+    // -----------------------------
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/[&<>"']/g, (m) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+      }[m]));
+    }
+
+    function safeHostFromUrl(u) {
+      try { return new URL(u).host; }
+      catch { return String(u || "").replace(/^https?:\/\//, "").split("/")[0]; }
+    }
+
+    function isValidHttpUrl(u) {
+      try {
+        const x = new URL(u);
+        return x.protocol === "http:" || x.protocol === "https:";
+      } catch { return false; }
+    }
+
+    function parseCsv(s) {
+      return String(s || "").split(",").map(x => x.trim()).filter(Boolean);
+    }
+
+    function toNum(v) {
+      if (v == null || v === "") return null;
+      const n = Number(String(v).trim());
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function safeJsonParse(s) {
+      try { return JSON.parse(s); } catch { return null; }
+    }
+
+    function escapeId(s) {
+      return String(s).replace(/[^a-zA-Z0-9_-]/g, "_");
+    }
+
+    function toast(title, detail = "", ms = 2400) {
+      const el = document.createElement("div");
+      el.className = "toast";
+      el.innerHTML = `<div class="t">${escapeHtml(title)}</div>${detail ? `<div class="d">${escapeHtml(detail)}</div>` : ""}`;
+      toastWrap.appendChild(el);
+      setTimeout(() => { el.style.opacity = "0"; el.style.transition = "opacity .2s"; }, Math.max(600, ms - 200));
+      setTimeout(() => el.remove(), ms);
+    }
+
+    function setBusy(btn, busy, labelWhileBusy = "Working…") {
+      if (!btn) return;
+      if (busy) {
+        btn.dataset._prev = btn.textContent;
+        btn.textContent = labelWhileBusy;
+        btn.disabled = true;
+      } else {
+        btn.textContent = btn.dataset._prev || btn.textContent;
+        btn.disabled = false;
+      }
+    }
+
+    async function copyText(text) {
+      try { await navigator.clipboard.writeText(text); return true; } catch { }
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      return true;
+    }
+
+    function requireAuth() {
+      if (!merchantId) {
+        toast("Sign in required");
+        throw new Error("Not signed in");
+      }
+    }
+
+    function normMeasureKey(k) {
+      const raw = String(k).trim();
+      if (!raw) return null;
+      if (/Cm$/.test(raw) || /In$/.test(raw)) return raw;
+
+      const map = {
+        chest: "chestCm", bust: "bustCm", waist: "waistCm", hip: "hipCm",
+        inseam: "inseamCm", shoulder: "shoulderCm", length: "lengthCm", rise: "riseCm"
+      };
+      const lower = raw.toLowerCase();
+      return map[lower] || raw;
+    }
+
+    function getSelectedSizes() {
+      return Array.from(sizesSelect.selectedOptions).map(o => o.value).filter(Boolean);
+    }
+
+    function fillSizesOptions(list) {
+      sizesSelect.innerHTML = "";
+      list.forEach(sz => {
+        const opt = document.createElement("option");
+        opt.value = sz;
+        opt.textContent = sz;
+        sizesSelect.appendChild(opt);
+      });
+      Array.from(sizesSelect.options).forEach(o => o.selected = true); // default all
+    }
+
+    function refreshSizesFromSet() {
+      const set = sizeSet.value;
+      fillSizesOptions(SIZE_SETS[set] || SIZE_SETS.alpha);
+    }
+
+    function getMeasuresForBuilder() {
+      const preset = measuresPreset.value;
+      const cat = itemCategory.value;
+
+      let base;
+      if (preset === "auto") base = MEASURE_PRESETS[cat] || ["chest", "waist"];
+      else if (preset === "custom") base = parseCsv(customMeasures.value);
+      else base = MEASURE_PRESETS[preset] || [];
+
+      return base.map(normMeasureKey).filter(Boolean);
+    }
+
+    function validateSizeChart(chart) {
+      const issues = [];
+      if (!chart || typeof chart !== "object") return { ok: false, issues: ["Chart missing or invalid JSON."] };
+
+      if (!["cm", "in"].includes(chart.unit)) issues.push("unit must be 'cm' or 'in'.");
+      if (!["body", "garment"].includes(chart.type)) issues.push("type must be 'body' or 'garment'.");
+      if (!Array.isArray(chart.sizes) || chart.sizes.length === 0) issues.push("sizes[] is required.");
+
+      const sizes = chart.sizes || [];
+
+      // Validate each measurement key
+      Object.entries(chart).forEach(([k, v]) => {
+        if (k === "sizes" || k === "unit" || k === "type") return;
+        if (!v || typeof v !== "object") return;
+
+        sizes.forEach(sz => {
+          const r = v[sz];
+          if (r == null) return;
+          if (!Array.isArray(r) || r.length !== 2) { issues.push(`${k}.${sz} must be [min,max].`); return; }
+
+          const min = r[0], max = r[1];
+          if (!Number.isFinite(min) || !Number.isFinite(max)) issues.push(`${k}.${sz} must be numbers.`);
+          if (min > max) issues.push(`${k}.${sz} min > max.`);
+
+          // Plausibility checks only meaningful when unit is cm and we know the key
+          if (chart.unit === "cm" && PLAUSIBLE_RANGES_CM[k]) {
+            const [lo, hi] = PLAUSIBLE_RANGES_CM[k];
+            if (min < lo || max > hi) issues.push(`${k}.${sz} out of plausible range (${lo}-${hi}cm).`);
+          }
+        });
+
+        // Monotonic check (by midpoints)
+        let prev = null;
+        for (let i = 0; i < sizes.length; i++) {
+          const sz = sizes[i];
+          const r = v[sz];
+          if (!r) continue;
+          const mid = (r[0] + r[1]) / 2;
+          if (prev != null && mid + 0.001 < prev) { issues.push(`${k} not monotonic at ${sz}.`); break; }
+          prev = mid;
+        }
+      });
+
+      return { ok: issues.length === 0, issues };
+    }
+
+    function renderBuilderTable(sizes, measures) {
+      const isBody = chartType.value === "body";
+      const unit = chartUnit.value;
+
+      const headCells = ["Size"].concat(measures.map(m => `${m} (${unit})`));
+      const thead = "<tr>" + headCells.map(h => `<th>${escapeHtml(h)}</th>`).join("") + "</tr>";
+
+      const rows = sizes.map(sz => {
+        const tds = measures.map(m => {
+          const minId = `cell_${escapeId(sz)}_${escapeId(m)}_min`;
+          const maxId = `cell_${escapeId(sz)}_${escapeId(m)}_max`;
+
+          if (isBody) {
+            return `
+              <td>
+                <div class="inline">
+                  <input style="width:110px" inputmode="decimal" placeholder="min" id="${minId}"/>
+                  <span class="muted">–</span>
+                  <input style="width:110px" inputmode="decimal" placeholder="max" id="${maxId}"/>
+                </div>
+              </td>
+            `;
+          }
+
+          return `
+            <td>
+              <div class="inline">
+                <input style="width:110px" inputmode="decimal" placeholder="value" id="${minId}"/>
+                <span class="muted">±</span>
+                <input style="width:110px" inputmode="decimal" placeholder="tol" id="${maxId}"/>
+              </div>
+              <div class="muted" style="margin-top:6px">If tol empty → min=max.</div>
+            </td>
+          `;
+        }).join("");
+
+        return `<tr><td><b>${escapeHtml(sz)}</b></td>${tds}</tr>`;
+      }).join("");
+
+      tableWrap.innerHTML = `
+        <table class="table" id="builderTable" data-body="${isBody ? "1" : "0"}" data-unit="${escapeHtml(unit)}">
+          <thead>${thead}</thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="muted" style="margin-top:10px;">Tip: JSON syncs as you type.</div>
+      `;
+
+      tableWrap.querySelectorAll("input").forEach(inp => {
+        inp.addEventListener("input", syncJsonFromTable);
+        inp.addEventListener("blur", syncJsonFromTable);
+      });
+    }
+
+    function syncJsonFromTable() {
+      const tbl = document.getElementById("builderTable");
+      if (!tbl) return;
+
+      const isBody = tbl.dataset.body === "1";
+      const unit = tbl.dataset.unit;
+
+      const sizes = getSelectedSizes();
+      const measures = getMeasuresForBuilder();
+
+      const chart = {
+        unit,
+        type: isBody ? "body" : "garment",
+        sizes: sizes.slice()
+      };
+      measures.forEach(m => { chart[m] = {}; });
+
+      sizes.forEach(sz => {
+        measures.forEach(m => {
+          const minEl = document.getElementById(`cell_${escapeId(sz)}_${escapeId(m)}_min`);
+          const maxEl = document.getElementById(`cell_${escapeId(sz)}_${escapeId(m)}_max`);
+          const a = toNum(minEl ? minEl.value : null);
+          const b = toNum(maxEl ? maxEl.value : null);
+          if (a == null && b == null) return;
+
+          if (isBody) {
+            const min = (a != null) ? a : b;
+            const max = (b != null) ? b : a;
+            chart[m][sz] = [min, max].sort((x, y) => x - y);
+          } else {
+            const val = a;
+            if (val == null) return;
+            const tol = (b != null) ? b : 0;
+            chart[m][sz] = [val - tol, val + tol].sort((x, y) => x - y);
+          }
+        });
+      });
+
+      itemSizeChart.value = JSON.stringify(chart, null, 2);
+    }
+
+    function chip(label, value) {
+      const v = String(value ?? "—");
+      const cls =
+        (label === "publish" && v === "published") ? "good" :
+        (label === "publish" && v === "rejected") ? "bad" :
+        (label === "status" && v === "pass") ? "good" :
+        (label === "status" && v === "fail") ? "bad" :
+        (label === "stage" && (v === "human" || v === "source_proof")) ? "warn" : "";
+      return `<span class="pill ${cls}">${escapeHtml(label)}: ${escapeHtml(v)}</span>`;
+    }
+
+    // -----------------------------
+    // Routing (tabs)
+    // -----------------------------
+    tabsEl.addEventListener("click", (e) => {
+      const btn = e.target.closest(".tab");
+      if (!btn) return;
+
+      const route = btn.dataset.route;
+      document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.route === route));
+      document.querySelectorAll(".route").forEach(r => r.classList.toggle("active", r.id === "route-" + route));
+    });
+
+    // -----------------------------
+    // Auth
+    // -----------------------------
+    btnSignIn.addEventListener("click", async () => {
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (e) {
+        console.error(e);
+        toast("Sign-in failed", "Check popup blockers and Firebase Auth settings.");
+      }
+    });
+
+    btnSignOut.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+      } catch (e) {
+        console.error(e);
+        toast("Sign-out failed");
+      }
+    });
+
+    // -----------------------------
+    // Settings: Worker origin
+    // -----------------------------
+    btnSaveWorkerOrigin.addEventListener("click", () => {
+      const v = settingsWorkerOrigin.value.trim();
+      if (!v) { toast("Worker origin required"); return; }
+      if (!isValidHttpUrl(v)) { toast("Invalid URL", "Worker origin must be https://..."); return; }
+
+      WORKER_API_ORIGIN = v.replace(/\/+$/, "");
+      localStorage.setItem(WORKER_ORIGIN_KEY, WORKER_API_ORIGIN);
+      workerMsg.textContent = "Saved ✓";
+      setTimeout(() => workerMsg.textContent = "", 1400);
+    });
+
+    // -----------------------------
+    // Settings: Save merchant
+    // -----------------------------
+    btnSaveMerchant.addEventListener("click", async () => {
+      try {
+        requireAuth();
+
+        const name = settingsName.value.trim();
+        const website = settingsWebsite.value.trim();
+
+        if (!name) { toast("Store name required"); return; }
+        if (!website) { toast("Website required"); return; }
+        if (!isValidHttpUrl(website)) { toast("Invalid website URL", "Use https://example.com"); return; }
+
+        setBusy(btnSaveMerchant, true, "Saving…");
+        merchantMsg.textContent = "Saving…";
+
+        await setDoc(wsDoc(db, "merchants", merchantId), {
+          ownerUid: merchantId,
+          name,
+          website,
+          features: {
+            profileSaveEnabled: !!settingsFeatSave.checked,
+            aiTryOnEnabled: !!settingsFeatTryOn.checked
+          },
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        merchantMsg.textContent = "Saved ✓";
+        verifyWebsite.value = website;
+        toast("Saved", "Merchant profile updated.");
+      } catch (e) {
+        console.error(e);
+        merchantMsg.textContent = "Save failed.";
+        toast("Save failed", "Check console + Firestore rules.");
+      } finally {
+        setBusy(btnSaveMerchant, false);
+      }
+    });
+
+    // -----------------------------
+    // Website verification (Worker)
+    // -----------------------------
+    btnStartVerify.addEventListener("click", async () => {
+      try {
+        requireAuth();
+        if (!WORKER_API_ORIGIN) { toast("Set Worker origin in Settings first"); return; }
+
+        const website = (verifyWebsite.value.trim() || settingsWebsite.value.trim());
+        if (!website) { toast("Website required"); return; }
+        if (!isValidHttpUrl(website)) { toast("Invalid website URL"); return; }
+
+        setBusy(btnStartVerify, true, "Starting…");
+        verifyState.textContent = "Starting…";
+
+        const idToken = await auth.currentUser.getIdToken(true);
+        const res = await fetch(WORKER_API_ORIGIN + "/v1/merchant/verify/start", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            firebaseIdToken: idToken,
+            merchantId,
+            website,
+            method: verifyMethod.value
+          })
+        });
+
+        if (!res.ok) throw new Error("start failed " + res.status);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "start not ok");
+
+        lastVerifyToken = data.token;
+        verifyBox.style.display = "";
+        renderVerifyInstructions(website, verifyMethod.value, data.token);
+        verifyState.textContent = "Add the proof, then click Check verification.";
+        toast("Verification started", "Add the proof then check.");
+      } catch (e) {
+        console.error(e);
+        verifyState.textContent = "Failed to start verification.";
+        toast("Verification start failed", "Check Worker origin + endpoint logs.");
+      } finally {
+        setBusy(btnStartVerify, false);
+      }
+    });
+
+    btnCheckVerify.addEventListener("click", async () => {
+      try {
+        requireAuth();
+        if (!WORKER_API_ORIGIN) { toast("Set Worker origin in Settings first"); return; }
+
+        const website = (verifyWebsite.value.trim() || settingsWebsite.value.trim());
+        if (!website) { toast("Website required"); return; }
+        if (!lastVerifyToken) { toast("Start verification first"); return; }
+
+        setBusy(btnCheckVerify, true, "Checking…");
+        verifyState.textContent = "Checking…";
+
+        const idToken = await auth.currentUser.getIdToken(true);
+        const res = await fetch(WORKER_API_ORIGIN + "/v1/merchant/verify/check", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            firebaseIdToken: idToken,
+            merchantId,
+            website,
+            method: verifyMethod.value,
+            token: lastVerifyToken
+          })
+        });
+
+        if (!res.ok) throw new Error("check failed " + res.status);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "check not ok");
+
+        if (data.verified === true) {
+          verifyState.textContent = "Verified ✓";
+          merchantMsg.textContent = "Website verified ✓";
+          toast("Verified ✓", "Website ownership confirmed.");
+        } else {
+          verifyState.textContent = "Not found yet. DNS can take time—try again.";
+          toast("Not found yet", "DNS and caches can take time.");
+        }
+      } catch (e) {
+        console.error(e);
+        verifyState.textContent = "Verification check failed.";
+        toast("Verification check failed", "Check Worker logs + proof placement.");
+      } finally {
+        setBusy(btnCheckVerify, false);
+      }
+    });
+
+    function renderVerifyInstructions(website, method, token) {
+      const host = safeHostFromUrl(website);
+
+      if (method === "dns") {
+        verifyInstructions.innerHTML =
+          `<div class="muted">Add a DNS TXT record for <b>${escapeHtml(host)}</b>:</div>
+           <ul class="muted" style="margin:8px 0 0 18px;">
+             <li><b>Type:</b> TXT</li>
+             <li><b>Name/Host:</b> <code>wisesize-verify</code> (or <code>wisesize-verify.${escapeHtml(host)}</code>)</li>
+             <li><b>Value:</b> (copy below)</li>
+           </ul>`;
+      } else {
+        verifyInstructions.innerHTML =
+          `<div class="muted">Create a public file on your website:</div>
+           <ul class="muted" style="margin:8px 0 0 18px;">
+             <li><b>Path:</b> <code>/.well-known/wisesize-verification.txt</code></li>
+             <li><b>Contents:</b> (copy below)</li>
+           </ul>`;
+      }
+
+      verifyTokenLabel.textContent = token;
+    }
+
+    // -----------------------------
+    // Builder events
+    // -----------------------------
+    measuresPreset.addEventListener("change", () => {
+      customMeasuresWrap.style.display = (measuresPreset.value === "custom") ? "" : "none";
+    });
+
+    sizeSet.addEventListener("change", () => {
+      refreshSizesFromSet();
+      // If table exists, rebuild to reflect sizes selection
+      const tbl = document.getElementById("builderTable");
+      if (tbl) {
+        btnBuildTable.click();
+      }
+    });
+
+    btnClearTable.addEventListener("click", () => {
+      tableWrap.innerHTML = '<div class="notice muted">Build a table to start.</div>';
+      itemSizeChart.value = "{}";
+      toast("Cleared");
+    });
+
+    btnBuildTable.addEventListener("click", () => {
+      const sizes = getSelectedSizes();
+      if (!sizes.length) { toast("Select at least one size"); return; }
+
+      const measures = getMeasuresForBuilder();
+      if (!measures.length) { toast("Select at least one measure"); return; }
+
+      renderBuilderTable(sizes, measures);
+      syncJsonFromTable();
+      toast("Table built");
+    });
+
+    btnValidate.addEventListener("click", () => {
+      syncJsonFromTable();
+      const report = validateSizeChart(safeJsonParse(itemSizeChart.value));
+      if (report.ok) toast("Looks good ✓");
+      else toast("Validation issues", report.issues.slice(0, 3).join(" • ") + (report.issues.length > 3 ? " …" : ""));
+      if (!report.ok) alert("Validation issues:\n\n" + report.issues.join("\n"));
+    });
+
+    // Default sizes
+    refreshSizesFromSet();
+
+    // -----------------------------
+    // Submit item
+    // -----------------------------
+    btnSubmitItem.addEventListener("click", async () => {
+      try {
+        requireAuth();
+        syncJsonFromTable();
+
+        const brand = itemBrand.value.trim();
+        const name = itemName.value.trim();
+        const category = itemCategory.value;
+
+        if (!brand || !name) { toast("Brand and product name required"); return; }
+
+        const chart = safeJsonParse(itemSizeChart.value);
+        const report = validateSizeChart(chart);
+        if (!report.ok) {
+          alert("Fix these issues before submitting:\n\n" + report.issues.join("\n"));
+          return;
+        }
+
+        setBusy(btnSubmitItem, true, "Submitting…");
+        itemMsg.textContent = "Submitting…";
+
+        await addDoc(wsCollection(db, "items"), {
+          merchantId,
+          brand,
+          name,
+          category,
+
+          // Store the chart exactly as validated
+          sizeChart: chart,
+
+          // Normalized measurement metadata
+          measurement: {
+            type: chart.type === "garment" ? "garment" : "body_recommended",
+            unit: chart.unit,
+            method: "merchant_entered",
+            tolerances: {} // for future extension
+          },
+
+          publishStatus: "submitted",
+
+          verification: {
+            stage: "auto_schema",
+            status: "pending",
+            progress: 10,
+            score: 0,
+            nextAction: null,
+            humanRequired: false,
+            lastUpdatedAt: serverTimestamp()
+          },
+
+          createdAt: serverTimestamp()
+        });
+
+        itemMsg.textContent = "Submitted ✓";
+        toast("Submitted ✓", "Item added to verification pipeline.");
+
+        itemBrand.value = "";
+        itemName.value = "";
+
+        await loadItems();
+        await loadQueue();
+      } catch (e) {
+        console.error(e);
+        itemMsg.textContent = "Submit failed.";
+        toast("Submit failed", "Check Firestore rules and console.");
+      } finally {
+        setBusy(btnSubmitItem, false);
+      }
+    });
+
+    // -----------------------------
+    // Items list / filters
+    // -----------------------------
+    [filterSearch, filterPublish, filterNeedsAction].forEach(el => {
+      el.addEventListener("input", () => renderItems(itemsCache));
+      el.addEventListener("change", () => renderItems(itemsCache));
+    });
+
+    btnRefreshItems.addEventListener("click", loadItems);
+    btnRefreshQueue.addEventListener("click", loadQueue);
+    btnRefreshUsage.addEventListener("click", loadUsage);
+
+    async function loadItems() {
+      if (!merchantId) {
+        itemsList.innerHTML = '<div class="muted">Sign in to manage items.</div>';
+        return;
+      }
+
+      itemsList.innerHTML = '<div class="muted">Loading…</div>';
+
+      // NOTE: This query requires an index if you later add more where/orderBy combinations.
+      const qy = query(
+        wsCollection(db, "items"),
+        where("merchantId", "==", merchantId),
+        orderBy("createdAt", "desc"),
+        limit(60)
+      );
+
+      const snap = await getDocs(qy);
+      itemsCache = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+      renderItems(itemsCache);
+    }
+
+    function renderItems(items) {
+      const search = filterSearch.value.trim().toLowerCase();
+      const pub = filterPublish.value;
+      const needs = filterNeedsAction.value;
+
+      const filtered = items.filter(it => {
+        const status = it.publishStatus || "draft";
+        if (pub !== "all" && status !== pub) return false;
+
+        const hasNext = !!(it.verification && it.verification.nextAction);
+        if (needs === "yes" && !hasNext) return false;
+        if (needs === "no" && hasNext) return false;
+
+        if (search) {
+          const hay = (it.id + " " + (it.brand || "") + " " + (it.name || "")).toLowerCase();
+          if (!hay.includes(search)) return false;
+        }
+        return true;
+      });
+
+      itemsList.innerHTML = "";
+      if (!filtered.length) {
+        itemsList.innerHTML = '<div class="muted">No items match filters.</div>';
+        return;
+      }
+
+      filtered.forEach(it => {
+        const v = it.verification || {};
+        const embedSnippet = buildEmbedSnippet(merchantId, it.id);
+
+        const el = document.createElement("div");
+        el.className = "item";
+
+        // IMPORTANT: Use escaped HTML for dynamic text.
+        el.innerHTML =
+          `<div class="itemTop">
+             <div style="min-width:0">
+               <div class="itemTitle">${escapeHtml((it.brand || "") + " — " + (it.name || ""))}</div>
+               <div class="muted" style="margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                 ${escapeHtml(it.category || "—")} • id: ${escapeHtml(it.id)}
+               </div>
+               <div class="pills">
+                 ${chip("publish", it.publishStatus || "draft")}
+                 ${chip("stage", v.stage || "—")}
+                 ${chip("status", v.status || "—")}
+                 ${chip("progress", String((v.progress ?? 0)) + "%")}
+               </div>
+               <div class="progressWrap">
+                 <div class="progressBar" style="width:${Math.max(0, Math.min(100, Number(v.progress || 0)))}%"></div>
+               </div>
+               ${v.nextAction ? `<div class="muted" style="margin-top:8px;"><b>Next:</b> ${escapeHtml(v.nextAction)}</div>` : ""}
+             </div>
+             <div class="inline" style="align-items:flex-start;">
+               <button data-act="view">View</button>
+               <button data-act="copy">Copy embed</button>
+             </div>
+           </div>
+           <div class="code" data-embed></div>`;
+
+        // render code as text
+        el.querySelector('[data-embed]').textContent = embedSnippet;
+
+        el.querySelector('[data-act="view"]').addEventListener("click", () => openDrawer(it));
+        el.querySelector('[data-act="copy"]').addEventListener("click", async () => {
+          await copyText(embedSnippet);
+          const b = el.querySelector('[data-act="copy"]');
+          b.textContent = "Copied ✓";
+          setTimeout(() => b.textContent = "Copy embed", 1100);
+        });
+
+        itemsList.appendChild(el);
+      });
+    }
+
+    // -----------------------------
+    // Queue
+    // -----------------------------
+    async function loadQueue() {
+      if (!merchantId) {
+        queueList.innerHTML = '<div class="muted">Sign in to manage verification.</div>';
+        return;
+      }
+
+      queueList.innerHTML = '<div class="muted">Loading…</div>';
+
+      const qy = query(
+        wsCollection(db, "items"),
+        where("merchantId", "==", merchantId),
+        orderBy("createdAt", "desc"),
+        limit(80)
+      );
+
+      const snap = await getDocs(qy);
+      const items = snap.docs.map(d => Object.assign({ id: d.id }, d.data()))
+        .filter(it => {
+          const v = it.verification || {};
+          if ((it.publishStatus || "") !== "submitted") return false;
+          return !!v.nextAction || ["source_proof", "human"].includes(v.stage) || v.status === "fail";
+        });
+
+      queueList.innerHTML = "";
+      if (!items.length) {
+        queueList.innerHTML = '<div class="muted">Queue is empty ✓</div>';
+        return;
+      }
+
+      items.forEach(it => {
+        const v = it.verification || {};
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML =
+          `<div class="itemTop">
+             <div style="min-width:0">
+               <div class="itemTitle">${escapeHtml(it.brand)} — ${escapeHtml(it.name)}</div>
+               <div class="muted" style="margin-top:2px;">stage: <b>${escapeHtml(v.stage || "—")}</b> • status: <b>${escapeHtml(v.status || "—")}</b></div>
+               ${v.nextAction ? `<div class="muted" style="margin-top:6px;"><b>Next action:</b> ${escapeHtml(v.nextAction)}</div>` : ""}
+               <div class="progressWrap" style="margin-top:8px;">
+                 <div class="progressBar" style="width:${Math.max(0, Math.min(100, Number(v.progress || 0)))}%"></div>
+               </div>
+             </div>
+             <div class="inline" style="align-items:flex-start;">
+               <button data-act="view">View</button>
+             </div>
+           </div>`;
+        el.querySelector('[data-act="view"]').addEventListener("click", () => openDrawer(it));
+        queueList.appendChild(el);
+      });
+    }
+
+    // -----------------------------
+    // Usage
+    // -----------------------------
+    async function loadUsage() {
+      if (!merchantId) {
+        usageList.innerHTML = '<div class="muted">Sign in to see usage.</div>';
+        topItems.innerHTML = "";
+        kpiTotal.textContent = "—";
+        kpiOpens.textContent = "—";
+        kpiRecs.textContent = "—";
+        kpiSaves.textContent = "—";
+        return;
+      }
+
+      usageList.innerHTML = '<div class="muted">Loading…</div>';
+      topItems.innerHTML = "";
+
+      const qy = query(
+        wsCollection(db, "usageEvents"),
+        where("merchantId", "==", merchantId),
+        orderBy("ts", "desc"),
+        limit(100)
+      );
+
+      const snap = await getDocs(qy);
+      const events = snap.docs.map(d => d.data());
+
+      const counts = events.reduce((acc, e) => {
+        const k = e.type || "unknown";
+        acc[k] = (acc[k] || 0) + 1;
+        return acc;
+      }, {});
+
+      kpiTotal.textContent = String(events.length);
+      kpiOpens.textContent = String(counts.open_embed || 0);
+      kpiRecs.textContent = String(counts.recommendation || 0);
+      kpiSaves.textContent = String(counts.save_profile || 0);
+
+      usageList.innerHTML = "";
+      events.slice(0, 20).forEach(e => {
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML =
+          `<div style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
+             <div>
+               <div style="font-weight:900">${escapeHtml(e.type || "unknown")}</div>
+               <div class="muted">item: ${escapeHtml(e.itemId || "—")} • session: ${escapeHtml(e.anonSessionId || "—")}</div>
+             </div>
+           </div>`;
+        usageList.appendChild(el);
+      });
+
+      if (!events.length) usageList.innerHTML = '<div class="muted">No events yet.</div>';
+
+      const byItem = {};
+      events.forEach(e => {
+        if (e.type !== "recommendation") return;
+        const id = e.itemId || "unknown";
+        byItem[id] = (byItem[id] || 0) + 1;
+      });
+
+      const top = Object.entries(byItem).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+      topItems.innerHTML = "";
+      if (!top.length) {
+        topItems.innerHTML = '<div class="muted">No recommendations yet.</div>';
+      } else {
+        top.forEach(([id, n]) => {
+          const el = document.createElement("div");
+          el.className = "item";
+          el.innerHTML =
+            `<div style="display:flex; justify-content:space-between; gap:10px;">
+               <div>
+                 <div style="font-weight:900">${escapeHtml(id)}</div>
+                 <div class="muted">Recommendations</div>
+               </div>
+               <div class="pill good">${escapeHtml(n)}</div>
+             </div>`;
+          topItems.appendChild(el);
+        });
+      }
+    }
+
+    // -----------------------------
+    // Drawer
+    // -----------------------------
+    btnCloseDrawer.addEventListener("click", closeDrawer);
+    drawerBack.addEventListener("click", (e) => { if (e.target === drawerBack) closeDrawer(); });
+
+    function openDrawer(item) {
+      drawerTitle.textContent = (item.brand || "") + " — " + (item.name || "");
+      drawerSub.textContent = "Item ID: " + item.id + " • " + (item.category || "—") + " • " + (item.publishStatus || "—");
+
+      drawerBack.classList.add("show");
+      drawerBack.setAttribute("aria-hidden", "false");
+
+      const v = item.verification || {};
+      const embedSnippet = buildEmbedSnippet(merchantId, item.id);
+
+      drawerBody.innerHTML =
+        `<div class="card" style="margin-bottom:12px;">
+           <h2>Status</h2>
+           <div class="pills">
+             ${chip("publish", item.publishStatus || "draft")}
+             ${chip("stage", v.stage || "—")}
+             ${chip("status", v.status || "—")}
+             ${chip("progress", String((v.progress ?? 0)) + "%")}
+           </div>
+           <div class="progressWrap">
+             <div class="progressBar" style="width:${Math.max(0, Math.min(100, Number(v.progress || 0)))}%"></div>
+           </div>
+           ${v.nextAction ? `<div class="muted" style="margin-top:8px;"><b>Next action:</b> ${escapeHtml(v.nextAction)}</div>` : ""}
+           <div class="actions"><button id="drawerCopyEmbed">Copy embed</button></div>
+           <div class="code" id="drawerEmbedCode"></div>
+         </div>
+         <div class="card">
+           <h2>Size chart</h2>
+           <div class="code">${escapeHtml(JSON.stringify(item.sizeChart || {}, null, 2))}</div>
+         </div>`;
+
+      document.getElementById("drawerEmbedCode").textContent = embedSnippet;
+      document.getElementById("drawerCopyEmbed").addEventListener("click", async () => {
+        await copyText(embedSnippet);
+        const b = document.getElementById("drawerCopyEmbed");
+        b.textContent = "Copied ✓";
+        setTimeout(() => b.textContent = "Copy embed", 1100);
+      });
+    }
+
+    function closeDrawer() {
+      drawerBack.classList.remove("show");
+      drawerBack.setAttribute("aria-hidden", "true");
+      drawerBody.innerHTML = "";
+    }
+
+    // -----------------------------
+    // Load merchant
+    // -----------------------------
+    async function loadMerchant() {
+      merchantMsg.textContent = "";
+      const snap = await getDoc(wsDoc(db, "merchants", merchantId));
+
+      if (!snap.exists()) {
+        merchantMsg.textContent = "No merchant profile yet. Fill Settings and Save.";
+        return;
+      }
+
+      const m = snap.data();
+      settingsName.value = m.name || "";
+      settingsWebsite.value = m.website || "";
+      settingsFeatSave.checked = !!(m.features && m.features.profileSaveEnabled);
+      settingsFeatTryOn.checked = !!(m.features && m.features.aiTryOnEnabled);
+      verifyWebsite.value = m.website || "";
+      merchantMsg.textContent = m.websiteVerified ? "Loaded. Website verified ✓" : "Loaded.";
+    }
+
+    // -----------------------------
+    // Auth boot
+    // -----------------------------
+    onAuthStateChanged(auth, async (u) => {
+      // Signed out
+      if (!u) {
+        merchantId = null;
+        authStateEl.textContent = "Signed out";
+        btnSignIn.style.display = "";
+        btnSignOut.style.display = "none";
+
+        itemsList.innerHTML = '<div class="muted">Sign in to manage items.</div>';
+        queueList.innerHTML = '<div class="muted">Sign in to manage verification.</div>';
+        usageList.innerHTML = '<div class="muted">Sign in to see usage.</div>';
+        topItems.innerHTML = "";
+        merchantMsg.textContent = "";
+        itemMsg.textContent = "";
+        verifyBox.style.display = "none";
+        lastVerifyToken = null;
+
+        return;
+      }
+
+      // Signed in
+      merchantId = u.uid;
+      authStateEl.textContent = u.email ?? u.uid;
+      btnSignIn.style.display = "none";
+      btnSignOut.style.display = "";
+
+      try {
+        await loadMerchant();
+        await loadItems();
+        await loadQueue();
+        // Usage loads on demand, but you can preload if you want:
+        // await loadUsage();
+      } catch (e) {
+        console.error(e);
+        toast("Load failed", "Check Firestore indexes/rules.");
+      }
+    });
+  </script>
+</body>
+
+</html>
