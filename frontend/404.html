@@ -1,128 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
-  <meta name="description"
-    content="Title: 404 - Page Not Found 404 Unlim8ted. it seems you've found a page that doesn't exist . Learn more at Unlim8ted Studio Productions."
-    name="description" />
-
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unlim8ted - 404 - Page Not Found</title>
+
+  <title>Unlim8ted — 404 Page Not Found</title>
+  <meta name="description"
+    content="404 - Page Not Found. Looks like the page you're searching for doesn't exist at Unlim8ted Studio Productions.">
+
+  <!-- Modern Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <script type="module" src="/components/site-navbar.js"></script>
+
   <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a, #1e293b);
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --text-main: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.7);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      background-color: #ffe066;
-      text-align: center;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .card {
+      max-width: 600px;
+      width: 100%;
       padding: 50px;
+      border-radius: 24px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.8s ease forwards;
     }
 
     h1 {
-      font-size: 70px;
-      color: #ff0000;
+      font-size: 100px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      background: linear-gradient(90deg, #818cf8, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    p {
-      font-size: 20px;
-      color: #333;
+    .subtitle {
+      font-size: 22px;
+      margin-top: 10px;
+      font-weight: 600;
     }
 
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      background: #fff3b0;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    .description {
+      margin-top: 20px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-size: 16px;
     }
 
     img {
-      max-width: 100%;
-      height: auto;
-      margin: 20px 0;
+      margin: 30px 0;
+      max-width: 220px;
+      opacity: 0.9;
     }
 
-    .back-button {
-      background-color: #ff5722;
+    .button {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 14px 30px;
+      border-radius: 999px;
+      background: var(--primary);
       color: white;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
       text-decoration: none;
-      font-size: 18px;
+      font-weight: 600;
+      transition: all 0.3s ease;
     }
 
-    .back-button:hover {
-      background-color: #e64a19;
+    .button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
     }
 
-    .funny-text {
-      font-size: 16px;
-      color: #666;
-      margin-top: 30px;
-    }
-  </style>
-  <style>
-    /* logo */
-    .logo {
-      position: absolute;
-      z-index: 1;
-      top: 5%;
-      /* Adjust top position relative to viewport height */
-      left: 5%;
-      /* Adjust left position relative to viewport width */
-      display: block;
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: var(--text-muted);
     }
 
-    .logo img {
-      height: 10vw;
-      /* Adjust height relative to viewport width */
-      max-height: 140px;
-      /* Set a maximum height to prevent the logo from getting too large on larger screens */
-      width: auto;
-      /* Maintain aspect ratio */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    /* Media query for small devices */
     @media (max-width: 600px) {
-      .logo img {
-        height: 20vw;
-        /* Larger logo for smaller devices */
+      .card {
+        padding: 35px 25px;
+      }
+
+      h1 {
+        font-size: 70px;
       }
     }
   </style>
-
 </head>
 
 <body>
-  <div id="inner-wrap">
-    <div class="logo" style="z-index: 2;">
-      <a href="/">
-        <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
+
+  <site-navbar
+    cart-href="/cart"
+    signin-href="/sign-in"
+    profile-href="/profile"
+    no-spacer="true">
+  </site-navbar>
+
+  <main>
+    <div class="card">
+      <h1>404</h1>
+      <div class="subtitle">Well… this is awkward.</div>
+
+      <img src="images/error/not_found.png" alt="Page not found">
+
+      <div class="description">
+        The page you're looking for doesn't exist.<br>
+        It may have been moved, deleted, or is just hiding from you. 🐱
+      </div>
+
+      <a href="javascript:history.back()" class="button">
+        Take Me Back
       </a>
     </div>
-    <div class="container">
-      <h1>404</h1>
-      <p>Well, this is awkward...</p>
-      <img src="images\error\not_found.png" alt="404 Image">
-      <p>It seems you've found a page that doesn't exist. It's either hiding or was eaten by a cat. 🐱</p>
-      <a href="javascript:history.back()" class="back-button">Take Me Back to Reality</a>
-      <p class="funny-text">P.S. Try checking under your couch. Maybe the page fell there. 🛋️</p>
-    </div>
-</body>
-<!-- Copyright -->
-<div style="margin-top: 20px;">
-  <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
-  <script>document.addEventListener("DOMContentLoaded", function () {
-      const currentYear = new Date().getFullYear();
-      const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
-      document.getElementById("footer-text").innerHTML = footerText;
-  });
-  </script>
-</div>
-</div>
+  </main>
 
+  <footer>
+    &copy; 2019-<span id="year"></span> Unlim8ted Studio Productions. All rights reserved.
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
 </html>

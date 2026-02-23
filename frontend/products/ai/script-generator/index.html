@@ -1,39 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feature Removed</title>
-    <meta name="description"content="Unlim8ted Film Script Generator. Unlim8ted Screenplay generator. Always free no sign up required. Powered by Unlim8ted Studio Productions."/>
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+  <title>Unlim8ted — Script Generator</title>
+  <meta
+    name="description"
+    content="This feature has been removed due to price concerns. Contact Unlim8ted Studio Productions for support or feedback."
+  />
 
-    <link rel="stylesheet" href="./resources/css/script-generator.01.css">
-<link rel="stylesheet" href="./resources/css/script-generator.02.css">
+  <!-- Modern font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <script type="module" src="/components/site-navbar.js"></script>
 
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.12);
+      --text: rgba(255, 255, 255, 0.92);
+      --muted: rgba(255, 255, 255, 0.70);
+      --accent: #22c55e;
+      --accent2: #60a5fa;
+      --btn: #6366f1;
+      --btnHover: #4f46e5;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 500px at 20% 10%, rgba(96, 165, 250, 0.25), transparent 60%),
+        radial-gradient(800px 500px at 80% 20%, rgba(34, 197, 94, 0.18), transparent 55%),
+        linear-gradient(135deg, #0b1220, #111a2e);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 18px;
+    }
+
+    .card {
+      width: min(760px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 42px;
+      animation: in 0.8s ease forwards;
+    }
+
+    .top {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.18);
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.12);
+    }
+
+    h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(28px, 3.2vw, 40px);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 62ch;
+    }
+
+    .grid {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+
+    .tile {
+      grid-column: span 12;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.16);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .tile h2 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.82);
+      font-weight: 800;
+    }
+
+    .tile p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .tile a {
+      color: rgba(255,255,255,0.92);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(255,255,255,0.35);
+    }
+
+    .tile a:hover {
+      color: white;
+      border-bottom-color: rgba(255,255,255,0.7);
+    }
+
+    @media (min-width: 760px) {
+      .tile.half { grid-column: span 6; }
+    }
+
+    .actions {
+      margin-top: 26px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 13px 20px;
+      font-weight: 700;
+      color: white;
+      background: var(--btn);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn:hover {
+      background: var(--btnHover);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.10);
+      border: 1px solid var(--border);
+      color: rgba(255,255,255,0.92);
+    }
+
+    .btn.secondary:hover {
+      background: rgba(255,255,255,0.14);
+      box-shadow: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 18px 16px 26px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @keyframes in {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-    <div id="inner-wrap">
-        <div class="logo" style="z-index: 2;">
-          <a href="/">
-            <img src="images/logo/logo.png"> <!--https://images.unlim8ted.com/logo/logo.png-->
-          </a>
+<body>  <site-navbar
+    cart-href="/cart"
+    signin-href="/sign-in"
+    profile-href="/profile"
+    no-spacer="true">
+  </site-navbar>
+  <main>
+    <section class="card" role="region" aria-label="Feature Removed">
+      <div class="top">
+        <div class="badge">
+          <span class="dot" aria-hidden="true"></span>
+          Feature removed
         </div>
-    <div class="container">
-        <h1>Sorry!</h1>
-        <p>Due to security concerns, we have decided to remove this feature.</p>
-        <p>If you were submitting feedback, you can instead send it to <a href="mailto:contact@unlim8ted.com">contact@unlim8ted.com</a>.</p>
-        <p>If you were looking for help, you can contact <a href="mailto:support@unlim8ted.com">support@unlim8ted.com</a>.</p>
-        <p>If you want this feature re-added and happen to be a web developer, you can contact <a href="mailto:enquiries@unlim8ted.com">enquiries@unlim8ted.com</a> if you want to help.</p>
-        <button onclick="history.back()">Go Back</button>
-    </div>
-</body>
-    <!-- Copyright -->
-    <div style="margin-top: 20px;">
-        <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
-            <script src="./resources/js/script-generator.01.js"></script>
       </div>
-    </div>
+
+      <h1>Sorry — this feature is no longer available.</h1>
+      <p class="lead">
+        We removed it due to cost concerns. If you need help or want to share feedback, use one of the options below.
+      </p>
+
+      <div class="grid">
+        <div class="tile half">
+          <h2>Feedback</h2>
+          <p>Email: <a href="mailto:contact@unlim8ted.com">contact@unlim8ted.com</a></p>
+        </div>
+
+        <div class="tile half">
+          <h2>Support</h2>
+          <p>Email: <a href="mailto:support@unlim8ted.com">support@unlim8ted.com</a></p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" type="button" onclick="history.back()">
+          ← Go back
+        </button>
+
+        <!-- Optional: a safer alternative link -->
+        <a class="btn secondary" href="/" rel="nofollow">
+          Home
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2019-<span id="year"></span> Unlim8ted Studio Productions. All rights reserved.
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
 </html>
