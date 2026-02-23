@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WiseSize — Products</title>
+<script type="module" src="/components/site-navbar.js"></script>
+<site-navbar
+  cart-href="/cart"
+  signin-href="/sign-in"
+  profile-href="/profile">
+</site-navbar>  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    img-src 'self' data: https:;
+    style-src 'self' 'unsafe-inline';
+    script-src 'self' https://www.gstatic.com 'unsafe-inline';
+    connect-src 'self' https:;">
+  <style>
+    :root{--bg:#0b0c10;--panel:rgba(20,22,28,.92);--card:rgba(255,255,255,.05);--border:rgba(255,255,255,.12);--muted:rgba(255,255,255,.72);--field:rgba(255,255,255,.06);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;}
+    *{box-sizing:border-box} html{color-scheme:dark}
+    body{margin:0;background:var(--bg);color:#e8e8ea}
+    .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--panel);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
+    .brand{font-weight:950}
+    .nav{display:flex;gap:8px;flex-wrap:wrap}
+    .nav a{display:inline-flex;gap:8px;align-items:center;padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);text-decoration:none;color:#fff;font-weight:900;font-size:13px}
+    .nav a.active{background:#fff;color:#000}
+    .auth{margin-left:auto;display:flex;gap:10px;align-items:center}
+    .container{max-width:1240px;margin:0 auto;padding:18px 16px}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
+    h1{margin:0 0 8px;font-size:20px}
+    .muted{color:var(--muted);font-size:12px;line-height:1.35}
+    .row{display:grid;gap:8px;margin:10px 0}
+    label{font-size:12.5px;opacity:.92}
+    input,select,textarea,button{border-radius:12px;border:1px solid var(--border);background:var(--field);color:#fff;padding:10px 12px;font-size:14px}
+    button{cursor:pointer;font-weight:900;background:rgba(255,255,255,.09)}
+    button.primary{background:#fff;color:#000}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .list{display:grid;gap:10px;margin-top:10px}
+    .item{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);border-radius:14px;padding:12px}
+    .code{margin-top:8px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;white-space:pre-wrap;overflow:auto}
+    .toastWrap{position:fixed;right:16px;bottom:16px;z-index:999;display:grid;gap:10px;max-width:min(520px, calc(100vw - 32px));}
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="brand">WiseSize</div>
+    <nav class="nav">
+      <a href="/products/software/wise-size/dashboard/index.html">Overview</a>
+      <a class="active" href="/products/software/wise-size/dashboard/products/index.html">Products</a>
+      <a href="/products/software/wise-size/dashboard/usage/index.html">Usage</a>
+      <a href="/products/software/wise-size/dashboard/settings/index.html">Settings</a>
+      <a href="/products/software/wise-size/docs/index.html">Docs</a>
+    </nav>
+    <div class="auth">
+      <span id="authState" class="muted"></span>
+      <button id="btnSignOut">Sign out</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="grid">
+      <div class="card">
+        <h1>Add a product</h1>
+        <div class="muted">This writes to <code>/wise-size/app/items</code>. Your rules require a <b>map</b> for sizeChart.</div>
+
+        <div class="row">
+          <label for="brand">Brand</label>
+          <input id="brand" placeholder="Brand" />
+        </div>
+
+        <div class="row">
+          <label for="name">Product name</label>
+          <input id="name" placeholder="Product name" />
+        </div>
+
+        <div class="row">
+          <label for="category">Category</label>
+          <select id="category">
+            <option value="top">Top</option>
+            <option value="bottom">Bottom</option>
+            <option value="outerwear">Outerwear</option>
+            <option value="dress">Dress</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label for="sizeChart">Size chart (JSON)</label>
+          <textarea id="sizeChart" rows="10" spellcheck="false">{
+  "unit": "cm",
+  "type": "body",
+  "sizes": ["S","M","L"],
+  "chestCm": { "S":[86,90], "M":[91,96], "L":[97,102] },
+  "waistCm": { "S":[70,74], "M":[75,80], "L":[81,86] }
+}</textarea>
+          <div class="muted">Must parse into a JSON <b>object</b> (Firestore map).</div>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="btnCreate">Submit</button>
+          <button id="btnRefresh">Refresh list</button>
+        </div>
+
+        <div id="msg" class="muted" style="margin-top:10px"></div>
+      </div>
+
+      <div class="card">
+        <h1>Your products</h1>
+        <div class="muted">Latest 60 items.</div>
+        <div id="list" class="list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toastWrap" id="toastWrap" aria-live="polite"></div>
+
+  <script type="module">
+    import { gateMerchantPage, doSignOut, toastify, escapeHtml, createItem, listMyItems } from "../ws-shared.js";
+
+    const toastWrap = document.getElementById("toastWrap");
+    const authState = document.getElementById("authState");
+    const btnSignOut = document.getElementById("btnSignOut");
+
+    const brand = document.getElementById("brand");
+    const name = document.getElementById("name");
+    const category = document.getElementById("category");
+    const sizeChart = document.getElementById("sizeChart");
+    const msg = document.getElementById("msg");
+    const list = document.getElementById("list");
+
+    btnSignOut.addEventListener("click", doSignOut);
+
+    function safeJsonParse(s) {
+      try { return JSON.parse(s); } catch { return null; }
+    }
+
+    function render(items, merchantId) {
+      list.innerHTML = "";
+      if (!items.length) {
+        list.innerHTML = `<div class="muted">No items yet.</div>`;
+        return;
+      }
+
+      items.forEach(it => {
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          <div style="font-weight:950">${escapeHtml(it.brand)} — ${escapeHtml(it.name)}</div>
+          <div class="muted" style="margin-top:4px">category: ${escapeHtml(it.category)} • id: ${escapeHtml(it.id)}</div>
+          <div class="muted" style="margin-top:6px">publish: ${escapeHtml(it.publishStatus || "draft")}</div>
+          <div class="code"></div>
+        `;
+        const embed = `<script src="https://services.unlim8ted.com/wisesize/v1/embed.js" data-wisesize-merchant="${merchantId}" data-wisesize-item="${it.id}" defer><\\/script>`;
+        el.querySelector(".code").textContent = embed;
+        list.appendChild(el);
+      });
+    }
+
+    let ctx = await gateMerchantPage();
+    authState.textContent = ctx.user.email || ctx.user.uid;
+
+    async function refresh() {
+      msg.textContent = "Loading…";
+      const items = await listMyItems(ctx.db, ctx.merchantId, { limitN: 60 });
+      render(items, ctx.merchantId);
+      msg.textContent = "Updated ✓";
+    }
+
+    document.getElementById("btnRefresh").addEventListener("click", async () => {
+      try { await refresh(); toastify(toastWrap, "Refreshed"); }
+      catch(e){ console.error(e); toastify(toastWrap, "Refresh failed", e.message || ""); }
+    });
+
+    document.getElementById("btnCreate").addEventListener("click", async () => {
+      try {
+        msg.textContent = "Submitting…";
+
+        const b = brand.value.trim();
+        const n = name.value.trim();
+        const c = category.value;
+
+        if (!b || !n) throw new Error("Brand and product name required");
+
+        const chart = safeJsonParse(sizeChart.value);
+        if (!chart || typeof chart !== "object" || Array.isArray(chart)) {
+          throw new Error("Size chart must be JSON object");
+        }
+
+        await createItem(ctx.db, ctx.merchantId, {
+          brand: b,
+          name: n,
+          category: c,
+          sizeChart: chart,
+          measurement: { type: "body_recommended", unit: chart.unit || "cm", method: "merchant_entered", tolerances: {} },
+          publishStatus: "submitted",
+          verification: { stage: "auto_schema", status: "pending", progress: 10 }
+        });
+
+        msg.textContent = "Submitted ✓";
+        toastify(toastWrap, "Submitted ✓");
+        brand.value = "";
+        name.value = "";
+        await refresh();
+      } catch (e) {
+        console.error(e);
+        msg.textContent = "Submit failed.";
+        toastify(toastWrap, "Submit failed", e.message || "Check console.");
+      }
+    });
+
+    await refresh();
+  </script>
+</body>
+</html>

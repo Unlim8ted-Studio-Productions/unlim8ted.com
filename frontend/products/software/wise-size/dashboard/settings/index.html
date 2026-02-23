@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WiseSize — Settings</title>
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    img-src 'self' data: https:;
+    style-src 'self' 'unsafe-inline';
+    script-src 'self' https://www.gstatic.com 'unsafe-inline';
+    connect-src 'self' https:;"><script type="module" src="/components/site-navbar.js"></script>
+<site-navbar
+  cart-href="/cart"
+  signin-href="/sign-in"
+  profile-href="/profile">
+</site-navbar>
+  <style>
+    :root{--bg:#0b0c10;--panel:rgba(20,22,28,.92);--card:rgba(255,255,255,.05);--border:rgba(255,255,255,.12);--muted:rgba(255,255,255,.72);--field:rgba(255,255,255,.06);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;}
+    *{box-sizing:border-box} html{color-scheme:dark}
+    body{margin:0;background:var(--bg);color:#e8e8ea}
+    .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--panel);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
+    .brand{font-weight:950}
+    .nav{display:flex;gap:8px;flex-wrap:wrap}
+    .nav a{display:inline-flex;gap:8px;align-items:center;padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);text-decoration:none;color:#fff;font-weight:900;font-size:13px}
+    .nav a.active{background:#fff;color:#000}
+    .auth{margin-left:auto;display:flex;gap:10px;align-items:center}
+    .container{max-width:900px;margin:0 auto;padding:18px 16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
+    h1{margin:0 0 8px;font-size:20px}
+    .muted{color:var(--muted);font-size:12px;line-height:1.35}
+    .row{display:grid;gap:8px;margin:10px 0}
+    label{font-size:12.5px;opacity:.92}
+    input,select,button{border-radius:12px;border:1px solid var(--border);background:var(--field);color:#fff;padding:10px 12px;font-size:14px}
+    button{cursor:pointer;font-weight:900;background:rgba(255,255,255,.09)}
+    button.primary{background:#fff;color:#000}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .toastWrap{position:fixed;right:16px;bottom:16px;z-index:999;display:grid;gap:10px;max-width:min(520px, calc(100vw - 32px));}
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="brand">WiseSize</div>
+    <nav class="nav">
+      <a href="/products/software/wise-size/dashboard/index.html">Overview</a>
+      <a href="/products/software/wise-size/dashboard/products/index.html">Products</a>
+      <a href="/products/software/wise-size/dashboard/usage/index.html">Usage</a>
+      <a class="active" href="/products/software/wise-size/dashboard/settings/index.html">Settings</a>
+      <a href="/products/software/wise-size/docs/index.html">Docs</a>
+    </nav>
+    <div class="auth">
+      <span id="authState" class="muted"></span>
+      <button id="btnSignOut">Sign out</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h1>Merchant settings</h1>
+      <div class="muted">Edits here update <code>/wise-size/app/merchants/{merchantId}</code>.</div>
+
+      <div class="row">
+        <label for="name">Store name</label>
+        <input id="name" />
+      </div>
+
+      <div class="row">
+        <label for="website">Website</label>
+        <input id="website" />
+      </div>
+
+      <div class="row">
+        <label>Features</label>
+        <div class="muted" style="display:grid;gap:8px">
+          <label><input type="checkbox" id="featSave" /> Enable “Save profile”</label>
+          <label><input type="checkbox" id="featTry" /> Enable AI Try-On</label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="btnSave">Save</button>
+        <button id="btnReverify">Re-verify website</button>
+      </div>
+
+      <div id="msg" class="muted" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <div class="toastWrap" id="toastWrap" aria-live="polite"></div>
+
+  <script type="module">
+    import { gateMerchantPage, doSignOut, toastify, updateMerchantProfile, PATHS, isValidHttpUrl } from "../ws-shared.js";
+
+    const toastWrap = document.getElementById("toastWrap");
+    const authState = document.getElementById("authState");
+    document.getElementById("btnSignOut").addEventListener("click", doSignOut);
+
+    const name = document.getElementById("name");
+    const website = document.getElementById("website");
+    const featSave = document.getElementById("featSave");
+    const featTry = document.getElementById("featTry");
+    const msg = document.getElementById("msg");
+
+    const ctx = await gateMerchantPage();
+    authState.textContent = ctx.user.email || ctx.user.uid;
+
+    // hydrate
+    name.value = ctx.merchant.name || "";
+    website.value = ctx.merchant.website || "";
+    featSave.checked = !!ctx.merchant.features?.profileSaveEnabled;
+    featTry.checked = !!ctx.merchant.features?.aiTryOnEnabled;
+
+    document.getElementById("btnSave").addEventListener("click", async () => {
+      try {
+        msg.textContent = "Saving…";
+        const n = name.value.trim();
+        const w = website.value.trim().replace(/\/+$/, "");
+
+        if (!n) throw new Error("Store name required");
+        if (!w) throw new Error("Website required");
+        if (!isValidHttpUrl(w)) throw new Error("Website must be https://...");
+
+        await updateMerchantProfile(ctx.db, ctx.merchantId, {
+          name: n,
+          website: w,
+          features: { profileSaveEnabled: !!featSave.checked, aiTryOnEnabled: !!featTry.checked }
+        });
+
+        msg.textContent = "Saved ✓";
+        toastify(toastWrap, "Saved");
+      } catch (e) {
+        console.error(e);
+        msg.textContent = "Save failed.";
+        toastify(toastWrap, "Save failed", e.message || "");
+      }
+    });
+
+    document.getElementById("btnReverify").addEventListener("click", () => {
+      // Send them to setup verification step
+      window.location.href = PATHS.SETUP;
+    });
+  </script>
+</body>
+</html>

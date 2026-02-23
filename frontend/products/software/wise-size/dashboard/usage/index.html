@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WiseSize — Usage</title>
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    img-src 'self' data: https:;
+    style-src 'self' 'unsafe-inline';
+    script-src 'self' https://www.gstatic.com 'unsafe-inline';
+    connect-src 'self' https:;">
+  <style>
+    :root{--bg:#0b0c10;--panel:rgba(20,22,28,.92);--card:rgba(255,255,255,.05);--border:rgba(255,255,255,.12);--muted:rgba(255,255,255,.72);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;}
+    *{box-sizing:border-box} html{color-scheme:dark}
+    body{margin:0;background:var(--bg);color:#e8e8ea}
+    .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--panel);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
+    .brand{font-weight:950}
+    .nav{display:flex;gap:8px;flex-wrap:wrap}
+    .nav a{display:inline-flex;gap:8px;align-items:center;padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);text-decoration:none;color:#fff;font-weight:900;font-size:13px}
+    .nav a.active{background:#fff;color:#000}
+    .auth{margin-left:auto;display:flex;gap:10px;align-items:center}
+    .container{max-width:1240px;margin:0 auto;padding:18px 16px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
+    .muted{color:var(--muted);font-size:12px;line-height:1.35}
+    .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:10px}
+    @media (max-width:980px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    .kpi{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);border-radius:14px;padding:10px}
+    .kpi .n{font-size:20px;font-weight:950}
+    .kpi .t{font-size:12px;color:var(--muted)}
+    button{cursor:pointer;font-weight:900;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);color:#fff;padding:10px 12px;border-radius:12px}
+    .list{display:grid;gap:10px;margin-top:10px}
+    .item{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);border-radius:14px;padding:12px}
+    .toastWrap{position:fixed;right:16px;bottom:16px;z-index:999;display:grid;gap:10px;max-width:min(520px, calc(100vw - 32px));}
+  </style><script type="module" src="/components/site-navbar.js"></script>
+<site-navbar
+  cart-href="/cart"
+  signin-href="/sign-in"
+  profile-href="/profile">
+</site-navbar>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="brand">WiseSize</div>
+    <nav class="nav">
+      <a href="/products/software/wise-size/dashboard/index.html">Overview</a>
+      <a href="/products/software/wise-size/dashboard/products/index.html">Products</a>
+      <a class="active" href="/products/software/wise-size/dashboard/usage/index.html">Usage</a>
+      <a href="/products/software/wise-size/dashboard/settings/index.html">Settings</a>
+      <a href="/products/software/wise-size/docs/index.html">Docs</a>
+    </nav>
+    <div class="auth">
+      <span id="authState" class="muted"></span>
+      <button id="btnSignOut">Sign out</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="grid">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+          <div>
+            <div style="font-weight:950;font-size:20px">Usage</div>
+            <div class="muted">Read-only. Your rules disable client writes for usageEvents.</div>
+          </div>
+          <button id="btnRefresh">Refresh</button>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="n" id="kTotal">—</div><div class="t">Events</div></div>
+          <div class="kpi"><div class="n" id="kOpen">—</div><div class="t">open_embed</div></div>
+          <div class="kpi"><div class="n" id="kRec">—</div><div class="t">recommendation</div></div>
+          <div class="kpi"><div class="n" id="kSave">—</div><div class="t">save_profile</div></div>
+        </div>
+
+        <div id="events" class="list"></div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:950;font-size:16px">Top items (recommendations)</div>
+        <div class="muted">Computed from the last 100 events.</div>
+        <div id="top" class="list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toastWrap" id="toastWrap" aria-live="polite"></div>
+
+  <script type="module">
+    import { gateMerchantPage, doSignOut, toastify, escapeHtml, listUsageEvents } from "../ws-shared.js";
+
+    const toastWrap = document.getElementById("toastWrap");
+    const authState = document.getElementById("authState");
+    const btnSignOut = document.getElementById("btnSignOut");
+    btnSignOut.addEventListener("click", doSignOut);
+
+    const kTotal = document.getElementById("kTotal");
+    const kOpen  = document.getElementById("kOpen");
+    const kRec   = document.getElementById("kRec");
+    const kSave  = document.getElementById("kSave");
+    const eventsEl = document.getElementById("events");
+    const topEl = document.getElementById("top");
+
+    const ctx = await gateMerchantPage();
+    authState.textContent = ctx.user.email || ctx.user.uid;
+
+    async function refresh() {
+      const events = await listUsageEvents(ctx.db, ctx.merchantId, { limitN: 100 });
+
+      const counts = events.reduce((acc, e) => {
+        const t = e.type || "unknown";
+        acc[t] = (acc[t] || 0) + 1;
+        return acc;
+      }, {});
+
+      kTotal.textContent = String(events.length);
+      kOpen.textContent  = String(counts.open_embed || 0);
+      kRec.textContent   = String(counts.recommendation || 0);
+      kSave.textContent  = String(counts.save_profile || 0);
+
+      eventsEl.innerHTML = "";
+      events.slice(0, 20).forEach(e => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <div style="font-weight:950">${escapeHtml(e.type || "unknown")}</div>
+          <div class="muted" style="margin-top:4px">item: ${escapeHtml(e.itemId || "—")} • session: ${escapeHtml(e.anonSessionId || "—")}</div>
+        `;
+        eventsEl.appendChild(div);
+      });
+      if (!events.length) eventsEl.innerHTML = `<div class="muted">No events yet.</div>`;
+
+      const byItem = {};
+      events.forEach(e => {
+        if (e.type !== "recommendation") return;
+        const id = e.itemId || "unknown";
+        byItem[id] = (byItem[id] || 0) + 1;
+      });
+
+      const top = Object.entries(byItem).sort((a,b) => b[1]-a[1]).slice(0, 10);
+      topEl.innerHTML = "";
+      if (!top.length) topEl.innerHTML = `<div class="muted">No recommendations yet.</div>`;
+      top.forEach(([id, n]) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <div style="display:flex;justify-content:space-between;gap:10px">
+            <div>
+              <div style="font-weight:950">${escapeHtml(id)}</div>
+              <div class="muted">Recommendations</div>
+            </div>
+            <div style="font-weight:950">${escapeHtml(n)}</div>
+          </div>
+        `;
+        topEl.appendChild(div);
+      });
+    }
+
+    document.getElementById("btnRefresh").addEventListener("click", async () => {
+      try { await refresh(); toastify(toastWrap, "Refreshed"); }
+      catch(e){ console.error(e); toastify(toastWrap, "Refresh failed", e.message || ""); }
+    });
+
+    await refresh();
+  </script>
+</body>
+</html>

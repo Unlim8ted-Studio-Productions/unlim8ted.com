@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>WiseSize — Docs</title>
+  <meta name="referrer" content="strict-origin-when-cross-origin"/>
+  <style>
+    :root{--bg:#0b0c10;--card:rgba(255,255,255,.05);--border:rgba(255,255,255,.12);--muted:rgba(255,255,255,.72);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;}
+    *{box-sizing:border-box} html{color-scheme:dark}
+    body{margin:0;background:var(--bg);color:#e8e8ea}
+    .top{padding:18px 16px;border-bottom:1px solid var(--border);background:rgba(20,22,28,.92);position:sticky;top:0;backdrop-filter:blur(10px)}
+    .wrap{max-width:980px;margin:0 auto;padding:18px 16px}
+    .card{border:1px solid var(--border);background:var(--card);border-radius:16px;padding:14px;margin:12px 0}
+    h1{margin:0 0 8px;font-size:22px}
+    h2{margin:0 0 8px;font-size:16px}
+    .muted{color:var(--muted);font-size:12px;line-height:1.45}
+    code{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);padding:2px 6px;border-radius:8px}
+    a{color:#fff}
+    .toc a{display:inline-block;margin-right:10px;margin-bottom:8px}
+    .code{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;white-space:pre-wrap;overflow:auto;margin-top:8px}
+  </style><script type="module" src="/components/site-navbar.js"></script>
+<site-navbar
+  cart-href="/cart"
+  signin-href="/sign-in"
+  profile-href="/profile">
+</site-navbar>
+</head>
+<body>
+  <div class="top">
+    <div class="wrap" style="padding:0 16px">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+        <div style="font-weight:950">WiseSize Docs</div>
+        <a href="/products/software/wise-size/dashboard/index.html">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="card toc">
+      <h1>Docs</h1>
+
+    </div>
+
+    <div class="card" id="how-sizing-works">
+      <h2>How sizing works</h2>
+      <div class="muted">
+        WiseSize matches a user profile (body measurements + fit preference) against your product’s sizing chart.
+        We support two chart types:
+        <ul>
+          <li><b>Body charts</b>: each size contains measurement ranges <code>[min,max]</code>.</li>
+          <li><b>Garment charts</b>: store flat-lay garment measures; we still store them as <code>[min,max]</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" id="measure-garments">
+      <h2>How to measure garments</h2>
+      <div class="muted">
+        Recommended measurements:
+        <ul>
+          <li>Top: chest, waist, shoulder, length</li>
+          <li>Bottom: waist, hip, inseam, rise</li>
+          <li>Dress: bust, waist, hip, length</li>
+        </ul>
+        Use consistent units (cm recommended). For garment measurements, measure flat on a table with a tape.
+      </div>
+    </div>
+
+
+    <div class="card" id="what-gets-published">
+      <h2>What gets published</h2>
+      <div class="muted">
+        Only items marked <b>published</b> are used by live embeds.
+        Submitted items go through verification first. Rejected items require edits/resubmission.
+      </div>
+    </div>
+
+    <div class="card" id="how-to-embed">
+      <h2>How to embed</h2>
+      <div class="muted">
+        Add this script to your product page. Replace values with your merchantId and itemId.
+      </div>
+      <div class="code">&lt;script src="https://services.unlim8ted.com/wisesize/v1/embed.js"
+  data-wisesize-merchant="YOUR_MERCHANT_ID"
+  data-wisesize-item="YOUR_ITEM_ID"
+  defer&gt;&lt;/script&gt;</div>
+      <div class="muted" style="margin-top:8px">
+        You can copy per-item embed snippets from the Products page.
+      </div>
+    </div>
+
+    <div class="card" id="faq">
+      <h2>FAQ + troubleshooting</h2>
+      <div class="muted">
+        <ul>
+          <li><b>“Not found yet” after DNS verification:</b> wait for DNS propagation and try again.</li>
+          <li><b>HTTP verification fails:</b> ensure the file is public and returns 200 at the exact path.</li>
+          <li><b>Dashboard keeps redirecting to setup:</b> your merchant doc must have <code>websiteVerified=true</code>.</li>
+          <li><b>Permission errors:</b> confirm you’re writing under <code>/wise-size/app/...</code> and logged in.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

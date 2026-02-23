@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WiseSize — Merchant Setup</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    img-src 'self' data: https:;
+    style-src 'self' 'unsafe-inline';
+    script-src 'self' https://www.gstatic.com 'unsafe-inline';
+    connect-src 'self' https:;">
+
+  <style>
+    :root{
+      --bg:#0b0c10; --panel:rgba(20,22,28,.92);
+      --card:rgba(255,255,255,.05); --border:rgba(255,255,255,.12);
+      --muted:rgba(255,255,255,.72); --field:rgba(255,255,255,.06);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+    *{ box-sizing:border-box; }
+    html{ color-scheme: dark; }
+    body{ margin:0; background:var(--bg); color:#e8e8ea; }
+    .topbar{
+      position:sticky; top:0; z-index:10;
+      display:flex; align-items:center; gap:14px;
+      padding:14px 16px; background:var(--panel);
+      border-bottom:1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+    .brand{font-weight:950}
+    .auth{margin-left:auto; display:flex; gap:10px; align-items:center;}
+    .container{ max-width: 1100px; margin:0 auto; padding:18px 16px; }
+    .grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap:14px; }
+    @media (max-width: 980px){ .grid{ grid-template-columns:1fr; } }
+    .card{ background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; }
+    h1{ margin:0 0 8px; font-size:20px;}
+    h2{ margin:0 0 8px; font-size:16px;}
+    .muted{ color:var(--muted); font-size:12px; line-height:1.35; }
+    .row{ display:grid; gap:8px; margin:10px 0; }
+    label{ font-size:12.5px; opacity:.92; }
+    input,select,button,textarea{
+      border-radius:12px; border:1px solid var(--border);
+      background:var(--field); color:#fff; padding:10px 12px; font-size:14px;
+    }
+    button{ cursor:pointer; font-weight:900; background:rgba(255,255,255,.09); }
+    button.primary{ background:#fff; color:#000; }
+    button.ghost{ background:transparent; }
+    button:disabled{ opacity:.6; cursor:not-allowed; }
+    .notice{ border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); border-radius:14px; padding:10px; }
+    .code{ margin-top:10px; background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; white-space: pre-wrap; overflow:auto;
+    }
+    .stepper{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .step{ border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); border-radius:999px; padding:6px 10px; font-size:12px; font-weight:900; }
+    .step.active{ background:#fff; color:#000; }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .toastWrap{ position:fixed; right:16px; bottom:16px; z-index:999; display:grid; gap:10px; max-width:min(520px, calc(100vw - 32px)); }
+  </style><script type="module" src="/components/site-navbar.js"></script>
+<site-navbar
+  cart-href="/cart"
+  signin-href="/sign-in"
+  profile-href="/profile">
+</site-navbar>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="brand">WiseSize</div>
+    <div class="muted">Merchant setup</div>
+
+    <div class="auth">
+      <span id="authState" class="muted"></span>
+      <button id="btnSignOut">Sign out</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="grid">
+      <div class="card">
+        <h1>Setup (required)</h1>
+        <div class="muted">You must create your merchant profile and verify your website before accessing the dashboard.</div>
+
+        <div class="stepper">
+          <div class="step active" id="stepPill1">1) Profile</div>
+          <div class="step" id="stepPill2">2) Verify</div>
+          <div class="step" id="stepPill3">3) Done</div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:12px 0" />
+
+        <!-- STEP 1 -->
+        <section id="step1">
+          <h2>Step 1 — Create your merchant profile</h2>
+
+          <div class="row">
+            <label for="storeName">Store name</label>
+            <input id="storeName" placeholder="Your store name" />
+          </div>
+
+          <div class="row">
+            <label for="storeWebsite">Website</label>
+            <input id="storeWebsite" placeholder="https://example.com" inputmode="url" />
+            <div class="muted">Must be your canonical domain.</div>
+          </div>
+
+          <div class="actions">
+            <button class="primary" id="btnSaveProfile">Save profile</button>
+            <button id="btnGoVerify">Next</button>
+          </div>
+
+          <div id="profileMsg" class="muted" style="margin-top:10px"></div>
+        </section>
+
+        <!-- STEP 2 -->
+        <section id="step2" style="display:none">
+          <h2>Step 2 — Verify website ownership</h2>
+
+          <div class="row">
+            <label for="verifyApi">Verification API origin</label>
+            <input id="verifyApi" placeholder="https://YOUR-VERIFY-API.com" />
+            <div class="muted">
+              This must serve:
+              <div class="code" style="margin-top:6px">POST /v1/merchant/verify/start
+POST /v1/merchant/verify/check</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="verifyWebsite">Website to verify</label>
+            <input id="verifyWebsite" placeholder="https://example.com" />
+          </div>
+
+          <div class="row">
+            <label for="verifyMethod">Method</label>
+            <select id="verifyMethod">
+              <option value="dns" selected>DNS TXT record (recommended)</option>
+              <option value="wellknown">HTTP file: /.well-known/wisesize-verification.txt</option>
+            </select>
+          </div>
+
+          <div class="actions">
+            <button id="btnStartVerify">Start verification</button>
+            <button class="primary" id="btnCheckVerify">Check verification</button>
+            <button class="ghost" id="btnBack">Back</button>
+          </div>
+
+          <div id="verifyBox" class="notice" style="display:none; margin-top:10px;">
+            <div style="font-weight:950; margin-bottom:6px;">Instructions</div>
+            <div id="verifyInstructions" class="muted"></div>
+            <div class="actions" style="margin-top:8px;">
+              <button id="btnCopyToken">Copy token</button>
+            </div>
+            <div id="verifyToken" class="code"></div>
+            <div id="verifyState" class="muted" style="margin-top:8px;"></div>
+          </div>
+        </section>
+
+        <!-- STEP 3 -->
+        <section id="step3" style="display:none">
+          <h2>Step 3 — Done</h2>
+          <div class="notice">
+            <div style="font-weight:950">Verified ✓</div>
+            <div class="muted" style="margin-top:6px">
+              Your merchant account is ready. Continue to the dashboard.
+            </div>
+            <div class="actions">
+              <button class="primary" id="btnContinue">Go to dashboard</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="card">
+        <h1>What you’ll unlock</h1>
+        <div class="muted">
+          After verification you’ll be able to:
+          <ul>
+            <li>Submit products + sizing charts</li>
+            <li>See usage metrics</li>
+            <li>Copy embed snippet</li>
+            <li>Read docs + troubleshooting</li>
+          </ul>
+        </div>
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:12px 0" />
+
+        <h2>Docs</h2>
+        <div class="muted">
+          Read: <a href="/products/software/wise-size/docs/index.html">WiseSize docs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toastWrap" id="toastWrap" aria-live="polite"></div>
+
+  <script type="module">
+    import {
+      PATHS, getApp, wsDoc,
+      redirectToSignIn, doSignOut,
+      ensureMerchantDocExists, createMerchantDoc, updateMerchantProfile,
+      merchantReady, isValidHttpUrl, toastify, copyText
+    } from "./ws-shared.js";
+
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const { auth, db } = getApp();
+
+    const toastWrap = document.getElementById("toastWrap");
+    const authState = document.getElementById("authState");
+    const btnSignOut = document.getElementById("btnSignOut");
+
+    // Step UI
+    const step1 = document.getElementById("step1");
+    const step2 = document.getElementById("step2");
+    const step3 = document.getElementById("step3");
+    const pill1 = document.getElementById("stepPill1");
+    const pill2 = document.getElementById("stepPill2");
+    const pill3 = document.getElementById("stepPill3");
+
+    const storeName = document.getElementById("storeName");
+    const storeWebsite = document.getElementById("storeWebsite");
+    const verifyWebsite = document.getElementById("verifyWebsite");
+    const profileMsg = document.getElementById("profileMsg");
+
+    const btnSaveProfile = document.getElementById("btnSaveProfile");
+    const btnGoVerify = document.getElementById("btnGoVerify");
+    const btnBack = document.getElementById("btnBack");
+    const btnContinue = document.getElementById("btnContinue");
+
+    // Verification UI
+    const verifyApi = document.getElementById("verifyApi");
+    const verifyMethod = document.getElementById("verifyMethod");
+    const btnStartVerify = document.getElementById("btnStartVerify");
+    const btnCheckVerify = document.getElementById("btnCheckVerify");
+    const verifyBox = document.getElementById("verifyBox");
+    const verifyInstructions = document.getElementById("verifyInstructions");
+    const verifyTokenEl = document.getElementById("verifyToken");
+    const verifyState = document.getElementById("verifyState");
+    const btnCopyToken = document.getElementById("btnCopyToken");
+
+    const VERIFY_ORIGIN_KEY = "wisesize_verify_origin";
+    const TOKEN_KEY_PREFIX = "wisesize_verify_token:";
+
+    let merchantId = null;
+    let merchant = null;
+    let lastToken = null;
+
+    function setStep(n) {
+      step1.style.display = (n === 1) ? "" : "none";
+      step2.style.display = (n === 2) ? "" : "none";
+      step3.style.display = (n === 3) ? "" : "none";
+      pill1.classList.toggle("active", n === 1);
+      pill2.classList.toggle("active", n === 2);
+      pill3.classList.toggle("active", n === 3);
+    }
+
+    function safeHostFromUrl(u) {
+      try { return new URL(u).host; }
+      catch { return String(u || "").replace(/^https?:\/\//,"").split("/")[0]; }
+    }
+
+    function tokenStorageKey(website, method) {
+      return TOKEN_KEY_PREFIX + method + ":" + safeHostFromUrl(website);
+    }
+
+    function renderVerifyInstructions(website, method, token) {
+      const host = safeHostFromUrl(website);
+
+      if (method === "dns") {
+        verifyInstructions.innerHTML = `
+          <div class="muted">Add a DNS TXT record for <b>${host}</b>:</div>
+          <ul class="muted" style="margin:8px 0 0 18px;">
+            <li><b>Type:</b> TXT</li>
+            <li><b>Name/Host:</b> <code>wisesize-verify</code> (or <code>wisesize-verify.${host}</code>)</li>
+            <li><b>Value:</b> (copy below)</li>
+          </ul>
+          <div class="muted" style="margin-top:8px;">DNS can take time to propagate.</div>
+        `;
+      } else {
+        verifyInstructions.innerHTML = `
+          <div class="muted">Create a public file on your website:</div>
+          <ul class="muted" style="margin:8px 0 0 18px;">
+            <li><b>Path:</b> <code>/.well-known/wisesize-verification.txt</code></li>
+            <li><b>Contents:</b> (copy below)</li>
+          </ul>
+          <div class="muted" style="margin-top:8px;">Must return 200 without auth.</div>
+        `;
+      }
+
+      verifyTokenEl.textContent = token;
+      verifyBox.style.display = "";
+    }
+
+    btnSignOut.addEventListener("click", async () => {
+      await doSignOut();
+    });
+
+    btnGoVerify.addEventListener("click", () => {
+      if (!merchant) {
+        toastify(toastWrap, "Save your profile first");
+        return;
+      }
+      const st = merchantReady(merchant);
+      if (!st.nameOk || !st.websiteOk) {
+        toastify(toastWrap, "Complete Step 1", "Store name + website are required.");
+        return;
+      }
+      setStep(2);
+    });
+
+    btnBack.addEventListener("click", () => setStep(1));
+
+    btnContinue.addEventListener("click", () => {
+      window.location.href = PATHS.DASHBOARD_HOME;
+    });
+
+    btnSaveProfile.addEventListener("click", async () => {
+      try {
+        profileMsg.textContent = "Saving…";
+
+        const name = storeName.value.trim();
+        const website = storeWebsite.value.trim();
+
+        if (!name) throw new Error("Store name required");
+        if (!website) throw new Error("Website required");
+        if (!isValidHttpUrl(website)) throw new Error("Website must be https://...");
+
+        // If merchant doc exists -> UPDATE, else CREATE (rules require name+website)
+        const existing = await ensureMerchantDocExists(db, merchantId);
+        if (!existing) {
+          merchant = await createMerchantDoc(db, merchantId, { name, website });
+        } else {
+          merchant = await updateMerchantProfile(db, merchantId, { name, website: website.replace(/\/+$/, "") });
+        }
+
+        verifyWebsite.value = merchant.website || website;
+
+        profileMsg.textContent = "Saved ✓";
+        toastify(toastWrap, "Saved", "Profile updated.");
+      } catch (e) {
+        console.error(e);
+        profileMsg.textContent = "Save failed.";
+        toastify(toastWrap, "Save failed", e.message || "Check console.");
+      }
+    });
+
+    // Verification origin stored locally (so it can be “actual” in your environment)
+    verifyApi.value = localStorage.getItem(VERIFY_ORIGIN_KEY) || "https://YOUR-VERIFY-API.com";
+    verifyApi.addEventListener("change", () => localStorage.setItem(VERIFY_ORIGIN_KEY, verifyApi.value.trim()));
+
+    btnStartVerify.addEventListener("click", async () => {
+      try {
+        const origin = verifyApi.value.trim().replace(/\/+$/, "");
+        if (!origin) throw new Error("Verification API origin required");
+
+        const website = (verifyWebsite.value.trim() || storeWebsite.value.trim());
+        if (!website) throw new Error("Website required");
+        if (!isValidHttpUrl(website)) throw new Error("Website must be https://...");
+
+        const method = verifyMethod.value;
+
+        verifyState.textContent = "Starting…";
+
+        const idToken = await auth.currentUser.getIdToken(true);
+        const res = await fetch(origin + "/v1/merchant/verify/start", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            firebaseIdToken: idToken,
+            merchantId,
+            website,
+            method
+          })
+        });
+
+        if (!res.ok) throw new Error("start failed: " + res.status);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "start not ok");
+
+        lastToken = data.token;
+        localStorage.setItem(tokenStorageKey(website, method), lastToken);
+
+        renderVerifyInstructions(website, method, lastToken);
+        verifyState.textContent = "Add the proof, then click Check verification.";
+        toastify(toastWrap, "Verification started", "Add proof then check.");
+      } catch (e) {
+        console.error(e);
+        verifyState.textContent = "Failed to start verification.";
+        toastify(toastWrap, "Start failed", e.message || "Check origin + logs.");
+      }
+    });
+
+    btnCheckVerify.addEventListener("click", async () => {
+      try {
+        const origin = verifyApi.value.trim().replace(/\/+$/, "");
+        if (!origin) throw new Error("Verification API origin required");
+
+        const website = (verifyWebsite.value.trim() || storeWebsite.value.trim());
+        if (!website) throw new Error("Website required");
+        if (!isValidHttpUrl(website)) throw new Error("Website must be https://...");
+
+        const method = verifyMethod.value;
+
+        // Load cached token if needed
+        if (!lastToken) {
+          lastToken = localStorage.getItem(tokenStorageKey(website, method));
+        }
+        if (!lastToken) throw new Error("Start verification first (no token).");
+
+        verifyState.textContent = "Checking…";
+
+        const idToken = await auth.currentUser.getIdToken(true);
+        const res = await fetch(origin + "/v1/merchant/verify/check", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            firebaseIdToken: idToken,
+            merchantId,
+            website,
+            method,
+            token: lastToken
+          })
+        });
+
+        if (!res.ok) throw new Error("check failed: " + res.status);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "check not ok");
+
+        if (data.verified === true) {
+          verifyState.textContent = "Verified ✓";
+
+          // IMPORTANT:
+          // Best: your server sets websiteVerified (Admin SDK).
+          // To make it "actually work" end-to-end right now, we update it client-side
+          // (your rules allow owner to update websiteVerified).
+          merchant = await updateMerchantProfile(db, merchantId, { websiteVerified: true });
+
+          setStep(3);
+          toastify(toastWrap, "Verified ✓", "Setup complete.");
+          return;
+        }
+
+        verifyState.textContent = "Not found yet. Try again (DNS can take time).";
+        toastify(toastWrap, "Not found yet", "DNS/HTTP caches can take time.");
+      } catch (e) {
+        console.error(e);
+        verifyState.textContent = "Check failed.";
+        toastify(toastWrap, "Check failed", e.message || "Check logs.");
+      }
+    });
+
+    btnCopyToken.addEventListener("click", async () => {
+      const t = (verifyTokenEl.textContent || "").trim();
+      if (!t) return toastify(toastWrap, "No token");
+      await copyText(t);
+      toastify(toastWrap, "Copied ✓");
+    });
+
+    // Auth boot
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        redirectToSignIn();
+        return;
+      }
+
+      merchantId = user.uid;
+      authState.textContent = user.email || user.uid;
+
+      // Load merchant doc if exists; if already ready => go dashboard
+      const ref = wsDoc(db, "merchants", merchantId);
+      const snap = await getDoc(ref);
+      merchant = snap.exists() ? snap.data() : null;
+
+      if (merchant) {
+        storeName.value = merchant.name || "";
+        storeWebsite.value = merchant.website || "";
+        verifyWebsite.value = merchant.website || "";
+
+        const st = merchantReady(merchant);
+        if (st.ready) {
+          setStep(3);
+          return;
+        }
+
+        // If profile exists but not verified, jump to verify
+        if (st.nameOk && st.websiteOk && !st.verifiedOk) setStep(2);
+        else setStep(1);
+      } else {
+        setStep(1);
+      }
+    });
+  </script>
+</body>
+</html>
