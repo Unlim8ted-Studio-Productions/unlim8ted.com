@@ -1,0 +1,73 @@
+﻿<section class="app-template app-template-gallery">
+    <div class="gallery-shell">
+        <header class="gallery-hero">
+            <div class="gallery-kicker">Media</div>
+            <div class="gallery-title">Gallery</div>
+            <div class="gallery-sub" id="gallerySubline">Local captures and photos.</div>
+            <div class="gallery-status" id="galleryStatus">Browse recent photos and manage saved captures.</div>
+        </header>
+
+        <section class="gallery-main">
+            <div class="gallery-stage" id="galleryStage"></div>
+            <div class="gallery-sidebar">
+                <div class="gallery-section-label">Capture Details</div>
+                <div class="gallery-card" id="galleryDetails"></div>
+                <div class="gallery-section-label">All Captures</div>
+                <div class="gallery-grid" id="galleryGrid"></div>
+            </div>
+        </section>
+    </div>
+
+    <style>
+        .app-template-gallery { min-height: 100%; }
+        .gallery-shell { display: grid; gap: 18px; min-height: 100%; }
+        .gallery-hero {
+            padding: 22px; border-radius: 30px; border: 1px solid rgba(223, 235, 255, 0.16);
+            background:
+                radial-gradient(240px 150px at 12% 10%, rgba(255, 184, 107, 0.18), transparent 64%),
+                radial-gradient(180px 140px at 86% 18%, rgba(121, 201, 255, 0.18), transparent 64%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
+                rgba(18, 24, 41, 0.78);
+            box-shadow: 0 26px 64px rgba(0, 0, 0, 0.28);
+        }
+        .gallery-kicker, .gallery-section-label, .gallery-detail-label {
+            font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(208, 223, 255, 0.56);
+        }
+        .gallery-title { margin-top: 8px; font-size: 32px; font-weight: 760; letter-spacing: -0.04em; color: rgba(247, 249, 255, 0.98); }
+        .gallery-sub, .gallery-status { margin-top: 10px; font-size: 14px; line-height: 1.55; color: rgba(229, 237, 255, 0.74); }
+        .gallery-status { color: rgba(255, 223, 174, 0.88); }
+        .gallery-main { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr); gap: 16px; min-height: 0; }
+        .gallery-stage, .gallery-card, .gallery-grid {
+            border-radius: 28px; border: 1px solid rgba(216, 230, 255, 0.12);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)), rgba(15, 22, 40, 0.52);
+            box-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
+        }
+        .gallery-stage { display: grid; place-items: center; padding: 18px; min-height: 420px; overflow: hidden; }
+        .gallery-stage-image { width: 100%; height: 100%; max-height: 540px; object-fit: contain; border-radius: 22px; background: rgba(5, 9, 18, 0.38); }
+        .gallery-stage-empty { display: grid; gap: 10px; text-align: center; color: rgba(197, 208, 236, 0.72); }
+        .gallery-sidebar { display: grid; gap: 10px; align-content: start; min-width: 0; }
+        .gallery-card { padding: 18px; display: grid; gap: 12px; }
+        .gallery-detail-row { display: grid; gap: 6px; padding-top: 12px; border-top: 1px solid rgba(218, 232, 255, 0.08); }
+        .gallery-detail-row:first-child { padding-top: 0; border-top: 0; }
+        .gallery-detail-value { font-size: 14px; line-height: 1.45; color: rgba(240, 244, 255, 0.92); word-break: break-word; }
+        .gallery-delete {
+            min-height: 44px; border: 0; border-radius: 18px; background: linear-gradient(135deg, rgba(255, 166, 190, 0.92), rgba(255, 122, 154, 0.92));
+            color: #08101f; font-size: 14px; font-weight: 760;
+        }
+        .gallery-grid { display: grid; gap: 0; max-height: 420px; overflow: auto; }
+        .gallery-thumb {
+            width: 100%; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer;
+            display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; align-items: center;
+            padding: 14px 16px; border-top: 1px solid rgba(218, 232, 255, 0.08);
+        }
+        .gallery-thumb:first-child { border-top: 0; }
+        .gallery-thumb.selected { background: rgba(255, 202, 132, 0.12); }
+        .gallery-thumb img { width: 72px; height: 72px; object-fit: cover; border-radius: 18px; background: rgba(7, 11, 20, 0.4); }
+        .gallery-thumb-title { font-size: 14px; font-weight: 700; color: rgba(247, 249, 255, 0.98); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .gallery-thumb-meta { margin-top: 4px; font-size: 12px; color: rgba(197, 208, 236, 0.72); }
+        @media (max-width: 760px) {
+            .gallery-main { grid-template-columns: minmax(0, 1fr); }
+            .gallery-grid { max-height: none; }
+        }
+    </style>
+</section>

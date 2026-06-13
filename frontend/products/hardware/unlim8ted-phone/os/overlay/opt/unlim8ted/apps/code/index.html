@@ -1,0 +1,284 @@
+<section class="app-template app-template-code">
+    <div class="code-shell">
+        <header class="code-hero">
+            <div class="code-kicker">Workspace</div>
+            <div class="code-title">Code</div>
+            <div class="code-subtitle" id="codePathLabel">Projects</div>
+            <div class="code-status" id="codeStatus">Build small projects directly on the device.</div>
+            <div class="code-stats" id="codeStats"></div>
+        </header>
+
+        <section class="code-grid">
+            <div class="code-panel">
+                <div class="code-panel-head">
+                    <div>
+                        <div class="code-panel-kicker">Explorer</div>
+                        <div class="code-panel-title">Folders and files</div>
+                    </div>
+                </div>
+                <div class="code-entry-list" id="codeEntryList"></div>
+            </div>
+
+            <div class="code-panel">
+                <div class="code-panel-head">
+                    <div>
+                        <div class="code-panel-kicker">Editor</div>
+                        <div class="code-panel-title" id="codeEditorTitle">No file selected</div>
+                    </div>
+                    <div class="code-chip" id="codeLanguageChip">Python</div>
+                </div>
+                <div class="code-editor-wrap">
+                    <div class="code-line-numbers" id="codeLineNumbers">1</div>
+                    <textarea class="code-editor" id="codeEditorInput" spellcheck="false"></textarea>
+                </div>
+                <div class="code-editor-status" id="codeEditorStatus">Open a source file to start editing.</div>
+                <div class="code-editor-actions">
+                    <button class="code-btn code-btn-secondary" id="codeSaveBtn" type="button">Save File</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="code-grid code-grid-secondary">
+            <div class="code-panel">
+                <div class="code-panel-head">
+                    <div>
+                        <div class="code-panel-kicker">New</div>
+                        <div class="code-panel-title">Start something</div>
+                    </div>
+                </div>
+                <div class="code-form-stack">
+                    <form class="code-form" id="codeProjectForm">
+                        <div class="code-form-title">New Project</div>
+                        <label class="code-field">
+                            <span class="code-field-label">Project Name</span>
+                            <input class="code-input" name="name" placeholder="weather-app" />
+                        </label>
+                        <button class="code-btn" type="submit">Create Project</button>
+                    </form>
+
+                    <form class="code-form" id="codeFolderForm">
+                        <div class="code-form-title">New Folder</div>
+                        <label class="code-field">
+                            <span class="code-field-label">Folder Name</span>
+                            <input class="code-input" name="name" placeholder="components" />
+                        </label>
+                        <button class="code-btn code-btn-secondary" type="submit">Create Folder</button>
+                    </form>
+
+                    <form class="code-form" id="codeFileForm">
+                        <div class="code-form-title">New File</div>
+                        <label class="code-field">
+                            <span class="code-field-label">File Name</span>
+                            <input class="code-input" name="name" placeholder="main.py" />
+                        </label>
+                        <label class="code-field">
+                            <span class="code-field-label">Starter</span>
+                            <select class="code-input" id="codeTemplateSelect" name="template"></select>
+                        </label>
+                        <button class="code-btn" type="submit">Create File</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="code-panel">
+                <div class="code-panel-head">
+                    <div>
+                        <div class="code-panel-kicker">Manage</div>
+                        <div class="code-panel-title">Selected item</div>
+                    </div>
+                </div>
+                <form class="code-form" id="codeRenameForm">
+                    <div class="code-form-title">Rename</div>
+                    <label class="code-field">
+                        <span class="code-field-label">New Name</span>
+                        <input class="code-input" id="codeRenameInput" name="name" placeholder="Rename selected item" />
+                    </label>
+                    <button class="code-btn code-btn-secondary" type="submit">Rename</button>
+                </form>
+                <div class="code-selection" id="codeSelectionMeta">No file selected.</div>
+                <button class="code-btn code-btn-danger" id="codeDeleteBtn" type="button">Delete Selected</button>
+            </div>
+        </section>
+    </div>
+
+    <style>
+        .app-template-code { min-height: 100%; }
+        .code-shell { display: grid; gap: 18px; min-height: 100%; padding-bottom: 14px; color: #eef5ff; }
+        .code-hero {
+            padding: 24px;
+            border-radius: 30px;
+            border: 1px solid rgba(166, 209, 255, 0.16);
+            background:
+                radial-gradient(240px 180px at 10% 12%, rgba(63, 186, 255, 0.26), transparent 64%),
+                radial-gradient(260px 180px at 92% 12%, rgba(82, 255, 197, 0.16), transparent 64%),
+                linear-gradient(135deg, rgba(12, 21, 42, 0.9), rgba(7, 14, 30, 0.86));
+            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.28);
+        }
+        .code-kicker, .code-panel-kicker, .code-field-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: rgba(188, 220, 255, 0.58);
+        }
+        .code-title { margin-top: 8px; font-size: 34px; font-weight: 800; letter-spacing: -0.05em; }
+        .code-subtitle { margin-top: 10px; font-size: 14px; color: rgba(226, 237, 255, 0.76); }
+        .code-status { margin-top: 10px; font-size: 13px; color: rgba(161, 231, 255, 0.92); }
+        .code-stats { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .code-grid { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: 16px; }
+        .code-grid-secondary { grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr); }
+        .code-panel {
+            border-radius: 28px;
+            border: 1px solid rgba(204, 227, 255, 0.12);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)), rgba(9, 16, 31, 0.72);
+            box-shadow: 0 20px 54px rgba(0, 0, 0, 0.22);
+            overflow: hidden;
+        }
+        .code-panel-head {
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+            border-bottom: 1px solid rgba(204, 227, 255, 0.08);
+        }
+        .code-panel-title { margin-top: 6px; font-size: 18px; font-weight: 730; color: rgba(247, 250, 255, 0.98); }
+        .code-chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(99, 193, 255, 0.12);
+            border: 1px solid rgba(126, 205, 255, 0.16);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: rgba(212, 243, 255, 0.95);
+        }
+        .code-entry-list { display: grid; max-height: 420px; overflow: auto; }
+        .code-entry {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            text-align: left;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: center;
+            padding: 15px 18px;
+            border-top: 1px solid rgba(204, 227, 255, 0.08);
+        }
+        .code-entry:first-child { border-top: 0; }
+        .code-entry.is-selected { background: rgba(84, 203, 255, 0.12); }
+        .code-entry-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 15px;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            font-size: 16px;
+            font-weight: 700;
+            color: #dff3ff;
+        }
+        .code-entry-name { font-size: 14px; font-weight: 700; color: rgba(247, 250, 255, 0.98); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .code-entry-meta { margin-top: 4px; font-size: 12px; color: rgba(182, 201, 230, 0.72); }
+        .code-entry-badge {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(223, 234, 255, 0.8);
+        }
+        .code-editor-wrap {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            min-height: 340px;
+            background: linear-gradient(180deg, rgba(4, 9, 18, 0.92), rgba(5, 11, 22, 0.98));
+        }
+        .code-line-numbers {
+            padding: 18px 10px 18px 18px;
+            min-width: 42px;
+            text-align: right;
+            white-space: pre;
+            color: rgba(102, 139, 190, 0.86);
+            background: rgba(255, 255, 255, 0.03);
+            border-right: 1px solid rgba(204, 227, 255, 0.06);
+            font: 12px/1.55 Consolas, "Courier New", monospace;
+            user-select: none;
+        }
+        .code-editor {
+            width: 100%;
+            min-height: 340px;
+            border: 0;
+            resize: none;
+            outline: none;
+            padding: 18px;
+            background: transparent;
+            color: #edf5ff;
+            font: 13px/1.55 Consolas, "Courier New", monospace;
+            tab-size: 4;
+        }
+        .code-editor-status {
+            padding: 12px 18px 0;
+            font-size: 12px;
+            color: rgba(178, 209, 241, 0.8);
+        }
+        .code-editor-actions {
+            padding: 14px 18px 18px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .code-form-stack { display: grid; gap: 0; }
+        .code-form {
+            display: grid;
+            gap: 12px;
+            padding: 18px;
+            border-top: 1px solid rgba(204, 227, 255, 0.08);
+        }
+        .code-form:first-child { border-top: 0; }
+        .code-form-title { font-size: 16px; font-weight: 720; color: rgba(247, 250, 255, 0.96); }
+        .code-field { display: grid; gap: 8px; }
+        .code-input {
+            width: 100%;
+            border: 1px solid rgba(206, 229, 255, 0.12);
+            border-radius: 18px;
+            background: rgba(9, 16, 31, 0.74);
+            color: #eef5ff;
+            padding: 13px 15px;
+            font: inherit;
+            outline: none;
+        }
+        .code-selection {
+            padding: 0 18px 18px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: rgba(194, 212, 237, 0.8);
+        }
+        .code-btn {
+            min-height: 44px;
+            border: 0;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(97, 215, 255, 0.94), rgba(110, 255, 197, 0.88));
+            color: #04111d;
+            font-size: 14px;
+            font-weight: 760;
+            box-shadow: 0 14px 28px rgba(52, 184, 255, 0.18);
+        }
+        .code-btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(247, 250, 255, 0.96);
+            border: 1px solid rgba(206, 229, 255, 0.12);
+            box-shadow: none;
+        }
+        .code-btn-danger {
+            margin: 0 18px 18px;
+            background: linear-gradient(135deg, rgba(255, 151, 176, 0.94), rgba(255, 111, 123, 0.9));
+            color: #2a0810;
+        }
+        @media (max-width: 760px) {
+            .code-grid, .code-grid-secondary { grid-template-columns: minmax(0, 1fr); }
+            .code-entry-list { max-height: none; }
+        }
+    </style>
+</section>

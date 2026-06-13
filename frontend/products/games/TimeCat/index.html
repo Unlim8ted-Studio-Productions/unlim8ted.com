@@ -5,8 +5,6 @@
   <meta charset="UTF-8" />
   <title>TimeCat – Two timelines, One chance to fix the past…</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script type="module" src="/components/site-loader.js"></script>
-  <site-loader text="Loading..."></site-loader>
 
   <style>
     /* logo */
@@ -75,7 +73,7 @@
       background-color: #4179b5;
     }
   </style>
-  <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>
+
   <style>
     /* General body styles */
     body {
@@ -1967,9 +1965,13 @@
 
     });
   </script>
-
+  <script type="module" src="/components/site-navbar.js"></script>
 </head>
-
+  <site-navbar
+    cart-href="https://unlim8ted.com/sign-in/cart"
+    signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile">
+  </site-navbar>
 <!-- POPUP OVERLAY -->
 <div id="popupOverlay" class="popup-overlay hidden"></div>
 

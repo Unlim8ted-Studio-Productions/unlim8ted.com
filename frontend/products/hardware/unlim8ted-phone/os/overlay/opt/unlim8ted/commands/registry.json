@@ -1,0 +1,35 @@
+﻿{
+  "commands": {
+    "sleep": {
+      "description": "Put the phone display to sleep",
+      "endpoint": "/api/system/sleep",
+      "method": "POST"
+    },
+    "wake": {
+      "description": "Wake the phone display",
+      "endpoint": "/api/system/wake",
+      "method": "POST"
+    },
+    "shutdown": {
+      "description": "Safely sync storage and power off the phone",
+      "endpoint": "/api/system/shutdown",
+      "method": "POST"
+    },
+    "brightness": {
+      "description": "Set display brightness from 0.05 to 1.0",
+      "endpoint": "/api/system/brightness",
+      "method": "POST"
+    },
+    "camera.start": {
+      "description": "Start camera preview",
+      "endpoint": "/api/apps/camera/start",
+      "method": "POST"
+    },
+    "camera.capture": {
+      "description": "Capture a still photo",
+      "endpoint": "/api/apps/camera/capture",
+      "method": "POST"
+    }
+  }
+}
+

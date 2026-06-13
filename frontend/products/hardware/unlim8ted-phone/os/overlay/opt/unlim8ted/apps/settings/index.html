@@ -1,0 +1,143 @@
+﻿<section class="app-template app-template-settings">
+    <div class="settings-shell">
+        <header class="settings-hero">
+            <div class="settings-hero-copy">
+                <div class="settings-kicker">Nebula device</div>
+                <div class="settings-title">Settings</div>
+                <div class="settings-sub" id="settingsOwnerLine">Device details, controls, and status in one flowing surface.</div>
+            </div>
+            <div class="settings-status-pill" id="settingsSleepState">Awake</div>
+        </header>
+
+        <section class="settings-section">
+            <div class="settings-section-label">Profile</div>
+            <div class="settings-group">
+                <div id="settingsProfileCard"></div>
+                <div id="settingsDeviceStats"></div>
+            </div>
+        </section>
+
+        <section class="settings-section">
+            <div class="settings-section-label">Connectivity</div>
+            <div id="settingsToggleGroup" class="settings-group"></div>
+        </section>
+
+        <section class="settings-section">
+            <div class="settings-section-label">Display</div>
+            <div id="settingsDisplayGroup" class="settings-group"></div>
+        </section>
+
+        <section class="settings-section">
+            <div class="settings-section-label">Attention</div>
+            <div id="settingsBadgesGroup" class="settings-group"></div>
+        </section>
+    </div>
+
+    <style>
+        .app-template-settings { min-height: 100%; }
+        .settings-shell { display: grid; gap: 18px; min-height: 100%; padding-bottom: 12px; }
+        .settings-hero {
+            position: relative;
+            padding: 24px 22px;
+            border-radius: 32px;
+            border: 1px solid rgba(222, 235, 255, 0.16);
+            background:
+                radial-gradient(240px 160px at 12% 12%, rgba(128, 202, 255, 0.24), transparent 64%),
+                radial-gradient(220px 140px at 88% 14%, rgba(184, 140, 255, 0.22), transparent 62%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)),
+                rgba(16, 24, 46, 0.72);
+            box-shadow: 0 28px 72px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .settings-kicker,
+        .settings-section-label,
+        .settings-row-overline,
+        .settings-badge-meta,
+        .settings-detail-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(209, 223, 255, 0.58);
+        }
+        .settings-title { margin-top: 8px; font-size: 34px; font-weight: 760; letter-spacing: -0.04em; color: rgba(247, 249, 255, 0.98); }
+        .settings-sub { margin-top: 10px; max-width: 34ch; font-size: 14px; line-height: 1.55; color: rgba(230, 238, 255, 0.76); }
+        .settings-status-pill {
+            min-height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(223, 235, 255, 0.14);
+            background: rgba(255, 255, 255, 0.1); display: inline-flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; color: rgba(247, 249, 255, 0.96); white-space: nowrap;
+        }
+        .settings-section { display: grid; gap: 10px; }
+        .settings-group {
+            border-radius: 28px; border: 1px solid rgba(216, 230, 255, 0.12);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)), rgba(15, 22, 40, 0.52);
+            overflow: hidden; box-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
+        }
+        .settings-profile {
+            display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 18px;
+            border-bottom: 1px solid rgba(218, 232, 255, 0.08);
+        }
+        .settings-avatar {
+            width: 58px; height: 58px; border-radius: 20px; display: grid; place-items: center;
+            font-size: 22px; font-weight: 760; color: #0d1325;
+            background: linear-gradient(135deg, rgba(136, 212, 255, 1), rgba(184, 140, 255, 0.95));
+            box-shadow: 0 14px 24px rgba(123, 166, 255, 0.24);
+        }
+        .settings-profile-name { font-size: 19px; font-weight: 720; color: rgba(247, 249, 255, 0.98); }
+        .settings-profile-copy { margin-top: 6px; font-size: 13px; line-height: 1.5; color: rgba(208, 221, 248, 0.72); }
+        .settings-detail-row,
+        .settings-toggle-row,
+        .settings-badge-row {
+            width: 100%; border: 0; background: transparent; color: inherit; padding: 16px 18px;
+            display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center;
+            text-align: left; border-top: 1px solid rgba(218, 232, 255, 0.08);
+        }
+        .settings-detail-row { grid-template-columns: minmax(0, 1fr); }
+        .settings-detail-row:first-child,
+        .settings-toggle-row:first-child,
+        .settings-badge-row:first-child { border-top: 0; }
+        .settings-row-title { font-size: 16px; font-weight: 690; color: rgba(247, 249, 255, 0.96); }
+        .settings-row-copy { margin-top: 4px; font-size: 13px; line-height: 1.45; color: rgba(195, 207, 236, 0.72); }
+        .settings-detail-value { font-size: 14px; font-weight: 680; color: rgba(235, 242, 255, 0.8); }
+        .settings-toggle-pill { width: 52px; height: 30px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); position: relative; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.06); }
+        .settings-toggle-pill::after { content: ""; position: absolute; top: 4px; left: 4px; width: 22px; height: 22px; border-radius: 999px; background: rgba(247, 249, 255, 0.96); transition: transform 180ms ease; }
+        .settings-toggle-row.active .settings-toggle-pill { background: linear-gradient(135deg, rgba(125, 200, 255, 0.92), rgba(145, 255, 222, 0.8)); }
+        .settings-toggle-row.active .settings-toggle-pill::after { transform: translateX(22px); }
+        .settings-display-stack { display: grid; }
+        .settings-display-block { padding: 18px; border-top: 1px solid rgba(218, 232, 255, 0.08); display: grid; gap: 12px; }
+        .settings-display-block:first-child { border-top: 0; }
+        .settings-slider-row { display: flex; align-items: center; gap: 14px; }
+        .settings-slider { width: 100%; accent-color: #91d4ff; }
+        .settings-slider-value { min-width: 48px; text-align: right; font-size: 14px; font-weight: 700; color: rgba(247, 249, 255, 0.96); }
+        .settings-timeout-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+        .settings-chip {
+            min-height: 42px; border-radius: 18px; border: 1px solid rgba(220, 233, 255, 0.12); background: rgba(255, 255, 255, 0.06);
+            color: rgba(247, 249, 255, 0.94); font-size: 13px; font-weight: 700;
+        }
+        .settings-radio-form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+        .settings-select,
+        .settings-input {
+            width: 100%; min-height: 42px; border-radius: 8px; border: 1px solid rgba(220, 233, 255, 0.12);
+            background: rgba(8, 13, 24, 0.72); color: rgba(247, 249, 255, 0.96); padding: 0 12px; font: inherit;
+        }
+        .settings-radio-list { display: grid; gap: 8px; }
+        .settings-bt-device {
+            min-height: 46px; border-radius: 8px; border: 1px solid rgba(220, 233, 255, 0.12); background: rgba(255, 255, 255, 0.06);
+            color: rgba(247, 249, 255, 0.96); display: grid; gap: 3px; text-align: left; padding: 8px 12px;
+        }
+        .settings-bt-device span { font-size: 14px; font-weight: 720; }
+        .settings-bt-device small { color: rgba(201, 214, 243, 0.7); }
+        .settings-chip.active { background: linear-gradient(135deg, rgba(136, 203, 255, 0.9), rgba(161, 145, 255, 0.88)); color: #08101f; box-shadow: 0 12px 24px rgba(125, 165, 255, 0.22); }
+        .settings-badge-count { min-width: 30px; height: 30px; border-radius: 999px; background: rgba(255, 255, 255, 0.1); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 760; }
+        .settings-empty { padding: 18px; font-size: 13px; line-height: 1.5; color: rgba(201, 214, 243, 0.7); }
+        @media (max-width: 560px) {
+            .settings-hero { display: grid; }
+            .settings-timeout-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+    </style>
+</section>
+
+

@@ -1,0 +1,34 @@
+<section class="app-template app-template-browser" style="display:grid;grid-template-rows:auto 1fr;gap:0;min-height:100%;height:100%;position:relative;">
+    <div id="browserTabSheet" style="position:absolute;inset:0;background:rgba(5,10,18,.58);backdrop-filter:blur(12px);display:none;align-items:flex-start;justify-content:center;padding:62px 14px 14px;z-index:6;">
+        <div style="width:100%;max-width:520px;border-radius:24px;background:linear-gradient(180deg, rgba(17,26,45,.98) 0%, rgba(24,35,58,.96) 100%);padding:12px;display:grid;gap:10px;box-shadow:0 20px 60px rgba(0,0,0,.28);">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+                <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#92aacb;">Tabs</div>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <button type="button" id="browserSheetNew" aria-label="New tab" title="New tab" style="height:32px;width:32px;border-radius:16px;border:1px solid rgba(140,186,255,.10);background:rgba(100,145,255,.08);color:#eef3ff;display:grid;place-items:center;" data-browser-icon="plus"></button>
+                    <button type="button" id="browserSheetClose" aria-label="Close sheet" title="Close sheet" style="height:32px;width:32px;border-radius:16px;border:1px solid rgba(140,186,255,.10);background:rgba(100,145,255,.08);color:#eef3ff;display:grid;place-items:center;" data-browser-icon="close"></button>
+                </div>
+            </div>
+            <div id="browserTabList" style="display:grid;gap:8px;max-height:52vh;overflow:auto;scrollbar-width:none;-ms-overflow-style:none;"></div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;">
+                <button type="button" id="browserSheetBack" aria-label="Back" title="Back" style="height:32px;border-radius:16px;border:1px solid rgba(140,186,255,.10);background:rgba(100,145,255,.08);color:#eef3ff;display:grid;place-items:center;" data-browser-icon="back"></button>
+                <button type="button" id="browserSheetForward" aria-label="Forward" title="Forward" style="height:32px;border-radius:16px;border:1px solid rgba(140,186,255,.10);background:rgba(100,145,255,.08);color:#eef3ff;display:grid;place-items:center;" data-browser-icon="forward"></button>
+                <button type="button" id="browserSheetReload" aria-label="Reload" title="Reload" style="height:32px;border-radius:16px;border:1px solid rgba(140,186,255,.10);background:rgba(100,145,255,.08);color:#eef3ff;display:grid;place-items:center;" data-browser-icon="reload"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-card" style="padding:10px 12px;border-radius:18px;background:linear-gradient(180deg, rgba(18,27,46,.98) 0%, rgba(24,35,58,.95) 100%);display:grid;clip-path:none;">
+        <form id="browserForm" style="display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:6px;align-items:center;">
+            <div style="display:flex;align-items:center;gap:8px;height:38px;background:rgba(241,246,255,.98);border-radius:19px;padding:0 12px;min-width:0;">
+                <span style="display:grid;place-items:center;color:#4b688d;flex:0 0 auto;" data-browser-icon="search"></span>
+                <input id="browserUrl" value="" placeholder="Search or enter address" style="width:100%;padding:0;background:transparent;color:#10203a;border:0;outline:none;font-size:14px;font-weight:600;min-width:0;" />
+            </div>
+            <button type="button" id="browserMenu" aria-label="Browser menu" title="Browser menu" style="height:32px;width:32px;border-radius:16px;border:1px solid rgba(140,186,255,.10);background:rgba(100,145,255,.08);color:#eef3ff;display:grid;place-items:center;" data-browser-icon="menu"></button>
+            <button type="button" id="browserCloseInline" aria-label="Close browser" title="Close browser" style="height:32px;width:32px;border-radius:16px;border:1px solid rgba(140,186,255,.10);background:rgba(100,145,255,.08);color:#eef3ff;display:grid;place-items:center;" data-browser-icon="close"></button>
+        </form>
+    </div>
+
+    <div class="system-card" style="padding:0;overflow:hidden;border-radius:0;background:#f6f9ff;min-height:0;height:100%;clip-path:none;box-shadow:none;">
+        <iframe id="browserFrame" title="Browser view" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads" style="width:100%;height:100%;border:0;background:#fff;scrollbar-width:thin;"></iframe>
+    </div>
+</section>

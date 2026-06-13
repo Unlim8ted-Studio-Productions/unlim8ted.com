@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unlim8ted - Hardware</title>
+  <meta name="title" content="Products - Unlim8ted" />
+  <meta name="description" content="Explore hardware builds from Unlim8ted Studio Productions." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://unlim8ted.com/products/hardware/" />
+  <meta property="og:title" content="Hardware - Unlim8ted Studio Productions" />
+  <meta property="og:description" content="Explore hardware builds, prototypes, and embedded projects from Unlim8ted Studio Productions." />
+  <meta property="og:image" content="https://assets.unlim8ted.com/images/products/hardware/unlim8ted-phone/render_transparent.gif" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://unlim8ted.com/products/hardware/" />
+  <meta property="twitter:title" content="Hardware - Unlim8ted Studio Productions" />
+  <meta property="twitter:description" content="Explore hardware builds, prototypes, and embedded projects from Unlim8ted Studio Productions." />
+  <meta property="twitter:image" content="https://assets.unlim8ted.com/images/products/hardware/unlim8ted-phone/render_transparent.gif" />
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
+
+  <script type="module" src="/components/site-navbar.js"></script>
+
+  <style>
+    :root {
+      --bg: #080a10;
+      --bg-2: #0d1220;
+      --panel: rgba(255, 255, 255, 0.06);
+      --panel-2: rgba(255, 255, 255, 0.09);
+      --line: rgba(255, 255, 255, 0.12);
+      --text: rgba(245, 247, 255, 0.94);
+      --muted: rgba(245, 247, 255, 0.68);
+      --accent: #6fd4ff;
+      --accent-2: #8f79ff;
+      --good: #61f0bf;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+      --radius: 24px;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(900px 480px at 15% 0%, rgba(111, 212, 255, 0.16), transparent 60%),
+        radial-gradient(780px 420px at 92% 12%, rgba(143, 121, 255, 0.18), transparent 58%),
+        linear-gradient(180deg, var(--bg-2), var(--bg));
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      padding: 28px 16px 44px;
+    }
+
+    .wrap {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-top: 14px;
+    }
+
+    .panel {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--panel-2), var(--panel));
+      box-shadow: var(--shadow);
+    }
+
+    .hero-copy,
+    .hero-side,
+    .toolbar,
+    .grid-card,
+    .empty {
+      padding: clamp(20px, 3vw, 30px);
+    }
+    .hero-copy {
+      width: 100%;
+    }
+
+    .hero-copy::before,
+    .hero-side::before {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(8px);
+    }
+
+    .hero-copy::before {
+      width: 320px;
+      height: 320px;
+      top: -170px;
+      right: -110px;
+      background: radial-gradient(circle, rgba(111, 212, 255, 0.2), transparent 70%);
+    }
+
+    .hero-side::before {
+      width: 260px;
+      height: 260px;
+      bottom: -150px;
+      left: -70px;
+      background: radial-gradient(circle, rgba(143, 121, 255, 0.24), transparent 70%);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.7;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 5vw, 4.6rem);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+    }
+
+    .sub {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .pill-row,
+    .meta-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill-row {
+      margin-top: 18px;
+    }
+
+    .pill,
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .chip[data-tone="live"] {
+      color: var(--good);
+      border-color: rgba(97, 240, 191, 0.26);
+      background: rgba(97, 240, 191, 0.08);
+    }
+
+    .chip[data-tone="build"] {
+      color: var(--accent);
+      border-color: rgba(111, 212, 255, 0.24);
+      background: rgba(111, 212, 255, 0.08);
+    }
+
+    .hero-side {
+      display: grid;
+      align-content: space-between;
+      gap: 18px;
+    }
+
+    .hero-side h2 {
+      font-size: 1.1rem;
+      letter-spacing: 0.01em;
+    }
+
+    .hero-side p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .meta-list {
+      margin-top: 18px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 56px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      color: var(--text);
+      font: inherit;
+      background: transparent;
+    }
+
+    .field input::placeholder {
+      color: rgba(245, 247, 255, 0.42);
+    }
+
+    .field select option {
+      color: #0b1020;
+    }
+
+    .section-title {
+      margin: 24px 2px 0;
+      font-size: 1rem;
+      color: rgba(245, 247, 255, 0.86);
+      letter-spacing: 0.02em;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .grid-card {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.92fr) minmax(0, 1.08fr);
+      gap: 18px;
+      align-items: center;
+    }
+
+    .media {
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(111, 212, 255, 0.14), transparent 55%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+      aspect-ratio: 5 / 4;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+    }
+
+    .media img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .card-copy {
+      display: grid;
+      gap: 12px;
+    }
+
+    .card-copy h3 {
+      font-size: 1.55rem;
+      letter-spacing: -0.03em;
+    }
+
+    .card-copy p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn--solid {
+      color: #04111d;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--accent), #b3f1ff);
+      font-weight: 700;
+    }
+
+    .empty {
+      margin-top: 16px;
+      color: var(--muted);
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      color: rgba(245, 247, 255, 0.58);
+      font-size: 0.9rem;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .toolbar,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        padding-inline: 12px;
+      }
+
+      .hero-copy,
+      .hero-side,
+      .toolbar,
+      .grid-card,
+      .empty {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 2.35rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+
+  <main class="page">
+    <div class="wrap">
+      <section class="hero">
+        <div class="panel hero-copy">
+          <p class="eyebrow">Hardware</p>
+          <h1>Devices, prototypes, and embedded builds.</h1>
+          <p class="sub">This section tracks real hardware work from Unlim8ted Studio Productions, including enclosures, embedded interfaces, and experimental handheld projects.</p>
+          <div class="pill-row">
+            <span class="pill">CM4 builds</span>
+            <span class="pill">3D enclosure work</span>
+            <span class="pill">Embedded UI</span>
+          </div>
+        </div>
+
+        
+      </section>
+
+      <section class="panel toolbar" aria-label="Hardware filters">
+        <label class="field" for="hardware-search">
+          <span aria-hidden="true">Search</span>
+          <input id="hardware-search" type="text" placeholder="Search hardware..." />
+        </label>
+        <label class="field" for="hardware-filter">
+          <span aria-hidden="true">Type</span>
+          <select id="hardware-filter">
+            <option value="all">All types</option>
+            <option value="handheld">Handheld</option>
+            <option value="embedded">Embedded</option>
+            <option value="prototype">Prototype</option>
+          </select>
+        </label>
+      </section>
+
+      <h2 class="section-title">Hardware projects</h2>
+
+      <section class="grid" id="hardware-grid">
+        <article class="panel grid-card hardware-item" data-category="handheld embedded prototype" data-search="unlim8ted phone cm4 raspberry pi hardware handheld enclosure embedded prototype">
+          <div class="media">
+            <img src="https://assets.unlim8ted.com/images/products/hardware/unlim8ted-phone/render_transparent.gif" alt="Unlim8ted Phone render" />
+          </div>
+          <div class="card-copy">
+            <div class="meta-list">
+              <span class="chip" data-tone="live">Handheld</span>
+              <span class="chip">CM4</span>
+              <span class="chip">Kiosk OS</span>
+            </div>
+            <h3>Unlim8ted Phone</h3>
+            <p>A custom handheld built around the Raspberry Pi Compute Module 4, combining enclosure design, embedded runtime work, and preserved PCB history in one project page.</p>
+            <div class="actions">
+              <a class="btn btn--solid" href="./unlim8ted-phone/">Open project</a>
+              <a class="btn" href="https://github.com/Unlim8ted-Studio-Productions/unlim8ted-phone">Source</a>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <div class="panel empty" id="hardware-empty" hidden>No hardware projects matched that search.</div>
+
+      <footer class="footer">
+        <p id="footer-text">&copy; 2019-2026 Unlim8ted Studio Productions. All rights reserved.</p>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    const searchInput = document.getElementById("hardware-search");
+    const filterSelect = document.getElementById("hardware-filter");
+    const items = Array.from(document.querySelectorAll(".hardware-item"));
+    const emptyState = document.getElementById("hardware-empty");
+    const footerText = document.getElementById("footer-text");
+
+    function applyFilters() {
+      const query = (searchInput.value || "").trim().toLowerCase();
+      const filter = filterSelect.value;
+      let visible = 0;
+
+      items.forEach((item) => {
+        const category = item.dataset.category || "";
+        const search = item.dataset.search || "";
+        const matchesQuery = !query || search.includes(query);
+        const matchesFilter = filter === "all" || category.includes(filter);
+        const show = matchesQuery && matchesFilter;
+        item.hidden = !show;
+        if (show) visible += 1;
+      });
+
+      emptyState.hidden = visible !== 0;
+    }
+
+    searchInput.addEventListener("input", applyFilters);
+    filterSelect.addEventListener("change", applyFilters);
+    applyFilters();
+
+    footerText.innerHTML = `&copy; 2019-${new Date().getFullYear()} Unlim8ted Studio Productions. All rights reserved.`;
+  </script>
+</body>
+
+</html>

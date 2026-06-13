@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Unlim8ted Phone</title>
+  <meta name="description" content="A CM4-based handheld phone project with enclosure, OS, and archived PCB work." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050507;
+      --bg-2: #090912;
+      --surface: rgba(255,255,255,.055);
+      --surface-2: rgba(255,255,255,.085);
+      --line: rgba(255,255,255,.12);
+      --line-2: rgba(255,255,255,.22);
+      --text: #f4f5fb;
+      --soft: rgba(244,245,251,.68);
+      --muted: rgba(244,245,251,.48);
+      --blue: #8ea2ff;
+      --cyan: #58e7ff;
+      --violet: #6e56ff;
+      --pink: #ff65d8;
+      --max: 1440px;
+      --pad: clamp(18px, 3vw, 42px);
+      --radius: 32px;
+      --display: "Space Grotesk", Inter, system-ui, sans-serif;
+      --body: Inter, system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--text);
+      font-family: var(--body);
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 15% 8%, rgba(110,86,255,.26), transparent 34rem),
+        radial-gradient(circle at 82% 18%, rgba(88,231,255,.15), transparent 30rem),
+        linear-gradient(180deg, #07070b 0%, #050507 48%, #030305 100%);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+      opacity: .055;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.85'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 49;
+      background:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(circle at center, black 0%, transparent 78%);
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    img, canvas { display: block; max-width: 100%; }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2, h3 { font-family: var(--display); letter-spacing: -.055em; }
+    p { color: var(--soft); line-height: 1.72; }
+    .page { position: relative; z-index: 2; }
+    .shell { width: min(calc(100% - var(--pad) * 2), var(--max)); margin-inline: auto; }
+    .eyebrow {
+      margin-bottom: 18px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: .72rem;
+      font-weight: 700;
+    }
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      color: var(--text);
+      background: rgba(255,255,255,.045);
+      transition: transform .28s ease, border-color .28s ease, background .28s ease;
+    }
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity .28s ease;
+      background: linear-gradient(135deg, rgba(110,86,255,.9), rgba(88,231,255,.3));
+    }
+    .btn:hover { transform: translateY(-2px); border-color: var(--line-2); }
+    .btn:hover::before { opacity: 1; }
+    .btn--solid {
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--violet), rgba(88,231,255,.74));
+      box-shadow: 0 20px 80px rgba(110,86,255,.26);
+    }
+    .glass {
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.035)),
+        rgba(255,255,255,.035);
+      box-shadow: 0 32px 100px rgba(0,0,0,.36);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      position: fixed;
+      z-index: 40;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: min(calc(100% - 28px), 960px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 999px;
+      background: rgba(5,5,7,.62);
+      backdrop-filter: blur(22px);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.04em; }
+    .brand-mark {
+      width: 30px; height: 30px; border-radius: 50%;
+      background:
+        radial-gradient(circle at 65% 32%, #fff 0 2px, transparent 3px),
+        linear-gradient(135deg, var(--violet), var(--cyan));
+      box-shadow: 0 0 40px rgba(88,231,255,.24);
+    }
+    .nav-links { display: flex; align-items: center; gap: 4px; color: rgba(244,245,251,.7); font-size: .88rem; }
+    .nav-links a { padding: 9px 12px; border-radius: 999px; transition: background .22s ease, color .22s ease; }
+    .nav-links a:hover { background: rgba(255,255,255,.08); color: var(--text); }
+
+    .hero {
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: start;
+      gap: 28px;
+      padding: 72px 0 140px;
+    }
+    .hero-copy { max-width: 920px; }
+    h1 {
+      max-width: 9ch;
+      font-size: clamp(4.5rem, 12vw, 13.8rem);
+      line-height: .82;
+    }
+    .hero-lede { max-width: 36rem; margin-top: 26px; font-size: clamp(1rem, 1.2vw, 1.18rem); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 42px;
+    }
+    .hero-meta div {
+      min-height: 112px;
+      padding: 16px;
+      border-radius: 22px;
+    }
+    .hero-meta span {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      font-size: .68rem;
+      font-weight: 800;
+    }
+    .hero-meta strong { display: block; font-size: .96rem; line-height: 1.35; }
+
+    .viewer-card {
+      position: relative;
+      min-height: min(760px, 76vh);
+      border-radius: 42px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .hero-viewer-stack {
+      display: grid;
+      gap: 18px;
+    }
+    .viewer-card::before {
+      content: "";
+      position: absolute;
+      inset: -25%;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 70% 28%, rgba(88,231,255,.18), transparent 23rem),
+        radial-gradient(circle at 28% 76%, rgba(255,101,216,.11), transparent 18rem);
+      animation: floatGlow 12s ease-in-out infinite alternate;
+    }
+    @keyframes floatGlow { to { transform: translate3d(-4%, 3%, 0) rotate(8deg); } }
+    .viewer-stage {
+      position: absolute;
+      inset: 18px;
+      border-radius: 32px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(88,231,255,.11), transparent 20rem),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015)),
+        #07080d;
+    }
+    #modelCanvas { width: 100%; height: 100%; cursor: grab; touch-action: none; }
+    #modelCanvas:active { cursor: grabbing; }
+    .viewer-label {
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      bottom: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(5,5,7,.68);
+      border: 1px solid rgba(255,255,255,.09);
+      backdrop-filter: blur(18px);
+      font-size: .86rem;
+    }
+    .viewer-label span { color: var(--cyan); }
+    .viewer-label strong { font-weight: 600; }
+
+    .intro {
+      padding: 60px 0 120px;
+      display: grid;
+      grid-template-columns: 1fr minmax(0,1.55fr);
+      gap: clamp(28px, 6vw, 90px);
+      align-items: start;
+    }
+    .section-title {
+      font-size: clamp(3rem, 7.5vw, 9rem);
+      line-height: .9;
+      max-width: 10ch;
+    }
+    .intro-copy { max-width: 680px; display: grid; gap: 22px; padding-top: .4rem; }
+    .intro-copy p { font-size: clamp(1.02rem, 1.35vw, 1.22rem); }
+
+    .horizontal-section { position: relative; min-height: 100svh; }
+    .horizontal-sticky {
+      position: sticky;
+      top: 0;
+      min-height: 100svh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .horizontal-track {
+      display: flex;
+      align-items: stretch;
+      gap: 24px;
+      width: max-content;
+      will-change: transform;
+      padding: 0 max(var(--pad), calc((100vw - var(--max)) / 2 + var(--pad)));
+    }
+    .panel {
+      width: min(84vw, 610px);
+      min-height: 72vh;
+      border-radius: 36px;
+      padding: clamp(22px, 3vw, 36px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+    .panel--wide { width: min(88vw, 860px); }
+    .panel::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: auto -20% -25% auto;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(110,86,255,.23), transparent 70%);
+    }
+    .panel-index {
+      color: var(--cyan);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .panel h3 { align-self: end; max-width: 10ch; font-size: clamp(3rem, 6vw, 6.7rem); line-height: .88; }
+    .panel p { max-width: 38rem; }
+    .panel-media {
+      margin: 28px 0;
+      min-height: 330px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,.09);
+      background:
+        radial-gradient(circle at 55% 38%, rgba(88,231,255,.18), transparent 22rem),
+        rgba(255,255,255,.035);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+    .panel-media img { width: 100%; height: 100%; object-fit: cover; opacity: .88; mix-blend-mode: screen; }
+    .part-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .chip {
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: rgba(255,255,255,.045);
+      color: rgba(244,245,251,.76);
+      font-size: .86rem;
+    }
+
+
+    .mesh-graphic {
+      width: min(72%, 340px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      position: relative;
+      border: 1px solid rgba(255,255,255,.18);
+      transform: rotateX(64deg) rotateZ(-12deg);
+      background:
+        radial-gradient(circle, rgba(88,231,255,.16), transparent 58%),
+        repeating-radial-gradient(circle, rgba(255,255,255,.12) 0 1px, transparent 1px 28px);
+    }
+    .mesh-graphic::before,
+    .mesh-graphic::after {
+      content: "";
+      position: absolute;
+      inset: 14%;
+      border-radius: 50%;
+      border: 1px solid rgba(88,231,255,.22);
+    }
+    .mesh-graphic::after { inset: 30%; border-color: rgba(255,101,216,.20); }
+
+    .model-picker {
+      min-height: 100svh;
+      display: grid;
+      align-items: center;
+      padding: 32px var(--pad);
+    }
+    .model-picker-preview {
+      width: min(100%, var(--max));
+      min-height: min(88svh, 980px);
+      margin: 0 auto;
+      padding: clamp(20px, 3vw, 38px);
+      border-radius: 42px;
+      border: 1px solid rgba(255,255,255,.09);
+      background:
+        radial-gradient(circle at 50% 28%, rgba(88,231,255,.12), transparent 24rem),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+        rgba(255,255,255,.03);
+      box-shadow: 0 28px 90px rgba(0,0,0,.34);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .model-picker-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 24px 80px rgba(110,86,255,.26));
+    }
+    .picker-copy { max-width: 840px; }
+    .picker-copy .section-title { max-width: 8ch; }
+    .picker-copy p { max-width: 35rem; margin-top: 20px; }
+    .picker-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .part-button {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      width: 100%;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      text-align: left;
+      color: var(--text);
+      background: rgba(255,255,255,.04);
+      cursor: pointer;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease;
+    }
+    .part-button:hover, .part-button.is-active {
+      transform: translateY(-4px);
+      border-color: rgba(88,231,255,.38);
+      background: rgba(88,231,255,.075);
+    }
+    .part-button span:first-child { color: var(--cyan); font-weight: 800; font-size: .82rem; }
+    .part-button strong { font-family: var(--display); font-size: clamp(1.2rem, 2vw, 2rem); letter-spacing: -.04em; }
+    .part-button span:nth-child(2) { display: grid; gap: 4px; }
+    .part-button small { color: var(--muted); }
+
+    .os-section {
+      padding: 90px 0 140px;
+      display: grid;
+      grid-template-columns: minmax(0,.9fr) minmax(320px,.72fr);
+      gap: clamp(30px, 6vw, 86px);
+      align-items: center;
+    }
+    .os-copy p { max-width: 41rem; margin-top: 24px; }
+    .phone-frame {
+      justify-self: center;
+      width: min(100%, 390px);
+      aspect-ratio: 9/19.5;
+      padding: 18px;
+      border-radius: 48px;
+      background: linear-gradient(180deg, #171a23, #050507);
+      box-shadow: 0 42px 120px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.09);
+      position: relative;
+    }
+    .phone-frame::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      width: 90px;
+      height: 8px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+    }
+    .phone-screen {
+      width: 100%; height: 100%; overflow: hidden;
+      border-radius: 32px;
+      background: #000;
+      border: 1px solid rgba(255,255,255,.075);
+    }
+    .phone-screen iframe { width: 100%; height: 100%; border: 0; background: #000; }
+
+    .notes {
+      padding: 80px 0 130px;
+    }
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+    .note {
+      min-height: 260px;
+      border-radius: 28px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .note span { color: var(--cyan); text-transform: uppercase; letter-spacing: .16em; font-size: .7rem; font-weight: 800; }
+    .note h3 { font-size: clamp(1.8rem, 3vw, 3rem); line-height: .95; }
+
+    .footer {
+      padding: 0 0 42px;
+    }
+    .footer-panel {
+      min-height: 430px;
+      border-radius: 42px;
+      padding: clamp(24px, 5vw, 64px);
+      display: grid;
+      align-content: space-between;
+      gap: 42px;
+      overflow: hidden;
+      position: relative;
+    }
+    .footer-panel::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -40% auto;
+      width: min(70vw, 780px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(88,231,255,.16), transparent 70%);
+    }
+    .footer h2 { max-width: 10ch; font-size: clamp(3.5rem, 8vw, 10rem); line-height: .84; }
+    .footer-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; position: relative; z-index: 1; }
+
+    .reveal { opacity: 0; transform: translate3d(0, 34px, 0); }
+    .split-line { display: block; overflow: hidden; }
+
+    @media (max-width: 980px) {
+      .nav {
+        width: min(calc(100% - 20px), 720px);
+        padding: 10px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        white-space: nowrap;
+        scrollbar-width: none;
+      }
+      .nav-links::-webkit-scrollbar { display: none; }
+      .hero, .intro, .os-section { grid-template-columns: 1fr; }
+      .hero { padding-top: 52px; }
+      .viewer-card { min-height: 600px; }
+      .hero-meta, .notes-grid { grid-template-columns: 1fr; }
+      .picker-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .panel, .panel--wide { width: calc(100vw - 48px); min-height: 640px; }
+      .horizontal-sticky { overflow-x: auto; display: block; padding: 82px 0; min-height: auto; }
+      .horizontal-track { transform: none !important; }
+    }
+    @media (max-width: 620px) {
+      :root { --pad: 14px; }
+      .nav {
+        bottom: 10px;
+        width: calc(100% - 16px);
+        border-radius: 26px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .brand { justify-content: center; }
+      .nav-links {
+        justify-content: flex-start;
+        padding-bottom: 2px;
+      }
+      .nav-links a {
+        padding: 8px 10px;
+        font-size: .82rem;
+      }
+      h1 { font-size: clamp(3.7rem, 22vw, 6rem); }
+      .section-title { font-size: 3.1rem; }
+      .viewer-card { min-height: 520px; border-radius: 28px; }
+      .viewer-label { left: 24px; right: 24px; bottom: 24px; align-items: flex-start; flex-direction: column; }
+      .picker-grid { grid-template-columns: 1fr; }
+      .part-button {
+        grid-template-columns: auto 1fr;
+        align-items: start;
+      }
+      .part-button small:last-child { grid-column: 2; }
+      .model-picker { padding-inline: 10px; }
+      .model-picker-preview {
+        min-height: 72svh;
+        border-radius: 28px;
+      }
+      .panel, .panel--wide { width: calc(100vw - 30px); padding: 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>  <script type="module" src="/components/site-navbar.js"></script>
+</head>
+<body>
+  <site-navbar
+    cart-href="https://unlim8ted.com/sign-in/cart"
+    signin-href="https://unlim8ted.com/sign-in"
+    profile-href="https://unlim8ted.com/profile">
+  </site-navbar>
+  <nav class="nav">
+    <a class="brand" href="#top" aria-label="Unlim8ted Phone home"></span><span>Unlim8ted Phone</span></a>
+    <div class="nav-links" aria-label="Page sections">
+      <a href="#context">Context</a>
+      <a href="#build">Build</a>
+      <a href="#parts">Parts</a>
+      <a href="#os">OS</a>
+      <a href="#source">Source</a>
+    </div>
+  </nav>
+
+  <div class="page" id="top">
+    <header class="hero shell">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">CM4 handheld project</p>
+        <h1 class="hero-title reveal">Unlim8ted Phone.</h1>
+        <p class="hero-lede reveal">A custom handheld built around the Raspberry Pi Compute Module 4, a printable enclosure system, and a local kiosk-style interface. This page is a snapshot of the current build rather than a product page.</p>
+        <div class="hero-actions reveal">
+          <a class="btn btn--solid" href="#build">Follow the build</a>
+          <a class="btn" href="https://github.com/Unlim8ted-Studio-Productions/unlim8ted-phone">Open repository</a>
+        </div>
+        <div class="hero-meta">
+          <div class="glass reveal"><span>Compute</span><strong>Raspberry Pi CM4 Lite baseline</strong></div>
+          <div class="glass reveal"><span>Enclosure</span><strong>SCAD and STL parts for a multi-piece body</strong></div>
+          <div class="glass reveal"><span>Status</span><strong>Active build with archived PCB work preserved</strong></div>
+        </div>
+      </div>
+
+      <div class="hero-viewer-stack reveal">
+        <aside class="viewer-card glass" aria-label="Interactive 3D model viewer">
+          <div class="viewer-stage">
+            <canvas id="modelCanvas"></canvas>
+          </div>
+          <div class="viewer-label">
+            <span id="viewerStatus">Loading mesh</span>
+            <strong id="viewerFile">Main_Case.stl</strong>
+          </div>
+        </aside>
+        <div class="picker-grid" id="partButtons" aria-label="Geometry model selector"></div>
+      </div>
+    </header>
+
+    <section class="intro shell" id="context">
+      <div>
+        <p class="eyebrow reveal">Context</p>
+        <h2 class="section-title reveal">The repo is the object.</h2>
+      </div>
+      <div class="intro-copy reveal">
+        <p>The project is organized around the things needed to make the device real: 3D enclosure files, operating system work, documentation, and earlier PCB development that is now kept as reference.</p>
+        <p>The current hardware direction uses off-the-shelf modules rather than treating the old custom PCB path as the active assembly route.</p>
+      </div>
+    </section>
+
+    <section class="horizontal-section" id="build" data-horizontal-section>
+      <div class="horizontal-sticky" data-horizontal-sticky>
+        <div class="horizontal-track" data-horizontal-track>
+          <article class="panel panel--wide glass reveal">
+            <span class="panel-index">01 / Hardware baseline</span>
+            <h3>Known parts first.</h3>
+            <div class="panel-media"><p style="font-family:var(--display);font-size:clamp(2.4rem,5vw,5.8rem);line-height:.9;color:var(--text);max-width:9ch;text-align:center;letter-spacing:-.06em;">CM4 + display + power.</p></div>
+            <p>The current path centers on a CM4, Waveshare carrier/display hardware, a LiPo power board, and a battery. The page names the stack without pretending it is finished consumer hardware.</p>
+          </article>
+
+          <article class="panel glass reveal">
+            <span class="panel-index">02 / Enclosure</span>
+            <h3>Parts that hold parts.</h3>
+            <div class="panel-media"><img src="https://assets.unlim8ted.com/images/products/hardware/unlim8ted-phone/Components.gif" alt="Exploded component animation of the Unlim8ted Phone." /></div>
+            <p>The case is split into printable and serviceable pieces: shell, covers, internal holders, camera volume, and connector transition geometry.</p>
+          </article>
+
+          <article class="panel glass reveal">
+            <span class="panel-index">03 / Runtime</span>
+            <h3>A local shell.</h3>
+            <div class="panel-media"><p style="font-family:var(--display);font-size:clamp(2.1rem,4vw,4.5rem);line-height:.92;color:var(--text);max-width:10ch;text-align:center;letter-spacing:-.06em;">Kiosk interface, not a mockup.</p></div>
+            <p>The OS work is represented as a device-specific kiosk surface with local modules and a Python-backed runtime layer.</p>
+          </article>
+
+          <article class="panel glass reveal">
+            <span class="panel-index">04 / Archived path</span>
+            <h3>Old PCB work stays visible.</h3>
+            <div class="panel-media"><div class="mesh-graphic" aria-hidden="true"></div></div>
+            <p>The custom PCB files remain in the repo for context. They are not presented as the active fabrication route for the current build.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="model-picker" id="parts">
+      <figure class="model-picker-preview glass reveal">
+        <img
+          src="https://assets.unlim8ted.com/images/products/hardware/unlim8ted-phone/render_transparent.gif"
+          alt="Animated render of the Unlim8ted Phone handheld prototype on a transparent background."
+          loading="lazy"
+          decoding="async" />
+      </figure>
+    </section>
+
+    <section class="os-section shell" id="os">
+      <div class="os-copy">
+        <p class="eyebrow reveal">OS surface</p>
+        <h2 class="section-title reveal">The interface belongs inside the device story.</h2>
+        <p class="reveal">The embedded preview is framed as a browser-limited look at the local shell. It stays secondary to the hardware/enclosure story instead of competing with it.</p>
+      </div>
+      <div class="phone-frame glass reveal">
+        <div class="phone-screen">
+          <iframe src="./os/overlay/opt/unlim8ted/ui/index.html" title="Embedded Unlim8ted OS UI" loading="lazy"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="notes shell">
+      <p class="eyebrow reveal">Build notes</p>
+      <h2 class="section-title reveal">Current, practical, unfinished.</h2>
+      <div class="notes-grid">
+        <article class="note glass reveal"><span>Assembly</span><h3>Designed around printable sections and revision.</h3></article>
+        <article class="note glass reveal"><span>Software</span><h3>Local modules sit behind a kiosk shell.</h3></article>
+        <article class="note glass reveal"><span>History</span><h3>Archived board work remains useful as context.</h3></article>
+      </div>
+    </section>
+
+    <footer class="footer shell" id="source">
+      <div class="footer-panel glass reveal">
+        <div>
+          <p class="eyebrow">Source</p>
+          <h2>Open the repo.</h2>
+        </div>
+        <div class="footer-row">
+          <p>The source files are the clearest record of what the project currently is.</p>
+          <a class="btn btn--solid" href="https://github.com/Unlim8ted-Studio-Productions/unlim8ted-phone">View on GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
+  <script type="module">
+    import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+
+    const MODEL_FILES = [
+      { label: "Main case", file: "Main_Case.stl", path: "https://raw.githubusercontent.com/Unlim8ted-Studio-Productions/unlim8ted-phone/refs/heads/main/3d/STL/Main_Case.stl", note: "Primary enclosure shell and main silhouette." },
+      { label: "Back cover", file: "Back_Cover.stl", path: "https://raw.githubusercontent.com/Unlim8ted-Studio-Productions/unlim8ted-phone/refs/heads/main/3d/STL/Back_Cover.stl", note: "Rear closure and seam relationship." },
+      { label: "Bottom cover", file: "Bottom_Cover.stl", path: "https://raw.githubusercontent.com/Unlim8ted-Studio-Productions/unlim8ted-phone/refs/heads/main/3d/STL/Bottom_Cover.stl", note: "Lower access section and underside split." },
+      { label: "CM4 holder", file: "Compute Module Plane.stl", path: "https://raw.githubusercontent.com/Unlim8ted-Studio-Productions/unlim8ted-phone/refs/heads/main/3d/STL/Compute Module Plane.stl", note: "Internal CM4 locating part." },
+      { label: "Battery holder", file: "Battery_Holder.stl", path: "https://raw.githubusercontent.com/Unlim8ted-Studio-Productions/unlim8ted-phone/refs/heads/main/3d/STL/Battery_Holder.stl", note: "Battery support and pack position." },
+      { label: "Power board holder", file: "Battery_Controller_Holder.stl", path: "https://raw.githubusercontent.com/Unlim8ted-Studio-Productions/unlim8ted-phone/refs/heads/main/3d/STL/Battery_Controller_Holder.stl", note: "Charging and power board mount." },
+      { label: "Camera bump", file: "Camera_Bump.stl", path: "https://raw.githubusercontent.com/Unlim8ted-Studio-Productions/unlim8ted-phone/refs/heads/main/3d/STL/Back_Cover_Camera_Bump.stl", note: "Camera volume and rear profile." },
+      { label: "USB-C entrance", file: "TypeC_Entrance.stl", path: "https://raw.githubusercontent.com/Unlim8ted-Studio-Productions/unlim8ted-phone/refs/heads/main/3d/STL/Type_C_Port_Entrance.stl", note: "Connector clearance and lower-edge opening." },
+      { label: "Full assembly", file: "phone.stl", path: "https://raw.githubusercontent.com/Unlim8ted-Studio-Productions/unlim8ted-phone/refs/heads/main/3d/STL/phone.stl", note: "Combined assembly view when available." }
+    ];
+
+    const state = {
+      renderer: null,
+      scene: null,
+      camera: null,
+      mesh: null,
+      frame: 0,
+      activeIndex: 0,
+      drag: false,
+      pointer: { x: 0, y: 0 },
+      rotation: { x: -.22, y: .72 },
+      targetRotation: { x: -.22, y: .72 }
+    };
+
+    const canvas = document.querySelector("#modelCanvas");
+    const statusEl = document.querySelector("#viewerStatus");
+    const fileEl = document.querySelector("#viewerFile");
+    const buttonsEl = document.querySelector("#partButtons");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    initMotion();
+    initButtons();
+    initViewer();
+
+    function initMotion() {
+      if (!window.gsap || !window.ScrollTrigger || reduced) {
+        document.querySelectorAll(".reveal").forEach(el => { el.style.opacity = 1; el.style.transform = "none"; });
+        return;
+      }
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      if (window.Lenis) {
+        const lenis = new Lenis({ duration: 1.12, smoothWheel: true, wheelMultiplier: .88 });
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add(time => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+      }
+
+      gsap.utils.toArray(".reveal").forEach((el, index) => {
+        gsap.to(el, {
+          opacity: 1,
+          y: 0,
+          duration: .9,
+          delay: Math.min(index * .025, .18),
+          ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 88%" }
+        });
+      });
+
+      gsap.utils.toArray("[data-horizontal-section]").forEach(section => {
+        const track = section.querySelector("[data-horizontal-track]");
+        if (!track) return;
+
+        function amount() { return Math.max(0, track.scrollWidth - window.innerWidth); }
+        ScrollTrigger.matchMedia({
+          "(min-width: 981px)": function() {
+            const tween = gsap.to(track, {
+              x: () => -amount(),
+              ease: "none",
+              scrollTrigger: {
+                trigger: section,
+                start: "top top",
+                end: () => `+=${amount() + window.innerHeight * .55}`,
+                scrub: .75,
+                pin: section.querySelector("[data-horizontal-sticky]"),
+                anticipatePin: 1,
+                invalidateOnRefresh: true
+              }
+            });
+            return () => tween.kill();
+          }
+        });
+      });
+
+      gsap.to(".viewer-card", {
+        yPercent: -5,
+        ease: "none",
+        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
+      });
+    }
+
+    function initButtons() {
+      buttonsEl.innerHTML = MODEL_FILES.map((item, index) => `
+        <button class="part-button ${index === 0 ? "is-active" : ""}" type="button" data-index="${index}">
+          <span>${String(index + 1).padStart(2, "0")}</span>
+          <span><strong>${item.label}</strong><small>${item.note}</small></span>
+          <small>${item.file}</small>
+        </button>
+      `).join("");
+
+      buttonsEl.addEventListener("click", event => {
+        const button = event.target.closest("[data-index]");
+        if (!button) return;
+        loadModel(Number(button.dataset.index));
+      });
+    }
+
+    function initViewer() {
+      if (!canvas) return;
+
+      state.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+      state.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      state.renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+      state.scene = new THREE.Scene();
+      state.camera = new THREE.PerspectiveCamera(34, 1, .01, 1000);
+      state.camera.position.set(0, 0, 6.5);
+
+      const hemi = new THREE.HemisphereLight(0xffffff, 0x121224, 1.8);
+      const key = new THREE.DirectionalLight(0xffffff, 3.2);
+      key.position.set(4, 5, 6);
+      const rim = new THREE.DirectionalLight(0x58e7ff, 2.3);
+      rim.position.set(-5, 2, -3);
+      state.scene.add(hemi, key, rim);
+
+      const grid = new THREE.GridHelper(7, 24, 0x374151, 0x1f2937);
+      grid.rotation.x = Math.PI / 2;
+      grid.position.z = -1.7;
+      grid.material.transparent = true;
+      grid.material.opacity = .18;
+      state.scene.add(grid);
+
+      canvas.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("resize", resizeViewer);
+      resizeViewer();
+      loadModel(0);
+      animateViewer();
+    }
+
+    function onPointerDown(event) {
+      state.drag = true;
+      state.pointer.x = event.clientX;
+      state.pointer.y = event.clientY;
+      canvas.setPointerCapture?.(event.pointerId);
+    }
+    function onPointerMove(event) {
+      if (!state.drag) return;
+      const dx = event.clientX - state.pointer.x;
+      const dy = event.clientY - state.pointer.y;
+      state.pointer.x = event.clientX;
+      state.pointer.y = event.clientY;
+      state.targetRotation.y += dx * .009;
+      state.targetRotation.x += dy * .009;
+      state.targetRotation.x = Math.max(-1.35, Math.min(1.35, state.targetRotation.x));
+    }
+    function onPointerUp() { state.drag = false; }
+
+    function resizeViewer() {
+      if (!state.renderer) return;
+      const rect = canvas.getBoundingClientRect();
+      const width = Math.max(1, rect.width);
+      const height = Math.max(1, rect.height);
+      state.renderer.setSize(width, height, false);
+      state.camera.aspect = width / height;
+      state.camera.updateProjectionMatrix();
+    }
+
+    async function loadModel(index) {
+      const item = MODEL_FILES[index] || MODEL_FILES[0];
+      state.activeIndex = index;
+      fileEl.textContent = item.file;
+      statusEl.textContent = "Loading mesh";
+      document.querySelectorAll(".part-button").forEach((btn, i) => btn.classList.toggle("is-active", i === index));
+
+      try {
+        const response = await fetch(item.path);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const buffer = await response.arrayBuffer();
+        const geometry = parseSTL(buffer);
+        setMesh(geometry);
+        statusEl.textContent = "Interactive STL preview";
+      } catch (error) {
+        console.warn(`Unable to load ${item.path}:`, error);
+        setMesh(fallbackGeometry(index));
+        statusEl.textContent = "Preview placeholder — STL not loaded";
+      }
+    }
+
+    function setMesh(geometry) {
+      if (state.mesh) {
+        state.scene.remove(state.mesh);
+        state.mesh.geometry.dispose();
+        state.mesh.material.dispose();
+      }
+
+      geometry.computeVertexNormals();
+      geometry.computeBoundingBox();
+      geometry.computeBoundingSphere();
+      centerAndScale(geometry);
+
+      const material = new THREE.MeshStandardMaterial({
+        color: 0xdde6ff,
+        roughness: .52,
+        metalness: .18,
+        emissive: 0x10162a,
+        emissiveIntensity: .22
+      });
+
+      state.mesh = new THREE.Mesh(geometry, material);
+      state.mesh.rotation.set(state.rotation.x, state.rotation.y, 0);
+      state.scene.add(state.mesh);
+    }
+
+    function centerAndScale(geometry) {
+      const box = geometry.boundingBox;
+      const center = new THREE.Vector3();
+      const size = new THREE.Vector3();
+      box.getCenter(center);
+      box.getSize(size);
+      const maxAxis = Math.max(size.x, size.y, size.z) || 1;
+      geometry.translate(-center.x, -center.y, -center.z);
+      geometry.scale(3.2 / maxAxis, 3.2 / maxAxis, 3.2 / maxAxis);
+    }
+
+    function fallbackGeometry(index) {
+      const group = new THREE.Group();
+      const shape = new THREE.Shape();
+      const w = 1.25;
+      const h = 2.55;
+      const r = .24;
+      shape.moveTo(-w + r, -h);
+      shape.lineTo(w - r, -h);
+      shape.quadraticCurveTo(w, -h, w, -h + r);
+      shape.lineTo(w, h - r);
+      shape.quadraticCurveTo(w, h, w - r, h);
+      shape.lineTo(-w + r, h);
+      shape.quadraticCurveTo(-w, h, -w, h - r);
+      shape.lineTo(-w, -h + r);
+      shape.quadraticCurveTo(-w, -h, -w + r, -h);
+
+      const geometry = new THREE.ExtrudeGeometry(shape, { depth: .28 + index * .015, bevelEnabled: true, bevelThickness: .08, bevelSize: .08, bevelSegments: 10 });
+      geometry.rotateX(Math.PI / 2);
+      return geometry;
+    }
+
+    function parseSTL(buffer) {
+      if (isBinarySTL(buffer)) return parseBinarySTL(buffer);
+      const text = new TextDecoder().decode(buffer);
+      return parseAsciiSTL(text);
+    }
+
+    function isBinarySTL(buffer) {
+      if (buffer.byteLength < 84) return false;
+      const dv = new DataView(buffer);
+      const faces = dv.getUint32(80, true);
+      const expected = 84 + faces * 50;
+      if (expected === buffer.byteLength) return true;
+      const header = new TextDecoder().decode(buffer.slice(0, 80)).trim().toLowerCase();
+      return !header.startsWith("solid");
+    }
+
+    function parseBinarySTL(buffer) {
+      const dv = new DataView(buffer);
+      const faces = dv.getUint32(80, true);
+      const positions = new Float32Array(faces * 9);
+      const normals = new Float32Array(faces * 9);
+      let offset = 84;
+      let p = 0;
+
+      for (let i = 0; i < faces; i++) {
+        const nx = dv.getFloat32(offset, true); offset += 4;
+        const ny = dv.getFloat32(offset, true); offset += 4;
+        const nz = dv.getFloat32(offset, true); offset += 4;
+        for (let v = 0; v < 3; v++) {
+          positions[p] = dv.getFloat32(offset, true); offset += 4;
+          positions[p + 1] = dv.getFloat32(offset, true); offset += 4;
+          positions[p + 2] = dv.getFloat32(offset, true); offset += 4;
+          normals[p] = nx; normals[p + 1] = ny; normals[p + 2] = nz;
+          p += 3;
+        }
+        offset += 2;
+      }
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
+      return geometry;
+    }
+
+    function parseAsciiSTL(text) {
+      const vertices = [];
+      const regex = /vertex\s+([-+]?\d*\.?\d+(?:e[-+]?\d+)?)\s+([-+]?\d*\.?\d+(?:e[-+]?\d+)?)\s+([-+]?\d*\.?\d+(?:e[-+]?\d+)?)/gi;
+      let match;
+      while ((match = regex.exec(text))) {
+        vertices.push(Number(match[1]), Number(match[2]), Number(match[3]));
+      }
+      if (vertices.length < 9) throw new Error("ASCII STL had no vertices");
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+      return geometry;
+    }
+
+    function animateViewer() {
+      state.frame = requestAnimationFrame(animateViewer);
+      if (!state.renderer || !state.mesh) return;
+      if (!state.drag) state.targetRotation.y += .0022;
+      state.rotation.x += (state.targetRotation.x - state.rotation.x) * .08;
+      state.rotation.y += (state.targetRotation.y - state.rotation.y) * .08;
+      state.mesh.rotation.x = state.rotation.x;
+      state.mesh.rotation.y = state.rotation.y;
+      state.renderer.render(state.scene, state.camera);
+    }
+  </script>
+</body>
+</html>

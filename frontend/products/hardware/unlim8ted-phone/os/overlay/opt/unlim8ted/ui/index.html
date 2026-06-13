@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+    <title>Unlim8ted OS</title>
+    <style>
+        :root {
+            --os-viewport-height: 100vh;
+            --bg0: #040611;
+            --bg1: #0a1020;
+            --bg2: #111a31;
+            --bg3: #1b1f46;
+            --bg4: #2b1f54;
+            --ink: rgba(247, 249, 255, 0.98);
+            --ink-soft: rgba(223, 232, 255, 0.8);
+            --ink-dim: rgba(187, 200, 231, 0.56);
+            --surface-strong: rgba(15, 22, 40, 0.8);
+            --surface: rgba(17, 24, 46, 0.62);
+            --surface-soft: rgba(255, 255, 255, 0.06);
+            --surface-stroke: rgba(196, 218, 255, 0.14);
+            --surface-stroke-strong: rgba(220, 233, 255, 0.2);
+            --accent-a: #7dc8ff;
+            --accent-b: #9a8cff;
+            --accent-c: #88ffd8;
+            --accent-warm: #ffc5dd;
+            --shadow-xl: 0 34px 96px rgba(0, 0, 0, 0.5), 0 12px 28px rgba(10, 14, 28, 0.34);
+            --shadow-lg: 0 22px 56px rgba(0, 0, 0, 0.36), 0 8px 18px rgba(10, 14, 28, 0.24);
+            --shadow-md: 0 14px 28px rgba(0, 0, 0, 0.24), 0 4px 10px rgba(10, 14, 28, 0.14);
+            --ease-os: cubic-bezier(.2, .9, .2, 1);
+            --ease-snap: cubic-bezier(.3, .7, 0, 1);
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --panel-progress: 0;
+            --sleep-progress: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: var(--os-viewport-height);
+            overflow: hidden;
+            background: #000;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--ink);
+        }
+
+        body {
+            position: fixed;
+            inset: 0;
+            overscroll-behavior: none;
+            font-family: "Segoe UI Variable Text", "SF Pro Display", Aptos, "Trebuchet MS", sans-serif;
+        }
+
+        .os {
+            position: fixed;
+            inset: 0;
+            height: var(--os-viewport-height);
+            overflow: hidden;
+            background:
+                radial-gradient(900px 700px at 14% 10%, rgba(131, 182, 255, 0.22), transparent 58%),
+                radial-gradient(760px 620px at 86% 18%, rgba(104, 255, 232, 0.14), transparent 52%),
+                radial-gradient(960px 760px at 74% 84%, rgba(182, 114, 255, 0.18), transparent 58%),
+                radial-gradient(620px 540px at 34% 78%, rgba(255, 162, 206, 0.1), transparent 54%),
+                linear-gradient(180deg, #1a2240 0%, #0b1020 46%, #040611 100%);
+        }
+
+        .aurora,
+        .mesh,
+        .grain,
+        .ribs,
+        .scan {
+            position: absolute;
+            inset: -8%;
+            pointer-events: none;
+        }
+
+        .aurora {
+            background:
+                radial-gradient(42% 36% at 18% 14%, rgba(140, 191, 255, 0.16), transparent 56%),
+                radial-gradient(38% 30% at 80% 22%, rgba(99, 255, 230, 0.14), transparent 58%),
+                radial-gradient(34% 30% at 72% 76%, rgba(191, 126, 255, 0.16), transparent 58%),
+                radial-gradient(28% 24% at 30% 80%, rgba(255, 190, 216, 0.12), transparent 58%);
+            filter: blur(42px);
+            animation: auroraShift 22s ease-in-out infinite alternate;
+        }
+
+        .mesh {
+            opacity: 0.11;
+            background:
+                linear-gradient(120deg, transparent 0 47%, rgba(129, 174, 255, 0.05) 48%, transparent 49%),
+                linear-gradient(60deg, transparent 0 45%, rgba(129, 174, 255, 0.035) 46%, transparent 47%);
+            background-size: 180px 180px, 220px 220px;
+            mix-blend-mode: screen;
+            transform: perspective(1000px) rotateX(68deg) translateY(36%);
+            transform-origin: bottom center;
+        }
+
+        .grain {
+            opacity: 0.03;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.7) 0.6px, transparent 0.7px);
+            background-size: 6px 6px;
+        }
+
+        .ribs {
+            opacity: 0.08;
+            background: repeating-linear-gradient(180deg, rgba(172, 196, 255, 0.04) 0 1px, transparent 1px 36px);
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 18%, transparent 80%, rgba(0, 0, 0, 0.7));
+        }
+
+        .scan {
+            opacity: 0.16;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 16%, transparent 84%, rgba(255, 255, 255, 0.025));
+            mix-blend-mode: screen;
+        }
+
+        @keyframes auroraShift {
+            from {
+                transform: translate3d(-2%, -1%, 0) scale(1.02);
+            }
+
+            to {
+                transform: translate3d(2%, 1.5%, 0) scale(1.08);
+            }
+        }
+
+        .os.cm4-performance {
+            --shadow-xl: 0 12px 28px rgba(0, 0, 0, 0.34);
+            --shadow-lg: 0 8px 18px rgba(0, 0, 0, 0.28);
+            --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.22);
+            background: linear-gradient(180deg, #17213e 0%, #0a1020 52%, #040611 100%);
+        }
+
+        .os.cm4-performance .aurora,
+        .os.cm4-performance .mesh,
+        .os.cm4-performance .grain,
+        .os.cm4-performance .ribs {
+            display: none;
+        }
+
+        .os.cm4-performance *,
+        .os.cm4-performance *::before,
+        .os.cm4-performance *::after {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            filter: none !important;
+            animation: none !important;
+            scroll-behavior: auto !important;
+        }
+
+        .os.cm4-performance .screen {
+            transition-duration: 220ms, 160ms;
+            will-change: transform;
+        }
+
+        .os.cm4-performance .home-shell {
+            transition: transform 120ms ease;
+            will-change: transform;
+        }
+
+        .os.cm4-performance .app-icon,
+        .os.cm4-performance .dock,
+        .os.cm4-performance .tile,
+        .os.cm4-performance .slider,
+        .os.cm4-performance .mini-card,
+        .os.cm4-performance .app-view,
+        .os.cm4-performance .switcher-card,
+        .os.cm4-performance .content-card {
+            box-shadow: none !important;
+        }
+
+        .os.cm4-performance .dock,
+        .os.cm4-performance .cc-backdrop,
+        .os.cm4-performance .tile,
+        .os.cm4-performance .slider,
+        .os.cm4-performance .mini-card,
+        .os.cm4-performance .app-view,
+        .os.cm4-performance .switcher-card,
+        .os.cm4-performance .content-card,
+        .os.cm4-performance .keyboard-key,
+        .os.cm4-performance .keyboard-tray-btn,
+        .os.cm4-performance .keyboard-suggestion {
+            background-image: none !important;
+        }
+
+        .os.cm4-performance .app-view {
+            background: rgba(8, 12, 24, 0.98);
+            transform: translate3d(0, 104%, 0);
+            transition: transform 180ms ease, opacity 120ms ease;
+        }
+
+        .os.cm4-performance .app-view.open {
+            transform: translate3d(0, 0, 0);
+        }
+
+        .os.cm4-performance .keyboard-layer {
+            background: rgba(6, 10, 17, 0.96);
+            transition: transform 140ms ease, opacity 100ms ease;
+        }
+
+        .os.cm4-performance .app-icon,
+        .os.cm4-performance .app,
+        .os.cm4-performance .toggle,
+        .os.cm4-performance .nav-btn,
+        .os.cm4-performance .keyboard-key {
+            transition: none !important;
+            will-change: auto !important;
+        }
+
+        .statusbar {
+            position: absolute;
+            inset: 0 0 auto 0;
+            z-index: 30;
+            height: calc(var(--safe-top) + 30px);
+            padding: calc(var(--safe-top) + 8px) 14px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 13px;
+            font-weight: 680;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+            opacity: calc(1 - min(var(--panel-progress), 0.6) * 0.45);
+            transition: opacity 180ms ease;
+        }
+
+        .statusbar::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: calc(var(--safe-top) + 6px);
+            transform: translateX(-50%);
+            width: 128px;
+            height: 5px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(168, 204, 255, 0.16), rgba(245, 248, 255, 0.92), rgba(168, 204, 255, 0.16));
+            box-shadow: 0 0 24px rgba(157, 202, 255, 0.24);
+            pointer-events: none;
+        }
+
+        .sb-left,
+        .sb-right {
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(214, 229, 255, 0.12);
+            background: rgba(14, 21, 40, 0.34);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px) saturate(135%);
+        }
+
+        .sb-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .statusbar button {
+            appearance: none;
+            border: 0;
+            color: inherit;
+            background: transparent;
+            font: inherit;
+            letter-spacing: inherit;
+            text-transform: inherit;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .wifi {
+            width: 16px;
+            height: 12px;
+            position: relative;
+        }
+
+        .wifi::before,
+        .wifi::after,
+        .wifi span {
+            content: "";
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 1.8px solid rgba(240, 247, 255, 0.95);
+            border-top-color: rgba(240, 247, 255, 0.95);
+            border-left-color: transparent;
+            border-right-color: transparent;
+            border-bottom: none;
+            border-radius: 999px 999px 0 0;
+        }
+
+        .wifi::before {
+            width: 16px;
+            height: 8px;
+            top: 0;
+        }
+
+        .wifi::after {
+            width: 10px;
+            height: 5px;
+            top: 3px;
+        }
+
+        .wifi span {
+            width: 4px;
+            height: 2px;
+            top: 7px;
+            background: rgba(240, 247, 255, 0.95);
+            border: none;
+            border-radius: 999px;
+        }
+
+        .wifi.off {
+            opacity: 0.38;
+        }
+
+        .wifi.ethernet::before,
+        .wifi.ethernet::after,
+        .wifi.ethernet span {
+            display: none;
+        }
+
+        .wifi.ethernet {
+            width: 17px;
+            height: 12px;
+            border: 1.8px solid rgba(240, 247, 255, 0.95);
+            border-radius: 3px;
+        }
+
+        .wifi.ethernet::before {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            width: 7px;
+            height: 4px;
+            transform: translateX(-50%);
+            border: 0;
+            border-left: 1.8px solid rgba(240, 247, 255, 0.95);
+            border-right: 1.8px solid rgba(240, 247, 255, 0.95);
+            border-radius: 0;
+        }
+
+        .wifi.weak::before {
+            opacity: 0.25;
+        }
+
+        .wifi.weak::after {
+            opacity: 0.5;
+        }
+
+        .battery {
+            width: 24px;
+            height: 12px;
+            border: 1.7px solid rgba(240, 247, 255, 0.92);
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .battery::after {
+            content: "";
+            position: absolute;
+            right: -3.8px;
+            top: 3px;
+            width: 2.5px;
+            height: 4px;
+            border-radius: 1px;
+            background: rgba(240, 247, 255, 0.92);
+        }
+
+        .battery-level {
+            position: absolute;
+            left: 1.8px;
+            top: 1.8px;
+            bottom: 1.8px;
+            width: 78%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.98), rgba(165, 228, 255, 0.84));
+        }
+
+        .screen {
+            position: absolute;
+            inset: 0;
+            will-change: transform, opacity;
+            transition: transform 700ms var(--ease-os), opacity 460ms ease;
+        }
+
+        .lockscreen {
+            z-index: 20;
+            display: block;
+            padding: 80px 24px calc(32px + var(--safe-bottom));
+            touch-action: none;
+        }
+
+        .lock-content {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: min(100%, 320px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            text-align: center;
+            transform: translate(-50%, calc(-50% - 18px));
+        }
+
+        .lock-date {
+            color: var(--ink-soft);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .lock-clock {
+            font-size: clamp(76px, 18vw, 108px);
+            font-weight: 260;
+            line-height: 0.92;
+            letter-spacing: -0.06em;
+            text-shadow: 0 8px 28px rgba(0, 0, 0, 0.24);
+        }
+
+        .lock-brand {
+            margin-top: 12px;
+            color: rgba(184, 205, 255, 0.42);
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .unlock-affordance {
+            position: absolute;
+            left: 50%;
+            bottom: calc(18px + var(--safe-bottom));
+            transform: translateX(-50%);
+            width: min(220px, 66vw);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: rgba(228, 238, 255, 0.7);
+            font-size: 12px;
+            font-weight: 620;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .home-indicator {
+            width: 138px;
+            height: 6px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(125, 197, 255, 0.14), rgba(255, 255, 255, 0.92), rgba(141, 209, 255, 0.14));
+            box-shadow: 0 0 22px rgba(158, 210, 255, 0.18);
+        }
+
+        .home-screen {
+            z-index: 10;
+            transform: translateY(100%);
+            opacity: 0.98;
+        }
+
+        .home-screen.unlocked {
+            transform: translateY(0);
+        }
+
+        .lockscreen.unlocked {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .home-shell {
+            position: absolute;
+            inset: 0;
+            transition: transform 220ms ease, filter 220ms ease;
+            will-change: transform, filter;
+        }
+
+        .pages {
+            position: absolute;
+            inset: 0;
+            padding-top: calc(var(--safe-top) + 58px);
+            padding-bottom: calc(var(--safe-bottom) + 128px);
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            touch-action: pan-x;
+        }
+
+        .pages::-webkit-scrollbar {
+            display: none;
+        }
+
+        .page {
+            width: 100%;
+            flex: 0 0 100%;
+            scroll-snap-align: start;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px 12px;
+            align-content: start;
+        }
+
+        .app {
+            border: 0;
+            background: transparent;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+        }
+
+        .app-icon {
+            position: relative;
+            width: min(18.6vw, 74px);
+            height: min(18.6vw, 74px);
+            border-radius: 20px;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(154, 195, 255, 0.12), rgba(154, 195, 255, 0.02));
+            border: 1px solid rgba(140, 186, 255, 0.15);
+            box-shadow: var(--shadow-lg);
+            transition: transform 140ms ease, box-shadow 180ms ease, filter 180ms ease;
+            isolation: isolate;
+            clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+        }
+
+        .app.pressed .app-icon {
+            transform: scale(0.92);
+            box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.26), 0 8px 16px rgba(0, 0, 0, 0.18);
+            filter: brightness(0.98) saturate(1.06);
+        }
+
+        .app-icon::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.03) 32%, rgba(0, 0, 0, 0.08) 100%);
+            pointer-events: none;
+        }
+
+        .app-icon::after {
+            content: "";
+            position: absolute;
+            inset: 1px;
+            z-index: 5;
+            clip-path: inherit;
+            box-shadow: inset 0 1px 0 rgba(200, 228, 255, 0.18), inset 0 -14px 24px rgba(0, 0, 0, 0.08);
+            pointer-events: none;
+        }
+
+        .icon-bg,
+        .icon-shape {
+            position: absolute;
+            inset: 0;
+        }
+
+        .icon-bg {
+            z-index: 1;
+        }
+
+        .icon-shape {
+            z-index: 3;
+        }
+
+        .label {
+            width: 100%;
+            text-align: center;
+            font-size: 11px;
+            line-height: 1.15;
+            font-weight: 650;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 2px;
+            color: rgba(238, 244, 255, 0.94);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.30);
+        }
+
+        .dock-wrap {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: calc(var(--safe-bottom) + 14px);
+            z-index: 16;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .dock {
+            width: calc(100% - 26px);
+            max-width: 420px;
+            height: 94px;
+            padding: 10px 12px;
+            border: 1px solid rgba(140, 186, 255, 0.18);
+            background:
+                linear-gradient(180deg, rgba(112, 148, 255, 0.12), rgba(112, 148, 255, 0.04)),
+                rgba(7, 12, 24, 0.56);
+            backdrop-filter: blur(26px) saturate(150%);
+            -webkit-backdrop-filter: blur(26px) saturate(150%);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            pointer-events: auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            align-items: center;
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+        }
+
+        .dock::before {
+            content: "";
+            position: absolute;
+            top: 1px;
+            left: 16px;
+            right: 16px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(181, 218, 255, 0.34), transparent);
+            opacity: 0.84;
+        }
+
+        .dock .app {
+            gap: 0;
+        }
+
+        .dock .label {
+            display: block;
+        }
+
+        .dock .app-icon {
+            width: 66px;
+            height: 66px;
+            border-radius: 18px;
+            margin: 0 auto;
+        }
+
+        .page-dots {
+            position: absolute;
+            left: 50%;
+            bottom: calc(var(--safe-bottom) + 118px);
+            transform: translateX(-50%);
+            z-index: 16;
+            display: flex;
+            gap: 8px;
+            opacity: calc(1 - min(var(--panel-progress), 0.9) * 0.55);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(178, 199, 245, 0.3);
+            transition: transform 260ms var(--ease-snap), background 220ms ease;
+        }
+
+        .dot.active {
+            transform: scale(1.25);
+            background: rgba(240, 247, 255, 0.96);
+        }
+
+        .control-center {
+            position: absolute;
+            inset: 0;
+            z-index: 60;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 180ms ease;
+            touch-action: pan-y;
+        }
+
+        .control-center.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .quick-pull-zone {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: min(220px, 58vw);
+            height: calc(var(--safe-top) + 34px);
+            z-index: 32;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .cc-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(2, 6, 14, 0.18);
+            backdrop-filter: blur(calc(8px + (var(--panel-progress) * 16px))) saturate(148%);
+            -webkit-backdrop-filter: blur(calc(8px + (var(--panel-progress) * 16px))) saturate(148%);
+            opacity: calc(0.12 + var(--panel-progress) * 0.88);
+        }
+
+        .cc-sheet {
+            position: absolute;
+            inset: 0;
+            padding: calc(var(--safe-top) + 40px) 16px calc(var(--safe-bottom) + 22px);
+            transform: translateY(-100%);
+            will-change: transform;
+            touch-action: pan-y;
+        }
+
+        .cc-panel {
+            width: 100%;
+            max-width: 460px;
+            margin: 0 auto;
+            display: grid;
+            gap: 12px;
+        }
+
+        .cc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6px 2px;
+        }
+
+        .cc-title {
+            font-size: 18px;
+            font-weight: 760;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .cc-sub {
+            font-size: 12px;
+            font-weight: 620;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-dim);
+        }
+
+        .cc-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 12px;
+        }
+
+        .tile,
+        .slider,
+        .mini-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(140, 186, 255, 0.13);
+            background:
+                linear-gradient(180deg, rgba(108, 149, 255, 0.14), rgba(108, 149, 255, 0.05)),
+                rgba(9, 16, 30, 0.70);
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(22px) saturate(150%);
+            -webkit-backdrop-filter: blur(22px) saturate(150%);
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+        }
+
+        .tile::before,
+        .slider::before,
+        .mini-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(201, 226, 255, 0.16), transparent 34%, transparent 72%, rgba(0, 0, 0, 0.04));
+            pointer-events: none;
+        }
+
+        .tile.large {
+            min-height: 170px;
+            padding: 16px;
+            display: grid;
+            gap: 12px;
+            align-content: start;
+        }
+
+        .tile.small {
+            min-height: 79px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .tile-title {
+            font-size: 14px;
+            font-weight: 760;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .tile-sub {
+            font-size: 11px;
+            color: rgba(222, 232, 255, 0.58);
+            font-weight: 620;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .toggle-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .toggle {
+            min-height: 70px;
+            min-width: 0;
+            max-width: 100%;
+            border: 1px solid rgba(140, 186, 255, 0.10);
+            background: rgba(120, 160, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 12px;
+            color: var(--ink);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 140ms ease, background 180ms ease;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            overflow: hidden;
+        }
+
+        .toggle:active {
+            transform: scale(0.97);
+        }
+
+        .toggle.active {
+            background: linear-gradient(180deg, rgba(111, 199, 255, 0.32), rgba(83, 114, 255, 0.16));
+            border-color: rgba(158, 214, 255, 0.18);
+        }
+.toggle {
+    min-height: 70px;
+    min-width: 0;
+
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    gap: 6px;
+}
+.toggle-label {
+    width: 100%;
+    text-align: left;
+    line-height: 1.1;
+
+    /* REMOVE truncation */
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+
+    /* Make it responsive */
+    font-size: clamp(9px, 2.5vw, 12px);
+}
+.label {
+    width: 100%;
+    text-align: center;
+
+    font-size: clamp(9px, 2.6vw, 12px);
+    line-height: 1.2;
+
+    /* allow wrapping */
+    white-space: normal;
+
+    /* prevent overflow breaking layout */
+    overflow: hidden;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+        .toggle-pill {
+            flex: 0 0 auto;
+            align-self: flex-end;
+            width: 28px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.16);
+            clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+            position: relative;
+            transition: background 180ms ease;
+        }
+
+        .toggle-pill::after {
+            content: "";
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.96);
+            clip-path: polygon(3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%, 0 3px);
+            transition: transform 180ms var(--ease-snap);
+        }
+
+        .toggle.active .toggle-pill {
+            background: rgba(255, 255, 255, 0.28);
+        }
+
+        .toggle.active .toggle-pill::after {
+            transform: translateX(12px);
+        }
+
+        .slider {
+            min-height: 90px;
+            padding: 16px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.10);
+            overflow: hidden;
+            clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.16);
+        }
+
+        .bar-fill {
+            width: 68%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.96), rgba(132, 230, 255, 0.84));
+        }
+
+        .mini-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .mini-card {
+            min-height: 92px;
+            padding: 16px;
+            display: grid;
+            align-content: center;
+            gap: 5px;
+        }
+
+        .app-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .app-view {
+            position: absolute;
+            inset: calc(var(--safe-top) + 6px) 0 0;
+            margin: 0;
+            border-radius: 34px 34px 0 0;
+            border: 1px solid var(--surface-stroke);
+            background:
+                radial-gradient(860px 620px at 18% 6%, rgba(134, 196, 255, 0.18), transparent 54%),
+                radial-gradient(680px 520px at 90% 12%, rgba(156, 132, 255, 0.16), transparent 56%),
+                linear-gradient(180deg, rgba(14, 22, 40, 0.94), rgba(8, 12, 24, 0.97));
+            box-shadow: var(--shadow-xl);
+            transform: translate3d(0, 110%, 0) scale(0.94);
+            transform-origin: center bottom;
+            opacity: 0;
+            transition: transform 460ms var(--ease-os), opacity 280ms ease, border-radius 260ms ease;
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(26px) saturate(145%);
+            -webkit-backdrop-filter: blur(26px) saturate(145%);
+        }
+
+        .app-view.open {
+            transform: translate3d(0, 0, 0) scale(1);
+            opacity: 1;
+        }
+
+        .app-view.browser-chrome-only .app-top {
+            display: none;
+        }
+
+        .app-view.browser-chrome-only .app-body {
+            padding: calc(var(--safe-top) + 10px) 16px calc(var(--safe-bottom) + 18px);
+        }
+
+        .app-top {
+            position: relative;
+            padding: 18px 20px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(214, 229, 255, 0.08);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+        }
+
+        .app-top::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 8px;
+            transform: translateX(-50%);
+            width: 76px;
+            height: 5px;
+            border-radius: 999px;
+            background: rgba(244, 248, 255, 0.4);
+        }
+
+        .app-title {
+            font-size: 18px;
+            font-weight: 760;
+            letter-spacing: 0.02em;
+            text-transform: none;
+        }
+
+        .app-meta {
+            display: grid;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .app-chip {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(204, 220, 255, 0.56);
+        }
+
+        .close-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(218, 232, 255, 0.12);
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+        }
+
+        .app-body {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 14px 18px 20px;
+            display: grid;
+            gap: 14px;
+            align-content: start;
+            overscroll-behavior-y: contain;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y pinch-zoom;
+            scrollbar-width: none;
+        }
+
+        .app-body::-webkit-scrollbar {
+            display: none;
+        }
+
+        .app-nav {
+            flex: 0 0 auto;
+            padding: 10px 18px calc(var(--safe-bottom) + 14px);
+            display: grid;
+            gap: 10px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.05));
+            border-top: 1px solid rgba(214, 229, 255, 0.08);
+        }
+
+        .app-nav-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .nav-btn {
+            min-height: 46px;
+            border-radius: 18px;
+            border: 1px solid rgba(218, 232, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(245, 248, 255, 0.96);
+            font-size: 12px;
+            font-weight: 720;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        .gesture-handle {
+            width: 132px;
+            height: 5px;
+            margin: 0 auto;
+            border-radius: 999px;
+            background: rgba(240, 246, 255, 0.84);
+            box-shadow: 0 0 18px rgba(131, 186, 255, 0.18);
+        }
+
+        .app-switcher {
+            position: absolute;
+            inset: 0;
+            z-index: 55;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: calc(var(--safe-top) + 26px) 12px calc(var(--safe-bottom) + 20px);
+            background:
+                radial-gradient(520px 360px at 50% 16%, rgba(97, 144, 255, 0.18), transparent 62%),
+                rgba(3, 7, 14, 0.76);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 220ms ease;
+        }
+
+        .app-switcher.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .switcher-shell {
+            width: min(560px, 100%);
+            display: grid;
+            gap: 16px;
+        }
+
+        .switcher-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 0 4px;
+        }
+
+        .switcher-title {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(190, 212, 255, 0.72);
+        }
+
+        .switcher-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .switcher-btn {
+            min-height: 34px;
+            padding: 0 14px;
+            border-radius: 17px;
+            border: 1px solid rgba(140, 186, 255, 0.12);
+            background: rgba(100, 145, 255, 0.08);
+            color: #eef3ff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .switcher-list {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding: 8px 4px 16px;
+            scroll-snap-type: x mandatory;
+        }
+
+        .switcher-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .switcher-card {
+            flex: 0 0 min(76vw, 300px);
+            min-height: 440px;
+            border: 1px solid rgba(140, 186, 255, 0.14);
+            border-radius: 28px;
+            padding: 14px;
+            background:
+                linear-gradient(180deg, rgba(104, 145, 255, 0.16), rgba(16, 22, 36, 0.82)),
+                rgba(8, 12, 20, 0.94);
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+            display: grid;
+            gap: 14px;
+            align-content: start;
+            scroll-snap-align: center;
+            text-align: left;
+            color: #eef3ff;
+            cursor: pointer;
+        }
+
+        .switcher-card.active {
+            transform: translateY(-8px) scale(1.01);
+            border-color: rgba(186, 224, 255, 0.34);
+        }
+
+        .switcher-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .switcher-card-id {
+            font-size: 10px;
+            color: rgba(188, 208, 255, 0.58);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .switcher-preview {
+            min-height: 0;
+            border-radius: 22px;
+            border: 1px solid rgba(140, 186, 255, 0.08);
+            background:
+                radial-gradient(300px 200px at 20% 0, rgba(96, 142, 255, 0.18), transparent 70%),
+                linear-gradient(180deg, rgba(18, 24, 38, 0.96), rgba(8, 11, 19, 0.98));
+            padding: 18px;
+            display: grid;
+            align-content: start;
+            gap: 12px;
+        }
+
+        .switcher-preview-bar {
+            display: flex;
+            gap: 6px;
+        }
+
+        .switcher-preview-bar span {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.28);
+        }
+
+        .switcher-empty {
+            min-height: 280px;
+            padding: 22px;
+            border: 1px solid rgba(140, 186, 255, 0.12);
+            border-radius: 28px;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            background: rgba(8, 12, 20, 0.74);
+            color: rgba(224, 235, 255, 0.7);
+        }
+
+        .keyboard-layer {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 65;
+            padding: 8px 8px calc(var(--safe-bottom) + 8px);
+            display: grid;
+            gap: 6px;
+            max-height: min(48vh, 360px);
+            background:
+                linear-gradient(180deg, rgba(6, 10, 17, 0), rgba(6, 10, 17, 0.94) 24%),
+                radial-gradient(420px 180px at 50% 0, rgba(102, 153, 255, 0.16), transparent 80%);
+            transform: translateY(110%);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 220ms ease, opacity 180ms ease;
+            touch-action: none;
+        }
+
+        .keyboard-layer.visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .keyboard-tray,
+        .keyboard-predictions,
+        .keyboard-row {
+            display: flex;
+            gap: 6px;
+            align-items: stretch;
+        }
+
+        .keyboard-tray,
+        .keyboard-predictions {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .keyboard-suggestion,
+        .keyboard-tray-btn,
+        .keyboard-key {
+            border: 1px solid rgba(140, 186, 255, 0.14);
+            background: rgba(255, 255, 255, 0.07);
+            color: #eef3ff;
+            min-height: 44px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 760;
+            cursor: pointer;
+            backdrop-filter: blur(14px);
+            white-space: nowrap;
+            flex: 1 1 0;
+            min-width: 0;
+            padding: 0 4px;
+        }
+
+        .keyboard-tray-btn {
+            min-height: 34px;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .keyboard-suggestion {
+            min-height: 32px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .keyboard-row-offset {
+            padding: 0 16px;
+        }
+
+        .keyboard-row-bottom {
+            display: flex;
+        }
+
+        .keyboard-glide-path {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .keyboard-key.special {
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .keyboard-key.key-wide {
+            flex: 1.35 1 0;
+        }
+
+        .keyboard-key.key-wider {
+            flex: 1.7 1 0;
+        }
+
+        .keyboard-key.glide-hit,
+        .keyboard-suggestion:active,
+        .keyboard-tray-btn:active,
+        .keyboard-key:active {
+            background: linear-gradient(180deg, rgba(111, 199, 255, 0.3), rgba(83, 114, 255, 0.18));
+            border-color: rgba(176, 220, 255, 0.24);
+        }
+
+        @media (max-height: 760px) {
+            .keyboard-layer {
+                padding: 6px 6px calc(var(--safe-bottom) + 6px);
+                gap: 5px;
+                max-height: min(45vh, 320px);
+            }
+
+            .keyboard-tray,
+            .keyboard-predictions,
+            .keyboard-row {
+                gap: 5px;
+            }
+
+            .keyboard-suggestion,
+            .keyboard-tray-btn,
+            .keyboard-key {
+                min-height: 40px;
+                border-radius: 12px;
+                font-size: 15px;
+            }
+
+            .keyboard-tray-btn {
+                min-height: 30px;
+                font-size: 10px;
+            }
+
+            .keyboard-suggestion {
+                min-height: 28px;
+                font-size: 11px;
+            }
+
+            .keyboard-row-offset {
+                padding: 0 12px;
+            }
+
+            .keyboard-key.special {
+                font-size: 10px;
+            }
+        }
+
+        .debug-toggle {
+            position: absolute;
+            right: 12px;
+            bottom: calc(var(--safe-bottom) + 14px);
+            z-index: 91;
+            width: 50px;
+            height: 50px;
+            border-radius: 999px;
+            border: 1px solid rgba(140, 186, 255, 0.18);
+            background: linear-gradient(180deg, rgba(109, 150, 255, 0.22), rgba(10, 16, 28, 0.84));
+            color: #eef3ff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            backdrop-filter: blur(14px);
+            cursor: pointer;
+        }
+
+        .debug-console {
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            bottom: calc(var(--safe-bottom) + 74px);
+            z-index: 90;
+            max-height: 22vh;
+            overflow: auto;
+            padding: 8px 10px;
+            border-radius: 16px;
+            background: rgba(7,12,24,.78);
+            backdrop-filter: blur(12px);
+            color: #cfe0ff;
+            font: 11px/1.35 ui-monospace, SFMono-Regular, Consolas, monospace;
+            display: none;
+            gap: 4px;
+            pointer-events: none;
+        }
+
+        .debug-console.visible {
+            display: grid;
+        }
+
+        .os.home-edit .app {
+            animation: homeJiggle 180ms ease-in-out infinite alternate;
+        }
+
+        .os.home-edit .app.selected-edit {
+            transform: scale(0.94);
+            filter: brightness(1.14);
+        }
+
+        @keyframes homeJiggle {
+            from {
+                transform: rotate(-1.2deg);
+            }
+
+            to {
+                transform: rotate(1.2deg);
+            }
+        }
+
+        .content-card {
+            padding: 18px;
+            border-radius: 26px;
+            border: 1px solid var(--surface-stroke);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
+                rgba(15, 22, 40, 0.52);
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(18px) saturate(140%);
+        }
+
+        .content-title {
+            font-size: 13px;
+            font-weight: 760;
+            margin-bottom: 8px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(210, 225, 255, 0.6);
+        }
+
+        .content-text {
+            font-size: 14px;
+            line-height: 1.58;
+            color: rgba(228, 236, 255, 0.72);
+            max-width: 42ch;
+        }
+
+        .app-section {
+            display: grid;
+            gap: 12px;
+        }
+
+        .app-hero-card {
+            padding: 22px;
+            border-radius: 30px;
+            border: 1px solid rgba(223, 235, 255, 0.16);
+            background:
+                radial-gradient(220px 140px at 12% 10%, rgba(137, 202, 255, 0.22), transparent 64%),
+                radial-gradient(180px 120px at 90% 16%, rgba(183, 136, 255, 0.18), transparent 62%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)),
+                rgba(16, 24, 46, 0.66);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .app-hero-title {
+            font-size: 30px;
+            font-weight: 760;
+            letter-spacing: -0.03em;
+        }
+
+        .app-hero-body {
+            margin-top: 8px;
+            font-size: 14px;
+            line-height: 1.58;
+            color: var(--ink-soft);
+            max-width: 40ch;
+        }
+
+        .app-inline-actions,
+        .app-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .app-pill-btn {
+            min-height: 38px;
+            padding: 0 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(219, 232, 255, 0.14);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--ink);
+            font-size: 13px;
+            font-weight: 680;
+            letter-spacing: 0.01em;
+        }
+
+        .app-group {
+            border-radius: 26px;
+            border: 1px solid var(--surface-stroke);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+                rgba(15, 22, 40, 0.5);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .app-group-header {
+            padding: 16px 18px 10px;
+            display: grid;
+            gap: 4px;
+        }
+
+        .app-group-title {
+            font-size: 16px;
+            font-weight: 730;
+            letter-spacing: -0.01em;
+        }
+
+        .app-group-copy {
+            font-size: 13px;
+            color: var(--ink-dim);
+            line-height: 1.45;
+        }
+
+        .app-list {
+            display: grid;
+        }
+
+        .app-list-row {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            text-align: left;
+            padding: 16px 18px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: center;
+            border-top: 1px solid rgba(218, 232, 255, 0.08);
+        }
+
+        .app-list-row:first-child {
+            border-top: 0;
+        }
+
+        .app-list-row-main {
+            min-width: 0;
+            display: grid;
+            gap: 4px;
+        }
+
+        .app-list-row-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ink);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .app-list-row-subtitle {
+            font-size: 13px;
+            color: var(--ink-dim);
+            line-height: 1.45;
+        }
+
+        .app-list-row-trailing {
+            font-size: 18px;
+            color: rgba(233, 240, 255, 0.56);
+        }
+
+        .app-form {
+            padding: 0 18px 18px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .app-field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .app-field-label {
+            font-size: 12px;
+            font-weight: 680;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(210, 225, 255, 0.56);
+        }
+
+        .app-input,
+        .app-textarea {
+            width: 100%;
+            border: 1px solid rgba(220, 233, 255, 0.12);
+            border-radius: 18px;
+            background: rgba(11, 17, 32, 0.5);
+            color: var(--ink);
+            padding: 14px 16px;
+            font: inherit;
+            outline: none;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .app-textarea {
+            min-height: 108px;
+            resize: vertical;
+        }
+
+        .app-submit {
+            min-height: 44px;
+            border: 0;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(138, 201, 255, 0.92), rgba(154, 140, 255, 0.92));
+            color: #08101f;
+            font-size: 14px;
+            font-weight: 760;
+            letter-spacing: 0.01em;
+            box-shadow: 0 14px 28px rgba(100, 144, 255, 0.24);
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .app-grid-card {
+            padding: 14px;
+            border-radius: 22px;
+            border: 1px solid rgba(220, 233, 255, 0.12);
+            background: rgba(255, 255, 255, 0.05);
+            display: grid;
+            gap: 8px;
+        }
+
+        .app-grid-image {
+            width: 100%;
+            height: 128px;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+
+        .os.sleeping .statusbar,
+        .os.sleeping .screen,
+        .os.sleeping .control-center,
+        .os.sleeping .app-layer,
+        .os.sleeping .branding {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sleep-screen {
+            position: absolute;
+            inset: 0;
+            z-index: 70;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            padding: 32px 24px;
+            background:
+                radial-gradient(720px 520px at 50% 12%, rgba(86, 122, 255, 0.12), transparent 60%),
+                linear-gradient(180deg, rgba(4, 6, 11, 0.98), rgba(0, 0, 0, 1));
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 280ms ease;
+        }
+
+        .sleep-screen.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sleep-time {
+            font-size: clamp(72px, 18vw, 112px);
+            font-weight: 240;
+            letter-spacing: -0.06em;
+            line-height: 0.9;
+            text-shadow: 0 16px 42px rgba(0, 0, 0, 0.5);
+        }
+
+        .sleep-sub {
+            color: rgba(228, 238, 255, 0.56);
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-weight: 720;
+        }
+
+        .brightness-range {
+            width: 100%;
+            appearance: none;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.10);
+            outline: none;
+        }
+
+        .brightness-range::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            border: 0;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 0 0 3px rgba(132, 230, 255, 0.18);
+        }
+
+        .brightness-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            color: rgba(222, 232, 255, 0.68);
+            font-size: 12px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-weight: 650;
+        }
+
+        .action-btn {
+            width: 100%;
+            min-height: 92px;
+            border-radius: 26px;
+            border: 1px solid var(--surface-stroke);
+            background:
+                radial-gradient(120px 80px at 16% 16%, rgba(255, 190, 222, 0.16), transparent 60%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)),
+                rgba(15, 22, 40, 0.52);
+            color: var(--ink);
+            padding: 16px;
+            text-align: left;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(14px);
+        }
+
+        .action-title {
+            font-size: 16px;
+            font-weight: 760;
+            margin-bottom: 6px;
+        }
+
+        .action-sub {
+            font-size: 13px;
+            color: rgba(222, 232, 255, 0.62);
+            line-height: 1.45;
+        }
+
+        .camera-shell {
+            display: grid;
+            gap: 14px;
+        }
+
+        .camera-stage,
+        .system-card {
+            border-radius: 28px;
+            border: 1px solid var(--surface-stroke);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+                rgba(15, 22, 40, 0.52);
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(16px) saturate(140%);
+        }
+
+        .camera-stage {
+            padding: 12px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .camera-preview-frame {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 9 / 16;
+            background: rgba(3, 5, 9, 0.92);
+            border-radius: 24px;
+        }
+
+        .camera-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .camera-status {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            padding: 10px 12px;
+            background: rgba(3, 8, 18, 0.62);
+            border: 1px solid rgba(140, 186, 255, 0.14);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(240, 246, 255, 0.92);
+            backdrop-filter: blur(12px);
+        }
+
+        .camera-controls {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .camera-meta {
+            display: grid;
+            gap: 4px;
+        }
+
+        .camera-kicker {
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(222, 232, 255, 0.54);
+            font-weight: 700;
+        }
+
+        .camera-copy {
+            font-size: 14px;
+            line-height: 1.45;
+            color: rgba(232, 240, 255, 0.82);
+        }
+
+        .camera-shutter {
+            width: 88px;
+            height: 88px;
+            border-radius: 999px;
+            border: 6px solid rgba(255, 255, 255, 0.82);
+            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.98), rgba(214, 225, 255, 0.92));
+            box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
+            cursor: pointer;
+        }
+
+        .camera-shutter:active {
+            transform: scale(0.96);
+        }
+
+        .camera-rail {
+            display: grid;
+            grid-template-columns: 88px 1fr;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .camera-thumb {
+            width: 88px;
+            height: 88px;
+            overflow: hidden;
+            border: 1px solid rgba(140, 186, 255, 0.14);
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 22px;
+        }
+
+        .camera-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .system-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .branding {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: calc(var(--safe-bottom) + 4px);
+            z-index: 12;
+            text-align: center;
+            font-size: 10px;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: rgba(168, 196, 255, 0.24);
+            font-weight: 800;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="os" id="os">
+        <div class="aurora"></div>
+        <div class="mesh"></div>
+        <div class="grain"></div>
+        <div class="ribs"></div>
+        <div class="scan"></div>
+
+        <div class="statusbar">
+            <div class="sb-left">
+                <button type="button" id="statusTimeButton" aria-label="Open quick settings">
+                    <span id="sbTime">9:41</span>
+                </button>
+            </div>
+            <div class="sb-right">
+                <div class="wifi" id="statusNetworkIcon"><span></span></div>
+                <div class="battery">
+                    <div class="battery-level"></div>
+                </div>
+            </div>
+        </div>
+        <button class="quick-pull-zone" id="topConfigHandle" type="button" aria-label="Open quick settings"></button>
+
+        <section class="screen lockscreen" id="lockscreen">
+            <div class="lock-content">
+                <div class="lock-date" id="lockDate">Thursday, March 26</div>
+                <div class="lock-clock" id="lockClock">9:41</div>
+                <div class="lock-brand">Unlim8ted Studios</div>
+            </div>
+            <div class="unlock-affordance">
+                <div class="home-indicator"></div>
+                <div>Swipe up to unlock</div>
+            </div>
+        </section>
+
+        <section class="screen home-screen" id="homeScreen">
+            <div class="home-shell" id="homeShell">
+                <div class="pages" id="pages">
+                    <div class="page">
+                        <button class="app" data-app="messages" aria-label="Messages">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#7f89ff,#3946ff 78%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:18px;right:18px;top:18px;bottom:18px;border:3px solid rgba(255,255,255,0.92);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:24px;top:26px;width:16px;height:16px;background:rgba(255,255,255,0.94);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:44px;top:26px;width:4px;height:4px;background:rgba(255,255,255,0.94);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:50px;top:26px;width:4px;height:4px;background:rgba(255,255,255,0.94);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:56px;top:26px;width:4px;height:4px;background:rgba(255,255,255,0.94);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Messages</div>
+                        </button>
+
+                        <button class="app" data-app="camera" aria-label="Camera">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#ffb36a,#ff6b2f 78%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:14px;right:14px;top:22px;bottom:18px;border:3px solid rgba(255,255,255,0.92);clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:24px;top:14px;width:16px;height:8px;background:rgba(255,255,255,0.92);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:26px;right:26px;top:32px;bottom:26px;border:4px solid rgba(255,255,255,0.92);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Camera</div>
+                        </button>
+
+                        <button class="app" data-app="gallery" aria-label="Gallery">
+                            <div class="app-icon">
+                                <div class="icon-bg"
+                                    style="background:linear-gradient(145deg,#ff9e5f,#ff4d8d 58%,#7d62ff);"></div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:16px;right:16px;top:16px;bottom:16px;border:3px solid rgba(255,255,255,0.86);clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:24px;right:24px;top:24px;bottom:24px;background:rgba(255,255,255,0.2);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:18px;top:18px;width:14px;height:14px;background:#fff4b0;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Gallery</div>
+                        </button>
+
+                        <button class="app" data-app="browser" aria-label="Browser">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#3ee8ff,#1e7bff 78%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:18px;right:18px;top:18px;bottom:18px;border:3px solid rgba(255,255,255,0.84);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:35px;top:18px;width:4px;height:38px;background:rgba(255,255,255,0.9);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:18px;top:35px;width:38px;height:4px;background:rgba(255,255,255,0.9);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Browser</div>
+                        </button>
+
+                        <button class="app" data-app="music" aria-label="Music">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#ff8c6b,#ff2f63 76%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:34px;top:16px;width:5px;height:28px;background:rgba(255,255,255,0.94);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:39px;top:16px;width:14px;height:4px;background:rgba(255,255,255,0.94);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:22px;top:42px;width:16px;height:16px;background:rgba(255,255,255,0.94);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:40px;top:34px;width:14px;height:14px;background:rgba(255,255,255,0.94);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Music</div>
+                        </button>
+
+                        <button class="app" data-app="maps" aria-label="Maps">
+                            <div class="app-icon">
+                                <div class="icon-bg"
+                                    style="background:linear-gradient(180deg,#bff0ff,#7bd5ff 42%,#66c56f 42%,#3ea559);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:14px;top:0;bottom:0;width:4px;background:rgba(255,255,255,0.28);transform:skewX(-18deg);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:34px;top:0;bottom:0;width:4px;background:rgba(255,255,255,0.24);transform:skewX(18deg);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:26px;top:18px;width:18px;height:18px;background:#ff546d;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:30px;top:22px;width:10px;height:10px;background:white;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Maps</div>
+                        </button>
+
+                        <button class="app" data-app="mail" aria-label="Mail">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#6db7ff,#2f63ff 76%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:14px;right:14px;top:18px;bottom:18px;border:3px solid rgba(255,255,255,0.94);clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:18px;right:18px;top:22px;height:18px;border-top:3px solid rgba(255,255,255,0.94);transform:skewY(18deg);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:18px;right:18px;top:22px;height:18px;border-top:3px solid rgba(255,255,255,0.94);transform:skewY(-18deg);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Mail</div>
+                        </button>
+
+                        <button class="app" data-app="notes" aria-label="Notes">
+                            <div class="app-icon">
+                                <div class="icon-bg"
+                                    style="background:linear-gradient(180deg,#ffe68c,#ffd14d 30%,#f4efdf 30%,#e8e1c6 100%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:16px;right:16px;top:20px;bottom:14px;border:2px solid rgba(0,0,0,0.10);background:rgba(255,255,255,0.22);clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:22px;right:22px;top:30px;height:2px;background:rgba(0,0,0,0.18);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:22px;right:28px;top:40px;height:2px;background:rgba(0,0,0,0.14);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:22px;right:34px;top:50px;height:2px;background:rgba(0,0,0,0.12);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Notes</div>
+                        </button>
+                    </div>
+
+                    <div class="page">
+                        <button class="app" data-app="clock" aria-label="Clock">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#2f3749,#0e1219 76%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:16px;right:16px;top:16px;bottom:16px;border:3px solid rgba(255,255,255,0.9);transform:rotate(45deg);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:36px;top:24px;width:3px;height:18px;background:white;">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:36px;top:36px;width:14px;height:3px;background:white;">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:34px;top:34px;width:7px;height:7px;background:white;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Clock</div>
+                        </button>
+                        <button class="app" data-app="files" aria-label="Files">
+                            <div class="app-icon">
+                                <div class="icon-bg"
+                                    style="background:linear-gradient(145deg,#76bfff,#aecfff 40%,#3162ff);"></div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:18px;right:18px;top:24px;bottom:18px;border:3px solid rgba(255,255,255,0.94);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:22px;top:16px;width:22px;height:10px;border:3px solid rgba(255,255,255,0.94);border-bottom:none;clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Files</div>
+                        </button>
+                        <button class="app" data-app="code" aria-label="Code">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#42d9ff,#0d7cff 42%,#1de0a1 100%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:18px;top:19px;width:14px;height:24px;border-left:4px solid rgba(255,255,255,0.94);border-bottom:4px solid rgba(255,255,255,0.94);transform:skewX(-12deg) rotate(12deg);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;right:18px;top:19px;width:14px;height:24px;border-right:4px solid rgba(255,255,255,0.94);border-bottom:4px solid rgba(255,255,255,0.94);transform:skewX(12deg) rotate(-12deg);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:34px;top:14px;width:4px;height:40px;background:rgba(255,255,255,0.94);transform:rotate(18deg);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Code</div>
+                        </button>
+                        <button class="app" data-app="store" aria-label="Store">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#8b72ff,#63a7ff 80%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:18px;right:18px;top:26px;bottom:18px;border:3px solid rgba(255,255,255,0.94);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:28px;right:28px;top:16px;height:12px;border:3px solid rgba(255,255,255,0.94);border-bottom:none;clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Store</div>
+                        </button>
+                        <button class="app" data-app="terminal" aria-label="Terminal">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#10231a,#163d2a 46%,#55ffad);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:14px;right:14px;top:18px;bottom:18px;border:3px solid rgba(210,255,230,0.94);border-radius:8px;background:rgba(0,0,0,.18);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:24px;top:30px;width:14px;height:4px;background:rgba(210,255,230,0.96);transform:rotate(35deg);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:24px;top:38px;width:14px;height:4px;background:rgba(210,255,230,0.96);transform:rotate(-35deg);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:44px;right:24px;bottom:27px;height:4px;background:rgba(210,255,230,0.96);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Terminal</div>
+                        </button>
+                        <button class="app" data-app="settings" aria-label="Settings">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#8891a4,#444d61 76%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:18px;top:18px;width:38px;height:38px;border:6px solid rgba(255,255,255,0.92);transform:rotate(45deg);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:31px;top:31px;width:12px;height:12px;background:rgba(255,255,255,0.92);transform:rotate(45deg);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:34px;top:10px;width:6px;height:12px;background:rgba(255,255,255,0.92);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:34px;bottom:10px;width:6px;height:12px;background:rgba(255,255,255,0.92);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:10px;top:34px;width:12px;height:6px;background:rgba(255,255,255,0.92);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;right:10px;top:34px;width:12px;height:6px;background:rgba(255,255,255,0.92);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Settings</div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="page-dots" id="pageDots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                </div>
+
+                <div class="dock-wrap">
+                    <div class="dock">
+                        <button class="app" data-app="phone" aria-label="Phone">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#5af0c8,#0f9e8a 78%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:24px;right:24px;top:16px;bottom:16px;border:4px solid rgba(255,255,255,0.94);clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:30px;right:30px;top:22px;height:4px;background:rgba(255,255,255,0.94);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:34px;right:34px;bottom:22px;height:4px;background:rgba(255,255,255,0.72);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Phone</div>
+                        </button>
+                        <button class="app" data-app="messages" aria-label="Messages">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#7f89ff,#3946ff 78%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:18px;right:18px;top:18px;bottom:18px;border:3px solid rgba(255,255,255,0.92);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:24px;top:26px;width:16px;height:16px;background:rgba(255,255,255,0.94);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:44px;top:26px;width:4px;height:4px;background:rgba(255,255,255,0.94);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:50px;top:26px;width:4px;height:4px;background:rgba(255,255,255,0.94);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:56px;top:26px;width:4px;height:4px;background:rgba(255,255,255,0.94);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Messages</div>
+                        </button>
+                        <button class="app" data-app="browser" aria-label="Browser">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#3ee8ff,#1e7bff 78%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:18px;right:18px;top:18px;bottom:18px;border:3px solid rgba(255,255,255,0.84);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:35px;top:18px;width:4px;height:38px;background:rgba(255,255,255,0.9);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:18px;top:35px;width:38px;height:4px;background:rgba(255,255,255,0.9);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Browser</div>
+                        </button>
+                        <button class="app" data-app="camera" aria-label="Camera">
+                            <div class="app-icon">
+                                <div class="icon-bg" style="background:linear-gradient(145deg,#ffb36a,#ff6b2f 78%);">
+                                </div>
+                                <div class="icon-shape">
+                                    <div
+                                        style="position:absolute;left:14px;right:14px;top:22px;bottom:18px;border:3px solid rgba(255,255,255,0.92);clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:24px;top:14px;width:16px;height:8px;background:rgba(255,255,255,0.92);">
+                                    </div>
+                                    <div
+                                        style="position:absolute;left:26px;right:26px;top:32px;bottom:26px;border:4px solid rgba(255,255,255,0.92);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="label">Camera</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="control-center" id="controlCenter" aria-hidden="true">
+            <div class="cc-backdrop" id="ccBackdrop"></div>
+            <div class="cc-sheet" id="ccSheet">
+                <div class="cc-panel">
+                    <div class="cc-header">
+                        <div>
+                            <div class="cc-title">System Panel</div>
+                            <div class="cc-sub">Unlim8ted OS controls</div>
+                        </div>
+                        <div class="cc-sub" id="ccTime">9:41</div>
+                    </div>
+
+                    <div class="cc-grid">
+                        <div class="tile large">
+                            <div>
+                                <div class="tile-title">Connectivity</div>
+                                <div class="tile-sub">Core hardware routes</div>
+                            </div>
+                            <div class="toggle-grid">
+                                <button class="toggle active" data-action="wifi"><span
+                                        class="toggle-label">Wi-Fi</span><span class="toggle-pill"></span></button>
+                                <button class="toggle active" data-action="bluetooth"><span
+                                        class="toggle-label">Bluetooth</span><span class="toggle-pill"></span></button>
+                                <button class="toggle" data-action="airplane"><span
+                                        class="toggle-label">Airplane</span><span class="toggle-pill"></span></button>
+                                <button class="toggle" data-action="focus"><span class="toggle-label">Focus</span><span
+                                        class="toggle-pill"></span></button>
+                            </div>
+                        </div>
+                        <div style="display:grid; gap:12px;">
+                            <div class="tile small">
+                                <div>
+                                    <div class="tile-title">Battery</div>
+                                    <div class="tile-sub">82%</div>
+                                </div>
+                                <div class="battery" style="transform: scale(1.05);">
+                                    <div class="battery-level" style="width:82%"></div>
+                                </div>
+                            </div>
+                            <div class="tile small">
+                                <div>
+                                    <div class="tile-title">Network</div>
+                                    <div class="tile-sub" id="networkStatusLabel">Checking link</div>
+                                </div>
+                                <div class="wifi" id="ccNetworkIcon"><span></span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slider">
+                        <div>
+                            <div class="tile-title">Brightness</div>
+                            <div class="tile-sub">Display luminance</div>
+                        </div>
+                        <input class="brightness-range" id="brightnessRange" type="range" min="5" max="100"
+                            value="68" aria-label="Display brightness" />
+                        <div class="brightness-meta">
+                            <span>Panel output</span>
+                            <span id="brightnessValue">68%</span>
+                        </div>
+                    </div>
+
+                    <div class="mini-row">
+                        <div class="mini-card">
+                            <div class="tile-title">Media</div>
+                            <div class="tile-sub">No playback</div>
+                        </div>
+                        <button class="action-btn" id="restartButton" type="button">
+                            <div class="action-title">Restart</div>
+                            <div class="action-sub">Do a full OS reboot and reload the shell from cold boot</div>
+                        </button>
+                        <button class="action-btn" id="shutdownButton" type="button">
+                            <div class="action-title">Shut Down</div>
+                            <div class="action-sub">Sync storage and power off before unplugging the device</div>
+                        </button>
+                        <button class="action-btn" id="sleepButton" type="button">
+                            <div class="action-title">Sleep</div>
+                            <div class="action-sub">Turn the display off and wake with tap, key, or swipe</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="app-layer" id="appLayer">
+            <section class="app-view" id="appView">
+                <div class="app-top">
+                    <div class="app-meta">
+                        <div class="app-chip">Unlim8ted app</div>
+                        <div class="app-title" id="appTitle">App</div>
+                    </div>
+                    <button class="close-btn" id="closeAppBtn" aria-label="Close app">×</button>
+                </div>
+                <div class="app-body" id="appBody"></div>
+                <div class="app-nav">
+                    <div class="app-nav-row">
+                        <button class="nav-btn" id="switchAppsBtn" type="button">Recents</button>
+                        <button class="nav-btn" id="homeNavBtn" type="button">Home</button>
+                        <button class="nav-btn" id="quickSettingsBtn" type="button">Panels</button>
+                    </div>
+                    <div class="gesture-handle"></div>
+                </div>
+            </section>
+            <section class="app-switcher" id="appSwitcherSheet" aria-hidden="true"></section>
+        </div>
+        <section class="keyboard-layer" id="keyboardLayer" aria-hidden="true">
+            <svg class="keyboard-glide-path" id="keyboardGlidePath" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+            <div class="keyboard-tray" id="keyboardTray">
+                <button type="button" class="keyboard-tray-btn" id="keyboardClipboardBtn">Paste</button>
+                <button type="button" class="keyboard-tray-btn" id="keyboardCopyBtn">Copy</button>
+                <button type="button" class="keyboard-tray-btn" id="keyboardHideBtn">Hide</button>
+            </div>
+            <div class="keyboard-predictions" id="keyboardPredictions"></div>
+            <div class="keyboard-row" id="keyboardRowQ"></div>
+            <div class="keyboard-row keyboard-row-offset" id="keyboardRowA"></div>
+            <div class="keyboard-row keyboard-row-offset" id="keyboardRowZ"></div>
+            <div class="keyboard-row keyboard-row-bottom" id="keyboardRowBottom"></div>
+        </section>
+
+        <div class="sleep-screen" id="sleepScreen" aria-hidden="true">
+            <div class="sleep-time" id="sleepTime">9:41</div>
+            <div class="sleep-sub">Tap, click, or press a key to wake</div>
+        </div>
+
+        <div class="debug-console" id="debugConsole"></div>
+        <button class="debug-toggle" id="debugToggleBtn" type="button" aria-pressed="false">Debug</button>
+
+        <div class="branding">Unlim8ted Studios</div>
+    </div>
+
+    <script src="./embed-bridge.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<section class="app-template app-template-files">
+    <div class="files-app">
+        <header class="files-topbar">
+            <div class="files-title-row">
+                <div>
+                    <div class="files-title">Files</div>
+                    <div class="files-path" id="filesPathLabel">Files</div>
+                </div>
+                <button class="files-icon-btn" id="filesRefreshBtn" type="button" aria-label="Refresh">R</button>
+            </div>
+            <form class="files-search" id="filesSearchForm">
+                <input id="filesSearchInput" autocomplete="off" name="query" placeholder="Search files" />
+                <button type="submit">Search</button>
+            </form>
+            <div class="files-root-strip" id="filesRootStrip"></div>
+            <div class="files-toolbar">
+                <select id="filesSortSelect" aria-label="Sort files">
+                    <option value="name">Name</option>
+                    <option value="date">Date</option>
+                    <option value="size">Size</option>
+                    <option value="type">Type</option>
+                </select>
+                <button class="files-mode-btn" id="filesModeBtn" type="button">Grid</button>
+                <button class="files-mode-btn" id="filesNewFolderBtn" type="button">Folder</button>
+                <button class="files-mode-btn" id="filesNewFileBtn" type="button">File</button>
+            </div>
+        </header>
+
+        <main class="files-browser">
+            <div class="files-list" id="filesEntryList"></div>
+        </main>
+
+        <section class="files-preview-sheet" id="filesPreviewSheet" aria-hidden="true">
+            <div class="files-sheet-handle"></div>
+            <div class="files-preview-head">
+                <div>
+                    <div class="files-preview-title" id="filesSelectedName">No item selected</div>
+                    <div class="files-preview-sub" id="filesSelectedMeta">Select an item for actions.</div>
+                </div>
+                <button class="files-icon-btn" id="filesClosePreviewBtn" type="button">X</button>
+            </div>
+            <div class="files-preview-body" id="filesPreviewPanel"></div>
+            <div class="files-actions">
+                <button id="filesOpenBtn" type="button">Open</button>
+                <a id="filesDownloadLink" href="#" download>Download</a>
+                <button id="filesRenameBtn" type="button">Rename</button>
+                <button id="filesDeleteBtn" class="danger" type="button">Delete</button>
+            </div>
+        </section>
+
+        <dialog class="files-dialog" id="filesDialog">
+            <form method="dialog" id="filesDialogForm">
+                <div class="files-dialog-title" id="filesDialogTitle">New Item</div>
+                <input class="files-dialog-input" id="filesDialogName" name="name" autocomplete="off" placeholder="Name" />
+                <textarea class="files-dialog-text" id="filesDialogBody" name="body" placeholder="Text file contents"></textarea>
+                <div class="files-dialog-actions">
+                    <button value="cancel" type="submit">Cancel</button>
+                    <button value="ok" type="submit">Done</button>
+                </div>
+            </form>
+        </dialog>
+    </div>
+
+    <style>
+        .app-template-files { height: 100%; min-height: 100%; }
+        .files-app { height: 100%; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); color: #eef4ff; background: #070b13; }
+        .files-topbar { display: grid; gap: 10px; padding: 14px 14px 10px; background: #101827; border-bottom: 1px solid rgba(220, 233, 255, 0.1); }
+        .files-title-row { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+        .files-title { font-size: 25px; font-weight: 780; letter-spacing: 0; }
+        .files-path { margin-top: 3px; font-size: 12px; line-height: 1.35; color: rgba(214, 225, 245, 0.7); word-break: break-word; }
+        .files-icon-btn, .files-mode-btn, .files-search button, .files-actions button, .files-actions a, .files-dialog-actions button {
+            border-radius: 8px; border: 1px solid rgba(220, 233, 255, 0.12); background: rgba(255, 255, 255, 0.08);
+            color: #eef4ff; min-height: 38px; padding: 0 12px; font: inherit; font-weight: 720; text-decoration: none; display: inline-grid; place-items: center;
+        }
+        .files-icon-btn { width: 38px; padding: 0; }
+        .files-search { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+        .files-search input, .files-toolbar select, .files-dialog-input, .files-dialog-text {
+            min-height: 40px; border-radius: 8px; border: 1px solid rgba(220, 233, 255, 0.12); background: #070b13; color: #eef4ff;
+            padding: 0 12px; outline: none; font: inherit;
+        }
+        .files-root-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+        .files-root-strip::-webkit-scrollbar { display: none; }
+        .files-root-chip { flex: 0 0 auto; min-height: 34px; border-radius: 8px; border: 1px solid rgba(220, 233, 255, 0.12); background: rgba(255, 255, 255, 0.07); color: #eef4ff; padding: 0 12px; font-weight: 720; }
+        .files-root-chip.active { background: #78c8ff; color: #07101b; }
+        .files-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; gap: 8px; }
+        .files-browser { min-height: 0; overflow: auto; padding: 8px 0 112px; }
+        .files-list { display: grid; gap: 1px; }
+        .files-list.grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 8px; }
+        .files-entry { width: 100%; min-width: 0; border: 0; background: #0c1320; color: #eef4ff; text-align: left; display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 14px; }
+        .files-entry.selected { background: #18304a; }
+        .files-list.grid .files-entry { min-height: 118px; border-radius: 8px; grid-template-columns: minmax(0, 1fr); align-content: center; justify-items: center; text-align: center; padding: 12px 8px; }
+        .files-icon { width: 42px; height: 42px; border-radius: 8px; display: grid; place-items: center; background: rgba(120, 200, 255, 0.12); color: #90d6ff; font-size: 12px; font-weight: 900; }
+        .files-icon.folder { background: rgba(255, 203, 105, 0.16); color: #ffd786; }
+        .files-name { font-size: 15px; font-weight: 720; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .files-meta { margin-top: 3px; font-size: 12px; color: rgba(214, 225, 245, 0.66); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .files-more { color: rgba(214, 225, 245, 0.55); }
+        .files-empty { padding: 26px 18px; color: rgba(214, 225, 245, 0.7); line-height: 1.5; }
+        .files-preview-sheet {
+            position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; max-height: 62%; min-height: 214px; display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto;
+            background: #111a2b; border-top: 1px solid rgba(220, 233, 255, 0.12); transform: translateY(calc(100% - 58px)); transition: transform 160ms ease;
+        }
+        .files-preview-sheet.visible { transform: translateY(0); }
+        .files-sheet-handle { width: 48px; height: 5px; border-radius: 8px; background: rgba(238, 244, 255, 0.35); justify-self: center; margin: 8px 0; }
+        .files-preview-head { padding: 0 14px 10px; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+        .files-preview-title { font-weight: 780; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70vw; }
+        .files-preview-sub { margin-top: 3px; font-size: 12px; color: rgba(214, 225, 245, 0.68); }
+        .files-preview-body { min-height: 0; overflow: auto; padding: 0 14px 12px; }
+        .files-preview-pre, .files-editor-textarea { width: 100%; min-height: 180px; border-radius: 8px; border: 1px solid rgba(220, 233, 255, 0.12); background: #07101b; color: #eef4ff; padding: 12px; font: 12px/1.45 Consolas, "DejaVu Sans Mono", monospace; white-space: pre-wrap; }
+        .files-editor-textarea { resize: vertical; outline: none; }
+        .files-image-preview { max-width: 100%; max-height: 240px; object-fit: contain; border-radius: 8px; background: #070b13; }
+        .files-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 10px 14px 14px; }
+        .files-actions .danger { background: #ff7790; color: #26030a; }
+        .files-dialog { border: 1px solid rgba(220, 233, 255, 0.12); border-radius: 8px; background: #111a2b; color: #eef4ff; width: min(360px, calc(100vw - 32px)); padding: 0; }
+        .files-dialog::backdrop { background: rgba(0, 0, 0, 0.55); }
+        .files-dialog form { padding: 16px; display: grid; gap: 12px; }
+        .files-dialog-title { font-size: 18px; font-weight: 780; }
+        .files-dialog-text { min-height: 130px; padding-top: 10px; resize: vertical; }
+        .files-dialog-actions { display: flex; justify-content: flex-end; gap: 8px; }
+        @media (max-width: 380px) {
+            .files-list.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .files-toolbar { grid-template-columns: minmax(0, 1fr) auto auto; }
+            #filesNewFileBtn { display: none; }
+        }
+    </style>
+</section>

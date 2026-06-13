@@ -1,0 +1,70 @@
+<section class="app-template app-template-terminal">
+    <div class="terminal-app">
+        <header class="terminal-bar">
+            <div>
+                <div class="terminal-title">Terminal</div>
+                <div class="terminal-sub" id="terminalStatus">PTY session</div>
+            </div>
+            <div class="terminal-actions">
+                <button type="button" data-terminal-send="paste">Paste</button>
+                <button type="button" data-terminal-send="tab">Tab</button>
+                <button type="button" data-terminal-send="ctrl-c">Ctrl-C</button>
+                <button type="button" id="terminalClear">Clear</button>
+                <button type="button" id="terminalExitKiosk">Exit Kiosk</button>
+            </div>
+        </header>
+
+        <div class="terminal-notice" id="terminalNotice">
+            No physical keyboard was detected, so this touch terminal stayed inside the kiosk.
+        </div>
+
+        <div id="terminalSurface" class="terminal-surface" tabindex="0">
+            <pre id="terminalOutput" class="terminal-output" aria-live="polite"></pre>
+            <div class="terminal-cursor" aria-hidden="true"></div>
+            <textarea id="terminalInput" data-terminal-input="true" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input"></textarea>
+        </div>
+
+        <footer class="terminal-softbar">
+            <button type="button" data-terminal-send="esc">Esc</button>
+            <button type="button" data-terminal-send="up">Up</button>
+            <button type="button" data-terminal-send="down">Down</button>
+            <button type="button" data-terminal-send="left">Left</button>
+            <button type="button" data-terminal-send="right">Right</button>
+            <button type="button" data-terminal-send="enter">Enter</button>
+        </footer>
+    </div>
+
+    <style>
+        .app-template-terminal { height: 100%; min-height: 100%; }
+        .terminal-app { height: 100%; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; background: #030504; color: #d7ffe9; font-family: Consolas, "DejaVu Sans Mono", monospace; }
+        .terminal-bar { min-height: 58px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #07110d; border-bottom: 1px solid rgba(104, 255, 178, 0.16); }
+        .terminal-title { font: 800 16px/1.2 Consolas, "DejaVu Sans Mono", monospace; color: #62ffb0; }
+        .terminal-sub { margin-top: 3px; font-size: 11px; color: rgba(178, 255, 215, 0.62); }
+        .terminal-notice { display: none; padding: 7px 12px; background: rgba(255, 213, 117, 0.12); color: #ffe6a3; border-bottom: 1px solid rgba(255, 213, 117, 0.18); font: 700 11px/1.35 Consolas, "DejaVu Sans Mono", monospace; }
+        .terminal-notice.visible { display: block; }
+        .terminal-actions, .terminal-softbar { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+        .terminal-actions::-webkit-scrollbar, .terminal-softbar::-webkit-scrollbar { display: none; }
+        .terminal-actions button, .terminal-softbar button {
+            flex: 0 0 auto; min-height: 34px; border-radius: 8px; border: 1px solid rgba(104, 255, 178, 0.18);
+            background: rgba(104, 255, 178, 0.08); color: #c8ffdc; padding: 0 10px; font: 800 12px Consolas, "DejaVu Sans Mono", monospace;
+        }
+        .terminal-surface { position: relative; min-height: 0; overflow: hidden; background: #020302; }
+        .terminal-output {
+            position: absolute; inset: 0; margin: 0; overflow: auto; padding: 12px; color: #d7ffe9;
+            font: 13px/1.38 Consolas, "DejaVu Sans Mono", monospace; white-space: pre-wrap; word-break: break-word;
+            user-select: text; -webkit-user-select: text; tab-size: 4;
+        }
+        .terminal-cursor {
+            position: absolute; left: 12px; bottom: 12px; width: 8px; height: 17px; background: rgba(98, 255, 176, 0.86);
+            animation: terminalBlink 1s steps(2, start) infinite; pointer-events: none;
+        }
+        #terminalInput { position: absolute; left: 0; top: 0; width: 1px; height: 1px; opacity: 0.01; border: 0; background: transparent; color: transparent; resize: none; outline: 0; }
+        .terminal-softbar { min-height: 48px; align-items: center; padding: 7px 8px; background: #07110d; border-top: 1px solid rgba(104, 255, 178, 0.16); }
+        .terminal-softbar button { min-width: 58px; }
+        @keyframes terminalBlink { 50% { opacity: 0; } }
+        @media (max-width: 420px) {
+            .terminal-bar { display: grid; }
+            .terminal-output { font-size: 12px; }
+        }
+    </style>
+</section>
