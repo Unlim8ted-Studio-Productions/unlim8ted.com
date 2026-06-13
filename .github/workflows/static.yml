@@ -257,8 +257,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Inject snippet immediately after <!DOCTYPE html> in every HTML file inside frontend/*
-      - name: Inject snippet after doctype in frontend HTML files
+      # Inject snippet after <!DOCTYPE html>; if no doctype exists, prepend the old way
+      - name: Inject snippet into frontend HTML files
         shell: bash
         run: |
           set -euo pipefail
@@ -287,35 +287,42 @@ jobs:
               continue
             fi
 
-            if ! grep -qi '<!DOCTYPE[[:space:]]\+html[[:space:]]*>' "$f"; then
-              echo "ERROR: No <!DOCTYPE html> found in $f" >&2
-              exit 1
-            fi
-
             tmp="$(mktemp)"
 
-            awk -v snip_file="$SNIP_FILE" -v mark="$MARK" '
-              BEGIN {
-                injected = 0
-                while ((getline line < snip_file) > 0) {
-                  snip = snip line "\n"
+            if grep -qi '<!DOCTYPE[[:space:]]\+html[[:space:]]*>' "$f"; then
+              awk -v snip_file="$SNIP_FILE" -v mark="$MARK" '
+                BEGIN {
+                  injected = 0
+                  while ((getline line < snip_file) > 0) {
+                    snip = snip line "\n"
+                  }
+                  close(snip_file)
                 }
-                close(snip_file)
-              }
 
+                {
+                  print $0
+
+                  if (!injected && tolower($0) ~ /<!doctype[[:space:]]+html[[:space:]]*>/) {
+                    print mark
+                    printf "%s", snip
+                    injected = 1
+                  }
+                }
+              ' "$f" > "$tmp"
+
+              mv "$tmp" "$f"
+              echo "Injected after <!DOCTYPE html>: $f"
+            else
               {
-                print $0
+                printf '%s\n' "$MARK"
+                cat "$SNIP_FILE"
+                printf '\n'
+                cat "$f"
+              } > "$tmp"
 
-                if (!injected && tolower($0) ~ /<!doctype[[:space:]]+html[[:space:]]*>/) {
-                  print mark
-                  printf "%s", snip
-                  injected = 1
-                }
-              }
-            ' "$f" > "$tmp"
-
-            mv "$tmp" "$f"
-            echo "Injected after <!DOCTYPE html>: $f"
+              mv "$tmp" "$f"
+              echo "No <!DOCTYPE html>; prepended old way: $f"
+            fi
           done
 
       - name: Setup Pages
