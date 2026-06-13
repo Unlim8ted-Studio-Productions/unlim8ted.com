@@ -257,8 +257,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Prepend snippet as the first thing in every HTML file *inside frontend/*
-      - name: Prepend snippet to frontend HTML files
+      # Inject snippet immediately after <!DOCTYPE html> in every HTML file inside frontend/*
+      - name: Inject snippet after doctype in frontend HTML files
         shell: bash
         run: |
           set -euo pipefail
@@ -277,23 +277,45 @@ jobs:
             exit 1
           fi
 
-          SNIP="$(cat "$SNIP_FILE")"
+          find "$OUT_DIR" -type f -name "*.html" \
+            ! -path "$SNIP_FILE" \
+            ! -path "frontend/components/deploy-inject/*" \
+            -print0 | while IFS= read -r -d '' f; do
 
-          find "$OUT_DIR" -type f -name "*.html" -print0 | while IFS= read -r -d '' f; do
             if grep -qF "$MARK" "$f"; then
               echo "Already injected: $f"
               continue
             fi
 
+            if ! grep -qi '<!DOCTYPE[[:space:]]\+html[[:space:]]*>' "$f"; then
+              echo "ERROR: No <!DOCTYPE html> found in $f" >&2
+              exit 1
+            fi
+
             tmp="$(mktemp)"
-            {
-              printf '%s\n' "$MARK"
-              printf '%s\n' "$SNIP"
-              cat "$f"
-            } > "$tmp"
+
+            awk -v snip_file="$SNIP_FILE" -v mark="$MARK" '
+              BEGIN {
+                injected = 0
+                while ((getline line < snip_file) > 0) {
+                  snip = snip line "\n"
+                }
+                close(snip_file)
+              }
+
+              {
+                print $0
+
+                if (!injected && tolower($0) ~ /<!doctype[[:space:]]+html[[:space:]]*>/) {
+                  print mark
+                  printf "%s", snip
+                  injected = 1
+                }
+              }
+            ' "$f" > "$tmp"
 
             mv "$tmp" "$f"
-            echo "Injected: $f"
+            echo "Injected after <!DOCTYPE html>: $f"
           done
 
       - name: Setup Pages

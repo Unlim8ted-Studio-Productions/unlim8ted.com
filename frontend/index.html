@@ -897,6 +897,19 @@
       font-weight: 650;
     }
 
+    .stat-value {
+      display: inline-flex;
+      align-items: baseline;
+      gap: .04em;
+      white-space: nowrap;
+    }
+
+    .stat-suffix {
+      font-size: clamp(48px, 7vw, 120px);
+      letter-spacing: -.08em;
+      font-weight: 650;
+    }
+
     .stat p {
       color: var(--muted);
       line-height: 1.45;
@@ -1604,6 +1617,13 @@
         <div class="stat">
           <div class="num" data-count="4">0</div>
           <p>Main public touchpoints: website, GitHub, YouTube, and community channels.</p>
+        </div>
+        <div class="stat">
+          <div class="stat-value">
+            <div class="num" data-count="100">0</div>
+            <div class="stat-suffix">%</div>
+          </div>
+          <p>Your engagement level.</p>
         </div>
       </div>
     </section>
