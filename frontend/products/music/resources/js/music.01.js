@@ -522,7 +522,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
       // Update "now playing" line immediately
       const title = displayTitle(item);
       nowPlayingEl.textContent = opts.autoplay ? `Now playing: ${title}` : `Selected: ${title}`;
-      emitMeatballMusicState({ isPlaying: opts.autoplay && isPlaying, selectedTitle: title });
+      emitMeatballMusicState({ isPlaying: opts.autoplay && isPlaying, selectedTitle: title, selecting: true });
 
       // Switch reviews/rating context to this product id
       activateReviewsFor(item);

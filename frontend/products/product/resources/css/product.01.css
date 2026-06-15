@@ -771,9 +771,8 @@
     }
 
     .meatballAssistant.is-speaking .meatballAvatar-mouth {
-      width: 28px;
-      height: 14px;
       border-bottom-width: 4px;
+      animation: meatballTalk .34s ease-in-out infinite alternate;
     }
 
     .meatballAssistant.is-hyped .meatballAvatar::after {

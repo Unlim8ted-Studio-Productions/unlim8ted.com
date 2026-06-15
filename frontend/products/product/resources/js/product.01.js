@@ -365,7 +365,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
       const price = context.priceText || pPrice.textContent || "";
 
       if (trigger === "intro") {
-        return `I am Meatball. I am keeping an eye on ${itemName}${price ? ` at ${price}` : ""}. Tap me if you want the quick read.`;
+        return `I am Meatball. I am keeping an eye on ${itemName}${price ? ` at ${price}` : ""}.`;
       }
       if (trigger === "cart-add") {
         if (variantLabel) return `YES. ${safeVariant.trim()} made it into the cart. I am thriving.`;

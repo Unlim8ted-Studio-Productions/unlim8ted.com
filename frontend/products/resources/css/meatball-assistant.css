@@ -23,7 +23,8 @@
 .meatballAssistant.is-jamming {
   filter:
     drop-shadow(0 8px 22px rgba(255, 182, 106, 0.22))
-    drop-shadow(0 0 18px rgba(98, 214, 255, 0.16));
+    drop-shadow(0 0 18px rgba(98, 214, 255, 0.16))
+    drop-shadow(0 0 28px rgba(255, 118, 214, 0.14));
 }
 
 .meatballAssistant.is-right {
@@ -153,11 +154,11 @@
 }
 
 .meatballAssistant.is-jamming .meatballAvatar {
-  animation: meatballJam 620ms ease-in-out infinite alternate;
+  animation: meatballJam 420ms ease-in-out infinite alternate;
 }
 
 .meatballAssistant.is-jamming .meatballAvatar-body {
-  animation: meatballFloat 1.55s ease-in-out infinite, meatballIdleTilt 2.4s ease-in-out infinite;
+  animation: meatballFloat 0.95s ease-in-out infinite, meatballIdleTilt 1.55s ease-in-out infinite;
 }
 
 .meatballAssistant.is-jamming .meatballAvatar-eye.left {
@@ -168,8 +169,10 @@
   animation: meatballBlink 8.5s infinite, meatballJamEye 620ms ease-in-out infinite alternate-reverse;
 }
 
-.meatballAssistant.is-jamming .meatballAvatar-mouth {
-  animation: meatballJamMouth 300ms ease-in-out infinite alternate;
+.meatballAssistant.is-jam-visible .meatballAssistant-bubble {
+  opacity: 0.97;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
 }
 
 .meatballAvatar-body::before {
@@ -209,7 +212,9 @@
     29px 2px 0 0 #93131b,
     6px 30px 0 -2px rgba(199, 232, 255, 0.92),
     19px 33px 0 -2px rgba(199, 232, 255, 0.82),
-    34px 29px 0 -2px rgba(199, 232, 255, 0.88);
+    34px 29px 0 -2px rgba(199, 232, 255, 0.88),
+    11px 37px 0 -3px rgba(223, 244, 255, 0.8),
+    30px 39px 0 -3px rgba(223, 244, 255, 0.74);
 }
 
 .meatballAvatar-eye {
@@ -270,7 +275,7 @@
 
 .meatballAssistant.is-speaking .meatballAvatar-mouth {
   height: 16px;
-  animation: meatballTalk 280ms ease-in-out infinite alternate;
+  animation: meatballTalk 320ms ease-in-out infinite alternate;
 }
 
 .meatballAssistant.is-speaking .meatballAssistant-bubble {
@@ -309,10 +314,10 @@
 
 @keyframes meatballTalk {
   from {
-    transform: translateX(-50%) scaleY(0.92);
+    transform: translateX(-50%) scaleX(0.96) scaleY(0.94);
   }
   to {
-    transform: translateX(-50%) scaleY(1.08);
+    transform: translateX(-50%) scaleX(1.04) scaleY(1.08);
   }
 }
 
@@ -327,28 +332,19 @@
 
 @keyframes meatballJam {
   from {
-    transform: translateY(0) rotate(-5deg);
+    transform: translateY(0) rotate(-9deg) scale(0.98);
   }
   to {
-    transform: translateY(-3px) rotate(5deg);
+    transform: translateY(-5px) rotate(9deg) scale(1.02);
   }
 }
 
 @keyframes meatballJamEye {
   from {
-    transform: translateY(0);
+    transform: translateY(0) scaleY(1);
   }
   to {
-    transform: translateY(1px);
-  }
-}
-
-@keyframes meatballJamMouth {
-  from {
-    transform: translateX(-50%) scaleX(0.94) scaleY(0.9);
-  }
-  to {
-    transform: translateX(-50%) scaleX(1.08) scaleY(1.08);
+    transform: translateY(2px) scaleY(0.88);
   }
 }
 

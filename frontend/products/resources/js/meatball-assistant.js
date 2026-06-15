@@ -38,6 +38,7 @@
     hypeUntil: 0,
     bounceUntil: 0,
     jamUntil: 0,
+    jamVisibleUntil: 0,
     currentJamTitle: "",
     anchorLockedUntil: 0,
     anchorZone: "",
@@ -561,10 +562,16 @@
     assistant.classList.toggle("is-hyped", now < state.hypeUntil);
     assistant.classList.toggle("is-bouncing", now < state.bounceUntil);
     assistant.classList.toggle("is-jamming", now < state.jamUntil);
+    assistant.classList.toggle("is-jam-visible", now < state.jamVisibleUntil);
+    if (now < state.jamVisibleUntil) {
+      assistant.classList.add("is-speaking");
+    }
     if (!state.bubblePinned && now > state.speakingUntil) {
-      assistant.classList.remove("is-speaking");
-      setMood(now < state.sweatUntil ? "Sweating" : "Watching");
-      persistState();
+      if (now >= state.jamVisibleUntil) {
+        assistant.classList.remove("is-speaking");
+        setMood(now < state.sweatUntil ? "Sweating" : "Watching");
+        persistState();
+      }
     }
   }
 
@@ -853,7 +860,7 @@
         line: pickLine([
           short ? `yes YES. add ${short}.` : "",
           "yes YES. put it in the cart.",
-          "add it. i am sweating over here."
+          "yes YES. add it. i am getting a little worked up."
         ], "yes YES. put it in the cart.")
       };
     }
@@ -915,8 +922,21 @@
     const page = pageKey();
     if (!page.startsWith("music")) return;
 
+    if (detail?.selecting) {
+      state.jamVisibleUntil = Date.now() + 2600;
+      assistant.classList.add("is-speaking");
+      const title = cleanLabel(detail.selectedTitle || detail.title || "", 40);
+      if (title) {
+        textEl.textContent = `${title}. loading the groove.`;
+      }
+      persistState();
+    }
+
     if (detail?.isPlaying) {
       state.jamUntil = Date.now() + 3600000;
+      state.jamVisibleUntil = Date.now() + 3600000;
+      state.hypeUntil = Date.now() + 1400;
+      state.bounceUntil = Date.now() + 1800;
       const title = cleanLabel(detail.selectedTitle || detail.title || "", 40);
       if (title && title !== state.currentJamTitle && Date.now() - state.lastSpokeAt > 5200) {
         state.currentJamTitle = title;
@@ -931,9 +951,12 @@
       return;
     }
 
-    state.jamUntil = 0;
     if (detail?.paused || detail?.ended) {
+      state.jamUntil = 0;
+      state.jamVisibleUntil = Date.now() + 1200;
       state.currentJamTitle = "";
+      textEl.textContent = detail.paused ? "paused. the groove is on hold." : "all right. track over.";
+      persistState();
     }
   }
 

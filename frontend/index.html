@@ -248,6 +248,8 @@
 
     .hero-title {
       max-width: 1180px;
+      align-self: center;
+      padding-top: clamp(18px, 3vh, 42px);
       transform-style: preserve-3d;
     }
 
@@ -263,10 +265,33 @@
 
     .hero-meta {
       align-self: end;
+      justify-self: end;
       display: grid;
       gap: 26px;
       max-width: 460px;
+      margin-left: auto;
       padding-bottom: 16px;
+      padding-left: 3vw;
+    }
+
+    .hero-mobile-title {
+      display: none;
+      margin: 0;
+      font-size: clamp(34px, 10vw, 58px);
+      line-height: .92;
+      letter-spacing: -.06em;
+      text-transform: none;
+    }
+
+    .hero-mobile-creativity {
+      display: none;
+      margin: 0;
+      max-width: 14ch;
+      font-size: clamp(20px, 5.6vw, 30px);
+      line-height: .96;
+      letter-spacing: -.05em;
+      color: var(--bone);
+      text-shadow: 0 8px 24px rgba(0, 0, 0, .34);
     }
 
     .hero-index {
@@ -1202,6 +1227,18 @@
       }
     }
 
+    @media (min-width: 901px) and (max-width: 1799px) {
+      .hero-title {
+        font-size: min(176px, 11vw);
+      }
+    }
+
+    @media (min-width: 901px) and (max-width: 1200px) and (max-height: 720px) {
+      .hero-title {
+        font-size: clamp(52px, 10.2vw, 124px);
+      }
+    }
+
     @media(max-width:900px) {
 
       .cursor,
@@ -1217,13 +1254,83 @@
         height: 170vh
       }
 
+      .hero-sticky {
+        align-items: flex-start;
+        padding: 8vh 6vw 8vh
+      }
+
       .hero-content {
         grid-template-columns: 1fr;
-        align-items: center
+        align-items: start;
+        gap: 7vw
+      }
+
+      .hero-title {
+        display: none
       }
 
       .hero-meta {
-        max-width: none
+        max-width: none;
+        justify-self: stretch;
+        align-self: start;
+        margin-top: clamp(10vh, 15vw, 18vh);
+        margin-left: 0;
+        padding-left: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px
+      }
+
+      .hero-meta .kicker,
+      .hero-index {
+        display: none
+      }
+
+      .hero-mobile-title {
+        display: block;
+        order: 2;
+        margin-top: -22px;
+        transform: translateY(-65px);
+      }
+
+      .hero-mobile-creativity {
+        display: block;
+        order: 1;
+        margin-top: -58px;
+        margin-bottom: 2px;
+        transform: translateY(-80px);
+      }
+
+      .hero-cta {
+        order: 3;
+      }
+
+      .hero-copy-blur {
+        order: 4;
+        max-width: 30rem
+      }
+
+      .hero-ring {
+        width: min(76vw, 420px);
+        height: min(76vw, 420px);
+        right: 50%;
+        top: 31vh;
+        transform: translateX(50%);
+      }
+
+      .hero-cta {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: min(56vw, 336px)
+      }
+
+      .hero-cta .btn {
+        width: 100%;
+        min-width: 0;
+        padding: 13px 10px;
+        font-size: 12px;
+        text-align: center
       }
 
       .manifesto {
@@ -1300,6 +1407,36 @@
       }
     }
 
+    @media (max-width: 762px) {
+      .hero-meta {
+        margin-top: clamp(13vh, 18vw, 21vh);
+      }
+
+      .hero-cta {
+        margin-top: min(64vw, 380px);
+      }
+    }
+
+    @media (max-width: 526px) {
+      .hero-meta {
+        margin-top: clamp(15vh, 22vw, 24vh);
+      }
+
+      .hero-cta {
+        margin-top: min(74vw, 430px);
+      }
+    }
+
+    @media (max-width: 455px) {
+      .hero-meta {
+        margin-top: clamp(17vh, 26vw, 28vh);
+      }
+
+      .hero-cta {
+        margin-top: min(84vw, 480px);
+      }
+    }
+
     @media(max-width:700px) {
       .sponsor-logos {
         gap: 22px
@@ -1348,6 +1485,8 @@
             <span class="line"><span>line.</span></span>
           </h1>
           <div class="hero-meta">
+            <p class="hero-mobile-creativity">Creativity, with no finish line.</p>
+            <h2 class="display hero-mobile-title">Unlim8ted</h2>
             <div class="kicker">Films / Games / Music / Software / AI</div>
             <p class="body-copy hero-copy-blur">Unlim8ted is a multidisciplinary studio building original films, games,
               music, software, and AI products, with active projects including TimeCat, The Life of a Meatball, Star
