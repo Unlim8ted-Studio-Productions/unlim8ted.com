@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unlim8ted - Talk to Meatball</title>
+  <meta name="description" content="Direct line to Meatball. Custom model coming later." />
+  <script type="module" src="/components/site-navbar.js"></script>
+  <link rel="stylesheet" href="../../resources/css/meatball-assistant.css" />
+  <style>
+    :root {
+      --bg: #091019;
+      --panel: rgba(255, 255, 255, 0.07);
+      --line: rgba(255, 255, 255, 0.12);
+      --text: rgba(244, 247, 255, 0.94);
+      --muted: rgba(244, 247, 255, 0.68);
+      --accent: #ffb46a;
+      --accent-2: #62d6ff;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+      background:
+        radial-gradient(960px 520px at 10% 0%, rgba(255, 180, 106, 0.18), transparent 58%),
+        radial-gradient(760px 500px at 100% 12%, rgba(98, 214, 255, 0.18), transparent 56%),
+        linear-gradient(180deg, #101823 0%, var(--bg) 100%);
+    }
+
+    .page {
+      width: min(1080px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 112px 0 40px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .intro {
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro::before {
+      content: "";
+      position: absolute;
+      inset: -40px auto auto -60px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(255, 180, 106, 0.28), transparent 66%);
+      pointer-events: none;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.7rem, 6vw, 4.8rem);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+    }
+
+    .sub {
+      max-width: 34rem;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.03rem;
+      line-height: 1.6;
+    }
+
+    .meatballStage {
+      min-height: 320px;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+    }
+
+    .meatballDisplay {
+      --meatball-size: 168px;
+      position: relative;
+      width: min(280px, 72vw);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.12), transparent 20%),
+        radial-gradient(circle at 76% 74%, rgba(255, 180, 106, 0.15), transparent 24%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .meatballDisplay::before {
+      content: "";
+      position: absolute;
+      inset: auto 22px 20px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+      filter: blur(12px);
+    }
+
+    .chatShell {
+      margin-top: 18px;
+      display: grid;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .chatLog {
+      min-height: 380px;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(7, 13, 20, 0.72);
+      display: grid;
+      align-content: start;
+      gap: 12px;
+    }
+
+    .msg {
+      max-width: min(520px, 100%);
+      padding: 14px 16px;
+      border-radius: 18px;
+      line-height: 1.5;
+    }
+
+    .msg.bot {
+      background: rgba(255, 180, 106, 0.12);
+      border: 1px solid rgba(255, 180, 106, 0.2);
+    }
+
+    .msg.user {
+      margin-left: auto;
+      background: rgba(98, 214, 255, 0.1);
+      border: 1px solid rgba(98, 214, 255, 0.18);
+      color: rgba(238, 247, 255, 0.92);
+    }
+
+    .composer {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+    }
+
+    .composer textarea {
+      min-height: 88px;
+      resize: vertical;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      padding: 16px;
+      font: inherit;
+    }
+
+    .composer button {
+      min-width: 136px;
+      border: 0;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #ffba74, #d98a3b);
+      color: #24130d;
+      font: inherit;
+      font-weight: 900;
+      cursor: not-allowed;
+      opacity: 0.62;
+    }
+
+    .noteRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .note {
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .meatballDisplay .meatballAvatar {
+      width: var(--meatball-size);
+      height: var(--meatball-size);
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .meatballDisplay .meatballAvatar-shadow {
+      left: 18px;
+      right: 18px;
+      bottom: 10px;
+      height: 18px;
+      filter: blur(10px);
+    }
+
+    .meatballDisplay .meatballAvatar-body {
+      animation-duration: 3.6s;
+    }
+
+    .meatballDisplay .meatballAvatar-eye {
+      top: 36px;
+      width: 22px;
+      height: 22px;
+    }
+
+    .meatballDisplay .meatballAvatar-eye.left {
+      left: 34px;
+    }
+
+    .meatballDisplay .meatballAvatar-eye.right {
+      right: 34px;
+    }
+
+    .meatballDisplay .meatballAvatar-eye .pupil {
+      width: 10px;
+      height: 10px;
+      transform: translate(-50%, -50%);
+    }
+
+    .meatballDisplay .meatballAvatar-mouth {
+      bottom: 31px;
+      width: 40px;
+      height: 18px;
+    }
+
+    @media (max-width: 860px) {
+      .page {
+        padding-top: 98px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .composer {
+        grid-template-columns: 1fr;
+      }
+
+      .composer button {
+        min-height: 52px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+
+  <main class="page">
+    <section class="hero">
+      <section class="panel intro">
+        <h1>A smarter Meatball</h1>
+        <p class="sub">
+          This is the dedicated Meatball page. The custom model is not wired in yet, so the interface is intentionally blank for now instead of pretending to work.
+        </p>
+
+        <div class="chatShell">
+          <div class="chatLog" aria-label="Conversation log">
+            <div class="msg bot">I am here. The real model is coming later.</div>
+            <div class="msg bot">For now this page is a shell, not a fake chatbot.</div>
+            <div class="msg user">So you are not answering yet?</div>
+            <div class="msg bot">Correct. I am between brains.</div>
+          </div>
+
+          <div class="composer" aria-label="Disabled chat composer">
+            <textarea disabled placeholder="Smarter meatball still developing..."></textarea>
+            <button type="button" disabled>Send</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel meatballStage">
+        <div class="meatballDisplay" aria-hidden="true">
+          <div class="meatballAvatar">
+            <span class="meatballAvatar-shadow"></span>
+            <span class="meatballAvatar-body">
+              <span class="meatballAvatar-eye left"><span class="pupil"></span></span>
+              <span class="meatballAvatar-eye right"><span class="pupil"></span></span>
+              <span class="meatballAvatar-mouth"></span>
+            </span>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="../../resources/js/meatball-assistant.js"></script>
+</body>
+</html>

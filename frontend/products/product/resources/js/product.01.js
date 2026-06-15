@@ -35,6 +35,11 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
     const postBtn = $("postBtn");
 
     const pageTitle = document.querySelector(".title");
+    const meatballAssistant = $("meatballAssistant");
+    const meatballAvatar = $("meatballAvatar");
+    const meatballText = $("meatballText");
+    const meatballStatus = $("meatballStatus");
+    const meatballToggle = $("meatballToggle");
 
     // ----------------------------
     // Utils
@@ -148,6 +153,476 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
       return String(s ?? "").replace(/[&<>"']/g, (c) => ({
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
       }[c]));
+    }
+
+    function clamp(n, min, max) {
+      return Math.max(min, Math.min(max, n));
+    }
+
+    const meatballModelProfiles = {
+      small: {
+        label: "Local small AI",
+        preferredPatterns: [
+          /qwen.*0\.5b/i,
+          /llama-3\.2-1b/i,
+          /gemma-2b/i,
+          /phi-3.*mini/i
+        ]
+      }
+    };
+
+    const meatballState = {
+      item: null,
+      variantLabel: "",
+      hoverZone: "idle",
+      lastHoverSpeechAt: 0,
+      lastSpeechAt: 0,
+      lastIntentAt: 0,
+      lastTrigger: "",
+      lastConcept: "",
+      hoverTimer: 0,
+      hoverCandidate: "",
+      bubblePinned: false,
+      bubbleExpanded: false,
+      hypeUntil: 0,
+      pointerVelocity: { x: 0, y: 0 },
+      previousPointer: { x: window.innerWidth * 0.5, y: window.innerHeight * 0.5, t: Date.now() },
+      lastPointer: { x: window.innerWidth * 0.5, y: window.innerHeight * 0.5 },
+      engine: null,
+      runtimePromise: null,
+      importPromise: null,
+      loadedModelId: "",
+      resolvedModel: null,
+      backend: "webllm",
+      fallbackNoticePending: false,
+      speechTicket: 0,
+      recentConcepts: [],
+      recentLines: []
+    };
+
+    function setMeatballStatus(text) {
+      meatballStatus.textContent = text;
+    }
+
+    function rememberMeatballThought(text, concept = "") {
+      const line = String(text || "").trim().toLowerCase();
+      if (line) {
+        meatballState.recentLines.unshift(line);
+        meatballState.recentLines = meatballState.recentLines.slice(0, 8);
+      }
+      if (concept) {
+        meatballState.recentConcepts.unshift(String(concept).trim().toLowerCase());
+        meatballState.recentConcepts = meatballState.recentConcepts.slice(0, 8);
+      }
+    }
+
+    function hasRecentMeatballLine(text) {
+      return meatballState.recentLines.includes(String(text || "").trim().toLowerCase());
+    }
+
+    function hasRecentMeatballConcept(concept) {
+      return concept ? meatballState.recentConcepts.includes(String(concept).trim().toLowerCase()) : false;
+    }
+
+    function syncMeatballBubble() {
+      const expanded = meatballState.bubblePinned || meatballState.bubbleExpanded;
+      meatballAssistant.classList.toggle("is-expanded", expanded);
+      meatballAssistant.classList.toggle("is-muted", !expanded);
+      meatballAssistant.classList.toggle("is-hyped", Date.now() < meatballState.hypeUntil);
+      if (meatballToggle) {
+        meatballToggle.textContent = expanded ? "Hide" : "Show";
+        meatballToggle.setAttribute("aria-label", expanded ? "Minimize Meatball bubble" : "Show Meatball bubble");
+      }
+      requestAnimationFrame(placeMeatballAssistant);
+    }
+
+    function setMeatballHype(ms = 2200) {
+      meatballState.hypeUntil = Date.now() + ms;
+      syncMeatballBubble();
+      clearTimeout(setMeatballHype._timer);
+      setMeatballHype._timer = setTimeout(syncMeatballBubble, ms + 40);
+    }
+
+    function expandMeatballBubble(temporary = true) {
+      meatballState.bubbleExpanded = true;
+      syncMeatballBubble();
+      clearTimeout(expandMeatballBubble._collapseTimer);
+      if (!temporary || meatballState.bubblePinned) return;
+      expandMeatballBubble._collapseTimer = setTimeout(() => {
+        if (meatballState.bubblePinned) return;
+        meatballState.bubbleExpanded = false;
+        syncMeatballBubble();
+      }, 4200);
+    }
+
+    function setMeatballText(text, options = {}) {
+      const { concept = "", temporary = true } = options;
+      meatballText.textContent = text;
+      expandMeatballBubble(temporary);
+      meatballAssistant.classList.add("is-speaking");
+      clearTimeout(setMeatballText._speakTimer);
+      setMeatballText._speakTimer = setTimeout(() => {
+        meatballAssistant.classList.remove("is-speaking");
+      }, 1800);
+      rememberMeatballThought(text, concept);
+      requestAnimationFrame(placeMeatballAssistant);
+    }
+
+    function updateMeatballEyes(clientX, clientY) {
+      const rect = meatballAvatar.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = clamp((clientX - cx) / (rect.width / 2), -1, 1);
+      const dy = clamp((clientY - cy) / (rect.height / 2), -1, 1);
+      meatballAvatar.style.setProperty("--pupil-x", `${(dx * 3.4).toFixed(2)}px`);
+      meatballAvatar.style.setProperty("--pupil-y", `${(dy * 3.4).toFixed(2)}px`);
+    }
+
+    function resolveHoverZone(target) {
+      if (!target || !(target instanceof Element)) return "idle";
+      if (target.closest("#addBtn")) return "cart";
+      if (target.closest("#buyBtn")) return "buy";
+      if (target.closest("#variantWrap")) return "variant";
+      if (target.closest("#hero")) return "hero";
+      if (target.closest("#thumbs")) return "gallery";
+      if (target.closest(".commentForm")) return "review-form";
+      if (target.closest("#commentList")) return "reviews";
+      if (target.closest(".product")) return "details";
+      return "idle";
+    }
+
+    function rectsOverlap(a, b) {
+      return !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
+    }
+
+    function getSafeRect(el, pad = 16) {
+      if (!el || typeof el.getBoundingClientRect !== "function") return null;
+      const rect = el.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return null;
+      return {
+        left: rect.left - pad,
+        top: rect.top - pad,
+        right: rect.right + pad,
+        bottom: rect.bottom + pad
+      };
+    }
+
+    function placeMeatballAssistant() {
+      const margin = window.innerWidth <= 720 ? 14 : 18;
+      const width = meatballAssistant.offsetWidth || 360;
+      const height = meatballAssistant.offsetHeight || 96;
+      const maxLeft = Math.max(margin, window.innerWidth - width - margin);
+      const maxTop = Math.max(margin, window.innerHeight - height - margin);
+
+      const avoidRects = [
+        getSafeRect(addBtn, 22),
+        getSafeRect(buyBtn, 22),
+        getSafeRect(document.getElementById("variantWrap"), 18),
+        getSafeRect(commentForm, 18)
+      ].filter(Boolean);
+
+      const candidates = [
+        { left: maxLeft, top: maxTop },
+        { left: margin, top: maxTop },
+        { left: maxLeft, top: margin },
+        { left: margin, top: margin }
+      ];
+
+      let best = candidates[0];
+      let bestScore = Number.POSITIVE_INFINITY;
+
+      for (const candidate of candidates) {
+        const rect = {
+          left: clamp(candidate.left, margin, maxLeft),
+          top: clamp(candidate.top, margin, maxTop),
+          right: clamp(candidate.left, margin, maxLeft) + width,
+          bottom: clamp(candidate.top, margin, maxTop) + height
+        };
+
+        let score = 0;
+        for (const avoid of avoidRects) {
+          if (rectsOverlap(rect, avoid)) score += 10000;
+          const dx = Math.max(0, Math.max(avoid.left - rect.right, rect.left - avoid.right));
+          const dy = Math.max(0, Math.max(avoid.top - rect.bottom, rect.top - avoid.bottom));
+          score += Math.hypot(dx, dy) < 80 ? 250 : 0;
+        }
+
+        if (window.innerWidth <= 720 && rect.bottom > window.innerHeight - 90) score += 800;
+        if (score < bestScore) {
+          best = { left: rect.left, top: rect.top };
+          bestScore = score;
+        }
+      }
+
+      meatballAssistant.style.left = `${clamp(best.left, margin, maxLeft)}px`;
+      meatballAssistant.style.top = `${clamp(best.top, margin, maxTop)}px`;
+    }
+
+    function meatballFallback(trigger, context = {}) {
+      const itemName = meatballState.item?.name || "this one";
+      const variantLabel = context.variantLabel || meatballState.variantLabel || "";
+      const safeVariant = variantLabel ? ` ${variantLabel}` : "";
+      const price = context.priceText || pPrice.textContent || "";
+
+      if (trigger === "intro") {
+        return `I am Meatball. I am keeping an eye on ${itemName}${price ? ` at ${price}` : ""}. Tap me if you want the quick read.`;
+      }
+      if (trigger === "cart-add") {
+        if (variantLabel) return `YES. ${safeVariant.trim()} made it into the cart. I am thriving.`;
+        return `YES. ${itemName} is in the cart now. The prophecy advances.`;
+      }
+      if (trigger === "variant-change") {
+        if (variantLabel) return `${variantLabel} is funnier and stronger. That is the correct kind of danger.`;
+        return `That switch changed the whole vibe. Much better.`;
+      }
+      if (trigger === "manual") {
+        if (variantLabel) return `${itemName} looks best in ${variantLabel}${price ? ` at ${price}` : ""}. I would absolutely keep that chaos selected.`;
+        return `${itemName}${price ? ` at ${price}` : ""} looks promising. Wave your cursor around and I will read the room.`;
+      }
+      if (trigger === "variant-unavailable") {
+        return variantLabel
+          ? `${variantLabel} is out. Tragic. Pivot to the next best nonsense immediately.`
+          : `That option is out of stock. We must shop around the damage.`;
+      }
+      if (trigger === "buy-intent") {
+        return variantLabel
+          ? `${variantLabel} is lined up. You are one dramatic click away from greatness.`
+          : `You are circling checkout like a cartoon villain. I respect it.`;
+      }
+      if (trigger === "cart-intent") {
+        return variantLabel
+          ? `Oh no. You are drifting toward Add to cart with ${variantLabel}. Yes. YES. Do it.`
+          : `You are moving toward Add to cart. I am sweating a little. Yes. YES.`;
+      }
+      if (trigger === "hero-hover") {
+        return `${itemName}${variantLabel ? ` in ${variantLabel}` : ""} looks suspiciously good at this angle.`;
+      }
+      if (trigger === "gallery-hover") {
+        return `You are checking angles like a professional chaos inspector. Correct.`;
+      }
+
+      switch (context.zone || meatballState.hoverZone) {
+        case "cart":
+          return variantLabel
+            ? `That add to cart button is lined up with ${variantLabel}. My pulse is up.`
+            : `That add to cart button is doing dangerous things to your self control.`;
+        case "buy":
+          return `Straight to checkout energy. Unhinged. Beautiful.`;
+        case "variant":
+          return variantLabel
+            ? `You are tuning the fit toward ${variantLabel}. I support the escalation.`
+            : `You are in the options now. This is where good decisions get weird.`;
+        case "reviews":
+          return `You are reading the crowd before deciding. Cowardly. Sensible.`;
+        default:
+          return `I am tracking ${itemName} and your suspicious little cursor from down here.`;
+      }
+    }
+
+    function getSpeechPolicy(trigger, context = {}) {
+      if (context.immediate || trigger === "intro" || trigger === "manual" || trigger === "cart-add" || trigger === "variant-unavailable") {
+        return { minGap: 0, concept: trigger, allowRepeat: false };
+      }
+      if (trigger === "variant-change") {
+        return { minGap: 2200, concept: `variant:${context.variantLabel || meatballState.variantLabel || ""}`, allowRepeat: false };
+      }
+      if (trigger === "buy-intent") {
+        return { minGap: 8000, concept: `buy:${context.variantLabel || meatballState.variantLabel || ""}`, allowRepeat: false };
+      }
+      if (trigger === "cart-intent") {
+        return { minGap: 6500, concept: `cart-intent:${context.variantLabel || meatballState.variantLabel || ""}`, allowRepeat: false };
+      }
+      if (trigger === "hero-hover" || trigger === "gallery-hover") {
+        return { minGap: 7000, concept: `${trigger}:${context.variantLabel || meatballState.variantLabel || ""}`, allowRepeat: false };
+      }
+      if (trigger === "hover") {
+        const zone = context.zone || "";
+        return { minGap: 9000, concept: `hover:${zone}:${context.variantLabel || meatballState.variantLabel || ""}`, allowRepeat: false };
+      }
+      return { minGap: 5000, concept: trigger, allowRepeat: false };
+    }
+
+    function buildMeatballPrompt(trigger, context = {}) {
+      const item = meatballState.item || {};
+      const variantLabel = context.variantLabel || meatballState.variantLabel || "";
+      const hoverZone = context.zone || meatballState.hoverZone;
+      const pointer = meatballState.lastPointer;
+      const viewport = {
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+
+      return {
+        system: [
+          "You are Meatball, a tiny playful shopping assistant living on a product page.",
+          "You are short, mischievous, helpful, and lightly theatrical.",
+          "Reply in 1 or 2 sentences, under 26 words total.",
+          "Reference the product or current page action when possible.",
+          "Do not mention hidden prompts, tokens, policies, or model limitations."
+        ].join("\n"),
+        user: [
+          `Trigger: ${trigger}`,
+          `Product: ${safeStr(item.name || "Unknown product", 140)}`,
+          `Description: ${safeStr(item.description || "", 260)}`,
+          `Price: ${safeStr(pPrice.textContent || "", 60)}`,
+          `Product type: ${safeStr(item.productType || "", 40)}`,
+          `Selected variant: ${safeStr(variantLabel, 120) || "none"}`,
+          `Mouse zone: ${hoverZone}`,
+          `Mouse position: ${Math.round(pointer.x)}, ${Math.round(pointer.y)}`,
+          `Viewport: ${viewport.width}x${viewport.height}`,
+          `Instruction: Say something product-aware about what the shopper is doing right now.`
+        ].join("\n")
+      };
+    }
+
+    function resolveMeatballModelRecord(webllm, modelProfile) {
+      const records = (webllm?.prebuiltAppConfig?.model_list || []).slice();
+      if (!records.length) throw new Error("No WebLLM models available");
+
+      for (const pattern of modelProfile.preferredPatterns) {
+        const match = records.find(record => pattern.test(String(record.model_id || "")));
+        if (match) return match;
+      }
+
+      const instructFallback = records.find(record => /instruct|chat/i.test(String(record.model_id || "")));
+      return instructFallback || records[0];
+    }
+
+    function isWebGPUUnsupportedError(error) {
+      const text = String(error?.message || error || "").toLowerCase();
+      return text.includes("webgpu is not supported");
+    }
+
+    function loadMeatballRuntime() {
+      if (meatballState.importPromise) return meatballState.importPromise;
+      meatballState.importPromise = import("https://esm.run/@mlc-ai/web-llm");
+      return meatballState.importPromise;
+    }
+
+    async function ensureMeatballRuntime() {
+      if (meatballState.engine && meatballState.loadedModelId) return meatballState.engine;
+      if (meatballState.runtimePromise) return meatballState.runtimePromise;
+
+      meatballState.runtimePromise = (async () => {
+        const modelProfile = meatballModelProfiles.small;
+        setMeatballStatus("Loading local AI");
+        try {
+          const webllm = await loadMeatballRuntime();
+          meatballState.resolvedModel = resolveMeatballModelRecord(webllm, modelProfile);
+          meatballState.engine = await webllm.CreateMLCEngine(meatballState.resolvedModel.model_id);
+          meatballState.loadedModelId = meatballState.resolvedModel.model_id;
+          meatballState.backend = "webllm";
+          setMeatballStatus(modelProfile.label);
+          return meatballState.engine;
+        } catch (error) {
+          if (!isWebGPUUnsupportedError(error)) throw error;
+          meatballState.engine = { localOnly: true };
+          meatballState.loadedModelId = "fallback";
+          meatballState.backend = "fallback";
+          meatballState.fallbackNoticePending = true;
+          setMeatballStatus("Fallback brain");
+          return meatballState.engine;
+        }
+      })().catch(error => {
+        meatballState.runtimePromise = null;
+        setMeatballStatus("Fallback brain");
+        throw error;
+      });
+
+      return meatballState.runtimePromise;
+    }
+
+    async function speakAsMeatball(trigger, context = {}) {
+      const policy = getSpeechPolicy(trigger, context);
+      const now = Date.now();
+      if (!context.immediate && now - meatballState.lastSpeechAt < policy.minGap) return false;
+      if (!policy.allowRepeat && hasRecentMeatballConcept(policy.concept)) return false;
+
+      const fallback = meatballFallback(trigger, context);
+      if (!context.immediate && hasRecentMeatballLine(fallback)) return false;
+
+      meatballState.lastSpeechAt = now;
+      meatballState.lastTrigger = trigger;
+      meatballState.lastConcept = policy.concept;
+      if (trigger === "cart-intent" || trigger === "buy-intent" || trigger === "cart-add") {
+        setMeatballHype(trigger === "cart-add" ? 3000 : 2200);
+      }
+      setMeatballText(fallback, { concept: policy.concept, temporary: !context.keepOpen });
+      setMeatballStatus(
+        trigger === "manual" ? "Reading" :
+        trigger === "cart-intent" ? "Sweating" :
+        trigger === "buy-intent" ? "Scheming" :
+        trigger === "cart-add" ? "Celebrating" :
+        "Watching"
+      );
+      return true;
+    }
+
+    function maybeSpeakOnHover(zone) {
+      const now = Date.now();
+      const changed = zone !== meatballState.hoverZone;
+      meatballState.hoverZone = zone;
+      if (!changed) return;
+      clearTimeout(meatballState.hoverTimer);
+      meatballState.hoverCandidate = zone;
+
+      if (!["hero", "gallery", "variant", "cart", "buy", "reviews"].includes(zone)) return;
+      if (now - meatballState.lastHoverSpeechAt < 7000) return;
+
+      meatballState.hoverTimer = setTimeout(() => {
+        if (meatballState.hoverCandidate !== zone) return;
+        meatballState.lastHoverSpeechAt = Date.now();
+        const trigger =
+          zone === "buy" ? "buy-intent" :
+          zone === "hero" ? "hero-hover" :
+          zone === "gallery" ? "gallery-hover" :
+          "hover";
+        speakAsMeatball(trigger, { zone }).catch(console.error);
+      }, zone === "buy" ? 520 : 850);
+    }
+
+    function distanceToRect(point, rect) {
+      const dx = point.x < rect.left ? rect.left - point.x : point.x > rect.right ? point.x - rect.right : 0;
+      const dy = point.y < rect.top ? rect.top - point.y : point.y > rect.bottom ? point.y - rect.bottom : 0;
+      return Math.hypot(dx, dy);
+    }
+
+    function isPointerHeadingTowardRect(rect) {
+      const prev = meatballState.previousPointer;
+      const curr = meatballState.lastPointer;
+      const vx = meatballState.pointerVelocity.x;
+      const vy = meatballState.pointerVelocity.y;
+      const speed = Math.hypot(vx, vy);
+      if (speed < 0.12) return false;
+
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const toTargetX = centerX - curr.x;
+      const toTargetY = centerY - curr.y;
+      const targetDist = Math.hypot(toTargetX, toTargetY) || 1;
+      const normalizedDot = ((vx * toTargetX) + (vy * toTargetY)) / (speed * targetDist);
+      const prevDist = distanceToRect(prev, rect);
+      const currDist = distanceToRect(curr, rect);
+      return normalizedDot > 0.78 && currDist < prevDist && currDist < 220;
+    }
+
+    function maybeSpeakOnIntent() {
+      const now = Date.now();
+      if (now - meatballState.lastIntentAt < 4200) return;
+
+      const addRect = addBtn?.getBoundingClientRect?.();
+      const buyRect = buyBtn?.getBoundingClientRect?.();
+
+      if (addRect && addRect.width > 0 && addRect.height > 0 && isPointerHeadingTowardRect(addRect)) {
+        meatballState.lastIntentAt = now;
+        speakAsMeatball("cart-intent", { zone: "cart" }).catch(console.error);
+        return;
+      }
+
+      if (buyRect && buyRect.width > 0 && buyRect.height > 0 && isPointerHeadingTowardRect(buyRect)) {
+        meatballState.lastIntentAt = now;
+        speakAsMeatball("buy-intent", { zone: "buy" }).catch(console.error);
+      }
     }
 
     // ----------------------------
@@ -631,6 +1106,7 @@ function renderVariantUI(item) {
 
     if (!vv) {
       selectedVariantLabelEl.textContent = parts.join(", ");
+      meatballState.variantLabel = parts.join(", ");
       variantPriceEl.textContent = "$—";
       pPrice.textContent = "$—";
 
@@ -642,6 +1118,8 @@ function renderVariantUI(item) {
     }
 
     const label = vv.label || vv.variantLabel || parts.join(", ");
+    const previousVariantLabel = meatballState.variantLabel;
+    meatballState.variantLabel = label;
     selectedVariantLabelEl.textContent = label;
 
     const priceNum = Number(vv.price);
@@ -670,6 +1148,7 @@ function renderVariantUI(item) {
     addBtn.onclick = async () => {
       if (!isAvail) {
         toast("This variant is out of stock");
+        speakAsMeatball("variant-unavailable", { zone: "variant", variantLabel: label, immediate: true }).catch(console.error);
         return;
       }
       try {
@@ -679,20 +1158,75 @@ function renderVariantUI(item) {
           qty: 1
         });
         toast("Added to cart");
+        speakAsMeatball("cart-add", { variantLabel: label, priceText: toMoney(priceNum), immediate: true }).catch(console.error);
       } catch (e) {
         console.error("addToCartMerged (variant) error:", e?.code, e?.message, e);
         toast("Could not add to cart");
       }
     };
+
+    if (label && previousVariantLabel && previousVariantLabel !== label) {
+      speakAsMeatball("variant-change", { variantLabel: label, priceText: toMoney(priceNum), immediate: true }).catch(console.error);
+    }
   }
 
   selects.forEach(sel => sel.addEventListener("change", syncVariant));
 
   // initial
   syncVariant();
+  requestAnimationFrame(placeMeatballAssistant);
 
   return { wrap, selects, syncVariant };
 }
+
+    window.addEventListener("mousemove", (event) => {
+      const now = Date.now();
+      const prev = meatballState.lastPointer;
+      const prevTime = meatballState.previousPointer.t || now - 16;
+      const dt = Math.max(8, now - prevTime);
+      meatballState.previousPointer = { x: prev.x, y: prev.y, t: now };
+      meatballState.lastPointer = { x: event.clientX, y: event.clientY };
+      meatballState.pointerVelocity = {
+        x: (event.clientX - prev.x) / dt,
+        y: (event.clientY - prev.y) / dt
+      };
+      updateMeatballEyes(event.clientX, event.clientY);
+      const zone = resolveHoverZone(event.target);
+      maybeSpeakOnHover(zone);
+      maybeSpeakOnIntent();
+      placeMeatballAssistant();
+    }, { passive: true });
+
+    meatballAvatar.addEventListener("click", () => {
+      meatballState.bubblePinned = !meatballState.bubblePinned;
+      if (!meatballState.bubblePinned) {
+        meatballState.bubbleExpanded = false;
+        syncMeatballBubble();
+      }
+      speakAsMeatball("manual", { immediate: true, keepOpen: meatballState.bubblePinned }).catch(console.error);
+    });
+
+    if (meatballToggle) {
+      meatballToggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        meatballState.bubblePinned = !meatballState.bubblePinned;
+        meatballState.bubbleExpanded = meatballState.bubblePinned;
+        syncMeatballBubble();
+      });
+    }
+
+    setMeatballStatus("Tap me");
+    syncMeatballBubble();
+    updateMeatballEyes(window.innerWidth * 0.5, window.innerHeight * 0.5);
+    requestAnimationFrame(placeMeatballAssistant);
+
+    window.addEventListener("resize", () => {
+      placeMeatballAssistant();
+    }, { passive: true });
+
+    window.addEventListener("scroll", () => {
+      placeMeatballAssistant();
+    }, { passive: true });
 
     // ----------------------------
     // Page render
@@ -715,6 +1249,8 @@ function renderVariantUI(item) {
 
       hero.innerHTML = "";
       thumbs.innerHTML = "";
+      meatballState.item = null;
+      meatballState.variantLabel = "";
 
       addBtn.style.display = "inline-flex";
       addBtn.disabled = true;
@@ -760,7 +1296,11 @@ function renderVariantUI(item) {
       pageTitle.textContent = item.name || "Product";
       pName.textContent = item.name || "Untitled";
       pDesc.textContent = item.description || "";
+      meatballState.item = item;
+      meatballState.variantLabel = "";
       renderInfoAccordions(item);
+      speakAsMeatball("intro", { immediate: true }).catch(console.error);
+      requestAnimationFrame(placeMeatballAssistant);
 
       const isPhysical =
         item.productType === "physical" ||
@@ -794,6 +1334,7 @@ function renderVariantUI(item) {
               variantId: "",
             });
             toast("Added to cart");
+            speakAsMeatball("cart-add", { priceText: toMoney(Number(item.price || 0)), immediate: true }).catch(console.error);
           } catch (e) {
             console.error("addToCartMerged error:", e?.code, e?.message, e);
             toast("Could not add to cart");

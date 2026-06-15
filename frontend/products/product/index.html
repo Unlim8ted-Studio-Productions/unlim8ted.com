@@ -12,6 +12,7 @@
   <script type="module" src="/components/site-navbar.js"></script>
 
   <link rel="stylesheet" href="./resources/css/product.01.css">
+  <link rel="stylesheet" href="../resources/css/meatball-assistant.css">
 </head>
 
 <body>
@@ -116,6 +117,29 @@
       <span id="footerText"></span>
     </div>
   </div>
+
+  <aside class="meatballAssistant" id="meatballAssistant" aria-live="polite">
+    <div class="meatballAssistant-bubble">
+      <div class="meatballAssistant-label">
+        <span>Meatball</span>
+        <div class="meatballAssistant-meta">
+          <span class="meatballAssistant-status" id="meatballStatus">Waking up</span>
+          <button class="meatballAssistant-toggle" id="meatballToggle" type="button" aria-label="Minimize Meatball bubble">Hide</button>
+        </div>
+      </div>
+      <p class="meatballAssistant-text" id="meatballText">
+        I am watching this product page quietly. Tap me if you want a read on the item.
+      </p>
+    </div>
+    <button class="meatballAvatar" id="meatballAvatar" type="button" aria-label="Talk to Meatball">
+      <span class="meatballAvatar-shadow"></span>
+      <span class="meatballAvatar-body">
+        <span class="meatballAvatar-eye left"><span class="pupil"></span></span>
+        <span class="meatballAvatar-eye right"><span class="pupil"></span></span>
+        <span class="meatballAvatar-mouth"></span>
+      </span>
+    </button>
+  </aside>
 
   <script type="module" src="./resources/js/product.01.js"></script>
 </body>

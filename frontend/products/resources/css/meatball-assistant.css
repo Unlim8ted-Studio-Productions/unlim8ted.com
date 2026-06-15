@@ -1,0 +1,406 @@
+:root {
+  --meatball-size: 84px;
+  --meatball-bubble-width: min(260px, calc(100vw - 132px));
+}
+
+.meatballAssistant {
+  position: fixed;
+  left: 18px;
+  top: 92px;
+  z-index: 1400;
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.meatballAssistant.is-hyped {
+  filter: drop-shadow(0 8px 22px rgba(255, 182, 106, 0.22));
+}
+
+.meatballAssistant.is-jamming {
+  filter:
+    drop-shadow(0 8px 22px rgba(255, 182, 106, 0.22))
+    drop-shadow(0 0 18px rgba(98, 214, 255, 0.16));
+}
+
+.meatballAssistant.is-right {
+  flex-direction: row-reverse;
+}
+
+.meatballAssistant-bubble {
+  width: var(--meatball-bubble-width);
+  min-height: 72px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 238, 223, 0.18);
+  background: linear-gradient(180deg, rgba(53, 26, 14, 0.95), rgba(24, 12, 7, 0.95));
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 140ms ease, transform 180ms ease;
+  pointer-events: none;
+}
+
+.meatballAssistant-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.meatballAssistant-link {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 222, 181, 0.18);
+  background: rgba(255, 248, 240, 0.06);
+  color: rgba(255, 233, 206, 0.92);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform 150ms ease, background 150ms ease, border-color 150ms ease;
+}
+
+.meatballAssistant-link:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 248, 240, 0.1);
+  border-color: rgba(255, 222, 181, 0.32);
+}
+
+.meatballAssistant-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-bottom: 6px;
+  color: rgba(255, 225, 194, 0.96);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.meatballAssistant-text {
+  margin: 0;
+  color: rgba(255, 247, 238, 0.92);
+  line-height: 1.4;
+  font-size: 13px;
+}
+
+.meatballAvatar {
+  --pupil-x: 0px;
+  --pupil-y: 0px;
+  position: relative;
+  width: var(--meatball-size);
+  height: var(--meatball-size);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.meatballAvatar-shadow {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 4px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.28);
+  filter: blur(8px);
+}
+
+.meatballAvatar-body {
+  position: absolute;
+  inset: 0;
+  border-radius: 46% 52% 47% 51%;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 216, 172, 0.34), transparent 26%),
+    radial-gradient(circle at 67% 74%, rgba(89, 30, 12, 0.3), transparent 32%),
+    radial-gradient(circle at 52% 44%, rgba(155, 72, 28, 0.38), transparent 58%),
+    linear-gradient(180deg, #a6592c 0%, #804019 54%, #521f0d 100%);
+  box-shadow:
+    inset 0 -10px 18px rgba(56, 16, 5, 0.34),
+    inset 0 8px 10px rgba(255, 214, 165, 0.12),
+    0 12px 26px rgba(28, 10, 5, 0.3);
+  animation: meatballFloat 4.2s ease-in-out infinite, meatballIdleTilt 7.4s ease-in-out infinite;
+}
+
+.meatballAvatar:hover .meatballAvatar-body {
+  animation-duration: 2.5s;
+}
+
+.meatballAssistant.is-sweating .meatballAvatar-body {
+  animation-duration: 1.6s;
+}
+
+.meatballAssistant.is-hyped .meatballAvatar-body {
+  animation: meatballFloat 1.9s ease-in-out infinite, meatballIdleTilt 3.4s ease-in-out infinite;
+}
+
+.meatballAssistant.is-bouncing .meatballAvatar {
+  animation: meatballBounce 380ms ease-in-out infinite alternate;
+}
+
+.meatballAssistant.is-jamming .meatballAvatar {
+  animation: meatballJam 620ms ease-in-out infinite alternate;
+}
+
+.meatballAssistant.is-jamming .meatballAvatar-body {
+  animation: meatballFloat 1.55s ease-in-out infinite, meatballIdleTilt 2.4s ease-in-out infinite;
+}
+
+.meatballAssistant.is-jamming .meatballAvatar-eye.left {
+  animation: meatballBlink 8.5s infinite, meatballJamEye 620ms ease-in-out infinite alternate;
+}
+
+.meatballAssistant.is-jamming .meatballAvatar-eye.right {
+  animation: meatballBlink 8.5s infinite, meatballJamEye 620ms ease-in-out infinite alternate-reverse;
+}
+
+.meatballAssistant.is-jamming .meatballAvatar-mouth {
+  animation: meatballJamMouth 300ms ease-in-out infinite alternate;
+}
+
+.meatballAvatar-body::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 10px;
+  top: 6px;
+  height: 20px;
+  border-radius: 58% 42% 52% 48% / 65% 55% 45% 35%;
+  background:
+    radial-gradient(circle at 20% 55%, rgba(255, 164, 164, 0.38), transparent 24%),
+    linear-gradient(180deg, #cf2f35 0%, #a81822 72%, #861018 100%);
+  box-shadow:
+    inset 0 -2px 5px rgba(113, 8, 15, 0.28),
+    0 2px 4px rgba(86, 10, 15, 0.18);
+  transform: rotate(-6deg);
+}
+
+.meatballAvatar-body::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 21px;
+  width: 10px;
+  height: 15px;
+  border-radius: 0 0 10px 10px;
+  background: linear-gradient(180deg, #b51d26 0%, #7f1118 100%);
+  box-shadow:
+    14px -1px 0 0 #aa1721,
+    29px 2px 0 0 #93131b;
+}
+
+.meatballAssistant.is-sweating .meatballAvatar-body::after {
+  box-shadow:
+    14px -1px 0 0 #aa1721,
+    29px 2px 0 0 #93131b,
+    6px 30px 0 -2px rgba(199, 232, 255, 0.92),
+    19px 33px 0 -2px rgba(199, 232, 255, 0.82),
+    34px 29px 0 -2px rgba(199, 232, 255, 0.88);
+}
+
+.meatballAvatar-eye {
+  position: absolute;
+  top: 26px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff7f0;
+  overflow: hidden;
+  animation: meatballBlink 8.5s infinite;
+}
+
+.meatballAvatar-eye.left {
+  left: 22px;
+}
+
+.meatballAvatar-eye.right {
+  right: 22px;
+}
+
+.meatballAvatar-eye .pupil {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #24130d;
+  transform: translate(calc(-50% + var(--pupil-x)), calc(-50% + var(--pupil-y)));
+}
+
+.meatballAvatar-mouth {
+  position: absolute;
+  left: 50%;
+  bottom: 17px;
+  width: 30px;
+  height: 14px;
+  border-radius: 0 0 18px 18px;
+  background: linear-gradient(180deg, rgba(74, 19, 9, 0.92), rgba(42, 10, 5, 0.98));
+  transform: translateX(-50%);
+  box-shadow:
+    0 1px 0 rgba(104, 70, 9, 0.55),
+    inset 0 2px 0 rgba(255, 208, 134, 0.42),
+    inset 0 -2px 0 rgba(12, 5, 3, 0.5);
+}
+
+.meatballAvatar-mouth::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 3px;
+  height: 6px;
+  border-radius: 999px;
+  border-bottom: 2px solid rgba(250, 214, 105, 0.88);
+}
+
+.meatballAssistant.is-speaking .meatballAvatar-mouth {
+  height: 16px;
+  animation: meatballTalk 280ms ease-in-out infinite alternate;
+}
+
+.meatballAssistant.is-speaking .meatballAssistant-bubble {
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(255, 212, 173, 0.08),
+    0 0 18px rgba(255, 190, 120, 0.08);
+}
+
+@keyframes meatballFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(3deg);
+  }
+}
+
+@keyframes meatballIdleTilt {
+  0%, 100% {
+    border-radius: 46% 52% 47% 51%;
+  }
+  50% {
+    border-radius: 49% 49% 52% 47%;
+  }
+}
+
+@keyframes meatballBlink {
+  0%, 45%, 47%, 100% {
+    transform: scaleY(1);
+  }
+  46% {
+    transform: scaleY(0.12);
+  }
+}
+
+@keyframes meatballTalk {
+  from {
+    transform: translateX(-50%) scaleY(0.92);
+  }
+  to {
+    transform: translateX(-50%) scaleY(1.08);
+  }
+}
+
+@keyframes meatballBounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes meatballJam {
+  from {
+    transform: translateY(0) rotate(-5deg);
+  }
+  to {
+    transform: translateY(-3px) rotate(5deg);
+  }
+}
+
+@keyframes meatballJamEye {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(1px);
+  }
+}
+
+@keyframes meatballJamMouth {
+  from {
+    transform: translateX(-50%) scaleX(0.94) scaleY(0.9);
+  }
+  to {
+    transform: translateX(-50%) scaleX(1.08) scaleY(1.08);
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --meatball-size: 72px;
+    --meatball-bubble-width: min(220px, calc(100vw - 112px));
+  }
+
+  .meatballAssistant {
+    left: 12px;
+    top: 82px;
+    gap: 8px;
+  }
+
+  .meatballAssistant-bubble {
+    min-height: 64px;
+    padding: 10px 12px;
+  }
+
+  .meatballAvatar-eye {
+    top: 22px;
+  }
+
+  .meatballAvatar-eye.left {
+    left: 18px;
+  }
+
+  .meatballAvatar-eye.right {
+    right: 18px;
+  }
+
+  .meatballAvatar-mouth {
+    bottom: 18px;
+  }
+}
+
+@media (max-width: 820px), (pointer: coarse) {
+  .meatballAssistant {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meatballAssistant,
+  .meatballAvatar-body {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+.meatballAssistant.is-speaking .meatballAssistant-bubble {
+  opacity: 0.97;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}

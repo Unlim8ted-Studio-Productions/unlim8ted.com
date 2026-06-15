@@ -96,6 +96,17 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
       "#00ffcc", "#3c00ff", "#eaff00", "#ff0074", "#00ff96",
     ];
 
+    function emitMeatballMusicState(extra = {}) {
+      window.dispatchEvent(new CustomEvent("meatball:music-state", {
+        detail: {
+          isPlaying,
+          title: nowPlayingEl?.textContent || "",
+          mode: vizMode,
+          ...extra
+        }
+      }));
+    }
+
     function fmtTime(sec) {
       sec = Math.max(0, sec || 0);
       const m = Math.floor(sec / 60);
@@ -287,7 +298,10 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
       audio.crossOrigin = "anonymous";
       audio.volume = parseFloat(volumeEl.value || "1");
 
-      audio.onplay = () => { ensureAnalyser(); };
+      audio.onplay = () => {
+        ensureAnalyser();
+        emitMeatballMusicState({ isPlaying: true });
+      };
 
       audio.ontimeupdate = () => {
         timeline.value = audio.currentTime * 1000;
@@ -297,6 +311,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
       audio.onended = () => {
         isPlaying = false;
         statusChip.textContent = "Ended";
+        emitMeatballMusicState({ isPlaying: false, ended: true });
         stopRaf();
         // Auto-play next if enabled
         if (autoplayNextEl.checked) playNext();
@@ -507,6 +522,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
       // Update "now playing" line immediately
       const title = displayTitle(item);
       nowPlayingEl.textContent = opts.autoplay ? `Now playing: ${title}` : `Selected: ${title}`;
+      emitMeatballMusicState({ isPlaying: opts.autoplay && isPlaying, selectedTitle: title });
 
       // Switch reviews/rating context to this product id
       activateReviewsFor(item);
@@ -562,6 +578,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
         if (!autoplay) {
           isPlaying = false;
           statusChip.textContent = "Ready";
+          emitMeatballMusicState({ isPlaying: false, ready: true });
           clearCanvas();
           return;
         }
@@ -569,6 +586,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
         await audio.play();
         isPlaying = true;
         statusChip.textContent = "Playing";
+        emitMeatballMusicState({ isPlaying: true });
         drawMidiNotes();
       } catch (err) {
         console.error("Error loading/playing MIDI track:", err);
@@ -603,6 +621,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
       if (!autoplay) {
         isPlaying = false;
         statusChip.textContent = "Ready";
+        emitMeatballMusicState({ isPlaying: false, ready: true });
         clearCanvas();
         return;
       }
@@ -611,6 +630,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
         await audio.play();
         isPlaying = true;
         statusChip.textContent = "Playing";
+        emitMeatballMusicState({ isPlaying: true });
         drawAudioViz();
       } catch (err) {
         console.error("Error playing audio-only track:", err);
@@ -628,6 +648,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
         audio.pause();
         isPlaying = false;
         statusChip.textContent = "Paused";
+        emitMeatballMusicState({ isPlaying: false, paused: true });
         stopRaf();
       }
     }
@@ -637,6 +658,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
         audio.play().then(() => {
           isPlaying = true;
           statusChip.textContent = "Playing";
+          emitMeatballMusicState({ isPlaying: true, resumed: true });
           startTime = performance.now() - (audio.currentTime * 1000);
           if (vizMode === "midi") drawMidiNotes();
           else drawAudioViz();
@@ -654,11 +676,13 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
         audio.play().then(() => {
           isPlaying = true;
           statusChip.textContent = "Playing";
+          emitMeatballMusicState({ isPlaying: true, restarted: true });
           if (vizMode === "midi") drawMidiNotes();
           else drawAudioViz();
         }).catch(() => { });
       } else {
         statusChip.textContent = "Playing";
+        emitMeatballMusicState({ isPlaying: true, restarted: true });
         stopRaf();
         if (vizMode === "midi") drawMidiNotes();
         else drawAudioViz();
