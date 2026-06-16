@@ -4,9 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WiseSize — Merchant Setup</title>
+
   <meta name="robots" content="noindex,nofollow" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
+  <!-- CSP (adjust VERIFY_API_ORIGIN host if needed) -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     img-src 'self' data: https:;
@@ -16,123 +18,251 @@
 
   <style>
     :root{
-      --bg:#0b0c10; --panel:rgba(20,22,28,.92);
-      --card:rgba(255,255,255,.05); --border:rgba(255,255,255,.12);
-      --muted:rgba(255,255,255,.72); --field:rgba(255,255,255,.06);
+      --bg:#0b0c10;
+      --card: rgba(255,255,255,.05);
+      --border: rgba(255,255,255,.12);
+      --muted: rgba(255,255,255,.72);
+
+      --field: rgba(255,255,255,.06);
+      --field2: rgba(255,255,255,.08);
+      --focus: rgba(255,255,255,.28);
+
+      --good: #4ade80;
+      --warn: #fbbf24;
+      --bad:  #fb7185;
+
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
     *{ box-sizing:border-box; }
     html{ color-scheme: dark; }
-    body{ margin:0; background:var(--bg); color:#e8e8ea; }
-    .topbar{
-      position:sticky; top:0; z-index:10;
-      display:flex; align-items:center; gap:14px;
-      padding:14px 16px; background:var(--panel);
-      border-bottom:1px solid var(--border);
-      backdrop-filter: blur(10px);
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 700px at 20% -10%, rgba(255,255,255,.06), transparent 55%),
+        radial-gradient(900px 550px at 90% 0%, rgba(255,255,255,.04), transparent 60%),
+        var(--bg);
+      color:#e8e8ea;
     }
-    .brand{font-weight:950}
-    .auth{margin-left:auto; display:flex; gap:10px; align-items:center;}
-    .container{ max-width: 1100px; margin:0 auto; padding:18px 16px; }
-    .grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap:14px; }
-    @media (max-width: 980px){ .grid{ grid-template-columns:1fr; } }
-    .card{ background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; }
-    h1{ margin:0 0 8px; font-size:20px;}
-    h2{ margin:0 0 8px; font-size:16px;}
-    .muted{ color:var(--muted); font-size:12px; line-height:1.35; }
-    .row{ display:grid; gap:8px; margin:10px 0; }
-    label{ font-size:12.5px; opacity:.92; }
-    input,select,button,textarea{
-      border-radius:12px; border:1px solid var(--border);
-      background:var(--field); color:#fff; padding:10px 12px; font-size:14px;
+
+    .container{
+      max-width: min(1100px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 18px 16px 40px;
     }
-    button{ cursor:pointer; font-weight:900; background:rgba(255,255,255,.09); }
-    button.primary{ background:#fff; color:#000; }
-    button.ghost{ background:transparent; }
+
+    .card{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.045);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+
+    h1{ margin:0 0 10px; font-size: 22px; }
+    h2{ margin:0 0 8px; font-size: 16px; }
+
+    .muted{ color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .row{ display:grid; gap:8px; margin: 10px 0; }
+    label{ font-size: 12.5px; opacity: .92; }
+
+    input, textarea, select, button{
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--field);
+      color:#fff;
+      padding:10px 12px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .12s ease, background .12s ease, transform .04s ease;
+    }
+    input::placeholder{ color: rgba(255,255,255,.45); }
+    input:focus, textarea:focus, select:focus{ border-color: var(--focus); background: var(--field2); }
+
+    button{
+      cursor:pointer;
+      font-weight: 900;
+      background: rgba(255,255,255,.09);
+      border-color: rgba(255,255,255,.16);
+    }
+    button:hover{ background: rgba(255,255,255,.13); }
+    button:active{ transform: translateY(1px); }
+    button.primary{ background:#fff; color:#000; border-color: rgba(255,255,255,.35); }
+    button.primary:hover{ opacity: .93; }
+    button.ghost{ background: transparent; }
     button:disabled{ opacity:.6; cursor:not-allowed; }
-    .notice{ border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); border-radius:14px; padding:10px; }
-    .code{ margin-top:10px; background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:10px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; white-space: pre-wrap; overflow:auto;
+
+    hr{ border:none; border-top: 1px solid var(--border); margin: 12px 0; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
     }
-    .stepper{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-    .step{ border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); border-radius:999px; padding:6px 10px; font-size:12px; font-weight:900; }
-    .step.active{ background:#fff; color:#000; }
-    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .toastWrap{ position:fixed; right:16px; bottom:16px; z-index:999; display:grid; gap:10px; max-width:min(520px, calc(100vw - 32px)); }
-  </style><script type="module" src="/components/site-navbar.js"></script>
-<site-navbar
-  cart-href="/cart"
-  signin-href="/sign-in"
-  profile-href="/profile">
-</site-navbar>
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .notice{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    .pills{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 6px; }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+    }
+    .pill.good{ border-color: rgba(74,222,128,.35); }
+    .pill.warn{ border-color: rgba(251,191,36,.35); }
+    .pill.bad{ border-color: rgba(251,113,133,.35); }
+
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .inline{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+    .code{
+      margin-top:10px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      padding:10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      overflow:auto;
+    }
+
+    .progressWrap{
+      margin-top:10px;
+      height:10px;
+      background: rgba(255,255,255,.06);
+      border-radius: 999px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .progressBar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(255,255,255,.92), rgba(255,255,255,.75));
+    }
+
+    /* Stepper */
+    .stepper{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .step{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-size:12px; font-weight:900;
+    }
+    .step.active{ background:#fff; color:#000; border-color: rgba(255,255,255,.35); }
+    .step.done{ border-color: rgba(74,222,128,.35); }
+
+    .pane{ display:none; }
+    .pane.active{ display:block; }
+
+    .toastWrap{
+      position:fixed; right:16px; bottom:16px; z-index:999;
+      display:grid; gap:10px;
+      max-width: min(520px, calc(100vw - 32px));
+    }
+    .toast{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(15,17,22,.96);
+      border-radius: 14px;
+      padding:10px 12px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.45);
+    }
+    .toast .t{ font-weight: 950; }
+    .toast .d{ margin-top:4px; color: var(--muted); font-size:12px; line-height:1.35; }
+  </style>
 </head>
 
 <body>
-  <div class="topbar">
-    <div class="brand">WiseSize</div>
-    <div class="muted">Merchant setup</div>
-
-    <div class="auth">
-      <span id="authState" class="muted"></span>
-      <button id="btnSignOut">Sign out</button>
-    </div>
-  </div>
+  <!-- REQUIRED: your site navbar -->
+  <script type="module" src="/components/site-navbar.js"></script>
+  <site-navbar
+    cart-href="/cart"
+    signin-href="/sign-in"
+    profile-href="/profile"
+    no-spacer="true">
+  </site-navbar>
 
   <div class="container">
     <div class="grid">
+      <!-- MAIN -->
       <div class="card">
-        <h1>Setup (required)</h1>
-        <div class="muted">You must create your merchant profile and verify your website before accessing the dashboard.</div>
-
-        <div class="stepper">
-          <div class="step active" id="stepPill1">1) Profile</div>
-          <div class="step" id="stepPill2">2) Verify</div>
-          <div class="step" id="stepPill3">3) Done</div>
+        <h1>Merchant setup</h1>
+        <div class="muted">
+          Before you can access the WiseSize dashboard, you need to:
+          <ul>
+            <li>Create your merchant profile</li>
+            <li>Verify you own your store domain</li>
+          </ul>
         </div>
 
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:12px 0" />
+        <div class="notice" style="margin-top:12px;">
+          <div style="font-weight:950; margin-bottom:6px;">Setup status</div>
+          <div class="pills" id="setupPills"></div>
+          <div class="progressWrap"><div class="progressBar" id="setupProgress"></div></div>
+          <div id="setupMsg" class="muted" style="margin-top:8px;"></div>
+        </div>
+
+        <div class="stepper" id="stepper" style="margin-top:12px;">
+          <div class="step active" data-step="1">1 — Profile</div>
+          <div class="step" data-step="2">2 — Verify</div>
+          <div class="step" data-step="3">3 — Done</div>
+        </div>
+
+        <hr/>
 
         <!-- STEP 1 -->
-        <section id="step1">
-          <h2>Step 1 — Create your merchant profile</h2>
+        <div class="pane active" id="pane1">
+          <h2>Step 1 — Store profile</h2>
 
           <div class="row">
             <label for="storeName">Store name</label>
-            <input id="storeName" placeholder="Your store name" />
+            <input id="storeName" placeholder="Your store name" autocomplete="organization" />
           </div>
 
           <div class="row">
             <label for="storeWebsite">Website</label>
             <input id="storeWebsite" placeholder="https://example.com" inputmode="url" />
-            <div class="muted">Must be your canonical domain.</div>
+            <div class="muted">Use your canonical domain (https). No trailing slash is best.</div>
           </div>
-
-          <div class="actions">
-            <button class="primary" id="btnSaveProfile">Save profile</button>
-            <button id="btnGoVerify">Next</button>
-          </div>
-
-          <div id="profileMsg" class="muted" style="margin-top:10px"></div>
-        </section>
-
-        <!-- STEP 2 -->
-        <section id="step2" style="display:none">
-          <h2>Step 2 — Verify website ownership</h2>
 
           <div class="row">
-            <label for="verifyApi">Verification API origin</label>
-            <input id="verifyApi" placeholder="https://YOUR-VERIFY-API.com" />
-            <div class="muted">
-              This must serve:
-              <div class="code" style="margin-top:6px">POST /v1/merchant/verify/start
-POST /v1/merchant/verify/check</div>
+            <label>Features</label>
+            <div style="display:grid; gap:8px">
+              <label class="inline">
+                <input type="checkbox" id="featSave" style="width:auto" />
+                Enable “Save profile”
+              </label>
+              <label class="inline">
+                <input type="checkbox" id="featTryOn" style="width:auto" />
+                Enable AI Try-On
+              </label>
             </div>
           </div>
 
-          <div class="row">
-            <label for="verifyWebsite">Website to verify</label>
-            <input id="verifyWebsite" placeholder="https://example.com" />
+          <div class="actions">
+            <button id="btnSaveProfile" class="primary">Save profile</button>
+            <button id="btnGoVerify">Next</button>
           </div>
+
+          <div id="profileMsg" class="muted" style="margin-top:10px" aria-live="polite"></div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="pane" id="pane2">
+          <h2>Step 2 — Verify domain ownership</h2>
 
           <div class="row">
             <label for="verifyMethod">Method</label>
@@ -144,53 +274,60 @@ POST /v1/merchant/verify/check</div>
 
           <div class="actions">
             <button id="btnStartVerify">Start verification</button>
-            <button class="primary" id="btnCheckVerify">Check verification</button>
-            <button class="ghost" id="btnBack">Back</button>
+            <button id="btnCheckVerify" class="primary">Check verification</button>
+            <button id="btnBackProfile" class="ghost">Back</button>
           </div>
 
-          <div id="verifyBox" class="notice" style="display:none; margin-top:10px;">
+          <div id="verifyBox" class="notice" style="display:none; margin-top:12px;">
             <div style="font-weight:950; margin-bottom:6px;">Instructions</div>
             <div id="verifyInstructions" class="muted"></div>
+
             <div class="actions" style="margin-top:8px;">
               <button id="btnCopyToken">Copy token</button>
             </div>
-            <div id="verifyToken" class="code"></div>
+
+            <div class="code" id="verifyToken"></div>
             <div id="verifyState" class="muted" style="margin-top:8px;"></div>
           </div>
-        </section>
 
-        <!-- STEP 3 -->
-        <section id="step3" style="display:none">
-          <h2>Step 3 — Done</h2>
-          <div class="notice">
-            <div style="font-weight:950">Verified ✓</div>
-            <div class="muted" style="margin-top:6px">
-              Your merchant account is ready. Continue to the dashboard.
-            </div>
-            <div class="actions">
-              <button class="primary" id="btnContinue">Go to dashboard</button>
-            </div>
+          <div class="muted" style="margin-top:10px;">
+            After verification, you’ll be redirected into the dashboard automatically.
           </div>
-        </section>
-      </div>
-
-      <div class="card">
-        <h1>What you’ll unlock</h1>
-        <div class="muted">
-          After verification you’ll be able to:
-          <ul>
-            <li>Submit products + sizing charts</li>
-            <li>See usage metrics</li>
-            <li>Copy embed snippet</li>
-            <li>Read docs + troubleshooting</li>
-          </ul>
         </div>
 
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:12px 0" />
+        <!-- STEP 3 -->
+        <div class="pane" id="pane3">
+          <h2>Step 3 — Done</h2>
+          <div class="notice">
+            <div style="font-weight:950;">Verified ✓</div>
+            <div class="muted" style="margin-top:6px;">
+              Your merchant account is ready. You can now access the WiseSize dashboard.
+            </div>
 
-        <h2>Docs</h2>
+            <div class="actions" style="margin-top:10px;">
+              <button id="btnGoDashboard" class="primary">Go to dashboard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDE -->
+      <div class="card">
+        <h2>Signed in</h2>
+        <div id="authLine" class="muted">—</div>
+
+        <hr/>
+
+        <h2>Embed preview</h2>
+        <div class="muted">After you add items, you’ll copy a snippet like this per product:</div>
+        <div class="code" id="embedPreview"></div>
+
+        <hr/>
+
+        <h2>Help</h2>
         <div class="muted">
-          Read: <a href="/products/software/wise-size/docs/index.html">WiseSize docs</a>
+          <div style="margin-bottom:8px;"><b>DNS method</b> is best if you can edit domain records.</div>
+          <div><b>HTTP file</b> is best if you can upload a file to your website.</div>
         </div>
       </div>
     </div>
@@ -199,302 +336,543 @@ POST /v1/merchant/verify/check</div>
   <div class="toastWrap" id="toastWrap" aria-live="polite"></div>
 
   <script type="module">
+    /**
+     * Firebase v9.22.2 (you said everything is on 9.22.2)
+     */
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import {
-      PATHS, getApp, wsDoc,
-      redirectToSignIn, doSignOut,
-      ensureMerchantDocExists, createMerchantDoc, updateMerchantProfile,
-      merchantReady, isValidHttpUrl, toastify, copyText
-    } from "./ws-shared.js";
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    // -----------------------------
+    // CONFIG
+    // -----------------------------
+    const firebaseConfig = {
+      apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
+      authDomain: "unlim8ted-db.firebaseapp.com",
+      projectId: "unlim8ted-db",
+      storageBucket: "unlim8ted-db.appspot.com",
+      messagingSenderId: "1059428499872",
+      appId: "1:1059428499872:web:855308683718237de6e4c5",
+    };
 
-    const { auth, db } = getApp();
+    // Your Worker origin (same worker where you added /v1/merchant/verify/start + /check)
+    // Example: https://api.unlim8ted.com  (whatever hosts your existing worker)
+    const VERIFY_API_ORIGIN = "https://api.unlim8ted.com"; // <-- CHANGE THIS
 
+    // Where to send people if not signed in
+    const SIGN_IN_PATH = "/sign-in";
+
+    // Dashboard entry after setup (relative to /products/software/wise-size/dashboard/)
+    const DASHBOARD_INDEX = "index.html";
+
+    // Embed script
+    const EMBED_SCRIPT_URL = "https://services.unlim8ted.com/wisesize/v1/embed.js";
+
+    // -----------------------------
+    // Firestore helpers (IMPORTANT: avoids the collection() error)
+    // Path: /wise-size/app/{subcollection}/...
+    // -----------------------------
+    function wsDoc(db, sub, id) {
+      return doc(db, "wise-size", "app", sub, id);
+    }
+
+    // -----------------------------
+    // UI refs
+    // -----------------------------
     const toastWrap = document.getElementById("toastWrap");
-    const authState = document.getElementById("authState");
-    const btnSignOut = document.getElementById("btnSignOut");
 
-    // Step UI
-    const step1 = document.getElementById("step1");
-    const step2 = document.getElementById("step2");
-    const step3 = document.getElementById("step3");
-    const pill1 = document.getElementById("stepPill1");
-    const pill2 = document.getElementById("stepPill2");
-    const pill3 = document.getElementById("stepPill3");
+    const setupPills = document.getElementById("setupPills");
+    const setupProgress = document.getElementById("setupProgress");
+    const setupMsg = document.getElementById("setupMsg");
+
+    const stepper = document.getElementById("stepper");
+    const pane1 = document.getElementById("pane1");
+    const pane2 = document.getElementById("pane2");
+    const pane3 = document.getElementById("pane3");
 
     const storeName = document.getElementById("storeName");
     const storeWebsite = document.getElementById("storeWebsite");
-    const verifyWebsite = document.getElementById("verifyWebsite");
-    const profileMsg = document.getElementById("profileMsg");
-
+    const featSave = document.getElementById("featSave");
+    const featTryOn = document.getElementById("featTryOn");
     const btnSaveProfile = document.getElementById("btnSaveProfile");
     const btnGoVerify = document.getElementById("btnGoVerify");
-    const btnBack = document.getElementById("btnBack");
-    const btnContinue = document.getElementById("btnContinue");
+    const btnBackProfile = document.getElementById("btnBackProfile");
+    const profileMsg = document.getElementById("profileMsg");
 
-    // Verification UI
-    const verifyApi = document.getElementById("verifyApi");
     const verifyMethod = document.getElementById("verifyMethod");
     const btnStartVerify = document.getElementById("btnStartVerify");
     const btnCheckVerify = document.getElementById("btnCheckVerify");
     const verifyBox = document.getElementById("verifyBox");
     const verifyInstructions = document.getElementById("verifyInstructions");
-    const verifyTokenEl = document.getElementById("verifyToken");
+    const verifyToken = document.getElementById("verifyToken");
     const verifyState = document.getElementById("verifyState");
     const btnCopyToken = document.getElementById("btnCopyToken");
 
-    const VERIFY_ORIGIN_KEY = "wisesize_verify_origin";
-    const TOKEN_KEY_PREFIX = "wisesize_verify_token:";
+    const btnGoDashboard = document.getElementById("btnGoDashboard");
+    const authLine = document.getElementById("authLine");
+    const embedPreview = document.getElementById("embedPreview");
 
-    let merchantId = null;
+    // -----------------------------
+    // Utilities
+    // -----------------------------
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    function toast(title, detail = "", ms = 2400) {
+      const el = document.createElement("div");
+      el.className = "toast";
+      el.innerHTML = `<div class="t">${escapeHtml(title)}</div>${detail ? `<div class="d">${escapeHtml(detail)}</div>` : ""}`;
+      toastWrap.appendChild(el);
+      setTimeout(() => { el.style.opacity = "0"; el.style.transition = "opacity .2s"; }, Math.max(600, ms - 200));
+      setTimeout(() => el.remove(), ms);
+    }
+
+    function setBusy(btn, busy, labelWhileBusy = "Working…") {
+      if (!btn) return;
+      if (busy) {
+        btn.dataset._prev = btn.textContent;
+        btn.textContent = labelWhileBusy;
+        btn.disabled = true;
+      } else {
+        btn.textContent = btn.dataset._prev || btn.textContent;
+        btn.disabled = false;
+      }
+    }
+
+    function isValidHttpUrl(u) {
+      try {
+        const x = new URL(u);
+        return x.protocol === "http:" || x.protocol === "https:";
+      } catch { return false; }
+    }
+
+    function normalizeWebsite(u) {
+      const x = new URL(u);
+      x.hash = "";
+      x.search = "";
+      x.pathname = x.pathname.replace(/\/+$/, "");
+      return x.toString();
+    }
+
+    async function copyText(text) {
+      try { await navigator.clipboard.writeText(text); return true; } catch {}
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      return true;
+    }
+
+    function redirectToSignIn() {
+      const here = window.location.pathname + window.location.search + window.location.hash;
+      window.location.href = `${SIGN_IN_PATH}?redirect=${encodeURIComponent(here)}`;
+    }
+
+    function buildEmbedSnippet(merchantId, itemId) {
+      return `<script src="${EMBED_SCRIPT_URL}" data-wisesize-merchant="${merchantId}" data-wisesize-item="${itemId}" defer><\\/script>`;
+    }
+
+    // -----------------------------
+    // Stepper
+    // -----------------------------
+    function setStep(n) {
+      [pane1, pane2, pane3].forEach((p, i) => p.classList.toggle("active", i === (n - 1)));
+      stepper.querySelectorAll(".step").forEach(s => {
+        const k = Number(s.dataset.step);
+        s.classList.toggle("active", k === n);
+      });
+    }
+
+    function markDone(stepNum, done) {
+      const el = stepper.querySelector(`.step[data-step="${stepNum}"]`);
+      if (el) el.classList.toggle("done", !!done);
+    }
+
+    // -----------------------------
+    // Verification token cache
+    // -----------------------------
+    function safeHostFromUrl(u) {
+      try { return new URL(u).host.toLowerCase(); }
+      catch { return ""; }
+    }
+    function tokenKey(merchantId, website, method) {
+      const host = safeHostFromUrl(website);
+      return `wisesize_verify_token:${merchantId}:${method}:${host}`;
+    }
+    function saveCachedToken(merchantId, website, method, token) {
+      try { localStorage.setItem(tokenKey(merchantId, website, method), token); } catch {}
+    }
+    function loadCachedToken(merchantId, website, method) {
+      try { return localStorage.getItem(tokenKey(merchantId, website, method)); } catch { return null; }
+    }
+
+    // -----------------------------
+    // Render status
+    // -----------------------------
+    function merchantReady(m) {
+      const hasName = !!String(m?.name || "").trim();
+      const hasWebsite = isValidHttpUrl(m?.website || "");
+      const verified = m?.websiteVerified === true;
+      return { hasName, hasWebsite, verified, ready: (hasName && hasWebsite && verified) };
+    }
+
+    function renderStatus(m) {
+      const st = merchantReady(m);
+      setupPills.innerHTML = [
+        `<span class="pill ${st.hasName && st.hasWebsite ? "good":"warn"}">profile: ${st.hasName && st.hasWebsite ? "ok" : "needed"}</span>`,
+        `<span class="pill ${st.verified ? "good":"warn"}">website: ${st.verified ? "verified" : "not verified"}</span>`
+      ].join("");
+
+      const pct = Math.round(((st.hasName && st.hasWebsite) ? 1 : 0) * 50 + (st.verified ? 50 : 0));
+      setupProgress.style.width = `${pct}%`;
+
+      if (st.ready) {
+        setupMsg.textContent = "Setup complete ✓";
+        markDone(1, true);
+        markDone(2, true);
+        setStep(3);
+      } else {
+        const missing = [];
+        if (!(st.hasName && st.hasWebsite)) missing.push("profile");
+        if (!st.verified) missing.push("verification");
+        setupMsg.textContent = "Complete: " + missing.join(", ") + ".";
+        markDone(1, (st.hasName && st.hasWebsite));
+        markDone(2, st.verified);
+        setStep((st.hasName && st.hasWebsite) ? 2 : 1);
+      }
+    }
+
+    // -----------------------------
+    // Firebase init
+    // -----------------------------
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // -----------------------------
+    // State
+    // -----------------------------
+    let uid = null;
     let merchant = null;
     let lastToken = null;
 
-    function setStep(n) {
-      step1.style.display = (n === 1) ? "" : "none";
-      step2.style.display = (n === 2) ? "" : "none";
-      step3.style.display = (n === 3) ? "" : "none";
-      pill1.classList.toggle("active", n === 1);
-      pill2.classList.toggle("active", n === 2);
-      pill3.classList.toggle("active", n === 3);
+    // -----------------------------
+    // Load merchant doc
+    // -----------------------------
+    async function loadMerchant() {
+      const ref = wsDoc(db, "merchants", uid);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return null;
+      return snap.data();
     }
 
-    function safeHostFromUrl(u) {
-      try { return new URL(u).host; }
-      catch { return String(u || "").replace(/^https?:\/\//,"").split("/")[0]; }
+    function fillForm(m) {
+      storeName.value = m?.name || "";
+      storeWebsite.value = m?.website || "";
+      featSave.checked = !!(m?.features?.profileSaveEnabled);
+      featTryOn.checked = !!(m?.features?.aiTryOnEnabled);
     }
 
-    function tokenStorageKey(website, method) {
-      return TOKEN_KEY_PREFIX + method + ":" + safeHostFromUrl(website);
+    // -----------------------------
+    // Save profile (create or update)
+    // -----------------------------
+    async function saveProfile() {
+      const name = storeName.value.trim();
+      const websiteRaw = storeWebsite.value.trim();
+
+      if (!name) { toast("Store name required"); return false; }
+      if (!websiteRaw) { toast("Website required"); return false; }
+      if (!isValidHttpUrl(websiteRaw)) { toast("Invalid website URL", "Use https://example.com"); return false; }
+
+      const website = normalizeWebsite(websiteRaw);
+      const ref = wsDoc(db, "merchants", uid);
+      const snap = await getDoc(ref);
+
+      // IMPORTANT: your rules require a full shape on CREATE.
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          ownerUid: uid,
+          name,
+          website,
+          features: {
+            profileSaveEnabled: !!featSave.checked,
+            aiTryOnEnabled: !!featTryOn.checked,
+          },
+          websiteVerified: false,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        }, { merge: false });
+      } else {
+        await setDoc(ref, {
+          ownerUid: uid, // keep stable
+          name,
+          website,
+          features: {
+            profileSaveEnabled: !!featSave.checked,
+            aiTryOnEnabled: !!featTryOn.checked,
+          },
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+      }
+
+      merchant = await loadMerchant();
+      fillForm(merchant);
+      renderStatus(merchant);
+
+      // prefill verification UI if token exists in this browser
+      const cached = loadCachedToken(uid, merchant.website, verifyMethod.value);
+      if (cached) {
+        lastToken = cached;
+        verifyBox.style.display = "";
+        verifyToken.textContent = cached;
+        verifyState.textContent = "Token loaded from this browser. Add proof, then click Check verification.";
+        renderVerifyInstructions(merchant.website, verifyMethod.value, cached);
+      }
+
+      profileMsg.textContent = "Saved ✓";
+      setTimeout(() => profileMsg.textContent = "", 1400);
+      toast("Saved", "Merchant profile updated.");
+      return true;
     }
 
+    // -----------------------------
+    // Verification UI
+    // -----------------------------
     function renderVerifyInstructions(website, method, token) {
       const host = safeHostFromUrl(website);
-
       if (method === "dns") {
-        verifyInstructions.innerHTML = `
-          <div class="muted">Add a DNS TXT record for <b>${host}</b>:</div>
-          <ul class="muted" style="margin:8px 0 0 18px;">
-            <li><b>Type:</b> TXT</li>
-            <li><b>Name/Host:</b> <code>wisesize-verify</code> (or <code>wisesize-verify.${host}</code>)</li>
-            <li><b>Value:</b> (copy below)</li>
-          </ul>
-          <div class="muted" style="margin-top:8px;">DNS can take time to propagate.</div>
-        `;
+        verifyInstructions.innerHTML =
+          `<div class="muted">Add a DNS TXT record for <b>${escapeHtml(host)}</b>:</div>
+           <ul class="muted" style="margin:8px 0 0 18px;">
+             <li><b>Type:</b> TXT</li>
+             <li><b>Name/Host:</b> <code>wisesize-verify</code> (or <code>wisesize-verify.${escapeHtml(host)}</code>)</li>
+             <li><b>Value:</b> (copy below)</li>
+           </ul>
+           <div class="muted" style="margin-top:8px;">DNS propagation can take time (minutes to hours).</div>`;
       } else {
-        verifyInstructions.innerHTML = `
-          <div class="muted">Create a public file on your website:</div>
-          <ul class="muted" style="margin:8px 0 0 18px;">
-            <li><b>Path:</b> <code>/.well-known/wisesize-verification.txt</code></li>
-            <li><b>Contents:</b> (copy below)</li>
-          </ul>
-          <div class="muted" style="margin-top:8px;">Must return 200 without auth.</div>
-        `;
+        verifyInstructions.innerHTML =
+          `<div class="muted">Create a public file on your website:</div>
+           <ul class="muted" style="margin:8px 0 0 18px;">
+             <li><b>Path:</b> <code>/.well-known/wisesize-verification.txt</code></li>
+             <li><b>Contents:</b> (copy below)</li>
+           </ul>
+           <div class="muted" style="margin-top:8px;">Must be reachable publicly (HTTP 200).</div>`;
       }
-
-      verifyTokenEl.textContent = token;
-      verifyBox.style.display = "";
+      verifyToken.textContent = token;
     }
 
-    btnSignOut.addEventListener("click", async () => {
-      await doSignOut();
+    async function apiStartVerify() {
+      if (!merchant) { toast("Save your profile first"); return; }
+      const website = merchant.website;
+      if (!isValidHttpUrl(website)) { toast("Website invalid", "Save profile again."); return; }
+
+      setBusy(btnStartVerify, true, "Starting…");
+      verifyState.textContent = "Starting…";
+
+      try {
+        const idToken = await auth.currentUser.getIdToken(true);
+        const res = await fetch(`${VERIFY_API_ORIGIN}/v1/merchant/verify/start`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            firebaseIdToken: idToken,
+            merchantId: uid,
+            website,
+            method: verifyMethod.value,
+          })
+        });
+
+        const data = await res.json().catch(() => null);
+        if (!res.ok || !data?.ok) throw new Error(data?.error || `start failed (${res.status})`);
+
+        lastToken = data.token;
+        saveCachedToken(uid, website, verifyMethod.value, lastToken);
+
+        verifyBox.style.display = "";
+        renderVerifyInstructions(website, verifyMethod.value, lastToken);
+        verifyState.textContent = "Add the proof, then click Check verification.";
+        toast("Verification started", "Token generated.");
+      } catch (e) {
+        console.error(e);
+        verifyState.textContent = "Failed to start verification.";
+        toast("Start failed", String(e?.message || e));
+      } finally {
+        setBusy(btnStartVerify, false);
+      }
+    }
+
+    async function apiCheckVerify() {
+      if (!merchant) { toast("Save your profile first"); return; }
+      const website = merchant.website;
+      if (!isValidHttpUrl(website)) { toast("Website invalid", "Save profile again."); return; }
+
+      // If user refreshed, try to load cached token
+      if (!lastToken) {
+        lastToken = loadCachedToken(uid, website, verifyMethod.value);
+      }
+      if (!lastToken) { toast("Start verification first"); return; }
+
+      setBusy(btnCheckVerify, true, "Checking…");
+      verifyState.textContent = "Checking…";
+
+      try {
+        const idToken = await auth.currentUser.getIdToken(true);
+        const res = await fetch(`${VERIFY_API_ORIGIN}/v1/merchant/verify/check`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            firebaseIdToken: idToken,
+            merchantId: uid,
+            website,
+            method: verifyMethod.value,
+            token: lastToken,
+          })
+        });
+
+        const data = await res.json().catch(() => null);
+        if (!res.ok || !data?.ok) throw new Error(data?.error || `check failed (${res.status})`);
+
+        if (data.verified === true) {
+          verifyState.textContent = "Verified ✓ Updating account…";
+
+          // Your rules currently allow merchant to set websiteVerified. Do it here.
+          await setDoc(wsDoc(db, "merchants", uid), {
+            websiteVerified: true,
+            updatedAt: serverTimestamp(),
+          }, { merge: true });
+
+          merchant = await loadMerchant();
+          renderStatus(merchant);
+
+          toast("Verified ✓", "Redirecting to dashboard…");
+          setTimeout(() => {
+            window.location.href = DASHBOARD_INDEX; // relative: dashboard/index.html
+          }, 700);
+
+          return;
+        }
+
+        verifyState.textContent = "Not found yet. Try again in a bit (DNS caches can delay).";
+        toast("Not found yet", "Proof not detected yet.");
+      } catch (e) {
+        console.error(e);
+        verifyState.textContent = "Verification check failed.";
+        toast("Check failed", String(e?.message || e));
+      } finally {
+        setBusy(btnCheckVerify, false);
+      }
+    }
+
+    // -----------------------------
+    // Wire events
+    // -----------------------------
+    btnSaveProfile.addEventListener("click", async () => {
+      try {
+        setBusy(btnSaveProfile, true, "Saving…");
+        profileMsg.textContent = "Saving…";
+        await saveProfile();
+      } catch (e) {
+        console.error(e);
+        profileMsg.textContent = "Save failed.";
+        toast("Save failed", "Check console + Firestore rules.");
+      } finally {
+        setBusy(btnSaveProfile, false);
+      }
     });
 
-    btnGoVerify.addEventListener("click", () => {
-      if (!merchant) {
-        toastify(toastWrap, "Save your profile first");
-        return;
-      }
-      const st = merchantReady(merchant);
-      if (!st.nameOk || !st.websiteOk) {
-        toastify(toastWrap, "Complete Step 1", "Store name + website are required.");
-        return;
+    btnGoVerify.addEventListener("click", async () => {
+      // Make sure profile is saved and valid
+      if (!merchant || !merchantReady(merchant).hasName || !merchantReady(merchant).hasWebsite) {
+        const ok = await saveProfile();
+        if (!ok) return;
       }
       setStep(2);
     });
 
-    btnBack.addEventListener("click", () => setStep(1));
+    btnBackProfile.addEventListener("click", () => setStep(1));
 
-    btnContinue.addEventListener("click", () => {
-      window.location.href = PATHS.DASHBOARD_HOME;
-    });
-
-    btnSaveProfile.addEventListener("click", async () => {
-      try {
-        profileMsg.textContent = "Saving…";
-
-        const name = storeName.value.trim();
-        const website = storeWebsite.value.trim();
-
-        if (!name) throw new Error("Store name required");
-        if (!website) throw new Error("Website required");
-        if (!isValidHttpUrl(website)) throw new Error("Website must be https://...");
-
-        // If merchant doc exists -> UPDATE, else CREATE (rules require name+website)
-        const existing = await ensureMerchantDocExists(db, merchantId);
-        if (!existing) {
-          merchant = await createMerchantDoc(db, merchantId, { name, website });
-        } else {
-          merchant = await updateMerchantProfile(db, merchantId, { name, website: website.replace(/\/+$/, "") });
-        }
-
-        verifyWebsite.value = merchant.website || website;
-
-        profileMsg.textContent = "Saved ✓";
-        toastify(toastWrap, "Saved", "Profile updated.");
-      } catch (e) {
-        console.error(e);
-        profileMsg.textContent = "Save failed.";
-        toastify(toastWrap, "Save failed", e.message || "Check console.");
-      }
-    });
-
-    // Verification origin stored locally (so it can be “actual” in your environment)
-    verifyApi.value = localStorage.getItem(VERIFY_ORIGIN_KEY) || "https://YOUR-VERIFY-API.com";
-    verifyApi.addEventListener("change", () => localStorage.setItem(VERIFY_ORIGIN_KEY, verifyApi.value.trim()));
-
-    btnStartVerify.addEventListener("click", async () => {
-      try {
-        const origin = verifyApi.value.trim().replace(/\/+$/, "");
-        if (!origin) throw new Error("Verification API origin required");
-
-        const website = (verifyWebsite.value.trim() || storeWebsite.value.trim());
-        if (!website) throw new Error("Website required");
-        if (!isValidHttpUrl(website)) throw new Error("Website must be https://...");
-
-        const method = verifyMethod.value;
-
-        verifyState.textContent = "Starting…";
-
-        const idToken = await auth.currentUser.getIdToken(true);
-        const res = await fetch(origin + "/v1/merchant/verify/start", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            firebaseIdToken: idToken,
-            merchantId,
-            website,
-            method
-          })
-        });
-
-        if (!res.ok) throw new Error("start failed: " + res.status);
-        const data = await res.json();
-        if (!data.ok) throw new Error(data.error || "start not ok");
-
-        lastToken = data.token;
-        localStorage.setItem(tokenStorageKey(website, method), lastToken);
-
-        renderVerifyInstructions(website, method, lastToken);
-        verifyState.textContent = "Add the proof, then click Check verification.";
-        toastify(toastWrap, "Verification started", "Add proof then check.");
-      } catch (e) {
-        console.error(e);
-        verifyState.textContent = "Failed to start verification.";
-        toastify(toastWrap, "Start failed", e.message || "Check origin + logs.");
-      }
-    });
-
-    btnCheckVerify.addEventListener("click", async () => {
-      try {
-        const origin = verifyApi.value.trim().replace(/\/+$/, "");
-        if (!origin) throw new Error("Verification API origin required");
-
-        const website = (verifyWebsite.value.trim() || storeWebsite.value.trim());
-        if (!website) throw new Error("Website required");
-        if (!isValidHttpUrl(website)) throw new Error("Website must be https://...");
-
-        const method = verifyMethod.value;
-
-        // Load cached token if needed
-        if (!lastToken) {
-          lastToken = localStorage.getItem(tokenStorageKey(website, method));
-        }
-        if (!lastToken) throw new Error("Start verification first (no token).");
-
-        verifyState.textContent = "Checking…";
-
-        const idToken = await auth.currentUser.getIdToken(true);
-        const res = await fetch(origin + "/v1/merchant/verify/check", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            firebaseIdToken: idToken,
-            merchantId,
-            website,
-            method,
-            token: lastToken
-          })
-        });
-
-        if (!res.ok) throw new Error("check failed: " + res.status);
-        const data = await res.json();
-        if (!data.ok) throw new Error(data.error || "check not ok");
-
-        if (data.verified === true) {
-          verifyState.textContent = "Verified ✓";
-
-          // IMPORTANT:
-          // Best: your server sets websiteVerified (Admin SDK).
-          // To make it "actually work" end-to-end right now, we update it client-side
-          // (your rules allow owner to update websiteVerified).
-          merchant = await updateMerchantProfile(db, merchantId, { websiteVerified: true });
-
-          setStep(3);
-          toastify(toastWrap, "Verified ✓", "Setup complete.");
-          return;
-        }
-
-        verifyState.textContent = "Not found yet. Try again (DNS can take time).";
-        toastify(toastWrap, "Not found yet", "DNS/HTTP caches can take time.");
-      } catch (e) {
-        console.error(e);
-        verifyState.textContent = "Check failed.";
-        toastify(toastWrap, "Check failed", e.message || "Check logs.");
-      }
-    });
+    btnStartVerify.addEventListener("click", apiStartVerify);
+    btnCheckVerify.addEventListener("click", apiCheckVerify);
 
     btnCopyToken.addEventListener("click", async () => {
-      const t = (verifyTokenEl.textContent || "").trim();
-      if (!t) return toastify(toastWrap, "No token");
+      const t = (verifyToken.textContent || "").trim();
+      if (!t) { toast("No token to copy"); return; }
       await copyText(t);
-      toastify(toastWrap, "Copied ✓");
+      toast("Copied ✓");
     });
 
-    // Auth boot
+    verifyMethod.addEventListener("change", () => {
+      if (!merchant?.website) return;
+      const cached = loadCachedToken(uid, merchant.website, verifyMethod.value);
+      if (cached) {
+        lastToken = cached;
+        verifyBox.style.display = "";
+        renderVerifyInstructions(merchant.website, verifyMethod.value, cached);
+        verifyState.textContent = "Token loaded from this browser. Add proof, then check.";
+      } else {
+        // keep box but clear token if you want:
+        // verifyBox.style.display = "none";
+      }
+    });
+
+    btnGoDashboard.addEventListener("click", () => {
+      window.location.href = DASHBOARD_INDEX;
+    });
+
+    // -----------------------------
+    // Auth gate
+    // -----------------------------
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         redirectToSignIn();
         return;
       }
 
-      merchantId = user.uid;
-      authState.textContent = user.email || user.uid;
+      uid = user.uid;
+      authLine.textContent = user.email ? user.email : uid;
+      embedPreview.textContent = buildEmbedSnippet(uid, "YOUR_ITEM_ID");
 
-      // Load merchant doc if exists; if already ready => go dashboard
-      const ref = wsDoc(db, "merchants", merchantId);
-      const snap = await getDoc(ref);
-      merchant = snap.exists() ? snap.data() : null;
+      try {
+        merchant = await loadMerchant();
+        if (merchant) fillForm(merchant);
+        renderStatus(merchant);
 
-      if (merchant) {
-        storeName.value = merchant.name || "";
-        storeWebsite.value = merchant.website || "";
-        verifyWebsite.value = merchant.website || "";
-
-        const st = merchantReady(merchant);
-        if (st.ready) {
+        // If already verified, skip to done + allow dashboard
+        if (merchantReady(merchant).ready) {
           setStep(3);
-          return;
         }
 
-        // If profile exists but not verified, jump to verify
-        if (st.nameOk && st.websiteOk && !st.verifiedOk) setStep(2);
-        else setStep(1);
-      } else {
-        setStep(1);
+        // If we have a website and a cached token, show instructions immediately
+        if (merchant?.website && isValidHttpUrl(merchant.website)) {
+          const cached = loadCachedToken(uid, merchant.website, verifyMethod.value);
+          if (cached) {
+            lastToken = cached;
+            verifyBox.style.display = "";
+            renderVerifyInstructions(merchant.website, verifyMethod.value, cached);
+            verifyState.textContent = "Token loaded from this browser. Add proof, then click Check verification.";
+          }
+        }
+      } catch (e) {
+        console.error(e);
+        toast("Load failed", "Check Firestore rules / network.");
       }
     });
   </script>
 </body>
-</html>
+</html>Uncaught (in promise) FirebaseError: Expected first argument to collection() to be a CollectionReference, a DocumentReference or FirebaseFirestore

@@ -33,11 +33,17 @@ export function getApp() {
  * Correct Firestore refs (fixes your FirebaseError):
  * /wise-size/app/{subcollection}/{docId?}
  */
-export function wsDoc(db, subcollection, docId) {
-  return doc(db, WS.ROOT_COLLECTION, WS.ROOT_DOC, subcollection, docId);
+// /products/software/wise-size/dashboard/shared/wisesize-firebase.js
+import { doc, collection } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+export function wsCol(db, sub) {
+  // /wise-size/app/{sub}/...
+  return collection(db, "wise-size", "app", sub);
 }
-export function wsCol(db, subcollection) {
-  return collection(db, WS.ROOT_COLLECTION, WS.ROOT_DOC, subcollection);
+
+export function wsDoc(db, sub, id) {
+  // /wise-size/app/{sub}/{id}
+  return doc(db, "wise-size", "app", sub, id);
 }
 
 export function redirectToSignIn() {
