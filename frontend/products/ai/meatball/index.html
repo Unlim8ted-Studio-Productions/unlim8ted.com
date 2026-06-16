@@ -3,10 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Unlim8ted - Talk to Meatball</title>
-  <meta name="description" content="Direct line to Meatball. Custom model coming later." />
+  <meta name="description" content="Direct line to Meatball. Intent model and context model powered chatbot." />
+
   <script type="module" src="/components/site-navbar.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+
   <link rel="stylesheet" href="../../resources/css/meatball-assistant.css" />
+
   <style>
     :root {
       --bg: #091019;
@@ -17,15 +22,25 @@
       --accent: #ffb46a;
       --accent-2: #62d6ff;
       --shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+      --page-pad-x: clamp(10px, 2.5vw, 28px);
+      --nav-space: clamp(64px, 9vh, 92px);
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
     body {
       margin: 0;
-      min-height: 100vh;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
       color: var(--text);
       font-family: "Segoe UI", "Trebuchet MS", sans-serif;
       background:
@@ -34,31 +49,50 @@
         linear-gradient(180deg, #101823 0%, var(--bg) 100%);
     }
 
+    button,
+    textarea {
+      -webkit-tap-highlight-color: transparent;
+    }
+
     .page {
-      width: min(1080px, calc(100% - 28px));
+      width: min(1080px, calc(100% - var(--page-pad-x) * 2));
+      height: 100vh;
+      height: 100dvh;
+      max-height: 100dvh;
       margin: 0 auto;
-      padding: 112px 0 40px;
+      padding: calc(var(--nav-space) + env(safe-area-inset-top, 0px)) 0 calc(14px + env(safe-area-inset-bottom, 0px));
+      display: grid;
+      overflow: hidden;
     }
 
     .hero {
+      min-height: 0;
+      height: 100%;
+      max-height: 100%;
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 18px;
+      overflow: hidden;
+      grid-template-columns: minmax(0, 1.1fr) minmax(250px, 0.9fr);
+      gap: clamp(12px, 1.7vw, 18px);
       align-items: stretch;
+      transform: translateY(clamp(-55px, -6vh, -24px));
     }
 
     .panel {
+      min-width: 0;
       border: 1px solid var(--line);
-      border-radius: 28px;
+      border-radius: clamp(20px, 3vw, 28px);
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
       box-shadow: var(--shadow);
       backdrop-filter: blur(14px);
     }
 
     .intro {
-      padding: 28px;
+      min-height: 0;
+      padding: clamp(14px, 2.7vh, 24px);
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .intro::before {
@@ -72,8 +106,8 @@
     }
 
     h1 {
-      margin: 0 0 12px;
-      font-size: clamp(2.7rem, 6vw, 4.8rem);
+      margin: 0 0 clamp(6px, 1.2vh, 12px);
+      font-size: clamp(2rem, 5.2vw, 4rem);
       line-height: 0.96;
       letter-spacing: -0.05em;
     }
@@ -82,25 +116,27 @@
       max-width: 34rem;
       margin: 0;
       color: var(--muted);
-      font-size: 1.03rem;
-      line-height: 1.6;
+      font-size: clamp(0.88rem, 1.65vh, 1.02rem);
+      line-height: 1.45;
     }
 
     .meatballStage {
-      min-height: 320px;
+      min-height: 0;
       display: grid;
       place-items: center;
-      padding: 22px;
+      padding: clamp(12px, 2.5vh, 22px);
+      overflow: hidden;
     }
 
     .meatballDisplay {
-      --meatball-size: 168px;
+      --meatball-size: clamp(118px, 18vw, 178px);
       position: relative;
-      width: min(280px, 72vw);
+      width: min(320px, 78vw, 100%);
+      max-height: 100%;
       aspect-ratio: 1;
       display: grid;
       place-items: center;
-      border-radius: 34px;
+      border-radius: clamp(24px, 4vw, 34px);
       background:
         radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.12), transparent 20%),
         radial-gradient(circle at 76% 74%, rgba(255, 180, 106, 0.15), transparent 24%),
@@ -120,50 +156,86 @@
     }
 
     .chatShell {
-      margin-top: 18px;
+      min-height: 0;
+      flex: 1;
+      margin-top: clamp(10px, 2vh, 18px);
       display: grid;
-      gap: 16px;
-      padding: 20px;
+      grid-template-rows: minmax(0, 1fr) auto auto;
+      gap: clamp(10px, 1.8vh, 16px);
+      padding: clamp(12px, 2.2vh, 18px);
+      overflow: hidden;
     }
 
     .chatLog {
-      min-height: 380px;
-      padding: 18px;
-      border-radius: 22px;
+      min-height: 0;
+      height: 100%;
+      max-height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+      padding: clamp(12px, 2vh, 18px);
+      border-radius: clamp(18px, 2.5vw, 22px);
       border: 1px solid var(--line);
       background: rgba(7, 13, 20, 0.72);
-      display: grid;
-      align-content: start;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
       gap: 12px;
+      scroll-behavior: smooth;
     }
 
     .msg {
+      flex: 0 0 auto;
       max-width: min(520px, 100%);
-      padding: 14px 16px;
+      min-width: 0;
+      padding: clamp(11px, 1.6vw, 14px) clamp(12px, 1.8vw, 16px);
       border-radius: 18px;
       line-height: 1.5;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .msg.bot {
       background: rgba(255, 180, 106, 0.12);
       border: 1px solid rgba(255, 180, 106, 0.2);
+      max-height: clamp(120px, 30dvh, 280px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+      -webkit-overflow-scrolling: touch;
     }
 
     .msg.user {
+      align-self: flex-end;
       margin-left: auto;
       background: rgba(98, 214, 255, 0.1);
       border: 1px solid rgba(98, 214, 255, 0.18);
       color: rgba(238, 247, 255, 0.92);
     }
 
+    .msg.system {
+      max-width: 100%;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.075);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
     .composer {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
       gap: 12px;
     }
 
     .composer textarea {
-      min-height: 88px;
+      width: 100%;
+      min-width: 0;
+      min-height: clamp(54px, 10vh, 76px);
+      max-height: 24vh;
       resize: vertical;
       border-radius: 18px;
       border: 1px solid var(--line);
@@ -171,17 +243,38 @@
       color: var(--text);
       padding: 16px;
       font: inherit;
+      outline: none;
+    }
+
+    .composer textarea:focus {
+      border-color: rgba(98, 214, 255, 0.42);
+      box-shadow: 0 0 0 4px rgba(98, 214, 255, 0.08);
+    }
+
+    .composer textarea:disabled {
+      opacity: 0.58;
+      cursor: wait;
     }
 
     .composer button {
-      min-width: 136px;
+      width: 136px;
+      min-width: 0;
+      height: 52px;
+      align-self: start;
       border: 0;
       border-radius: 18px;
       background: linear-gradient(180deg, #ffba74, #d98a3b);
       color: #24130d;
       font: inherit;
       font-weight: 900;
-      cursor: not-allowed;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+      opacity: 1;
+    }
+
+    .composer button:disabled {
+      cursor: wait;
       opacity: 0.62;
     }
 
@@ -201,6 +294,39 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
       font-weight: 800;
+    }
+
+    .note.good {
+      color: rgba(157, 255, 191, 0.9);
+      border-color: rgba(157, 255, 191, 0.22);
+      background: rgba(157, 255, 191, 0.06);
+    }
+
+    .note.bad {
+      color: rgba(255, 120, 120, 0.9);
+      border-color: rgba(255, 120, 120, 0.22);
+      background: rgba(255, 120, 120, 0.06);
+    }
+
+    .debugPanel {
+      max-height: 24vh;
+      overflow: auto;
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 16px;
+      background: rgba(0,0,0,0.22);
+      color: rgba(244, 247, 255, 0.62);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      display: none;
+    }
+
+    .debugPanel.show {
+      display: block;
     }
 
     .meatballDisplay .meatballAvatar {
@@ -223,50 +349,434 @@
     }
 
     .meatballDisplay .meatballAvatar-eye {
-      top: 36px;
-      width: 22px;
-      height: 22px;
+      top: 27%;
+      width: clamp(12px, 12%, 22px);
+      height: clamp(12px, 12%, 22px);
+      z-index: 4;
     }
 
     .meatballDisplay .meatballAvatar-eye.left {
-      left: 34px;
+      left: 24%;
     }
 
     .meatballDisplay .meatballAvatar-eye.right {
-      right: 34px;
+      right: 24%;
     }
 
     .meatballDisplay .meatballAvatar-eye .pupil {
-      width: 10px;
-      height: 10px;
+      width: clamp(6px, 46%, 10px);
+      height: clamp(6px, 46%, 10px);
       transform: translate(-50%, -50%);
     }
 
     .meatballDisplay .meatballAvatar-mouth {
-      bottom: 31px;
-      width: 40px;
+      bottom: 21%;
+      width: clamp(26px, 24%, 40px);
+      height: clamp(10px, 10%, 18px);
+      z-index: 3;
+      transform-origin: 50% 50%;
+    }
+
+    .meatballDisplay .meatballAvatar.talking .meatballAvatar-mouth {
+      animation: meatballTalk 0.18s infinite steps(2, end);
+    }
+
+    .meatballSpeech {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      z-index: 4;
+      padding: 12px 14px;
+      border-radius: 18px 18px 18px 6px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 247, 231, 0.92);
+      color: #2b170e;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.26);
+      font-size: 13px;
+      line-height: 1.25;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      text-align: left;
+      transform: rotate(-2deg);
+    }
+
+    .meatballSpeech::after {
+      content: "";
+      position: absolute;
+      left: 34px;
+      bottom: -10px;
+      width: 18px;
       height: 18px;
+      background: rgba(255, 247, 231, 0.92);
+      border-right: 1px solid rgba(255, 255, 255, 0.18);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+      transform: rotate(45deg);
+    }
+
+    @keyframes meatballTalk {
+      0% {
+        width: clamp(24px, 22%, 36px);
+        height: clamp(9px, 8%, 14px);
+        border-radius: 999px 999px 10px 10px;
+        transform: translateX(-50%) scaleY(0.82);
+      }
+
+      50% {
+        width: clamp(28px, 27%, 42px);
+        height: clamp(13px, 14%, 22px);
+        border-radius: 50% 50% 44% 44%;
+        transform: translateX(-50%) scaleY(1.04);
+      }
+
+      100% {
+        width: clamp(25px, 24%, 38px);
+        height: clamp(10px, 10%, 16px);
+        border-radius: 999px 999px 12px 12px;
+        transform: translateX(-50%) scaleY(0.9);
+      }
+    }
+
+    @media (min-width: 861px) and (min-height: 701px) {
+      body {
+        overflow: hidden;
+      }
+
+      .page {
+        height: 100vh;
+        height: 100dvh;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr) minmax(220px, 0.72fr);
+      }
+
+      h1 {
+        font-size: clamp(2rem, 6vw, 3.4rem);
+      }
     }
 
     @media (max-width: 860px) {
+      :root {
+        --page-pad-x: clamp(10px, 3vw, 18px);
+        --nav-space: 74px;
+      }
+
+      body {
+        overflow: hidden;
+      }
+
       .page {
-        padding-top: 98px;
+        height: 100dvh;
+        max-height: 100dvh;
+        display: grid;
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        overflow: hidden;
       }
 
       .hero {
+        height: 100%;
+        min-height: 0;
+        max-height: 100%;
         grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 1fr) clamp(132px, 24dvh, 190px);
+        gap: 12px;
+        align-items: stretch;
+        overflow: hidden;
+        transform: none;
+      }
+
+      .intro {
+        min-height: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .meatballStage {
+        min-height: 0;
+        height: 100%;
+        padding: 10px;
+      }
+
+      .meatballDisplay {
+        --meatball-size: clamp(86px, 23vw, 124px);
+        width: min(220px, 58vw);
+      }
+
+      .meatballSpeech {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        padding: 8px 10px;
+        font-size: 10px;
+        line-height: 1.18;
+      }
+
+      .chatShell {
+        min-height: 360px;
+      }
+
+      .composer textarea {
+        min-height: 54px;
+        max-height: 120px;
+      }
+
+      .composer button {
+        width: 90px;
+        height: 54px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root {
+        --page-pad-x: 10px;
+        --nav-space: 68px;
+      }
+
+      .page {
+        width: calc(100% - 20px);
+      }
+
+      .hero {
+        min-height: 0;
+      }
+
+      .intro {
+        padding: 14px;
+        border-radius: 22px;
+        min-height: 0;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 12vw, 3rem);
+        letter-spacing: -0.055em;
+      }
+
+      .sub {
+        font-size: 0.9rem;
+        line-height: 1.38;
+      }
+
+      .chatShell {
+        margin-top: 12px;
+        padding: 10px;
+        gap: 10px;
+        min-height: 0;
+      }
+
+      .chatLog {
+        padding: 10px;
+        gap: 10px;
+        max-height: 100%;
+      }
+
+      .msg.bot {
+        max-height: clamp(110px, 28dvh, 220px);
+      }
+
+      .msg {
+        max-width: 92%;
+        font-size: 0.95rem;
+        line-height: 1.42;
       }
 
       .composer {
         grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .composer textarea {
+        min-height: 52px;
+        max-height: 130px;
+        padding: 13px 14px;
+        font-size: 16px;
       }
 
       .composer button {
-        min-height: 52px;
+        width: 100%;
+        height: 48px;
+        border-radius: 16px;
+      }
+
+      .meatballStage {
+        min-height: 136px;
+        border-radius: 22px;
+      }
+
+      .meatballDisplay {
+        --meatball-size: clamp(78px, 25vw, 108px);
+        width: min(190px, 62vw);
+      }
+    }
+
+    @media (max-width: 390px) {
+      .meatballDisplay .meatballAvatar-eye {
+        top: 25%;
+      }
+
+      .meatballDisplay .meatballAvatar-eye.left {
+        left: 22%;
+      }
+
+      .meatballDisplay .meatballAvatar-eye.right {
+        right: 22%;
+      }
+
+      .meatballDisplay .meatballAvatar-mouth {
+        bottom: 19%;
+      }
+      .sub {
+        display: none;
+      }
+
+      .intro {
+        min-height: 0;
+      }
+
+      .chatShell {
+        margin-top: 10px;
+      }
+
+      .msg {
+        max-width: 96%;
+        font-size: 0.92rem;
+      }
+
+      .meatballStage {
+        min-height: 124px;
+      }
+
+      .meatballSpeech {
+        font-size: 9px;
+      }
+    }
+
+    @media (max-height: 720px) {
+      :root {
+        --nav-space: 66px;
+      }
+
+      .page {
+        padding-top: calc(var(--nav-space) + env(safe-area-inset-top, 0px));
+        padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+      }
+
+      .hero {
+        transform: none;
+      }
+
+      h1 {
+        font-size: clamp(1.75rem, 4.8vw, 3.2rem);
+      }
+
+      .sub {
+        font-size: 0.86rem;
+        line-height: 1.35;
+      }
+
+      .chatShell {
+        margin-top: 8px;
+        gap: 8px;
+        padding: 12px;
+      }
+
+      .msg {
+        padding: 10px 12px;
+        line-height: 1.35;
+      }
+
+      .msg.bot {
+        max-height: clamp(100px, 26dvh, 200px);
+      }
+    }
+
+    @media (max-height: 620px) and (min-width: 861px) {
+      .sub {
+        display: none;
+      }
+
+      .hero {
+        gap: 10px;
+      }
+
+      .composer textarea {
+        min-height: 48px;
+        max-height: 48px;
+      }
+
+      .composer button {
+        height: 48px;
+      }
+
+      .msg.bot {
+        max-height: clamp(90px, 22dvh, 160px);
+      }
+    }
+
+    @media (max-width: 860px) and (max-height: 560px) and (orientation: landscape) {
+      .page {
+        padding-top: calc(58px + env(safe-area-inset-top, 0px));
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1fr) minmax(150px, 0.38fr);
+        grid-template-rows: 1fr;
+      }
+
+      .intro {
+        min-height: 0;
+        height: 100%;
+      }
+
+      .meatballStage {
+        min-height: 0;
+      }
+
+      .meatballDisplay {
+        --meatball-size: clamp(72px, 15vw, 100px);
+        width: min(170px, 34vw);
+      }
+
+      .sub {
+        display: none;
+      }
+    }
+
+    /* Hard overflow lock: long answers must scroll inside the chat/answer box, not stretch the page. */
+    .intro,
+    .chatShell,
+    .chatLog {
+      min-height: 0;
+      max-height: 100%;
+      overflow: hidden;
+    }
+
+    .chatLog {
+      overflow-y: auto;
+    }
+
+    .msg.bot {
+      display: block;
+      max-height: clamp(96px, 28dvh, 280px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      contain: content;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
 </head>
+
 <body>
   <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
 
@@ -275,27 +785,28 @@
       <section class="panel intro">
         <h1>A smarter Meatball</h1>
         <p class="sub">
-          This is the dedicated Meatball page. The custom model is not wired in yet, so the interface is intentionally blank for now instead of pretending to work.
+          Meatball now uses the intent model first, then the context model, then selects a grounded answer from its local answer bank.
         </p>
 
         <div class="chatShell">
-          <div class="chatLog" aria-label="Conversation log">
-            <div class="msg bot">I am here. The real model is coming later.</div>
-            <div class="msg bot">For now this page is a shell, not a fake chatbot.</div>
-            <div class="msg user">So you are not answering yet?</div>
-            <div class="msg bot">Correct. I am between brains.</div>
+
+          <div id="chatLog" class="chatLog" aria-label="Conversation log">
+            <div class="msg bot">I am loading my tiny brain. Sauce may take one second.</div>
           </div>
 
-          <div class="composer" aria-label="Disabled chat composer">
-            <textarea disabled placeholder="Smarter meatball still developing..."></textarea>
-            <button type="button" disabled>Send</button>
-          </div>
+          <form id="chatForm" class="composer" aria-label="Meatball chat composer">
+            <textarea id="chatInput" disabled placeholder="Loading Meatball models..."></textarea>
+            <button id="sendButton" type="submit" disabled>Send</button>
+          </form>
+
+          <div id="debugPanel" class="debugPanel" aria-label="Debug output"></div>
         </div>
       </section>
 
       <aside class="panel meatballStage">
         <div class="meatballDisplay" aria-hidden="true">
-          <div class="meatballAvatar">
+          <div class="meatballSpeech">I’m the other meatball’s bigger, smarter brother.</div>
+          <div id="bigMeatballAvatar" class="meatballAvatar">
             <span class="meatballAvatar-shadow"></span>
             <span class="meatballAvatar-body">
               <span class="meatballAvatar-eye left"><span class="pupil"></span></span>
@@ -308,6 +819,859 @@
     </section>
   </main>
 
-  <script src="../../resources/js/meatball-assistant.js"></script>
+
+  <script>
+    const MODEL_PATHS = {
+      intentModel: "https://assets.unlim8ted.com/models/intent-model/meatball_intent.onnx",
+      intentMetadata: "https://assets.unlim8ted.com/models/intent-model/meatball_metadata.json",
+
+      contextModel: "https://assets.unlim8ted.com/models/context-model/meatball_context.onnx",
+      contextMetadata: "https://assets.unlim8ted.com/models/context-model/meatball_context_metadata.json",
+
+      answerBankCandidates: [
+        "https://assets.unlim8ted.com/data/Smart-Meatball-Intent-Combined.jsonl",
+        "https://assets.unlim8ted.com/data/Smart-Meatball-Intent-Combined.json",
+        "https://assets.unlim8ted.com/data/Smart-Meatball-Data.jsonl",
+        "https://assets.unlim8ted.com/data/Smart-Meatball-Data.json"
+      ]
+    };
+
+    const DEBUG_ENABLED = new URLSearchParams(location.search).has("debug");
+
+    const chatLog = document.getElementById("chatLog");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+    const sendButton = document.getElementById("sendButton");
+    const debugPanel = document.getElementById("debugPanel");
+    const bigMeatballAvatar = document.getElementById("bigMeatballAvatar");
+
+    const intentStatus = document.getElementById("intentStatus");
+    const contextStatus = document.getElementById("contextStatus");
+    const dataStatus = document.getElementById("dataStatus");
+
+    let intentBrain = null;
+    let contextBrain = null;
+    let answerRows = [];
+    let rowsByIntent = new Map();
+    let talkTimer = null;
+
+    let memory = {
+      last_intent: "none",
+      last_project_key: "none",
+      last_category: "none",
+      last_answer_text: "",
+      message_count: 0,
+      confusion_count: 0,
+      topic_switch_count: 0
+    };
+
+    function setStatus(el, text, state) {
+      el.textContent = text;
+      el.classList.remove("good", "bad");
+      if (state) el.classList.add(state);
+    }
+
+    function addMessage(role, text) {
+      const msg = document.createElement("div");
+      msg.className = `msg ${role}`;
+      msg.textContent = text;
+      chatLog.appendChild(msg);
+      chatLog.scrollTop = chatLog.scrollHeight;
+
+      if (role === "bot") {
+        animateMeatballTalk(text);
+      }
+    }
+
+    function setMeatballTalking(isTalking) {
+      if (!bigMeatballAvatar) return;
+      bigMeatballAvatar.classList.toggle("talking", Boolean(isTalking));
+    }
+
+    function animateMeatballTalk(text) {
+      if (talkTimer) window.clearTimeout(talkTimer);
+
+      const talkDuration = Math.min(
+        4200,
+        Math.max(900, String(text || "").length * 42)
+      );
+
+      setMeatballTalking(true);
+
+      talkTimer = window.setTimeout(() => {
+        setMeatballTalking(false);
+        talkTimer = null;
+      }, talkDuration);
+    }
+
+    function setDebug(data) {
+      if (!DEBUG_ENABLED) return;
+      debugPanel.classList.add("show");
+      debugPanel.textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+    }
+
+    function normalizeText(text) {
+      return String(text || "")
+        .toLowerCase()
+        .replace(/[“”]/g, '"')
+        .replace(/[‘’]/g, "'")
+        .replace(/[^a-z0-9?!.,'"\s:_/\-|=+#@&()%]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function fnv1aHash(str) {
+      let hash = 2166136261;
+
+      for (let i = 0; i < str.length; i++) {
+        hash ^= str.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+
+      return hash >>> 0;
+    }
+
+    function softmax(arr) {
+      const max = Math.max(...arr);
+      const exp = arr.map(x => Math.exp(x - max));
+      const sum = exp.reduce((a, b) => a + b, 0) || 1;
+      return exp.map(x => x / sum);
+    }
+
+    function textToVector(text, config = {}) {
+      const featureSize = config.feature_size || config.input_size || config.vocab_size || 4096;
+      const ngramMin = config.ngram_min || 2;
+      const ngramMax = config.ngram_max || 5;
+
+      // IMPORTANT: this must match tools/intent_nueral_net_train.py
+      // and tools/context_neural_net_train.py exactly. The model was trained
+      // with leading/trailing spaces and the word: prefix.
+      const clean = ` ${normalizeText(text)} `;
+
+      const vec = new Float32Array(featureSize);
+
+      for (let n = ngramMin; n <= ngramMax; n++) {
+        for (let i = 0; i <= clean.length - n; i++) {
+          const gram = clean.slice(i, i + n);
+          const idx = fnv1aHash(gram) % featureSize;
+          vec[idx] += 1.0;
+        }
+      }
+
+      const words = clean.trim().split(/\s+/).filter(Boolean);
+
+      for (const word of words) {
+        const idx = fnv1aHash("word:" + word) % featureSize;
+        vec[idx] += 1.5;
+      }
+
+      let norm = 0;
+      for (let i = 0; i < vec.length; i++) norm += vec[i] * vec[i];
+
+      norm = Math.sqrt(norm) || 1;
+
+      for (let i = 0; i < vec.length; i++) vec[i] /= norm;
+
+      return vec;
+    }
+
+    function memoryToVector(mem, config = {}) {
+      const memoryFeatureSize = config.memory_feature_size || 256;
+      const vec = new Float32Array(memoryFeatureSize);
+
+      // IMPORTANT: this must match tools/context_neural_net_train.py.
+      // Do not normalize this memory vector. The context model was trained
+      // on raw memory features plus capped counters.
+      const fields = [
+        "last_intent",
+        "last_project_key",
+        "last_category",
+        "current_intent",
+        "current_project_key",
+        "current_category"
+      ];
+
+      for (const field of fields) {
+        const value = String(mem[field] || "none").toLowerCase();
+        const idx = fnv1aHash(`${field}:${value}`) % memoryFeatureSize;
+        vec[idx] += 1.0;
+      }
+
+      vec[0] = Math.min((mem.message_count || 0) / 20.0, 1.0);
+      vec[1] = Math.min((mem.confusion_count || 0) / 8.0, 1.0);
+      vec[2] = Math.min((mem.topic_switch_count || 0) / 8.0, 1.0);
+
+      return vec;
+    }
+
+    async function fetchJson(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`${url} failed with ${res.status}`);
+      return await res.json();
+    }
+
+    async function fetchText(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`${url} failed with ${res.status}`);
+      return await res.text();
+    }
+
+    function parseAnswerBank(text, url) {
+      const trimmed = text.trim();
+
+      if (!trimmed) return [];
+
+      if (url.endsWith(".json")) {
+        const parsed = JSON.parse(trimmed);
+
+        if (Array.isArray(parsed)) return parsed;
+
+        if (Array.isArray(parsed.rows)) return parsed.rows;
+        if (Array.isArray(parsed.data)) return parsed.data;
+        if (Array.isArray(parsed.answers)) return parsed.answers;
+
+        return Object.values(parsed).flatMap(value => {
+          if (Array.isArray(value)) return value;
+          if (value && typeof value === "object" && value.question && value.answer) return [value];
+          return [];
+        });
+      }
+
+      return trimmed
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map(line => {
+          try {
+            return JSON.parse(line);
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+    }
+
+    async function loadAnswerBank() {
+      let lastError = null;
+
+      for (const url of MODEL_PATHS.answerBankCandidates) {
+        try {
+          const text = await fetchText(url);
+          const rows = parseAnswerBank(text, url)
+            .filter(row => row && typeof row === "object")
+            .filter(row => row.answer || row.response || row.text);
+
+          if (rows.length) {
+            answerRows = rows.map((row, index) => ({
+              id: row.id || `answer_${index}`,
+              question: row.question || row.input || "",
+              answer: row.answer || row.response || row.text || "",
+              intent: row.intent || row.label || "unknown",
+              project: row.project || "",
+              project_key: row.project_key || row.projectKey || "general_knowledge",
+              category: row.category || "conversation",
+              tags: Array.isArray(row.tags) ? row.tags : []
+            }));
+
+            rowsByIntent = new Map();
+
+            for (const row of answerRows) {
+              if (!rowsByIntent.has(row.intent)) rowsByIntent.set(row.intent, []);
+              rowsByIntent.get(row.intent).push(row);
+            }
+
+            return {
+              url,
+              rows: answerRows.length
+            };
+          }
+        } catch (err) {
+          lastError = err;
+        }
+      }
+
+      throw lastError || new Error("No answer bank loaded.");
+    }
+
+    async function createSession(url) {
+      return await ort.InferenceSession.create(url, {
+        executionProviders: ["wasm"]
+      });
+    }
+
+    async function runSessionWithFirstInput(session, tensor) {
+      const inputNames = session.inputNames || [];
+
+      if (inputNames.length) {
+        return await session.run({
+          [inputNames[0]]: tensor
+        });
+      }
+
+      const names = [
+        "input",
+        "input_vector",
+        "context_input",
+        "features",
+        "x"
+      ];
+
+      let lastError = null;
+
+      for (const name of names) {
+        try {
+          return await session.run({
+            [name]: tensor
+          });
+        } catch (err) {
+          lastError = err;
+        }
+      }
+
+      throw lastError || new Error("No valid ONNX input name found.");
+    }
+
+    function getLabels(metadata, keys) {
+      for (const key of keys) {
+        if (Array.isArray(metadata[key])) return metadata[key];
+      }
+
+      if (metadata.labels && Array.isArray(metadata.labels)) return metadata.labels;
+
+      return [];
+    }
+
+    async function loadModels() {
+      //setStatus(intentStatus, "Intent model loading", "");
+      //setStatus(contextStatus, "Context model loading", "");
+      //setStatus(dataStatus, "Answer bank loading", "");
+
+      const [intentMetadata, contextMetadata, answerBankLoad] = await Promise.all([
+        fetchJson(MODEL_PATHS.intentMetadata),
+        fetchJson(MODEL_PATHS.contextMetadata),
+        loadAnswerBank()
+      ]);
+
+      //setStatus(dataStatus, `Answer bank ready (${answerBankLoad.rows})`, "good");
+
+      const [intentSession, contextSession] = await Promise.all([
+        createSession(MODEL_PATHS.intentModel),
+        createSession(MODEL_PATHS.contextModel)
+      ]);
+
+      intentBrain = {
+        session: intentSession,
+        metadata: intentMetadata,
+        labels: getLabels(intentMetadata, ["intents", "intent_labels", "labels"])
+      };
+
+      contextBrain = {
+        session: contextSession,
+        metadata: contextMetadata,
+        labels: getLabels(contextMetadata, ["actions", "context_actions", "action_labels", "labels"])
+      };
+
+      //setStatus(intentStatus, "Intent model ready", "good");
+      //setStatus(contextStatus, "Context model ready", "good");
+
+      chatInput.disabled = false;
+      sendButton.disabled = false;
+      chatInput.placeholder = "Ask Meatball...";
+    }
+
+    async function predictIntent(userText) {
+      const config = intentBrain.metadata.config || intentBrain.metadata;
+      const vec = textToVector(userText, config);
+      const tensor = new ort.Tensor("float32", vec, [1, vec.length]);
+
+      const outputs = await runSessionWithFirstInput(intentBrain.session, tensor);
+      const firstKey = Object.keys(outputs)[0];
+      const logits = Array.from(outputs[firstKey].data);
+      const probs = softmax(logits);
+
+      const top = probs
+        .map((score, index) => ({
+          intent: intentBrain.labels[index] || String(index),
+          score
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 6);
+
+      return {
+        intent: top[0]?.intent || "unknown",
+        confidence: top[0]?.score || 0,
+        top
+      };
+    }
+
+    function chooseAnswerRow(intentPrediction, userText) {
+      const intent = intentPrediction.intent;
+      const rows = rowsByIntent.get(intent) || [];
+
+      if (!rows.length) return null;
+
+      const q = normalizeText(userText);
+      const words = new Set(q.split(/\s+/).filter(word => word.length > 2));
+
+      let best = rows[0];
+      let bestScore = -9999;
+
+      for (const row of rows) {
+        const rowText = normalizeText([
+          row.question,
+          row.answer,
+          row.intent,
+          row.project_key,
+          row.category,
+          ...(row.tags || [])
+        ].join(" "));
+
+        let score = 0;
+
+        if (normalizeText(row.question) === q) score += 50;
+
+        for (const word of words) {
+          if (rowText.includes(word)) score += 2;
+        }
+
+        if (row.project_key === memory.last_project_key && row.project_key !== "general_knowledge") {
+          score += 2.5;
+        }
+
+        if (row.category === memory.last_category && memory.message_count > 0) {
+          score += 0.5;
+        }
+
+        score += Math.random() * 0.001;
+
+        if (score > bestScore) {
+          best = row;
+          bestScore = score;
+        }
+      }
+
+      return best;
+    }
+
+    function buildContextInputText(userText, answerRow, intentPrediction) {
+      return [
+        `last_intent=${memory.last_intent || "none"}`,
+        `last_project=${memory.last_project_key || "none"}`,
+        `last_category=${memory.last_category || "none"}`,
+        `last_answer=${memory.last_answer_text || ""}`,
+        `current_intent=${intentPrediction.intent || "none"}`,
+        `current_project=${answerRow?.project_key || "general_knowledge"}`,
+        `current_category=${answerRow?.category || "conversation"}`,
+        `user=${normalizeText(userText)}`,
+        `candidate_answer=${answerRow?.answer || ""}`
+      ].join(" ");
+    }
+
+    async function predictContext(userText, answerRow, intentPrediction) {
+      const config = contextBrain.metadata.config || contextBrain.metadata;
+
+      const text = buildContextInputText(userText, answerRow, intentPrediction);
+      const textVec = textToVector(text, config);
+
+      let inputVec = textVec;
+
+      if (config.memory_feature_size) {
+        const memVec = memoryToVector({
+          ...memory,
+          current_intent: intentPrediction.intent || "none",
+          current_project_key: answerRow?.project_key || "general_knowledge",
+          current_category: answerRow?.category || "conversation"
+        }, config);
+
+        inputVec = new Float32Array(textVec.length + memVec.length);
+        inputVec.set(textVec, 0);
+        inputVec.set(memVec, textVec.length);
+      }
+
+      const tensor = new ort.Tensor("float32", inputVec, [1, inputVec.length]);
+      const outputs = await runSessionWithFirstInput(contextBrain.session, tensor);
+      const firstKey = Object.keys(outputs)[0];
+      const logits = Array.from(outputs[firstKey].data);
+      const probs = softmax(logits);
+
+      const top = probs
+        .map((score, index) => ({
+          action: contextBrain.labels[index] || String(index),
+          score
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 6);
+
+      return {
+        action: top[0]?.action || "direct_answer",
+        confidence: top[0]?.score || 0,
+        top
+      };
+    }
+
+    function isVagueSymbolOnly(q) {
+      return /^[?!.\s]+$/.test(q);
+    }
+
+    function directRuntimeOverride(userText) {
+      const q = normalizeText(userText);
+
+      if (isVagueSymbolOnly(q)) {
+        return {
+          answer: "I’m not totally sure what you mean. Ask that a little more clearly.",
+          intent: "nonsense_vague",
+          category: "nonsense",
+          project_key: "general_knowledge",
+          reason: "symbol_only"
+        };
+      }
+
+      if (
+        q === "what does that mean" ||
+        q === "what did that mean" ||
+        q === "what do you mean" ||
+        q === "explain that" ||
+        q === "why did you say that" ||
+        q === "what are you saying" ||
+        q === "what does it mean" ||
+        q === "what is that supposed to mean"
+      ) {
+        const last = normalizeText(memory.last_answer_text);
+
+        if (
+          last.includes("not totally sure") ||
+          last.includes("too vague") ||
+          last.includes("mildly confused") ||
+          last.includes("wrong sauce jar") ||
+          last.includes("cleaner way") ||
+          last.includes("need more")
+        ) {
+          return {
+            answer: "I meant that your last message was too vague for me to understand. Ask with the main topic included.",
+            intent: "smalltalk_explain_previous",
+            category: "conversation",
+            project_key: "general_knowledge",
+            reason: "explain_previous_vague"
+          };
+        }
+
+        if (memory.last_answer_text) {
+          return {
+            answer: "You’re asking about my last answer. I meant: " + memory.last_answer_text,
+            intent: "smalltalk_explain_previous",
+            category: "conversation",
+            project_key: memory.last_project_key || "general_knowledge",
+            reason: "explain_previous_answer"
+          };
+        }
+
+        return {
+          answer: "I need a previous answer to explain. Ask a full question first.",
+          intent: "smalltalk_explain_previous",
+          category: "conversation",
+          project_key: "general_knowledge",
+          reason: "no_previous_answer"
+        };
+      }
+
+      return null;
+    }
+
+    function isBoundaryIntent(intent) {
+      intent = String(intent || "").toLowerCase();
+
+      return (
+        intent.includes("inappropriate") ||
+        intent.includes("sexual") ||
+        intent.includes("too_complex") ||
+        intent.includes("medical") ||
+        intent.includes("legal") ||
+        intent.includes("financial") ||
+        intent.includes("malware") ||
+        intent.includes("illegal") ||
+        intent.includes("private_data") ||
+        intent.includes("prompt_injection")
+      );
+    }
+
+    function applyContextAction(userText, answerRow, intentPrediction, contextPrediction) {
+      const action = contextPrediction.action || "direct_answer";
+      const baseAnswer = answerRow?.answer || getCannedFallbackAnswer(userText);
+
+      if (isBoundaryIntent(intentPrediction.intent)) {
+        return baseAnswer;
+      }
+
+      if (answerRow?.category === "inappropriate" || answerRow?.category === "safety") {
+        return baseAnswer;
+      }
+
+      if (action === "clarify") {
+        return "I’m not totally sure what you mean. Ask that a little more clearly.";
+      }
+
+      if (action === "soft_refusal") {
+        return baseAnswer;
+      }
+
+      if (action === "correct_misunderstanding") {
+        return baseAnswer;
+      }
+
+      if (action === "reset_needed") {
+        if ((memory.confusion_count || 0) >= 4) {
+          resetMemory();
+          return "I got too tangled, so I reset the sauce. Ask again fresh.";
+        }
+
+        return baseAnswer;
+      }
+
+      if (action === "topic_shift") {
+        const oldProject = memory.last_project_key || "none";
+        const newProject = answerRow?.project_key || "general_knowledge";
+
+        if (
+          oldProject !== "none" &&
+          oldProject !== "general_knowledge" &&
+          newProject !== oldProject &&
+          memory.message_count > 1
+        ) {
+          return "Switching sauce lanes: " + baseAnswer;
+        }
+
+        return baseAnswer;
+      }
+
+      return baseAnswer;
+    }
+
+    function updateMemoryFromResult(answer, intent, category, projectKey) {
+      memory.last_intent = intent || "none";
+      memory.last_category = category || "conversation";
+      memory.last_project_key = projectKey || "general_knowledge";
+      memory.last_answer_text = answer || "";
+      memory.message_count = (memory.message_count || 0) + 1;
+
+      if (category === "nonsense" || intent === "nonsense_vague") {
+        memory.confusion_count = (memory.confusion_count || 0) + 1;
+      } else {
+        memory.confusion_count = Math.max(0, (memory.confusion_count || 0) - 1);
+      }
+    }
+
+    function resetMemory() {
+      memory = {
+        last_intent: "none",
+        last_project_key: "none",
+        last_category: "none",
+        last_answer_text: "",
+        message_count: 0,
+        confusion_count: 0,
+        topic_switch_count: 0
+      };
+    }
+
+    function getCannedFallbackAnswer(userText) {
+      const q = normalizeText(userText);
+
+      if (/^(hi|hello|hey|hola|yo|sup|bonjour|ciao)\b/.test(q)) {
+        return "Hello. I am awake, round, and ready for a simple question.";
+      }
+
+      if (
+        q === "how are you" ||
+        q === "how r you" ||
+        q === "how are u" ||
+        q === "how you doing" ||
+        q === "how are you doing" ||
+        q === "how's it going" ||
+        q === "hows it going" ||
+        q === "how is it going"
+      ) {
+        return "I’m doing good. The sauce is stable, the browser is awake, and I’m ready for another question.";
+      }
+
+      if (
+        q.includes("how has your day") ||
+        q.includes("how was your day") ||
+        q.includes("how is your day") ||
+        q.includes("hows your day") ||
+        q.includes("how's your day")
+      ) {
+        return "My day has been very browser-based. The sauce is stable and I’m ready for another question.";
+      }
+
+      if (q.includes("joke") || q.includes("funny") || q.includes("make me laugh")) {
+        return "Why did the meatball refuse to fight? Because it did not want beef.";
+      }
+
+      if (q.includes("dirty") || q.includes("nsfw") || q.includes("sexual") || q.includes("adult")) {
+        return "Nope. The sauce stays PG. I can tell a clean meatball joke instead.";
+      }
+
+      if (q.includes("what is a tree") || q === "tree" || q.includes("define tree")) {
+        return "A tree is a large plant with a woody trunk, branches, leaves or needles, and roots.";
+      }
+
+      if (q.includes("what is a brain") || q === "brain" || q.includes("define brain")) {
+        return "A brain is an organ that controls thoughts, senses, movement, memory, emotions, and many body functions.";
+      }
+
+      if (q.includes("who are you") || q.includes("what are you")) {
+        return "I’m Smarter Meatball, a tiny browser mascot for Unlim8ted.";
+      }
+
+      return "I’m not totally sure what you mean. Ask that a little more clearly.";
+    }
+
+    async function getMeatballReply(userText) {
+      const override = directRuntimeOverride(userText);
+
+      if (override) {
+        updateMemoryFromResult(
+          override.answer,
+          override.intent,
+          override.category,
+          override.project_key
+        );
+
+        return {
+          text: override.answer,
+          debug: {
+            mode: "runtime_override",
+            reason: override.reason,
+            intent: override.intent,
+            category: override.category,
+            project_key: override.project_key,
+            memory
+          }
+        };
+      }
+
+      const intentPrediction = await predictIntent(userText);
+      const answerRow = chooseAnswerRow(intentPrediction, userText);
+
+      if (!answerRow || intentPrediction.confidence < 0.08) {
+        const answer = getCannedFallbackAnswer(userText);
+
+        updateMemoryFromResult(
+          answer,
+          "fallback",
+          "fallback",
+          "general_knowledge"
+        );
+
+        return {
+          text: answer,
+          debug: {
+            mode: "fallback_no_answer_row",
+            intentPrediction,
+            memory
+          }
+        };
+      }
+
+      const contextPrediction = await predictContext(userText, answerRow, intentPrediction);
+      const answer = applyContextAction(userText, answerRow, intentPrediction, contextPrediction);
+
+      updateMemoryFromResult(
+        answer,
+        answerRow.intent || intentPrediction.intent,
+        answerRow.category || "conversation",
+        answerRow.project_key || "general_knowledge"
+      );
+
+      return {
+        text: answer,
+        debug: {
+          mode: "intent_context",
+          intentPrediction,
+          contextPrediction,
+          answerRow: {
+            id: answerRow.id,
+            intent: answerRow.intent,
+            project_key: answerRow.project_key,
+            category: answerRow.category,
+            question: answerRow.question
+          },
+          memory
+        }
+      };
+    }
+
+    chatForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const text = chatInput.value.trim();
+
+      if (!text) return;
+
+      chatInput.value = "";
+      chatInput.disabled = true;
+      sendButton.disabled = true;
+
+      addMessage("user", text);
+
+      try {
+        const result = await getMeatballReply(text);
+        addMessage("bot", result.text);
+        setDebug(result.debug);
+      } catch (err) {
+        console.error(err);
+        addMessage("bot", "The sauce broke while answering. Check the browser console.");
+        setDebug({
+          error: String(err && err.message ? err.message : err)
+        });
+      } finally {
+        chatInput.disabled = false;
+        sendButton.disabled = false;
+        chatInput.focus();
+      }
+    });
+
+    chatInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        chatForm.requestSubmit();
+      }
+    });
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      try {
+        await loadModels();
+
+        chatLog.innerHTML = "";
+        addMessage("bot", "I am here. Intent brain online. Context sauce online. Ask me something.");
+
+        if (DEBUG_ENABLED) {
+          debugPanel.classList.add("show");
+          setDebug({
+            loaded: true,
+            intentLabels: intentBrain.labels.length,
+            contextLabels: contextBrain.labels.length,
+            answerRows: answerRows.length,
+            paths: MODEL_PATHS
+          });
+        }
+
+        chatInput.focus();
+      } catch (err) {
+        console.error(err);
+
+        //setStatus(intentStatus, "Intent model failed", "bad");
+        //setStatus(contextStatus, "Context model failed", "bad");
+        //setStatus(dataStatus, "Answer bank maybe failed", "bad");
+
+        chatLog.innerHTML = "";
+        addMessage("bot", "My model files did not load.");
+
+        setDebug({
+          loadError: String(err && err.message ? err.message : err),
+          paths: MODEL_PATHS
+        });
+      }
+    });
+  </script>
 </body>
 </html>
