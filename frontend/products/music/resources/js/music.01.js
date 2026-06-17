@@ -503,7 +503,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
       }
 
       if (timecat.length) {
-        const d = buildDivider("Soundtrack", "TimeCat", "The soundracks to Unlim8ted's newest game in development, Time Cat.");
+        const d = buildDivider("Soundtrack", "TimeCat", "The soundracks to Unlim8ted's newest game in development, Time Cat. Note that songs in this section utilize AI to enhance the audio.");
         songListEl.appendChild(d);
         timecat.forEach(item => {
           const idx = allMusic.indexOf(item);
