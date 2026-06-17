@@ -75,6 +75,8 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
     let srcNode = null;
     let freqData = null;
     let timeData = null;
+    let lastMeatballEmit = 0;
+    let lastBeatAt = 0;
 
     const nowPlayingEl = $("nowPlaying");
     const statusChip = $("statusChip");
@@ -105,6 +107,44 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
           ...extra
         }
       }));
+    }
+
+    function emitMeatballJamFrame(sourceFreqData, sourceTimeData) {
+      if (!isPlaying || !sourceFreqData || !sourceTimeData) return;
+      const now = performance.now();
+      if (now - lastMeatballEmit < 90) return;
+      lastMeatballEmit = now;
+
+      const len = sourceFreqData.length;
+      if (!len) return;
+
+      let total = 0;
+      for (let i = 0; i < len; i++) total += sourceFreqData[i];
+      const energy = Math.max(0, Math.min(1, (total / (len * 255)) * 1.9));
+
+      const bassBins = Math.max(6, Math.floor(len * 0.08));
+      const presenceStart = Math.floor(len * 0.2);
+      const presenceEnd = Math.max(presenceStart + 6, Math.floor(len * 0.46));
+      let bassSum = 0;
+      let presenceSum = 0;
+
+      for (let i = 0; i < bassBins; i++) bassSum += sourceFreqData[i];
+      for (let i = presenceStart; i < presenceEnd; i++) presenceSum += sourceFreqData[i];
+
+      const bassEnergy = bassSum / (bassBins * 255);
+      const presenceEnergy = presenceSum / ((presenceEnd - presenceStart) * 255);
+      const motion = Math.max(0, Math.min(1, (bassEnergy * 0.75) + (presenceEnergy * 0.45)));
+      const beatThreshold = 0.36 + energy * 0.14;
+      const beat = bassEnergy > beatThreshold && now - lastBeatAt > 240;
+      if (beat) lastBeatAt = now;
+
+      emitMeatballMusicState({
+        energy,
+        bassEnergy,
+        presenceEnergy,
+        motion,
+        beat
+      });
     }
 
     function fmtTime(sec) {
@@ -167,6 +207,12 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
 
       ctx2d.clearRect(0, 0, w, h);
 
+      if (analyser && freqData && timeData) {
+        analyser.getByteFrequencyData(freqData);
+        analyser.getByteTimeDomainData(timeData);
+        emitMeatballJamFrame(freqData, timeData);
+      }
+
       const noteWidth = w / 128;
 
       for (const note of notes) {
@@ -205,6 +251,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
       for (let i = 0; i < freqData.length; i++) sum += freqData[i];
       const avg = sum / (freqData.length * 255);
       const energy = Math.min(1, Math.max(0, avg * 1.8));
+      emitMeatballJamFrame(freqData, timeData);
 
       // Center glow rings
       const cx = w * 0.5;
@@ -279,6 +326,8 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
 
     function teardownAudio() {
       stopRaf();
+      lastMeatballEmit = 0;
+      lastBeatAt = 0;
 
       if (audio) {
         try { audio.pause(); } catch { }

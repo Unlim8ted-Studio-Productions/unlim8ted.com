@@ -4,6 +4,12 @@
 }
 
 .meatballAssistant {
+  --jam-tilt: 0deg;
+  --jam-lift: 0px;
+  --jam-scale: 1;
+  --jam-eye-squint: 1;
+  --jam-glow: 0.16;
+  --jam-speed: 420ms;
   position: fixed;
   left: 18px;
   top: 92px;
@@ -23,8 +29,8 @@
 .meatballAssistant.is-jamming {
   filter:
     drop-shadow(0 8px 22px rgba(255, 182, 106, 0.22))
-    drop-shadow(0 0 18px rgba(98, 214, 255, 0.16))
-    drop-shadow(0 0 28px rgba(255, 118, 214, 0.14));
+    drop-shadow(0 0 18px rgba(98, 214, 255, var(--jam-glow)))
+    drop-shadow(0 0 28px rgba(255, 118, 214, calc(var(--jam-glow) * 0.85)));
 }
 
 .meatballAssistant.is-right {
@@ -154,19 +160,19 @@
 }
 
 .meatballAssistant.is-jamming .meatballAvatar {
-  animation: meatballJam 420ms ease-in-out infinite alternate;
+  animation: meatballJam var(--jam-speed) cubic-bezier(0.22, 0.61, 0.36, 1) infinite alternate;
 }
 
 .meatballAssistant.is-jamming .meatballAvatar-body {
-  animation: meatballFloat 0.95s ease-in-out infinite, meatballIdleTilt 1.55s ease-in-out infinite;
+  animation: meatballFloat calc(var(--jam-speed) * 2.15) ease-in-out infinite, meatballIdleTilt calc(var(--jam-speed) * 3.6) ease-in-out infinite;
 }
 
 .meatballAssistant.is-jamming .meatballAvatar-eye.left {
-  animation: meatballBlink 8.5s infinite, meatballJamEye 620ms ease-in-out infinite alternate;
+  animation: meatballBlink 8.5s infinite, meatballJamEye calc(var(--jam-speed) * 1.45) ease-in-out infinite alternate;
 }
 
 .meatballAssistant.is-jamming .meatballAvatar-eye.right {
-  animation: meatballBlink 8.5s infinite, meatballJamEye 620ms ease-in-out infinite alternate-reverse;
+  animation: meatballBlink 8.5s infinite, meatballJamEye calc(var(--jam-speed) * 1.45) ease-in-out infinite alternate-reverse;
 }
 
 .meatballAssistant.is-jam-visible .meatballAssistant-bubble {
@@ -332,10 +338,10 @@
 
 @keyframes meatballJam {
   from {
-    transform: translateY(0) rotate(-9deg) scale(0.98);
+    transform: translateY(var(--jam-lift)) rotate(calc(var(--jam-tilt) * -0.72)) scale(calc(var(--jam-scale) * 0.985));
   }
   to {
-    transform: translateY(-5px) rotate(9deg) scale(1.02);
+    transform: translateY(calc(var(--jam-lift) - 4px)) rotate(var(--jam-tilt)) scale(var(--jam-scale));
   }
 }
 
@@ -344,7 +350,7 @@
     transform: translateY(0) scaleY(1);
   }
   to {
-    transform: translateY(2px) scaleY(0.88);
+    transform: translateY(2px) scaleY(var(--jam-eye-squint));
   }
 }
 

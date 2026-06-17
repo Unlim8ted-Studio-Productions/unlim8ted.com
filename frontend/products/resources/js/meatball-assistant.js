@@ -40,6 +40,8 @@
     jamUntil: 0,
     jamVisibleUntil: 0,
     currentJamTitle: "",
+    jamEnergy: 0,
+    jamBeatAt: 0,
     anchorLockedUntil: 0,
     anchorZone: "",
     raf: 0
@@ -922,6 +924,20 @@
     const page = pageKey();
     if (!page.startsWith("music")) return;
 
+    if (typeof detail?.energy === "number") {
+      state.jamEnergy = Math.max(0, Math.min(1, detail.energy));
+      if (detail.beat) state.jamBeatAt = Date.now();
+      const beatBoost = Date.now() - state.jamBeatAt < 180 ? 1 : 0;
+      const energy = state.jamEnergy;
+      assistant.style.setProperty("--jam-tilt", `${(4 + energy * 8 + beatBoost * 5).toFixed(2)}deg`);
+      assistant.style.setProperty("--jam-lift", `${(-1 - energy * 5 - beatBoost * 3).toFixed(2)}px`);
+      assistant.style.setProperty("--jam-scale", `${(1 + energy * 0.05 + beatBoost * 0.03).toFixed(3)}`);
+      assistant.style.setProperty("--jam-eye-squint", `${Math.max(0.72, 0.94 - energy * 0.16 - beatBoost * 0.06).toFixed(3)}`);
+      assistant.style.setProperty("--jam-glow", `${(0.14 + energy * 0.22 + beatBoost * 0.08).toFixed(3)}`);
+      assistant.style.setProperty("--jam-speed", `${Math.max(210, 430 - energy * 170 - beatBoost * 55).toFixed(0)}ms`);
+      if (beatBoost) state.hypeUntil = Math.max(state.hypeUntil, Date.now() + 260);
+    }
+
     if (detail?.selecting) {
       state.jamVisibleUntil = Date.now() + 2600;
       assistant.classList.add("is-speaking");
@@ -955,6 +971,13 @@
       state.jamUntil = 0;
       state.jamVisibleUntil = Date.now() + 1200;
       state.currentJamTitle = "";
+      state.jamEnergy = 0;
+      assistant.style.setProperty("--jam-tilt", "0deg");
+      assistant.style.setProperty("--jam-lift", "0px");
+      assistant.style.setProperty("--jam-scale", "1");
+      assistant.style.setProperty("--jam-eye-squint", "1");
+      assistant.style.setProperty("--jam-glow", "0.16");
+      assistant.style.setProperty("--jam-speed", "420ms");
       textEl.textContent = detail.paused ? "paused. the groove is on hold." : "all right. track over.";
       persistState();
     }
