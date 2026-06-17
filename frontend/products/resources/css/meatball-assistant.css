@@ -7,9 +7,7 @@
   --jam-tilt: 0deg;
   --jam-lift: 0px;
   --jam-scale: 1;
-  --jam-eye-squint: 1;
   --jam-glow: 0.16;
-  --jam-speed: 420ms;
   position: fixed;
   left: 18px;
   top: 92px;
@@ -160,19 +158,19 @@
 }
 
 .meatballAssistant.is-jamming .meatballAvatar {
-  animation: meatballJam var(--jam-speed) cubic-bezier(0.22, 0.61, 0.36, 1) infinite alternate;
+  animation: meatballJam 340ms cubic-bezier(0.22, 0.61, 0.36, 1) infinite alternate;
 }
 
 .meatballAssistant.is-jamming .meatballAvatar-body {
-  animation: meatballFloat calc(var(--jam-speed) * 2.15) ease-in-out infinite, meatballIdleTilt calc(var(--jam-speed) * 3.6) ease-in-out infinite;
+  animation: meatballFloat 0.88s ease-in-out infinite, meatballIdleTilt 1.45s ease-in-out infinite;
 }
 
 .meatballAssistant.is-jamming .meatballAvatar-eye.left {
-  animation: meatballBlink 8.5s infinite, meatballJamEye calc(var(--jam-speed) * 1.45) ease-in-out infinite alternate;
+  animation: meatballBlink 8.5s infinite, meatballJamEye 560ms ease-in-out infinite alternate;
 }
 
 .meatballAssistant.is-jamming .meatballAvatar-eye.right {
-  animation: meatballBlink 8.5s infinite, meatballJamEye calc(var(--jam-speed) * 1.45) ease-in-out infinite alternate-reverse;
+  animation: meatballBlink 8.5s infinite, meatballJamEye 560ms ease-in-out infinite alternate-reverse;
 }
 
 .meatballAssistant.is-jam-visible .meatballAssistant-bubble {
@@ -350,7 +348,7 @@
     transform: translateY(0) scaleY(1);
   }
   to {
-    transform: translateY(2px) scaleY(var(--jam-eye-squint));
+    transform: translateY(2px) scaleY(0.82);
   }
 }
 
