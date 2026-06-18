@@ -920,6 +920,15 @@
     }
   }
 
+  function keepMusicAssistantVisible() {
+    assistant.style.opacity = "1";
+    assistant.style.visibility = "visible";
+    assistant.hidden = false;
+    state.anchorLockedUntil = 0;
+    chooseAnchor(null, true);
+    applyPosition();
+  }
+
   function handleMusicState(detail) {
     const page = pageKey();
     if (!page.startsWith("music")) return;
@@ -932,13 +941,12 @@
       assistant.style.setProperty("--jam-tilt", `${(4 + energy * 8 + beatBoost * 5).toFixed(2)}deg`);
       assistant.style.setProperty("--jam-lift", `${(-1 - energy * 5 - beatBoost * 3).toFixed(2)}px`);
       assistant.style.setProperty("--jam-scale", `${(1 + energy * 0.05 + beatBoost * 0.03).toFixed(3)}`);
-      assistant.style.setProperty("--jam-eye-squint", `${Math.max(0.72, 0.94 - energy * 0.16 - beatBoost * 0.06).toFixed(3)}`);
       assistant.style.setProperty("--jam-glow", `${(0.14 + energy * 0.22 + beatBoost * 0.08).toFixed(3)}`);
-      assistant.style.setProperty("--jam-speed", `${Math.max(210, 430 - energy * 170 - beatBoost * 55).toFixed(0)}ms`);
       if (beatBoost) state.hypeUntil = Math.max(state.hypeUntil, Date.now() + 260);
     }
 
     if (detail?.selecting) {
+      keepMusicAssistantVisible();
       state.jamVisibleUntil = Date.now() + 2600;
       assistant.classList.add("is-speaking");
       const title = cleanLabel(detail.selectedTitle || detail.title || "", 40);
@@ -949,6 +957,7 @@
     }
 
     if (detail?.isPlaying) {
+      keepMusicAssistantVisible();
       state.jamUntil = Date.now() + 3600000;
       state.jamVisibleUntil = Date.now() + 3600000;
       state.hypeUntil = Date.now() + 1400;
@@ -975,9 +984,7 @@
       assistant.style.setProperty("--jam-tilt", "0deg");
       assistant.style.setProperty("--jam-lift", "0px");
       assistant.style.setProperty("--jam-scale", "1");
-      assistant.style.setProperty("--jam-eye-squint", "1");
       assistant.style.setProperty("--jam-glow", "0.16");
-      assistant.style.setProperty("--jam-speed", "420ms");
       textEl.textContent = detail.paused ? "paused. the groove is on hold." : "all right. track over.";
       persistState();
     }
