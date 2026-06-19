@@ -1,0 +1,13 @@
+{
+  "model_type": "subject_span_finder",
+  "dataset_path": "assets/data/SubjectFinder.jsonl",
+  "max_len": 96,
+  "max_vocab_size": 12000,
+  "embed_size": 128,
+  "hidden_size": 192,
+  "dropout": 0.25,
+  "pad_id": 0,
+  "unk_id": 1,
+  "model_pt": "assets/models/subject_finder/subject_finder.pt",
+  "vocab": "assets/models/subject_finder/vocab.json"
+}

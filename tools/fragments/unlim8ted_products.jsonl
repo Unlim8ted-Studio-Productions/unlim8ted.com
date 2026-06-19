@@ -1,0 +1,56 @@
+{"id":"entity_unlim8ted_products","type":"entity","text":"Unlim8ted Products","topic":"unlim8ted_products"}
+
+{"id":"fact_unlim8ted_products_fact_001","type":"fact","text":"the complete catalog of products created by Unlim8ted","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_002","type":"fact","text":"includes films, games, music, software, AI, hardware, and physical products","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_003","type":"fact","text":"represents the public-facing output of the Unlim8ted ecosystem","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_004","type":"fact","text":"connects multiple creative disciplines under one brand","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_005","type":"fact","text":"includes both digital and physical creations","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_006","type":"fact","text":"combines technology, storytelling, design, and experimentation","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_007","type":"fact","text":"built around original intellectual property","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_008","type":"fact","text":"spans multiple creative industries","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_009","type":"fact","text":"contains both finished products and ongoing projects","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_010","type":"fact","text":"treats creativity as a connected system rather than isolated categories","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_011","type":"fact","text":"supports experimentation across different mediums","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_012","type":"fact","text":"includes interactive, narrative, and utility-focused experiences","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_013","type":"fact","text":"expands through new releases and prototypes","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_014","type":"fact","text":"focuses on memorable and original creations","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_fact_015","type":"fact","text":"represents the combined output of the Unlim8ted vision","topic":"unlim8ted_products"}
+
+{"id":"fact_unlim8ted_products_catalog_001","type":"fact","text":"includes TimeCat","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_catalog_002","type":"fact","text":"includes The Life of a Meatball","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_catalog_003","type":"fact","text":"includes Star Tracker","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_catalog_004","type":"fact","text":"includes Wise Size","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_catalog_005","type":"fact","text":"includes the Unlim8ted Phone","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_catalog_006","type":"fact","text":"includes Square Pixels","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_catalog_007","type":"fact","text":"includes AI tools and assistants","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_catalog_008","type":"fact","text":"includes music projects","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_catalog_009","type":"fact","text":"includes software utilities","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_catalog_010","type":"fact","text":"includes hardware experiments","topic":"unlim8ted_products"}
+
+{"id":"fact_unlim8ted_products_philosophy_001","type":"fact","text":"treats products as connected parts of a larger ecosystem","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_philosophy_002","type":"fact","text":"allows ideas to move between different mediums","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_philosophy_003","type":"fact","text":"encourages films, games, music, and software to influence each other","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_philosophy_004","type":"fact","text":"focuses on building things that should not exist yet","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_philosophy_005","type":"fact","text":"values experimentation over convention","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_philosophy_006","type":"fact","text":"supports creator-driven development","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_philosophy_007","type":"fact","text":"encourages unusual combinations of technology and art","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_philosophy_008","type":"fact","text":"treats creativity as an ongoing process","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_philosophy_009","type":"fact","text":"supports rapid experimentation and iteration","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_philosophy_010","type":"fact","text":"views product creation as worldbuilding","topic":"unlim8ted_products"}
+
+{"id":"fact_unlim8ted_products_comparison_001","type":"fact","text":"broader than any individual Unlim8ted category","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_comparison_002","type":"fact","text":"contains both creative and technical projects","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_comparison_003","type":"fact","text":"includes more than just games","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_comparison_004","type":"fact","text":"includes more than just software","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_comparison_005","type":"fact","text":"includes more than just films","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_comparison_006","type":"fact","text":"combines multiple creative categories into one catalog","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_comparison_007","type":"fact","text":"acts as the umbrella above individual project categories","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_comparison_008","type":"fact","text":"covers a wider scope than any single product","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_comparison_009","type":"fact","text":"represents the entire release catalog rather than one project","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_comparison_010","type":"fact","text":"unifies all major product lines under one topic","topic":"unlim8ted_products"}
+
+{"id":"fact_unlim8ted_products_future_001","type":"fact","text":"can expand as new projects are created","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_future_002","type":"fact","text":"supports future product categories","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_future_003","type":"fact","text":"provides room for new experiments and releases","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_future_004","type":"fact","text":"evolves alongside the broader Unlim8ted ecosystem","topic":"unlim8ted_products"}
+{"id":"fact_unlim8ted_products_future_005","type":"fact","text":"serves as a foundation for future creations","topic":"unlim8ted_products"}

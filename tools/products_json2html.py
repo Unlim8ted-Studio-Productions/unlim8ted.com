@@ -1,5 +1,6 @@
 import json
 import html
+import os
 # Sample JSON Data
 data = [{
     "id": "unlim8ted-hardcover-bound-notebook",
@@ -604,7 +605,9 @@ def convert_to_html(data):
 html_result = convert_to_html(data)
 
 # Save the result to a txt file
-with open("output.txt", "w", encoding="utf-8") as file:
+output_path = "tools/generated/output.txt"
+os.makedirs(os.path.dirname(output_path), exist_ok=True)
+with open(output_path, "w", encoding="utf-8") as file:
     file.write(html_result)
 
-print("HTML has been generated and saved to 'output.txt'.")
+print(f"HTML has been generated and saved to '{output_path}'.")

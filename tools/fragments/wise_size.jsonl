@@ -1,0 +1,61 @@
+{"id":"entity_wise_size","type":"entity","text":"Wise Size","topic":"wise_size"}
+
+{"id":"fact_wise_size_fact_001","type":"fact","text":"a fit decision engine for online clothing purchases","topic":"wise_size"}
+{"id":"fact_wise_size_fact_002","type":"fact","text":"built to reduce uncertainty during apparel shopping","topic":"wise_size"}
+{"id":"fact_wise_size_fact_003","type":"fact","text":"focused on helping shoppers choose the correct size","topic":"wise_size"}
+{"id":"fact_wise_size_fact_004","type":"fact","text":"designed to reduce clothing returns caused by sizing mistakes","topic":"wise_size"}
+{"id":"fact_wise_size_fact_005","type":"fact","text":"a software product from Unlim8ted","topic":"wise_size"}
+{"id":"fact_wise_size_fact_006","type":"fact","text":"built around fit certainty rather than visual realism","topic":"wise_size"}
+{"id":"fact_wise_size_fact_007","type":"fact","text":"intended to improve confidence at the moment of purchase","topic":"wise_size"}
+{"id":"fact_wise_size_fact_008","type":"fact","text":"focused on decision making instead of product discovery","topic":"wise_size"}
+{"id":"fact_wise_size_fact_009","type":"fact","text":"designed as infrastructure for online retailers","topic":"wise_size"}
+{"id":"fact_wise_size_fact_010","type":"fact","text":"created to solve sizing uncertainty in ecommerce","topic":"wise_size"}
+{"id":"fact_wise_size_fact_011","type":"fact","text":"uses sizing information that shoppers already trust","topic":"wise_size"}
+{"id":"fact_wise_size_fact_012","type":"fact","text":"translates sizing information across brands","topic":"wise_size"}
+{"id":"fact_wise_size_fact_013","type":"fact","text":"helps shoppers decide between size options","topic":"wise_size"}
+{"id":"fact_wise_size_fact_014","type":"fact","text":"built to increase trust in online apparel purchases","topic":"wise_size"}
+{"id":"fact_wise_size_fact_015","type":"fact","text":"aimed at reducing guesswork during checkout","topic":"wise_size"}
+
+{"id":"fact_wise_size_engine_001","type":"fact","text":"outputs tight, true, or loose fit recommendations","topic":"wise_size"}
+{"id":"fact_wise_size_engine_002","type":"fact","text":"can recommend sizing up or sizing down","topic":"wise_size"}
+{"id":"fact_wise_size_engine_003","type":"fact","text":"provides a confidence score alongside recommendations","topic":"wise_size"}
+{"id":"fact_wise_size_engine_004","type":"fact","text":"builds a profile from clothing sizes users already wear","topic":"wise_size"}
+{"id":"fact_wise_size_engine_005","type":"fact","text":"supports cross-brand size translation","topic":"wise_size"}
+{"id":"fact_wise_size_engine_006","type":"fact","text":"treats sizing as a decision problem","topic":"wise_size"}
+{"id":"fact_wise_size_engine_007","type":"fact","text":"focuses on reliability over visual effects","topic":"wise_size"}
+{"id":"fact_wise_size_engine_008","type":"fact","text":"can incorporate optional body measurements","topic":"wise_size"}
+{"id":"fact_wise_size_engine_009","type":"fact","text":"uses refinement inputs to improve confidence","topic":"wise_size"}
+{"id":"fact_wise_size_engine_010","type":"fact","text":"attempts to make sizing recommendations understandable","topic":"wise_size"}
+
+{"id":"fact_wise_size_retail_001","type":"fact","text":"targets one of the largest causes of ecommerce returns","topic":"wise_size"}
+{"id":"fact_wise_size_retail_002","type":"fact","text":"treats returns as a business inefficiency","topic":"wise_size"}
+{"id":"fact_wise_size_retail_003","type":"fact","text":"focuses on apparel fit rather than fashion trends","topic":"wise_size"}
+{"id":"fact_wise_size_retail_004","type":"fact","text":"designed for integration into product pages","topic":"wise_size"}
+{"id":"fact_wise_size_retail_005","type":"fact","text":"intended to operate at the point where purchase decisions occur","topic":"wise_size"}
+{"id":"fact_wise_size_retail_006","type":"fact","text":"aims to reduce return shipping costs","topic":"wise_size"}
+{"id":"fact_wise_size_retail_007","type":"fact","text":"aims to improve customer confidence","topic":"wise_size"}
+{"id":"fact_wise_size_retail_008","type":"fact","text":"supports ecommerce merchants and apparel brands","topic":"wise_size"}
+{"id":"fact_wise_size_retail_009","type":"fact","text":"focuses on fit reliability as a competitive advantage","topic":"wise_size"}
+{"id":"fact_wise_size_retail_010","type":"fact","text":"views certainty as a business asset","topic":"wise_size"}
+
+{"id":"fact_wise_size_ai_001","type":"fact","text":"can optionally use image-based refinement","topic":"wise_size"}
+{"id":"fact_wise_size_ai_002","type":"fact","text":"does not depend entirely on AI-generated visuals","topic":"wise_size"}
+{"id":"fact_wise_size_ai_003","type":"fact","text":"treats virtual try-on as an optional downstream feature","topic":"wise_size"}
+{"id":"fact_wise_size_ai_004","type":"fact","text":"can function without photorealistic rendering","topic":"wise_size"}
+{"id":"fact_wise_size_ai_005","type":"fact","text":"prioritizes decision quality over visual quality","topic":"wise_size"}
+{"id":"fact_wise_size_ai_006","type":"fact","text":"uses AI as a supporting tool rather than the core product","topic":"wise_size"}
+{"id":"fact_wise_size_ai_007","type":"fact","text":"can combine sizing references with optional image data","topic":"wise_size"}
+{"id":"fact_wise_size_ai_008","type":"fact","text":"focuses on fit prediction rather than image generation","topic":"wise_size"}
+{"id":"fact_wise_size_ai_009","type":"fact","text":"treats confidence as more important than realism","topic":"wise_size"}
+{"id":"fact_wise_size_ai_010","type":"fact","text":"is designed around sizing intelligence rather than visual effects","topic":"wise_size"}
+
+{"id":"fact_wise_size_philosophy_001","type":"fact","text":"certainty is a core design principle","topic":"wise_size"}
+{"id":"fact_wise_size_philosophy_002","type":"fact","text":"trust is treated as part of the product","topic":"wise_size"}
+{"id":"fact_wise_size_philosophy_003","type":"fact","text":"reliability is valued over visual realism","topic":"wise_size"}
+{"id":"fact_wise_size_philosophy_004","type":"fact","text":"focuses on solving a specific consumer problem","topic":"wise_size"}
+{"id":"fact_wise_size_philosophy_005","type":"fact","text":"aims to eliminate sizing guesswork","topic":"wise_size"}
+{"id":"fact_wise_size_philosophy_006","type":"fact","text":"views fit decisions as infrastructure rather than marketing","topic":"wise_size"}
+{"id":"fact_wise_size_philosophy_007","type":"fact","text":"treats fit confidence as measurable value","topic":"wise_size"}
+{"id":"fact_wise_size_philosophy_008","type":"fact","text":"focuses on practical outcomes instead of novelty","topic":"wise_size"}
+{"id":"fact_wise_size_philosophy_009","type":"fact","text":"attempts to make online shopping more predictable","topic":"wise_size"}
+{"id":"fact_wise_size_philosophy_010","type":"fact","text":"positions fit certainty as the primary goal","topic":"wise_size"}

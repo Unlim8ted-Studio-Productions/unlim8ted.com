@@ -1,0 +1,396 @@
+    <!--______________________________START OF LOADING AND NOSCRIPT____________________________________-->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style media="screen" type="text/css">
+        .loader {
+            position: fixed;
+            background-color: black;
+            opacity: 1;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0%;
+            z-index: 999999988;
+            pointer-events: none;
+        }
+
+        .loaderr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            /* To stack spinner and text vertically */
+            height: 100vh;
+            /* Full viewport height to ensure vertical centering */
+        }
+
+        .loaderr {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top: 8px solid #3498db;
+            border-right: 8px solid #e74c3c;
+            border-bottom: 8px solid #f1c40f;
+            border-left: 8px solid #9b59b6;
+            -webkit-animation: spin 1.5s linear infinite;
+            animation: spin 1.5s linear infinite;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.7), 0 0 15px rgba(231, 76, 60, 0.7), 0 0 15px rgba(241, 196, 15, 0.7), 0 0 15px rgba(155, 89, 182, 0.7);
+            position: relative;
+        }
+
+        .loaderr:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top: 8px solid rgba(52, 152, 219, 0.7);
+            border-right: 8px solid rgba(231, 76, 60, 0.7);
+            border-bottom: 8px solid rgba(241, 196, 15, 0.7);
+            border-left: 8px solid rgba(155, 89, 182, 0.7);
+            -webkit-animation: spin-reverse 1.5s linear infinite;
+            animation: spin-reverse 1.5s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @-webkit-keyframes spin-reverse {
+            0% {
+                -webkit-transform: rotate(360deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(0deg);
+            }
+        }
+
+        @keyframes spin-reverse {
+            0% {
+                transform: rotate(360deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        /* Loading text animation */
+        .loading-text {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #3498db;
+            font-family: Arial, sans-serif;
+            letter-spacing: 2px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+
+        @-webkit-keyframes load-out {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes load-out {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+    <!-- Styles for the No-JavaScript message -->
+    <style>
+        .no-js-message {
+            background: #2c4762;
+            color: red;
+            font-size: 20px;
+            text-align: center;
+            padding: 20px;
+            z-index: 999999999999999999999999999999999999999999999;
+            position: fixed;
+            width: 100%;
+            top: 0;
+        }
+    </style>
+
+    <!-- No-JavaScript message -->
+    <noscript>
+        <div class="no-js-message">
+            Please enable JavaScript to use this website properly.
+        </div>
+    </noscript>
+    <div class="loader">
+        <div class="loaderr-container">
+            <div class="loaderr"></div>
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+    <script>
+        // This function will execute after the full page has finished loading
+        window.onload = function () {
+            // Trigger fade-out animation for the loader spinner
+            const loaderSpinner = document.querySelector('.loaderr');
+            const loadingText = document.querySelector('.loading-text');
+            const loaderContainer = document.querySelector('.loader');
+
+            // Apply animations
+            loaderSpinner.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+            loaderSpinner.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+            loadingText.style.animation = 'load-out 1.5s forwards, spin 2s linear infinite';
+            loadingText.style.webkitAnimation = 'load-out 1.5s forwards, spin 2s linear infinite';
+
+            loaderContainer.style.animation = 'load-out 4s forwards';
+            loaderContainer.style.webkitAnimation = 'load-out 4s forwards';
+
+
+        };
+
+    </script>
+    <!--______________________________END OF LOADING AND NOSCRIPT____________________________________-->
+        <style>
+        
+/* Navigation Bar Styles */
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #333333d0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 3;
+  }
+  
+  .nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+  }
+  
+  .nav-item {
+    position: relative;
+  }
+  
+  .nav-item a {
+    display: block;
+    color: white;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+  }
+  
+  .nav-item a:hover {
+    background-color: #15131f;
+    color: rgb(51, 207, 103);
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 3;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #1c1d38;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+    z-index: 3;
+  }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #251f1f;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+            padding: 12px 16px;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #2d2849;
+        }
+
+        .navbar-toggle {
+            display: none;
+            background-color: #333;
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                display: none;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .navbar-toggle {
+                display: block;
+            }
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById("navbarLinks");
+            navLinks.classList.toggle("show");
+        }
+    </script>
+  <nav class="navbar">
+    <div class="navbar-header">
+      <button class="navbar-toggle" style="position:absolute; top:5px; left:1%" onclick="toggleMenu()">☰</button>
+      <ul class="nav-links" id="navbarLinks">
+        <li class="nav-item"><a href="/">Home</a></li>
+        <li class="nav-item"><a href="products">Products</a></li>
+        <li class="nav-item"><a href="help">Help</a></li>
+        <li class="nav-item"><a href="about">About</a></li>
+        <li class="nav-item dropdown">
+          <a href="javascript:void(0)" class="dropbtn">More</a>
+          <div class="dropdown-content">
+            <a href="portfolio">Portfolio</a>
+            <a href="contact">Contact</a>
+            <a href="blog">Blog</a>
+            <a href="live-chat">Live Chat</a>
+            <a href="live-game">Live Chat and Game</a>
+            <a href="puzzle-squares">Puzzle Squares</a>
+          </div>
+        </li>
+        <a href="old"><button>Old site</button></a>
+      </ul>
+    </div>
+  </nav>
+    <style>
+        /* logo */
+        .logo {
+            position: absolute;
+            z-index: 1;
+            top: 5%;
+            /* Adjust top position relative to viewport height */
+            left: 5%;
+            /* Adjust left position relative to viewport width */
+            display: block;
+        }
+
+        .logo img {
+            height: 10vw;
+            /* Adjust height relative to viewport width */
+            max-height: 140px;
+            /* Set a maximum height to prevent the logo from getting too large on larger screens */
+            width: auto;
+            /* Maintain aspect ratio */
+        }
+
+        /* Media query for small devices */
+        @media (max-width: 600px) {
+            .logo img {
+                height: 20vw;
+                /* Larger logo for smaller devices */
+            }
+        }
+        button {
+      padding: 10px;
+      font-size: 1em;
+      background-color: #000000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: rgb(57, 200, 145);
+    }
+    .image {
+        max-width: 300px;
+        }
+                /* Cart button and notification styles */
+                .cart-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #0056b3;
+            color: #fff;
+            padding: 5px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+            display: block;
+            /* Initially hidden */
+        }
+
+        .cart-btn:hover {
+            background-color: #4179b5;
+        }
+    </style>
+    <a class="cart-btn" href="cart" style="font-size: larger; position: fixed; top: 30px">🛍️</a>

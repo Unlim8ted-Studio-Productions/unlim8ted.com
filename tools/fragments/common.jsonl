@@ -1,0 +1,115 @@
+{"id": "w_i", "type": "word", "text": "i"}
+{"id": "w_yes", "type": "word", "text": "yes"}
+{"id": "w_no", "type": "word", "text": "no"}
+{"id": "w_know", "type": "word", "text": "know"}
+{"id": "w_maybe", "type": "word", "text": "maybe"}
+{"id": "w_not", "type": "word", "text": "not"}
+{"id": "w_unknown", "type": "word", "text": "unknown"}
+{"id": "w_public", "type": "word", "text": "public"}
+{"id": "w_details", "type": "word", "text": "details"}
+{"id": "w_limited", "type": "word", "text": "limited"}
+{"id": "w_a", "type": "word", "text": "a"}
+{"id": "w_an", "type": "word", "text": "an"}
+{"id": "w_the", "type": "word", "text": "the"}
+{"id": "w_this", "type": "word", "text": "this"}
+{"id": "w_that", "type": "word", "text": "that"}
+{"id": "w_it", "type": "word", "text": "it"}
+{"id": "w_they", "type": "word", "text": "they"}
+{"id": "w_there", "type": "word", "text": "there"}
+{"id": "w_one", "type": "word", "text": "one"}
+{"id": "w_thing", "type": "word", "text": "thing"}
+{"id": "w_part", "type": "word", "text": "part"}
+{"id": "w_is", "type": "word", "text": "is"}
+{"id": "w_are", "type": "word", "text": "are"}
+{"id": "w_was", "type": "word", "text": "was"}
+{"id": "w_were", "type": "word", "text": "were"}
+{"id": "w_be", "type": "word", "text": "be"}
+{"id": "w_being", "type": "word", "text": "being"}
+{"id": "w_means", "type": "word", "text": "means"}
+{"id": "w_means_that", "type": "word", "text": "means that"}
+{"id": "w_has", "type": "word", "text": "has"}
+{"id": "w_have", "type": "word", "text": "have"}
+{"id": "w_uses", "type": "word", "text": "uses"}
+{"id": "w_involves", "type": "word", "text": "involves"}
+{"id": "w_includes", "type": "word", "text": "includes"}
+{"id": "w_explains", "type": "word", "text": "explains"}
+{"id": "w_describes", "type": "word", "text": "describes"}
+{"id": "w_studies", "type": "word", "text": "studies"}
+{"id": "w_asks", "type": "word", "text": "asks"}
+{"id": "w_helps", "type": "word", "text": "helps"}
+{"id": "w_shows", "type": "word", "text": "shows"}
+{"id": "w_connects", "type": "word", "text": "connects"}
+{"id": "w_focuses", "type": "word", "text": "focuses"}
+{"id": "w_depends", "type": "word", "text": "depends"}
+{"id": "w_can", "type": "word", "text": "can"}
+{"id": "w_may", "type": "word", "text": "may"}
+{"id": "w_might", "type": "word", "text": "might"}
+{"id": "w_should", "type": "word", "text": "should"}
+{"id": "w_does", "type": "word", "text": "does"}
+{"id": "w_do", "type": "word", "text": "do"}
+{"id": "w_did", "type": "word", "text": "did"}
+{"id": "w_about", "type": "word", "text": "about"}
+{"id": "w_around", "type": "word", "text": "around"}
+{"id": "w_with", "type": "word", "text": "with"}
+{"id": "w_without", "type": "word", "text": "without"}
+{"id": "w_from", "type": "word", "text": "from"}
+{"id": "w_for", "type": "word", "text": "for"}
+{"id": "w_to", "type": "word", "text": "to"}
+{"id": "w_into", "type": "word", "text": "into"}
+{"id": "w_through", "type": "word", "text": "through"}
+{"id": "w_because", "type": "word", "text": "because"}
+{"id": "w_if", "type": "word", "text": "if"}
+{"id": "w_so", "type": "word", "text": "so"}
+{"id": "w_and", "type": "word", "text": "and"}
+{"id": "w_or", "type": "word", "text": "or"}
+{"id": "w_but", "type": "word", "text": "but"}
+{"id": "w_also", "type": "word", "text": "also"}
+{"id": "w_while", "type": "word", "text": "while"}
+{"id": "w_when", "type": "word", "text": "when"}
+{"id": "w_where", "type": "word", "text": "where"}
+{"id": "w_why", "type": "word", "text": "why"}
+{"id": "w_how", "type": "word", "text": "how"}
+{"id": "w_as", "type": "word", "text": "as"}
+{"id": "w_by", "type": "word", "text": "by"}
+{"id": "w_of", "type": "word", "text": "of"}
+{"id": "w_on", "type": "word", "text": "on"}
+{"id": "w_in", "type": "word", "text": "in"}
+{"id": "w_at", "type": "word", "text": "at"}
+{"id": "w_basically", "type": "word", "text": "basically"}
+{"id": "w_actually", "type": "word", "text": "actually"}
+{"id": "w_mostly", "type": "word", "text": "mostly"}
+{"id": "w_probably", "type": "word", "text": "probably"}
+{"id": "w_usually", "type": "word", "text": "usually"}
+{"id": "w_simply", "type": "word", "text": "simply"}
+{"id": "w_officially", "type": "word", "text": "officially"}
+{"id": "w_safely", "type": "word", "text": "safely"}
+{"id": "w_roughly", "type": "word", "text": "roughly"}
+{"id": "w_clearly", "type": "word", "text": "clearly"}
+{"id": "w_mainly", "type": "word", "text": "mainly"}
+{"id": "w_generally", "type": "word", "text": "generally"}
+{"id": "p_period", "type": "punct", "text": "."}
+{"id": "p_comma", "type": "punct", "text": ","}
+{"id": "p_question", "type": "punct", "text": "?"}
+{"id": "p_bang", "type": "punct", "text": "!"}
+{"id": "p_colon", "type": "punct", "text": ":"}
+{"id": "p_semicolon", "type": "punct", "text": ";"}
+{"id": "transition_basic", "type": "transition", "text": "Basically"}
+{"id": "transition_short_answer", "type": "transition", "text": "Short answer"}
+{"id": "transition_simple", "type": "transition", "text": "Simply put"}
+{"id": "transition_safe", "type": "transition", "text": "The safe answer"}
+{"id": "transition_from_known", "type": "transition", "text": "From what is known"}
+{"id": "transition_good_way", "type": "transition", "text": "A good way to say it"}
+{"id": "transition_main_idea", "type": "transition", "text": "The main idea"}
+{"id": "transition_one_thing", "type": "transition", "text": "One useful way to frame it"}
+{"id": "transition_in_unlim8ted_terms", "type": "transition", "text": "In Unlim8ted terms"}
+{"id": "transition_not_exact", "type": "transition", "text": "Not exactly"}
+{"id": "transition_yes", "type": "transition", "text": "Yes"}
+{"id": "transition_no", "type": "transition", "text": "No"}
+{"id": "transition_maybe", "type": "transition", "text": "Maybe"}
+{"id": "transition_about_that", "type": "transition", "text": "About that"}
+{"id": "transition_here", "type": "transition", "text": "Here is the clean version"}
+{"id": "joiner_and", "type": "joiner", "text": "and"}
+{"id": "joiner_but", "type": "joiner", "text": "but"}
+{"id": "joiner_so", "type": "joiner", "text": "so"}
+{"id": "joiner_because", "type": "joiner", "text": "because"}
+{"id": "joiner_also", "type": "joiner", "text": "also"}

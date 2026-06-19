@@ -1,0 +1,30 @@
+{
+  "model_type": "question_to_answer_chunks_gru",
+  "dataset_path": "assets/data/smart-meatball-data.jsonl",
+  "input_type": "bag_of_words_ngrams",
+  "input_ngrams": [
+    1,
+    2,
+    3
+  ],
+  "max_input_vocab_size": 12000,
+  "output_type": "mined_answer_chunks",
+  "min_chunk_freq": 2,
+  "min_chunk_words": 2,
+  "max_chunk_words": 8,
+  "max_output_chunks": 32,
+  "max_output_vocab_size": 6000,
+  "hidden_size": 192,
+  "embed_size": 128,
+  "dropout": 0.35,
+  "pad_id": 0,
+  "bos_id": 1,
+  "eos_id": 2,
+  "unk_id": 3,
+  "model_pt_path": "assets/models/meatball_chunk_answer_model/meatball_chunk_answer_model.pt",
+  "input_vocab_path": "assets/models/meatball_chunk_answer_model/input_vocab.json",
+  "output_chunks_path": "assets/models/meatball_chunk_answer_model/output_chunks.json",
+  "encoder_onnx_path": "assets/models/meatball_chunk_answer_model/meatball_chunk_encoder.onnx",
+  "decoder_onnx_path": "assets/models/meatball_chunk_answer_model/meatball_chunk_decoder_step.onnx",
+  "note": "This model predicts ordered answer chunk IDs mined from smart-meatball-data.jsonl. It does not use an LLM."
+}

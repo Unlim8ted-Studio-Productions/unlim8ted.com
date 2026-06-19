@@ -1,0 +1,10 @@
+{
+  "input_size": 8000,
+  "hidden_size": 256,
+  "output_size": 307,
+  "dropout": 0.35,
+  "threshold": 0.55,
+  "top_k": 4,
+  "margin": 0.18,
+  "tokenizer": "lowercase words + bigrams + trigrams, log1p bag of words"
+}

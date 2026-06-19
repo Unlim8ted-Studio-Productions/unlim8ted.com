@@ -1,0 +1,11 @@
+{
+  "input_size": 12000,
+  "hidden_size": 384,
+  "output_size": 1140,
+  "dropout": 0.35,
+  "threshold": 0.5,
+  "top_k": 8,
+  "margin": 0.22,
+  "unknown_id": "i_cant_i_dont_know",
+  "tokenizer": "lowercase words + bigrams + trigrams, log1p bag of words"
+}

@@ -1,4 +1,5 @@
 import json
+import os
 
 
 products = [
@@ -362,8 +363,8 @@ for product in products:
 
 
 # Save updated products as JSON
-
-output_file = "output.json"
+output_file = "tools/generated/output.json"
+os.makedirs(os.path.dirname(output_file), exist_ok=True)
 with open(output_file, "w") as f:
     json.dump(products, f, indent=4)
 

@@ -1,0 +1,6 @@
+{"id": "entity_snow", "type": "entity", "text": "Snow", "topic": "snow"}
+{"id": "fact_object_snow_001", "type": "fact", "text": "frozen precipitation made of ice crystals", "topic": "snow", "source_id": "object_snow_001", "original_text": "Snow is frozen precipitation made of ice crystals.", "phrase_kind": "is_predicate"}
+{"id": "fact_object_snow_002", "type": "fact", "text": "snow forms when water vapor freezes in cold clouds", "topic": "snow", "source_id": "object_snow_002", "original_text": "Snow forms when water vapor freezes in cold clouds.", "phrase_kind": "fact_phrase"}
+{"id": "fact_object_snow_003", "type": "fact", "text": "snowflakes often have six-sided crystal patterns", "topic": "snow", "source_id": "object_snow_003", "original_text": "Snowflakes often have six-sided crystal patterns.", "phrase_kind": "fact_phrase"}
+{"id": "fact_object_snow_004", "type": "fact", "text": "snow can insulate the ground and store freshwater until it melts", "topic": "snow", "source_id": "object_snow_004", "original_text": "Snow can insulate the ground and store freshwater until it melts.", "phrase_kind": "fact_phrase"}
+{"id": "fact_object_snow_005", "type": "fact", "text": "snow frozen sky confetti", "topic": "snow", "source_id": "object_snow_005", "original_text": "The meatball considers snow frozen sky confetti.", "phrase_kind": "voice_phrase"}

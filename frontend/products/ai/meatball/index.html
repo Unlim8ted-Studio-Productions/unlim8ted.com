@@ -349,69 +349,36 @@
     }
 
     .meatballDisplay .meatballAvatar-eye {
-      top: 27%;
-      width: clamp(12px, 12%, 22px);
-      height: clamp(12px, 12%, 22px);
+      top: 30.95%;
+      width: clamp(14px, 19.05%, 28px);
+      height: clamp(14px, 19.05%, 28px);
       z-index: 4;
     }
 
     .meatballDisplay .meatballAvatar-eye.left {
-      left: 24%;
+      left: 26.19%;
     }
 
     .meatballDisplay .meatballAvatar-eye.right {
-      right: 24%;
+      right: 26.19%;
     }
 
     .meatballDisplay .meatballAvatar-eye .pupil {
-      width: clamp(6px, 46%, 10px);
-      height: clamp(6px, 46%, 10px);
+      width: clamp(7px, 9.52%, 13px);
+      height: clamp(7px, 9.52%, 13px);
       transform: translate(-50%, -50%);
     }
 
     .meatballDisplay .meatballAvatar-mouth {
-      bottom: 21%;
-      width: clamp(26px, 24%, 40px);
-      height: clamp(10px, 10%, 18px);
+      bottom: 20.24%;
+      width: clamp(24px, 35.71%, 44px);
+      height: clamp(11px, 16.67%, 20px);
       z-index: 3;
       transform-origin: 50% 50%;
     }
 
     .meatballDisplay .meatballAvatar.talking .meatballAvatar-mouth {
       animation: meatballTalk 0.18s infinite steps(2, end);
-    }
-
-    .meatballSpeech {
-      position: absolute;
-      top: 18px;
-      left: 18px;
-      right: 18px;
-      z-index: 4;
-      padding: 12px 14px;
-      border-radius: 18px 18px 18px 6px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: rgba(255, 247, 231, 0.92);
-      color: #2b170e;
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.26);
-      font-size: 13px;
-      line-height: 1.25;
-      font-weight: 900;
-      letter-spacing: -0.01em;
-      text-align: left;
-      transform: rotate(-2deg);
-    }
-
-    .meatballSpeech::after {
-      content: "";
-      position: absolute;
-      left: 34px;
-      bottom: -10px;
-      width: 18px;
-      height: 18px;
-      background: rgba(255, 247, 231, 0.92);
-      border-right: 1px solid rgba(255, 255, 255, 0.18);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-      transform: rotate(45deg);
     }
 
     @keyframes meatballTalk {
@@ -503,15 +470,6 @@
       .meatballDisplay {
         --meatball-size: clamp(86px, 23vw, 124px);
         width: min(220px, 58vw);
-      }
-
-      .meatballSpeech {
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        padding: 8px 10px;
-        font-size: 10px;
-        line-height: 1.18;
       }
 
       .chatShell {
@@ -613,19 +571,19 @@
 
     @media (max-width: 390px) {
       .meatballDisplay .meatballAvatar-eye {
-        top: 25%;
+        top: 30.95%;
       }
 
       .meatballDisplay .meatballAvatar-eye.left {
-        left: 22%;
+        left: 26.19%;
       }
 
       .meatballDisplay .meatballAvatar-eye.right {
-        right: 22%;
+        right: 26.19%;
       }
 
       .meatballDisplay .meatballAvatar-mouth {
-        bottom: 19%;
+        bottom: 20.24%;
       }
       .sub {
         display: none;
@@ -648,9 +606,6 @@
         min-height: 124px;
       }
 
-      .meatballSpeech {
-        font-size: 9px;
-      }
     }
 
     @media (max-height: 720px) {
@@ -805,7 +760,6 @@
 
       <aside class="panel meatballStage">
         <div class="meatballDisplay" aria-hidden="true">
-          <div class="meatballSpeech">I’m the other meatball’s bigger, smarter brother.</div>
           <div id="bigMeatballAvatar" class="meatballAvatar">
             <span class="meatballAvatar-shadow"></span>
             <span class="meatballAvatar-body">

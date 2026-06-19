@@ -1,0 +1,6 @@
+﻿{"id":"entity_baby","type":"entity","text":"Baby","topic":"baby"}
+{"id":"fact_object_baby_001","type":"fact","text":"a very young child or animal","topic":"baby","source_id":"object_baby_001","original_text":"Baby is a very young child or animal.","phrase_kind":"is_predicate"}
+{"id":"fact_object_baby_002","type":"fact","text":"baby has traits, parts, or behaviors that help it survive","topic":"baby","source_id":"object_baby_002","original_text":"Baby has traits, parts, or behaviors that help it survive.","phrase_kind":"fact_phrase"}
+{"id":"fact_object_baby_003","type":"fact","text":"baby can grow, change, and interact with its environment","topic":"baby","source_id":"object_baby_003","original_text":"Baby can grow, change, and interact with its environment.","phrase_kind":"fact_phrase"}
+{"id":"fact_object_baby_004","type":"fact","text":"people study baby to learn about life, needs, habitats, development, or behavior","topic":"baby","source_id":"object_baby_004","original_text":"People study baby to learn about life, needs, habitats, development, or behavior.","phrase_kind":"fact_phrase"}
+{"id":"fact_object_baby_005","type":"fact","text":"the meatball treats baby like a full-time biology employee","topic":"baby","source_id":"object_baby_005","original_text":"The meatball treats baby like a full-time biology employee.","phrase_kind":"voice_phrase"}

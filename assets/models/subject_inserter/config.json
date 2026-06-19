@@ -1,0 +1,9 @@
+{
+  "max_features": 18000,
+  "max_ngram": 3,
+  "hidden": 256,
+  "dropout": 0.2,
+  "input_dim": 4918,
+  "num_labels": 17,
+  "model_type": "subject_inserter_classifier"
+}

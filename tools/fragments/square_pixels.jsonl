@@ -1,0 +1,57 @@
+{"id":"entity_square_pixels","type":"entity","text":"Square Pixels","topic":"square_pixels"}
+
+{"id":"fact_square_pixels_fact_001","type":"fact","text":"a sandbox adventure game project from Unlim8ted","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_002","type":"fact","text":"inspired by games like Terraria","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_003","type":"fact","text":"focused on exploration, crafting, and adventure","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_004","type":"fact","text":"set in a pixel-based world","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_005","type":"fact","text":"built around discovery and progression","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_006","type":"fact","text":"designed as a 2D sandbox experience","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_007","type":"fact","text":"centered on player freedom and experimentation","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_008","type":"fact","text":"part of the Unlim8ted game catalog","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_009","type":"fact","text":"focused on emergent gameplay","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_010","type":"fact","text":"built as an original game project","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_011","type":"fact","text":"includes resource gathering systems","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_012","type":"fact","text":"includes crafting mechanics","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_013","type":"fact","text":"includes construction and building systems","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_014","type":"fact","text":"supports exploration-driven gameplay","topic":"square_pixels"}
+{"id":"fact_square_pixels_fact_015","type":"fact","text":"combines survival and creativity","topic":"square_pixels"}
+
+{"id":"fact_square_pixels_world_001","type":"fact","text":"features a dynamically generated world","topic":"square_pixels"}
+{"id":"fact_square_pixels_world_002","type":"fact","text":"contains multiple biomes","topic":"square_pixels"}
+{"id":"fact_square_pixels_world_003","type":"fact","text":"includes hidden treasures to discover","topic":"square_pixels"}
+{"id":"fact_square_pixels_world_004","type":"fact","text":"encourages long-term exploration","topic":"square_pixels"}
+{"id":"fact_square_pixels_world_005","type":"fact","text":"contains locations with unique challenges","topic":"square_pixels"}
+{"id":"fact_square_pixels_world_006","type":"fact","text":"supports player-driven exploration paths","topic":"square_pixels"}
+{"id":"fact_square_pixels_world_007","type":"fact","text":"contains underground environments","topic":"square_pixels"}
+{"id":"fact_square_pixels_world_008","type":"fact","text":"contains valuable resources to collect","topic":"square_pixels"}
+{"id":"fact_square_pixels_world_009","type":"fact","text":"rewards curiosity and experimentation","topic":"square_pixels"}
+{"id":"fact_square_pixels_world_010","type":"fact","text":"designed to feel expansive and open-ended","topic":"square_pixels"}
+
+{"id":"fact_square_pixels_gameplay_001","type":"fact","text":"allows players to gather resources","topic":"square_pixels"}
+{"id":"fact_square_pixels_gameplay_002","type":"fact","text":"allows players to craft items","topic":"square_pixels"}
+{"id":"fact_square_pixels_gameplay_003","type":"fact","text":"allows players to construct structures","topic":"square_pixels"}
+{"id":"fact_square_pixels_gameplay_004","type":"fact","text":"encourages creative problem solving","topic":"square_pixels"}
+{"id":"fact_square_pixels_gameplay_005","type":"fact","text":"supports progression through exploration","topic":"square_pixels"}
+{"id":"fact_square_pixels_gameplay_006","type":"fact","text":"includes combat encounters","topic":"square_pixels"}
+{"id":"fact_square_pixels_gameplay_007","type":"fact","text":"includes hostile creatures","topic":"square_pixels"}
+{"id":"fact_square_pixels_gameplay_008","type":"fact","text":"includes boss-style challenges","topic":"square_pixels"}
+{"id":"fact_square_pixels_gameplay_009","type":"fact","text":"mixes action with sandbox mechanics","topic":"square_pixels"}
+{"id":"fact_square_pixels_gameplay_010","type":"fact","text":"supports multiple playstyles","topic":"square_pixels"}
+
+{"id":"fact_square_pixels_multiplayer_001","type":"fact","text":"supports cooperative play","topic":"square_pixels"}
+{"id":"fact_square_pixels_multiplayer_002","type":"fact","text":"allows players to explore together","topic":"square_pixels"}
+{"id":"fact_square_pixels_multiplayer_003","type":"fact","text":"encourages collaborative building","topic":"square_pixels"}
+{"id":"fact_square_pixels_multiplayer_004","type":"fact","text":"supports shared adventures","topic":"square_pixels"}
+{"id":"fact_square_pixels_multiplayer_005","type":"fact","text":"includes multiplayer-focused gameplay possibilities","topic":"square_pixels"}
+
+{"id":"fact_square_pixels_systems_001","type":"fact","text":"includes a day and night cycle","topic":"square_pixels"}
+{"id":"fact_square_pixels_systems_002","type":"fact","text":"changes gameplay conditions over time","topic":"square_pixels"}
+{"id":"fact_square_pixels_systems_003","type":"fact","text":"uses environmental systems to affect encounters","topic":"square_pixels"}
+{"id":"fact_square_pixels_systems_004","type":"fact","text":"supports evolving gameplay situations","topic":"square_pixels"}
+{"id":"fact_square_pixels_systems_005","type":"fact","text":"encourages adaptation to changing conditions","topic":"square_pixels"}
+
+{"id":"fact_square_pixels_modding_001","type":"fact","text":"supports community modification systems","topic":"square_pixels"}
+{"id":"fact_square_pixels_modding_002","type":"fact","text":"encourages expansion through mods","topic":"square_pixels"}
+{"id":"fact_square_pixels_modding_003","type":"fact","text":"designed with extensibility in mind","topic":"square_pixels"}
+{"id":"fact_square_pixels_modding_004","type":"fact","text":"allows the experience to grow beyond the base game","topic":"square_pixels"}
+{"id":"fact_square_pixels_modding_005","type":"fact","text":"supports player-created content","topic":"square_pixels"}

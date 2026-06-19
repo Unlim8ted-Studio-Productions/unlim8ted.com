@@ -29,7 +29,7 @@ REDIRECT_URL = (os.getenv("SQUARE_REDIRECT_URL") or "").strip() or None
 
 SLEEP_BETWEEN_CALLS_SEC = float(os.getenv("SQUARE_SLEEP_SEC") or "0.25")
 
-OUT_JSON = os.getenv("OUT_JSON") or "products_with_variant_buy_links.json"
+OUT_JSON = os.getenv("OUT_JSON") or "tools/generated/products_with_variant_buy_links.json"
 
 
 # ----------------------------
@@ -269,6 +269,7 @@ def build_products_json() -> List[Dict[str, Any]]:
 
 def main() -> None:
     products = build_products_json()
+    os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
     with open(OUT_JSON, "w", encoding="utf-8") as f:
         json.dump(products, f, ensure_ascii=False, indent=2)
 

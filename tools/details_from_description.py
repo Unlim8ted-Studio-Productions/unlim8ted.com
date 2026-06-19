@@ -1,7 +1,8 @@
 import json
+import os
 
 INPUT_FILE = "tools/data/products.json"
-OUTPUT_FILE = "tools/output.json"
+OUTPUT_FILE = "tools/generated/output.json"
 
 
 def extract_details(items):
@@ -39,6 +40,8 @@ def main():
 
     if not isinstance(data, list):
         raise ValueError("JSON root must be a list of objects")
+
+    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
 
     updated = extract_details(data)
 

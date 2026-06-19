@@ -1,0 +1,6 @@
+﻿{"id":"entity_eye","type":"entity","text":"Eye","topic":"eye"}
+{"id":"fact_object_eye_001","type":"fact","text":"the organ used for seeing","topic":"eye","source_id":"object_eye_001","original_text":"Eye is the organ used for seeing.","phrase_kind":"is_predicate"}
+{"id":"fact_object_eye_002","type":"fact","text":"eye helps a body sense, move, protect itself, or stay alive","topic":"eye","source_id":"object_eye_002","original_text":"Eye helps a body sense, move, protect itself, or stay alive.","phrase_kind":"fact_phrase"}
+{"id":"fact_object_eye_003","type":"fact","text":"eye can differ in size, shape, strength, number, or condition","topic":"eye","source_id":"object_eye_003","original_text":"Eye can differ in size, shape, strength, number, or condition.","phrase_kind":"fact_phrase"}
+{"id":"fact_object_eye_004","type":"fact","text":"people study eye to understand anatomy, health, growth, or behavior","topic":"eye","source_id":"object_eye_004","original_text":"People study eye to understand anatomy, health, growth, or behavior.","phrase_kind":"fact_phrase"}
+{"id":"fact_object_eye_005","type":"fact","text":"the meatball is strongly in favor of keeping eye in working order","topic":"eye","source_id":"object_eye_005","original_text":"The meatball is strongly in favor of keeping eye in working order.","phrase_kind":"voice_phrase"}
