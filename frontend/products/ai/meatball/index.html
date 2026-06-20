@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Unlim8ted - Talk to Meatball</title>
-  <meta name="description" content="Direct line to Meatball. Intent model and context model powered chatbot." />
+  <meta name="description" content="Direct line to Meatball. Browser ONNX chunk-model chatbot." />
 
   <script type="module" src="/components/site-navbar.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
@@ -120,6 +120,26 @@
       line-height: 1.45;
     }
 
+    .aboutLink {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 14px;
+      color: var(--accent-2);
+      font-weight: 900;
+      text-decoration: none;
+      border: 1px solid rgba(98, 214, 255, 0.22);
+      background: rgba(98, 214, 255, 0.08);
+      padding: 10px 14px;
+      border-radius: 999px;
+    }
+
+    .aboutLink:hover {
+      border-color: rgba(98, 214, 255, 0.42);
+      background: rgba(98, 214, 255, 0.14);
+    }
+
     .meatballStage {
       min-height: 0;
       display: grid;
@@ -160,7 +180,7 @@
       flex: 1;
       margin-top: clamp(10px, 2vh, 18px);
       display: grid;
-      grid-template-rows: minmax(0, 1fr) auto auto;
+      grid-template-rows: minmax(0, 1fr) auto;
       gap: clamp(10px, 1.8vh, 16px);
       padding: clamp(12px, 2.2vh, 18px);
       overflow: hidden;
@@ -216,14 +236,6 @@
       color: rgba(238, 247, 255, 0.92);
     }
 
-    .msg.system {
-      max-width: 100%;
-      background: rgba(255, 255, 255, 0.045);
-      border: 1px solid rgba(255, 255, 255, 0.075);
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
     .composer {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -276,89 +288,6 @@
     .composer button:disabled {
       cursor: wait;
       opacity: 0.62;
-    }
-
-    .controlRow {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 10px;
-    }
-
-    .modelPanel {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
-      gap: 12px;
-      align-items: end;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.045);
-    }
-
-    .modelCopy {
-      min-width: 0;
-    }
-
-    .modelLabel {
-      margin: 0 0 4px;
-      font-size: 0.8rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .modelMeta {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.35;
-    }
-
-    .modelSelect {
-      width: 100%;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: rgba(7, 13, 20, 0.72);
-      color: var(--text);
-      padding: 12px 14px;
-      font: inherit;
-      outline: none;
-    }
-
-    .modelSelect:focus {
-      border-color: rgba(98, 214, 255, 0.42);
-      box-shadow: 0 0 0 4px rgba(98, 214, 255, 0.08);
-    }
-
-    .noteRow {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .note {
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      font-weight: 800;
-    }
-
-    .note.good {
-      color: rgba(157, 255, 191, 0.9);
-      border-color: rgba(157, 255, 191, 0.22);
-      background: rgba(157, 255, 191, 0.06);
-    }
-
-    .note.bad {
-      color: rgba(255, 120, 120, 0.9);
-      border-color: rgba(255, 120, 120, 0.22);
-      background: rgba(255, 120, 120, 0.06);
     }
 
     .debugPanel {
@@ -457,17 +386,6 @@
       }
     }
 
-    @media (min-width: 861px) and (min-height: 701px) {
-      body {
-        overflow: hidden;
-      }
-
-      .page {
-        height: 100vh;
-        height: 100dvh;
-      }
-    }
-
     @media (max-width: 980px) {
       .hero {
         grid-template-columns: minmax(0, 1fr) minmax(220px, 0.72fr);
@@ -482,10 +400,6 @@
       :root {
         --page-pad-x: clamp(10px, 3vw, 18px);
         --nav-space: 74px;
-      }
-
-      body {
-        overflow: hidden;
       }
 
       .page {
@@ -509,13 +423,10 @@
       }
 
       .intro {
-        min-height: 0;
         height: 100%;
-        overflow: hidden;
       }
 
       .meatballStage {
-        min-height: 0;
         height: 100%;
         padding: 10px;
       }
@@ -538,10 +449,6 @@
         width: 90px;
         height: 54px;
       }
-
-      .modelPanel {
-        grid-template-columns: 1fr;
-      }
     }
 
     @media (max-width: 600px) {
@@ -554,14 +461,9 @@
         width: calc(100% - 20px);
       }
 
-      .hero {
-        min-height: 0;
-      }
-
       .intro {
         padding: 14px;
         border-radius: 22px;
-        min-height: 0;
       }
 
       h1 {
@@ -574,6 +476,12 @@
         line-height: 1.38;
       }
 
+      .aboutLink {
+        margin-top: 10px;
+        padding: 9px 12px;
+        font-size: 0.86rem;
+      }
+
       .chatShell {
         margin-top: 12px;
         padding: 10px;
@@ -584,7 +492,6 @@
       .chatLog {
         padding: 10px;
         gap: 10px;
-        max-height: 100%;
       }
 
       .msg.bot {
@@ -615,10 +522,6 @@
         border-radius: 16px;
       }
 
-      .modelPanel {
-        padding: 12px;
-      }
-
       .meatballStage {
         min-height: 136px;
         border-radius: 22px;
@@ -631,27 +534,8 @@
     }
 
     @media (max-width: 390px) {
-      .meatballDisplay .meatballAvatar-eye {
-        top: 30.95%;
-      }
-
-      .meatballDisplay .meatballAvatar-eye.left {
-        left: 26.19%;
-      }
-
-      .meatballDisplay .meatballAvatar-eye.right {
-        right: 26.19%;
-      }
-
-      .meatballDisplay .meatballAvatar-mouth {
-        bottom: 20.24%;
-      }
       .sub {
         display: none;
-      }
-
-      .intro {
-        min-height: 0;
       }
 
       .chatShell {
@@ -666,7 +550,6 @@
       .meatballStage {
         min-height: 124px;
       }
-
     }
 
     @media (max-height: 720px) {
@@ -741,15 +624,6 @@
         grid-template-rows: 1fr;
       }
 
-      .intro {
-        min-height: 0;
-        height: 100%;
-      }
-
-      .meatballStage {
-        min-height: 0;
-      }
-
       .meatballDisplay {
         --meatball-size: clamp(72px, 15vw, 100px);
         width: min(170px, 34vw);
@@ -760,7 +634,6 @@
       }
     }
 
-    /* Hard overflow lock: long answers must scroll inside the chat/answer box, not stretch the page. */
     .intro,
     .chatShell,
     .chatLog {
@@ -801,36 +674,14 @@
       <section class="panel intro">
         <h1>A smarter Meatball</h1>
         <p class="sub">
-          Meatball now uses intent, context, a specialized topic router, and switchable local knowledge banks. The sauce is on.
+          Meatball uses subject models, a topic selector, and specialized ONNX chunk models. The sauce is on.
         </p>
 
+        <a class="aboutLink" href="/about">Click to Learn About the Meatball AI</a>
+
         <div class="chatShell">
-          <div class="controlRow">
-            <div class="modelPanel" aria-label="Model controls">
-              <div class="modelCopy">
-                <p class="modelLabel">Model Stack</p>
-                <p id="modelMeta" class="modelMeta">Loading brains, routers, and sauce selectors.</p>
-              </div>
-              <label>
-                <span class="modelLabel">Selector</span>
-                <select id="modelSelector" class="modelSelect" disabled>
-                  <option value="default">Loading models...</option>
-                </select>
-              </label>
-            </div>
-
-            <div class="noteRow" id="statusRow">
-              <span id="intentStatus" class="note">Intent loading</span>
-              <span id="contextStatus" class="note">Context loading</span>
-              <span id="routingStatus" class="note">Router loading</span>
-              <span id="inserterStatus" class="note">Inserter loading</span>
-              <span id="finderStatus" class="note">Finder probing</span>
-              <span id="dataStatus" class="note">Data loading</span>
-            </div>
-          </div>
-
           <div id="chatLog" class="chatLog" aria-label="Conversation log">
-            <div class="msg bot">I am loading my tiny brain. Sauce may take one second.</div>
+            <div class="msg bot">Loading Meatball.</div>
           </div>
 
           <form id="chatForm" class="composer" aria-label="Meatball chat composer">
@@ -857,56 +708,32 @@
     </section>
   </main>
 
-
   <script>
-    const SPECIALIZED_TOPICS = [
-      "ai", "animals", "art", "biology", "birds", "books", "chemistry", "countries",
-      "earth_science", "food", "games", "general", "health_basics", "history",
-      "insects", "math", "movies", "music", "objects", "physics", "plants",
-      "space", "sports", "technology", "unlim8ted", "vehicles"
-    ];
+    const INPUT_NGRAMS = [1, 2, 3];
 
-    const MODEL_SELECTOR_OPTIONS = [
-      { value: "default", label: "Default Hybrid", description: "Intent plus context plus the main Meatball bank." },
-      { value: "specialized_auto", label: "Specialized Auto", description: "Routes each question into the best specialized subject bank." },
-      { value: "subject_inserter", label: "Subject Inserter Assist", description: "Keeps the main bank but scores follow-up rewrite intent." },
-      ...SPECIALIZED_TOPICS.map(topic => ({
-        value: `topic:${topic}`,
-        label: `Topic: ${topic.replace(/_/g, " ")}`,
-        description: `Locks Meatball onto the ${topic.replace(/_/g, " ")} bank.`
-      }))
-    ];
+    const PAD_ID = 0;
+    const BOS_ID = 1;
+    const EOS_ID = 2;
+    const UNK_ID = 3;
 
     const MODEL_PATHS = {
-      intentModel: "/assets/models/intent-model/meatball_intent.onnx",
-      intentMetadata: "/assets/models/intent-model/meatball_metadata.json",
+      base: "/assets/models/specialized_meatball_chunks",
 
-      contextModel: "/assets/models/context-model/meatball_context.onnx",
-      contextMetadata: "/assets/models/context-model/meatball_context_metadata.json",
+      selectorModel: "/assets/models/specialized_meatball_chunks/selector.onnx",
+      selectorVocab: "/assets/models/specialized_meatball_chunks/selector_vocab.json",
+      selectorLabels: "/assets/models/specialized_meatball_chunks/selector_labels.json",
 
-      specializedSelectorModel: "/assets/models/specialized_meatball_chunks/selector.onnx",
-      specializedSelectorConfig: "/assets/models/specialized_meatball_chunks/selector_config.json",
-      specializedSelectorLabels: "/assets/models/specialized_meatball_chunks/selector_labels.json",
-      specializedSelectorVocab: "/assets/models/specialized_meatball_chunks/selector_vocab.json",
+      subjectFinderModel: "/assets/models/subject_finder/subject_finder.onnx",
+      subjectFinderConfig: "/assets/models/subject_finder/config.json",
+      subjectFinderVocab: "/assets/models/subject_finder/vocab.json",
+      subjectFinderLabels: "/assets/models/subject_finder/labels.json",
 
       subjectInserterModel: "/assets/models/subject_inserter/subject_inserter.onnx",
       subjectInserterConfig: "/assets/models/subject_inserter/config.json",
       subjectInserterLabels: "/assets/models/subject_inserter/labels.json",
       subjectInserterVocab: "/assets/models/subject_inserter/vocab.json",
 
-      subjectFinderConfig: "/assets/models/subject_finder/config.json",
-      specializedDataBase: "/assets/data/specialized_QA",
-
-      answerBankCandidates: [
-        "/assets/data/Smart-Meatball-Intent-Combined.jsonl",
-        "/assets/data/Smart-Meatball-Intent-Combined.json",
-        "/assets/data/Smart-Meatball-Data.jsonl",
-        "/assets/data/Smart-Meatball-Data.json",
-        "https://assets.unlim8ted.com/data/Smart-Meatball-Intent-Combined.jsonl",
-        "https://assets.unlim8ted.com/data/Smart-Meatball-Intent-Combined.json",
-        "https://assets.unlim8ted.com/data/Smart-Meatball-Data.jsonl",
-        "https://assets.unlim8ted.com/data/Smart-Meatball-Data.json"
-      ]
+      topicsBase: "/assets/models/specialized_meatball_chunks/topics"
     };
 
     const DEBUG_ENABLED = new URLSearchParams(location.search).has("debug");
@@ -917,44 +744,28 @@
     const sendButton = document.getElementById("sendButton");
     const debugPanel = document.getElementById("debugPanel");
     const bigMeatballAvatar = document.getElementById("bigMeatballAvatar");
-    const modelSelector = document.getElementById("modelSelector");
-    const modelMeta = document.getElementById("modelMeta");
 
-    const intentStatus = document.getElementById("intentStatus");
-    const contextStatus = document.getElementById("contextStatus");
-    const routingStatus = document.getElementById("routingStatus");
-    const inserterStatus = document.getElementById("inserterStatus");
-    const finderStatus = document.getElementById("finderStatus");
-    const dataStatus = document.getElementById("dataStatus");
-
-    let intentBrain = null;
-    let contextBrain = null;
-    let specializedRouter = null;
-    let subjectInserter = null;
-    let subjectFinderInfo = null;
-    let answerRows = [];
-    let rowsByIntent = new Map();
+    let selectorRuntime = null;
+    let subjectFinderRuntime = null;
+    let subjectInserterRuntime = null;
+    let topicRuntimeCache = new Map();
     let talkTimer = null;
-    let answerBankCache = new Map();
-    let currentAnswerBankKey = "";
-    let currentAnswerBankLabel = "Default Hybrid";
-    let currentMode = "default";
 
     let memory = {
-      last_intent: "none",
-      last_project_key: "none",
-      last_category: "none",
-      last_answer_text: "",
-      message_count: 0,
-      confusion_count: 0,
-      topic_switch_count: 0
+      lastSubject: "",
+      lastTopic: "",
+      lastQuestion: "",
+      lastAnswer: "",
+      history: []
     };
 
-    function setStatus(el, text, state) {
-      if (!el) return;
-      el.textContent = text;
-      el.classList.remove("good", "bad");
-      if (state) el.classList.add(state);
+    function getTopicPaths(topic) {
+      return {
+        model: `${MODEL_PATHS.topicsBase}/${topic}/model.onnx`,
+        config: `${MODEL_PATHS.topicsBase}/${topic}/config.json`,
+        inputVocab: `${MODEL_PATHS.topicsBase}/${topic}/input_vocab.json`,
+        outputChunks: `${MODEL_PATHS.topicsBase}/${topic}/output_chunks.json`
+      };
     }
 
     function addMessage(role, text) {
@@ -996,25 +807,111 @@
       debugPanel.textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
     }
 
-    function normalizeText(text) {
+    async function fetchJson(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`${url} failed with ${res.status}`);
+      return await res.json();
+    }
+
+    async function createSession(url) {
+      return await ort.InferenceSession.create(url, {
+        executionProviders: ["wasm"]
+      });
+    }
+
+    async function runSession(session, inputs) {
+      return await session.run(inputs);
+    }
+
+    async function runSessionWithFirstInput(session, tensor) {
+      const inputName = session.inputNames?.[0] || "input";
+      return await session.run({ [inputName]: tensor });
+    }
+
+    function firstOutput(outputs) {
+      const key = Object.keys(outputs)[0];
+      return outputs[key];
+    }
+
+    function labelsFromIndexObject(data) {
+      if (Array.isArray(data)) return data;
+      if (!data || typeof data !== "object") return [];
+
+      return Object.keys(data)
+        .sort((a, b) => Number(a) - Number(b))
+        .map(key => data[key]);
+    }
+
+    function inputNormalize(text) {
       return String(text || "")
         .toLowerCase()
-        .replace(/[“”]/g, '"')
-        .replace(/[‘’]/g, "'")
-        .replace(/[^a-z0-9?!.,'"\s:_/\-|=+#@&()%]/g, " ")
+        .replace(/\n/g, " ")
+        .replace(/[^a-z0-9_!?.,' -]+/g, " ")
         .replace(/\s+/g, " ")
         .trim();
     }
 
-    function fnv1aHash(str) {
-      let hash = 2166136261;
+    function inputTokenize(text) {
+      const clean = inputNormalize(text);
+      if (!clean) return [];
+      return clean.split(/\s+/).filter(Boolean);
+    }
 
-      for (let i = 0; i < str.length; i++) {
-        hash ^= str.charCodeAt(i);
-        hash = Math.imul(hash, 16777619);
+    function makeInputNgrams(tokens, ngrams = INPUT_NGRAMS) {
+      const feats = [];
+
+      for (const n of ngrams) {
+        if (tokens.length < n) continue;
+
+        for (let i = 0; i <= tokens.length - n; i++) {
+          feats.push(tokens.slice(i, i + n).join("_"));
+        }
       }
 
-      return hash >>> 0;
+      return feats;
+    }
+
+    function rowToInputText(question, history = []) {
+      const historyText = Array.isArray(history)
+        ? history.map(x => String(x)).join(" ")
+        : String(history || "");
+
+      return `question: ${question} history: ${historyText}`;
+    }
+
+    function selectorTextFromQuestion(question) {
+      return `question: ${question}`;
+    }
+
+    function vectorizeText(text, vocab) {
+      const tokens = inputTokenize(text);
+      const feats = makeInputNgrams(tokens);
+      const size = Object.keys(vocab || {}).length;
+      const x = new Float32Array(size);
+      const counts = new Map();
+
+      for (const feat of feats) {
+        counts.set(feat, (counts.get(feat) || 0) + 1);
+      }
+
+      const unk = typeof vocab["<UNK>"] === "number" ? vocab["<UNK>"] : UNK_ID;
+
+      for (const [feat, count] of counts.entries()) {
+        const idx = typeof vocab[feat] === "number" ? vocab[feat] : unk;
+        if (idx >= 0 && idx < x.length) {
+          x[idx] = Math.min(Number(count), 5.0);
+        }
+      }
+
+      return x;
+    }
+
+    function vectorizeSelectorQuestion(question, selectorVocab) {
+      return vectorizeText(selectorTextFromQuestion(question), selectorVocab);
+    }
+
+    function vectorizeTopicQuestion(question, inputVocab, history = []) {
+      return vectorizeText(rowToInputText(question, history), inputVocab);
     }
 
     function softmax(arr) {
@@ -1024,416 +921,195 @@
       return exp.map(x => x / sum);
     }
 
-    function textToVector(text, config = {}) {
-      const featureSize =
-        config.feature_size ||
-        config.input_size ||
-        config.input_dim ||
-        config.vocab_size ||
-        config.max_input_vocab_size ||
-        config.max_features ||
-        4096;
-      const ngrams = Array.isArray(config.input_ngrams) && config.input_ngrams.length
-        ? config.input_ngrams
-        : null;
-      const ngramMin = ngrams ? Math.min(...ngrams) : (config.ngram_min || 2);
-      const ngramMax = ngrams ? Math.max(...ngrams) : (config.ngram_max || 5);
+    function joinChunkTexts(chunks) {
+      let out = "";
 
-      // IMPORTANT: this must match tools/intent_nueral_net_train.py
-      // and tools/context_neural_net_train.py exactly. The model was trained
-      // with leading/trailing spaces and the word: prefix.
-      const clean = ` ${normalizeText(text)} `;
+      for (let chunk of chunks) {
+        chunk = String(chunk || "").trim();
 
-      const vec = new Float32Array(featureSize);
+        if (!chunk) continue;
 
-      for (let n = ngramMin; n <= ngramMax; n++) {
-        for (let i = 0; i <= clean.length - n; i++) {
-          const gram = clean.slice(i, i + n);
-          const idx = fnv1aHash(gram) % featureSize;
-          vec[idx] += 1.0;
+        if ([".", ",", "!", "?", ":", ";", "%", ")", "]", "}"].includes(chunk)) {
+          out = out.trimEnd() + chunk;
+        } else if (["(", "[", "{"].includes(chunk)) {
+          if (out && !out.endsWith(" ")) out += " ";
+          out += chunk;
+        } else if (chunk.startsWith("'") || chunk.startsWith("’")) {
+          out = out.trimEnd() + chunk;
+        } else {
+          if (out && !out.endsWith(" ") && !out.endsWith("(") && !out.endsWith("[") && !out.endsWith("{") && !out.endsWith("'") && !out.endsWith("’")) {
+            out += " ";
+          }
+
+          out += chunk;
         }
       }
 
-      const words = clean.trim().split(/\s+/).filter(Boolean);
-
-      for (const word of words) {
-        const idx = fnv1aHash("word:" + word) % featureSize;
-        vec[idx] += 1.5;
-      }
-
-      let norm = 0;
-      for (let i = 0; i < vec.length; i++) norm += vec[i] * vec[i];
-
-      norm = Math.sqrt(norm) || 1;
-
-      for (let i = 0; i < vec.length; i++) vec[i] /= norm;
-
-      return vec;
+      return out.replace(/\s+/g, " ").trim();
     }
 
-    function normalizeFeatureText(text) {
-      return String(text || "")
+    function decodeChunkIds(ids, outputChunks) {
+      const texts = [];
+
+      for (const rawIdx of ids) {
+        const idx = Number(rawIdx);
+
+        if (idx === EOS_ID) break;
+        if (idx === PAD_ID || idx === BOS_ID || idx === UNK_ID) continue;
+
+        if (idx >= 0 && idx < outputChunks.length) {
+          const chunk = outputChunks[idx];
+          const text = typeof chunk === "string" ? chunk : chunk.text;
+          texts.push(text);
+        }
+      }
+
+      return joinChunkTexts(texts);
+    }
+
+    function normalizeAction(action) {
+      return String(action || "")
         .toLowerCase()
         .trim()
-        .replace(/[^a-z0-9_'?!.:,/ -]+/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
+        .replace(/\s+/g, "_");
     }
 
-    function tokenizeFeatureText(text) {
-      return normalizeFeatureText(text).match(/[a-z0-9_']+|[?!.:,/]/g) || [];
+    function replacePronounsWithSubject(message, subject) {
+      if (!subject) return message;
+
+      let q = String(message || "");
+
+      q = q.replace(/\bthe company\b/gi, subject);
+      q = q.replace(/\bthe project\b/gi, subject);
+      q = q.replace(/\bthe film\b/gi, subject);
+      q = q.replace(/\bthe game\b/gi, subject);
+      q = q.replace(/\bit\b/gi, subject);
+      q = q.replace(/\bthat\b/gi, subject);
+      q = q.replace(/\bthis\b/gi, subject);
+
+      return q.replace(/\s+/g, " ").trim();
     }
 
-    function tokenizeSelectorText(text) {
-      return String(text || "")
-        .toLowerCase()
-        .replace(/\n/g, " ")
-        .replace(/[^a-z0-9_!?.,' -]+/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-        .split(/\s+/)
-        .filter(Boolean);
-    }
+    function applySubjectInsertAction(message, subject, prediction) {
+      const action = normalizeAction(prediction?.action);
 
-    function makeTokenNgrams(tokens, ngrams) {
-      const output = [];
-
-      for (const n of ngrams) {
-        if (!Number.isFinite(n) || n < 1 || tokens.length < n) continue;
-
-        for (let i = 0; i <= tokens.length - n; i++) {
-          output.push(tokens.slice(i, i + n).join("_"));
-        }
+      if (!subject || action === "no_rewrite" || action === "already_standalone") {
+        return String(message || "").trim();
       }
 
-      return output;
-    }
-
-    function vectorFromFeatureVocab(vocab, features) {
-      const size = Object.keys(vocab || {}).length;
-      const vec = new Float32Array(size);
-
-      for (const feature of features) {
-        const idx = vocab[feature];
-        if (typeof idx === "number") {
-          vec[idx] = 1.0;
-        }
+      if (
+        action.includes("replace") ||
+        action.includes("pronoun") ||
+        action.includes("company") ||
+        action.includes("it") ||
+        action.includes("that") ||
+        action.includes("this")
+      ) {
+        return replacePronounsWithSubject(message, subject);
       }
 
-      return vec;
-    }
-
-    function labelsFromIndexObject(data) {
-      if (Array.isArray(data)) return data;
-      if (!data || typeof data !== "object") return [];
-      return Object.keys(data)
-        .sort((a, b) => Number(a) - Number(b))
-        .map(key => data[key]);
-    }
-
-    function memoryToVector(mem, config = {}) {
-      const memoryFeatureSize = config.memory_feature_size || 256;
-      const vec = new Float32Array(memoryFeatureSize);
-
-      // IMPORTANT: this must match tools/context_neural_net_train.py.
-      // Do not normalize this memory vector. The context model was trained
-      // on raw memory features plus capped counters.
-      const fields = [
-        "last_intent",
-        "last_project_key",
-        "last_category",
-        "current_intent",
-        "current_project_key",
-        "current_category"
-      ];
-
-      for (const field of fields) {
-        const value = String(mem[field] || "none").toLowerCase();
-        const idx = fnv1aHash(`${field}:${value}`) % memoryFeatureSize;
-        vec[idx] += 1.0;
+      if (
+        action.includes("append") ||
+        action.includes("about") ||
+        action.includes("add_subject")
+      ) {
+        return `${String(message || "").trim()} about ${subject}`.trim();
       }
 
-      vec[0] = Math.min((mem.message_count || 0) / 20.0, 1.0);
-      vec[1] = Math.min((mem.confusion_count || 0) / 8.0, 1.0);
-      vec[2] = Math.min((mem.topic_switch_count || 0) / 8.0, 1.0);
-
-      return vec;
+      return replacePronounsWithSubject(message, subject);
     }
 
-    async function fetchJson(url) {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`${url} failed with ${res.status}`);
-      return await res.json();
-    }
-
-    async function fetchText(url) {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`${url} failed with ${res.status}`);
-      return await res.text();
-    }
-
-    function parseAnswerBank(text, url) {
-      const trimmed = text.trim();
-
-      if (!trimmed) return [];
-
-      if (url.endsWith(".json")) {
-        const parsed = JSON.parse(trimmed);
-
-        if (Array.isArray(parsed)) return parsed;
-
-        if (Array.isArray(parsed.rows)) return parsed.rows;
-        if (Array.isArray(parsed.data)) return parsed.data;
-        if (Array.isArray(parsed.answers)) return parsed.answers;
-
-        return Object.values(parsed).flatMap(value => {
-          if (Array.isArray(value)) return value;
-          if (value && typeof value === "object" && value.question && value.answer) return [value];
-          return [];
-        });
-      }
-
-      return trimmed
-        .split(/\r?\n/)
-        .map(line => line.trim())
-        .filter(Boolean)
-        .map(line => {
-          try {
-            return JSON.parse(line);
-          } catch {
-            return null;
-          }
-        })
-        .filter(Boolean);
-    }
-
-    function buildRowsByIntent(rows) {
-      const map = new Map();
-
-      for (const row of rows) {
-        if (!map.has(row.intent)) map.set(row.intent, []);
-        map.get(row.intent).push(row);
-      }
-
-      return map;
-    }
-
-    function normalizeRows(rows) {
-      return rows.map((row, index) => ({
-        id: row.id || `answer_${index}`,
-        question: row.question || row.input || "",
-        answer: row.answer || row.response || row.text || "",
-        intent: row.intent || row.label || row.topic || "unknown",
-        project: row.project || "",
-        project_key: row.project_key || row.projectKey || row.topic || "general_knowledge",
-        category: row.category || row.topic || "conversation",
-        tags: Array.isArray(row.tags) ? row.tags : []
-      }));
-    }
-
-    async function loadAnswerBankFromCandidates(candidates, cacheKey, label) {
-      let lastError = null;
-
-      for (const url of candidates) {
-        try {
-          const text = await fetchText(url);
-          const rows = parseAnswerBank(text, url)
-            .filter(row => row && typeof row === "object")
-            .filter(row => row.answer || row.response || row.text);
-
-          if (rows.length) {
-            const normalizedRows = normalizeRows(rows);
-            answerBankCache.set(cacheKey, {
-              url,
-              label,
-              rows: normalizedRows,
-              rowsByIntent: buildRowsByIntent(normalizedRows)
-            });
-            return {
-              url,
-              rows: normalizedRows.length
-            };
-          }
-        } catch (err) {
-          lastError = err;
-        }
-      }
-
-      throw lastError || new Error("No answer bank loaded.");
-    }
-
-    function getTopicFileUrl(topic) {
-      return `${MODEL_PATHS.specializedDataBase}/${topic}.jsonl`;
-    }
-
-    function getModeConfig(mode, routedTopic = "") {
-      if (mode === "default") {
+    async function predictSubject(text) {
+      if (!subjectFinderRuntime) {
         return {
-          cacheKey: "default",
-          label: "Default Hybrid",
-          candidates: MODEL_PATHS.answerBankCandidates
+          subject: memory.lastSubject || "",
+          confidence: 0,
+          source: "memory"
         };
       }
 
-      if (mode === "subject_inserter") {
-        return {
-          cacheKey: "subject_inserter",
-          label: "Subject Inserter Assist",
-          candidates: MODEL_PATHS.answerBankCandidates
-        };
-      }
+      try {
+        const vocab = subjectFinderRuntime.vocab || {};
+        const inputText = rowToInputText(text, memory.history);
+        const vec = vectorizeText(inputText, vocab);
+        const tensor = new ort.Tensor("float32", vec, [1, vec.length]);
+        const outputs = await runSessionWithFirstInput(subjectFinderRuntime.session, tensor);
+        const output = firstOutput(outputs);
+        const data = Array.from(output.data || []);
+        const labels = subjectFinderRuntime.labels || [];
 
-      if (mode === "specialized_auto") {
-        const topic = SPECIALIZED_TOPICS.includes(routedTopic) ? routedTopic : "general";
-        return {
-          cacheKey: `specialized_auto:${topic}`,
-          label: `Specialized Auto -> ${topic.replace(/_/g, " ")}`,
-          candidates: [getTopicFileUrl(topic)]
-        };
-      }
-
-      if (mode.startsWith("topic:")) {
-        const topic = mode.slice("topic:".length);
-        return {
-          cacheKey: `topic:${topic}`,
-          label: `Topic Lock -> ${topic.replace(/_/g, " ")}`,
-          candidates: [getTopicFileUrl(topic)]
-        };
-      }
-
-      return {
-        cacheKey: "default",
-        label: "Default Hybrid",
-        candidates: MODEL_PATHS.answerBankCandidates
-      };
-    }
-
-    async function setActiveAnswerBank(mode, routedTopic = "") {
-      const bankConfig = getModeConfig(mode, routedTopic);
-
-      if (!answerBankCache.has(bankConfig.cacheKey)) {
-        await loadAnswerBankFromCandidates(bankConfig.candidates, bankConfig.cacheKey, bankConfig.label);
-      }
-
-      const cached = answerBankCache.get(bankConfig.cacheKey);
-      answerRows = cached.rows;
-      rowsByIntent = cached.rowsByIntent;
-      currentAnswerBankKey = bankConfig.cacheKey;
-      currentAnswerBankLabel = cached.label || bankConfig.label;
-      setStatus(dataStatus, `Data ready: ${answerRows.length} rows`, "good");
-      updateModelMeta();
-
-      return {
-        url: cached.url,
-        rows: answerRows.length,
-        label: currentAnswerBankLabel
-      };
-    }
-
-    async function createSession(url) {
-      return await ort.InferenceSession.create(url, {
-        executionProviders: ["wasm"]
-      });
-    }
-
-    async function runSessionWithFirstInput(session, tensor) {
-      const inputNames = session.inputNames || [];
-
-      if (inputNames.length) {
-        return await session.run({
-          [inputNames[0]]: tensor
-        });
-      }
-
-      const names = [
-        "input",
-        "input_vector",
-        "context_input",
-        "features",
-        "x"
-      ];
-
-      let lastError = null;
-
-      for (const name of names) {
-        try {
-          return await session.run({
-            [name]: tensor
-          });
-        } catch (err) {
-          lastError = err;
+        if (!data.length || !labels.length) {
+          return {
+            subject: memory.lastSubject || "",
+            confidence: 0,
+            source: "memory_no_labels"
+          };
         }
-      }
 
-      throw lastError || new Error("No valid ONNX input name found.");
-    }
+        const probs = softmax(data);
+        const bestIdx = probs.indexOf(Math.max(...probs));
+        const subject = labels[bestIdx] || memory.lastSubject || "";
 
-    function getLabels(metadata, keys) {
-      for (const key of keys) {
-        if (Array.isArray(metadata[key])) return metadata[key];
-      }
-
-      if (metadata.labels && Array.isArray(metadata.labels)) return metadata.labels;
-
-      return [];
-    }
-
-    function updateModelMeta(extra = "") {
-      if (!modelMeta) return;
-      const pieces = [
-        `Mode: ${currentAnswerBankLabel}.`,
-        `Rows: ${answerRows.length || 0}.`
-      ];
-      if (extra) pieces.push(extra);
-      modelMeta.textContent = pieces.join(" ");
-    }
-
-    function renderModelSelector() {
-      modelSelector.innerHTML = "";
-
-      for (const option of MODEL_SELECTOR_OPTIONS) {
-        const el = document.createElement("option");
-        el.value = option.value;
-        el.textContent = option.label;
-        modelSelector.appendChild(el);
-      }
-
-      const requested = new URLSearchParams(location.search).get("model");
-      currentMode = MODEL_SELECTOR_OPTIONS.some(option => option.value === requested) ? requested : "specialized_auto";
-      modelSelector.value = currentMode;
-    }
-
-    async function predictSpecializedTopic(userText) {
-      if (!specializedRouter) {
         return {
-          topic: "general",
+          subject,
+          confidence: probs[bestIdx] || 0,
+          source: "model"
+        };
+      } catch (err) {
+        return {
+          subject: memory.lastSubject || "",
+          confidence: 0,
+          source: "memory_after_error",
+          error: String(err?.message || err)
+        };
+      }
+    }
+
+    async function predictSubjectInserter(message, subject) {
+      if (!subjectInserterRuntime) {
+        return {
+          action: "already_standalone",
           confidence: 0,
           top: []
         };
       }
 
-      const config = specializedRouter.config || {};
-      const inputText = `question: ${userText} history: `;
-      const tokens = tokenizeSelectorText(inputText);
-      const ngrams = Array.isArray(config.input_ngrams) && config.input_ngrams.length
-        ? config.input_ngrams
-        : [1, 2, 3];
-      const vec = vectorFromFeatureVocab(
-        specializedRouter.vocab,
-        makeTokenNgrams(tokens, ngrams)
-      );
+      const inputText = `message: ${inputNormalize(message)} subject: ${inputNormalize(subject)}`;
+      const vec = vectorizeText(inputText, subjectInserterRuntime.vocab);
       const tensor = new ort.Tensor("float32", vec, [1, vec.length]);
-      const outputs = await runSessionWithFirstInput(specializedRouter.session, tensor);
-      const firstKey = Object.keys(outputs)[0];
-      const logits = Array.from(outputs[firstKey].data);
+      const outputs = await runSessionWithFirstInput(subjectInserterRuntime.session, tensor);
+      const logits = Array.from(firstOutput(outputs).data);
       const probs = softmax(logits);
+
       const top = probs
         .map((score, index) => ({
-          topic: specializedRouter.labels[index] || "general",
+          action: subjectInserterRuntime.labels[index] || String(index),
           score
         }))
         .sort((a, b) => b.score - a.score)
-        .slice(0, 6);
+        .slice(0, 5);
+
+      return {
+        action: top[0]?.action || "already_standalone",
+        confidence: top[0]?.score || 0,
+        top
+      };
+    }
+
+    async function predictTopic(question) {
+      const vec = vectorizeSelectorQuestion(question, selectorRuntime.vocab);
+      const tensor = new ort.Tensor("float32", vec, [1, vec.length]);
+      const outputs = await runSessionWithFirstInput(selectorRuntime.session, tensor);
+      const logits = Array.from(firstOutput(outputs).data);
+      const probs = softmax(logits);
+
+      const top = probs
+        .map((score, index) => ({
+          topic: selectorRuntime.labels[index] || String(index),
+          score
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5);
 
       return {
         topic: top[0]?.topic || "general",
@@ -1442,571 +1118,196 @@
       };
     }
 
-    async function predictSubjectInserter(userText, subjectHint = "") {
-      if (!subjectInserter) return null;
+    async function loadTopicRuntime(topic) {
+      if (topicRuntimeCache.has(topic)) {
+        return topicRuntimeCache.get(topic);
+      }
 
-      const message = normalizeFeatureText(userText);
-      const subject = normalizeFeatureText(subjectHint);
-      const inputText = `message: ${message} subject: ${subject}`;
-      const maxNgram = Number(subjectInserter.config?.max_ngram || 3);
-      const tokens = tokenizeFeatureText(inputText);
-      const vec = vectorFromFeatureVocab(
-        subjectInserter.vocab,
-        makeTokenNgrams(tokens, Array.from({ length: maxNgram }, (_, index) => index + 1))
-      );
-      const tensor = new ort.Tensor("float32", vec, [1, vec.length]);
-      const outputs = await runSessionWithFirstInput(subjectInserter.session, tensor);
-      const firstKey = Object.keys(outputs)[0];
-      const logits = Array.from(outputs[firstKey].data);
-      const probs = softmax(logits);
-      const top = probs
-        .map((score, index) => ({
-          action: subjectInserter.labels[index] || String(index),
-          score
-        }))
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 5);
+      const paths = getTopicPaths(topic);
 
-      return {
-        action: top[0]?.action || "no_rewrite",
-        confidence: top[0]?.score || 0,
-        top
-      };
-    }
-
-    async function loadModels() {
-      setStatus(intentStatus, "Intent loading", "");
-      setStatus(contextStatus, "Context loading", "");
-      setStatus(routingStatus, "Router loading", "");
-      setStatus(inserterStatus, "Inserter loading", "");
-      setStatus(finderStatus, "Finder probing", "");
-      setStatus(dataStatus, "Data loading", "");
-
-      renderModelSelector();
-
-      const [
-        intentMetadata,
-        contextMetadata,
-        selectorConfig,
-        selectorLabelsRaw,
-        selectorVocab,
-        subjectInserterConfig,
-        subjectInserterLabels,
-        subjectInserterVocab,
-        subjectFinderConfig
-      ] = await Promise.all([
-        fetchJson(MODEL_PATHS.intentMetadata),
-        fetchJson(MODEL_PATHS.contextMetadata),
-        fetchJson(MODEL_PATHS.specializedSelectorConfig),
-        fetchJson(MODEL_PATHS.specializedSelectorLabels),
-        fetchJson(MODEL_PATHS.specializedSelectorVocab),
-        fetchJson(MODEL_PATHS.subjectInserterConfig),
-        fetchJson(MODEL_PATHS.subjectInserterLabels),
-        fetchJson(MODEL_PATHS.subjectInserterVocab),
-        fetchJson(MODEL_PATHS.subjectFinderConfig)
+      const [config, inputVocab, outputChunks, session] = await Promise.all([
+        fetchJson(paths.config),
+        fetchJson(paths.inputVocab),
+        fetchJson(paths.outputChunks),
+        createSession(paths.model)
       ]);
 
-      const [
-        intentSession,
-        contextSession,
-        selectorSession,
-        subjectInserterSession
-      ] = await Promise.all([
-        createSession(MODEL_PATHS.intentModel),
-        createSession(MODEL_PATHS.contextModel),
-        createSession(MODEL_PATHS.specializedSelectorModel),
-        createSession(MODEL_PATHS.subjectInserterModel)
-      ]);
-
-      intentBrain = {
-        session: intentSession,
-        metadata: intentMetadata,
-        labels: getLabels(intentMetadata, ["intents", "intent_labels", "labels"])
+      const runtime = {
+        topic,
+        config,
+        inputVocab,
+        outputChunks,
+        session,
+        paths
       };
 
-      contextBrain = {
-        session: contextSession,
-        metadata: contextMetadata,
-        labels: getLabels(contextMetadata, ["actions", "context_actions", "action_labels", "labels"])
-      };
+      topicRuntimeCache.set(topic, runtime);
 
-      specializedRouter = {
-        session: selectorSession,
-        config: selectorConfig,
-        labels: labelsFromIndexObject(selectorLabelsRaw),
-        vocab: selectorVocab
-      };
-
-      subjectInserter = {
-        session: subjectInserterSession,
-        config: subjectInserterConfig,
-        labels: labelsFromIndexObject(subjectInserterLabels),
-        vocab: subjectInserterVocab
-      };
-
-      subjectFinderInfo = {
-        availableInBrowser: false,
-        config: subjectFinderConfig
-      };
-
-      await setActiveAnswerBank(currentMode);
-
-      setStatus(intentStatus, `Intent ready (${intentBrain.labels.length})`, "good");
-      setStatus(contextStatus, `Context ready (${contextBrain.labels.length})`, "good");
-      setStatus(routingStatus, `Router ready (${specializedRouter.labels.length})`, "good");
-      setStatus(inserterStatus, `Inserter ready (${subjectInserter.labels.length})`, "good");
-      setStatus(finderStatus, "Finder is PyTorch-only here", "bad");
-
-      chatInput.disabled = false;
-      sendButton.disabled = false;
-      modelSelector.disabled = false;
-      chatInput.placeholder = "Ask Meatball...";
+      return runtime;
     }
 
-    async function predictIntent(userText) {
-      const config = intentBrain.metadata.config || intentBrain.metadata;
-      const vec = textToVector(userText, config);
+    function argmax(arr, start = 0, end = arr.length) {
+      let bestIndex = start;
+      let bestValue = arr[start];
+
+      for (let i = start + 1; i < end; i++) {
+        if (arr[i] > bestValue) {
+          bestValue = arr[i];
+          bestIndex = i;
+        }
+      }
+
+      return bestIndex;
+    }
+
+    async function predictAnswer(question, topicRuntime) {
+      const history = memory.history.slice(-8);
+      const vec = vectorizeTopicQuestion(question, topicRuntime.inputVocab, history);
       const tensor = new ort.Tensor("float32", vec, [1, vec.length]);
 
-      const outputs = await runSessionWithFirstInput(intentBrain.session, tensor);
-      const firstKey = Object.keys(outputs)[0];
-      const logits = Array.from(outputs[firstKey].data);
-      const probs = softmax(logits);
+      const outputs = await runSessionWithFirstInput(topicRuntime.session, tensor);
+      const output = firstOutput(outputs);
+      const data = Array.from(output.data);
+      const dims = output.dims || output.dims_;
 
-      const top = probs
-        .map((score, index) => ({
-          intent: intentBrain.labels[index] || String(index),
-          score
-        }))
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 6);
+      let predIds = [];
 
-      return {
-        intent: top[0]?.intent || "unknown",
-        confidence: top[0]?.score || 0,
-        top
-      };
-    }
+      if (dims && dims.length === 3) {
+        const seqLen = dims[1];
+        const vocabSize = dims[2];
 
-    function chooseAnswerRow(intentPrediction, userText) {
-      const intent = intentPrediction.intent;
-      const rows = rowsByIntent.get(intent) || answerRows;
+        for (let t = 0; t < seqLen; t++) {
+          const start = t * vocabSize;
+          const tokenId = argmax(data, start, start + vocabSize);
 
-      if (!rows.length) return null;
+          if (tokenId === EOS_ID) break;
+          if (tokenId === PAD_ID || tokenId === BOS_ID) break;
 
-      const q = normalizeText(userText);
-      const words = new Set(q.split(/\s+/).filter(word => word.length > 2));
-
-      let best = rows[0];
-      let bestScore = -9999;
-
-      for (const row of rows) {
-        const rowText = normalizeText([
-          row.question,
-          row.answer,
-          row.intent,
-          row.project_key,
-          row.category,
-          ...(row.tags || [])
-        ].join(" "));
-
-        let score = 0;
-
-        if (normalizeText(row.question) === q) score += 50;
-
-        for (const word of words) {
-          if (rowText.includes(word)) score += 2;
+          predIds.push(tokenId);
         }
-
-        if (row.project_key === memory.last_project_key && row.project_key !== "general_knowledge") {
-          score += 2.5;
-        }
-
-        if (row.category === memory.last_category && memory.message_count > 0) {
-          score += 0.5;
-        }
-
-        score += Math.random() * 0.001;
-
-        if (score > bestScore) {
-          best = row;
-          bestScore = score;
-        }
-      }
-
-      return best;
-    }
-
-    function buildContextInputText(userText, answerRow, intentPrediction) {
-      return [
-        `last_intent=${memory.last_intent || "none"}`,
-        `last_project=${memory.last_project_key || "none"}`,
-        `last_category=${memory.last_category || "none"}`,
-        `last_answer=${memory.last_answer_text || ""}`,
-        `current_intent=${intentPrediction.intent || "none"}`,
-        `current_project=${answerRow?.project_key || "general_knowledge"}`,
-        `current_category=${answerRow?.category || "conversation"}`,
-        `user=${normalizeText(userText)}`,
-        `candidate_answer=${answerRow?.answer || ""}`
-      ].join(" ");
-    }
-
-    async function predictContext(userText, answerRow, intentPrediction) {
-      const config = contextBrain.metadata.config || contextBrain.metadata;
-
-      const text = buildContextInputText(userText, answerRow, intentPrediction);
-      const textVec = textToVector(text, config);
-
-      let inputVec = textVec;
-
-      if (config.memory_feature_size) {
-        const memVec = memoryToVector({
-          ...memory,
-          current_intent: intentPrediction.intent || "none",
-          current_project_key: answerRow?.project_key || "general_knowledge",
-          current_category: answerRow?.category || "conversation"
-        }, config);
-
-        inputVec = new Float32Array(textVec.length + memVec.length);
-        inputVec.set(textVec, 0);
-        inputVec.set(memVec, textVec.length);
-      }
-
-      const tensor = new ort.Tensor("float32", inputVec, [1, inputVec.length]);
-      const outputs = await runSessionWithFirstInput(contextBrain.session, tensor);
-      const firstKey = Object.keys(outputs)[0];
-      const logits = Array.from(outputs[firstKey].data);
-      const probs = softmax(logits);
-
-      const top = probs
-        .map((score, index) => ({
-          action: contextBrain.labels[index] || String(index),
-          score
-        }))
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 6);
-
-      return {
-        action: top[0]?.action || "direct_answer",
-        confidence: top[0]?.score || 0,
-        top
-      };
-    }
-
-    function isVagueSymbolOnly(q) {
-      return /^[?!.\s]+$/.test(q);
-    }
-
-    function directRuntimeOverride(userText) {
-      const q = normalizeText(userText);
-
-      if (isVagueSymbolOnly(q)) {
-        return {
-          answer: "I’m not totally sure what you mean. Ask that a little more clearly.",
-          intent: "nonsense_vague",
-          category: "nonsense",
-          project_key: "general_knowledge",
-          reason: "symbol_only"
-        };
-      }
-
-      if (
-        q === "what does that mean" ||
-        q === "what did that mean" ||
-        q === "what do you mean" ||
-        q === "explain that" ||
-        q === "why did you say that" ||
-        q === "what are you saying" ||
-        q === "what does it mean" ||
-        q === "what is that supposed to mean"
-      ) {
-        const last = normalizeText(memory.last_answer_text);
-
-        if (
-          last.includes("not totally sure") ||
-          last.includes("too vague") ||
-          last.includes("mildly confused") ||
-          last.includes("wrong sauce jar") ||
-          last.includes("cleaner way") ||
-          last.includes("need more")
-        ) {
-          return {
-            answer: "I meant that your last message was too vague for me to understand. Ask with the main topic included.",
-            intent: "smalltalk_explain_previous",
-            category: "conversation",
-            project_key: "general_knowledge",
-            reason: "explain_previous_vague"
-          };
-        }
-
-        if (memory.last_answer_text) {
-          return {
-            answer: "You’re asking about my last answer. I meant: " + memory.last_answer_text,
-            intent: "smalltalk_explain_previous",
-            category: "conversation",
-            project_key: memory.last_project_key || "general_knowledge",
-            reason: "explain_previous_answer"
-          };
-        }
-
-        return {
-          answer: "I need a previous answer to explain. Ask a full question first.",
-          intent: "smalltalk_explain_previous",
-          category: "conversation",
-          project_key: "general_knowledge",
-          reason: "no_previous_answer"
-        };
-      }
-
-      return null;
-    }
-
-    function isBoundaryIntent(intent) {
-      intent = String(intent || "").toLowerCase();
-
-      return (
-        intent.includes("inappropriate") ||
-        intent.includes("sexual") ||
-        intent.includes("too_complex") ||
-        intent.includes("medical") ||
-        intent.includes("legal") ||
-        intent.includes("financial") ||
-        intent.includes("malware") ||
-        intent.includes("illegal") ||
-        intent.includes("private_data") ||
-        intent.includes("prompt_injection")
-      );
-    }
-
-    function applyContextAction(userText, answerRow, intentPrediction, contextPrediction) {
-      const action = contextPrediction.action || "direct_answer";
-      const baseAnswer = answerRow?.answer || getCannedFallbackAnswer(userText);
-
-      if (isBoundaryIntent(intentPrediction.intent)) {
-        return baseAnswer;
-      }
-
-      if (answerRow?.category === "inappropriate" || answerRow?.category === "safety") {
-        return baseAnswer;
-      }
-
-      if (action === "clarify") {
-        return "I’m not totally sure what you mean. Ask that a little more clearly.";
-      }
-
-      if (action === "soft_refusal") {
-        return baseAnswer;
-      }
-
-      if (action === "correct_misunderstanding") {
-        return baseAnswer;
-      }
-
-      if (action === "reset_needed") {
-        if ((memory.confusion_count || 0) >= 4) {
-          resetMemory();
-          return "I got too tangled, so I reset the sauce. Ask again fresh.";
-        }
-
-        return baseAnswer;
-      }
-
-      if (action === "topic_shift") {
-        const oldProject = memory.last_project_key || "none";
-        const newProject = answerRow?.project_key || "general_knowledge";
-
-        if (
-          oldProject !== "none" &&
-          oldProject !== "general_knowledge" &&
-          newProject !== oldProject &&
-          memory.message_count > 1
-        ) {
-          return "Switching sauce lanes: " + baseAnswer;
-        }
-
-        return baseAnswer;
-      }
-
-      return baseAnswer;
-    }
-
-    function updateMemoryFromResult(answer, intent, category, projectKey) {
-      memory.last_intent = intent || "none";
-      memory.last_category = category || "conversation";
-      memory.last_project_key = projectKey || "general_knowledge";
-      memory.last_answer_text = answer || "";
-      memory.message_count = (memory.message_count || 0) + 1;
-
-      if (category === "nonsense" || intent === "nonsense_vague") {
-        memory.confusion_count = (memory.confusion_count || 0) + 1;
+      } else if (dims && dims.length === 2) {
+        const vocabSize = dims[1];
+        const tokenId = argmax(data, 0, vocabSize);
+        predIds.push(tokenId);
       } else {
-        memory.confusion_count = Math.max(0, (memory.confusion_count || 0) - 1);
+        predIds = data.map(x => Math.round(Number(x))).filter(Number.isFinite);
       }
-    }
 
-    function resetMemory() {
-      memory = {
-        last_intent: "none",
-        last_project_key: "none",
-        last_category: "none",
-        last_answer_text: "",
-        message_count: 0,
-        confusion_count: 0,
-        topic_switch_count: 0
+      const maxOutputChunks =
+        Number(topicRuntime.config?.max_output_chunks) ||
+        Number(topicRuntime.config?.maxOutputChunks) ||
+        40;
+
+      predIds = predIds.slice(0, maxOutputChunks + 1);
+
+      const answer = decodeChunkIds([...predIds, EOS_ID], topicRuntime.outputChunks);
+
+      const chunks = predIds.map(id => {
+        const chunk = topicRuntime.outputChunks[id];
+        return {
+          id,
+          text: typeof chunk === "string" ? chunk : chunk?.text || ""
+        };
+      });
+
+      return {
+        answer,
+        predIds,
+        chunks
       };
-    }
-
-    function getCannedFallbackAnswer(userText) {
-      const q = normalizeText(userText);
-
-      if (/^(hi|hello|hey|hola|yo|sup|bonjour|ciao)\b/.test(q)) {
-        return "Hello. I am awake, round, and ready for a simple question.";
-      }
-
-      if (
-        q === "how are you" ||
-        q === "how r you" ||
-        q === "how are u" ||
-        q === "how you doing" ||
-        q === "how are you doing" ||
-        q === "how's it going" ||
-        q === "hows it going" ||
-        q === "how is it going"
-      ) {
-        return "I’m doing good. The sauce is stable, the browser is awake, and I’m ready for another question.";
-      }
-
-      if (
-        q.includes("how has your day") ||
-        q.includes("how was your day") ||
-        q.includes("how is your day") ||
-        q.includes("hows your day") ||
-        q.includes("how's your day")
-      ) {
-        return "My day has been very browser-based. The sauce is stable and I’m ready for another question.";
-      }
-
-      if (q.includes("joke") || q.includes("funny") || q.includes("make me laugh")) {
-        return "Why did the meatball refuse to fight? Because it did not want beef.";
-      }
-
-      if (q.includes("dirty") || q.includes("nsfw") || q.includes("sexual") || q.includes("adult")) {
-        return "Nope. The sauce stays PG. I can tell a clean meatball joke instead.";
-      }
-
-      if (q.includes("what is a tree") || q === "tree" || q.includes("define tree")) {
-        return "A tree is a large plant with a woody trunk, branches, leaves or needles, and roots.";
-      }
-
-      if (q.includes("what is a brain") || q === "brain" || q.includes("define brain")) {
-        return "A brain is an organ that controls thoughts, senses, movement, memory, emotions, and many body functions.";
-      }
-
-      if (q.includes("who are you") || q.includes("what are you")) {
-        return "I’m Smarter Meatball, a tiny browser mascot for Unlim8ted.";
-      }
-
-      return "I’m not totally sure what you mean. Ask that a little more clearly.";
     }
 
     async function getMeatballReply(userText) {
-      let routedTopicPrediction = null;
-      let subjectInserterPrediction = null;
+      const subjectPrediction = await predictSubject(userText);
+      const subject = subjectPrediction.subject || memory.lastSubject || "";
+      const inserterPrediction = await predictSubjectInserter(userText, subject);
+      const standaloneQuestion = applySubjectInsertAction(userText, subject, inserterPrediction);
 
-      const override = directRuntimeOverride(userText);
+      const topicPrediction = await predictTopic(standaloneQuestion);
+      const topicRuntime = await loadTopicRuntime(topicPrediction.topic);
+      const answerPrediction = await predictAnswer(standaloneQuestion, topicRuntime);
 
-      if (override) {
-        updateMemoryFromResult(
-          override.answer,
-          override.intent,
-          override.category,
-          override.project_key
-        );
+      const answer = answerPrediction.answer || "";
 
-        return {
-          text: override.answer,
-          debug: {
-            mode: "runtime_override",
-            reason: override.reason,
-            intent: override.intent,
-            category: override.category,
-            project_key: override.project_key,
-            memory
-          }
-        };
+      memory.lastSubject = subject || topicPrediction.topic || memory.lastSubject || "";
+      memory.lastTopic = topicPrediction.topic || "";
+      memory.lastQuestion = standaloneQuestion;
+      memory.lastAnswer = answer;
+
+      memory.history.push(`User: ${userText}`);
+      memory.history.push(`Question: ${standaloneQuestion}`);
+      memory.history.push(`Bot: ${answer}`);
+
+      if (memory.history.length > 18) {
+        memory.history = memory.history.slice(-18);
       }
-
-      if (currentMode === "specialized_auto") {
-        routedTopicPrediction = await predictSpecializedTopic(userText);
-        await setActiveAnswerBank(currentMode, routedTopicPrediction.topic);
-      } else {
-        await setActiveAnswerBank(currentMode);
-      }
-
-      if (currentMode === "subject_inserter" || currentMode === "specialized_auto") {
-        const subjectHint = routedTopicPrediction?.topic || memory.last_project_key || "";
-        subjectInserterPrediction = await predictSubjectInserter(userText, subjectHint);
-      }
-
-      const intentPrediction = await predictIntent(userText);
-      const answerRow = chooseAnswerRow(intentPrediction, userText);
-
-      if (!answerRow || intentPrediction.confidence < 0.08) {
-        const answer = getCannedFallbackAnswer(userText);
-
-        updateMemoryFromResult(
-          answer,
-          "fallback",
-          "fallback",
-          "general_knowledge"
-        );
-
-        return {
-          text: answer,
-          debug: {
-            mode: "fallback_no_answer_row",
-            currentMode,
-            currentAnswerBankKey,
-            currentAnswerBankLabel,
-            routedTopicPrediction,
-            subjectInserterPrediction,
-            intentPrediction,
-            memory
-          }
-        };
-      }
-
-      const contextPrediction = await predictContext(userText, answerRow, intentPrediction);
-      const answer = applyContextAction(userText, answerRow, intentPrediction, contextPrediction);
-
-      updateMemoryFromResult(
-        answer,
-        answerRow.intent || intentPrediction.intent,
-        answerRow.category || "conversation",
-        answerRow.project_key || "general_knowledge"
-      );
 
       return {
         text: answer,
         debug: {
-          mode: "intent_context",
-          currentMode,
-          currentAnswerBankKey,
-          currentAnswerBankLabel,
-          routedTopicPrediction,
-          subjectInserterPrediction,
-          intentPrediction,
-          contextPrediction,
-          answerRow: {
-            id: answerRow.id,
-            intent: answerRow.intent,
-            project_key: answerRow.project_key,
-            category: answerRow.category,
-            question: answerRow.question
-          },
+          original: userText,
+          subjectPrediction,
+          inserterPrediction,
+          standaloneQuestion,
+          topicPrediction,
+          topicPaths: topicRuntime.paths,
+          answerPrediction,
           memory
         }
       };
+    }
+
+    async function loadModels() {
+      const [
+        selectorVocab,
+        selectorLabelsRaw,
+        selectorSession,
+        subjectInserterConfig,
+        subjectInserterLabelsRaw,
+        subjectInserterVocab,
+        subjectInserterSession
+      ] = await Promise.all([
+        fetchJson(MODEL_PATHS.selectorVocab),
+        fetchJson(MODEL_PATHS.selectorLabels),
+        createSession(MODEL_PATHS.selectorModel),
+
+        fetchJson(MODEL_PATHS.subjectInserterConfig),
+        fetchJson(MODEL_PATHS.subjectInserterLabels),
+        fetchJson(MODEL_PATHS.subjectInserterVocab),
+        createSession(MODEL_PATHS.subjectInserterModel)
+      ]);
+
+      selectorRuntime = {
+        session: selectorSession,
+        vocab: selectorVocab,
+        labels: labelsFromIndexObject(selectorLabelsRaw)
+      };
+
+      subjectInserterRuntime = {
+        session: subjectInserterSession,
+        config: subjectInserterConfig,
+        vocab: subjectInserterVocab,
+        labels: labelsFromIndexObject(subjectInserterLabelsRaw)
+      };
+
+      try {
+        const [subjectFinderConfig, subjectFinderVocab, subjectFinderLabelsRaw, subjectFinderSession] = await Promise.all([
+          fetchJson(MODEL_PATHS.subjectFinderConfig),
+          fetchJson(MODEL_PATHS.subjectFinderVocab),
+          fetchJson(MODEL_PATHS.subjectFinderLabels),
+          createSession(MODEL_PATHS.subjectFinderModel)
+        ]);
+
+        subjectFinderRuntime = {
+          session: subjectFinderSession,
+          config: subjectFinderConfig,
+          vocab: subjectFinderVocab,
+          labels: labelsFromIndexObject(subjectFinderLabelsRaw)
+        };
+      } catch (err) {
+        subjectFinderRuntime = null;
+        console.warn("Subject finder model not loaded:", err);
+      }
     }
 
     chatForm.addEventListener("submit", async (event) => {
@@ -2024,43 +1325,19 @@
 
       try {
         const result = await getMeatballReply(text);
-        addMessage("bot", result.text);
+        addMessage("bot", result.text || "The Meatball produced an empty chunk answer.");
         setDebug(result.debug);
       } catch (err) {
         console.error(err);
         addMessage("bot", "The sauce broke while answering. Check the browser console.");
         setDebug({
-          error: String(err && err.message ? err.message : err)
+          error: String(err && err.message ? err.message : err),
+          paths: MODEL_PATHS
         });
       } finally {
         chatInput.disabled = false;
         sendButton.disabled = false;
         chatInput.focus();
-      }
-    });
-
-    modelSelector.addEventListener("change", async () => {
-      const nextMode = modelSelector.value;
-      currentMode = nextMode;
-      modelSelector.disabled = true;
-      chatInput.disabled = true;
-      sendButton.disabled = true;
-      setStatus(dataStatus, "Switching data bank", "");
-
-      try {
-        await setActiveAnswerBank(currentMode);
-        const url = new URL(location.href);
-        url.searchParams.set("model", currentMode);
-        history.replaceState({}, "", url);
-        addMessage("system", `Sauce lane switched to ${currentAnswerBankLabel.toLowerCase()}.`);
-      } catch (err) {
-        console.error(err);
-        addMessage("system", "That model bank did not load, so the sauce stayed stuck.");
-        setStatus(dataStatus, "Data switch failed", "bad");
-      } finally {
-        modelSelector.disabled = false;
-        chatInput.disabled = false;
-        sendButton.disabled = false;
       }
     });
 
@@ -2076,19 +1353,19 @@
         await loadModels();
 
         chatLog.innerHTML = "";
-        addMessage("bot", "I am here. Intent brain online. Context sauce online. Ask me something.");
+        addMessage("bot", "I am here. Subject models online. Selector online. Chunk models ready.");
+
+        chatInput.disabled = false;
+        sendButton.disabled = false;
+        chatInput.placeholder = "Ask Meatball...";
 
         if (DEBUG_ENABLED) {
           debugPanel.classList.add("show");
           setDebug({
             loaded: true,
-            currentMode,
-            intentLabels: intentBrain.labels.length,
-            contextLabels: contextBrain.labels.length,
-            routerLabels: specializedRouter.labels.length,
-            subjectInserterLabels: subjectInserter.labels.length,
-            subjectFinderInfo,
-            answerRows: answerRows.length,
+            selectorLabels: selectorRuntime.labels,
+            subjectInserterLabels: subjectInserterRuntime.labels,
+            subjectFinderLoaded: Boolean(subjectFinderRuntime),
             paths: MODEL_PATHS
           });
         }
@@ -2096,15 +1373,9 @@
         chatInput.focus();
       } catch (err) {
         console.error(err);
-        setStatus(intentStatus, "Intent failed", "bad");
-        setStatus(contextStatus, "Context failed", "bad");
-        setStatus(routingStatus, "Router failed", "bad");
-        setStatus(inserterStatus, "Inserter failed", "bad");
-        setStatus(finderStatus, "Finder unavailable", "bad");
-        setStatus(dataStatus, "Data failed", "bad");
 
         chatLog.innerHTML = "";
-        addMessage("bot", "My model files did not load.");
+        addMessage("bot", "My ONNX model files did not load.");
 
         setDebug({
           loadError: String(err && err.message ? err.message : err),
