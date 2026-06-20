@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Unlim8ted - About the meatball</title>
+<script type="module" src="/components/site-navbar.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  :root {
+    --bg: #071018;
+    --panel: rgba(255,255,255,0.065);
+    --panel-2: rgba(255,255,255,0.095);
+    --line: rgba(255,255,255,0.14);
+    --text: rgba(246,248,255,0.96);
+    --muted: rgba(246,248,255,0.66);
+    --soft: rgba(246,248,255,0.48);
+    --orange: #ffb46a;
+    --blue: #62d6ff;
+    --green: #9cffc7;
+    --pink: #ff7ad9;
+    --purple: #b79cff;
+    --danger: #ff6969;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 12% 5%, rgba(255,180,106,0.18), transparent 30%),
+      radial-gradient(circle at 88% 10%, rgba(98,214,255,0.16), transparent 32%),
+      radial-gradient(circle at 50% 100%, rgba(183,156,255,0.12), transparent 38%),
+      var(--bg);
+    color: var(--text);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding: 0 16px 42px;
+  }
+
+  site-navbar {
+    display: block;
+    margin: 0 -16px 36px;
+  }
+
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 42px;
+    padding-top: 18px;
+  }
+
+  .eyebrow {
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 12px;
+    font-weight: 900;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(36px, 6vw, 76px);
+    letter-spacing: -0.075em;
+    line-height: 0.92;
+  }
+
+  .subtitle {
+    margin: 18px auto 0;
+    max-width: 840px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  .section {
+    margin: 28px 0;
+    border: 1px solid var(--line);
+    border-radius: 30px;
+    background: rgba(255,255,255,0.045);
+    box-shadow: 0 30px 90px rgba(0,0,0,0.28);
+    overflow: hidden;
+  }
+
+  .section-head {
+    padding: 24px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,0.045);
+  }
+
+  .section-title {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    margin-bottom: 8px;
+  }
+
+  .section-desc {
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .content {
+    padding: 24px;
+  }
+
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .node {
+    width: min(100%, 920px);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 20px;
+    background: var(--panel);
+    position: relative;
+  }
+
+  .node.hot {
+    border-color: rgba(255,180,106,0.38);
+    background: linear-gradient(135deg, rgba(255,180,106,0.15), rgba(255,255,255,0.055));
+  }
+
+  .node.blue {
+    border-color: rgba(98,214,255,0.38);
+    background: linear-gradient(135deg, rgba(98,214,255,0.14), rgba(255,255,255,0.055));
+  }
+
+  .node.green {
+    border-color: rgba(156,255,199,0.35);
+    background: linear-gradient(135deg, rgba(156,255,199,0.10), rgba(255,255,255,0.055));
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .node-title {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    margin-bottom: 7px;
+  }
+
+  .node-desc {
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .arrow {
+    color: rgba(255,255,255,0.42);
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--panel);
+    padding: 18px;
+  }
+
+  .card h3 {
+    margin: 0 0 9px;
+    font-size: 18px;
+    color: var(--blue);
+    letter-spacing: -0.025em;
+  }
+
+  .card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  .pill {
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.11);
+    text-align: center;
+    font-weight: 850;
+    font-size: 14px;
+  }
+
+  pre {
+    margin: 12px 0 0;
+    padding: 16px;
+    border-radius: 16px;
+    overflow-x: auto;
+    background: rgba(0,0,0,0.34);
+    border: 1px solid rgba(255,255,255,0.11);
+    color: rgba(245,247,255,0.9);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  code {
+    color: var(--orange);
+  }
+
+  .split-flow {
+    display: grid;
+    grid-template-columns: 1fr 44px 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .middle-arrow {
+    text-align: center;
+    color: rgba(255,255,255,0.42);
+    font-size: 28px;
+  }
+
+  .model-box {
+    border: 1px solid rgba(98,214,255,0.28);
+    border-radius: 18px;
+    padding: 16px;
+    background: rgba(98,214,255,0.07);
+  }
+
+  .model-name {
+    color: var(--blue);
+    font-weight: 900;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .model-lines {
+    color: var(--muted);
+    line-height: 1.55;
+    font-size: 14px;
+  }
+
+  .mini-label {
+    color: var(--soft);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .warning {
+    border-color: rgba(255,105,105,0.36);
+    background: rgba(255,105,105,0.08);
+  }
+
+  .success {
+    border-color: rgba(156,255,199,0.35);
+    background: rgba(156,255,199,0.08);
+  }
+
+  @media (max-width: 900px) {
+    .grid-2,
+    .grid-3,
+    .grid-4,
+    .split-flow {
+      grid-template-columns: 1fr;
+    }
+
+    .middle-arrow {
+      transform: rotate(90deg);
+    }
+
+    body {
+      padding: 0 12px 28px;
+    }
+
+    site-navbar {
+      margin: 0 -12px 28px;
+    }
+  }
+</style>
+</head>
+<body>
+<site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+
+<main class="page">
+
+  <header class="hero">
+    <div class="eyebrow">About the Meatball AI</div>
+    <h1>A small browser AI made from fragments</h1>
+    <p class="subtitle">
+      The Meatball does not need a huge live AI model running on a server. Instead, it uses small browser-friendly models
+      to understand the question, pick the right topic, choose useful answer fragments, and stitch them together.
+    </p>
+  </header>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-title">The Simple Idea</div>
+      <div class="section-desc">
+        The Meatball is not trying to invent every answer from scratch. It chooses from prepared pieces of knowledge.
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="grid-3">
+        <div class="card">
+          <h3>1. Understand the question</h3>
+          <p>
+            It figures out what the user is asking about, especially when the question is vague or depends on the previous message.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>2. Pick the right topic</h3>
+          <p>
+            It sends the question to the correct small model, like Unlim8ted projects, products, science, movies, or fallback.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>3. Build the answer</h3>
+          <p>
+            It selects useful text fragments, joins them in order, and cleans up the final response.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="section-title">How a Message Moves Through the System</div>
+      <div class="section-desc">
+        History is used only to clarify the question. The answer system receives a clean standalone question.
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="flow">
+
+        <div class="node hot">
+          <div class="tag">User says</div>
+          <div class="node-title">“does the company have clothes?”</div>
+          <div class="node-desc">
+            This is vague because “the company” depends on what the user was just talking about.
+          </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="grid-3" style="width: min(100%, 1100px);">
+          <div class="card">
+            <h3>Find the subject</h3>
+            <p>
+              The system looks at the recent conversation and sees that “the company” means Unlim8ted.
+            </p>
+            <pre>subject found:
+"Unlim8ted"</pre>
+          </div>
+
+          <div class="card">
+            <h3>Rewrite the question</h3>
+            <p>
+              The system replaces the vague phrase with the real subject.
+            </p>
+            <pre>before:
+does the company have clothes?
+
+after:
+does Unlim8ted have clothes?</pre>
+          </div>
+
+          <div class="card">
+            <h3>Use the clean question</h3>
+            <p>
+              The answer model does not need the full chat history anymore.
+            </p>
+            <pre>standalone question:
+does Unlim8ted have clothes?</pre>
+          </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="node blue">
+          <div class="tag">Router</div>
+          <div class="node-title">Send it to the right mini-model</div>
+          <div class="node-desc">
+            The router chooses the best category so random facts do not compete with the correct answer.
+          </div>
+
+          <div class="grid-4" style="margin-top: 16px;">
+            <div class="pill">Unlim8ted</div>
+            <div class="pill">Products</div>
+            <div class="pill">Movies</div>
+            <div class="pill">Games</div>
+            <div class="pill">AI</div>
+            <div class="pill">Science</div>
+            <div class="pill">Objects</div>
+            <div class="pill">Fallback</div>
+          </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="node green">
+          <div class="tag">Answer Model</div>
+          <div class="node-title">Choose answer fragments</div>
+          <div class="node-desc">
+            The chosen mini-model predicts an ordered list of chunks, like “Unlim8ted,” “may have,” “clothing,” and “if listed.”
+          </div>
+          <pre>chosen chunks:
+["Unlim8ted", "may have", "clothing", "if those products are listed", "."]</pre>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="node hot">
+          <div class="tag">Final answer</div>
+          <div class="node-title">“Unlim8ted may have clothing if those products are listed.”</div>
+          <div class="node-desc">
+            The sauce is on, but the answer is still built from controlled pieces.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>
