@@ -1,0 +1,28 @@
+{
+  "model_type": "question_to_answer_chunks_gru_topic_specialist",
+  "topic": "history",
+  "input_type": "bag_of_words_ngrams",
+  "input_ngrams": [
+    1,
+    2,
+    3
+  ],
+  "max_input_vocab_size": 12000,
+  "output_type": "mined_answer_chunks",
+  "min_chunk_freq": 3,
+  "min_chunk_words": 2,
+  "max_chunk_words": 6,
+  "max_output_chunks": 40,
+  "max_output_vocab_size": 12000,
+  "hidden_size": 192,
+  "embed_size": 128,
+  "dropout": 0.35,
+  "pad_id": 0,
+  "bos_id": 1,
+  "eos_id": 2,
+  "unk_id": 3,
+  "model_pt_path": "model.pt",
+  "input_vocab_path": "input_vocab.json",
+  "output_chunks_path": "output_chunks.json",
+  "note": "Topic-specialized Meatball chunk model using original mined chunk logic."
+}

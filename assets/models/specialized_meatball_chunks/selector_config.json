@@ -1,0 +1,15 @@
+{
+  "model_type": "meatball_topic_selector_bow_ngrams",
+  "input_type": "bag_of_words_ngrams",
+  "input_ngrams": [
+    1,
+    2,
+    3
+  ],
+  "max_input_vocab_size": 12000,
+  "hidden_size": 192,
+  "dropout": 0.35,
+  "model_pt_path": "selector.pt",
+  "selector_vocab_path": "selector_vocab.json",
+  "selector_labels_path": "selector_labels.json"
+}

@@ -13,9 +13,9 @@ from torch.utils.data import Dataset, DataLoader
 # CONFIG
 # ============================================================
 
-DATASET_PATH = Path("assets/data/SmartMeatballQA.jsonl")
+DATASET_PATH = Path("assets/data/combined_test.jsonl")
 
-OUTPUT_DIR = Path("assets/models/meatball_chunk_answer_model")
+OUTPUT_DIR = Path("assets/models/meatball_chunk_answer_model_new_data")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 MODEL_PT_PATH = OUTPUT_DIR / "meatball_chunk_answer_model.pt"

@@ -278,6 +278,59 @@
       opacity: 0.62;
     }
 
+    .controlRow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    .modelPanel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+      gap: 12px;
+      align-items: end;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .modelCopy {
+      min-width: 0;
+    }
+
+    .modelLabel {
+      margin: 0 0 4px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .modelMeta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.35;
+    }
+
+    .modelSelect {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(7, 13, 20, 0.72);
+      color: var(--text);
+      padding: 12px 14px;
+      font: inherit;
+      outline: none;
+    }
+
+    .modelSelect:focus {
+      border-color: rgba(98, 214, 255, 0.42);
+      box-shadow: 0 0 0 4px rgba(98, 214, 255, 0.08);
+    }
+
     .noteRow {
       display: flex;
       flex-wrap: wrap;
@@ -485,6 +538,10 @@
         width: 90px;
         height: 54px;
       }
+
+      .modelPanel {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 600px) {
@@ -556,6 +613,10 @@
         width: 100%;
         height: 48px;
         border-radius: 16px;
+      }
+
+      .modelPanel {
+        padding: 12px;
       }
 
       .meatballStage {
@@ -740,10 +801,33 @@
       <section class="panel intro">
         <h1>A smarter Meatball</h1>
         <p class="sub">
-          Meatball now uses the intent model first, then the context model, then selects a grounded answer from its local answer bank.
+          Meatball now uses intent, context, a specialized topic router, and switchable local knowledge banks. The sauce is on.
         </p>
 
         <div class="chatShell">
+          <div class="controlRow">
+            <div class="modelPanel" aria-label="Model controls">
+              <div class="modelCopy">
+                <p class="modelLabel">Model Stack</p>
+                <p id="modelMeta" class="modelMeta">Loading brains, routers, and sauce selectors.</p>
+              </div>
+              <label>
+                <span class="modelLabel">Selector</span>
+                <select id="modelSelector" class="modelSelect" disabled>
+                  <option value="default">Loading models...</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="noteRow" id="statusRow">
+              <span id="intentStatus" class="note">Intent loading</span>
+              <span id="contextStatus" class="note">Context loading</span>
+              <span id="routingStatus" class="note">Router loading</span>
+              <span id="inserterStatus" class="note">Inserter loading</span>
+              <span id="finderStatus" class="note">Finder probing</span>
+              <span id="dataStatus" class="note">Data loading</span>
+            </div>
+          </div>
 
           <div id="chatLog" class="chatLog" aria-label="Conversation log">
             <div class="msg bot">I am loading my tiny brain. Sauce may take one second.</div>
@@ -775,14 +859,49 @@
 
 
   <script>
-    const MODEL_PATHS = {
-      intentModel: "https://assets.unlim8ted.com/models/intent-model/meatball_intent.onnx",
-      intentMetadata: "https://assets.unlim8ted.com/models/intent-model/meatball_metadata.json",
+    const SPECIALIZED_TOPICS = [
+      "ai", "animals", "art", "biology", "birds", "books", "chemistry", "countries",
+      "earth_science", "food", "games", "general", "health_basics", "history",
+      "insects", "math", "movies", "music", "objects", "physics", "plants",
+      "space", "sports", "technology", "unlim8ted", "vehicles"
+    ];
 
-      contextModel: "https://assets.unlim8ted.com/models/context-model/meatball_context.onnx",
-      contextMetadata: "https://assets.unlim8ted.com/models/context-model/meatball_context_metadata.json",
+    const MODEL_SELECTOR_OPTIONS = [
+      { value: "default", label: "Default Hybrid", description: "Intent plus context plus the main Meatball bank." },
+      { value: "specialized_auto", label: "Specialized Auto", description: "Routes each question into the best specialized subject bank." },
+      { value: "subject_inserter", label: "Subject Inserter Assist", description: "Keeps the main bank but scores follow-up rewrite intent." },
+      ...SPECIALIZED_TOPICS.map(topic => ({
+        value: `topic:${topic}`,
+        label: `Topic: ${topic.replace(/_/g, " ")}`,
+        description: `Locks Meatball onto the ${topic.replace(/_/g, " ")} bank.`
+      }))
+    ];
+
+    const MODEL_PATHS = {
+      intentModel: "/assets/models/intent-model/meatball_intent.onnx",
+      intentMetadata: "/assets/models/intent-model/meatball_metadata.json",
+
+      contextModel: "/assets/models/context-model/meatball_context.onnx",
+      contextMetadata: "/assets/models/context-model/meatball_context_metadata.json",
+
+      specializedSelectorModel: "/assets/models/specialized_meatball_chunks/selector.onnx",
+      specializedSelectorConfig: "/assets/models/specialized_meatball_chunks/selector_config.json",
+      specializedSelectorLabels: "/assets/models/specialized_meatball_chunks/selector_labels.json",
+      specializedSelectorVocab: "/assets/models/specialized_meatball_chunks/selector_vocab.json",
+
+      subjectInserterModel: "/assets/models/subject_inserter/subject_inserter.onnx",
+      subjectInserterConfig: "/assets/models/subject_inserter/config.json",
+      subjectInserterLabels: "/assets/models/subject_inserter/labels.json",
+      subjectInserterVocab: "/assets/models/subject_inserter/vocab.json",
+
+      subjectFinderConfig: "/assets/models/subject_finder/config.json",
+      specializedDataBase: "/assets/data/specialized_QA",
 
       answerBankCandidates: [
+        "/assets/data/Smart-Meatball-Intent-Combined.jsonl",
+        "/assets/data/Smart-Meatball-Intent-Combined.json",
+        "/assets/data/Smart-Meatball-Data.jsonl",
+        "/assets/data/Smart-Meatball-Data.json",
         "https://assets.unlim8ted.com/data/Smart-Meatball-Intent-Combined.jsonl",
         "https://assets.unlim8ted.com/data/Smart-Meatball-Intent-Combined.json",
         "https://assets.unlim8ted.com/data/Smart-Meatball-Data.jsonl",
@@ -798,16 +917,28 @@
     const sendButton = document.getElementById("sendButton");
     const debugPanel = document.getElementById("debugPanel");
     const bigMeatballAvatar = document.getElementById("bigMeatballAvatar");
+    const modelSelector = document.getElementById("modelSelector");
+    const modelMeta = document.getElementById("modelMeta");
 
     const intentStatus = document.getElementById("intentStatus");
     const contextStatus = document.getElementById("contextStatus");
+    const routingStatus = document.getElementById("routingStatus");
+    const inserterStatus = document.getElementById("inserterStatus");
+    const finderStatus = document.getElementById("finderStatus");
     const dataStatus = document.getElementById("dataStatus");
 
     let intentBrain = null;
     let contextBrain = null;
+    let specializedRouter = null;
+    let subjectInserter = null;
+    let subjectFinderInfo = null;
     let answerRows = [];
     let rowsByIntent = new Map();
     let talkTimer = null;
+    let answerBankCache = new Map();
+    let currentAnswerBankKey = "";
+    let currentAnswerBankLabel = "Default Hybrid";
+    let currentMode = "default";
 
     let memory = {
       last_intent: "none",
@@ -820,6 +951,7 @@
     };
 
     function setStatus(el, text, state) {
+      if (!el) return;
       el.textContent = text;
       el.classList.remove("good", "bad");
       if (state) el.classList.add(state);
@@ -893,9 +1025,19 @@
     }
 
     function textToVector(text, config = {}) {
-      const featureSize = config.feature_size || config.input_size || config.vocab_size || 4096;
-      const ngramMin = config.ngram_min || 2;
-      const ngramMax = config.ngram_max || 5;
+      const featureSize =
+        config.feature_size ||
+        config.input_size ||
+        config.input_dim ||
+        config.vocab_size ||
+        config.max_input_vocab_size ||
+        config.max_features ||
+        4096;
+      const ngrams = Array.isArray(config.input_ngrams) && config.input_ngrams.length
+        ? config.input_ngrams
+        : null;
+      const ngramMin = ngrams ? Math.min(...ngrams) : (config.ngram_min || 2);
+      const ngramMax = ngrams ? Math.max(...ngrams) : (config.ngram_max || 5);
 
       // IMPORTANT: this must match tools/intent_nueral_net_train.py
       // and tools/context_neural_net_train.py exactly. The model was trained
@@ -927,6 +1069,66 @@
       for (let i = 0; i < vec.length; i++) vec[i] /= norm;
 
       return vec;
+    }
+
+    function normalizeFeatureText(text) {
+      return String(text || "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9_'?!.:,/ -]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function tokenizeFeatureText(text) {
+      return normalizeFeatureText(text).match(/[a-z0-9_']+|[?!.:,/]/g) || [];
+    }
+
+    function tokenizeSelectorText(text) {
+      return String(text || "")
+        .toLowerCase()
+        .replace(/\n/g, " ")
+        .replace(/[^a-z0-9_!?.,' -]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
+    function makeTokenNgrams(tokens, ngrams) {
+      const output = [];
+
+      for (const n of ngrams) {
+        if (!Number.isFinite(n) || n < 1 || tokens.length < n) continue;
+
+        for (let i = 0; i <= tokens.length - n; i++) {
+          output.push(tokens.slice(i, i + n).join("_"));
+        }
+      }
+
+      return output;
+    }
+
+    function vectorFromFeatureVocab(vocab, features) {
+      const size = Object.keys(vocab || {}).length;
+      const vec = new Float32Array(size);
+
+      for (const feature of features) {
+        const idx = vocab[feature];
+        if (typeof idx === "number") {
+          vec[idx] = 1.0;
+        }
+      }
+
+      return vec;
+    }
+
+    function labelsFromIndexObject(data) {
+      if (Array.isArray(data)) return data;
+      if (!data || typeof data !== "object") return [];
+      return Object.keys(data)
+        .sort((a, b) => Number(a) - Number(b))
+        .map(key => data[key]);
     }
 
     function memoryToVector(mem, config = {}) {
@@ -1005,10 +1207,34 @@
         .filter(Boolean);
     }
 
-    async function loadAnswerBank() {
+    function buildRowsByIntent(rows) {
+      const map = new Map();
+
+      for (const row of rows) {
+        if (!map.has(row.intent)) map.set(row.intent, []);
+        map.get(row.intent).push(row);
+      }
+
+      return map;
+    }
+
+    function normalizeRows(rows) {
+      return rows.map((row, index) => ({
+        id: row.id || `answer_${index}`,
+        question: row.question || row.input || "",
+        answer: row.answer || row.response || row.text || "",
+        intent: row.intent || row.label || row.topic || "unknown",
+        project: row.project || "",
+        project_key: row.project_key || row.projectKey || row.topic || "general_knowledge",
+        category: row.category || row.topic || "conversation",
+        tags: Array.isArray(row.tags) ? row.tags : []
+      }));
+    }
+
+    async function loadAnswerBankFromCandidates(candidates, cacheKey, label) {
       let lastError = null;
 
-      for (const url of MODEL_PATHS.answerBankCandidates) {
+      for (const url of candidates) {
         try {
           const text = await fetchText(url);
           const rows = parseAnswerBank(text, url)
@@ -1016,27 +1242,16 @@
             .filter(row => row.answer || row.response || row.text);
 
           if (rows.length) {
-            answerRows = rows.map((row, index) => ({
-              id: row.id || `answer_${index}`,
-              question: row.question || row.input || "",
-              answer: row.answer || row.response || row.text || "",
-              intent: row.intent || row.label || "unknown",
-              project: row.project || "",
-              project_key: row.project_key || row.projectKey || "general_knowledge",
-              category: row.category || "conversation",
-              tags: Array.isArray(row.tags) ? row.tags : []
-            }));
-
-            rowsByIntent = new Map();
-
-            for (const row of answerRows) {
-              if (!rowsByIntent.has(row.intent)) rowsByIntent.set(row.intent, []);
-              rowsByIntent.get(row.intent).push(row);
-            }
-
+            const normalizedRows = normalizeRows(rows);
+            answerBankCache.set(cacheKey, {
+              url,
+              label,
+              rows: normalizedRows,
+              rowsByIntent: buildRowsByIntent(normalizedRows)
+            });
             return {
               url,
-              rows: answerRows.length
+              rows: normalizedRows.length
             };
           }
         } catch (err) {
@@ -1045,6 +1260,74 @@
       }
 
       throw lastError || new Error("No answer bank loaded.");
+    }
+
+    function getTopicFileUrl(topic) {
+      return `${MODEL_PATHS.specializedDataBase}/${topic}.jsonl`;
+    }
+
+    function getModeConfig(mode, routedTopic = "") {
+      if (mode === "default") {
+        return {
+          cacheKey: "default",
+          label: "Default Hybrid",
+          candidates: MODEL_PATHS.answerBankCandidates
+        };
+      }
+
+      if (mode === "subject_inserter") {
+        return {
+          cacheKey: "subject_inserter",
+          label: "Subject Inserter Assist",
+          candidates: MODEL_PATHS.answerBankCandidates
+        };
+      }
+
+      if (mode === "specialized_auto") {
+        const topic = SPECIALIZED_TOPICS.includes(routedTopic) ? routedTopic : "general";
+        return {
+          cacheKey: `specialized_auto:${topic}`,
+          label: `Specialized Auto -> ${topic.replace(/_/g, " ")}`,
+          candidates: [getTopicFileUrl(topic)]
+        };
+      }
+
+      if (mode.startsWith("topic:")) {
+        const topic = mode.slice("topic:".length);
+        return {
+          cacheKey: `topic:${topic}`,
+          label: `Topic Lock -> ${topic.replace(/_/g, " ")}`,
+          candidates: [getTopicFileUrl(topic)]
+        };
+      }
+
+      return {
+        cacheKey: "default",
+        label: "Default Hybrid",
+        candidates: MODEL_PATHS.answerBankCandidates
+      };
+    }
+
+    async function setActiveAnswerBank(mode, routedTopic = "") {
+      const bankConfig = getModeConfig(mode, routedTopic);
+
+      if (!answerBankCache.has(bankConfig.cacheKey)) {
+        await loadAnswerBankFromCandidates(bankConfig.candidates, bankConfig.cacheKey, bankConfig.label);
+      }
+
+      const cached = answerBankCache.get(bankConfig.cacheKey);
+      answerRows = cached.rows;
+      rowsByIntent = cached.rowsByIntent;
+      currentAnswerBankKey = bankConfig.cacheKey;
+      currentAnswerBankLabel = cached.label || bankConfig.label;
+      setStatus(dataStatus, `Data ready: ${answerRows.length} rows`, "good");
+      updateModelMeta();
+
+      return {
+        url: cached.url,
+        rows: answerRows.length,
+        label: currentAnswerBankLabel
+      };
     }
 
     async function createSession(url) {
@@ -1095,22 +1378,144 @@
       return [];
     }
 
-    async function loadModels() {
-      //setStatus(intentStatus, "Intent model loading", "");
-      //setStatus(contextStatus, "Context model loading", "");
-      //setStatus(dataStatus, "Answer bank loading", "");
+    function updateModelMeta(extra = "") {
+      if (!modelMeta) return;
+      const pieces = [
+        `Mode: ${currentAnswerBankLabel}.`,
+        `Rows: ${answerRows.length || 0}.`
+      ];
+      if (extra) pieces.push(extra);
+      modelMeta.textContent = pieces.join(" ");
+    }
 
-      const [intentMetadata, contextMetadata, answerBankLoad] = await Promise.all([
+    function renderModelSelector() {
+      modelSelector.innerHTML = "";
+
+      for (const option of MODEL_SELECTOR_OPTIONS) {
+        const el = document.createElement("option");
+        el.value = option.value;
+        el.textContent = option.label;
+        modelSelector.appendChild(el);
+      }
+
+      const requested = new URLSearchParams(location.search).get("model");
+      currentMode = MODEL_SELECTOR_OPTIONS.some(option => option.value === requested) ? requested : "specialized_auto";
+      modelSelector.value = currentMode;
+    }
+
+    async function predictSpecializedTopic(userText) {
+      if (!specializedRouter) {
+        return {
+          topic: "general",
+          confidence: 0,
+          top: []
+        };
+      }
+
+      const config = specializedRouter.config || {};
+      const inputText = `question: ${userText} history: `;
+      const tokens = tokenizeSelectorText(inputText);
+      const ngrams = Array.isArray(config.input_ngrams) && config.input_ngrams.length
+        ? config.input_ngrams
+        : [1, 2, 3];
+      const vec = vectorFromFeatureVocab(
+        specializedRouter.vocab,
+        makeTokenNgrams(tokens, ngrams)
+      );
+      const tensor = new ort.Tensor("float32", vec, [1, vec.length]);
+      const outputs = await runSessionWithFirstInput(specializedRouter.session, tensor);
+      const firstKey = Object.keys(outputs)[0];
+      const logits = Array.from(outputs[firstKey].data);
+      const probs = softmax(logits);
+      const top = probs
+        .map((score, index) => ({
+          topic: specializedRouter.labels[index] || "general",
+          score
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 6);
+
+      return {
+        topic: top[0]?.topic || "general",
+        confidence: top[0]?.score || 0,
+        top
+      };
+    }
+
+    async function predictSubjectInserter(userText, subjectHint = "") {
+      if (!subjectInserter) return null;
+
+      const message = normalizeFeatureText(userText);
+      const subject = normalizeFeatureText(subjectHint);
+      const inputText = `message: ${message} subject: ${subject}`;
+      const maxNgram = Number(subjectInserter.config?.max_ngram || 3);
+      const tokens = tokenizeFeatureText(inputText);
+      const vec = vectorFromFeatureVocab(
+        subjectInserter.vocab,
+        makeTokenNgrams(tokens, Array.from({ length: maxNgram }, (_, index) => index + 1))
+      );
+      const tensor = new ort.Tensor("float32", vec, [1, vec.length]);
+      const outputs = await runSessionWithFirstInput(subjectInserter.session, tensor);
+      const firstKey = Object.keys(outputs)[0];
+      const logits = Array.from(outputs[firstKey].data);
+      const probs = softmax(logits);
+      const top = probs
+        .map((score, index) => ({
+          action: subjectInserter.labels[index] || String(index),
+          score
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5);
+
+      return {
+        action: top[0]?.action || "no_rewrite",
+        confidence: top[0]?.score || 0,
+        top
+      };
+    }
+
+    async function loadModels() {
+      setStatus(intentStatus, "Intent loading", "");
+      setStatus(contextStatus, "Context loading", "");
+      setStatus(routingStatus, "Router loading", "");
+      setStatus(inserterStatus, "Inserter loading", "");
+      setStatus(finderStatus, "Finder probing", "");
+      setStatus(dataStatus, "Data loading", "");
+
+      renderModelSelector();
+
+      const [
+        intentMetadata,
+        contextMetadata,
+        selectorConfig,
+        selectorLabelsRaw,
+        selectorVocab,
+        subjectInserterConfig,
+        subjectInserterLabels,
+        subjectInserterVocab,
+        subjectFinderConfig
+      ] = await Promise.all([
         fetchJson(MODEL_PATHS.intentMetadata),
         fetchJson(MODEL_PATHS.contextMetadata),
-        loadAnswerBank()
+        fetchJson(MODEL_PATHS.specializedSelectorConfig),
+        fetchJson(MODEL_PATHS.specializedSelectorLabels),
+        fetchJson(MODEL_PATHS.specializedSelectorVocab),
+        fetchJson(MODEL_PATHS.subjectInserterConfig),
+        fetchJson(MODEL_PATHS.subjectInserterLabels),
+        fetchJson(MODEL_PATHS.subjectInserterVocab),
+        fetchJson(MODEL_PATHS.subjectFinderConfig)
       ]);
 
-      //setStatus(dataStatus, `Answer bank ready (${answerBankLoad.rows})`, "good");
-
-      const [intentSession, contextSession] = await Promise.all([
+      const [
+        intentSession,
+        contextSession,
+        selectorSession,
+        subjectInserterSession
+      ] = await Promise.all([
         createSession(MODEL_PATHS.intentModel),
-        createSession(MODEL_PATHS.contextModel)
+        createSession(MODEL_PATHS.contextModel),
+        createSession(MODEL_PATHS.specializedSelectorModel),
+        createSession(MODEL_PATHS.subjectInserterModel)
       ]);
 
       intentBrain = {
@@ -1125,11 +1530,36 @@
         labels: getLabels(contextMetadata, ["actions", "context_actions", "action_labels", "labels"])
       };
 
-      //setStatus(intentStatus, "Intent model ready", "good");
-      //setStatus(contextStatus, "Context model ready", "good");
+      specializedRouter = {
+        session: selectorSession,
+        config: selectorConfig,
+        labels: labelsFromIndexObject(selectorLabelsRaw),
+        vocab: selectorVocab
+      };
+
+      subjectInserter = {
+        session: subjectInserterSession,
+        config: subjectInserterConfig,
+        labels: labelsFromIndexObject(subjectInserterLabels),
+        vocab: subjectInserterVocab
+      };
+
+      subjectFinderInfo = {
+        availableInBrowser: false,
+        config: subjectFinderConfig
+      };
+
+      await setActiveAnswerBank(currentMode);
+
+      setStatus(intentStatus, `Intent ready (${intentBrain.labels.length})`, "good");
+      setStatus(contextStatus, `Context ready (${contextBrain.labels.length})`, "good");
+      setStatus(routingStatus, `Router ready (${specializedRouter.labels.length})`, "good");
+      setStatus(inserterStatus, `Inserter ready (${subjectInserter.labels.length})`, "good");
+      setStatus(finderStatus, "Finder is PyTorch-only here", "bad");
 
       chatInput.disabled = false;
       sendButton.disabled = false;
+      modelSelector.disabled = false;
       chatInput.placeholder = "Ask Meatball...";
     }
 
@@ -1160,7 +1590,7 @@
 
     function chooseAnswerRow(intentPrediction, userText) {
       const intent = intentPrediction.intent;
-      const rows = rowsByIntent.get(intent) || [];
+      const rows = rowsByIntent.get(intent) || answerRows;
 
       if (!rows.length) return null;
 
@@ -1480,6 +1910,9 @@
     }
 
     async function getMeatballReply(userText) {
+      let routedTopicPrediction = null;
+      let subjectInserterPrediction = null;
+
       const override = directRuntimeOverride(userText);
 
       if (override) {
@@ -1503,6 +1936,18 @@
         };
       }
 
+      if (currentMode === "specialized_auto") {
+        routedTopicPrediction = await predictSpecializedTopic(userText);
+        await setActiveAnswerBank(currentMode, routedTopicPrediction.topic);
+      } else {
+        await setActiveAnswerBank(currentMode);
+      }
+
+      if (currentMode === "subject_inserter" || currentMode === "specialized_auto") {
+        const subjectHint = routedTopicPrediction?.topic || memory.last_project_key || "";
+        subjectInserterPrediction = await predictSubjectInserter(userText, subjectHint);
+      }
+
       const intentPrediction = await predictIntent(userText);
       const answerRow = chooseAnswerRow(intentPrediction, userText);
 
@@ -1520,6 +1965,11 @@
           text: answer,
           debug: {
             mode: "fallback_no_answer_row",
+            currentMode,
+            currentAnswerBankKey,
+            currentAnswerBankLabel,
+            routedTopicPrediction,
+            subjectInserterPrediction,
             intentPrediction,
             memory
           }
@@ -1540,6 +1990,11 @@
         text: answer,
         debug: {
           mode: "intent_context",
+          currentMode,
+          currentAnswerBankKey,
+          currentAnswerBankLabel,
+          routedTopicPrediction,
+          subjectInserterPrediction,
           intentPrediction,
           contextPrediction,
           answerRow: {
@@ -1584,6 +2039,31 @@
       }
     });
 
+    modelSelector.addEventListener("change", async () => {
+      const nextMode = modelSelector.value;
+      currentMode = nextMode;
+      modelSelector.disabled = true;
+      chatInput.disabled = true;
+      sendButton.disabled = true;
+      setStatus(dataStatus, "Switching data bank", "");
+
+      try {
+        await setActiveAnswerBank(currentMode);
+        const url = new URL(location.href);
+        url.searchParams.set("model", currentMode);
+        history.replaceState({}, "", url);
+        addMessage("system", `Sauce lane switched to ${currentAnswerBankLabel.toLowerCase()}.`);
+      } catch (err) {
+        console.error(err);
+        addMessage("system", "That model bank did not load, so the sauce stayed stuck.");
+        setStatus(dataStatus, "Data switch failed", "bad");
+      } finally {
+        modelSelector.disabled = false;
+        chatInput.disabled = false;
+        sendButton.disabled = false;
+      }
+    });
+
     chatInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
@@ -1602,8 +2082,12 @@
           debugPanel.classList.add("show");
           setDebug({
             loaded: true,
+            currentMode,
             intentLabels: intentBrain.labels.length,
             contextLabels: contextBrain.labels.length,
+            routerLabels: specializedRouter.labels.length,
+            subjectInserterLabels: subjectInserter.labels.length,
+            subjectFinderInfo,
             answerRows: answerRows.length,
             paths: MODEL_PATHS
           });
@@ -1612,10 +2096,12 @@
         chatInput.focus();
       } catch (err) {
         console.error(err);
-
-        //setStatus(intentStatus, "Intent model failed", "bad");
-        //setStatus(contextStatus, "Context model failed", "bad");
-        //setStatus(dataStatus, "Answer bank maybe failed", "bad");
+        setStatus(intentStatus, "Intent failed", "bad");
+        setStatus(contextStatus, "Context failed", "bad");
+        setStatus(routingStatus, "Router failed", "bad");
+        setStatus(inserterStatus, "Inserter failed", "bad");
+        setStatus(finderStatus, "Finder unavailable", "bad");
+        setStatus(dataStatus, "Data failed", "bad");
 
         chatLog.innerHTML = "";
         addMessage("bot", "My model files did not load.");
