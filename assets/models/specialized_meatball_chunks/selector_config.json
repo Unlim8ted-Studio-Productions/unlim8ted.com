@@ -9,7 +9,8 @@
   "max_input_vocab_size": 12000,
   "hidden_size": 192,
   "dropout": 0.35,
-  "model_pt_path": "selector.pt",
+  "model_onnx_path": "selector.onnx",
   "selector_vocab_path": "selector_vocab.json",
-  "selector_labels_path": "selector_labels.json"
+  "selector_labels_path": "selector_labels.json",
+  "history_in_input": false
 }

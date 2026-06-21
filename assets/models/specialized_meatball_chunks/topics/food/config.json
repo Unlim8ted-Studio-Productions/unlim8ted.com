@@ -16,13 +16,15 @@
   "max_output_vocab_size": 12000,
   "hidden_size": 192,
   "embed_size": 128,
+  "prompt_size": 128,
   "dropout": 0.35,
   "pad_id": 0,
   "bos_id": 1,
   "eos_id": 2,
   "unk_id": 3,
-  "model_pt_path": "model.pt",
+  "model_onnx_path": "../food.onnx",
   "input_vocab_path": "input_vocab.json",
   "output_chunks_path": "output_chunks.json",
+  "history_in_input": false,
   "note": "Topic-specialized Meatball chunk model using original mined chunk logic."
 }

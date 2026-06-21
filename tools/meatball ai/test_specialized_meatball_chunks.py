@@ -4,16 +4,16 @@ import argparse
 from pathlib import Path
 from collections import Counter
 
-import torch
-import torch.nn as nn
+import numpy as np
+import onnx
+import onnxruntime as ort
 
 # ============================================================
 # CONFIG
 # ============================================================
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-
 INPUT_NGRAMS = (1, 2, 3)
+SELECTOR_MAX_LEN = 48
 
 HIDDEN_SIZE = 192
 EMBED_SIZE = 128
@@ -78,14 +78,7 @@ def make_input_ngrams(tokens, ngrams=INPUT_NGRAMS):
 
 def row_to_input_text(row):
     question = row.get("question", "")
-
-    history = row.get("history", [])
-    if isinstance(history, list):
-        history_text = " ".join(str(x) for x in history)
-    else:
-        history_text = str(history)
-
-    return f"question: {question} history: {history_text}"
+    return f"question: {question}"
 
 
 def selector_text_from_question(question: str):
@@ -96,7 +89,7 @@ def vectorize_text(text, vocab):
     tokens = input_tokenize(text)
     feats = make_input_ngrams(tokens)
 
-    x = torch.zeros(len(vocab), dtype=torch.float32)
+    x = np.zeros(len(vocab), dtype=np.float32)
 
     counts = Counter(feats)
 
@@ -112,13 +105,37 @@ def vectorize_selector_question(question, selector_vocab):
     return vectorize_text(text, selector_vocab)
 
 
-def vectorize_topic_question(question, input_vocab, history=None):
-    if history is None:
-        history = []
+def encode_selector_question_ids(
+    question,
+    selector_vocab,
+    max_len=SELECTOR_MAX_LEN,
+    max_token_id=None,
+):
+    text = selector_text_from_question(question)
+    tokens = input_tokenize(text)
+    feats = make_input_ngrams(tokens)
 
+    pad_id = int(selector_vocab.get("<PAD>", 0))
+    unk_id = int(selector_vocab.get("<UNK>", 1))
+
+    ids = []
+    for feat in feats:
+        token_id = int(selector_vocab.get(feat, unk_id))
+        if max_token_id is not None and token_id > max_token_id:
+            token_id = unk_id
+        ids.append(token_id)
+        if len(ids) >= max_len:
+            break
+
+    while len(ids) < max_len:
+        ids.append(pad_id)
+
+    return np.asarray(ids, dtype=np.int64)
+
+
+def vectorize_topic_question(question, input_vocab, history=None):
     row = {
         "question": question,
-        "history": history,
     }
 
     text = row_to_input_text(row)
@@ -180,131 +197,60 @@ def decode_chunk_ids(ids, output_chunks):
 
 
 # ============================================================
-# MODELS
-# Must match train_selector_and_specialists_old_chunks.py
-# ============================================================
-
-
-class SelectorModel(nn.Module):
-    def __init__(
-        self, input_size, num_topics, hidden_size=HIDDEN_SIZE, dropout=DROPOUT
-    ):
-        super().__init__()
-
-        self.model = nn.Sequential(
-            nn.Linear(input_size, hidden_size),
-            nn.LayerNorm(hidden_size),
-            nn.GELU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden_size, hidden_size),
-            nn.LayerNorm(hidden_size),
-            nn.GELU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden_size, num_topics),
-        )
-
-    def forward(self, x):
-        return self.model(x)
-
-
-class ChunkAnswerModel(nn.Module):
-    def __init__(
-        self,
-        input_size,
-        output_vocab_size,
-        hidden_size=HIDDEN_SIZE,
-        embed_size=EMBED_SIZE,
-        dropout=DROPOUT,
-    ):
-        super().__init__()
-
-        self.input_size = input_size
-        self.output_vocab_size = output_vocab_size
-        self.hidden_size = hidden_size
-        self.embed_size = embed_size
-
-        self.encoder = nn.Sequential(
-            nn.Linear(input_size, hidden_size),
-            nn.LayerNorm(hidden_size),
-            nn.GELU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden_size, hidden_size),
-            nn.LayerNorm(hidden_size),
-            nn.GELU(),
-            nn.Dropout(dropout),
-        )
-
-        self.embedding = nn.Embedding(output_vocab_size, embed_size)
-
-        self.decoder_cell = nn.GRUCell(embed_size, hidden_size)
-
-        self.output = nn.Sequential(
-            nn.LayerNorm(hidden_size),
-            nn.Dropout(dropout),
-            nn.Linear(hidden_size, output_vocab_size),
-        )
-
-    def encode(self, x):
-        return self.encoder(x)
-
-    def decoder_step(self, prev_token, hidden):
-        emb = self.embedding(prev_token)
-        hidden = self.decoder_cell(emb, hidden)
-        logits = self.output(hidden)
-        return logits, hidden
-
-    def forward(
-        self, x, target=None, teacher_forcing=True, max_len=MAX_OUTPUT_CHUNKS + 1
-    ):
-        batch_size = x.size(0)
-
-        hidden = self.encode(x)
-
-        prev_token = torch.full(
-            (batch_size,),
-            BOS_ID,
-            dtype=torch.long,
-            device=x.device,
-        )
-
-        logits_steps = []
-
-        for t in range(max_len):
-            logits, hidden = self.decoder_step(prev_token, hidden)
-            logits_steps.append(logits.unsqueeze(1))
-
-            if teacher_forcing and target is not None:
-                prev_token = target[:, t]
-            else:
-                prev_token = torch.argmax(logits, dim=-1)
-
-        return torch.cat(logits_steps, dim=1)
-
-
-# ============================================================
 # LOAD MODELS
 # ============================================================
 
 
+def create_session(path):
+    providers = ["CPUExecutionProvider"]
+    return ort.InferenceSession(str(path), providers=providers)
+
+
+def infer_selector_max_token_id(path):
+    model = onnx.load(str(path))
+
+    for init in model.graph.initializer:
+        name = init.name.lower()
+        if "embedding" in name and "weight" in name and init.dims:
+            return int(init.dims[0]) - 1
+
+    return None
+
+
+def cast_input_for_session(session, array):
+    input_meta = session.get_inputs()[0]
+    input_type = input_meta.type
+
+    if input_type == "tensor(int64)":
+        return np.asarray(array, dtype=np.int64)
+
+    if input_type == "tensor(int32)":
+        return np.asarray(array, dtype=np.int32)
+
+    if input_type == "tensor(float)":
+        return np.asarray(array, dtype=np.float32)
+
+    if input_type == "tensor(double)":
+        return np.asarray(array, dtype=np.float64)
+
+    return np.asarray(array)
+
+
+def run_first_output(session, array):
+    input_name = session.get_inputs()[0].name
+    cast_array = cast_input_for_session(session, array)
+    outputs = session.run(None, {input_name: cast_array})
+    return outputs[0]
+
+
 def load_selector(model_dir, selector_vocab, labels):
-    selector_path = model_dir / "selector.pt"
-
-    checkpoint = torch.load(selector_path, map_location=DEVICE)
-
-    model = SelectorModel(
-        input_size=checkpoint.get("input_size", len(selector_vocab)),
-        num_topics=checkpoint.get("num_topics", len(labels)),
-        hidden_size=checkpoint.get("hidden_size", HIDDEN_SIZE),
-        dropout=checkpoint.get("dropout", DROPOUT),
-    ).to(DEVICE)
-
-    if "model_state_dict" in checkpoint:
-        model.load_state_dict(checkpoint["model_state_dict"])
-    else:
-        model.load_state_dict(checkpoint)
-
-    model.eval()
-    return model
+    selector_path = model_dir / "selector.onnx"
+    if not selector_path.exists():
+        raise FileNotFoundError(f"Missing selector ONNX: {selector_path}")
+    return {
+        "session": create_session(selector_path),
+        "max_token_id": infer_selector_max_token_id(selector_path),
+    }
 
 
 def load_topic_model(topic_dir):
@@ -312,33 +258,14 @@ def load_topic_model(topic_dir):
     input_vocab = load_json(topic_dir / "input_vocab.json")
     output_chunks = load_json(topic_dir / "output_chunks.json")
 
-    model_path = topic_dir / config.get("model_pt_path", "model.pt")
+    model_rel = config.get("model_onnx_path", "../model.onnx")
+    model_path = (topic_dir / model_rel).resolve()
+    if not model_path.exists():
+        raise FileNotFoundError(f"Missing topic ONNX: {model_path}")
 
-    checkpoint = torch.load(model_path, map_location=DEVICE)
+    max_output_chunks = config.get("max_output_chunks", MAX_OUTPUT_CHUNKS)
 
-    model = ChunkAnswerModel(
-        input_size=checkpoint.get("input_vocab_size", len(input_vocab)),
-        output_vocab_size=checkpoint.get("output_vocab_size", len(output_chunks)),
-        hidden_size=checkpoint.get(
-            "hidden_size", config.get("hidden_size", HIDDEN_SIZE)
-        ),
-        embed_size=checkpoint.get("embed_size", config.get("embed_size", EMBED_SIZE)),
-        dropout=checkpoint.get("dropout", config.get("dropout", DROPOUT)),
-    ).to(DEVICE)
-
-    if "model_state_dict" in checkpoint:
-        model.load_state_dict(checkpoint["model_state_dict"])
-    else:
-        model.load_state_dict(checkpoint)
-
-    model.eval()
-
-    max_output_chunks = checkpoint.get(
-        "max_output_chunks",
-        config.get("max_output_chunks", MAX_OUTPUT_CHUNKS),
-    )
-
-    return model, input_vocab, output_chunks, max_output_chunks
+    return create_session(model_path), input_vocab, output_chunks, max_output_chunks
 
 
 # ============================================================
@@ -346,54 +273,63 @@ def load_topic_model(topic_dir):
 # ============================================================
 
 
-@torch.no_grad()
 def predict_topic(question, selector_model, selector_vocab, labels, top_k=5):
-    selector_model.eval()
+    session = selector_model["session"]
+    max_token_id = selector_model.get("max_token_id")
+    input_meta = session.get_inputs()[0]
 
-    x = vectorize_selector_question(question, selector_vocab).unsqueeze(0).to(DEVICE)
+    if input_meta.type in ("tensor(int64)", "tensor(int32)"):
+        shape = input_meta.shape
+        seq_len = SELECTOR_MAX_LEN
+        if len(shape) >= 2 and isinstance(shape[1], int):
+            seq_len = int(shape[1])
+        x = encode_selector_question_ids(
+            question,
+            selector_vocab,
+            max_len=seq_len,
+            max_token_id=max_token_id,
+        ).reshape(1, -1)
+    else:
+        x = vectorize_selector_question(question, selector_vocab).reshape(1, -1)
 
-    logits = selector_model(x)[0]
-    probs = torch.softmax(logits, dim=-1)
+    logits = run_first_output(session, x)[0]
+    logits = np.asarray(logits, dtype=np.float32)
+    shifted = logits - np.max(logits)
+    probs = np.exp(shifted)
+    probs /= max(float(np.sum(probs)), 1e-8)
 
-    topic_id = int(torch.argmax(probs).item())
-    confidence = float(probs[topic_id].item())
+    topic_id = int(np.argmax(probs))
+    confidence = float(probs[topic_id])
 
     topic = labels.get(str(topic_id), labels.get(topic_id))
 
-    top = torch.topk(probs, k=min(top_k, probs.numel()))
-
     top_topics = []
-    for prob, idx in zip(top.values.tolist(), top.indices.tolist()):
+    top_indices = np.argsort(probs)[::-1][: min(top_k, probs.shape[0])]
+    for idx in top_indices:
+        prob = float(probs[idx])
         t = labels.get(str(int(idx)), labels.get(int(idx)))
-        top_topics.append((t, float(prob)))
+        top_topics.append((t, prob))
 
     return topic, confidence, top_topics
 
 
-@torch.no_grad()
 def predict_answer(
     question, model, input_vocab, output_chunks, max_output_chunks, history=None
 ):
-    model.eval()
-
     x = vectorize_topic_question(question, input_vocab, history=history)
-    x = x.unsqueeze(0).to(DEVICE)
-
-    hidden = model.encode(x)
-
-    prev_token = torch.tensor([BOS_ID], dtype=torch.long, device=DEVICE)
+    x = x.reshape(1, -1)
+    logits_steps = run_first_output(model, x)[0]
 
     pred_ids = []
     scores = []
 
-    for _ in range(max_output_chunks + 1):
-        logits, hidden = model.decoder_step(prev_token, hidden)
-
-        probs = torch.softmax(logits, dim=-1)
-        score, token = torch.max(probs, dim=-1)
-
-        token_id = int(token.item())
-        score_value = float(score.item())
+    for step_logits in logits_steps[: max_output_chunks + 1]:
+        step_logits = np.asarray(step_logits, dtype=np.float32)
+        shifted = step_logits - np.max(step_logits)
+        probs = np.exp(shifted)
+        probs /= max(float(np.sum(probs)), 1e-8)
+        token_id = int(np.argmax(probs))
+        score_value = float(probs[token_id])
 
         if token_id == EOS_ID:
             break
@@ -403,8 +339,6 @@ def predict_answer(
 
         pred_ids.append(token_id)
         scores.append(score_value)
-
-        prev_token = token
 
     answer = decode_chunk_ids(pred_ids + [EOS_ID], output_chunks)
 
@@ -470,7 +404,7 @@ def main():
     parser.add_argument(
         "--model_dir",
         default="assets/models/specialized_meatball_chunks",
-        help="Folder with selector.pt, selector_vocab.json, selector_labels.json, and topics/",
+        help="Folder with selector.onnx, selector_vocab.json, selector_labels.json, and topics/",
     )
 
     parser.add_argument(
@@ -502,8 +436,7 @@ def main():
 
     topic_cache = {}
 
-    print(f"device: {DEVICE}")
-    print("Loaded PT Meatball specialized runtime.")
+    print("Loaded ONNX Meatball specialized runtime.")
     print(f"model_dir: {model_dir}")
     print()
 

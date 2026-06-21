@@ -1,198 +1,24 @@
 {
   "architecture": "MeatballAI selector plus topic-specialized original chunk models",
   "selector": {
-    "model": "selector.pt",
+    "model": "selector.onnx",
     "config": "selector_config.json",
     "vocab": "selector_vocab.json",
     "labels": "selector_labels.json"
   },
   "topics": {
-    "ai": {
-      "dir": "topics/ai",
-      "model": "topics/ai/model.pt",
-      "config": "topics/ai/config.json",
-      "input_vocab": "topics/ai/input_vocab.json",
-      "output_chunks": "topics/ai/output_chunks.json"
-    },
-    "animals": {
-      "dir": "topics/animals",
-      "model": "topics/animals/model.pt",
-      "config": "topics/animals/config.json",
-      "input_vocab": "topics/animals/input_vocab.json",
-      "output_chunks": "topics/animals/output_chunks.json"
-    },
-    "art": {
-      "dir": "topics/art",
-      "model": "topics/art/model.pt",
-      "config": "topics/art/config.json",
-      "input_vocab": "topics/art/input_vocab.json",
-      "output_chunks": "topics/art/output_chunks.json"
-    },
-    "biology": {
-      "dir": "topics/biology",
-      "model": "topics/biology/model.pt",
-      "config": "topics/biology/config.json",
-      "input_vocab": "topics/biology/input_vocab.json",
-      "output_chunks": "topics/biology/output_chunks.json"
-    },
-    "birds": {
-      "dir": "topics/birds",
-      "model": "topics/birds/model.pt",
-      "config": "topics/birds/config.json",
-      "input_vocab": "topics/birds/input_vocab.json",
-      "output_chunks": "topics/birds/output_chunks.json"
-    },
-    "books": {
-      "dir": "topics/books",
-      "model": "topics/books/model.pt",
-      "config": "topics/books/config.json",
-      "input_vocab": "topics/books/input_vocab.json",
-      "output_chunks": "topics/books/output_chunks.json"
-    },
-    "chemistry": {
-      "dir": "topics/chemistry",
-      "model": "topics/chemistry/model.pt",
-      "config": "topics/chemistry/config.json",
-      "input_vocab": "topics/chemistry/input_vocab.json",
-      "output_chunks": "topics/chemistry/output_chunks.json"
-    },
-    "countries": {
-      "dir": "topics/countries",
-      "model": "topics/countries/model.pt",
-      "config": "topics/countries/config.json",
-      "input_vocab": "topics/countries/input_vocab.json",
-      "output_chunks": "topics/countries/output_chunks.json"
-    },
-    "earth_science": {
-      "dir": "topics/earth_science",
-      "model": "topics/earth_science/model.pt",
-      "config": "topics/earth_science/config.json",
-      "input_vocab": "topics/earth_science/input_vocab.json",
-      "output_chunks": "topics/earth_science/output_chunks.json"
-    },
-    "food": {
-      "dir": "topics/food",
-      "model": "topics/food/model.pt",
-      "config": "topics/food/config.json",
-      "input_vocab": "topics/food/input_vocab.json",
-      "output_chunks": "topics/food/output_chunks.json"
-    },
-    "games": {
-      "dir": "topics/games",
-      "model": "topics/games/model.pt",
-      "config": "topics/games/config.json",
-      "input_vocab": "topics/games/input_vocab.json",
-      "output_chunks": "topics/games/output_chunks.json"
-    },
     "general": {
       "dir": "topics/general",
-      "model": "topics/general/model.pt",
+      "model": "topics/general.onnx",
       "config": "topics/general/config.json",
       "input_vocab": "topics/general/input_vocab.json",
       "output_chunks": "topics/general/output_chunks.json"
-    },
-    "health_basics": {
-      "dir": "topics/health_basics",
-      "model": "topics/health_basics/model.pt",
-      "config": "topics/health_basics/config.json",
-      "input_vocab": "topics/health_basics/input_vocab.json",
-      "output_chunks": "topics/health_basics/output_chunks.json"
-    },
-    "history": {
-      "dir": "topics/history",
-      "model": "topics/history/model.pt",
-      "config": "topics/history/config.json",
-      "input_vocab": "topics/history/input_vocab.json",
-      "output_chunks": "topics/history/output_chunks.json"
-    },
-    "insects": {
-      "dir": "topics/insects",
-      "model": "topics/insects/model.pt",
-      "config": "topics/insects/config.json",
-      "input_vocab": "topics/insects/input_vocab.json",
-      "output_chunks": "topics/insects/output_chunks.json"
-    },
-    "math": {
-      "dir": "topics/math",
-      "model": "topics/math/model.pt",
-      "config": "topics/math/config.json",
-      "input_vocab": "topics/math/input_vocab.json",
-      "output_chunks": "topics/math/output_chunks.json"
-    },
-    "movies": {
-      "dir": "topics/movies",
-      "model": "topics/movies/model.pt",
-      "config": "topics/movies/config.json",
-      "input_vocab": "topics/movies/input_vocab.json",
-      "output_chunks": "topics/movies/output_chunks.json"
-    },
-    "music": {
-      "dir": "topics/music",
-      "model": "topics/music/model.pt",
-      "config": "topics/music/config.json",
-      "input_vocab": "topics/music/input_vocab.json",
-      "output_chunks": "topics/music/output_chunks.json"
-    },
-    "objects": {
-      "dir": "topics/objects",
-      "model": "topics/objects/model.pt",
-      "config": "topics/objects/config.json",
-      "input_vocab": "topics/objects/input_vocab.json",
-      "output_chunks": "topics/objects/output_chunks.json"
-    },
-    "physics": {
-      "dir": "topics/physics",
-      "model": "topics/physics/model.pt",
-      "config": "topics/physics/config.json",
-      "input_vocab": "topics/physics/input_vocab.json",
-      "output_chunks": "topics/physics/output_chunks.json"
-    },
-    "plants": {
-      "dir": "topics/plants",
-      "model": "topics/plants/model.pt",
-      "config": "topics/plants/config.json",
-      "input_vocab": "topics/plants/input_vocab.json",
-      "output_chunks": "topics/plants/output_chunks.json"
-    },
-    "space": {
-      "dir": "topics/space",
-      "model": "topics/space/model.pt",
-      "config": "topics/space/config.json",
-      "input_vocab": "topics/space/input_vocab.json",
-      "output_chunks": "topics/space/output_chunks.json"
-    },
-    "sports": {
-      "dir": "topics/sports",
-      "model": "topics/sports/model.pt",
-      "config": "topics/sports/config.json",
-      "input_vocab": "topics/sports/input_vocab.json",
-      "output_chunks": "topics/sports/output_chunks.json"
-    },
-    "technology": {
-      "dir": "topics/technology",
-      "model": "topics/technology/model.pt",
-      "config": "topics/technology/config.json",
-      "input_vocab": "topics/technology/input_vocab.json",
-      "output_chunks": "topics/technology/output_chunks.json"
-    },
-    "unlim8ted": {
-      "dir": "topics/unlim8ted",
-      "model": "topics/unlim8ted/model.pt",
-      "config": "topics/unlim8ted/config.json",
-      "input_vocab": "topics/unlim8ted/input_vocab.json",
-      "output_chunks": "topics/unlim8ted/output_chunks.json"
-    },
-    "vehicles": {
-      "dir": "topics/vehicles",
-      "model": "topics/vehicles/model.pt",
-      "config": "topics/vehicles/config.json",
-      "input_vocab": "topics/vehicles/input_vocab.json",
-      "output_chunks": "topics/vehicles/output_chunks.json"
     }
   },
   "notes": [
     "Each topic has its own input_vocab.json and output_chunks.json.",
     "Specialized models use original mined chunk logic.",
-    "Do not use one shared chunk vocabulary across topics."
+    "Do not use one shared chunk vocabulary across topics.",
+    "History is intentionally excluded from specialized model inputs."
   ]
 }

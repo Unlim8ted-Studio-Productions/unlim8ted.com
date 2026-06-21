@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
   <title>Unlim8ted - Home</title>
+  <link rel="stylesheet" href="./products/resources/css/meatball-assistant.css">
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
 
   <style>
     :root {
@@ -1447,6 +1449,580 @@
       }
     }
 
+    .meatball-home-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.18fr) minmax(280px, .82fr);
+      gap: clamp(22px, 4vw, 56px);
+      align-items: start;
+    }
+
+    .meatball-home-copy {
+      display: grid;
+      gap: 22px;
+      min-width: 0;
+    }
+
+    .meatball-home-title,
+    .meatball-home-body {
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(236, 231, 221, .12);
+    }
+
+    .meatball-home-title {
+      color: white;
+      background: rgba(0, 0, 0, .46);
+      display: inline-block;
+      width: fit-content;
+      padding: .08em .16em .14em;
+      border-radius: 18px;
+    }
+
+    .meatball-home-body {
+      color: rgba(255, 255, 255, .92);
+      background: rgba(255, 255, 255, .1);
+      padding: 18px 20px;
+      border-radius: 20px;
+      max-width: 46rem;
+    }
+
+    .meatball-home-shell {
+      border-radius: 30px;
+      border: 1px solid rgba(236, 231, 221, .12);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, .34);
+      background: rgba(10, 16, 28, .62);
+      padding: clamp(14px, 2vw, 22px);
+    }
+
+    .meatball-home-stage {
+      min-height: 720px;
+      background: none;
+      display: grid;
+      place-items: center;
+      padding: clamp(22px, 3vw, 34px);
+      isolation: isolate;
+      position: relative;
+      overflow: visible;
+    }
+
+    .meatball-home-stage::before,
+    .meatball-home-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .meatball-home-stage::before {
+      background-image:
+        radial-gradient(circle at 14% 18%, rgba(255, 255, 255, .95) 0 1px, transparent 2px),
+        radial-gradient(circle at 78% 22%, rgba(255, 255, 255, .8) 0 1px, transparent 2px),
+        radial-gradient(circle at 66% 68%, rgba(255, 255, 255, .72) 0 1px, transparent 2px),
+        radial-gradient(circle at 28% 74%, rgba(255, 255, 255, .84) 0 1px, transparent 2px),
+        radial-gradient(circle at 87% 56%, rgba(255, 255, 255, .7) 0 1px, transparent 2px);
+      opacity: .92;
+    }
+
+    .meatball-home-stage::after {
+      background: none;
+    }
+
+    .meatball-home-cosmos {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      gap: 22px;
+      width: 100%;
+    }
+
+    .meatball-home-display {
+      --meatball-size: clamp(138px, 16vw, 202px);
+      position: relative;
+      width: min(520px, 100%);
+      aspect-ratio: 1 / 1.28;
+      display: grid;
+      place-items: center;
+      background: none;
+    }
+
+    .meatballAstronaut {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+    }
+
+    .meatballAstronaut-suit {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .meatballAstronaut-pack {
+      position: absolute;
+      left: 50%;
+      top: 41%;
+      width: 27%;
+      height: 24%;
+      transform: translate(-50%, -50%);
+      border-radius: 26px;
+      background: linear-gradient(180deg, #d8e3f3, #97aac0);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, .18);
+      z-index: 0;
+    }
+
+    .meatballAstronaut-suitTorso {
+      position: absolute;
+      left: 50%;
+      bottom: 8%;
+      width: 39%;
+      height: 32%;
+      transform: translateX(-50%);
+      border-radius: 30px 30px 24px 24px;
+      background: linear-gradient(180deg, #fbfdff, #d4dfeb 52%, #9aaac0 100%);
+      box-shadow: inset 0 -10px 18px rgba(98, 115, 140, .22), 0 18px 26px rgba(0, 0, 0, .2);
+      z-index: 1;
+    }
+
+    .meatballAstronaut-suitTorso::before {
+      content: "";
+      position: absolute;
+      inset: 14% 22% auto;
+      height: 24%;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #8ed6ff, #4f84b6);
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, .24);
+    }
+
+    .meatballAstronaut-suitTorso::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 18%;
+      width: 42%;
+      height: 16%;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: linear-gradient(180deg, #f8fbff, #b8c7d8);
+      box-shadow: inset 0 -4px 8px rgba(92, 109, 134, .18);
+    }
+
+    .meatballAstronaut-suitArm,
+    .meatballAstronaut-suitLeg {
+      position: absolute;
+      background: linear-gradient(180deg, #eef6ff, #aebed1);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, .18);
+      z-index: 1;
+    }
+
+    .meatballAstronaut-suitArm {
+      top: 55%;
+      width: 10%;
+      height: 26%;
+      border-radius: 999px;
+    }
+
+    .meatballAstronaut-suitArm-left {
+      left: 24%;
+      transform: rotate(24deg);
+    }
+
+    .meatballAstronaut-suitArm-right {
+      right: 24%;
+      transform: rotate(-24deg);
+    }
+
+    .meatballAstronaut-suitLeg {
+      bottom: 1%;
+      width: 10%;
+      height: 18%;
+      border-radius: 999px;
+    }
+
+    .meatballAstronaut-suitLeg-left {
+      left: 39%;
+      transform: rotate(7deg);
+    }
+
+    .meatballAstronaut-suitLeg-right {
+      right: 39%;
+      transform: rotate(-7deg);
+    }
+
+    .meatballAstronaut-boot,
+    .meatballAstronaut-glove {
+      position: absolute;
+      background: linear-gradient(180deg, #f8fbff, #c6d3e1);
+      box-shadow: 0 8px 14px rgba(0, 0, 0, .18);
+      z-index: 1;
+    }
+
+    .meatballAstronaut-boot {
+      bottom: 0;
+      width: 14%;
+      height: 8%;
+      border-radius: 999px 999px 18px 18px;
+    }
+
+    .meatballAstronaut-boot-left {
+      left: 35%;
+    }
+
+    .meatballAstronaut-boot-right {
+      right: 35%;
+    }
+
+    .meatballAstronaut-glove {
+      top: 75%;
+      width: 7%;
+      height: 7%;
+      border-radius: 50%;
+    }
+
+    .meatballAstronaut-glove-left {
+      left: 18.5%;
+    }
+
+    .meatballAstronaut-glove-right {
+      right: 18.5%;
+    }
+
+    .meatballAstronaut-helmet {
+      position: absolute;
+      inset: 0% 6% 10%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 32% 22%, rgba(255, 255, 255, .56), rgba(255, 255, 255, .18) 16%, rgba(255, 255, 255, .06) 34%, rgba(255, 255, 255, .02) 55%, rgba(112, 170, 219, .06) 100%),
+        linear-gradient(180deg, rgba(214, 240, 255, .24), rgba(255, 255, 255, .03));
+      border: 1px solid rgba(255, 255, 255, .34);
+      box-shadow:
+        inset 0 0 18px rgba(255, 255, 255, .1),
+        inset 0 -14px 18px rgba(95, 124, 155, .12);
+      z-index: 4;
+    }
+
+    .meatballAstronaut-helmetShell {
+      position: absolute;
+      inset: -2% 2% 2%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 36%, #fbfdff 0%, #edf4fb 54%, #cad7e5 76%, #aab8c8 100%);
+      box-shadow:
+        0 18px 28px rgba(0, 0, 0, .18),
+        inset 0 -10px 18px rgba(145, 160, 180, .18);
+      z-index: 2;
+    }
+
+    .meatballAstronaut-helmetShell::before {
+      content: "";
+      position: absolute;
+      inset: 8% 8% auto 12%;
+      height: 18%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(255, 255, 255, 0));
+      opacity: .7;
+    }
+
+    .meatballAstronaut-helmetShell::after {
+      content: "";
+      position: absolute;
+      inset: auto 12% 10% 12%;
+      height: 18%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 0%, rgba(76, 97, 123, .24), rgba(76, 97, 123, 0));
+      opacity: .7;
+    }
+
+    .meatballAstronaut-helmetRim {
+      position: absolute;
+      inset: 0% 5% 6%;
+      border-radius: 50%;
+      border: 14px solid rgba(236, 243, 250, .98);
+      box-shadow:
+        inset 0 0 0 2px rgba(142, 160, 184, .65),
+        inset 0 -8px 10px rgba(143, 158, 177, .22),
+        0 10px 18px rgba(0, 0, 0, .14);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .meatballAstronaut-tube {
+      position: absolute;
+      left: 61%;
+      bottom: 12%;
+      width: 20%;
+      height: 24%;
+      border: 10px solid #c7d3df;
+      border-left: 0;
+      border-top: 0;
+      border-radius: 0 0 999px 0;
+      transform: rotate(10deg);
+      box-shadow:
+        inset -2px -2px 0 rgba(150, 167, 188, .65),
+        0 0 0 2px rgba(237, 244, 255, .22);
+      z-index: 2;
+    }
+
+    .meatballAstronaut-collar {
+      position: absolute;
+      left: 50%;
+      bottom: 13%;
+      width: 36%;
+      height: 13%;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: linear-gradient(180deg, #f4f7ff, #bcc8db);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .26);
+      z-index: 2;
+    }
+
+    .meatballAstronaut-jet {
+      position: absolute;
+      bottom: 20%;
+      width: 11%;
+      height: 18%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #edf4ff, #9eaec6);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, .24);
+      z-index: 0;
+    }
+
+    .meatballAstronaut-jet-left {
+      left: 23%;
+      transform: rotate(-10deg);
+    }
+
+    .meatballAstronaut-jet-right {
+      right: 23%;
+      transform: rotate(10deg);
+    }
+
+    .meatballAstronaut-jet::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      width: 42%;
+      height: 46%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, rgba(255, 214, 111, .92), rgba(98, 214, 255, 0));
+      filter: blur(3px);
+      opacity: .42;
+    }
+
+    .meatball-home-display .meatballAvatar {
+      width: var(--meatball-size);
+      height: var(--meatball-size);
+      cursor: default;
+      pointer-events: none;
+      z-index: 3;
+      transform: translateY(-4%);
+      filter: none;
+    }
+
+    .meatball-home-display .meatballAvatar-shadow {
+      left: 20px;
+      right: 20px;
+      bottom: 8px;
+      height: 14px;
+      filter: blur(8px);
+      opacity: .45;
+    }
+
+    .meatball-home-display .meatballAvatar-body {
+      filter: none;
+      image-rendering: auto;
+    }
+
+    .meatball-home-display .meatballAvatar-eye {
+      top: 27.5%;
+      width: clamp(18px, 20%, 28px);
+      height: clamp(18px, 20%, 28px);
+      z-index: 4;
+    }
+
+    .meatball-home-display .meatballAvatar-eye.left {
+      left: 22%;
+    }
+
+    .meatball-home-display .meatballAvatar-eye.right {
+      right: 22%;
+    }
+
+    .meatball-home-display .meatballAvatar-eye .pupil {
+      width: clamp(8px, 9.6%, 13px);
+      height: clamp(8px, 9.6%, 13px);
+      transform: translate(-50%, -50%);
+    }
+
+    .meatball-home-display .meatballAvatar-mouth {
+      bottom: 15.5%;
+      width: clamp(34px, 38%, 52px);
+      height: clamp(14px, 17%, 24px);
+      z-index: 3;
+      transform-origin: 50% 50%;
+      border-radius: 0 0 999px 999px;
+      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .08);
+    }
+
+    .meatball-home-shell .chatShell {
+      display: grid;
+      gap: 14px;
+    }
+
+    .meatball-home-shell .modelPanel,
+    .meatball-home-shell .chatLog,
+    .meatball-home-shell .debugPanel {
+      border: 1px solid rgba(255, 255, 255, .1);
+      background: rgba(255, 255, 255, .04);
+      border-radius: 18px;
+    }
+
+    .meatball-home-shell .modelPanel {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      align-items: end;
+      padding: 12px 14px;
+    }
+
+    .meatball-home-shell .modelLabel,
+    .meatball-home-shell .assistantStatusLabel {
+      margin: 0 0 4px;
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(236, 231, 221, .68);
+    }
+
+    .meatball-home-shell .modelMeta {
+      margin: 0;
+      color: rgba(236, 231, 221, .72);
+      font-size: .92rem;
+      line-height: 1.4;
+    }
+
+    .meatball-home-shell textarea {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 16px;
+      background: rgba(7, 13, 20, .84);
+      color: #fff;
+      padding: 14px 15px;
+      font: inherit;
+      outline: none;
+    }
+
+    .meatball-home-shell .chatLog {
+      min-height: 360px;
+      max-height: 520px;
+      overflow: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .meatball-home-shell .msg {
+      max-width: min(560px, 100%);
+      padding: 12px 14px;
+      border-radius: 18px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .meatball-home-shell .msg.bot,
+    .meatball-home-shell .msg.system {
+      background: rgba(255, 180, 106, .1);
+      border: 1px solid rgba(255, 180, 106, .18);
+      color: rgba(255, 247, 238, .92);
+    }
+
+    .meatball-home-shell .msg.user {
+      align-self: flex-end;
+      background: rgba(98, 214, 255, .12);
+      border: 1px solid rgba(98, 214, 255, .22);
+      color: rgba(238, 247, 255, .92);
+    }
+
+    .meatball-home-shell .composer {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+    }
+
+    .meatball-home-shell textarea {
+      min-height: 64px;
+      max-height: 180px;
+      resize: vertical;
+    }
+
+    .meatball-home-shell button {
+      min-width: 120px;
+      border: 0;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffba74, #d98a3b);
+      color: #24130d;
+      font: inherit;
+      font-weight: 900;
+      padding: 0 20px;
+      cursor: pointer;
+    }
+
+    .meatball-home-shell .debugPanel {
+      display: none;
+      max-height: 220px;
+      overflow: auto;
+      padding: 12px;
+      color: rgba(244, 247, 255, .62);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      white-space: pre-wrap;
+    }
+
+    .meatball-home-shell .debugPanel.show {
+      display: block;
+    }
+
+    @keyframes meatballTalk {
+      0% { width: clamp(24px, 22%, 36px); height: clamp(9px, 8%, 14px); border-radius: 999px 999px 10px 10px; transform: translateX(-50%) scaleY(.82); }
+      50% { width: clamp(28px, 27%, 42px); height: clamp(13px, 14%, 22px); border-radius: 50% 50% 44% 44%; transform: translateX(-50%) scaleY(1.04); }
+      100% { width: clamp(25px, 24%, 38px); height: clamp(10px, 10%, 16px); border-radius: 999px 999px 12px 12px; transform: translateX(-50%) scaleY(.9); }
+    }
+
+    @media (max-width: 1100px) {
+      .meatball-home-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .meatball-home-stage {
+        min-height: 440px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .meatball-home-shell .modelPanel,
+      .meatball-home-shell .composer {
+        grid-template-columns: 1fr;
+      }
+
+      .meatball-home-stage {
+        min-height: 320px;
+      }
+
+      .meatball-home-display {
+        --meatball-size: clamp(118px, 33vw, 156px);
+        width: min(360px, 88vw);
+      }
+    }
+
     @media(prefers-reduced-motion:reduce) {
 
       *,
@@ -1700,40 +2276,48 @@
     </section>
 
     <section class="section ai" id="ai" style="background:none">
-      <div class="ai-layout">
-        <div>
-          <div class="kicker" style="color:white">AI layer</div>
-          <h2
-            style="color:white;background:rgba(0,0,0,.55); backdrop-filter:blur(28px); -webkit-backdrop-filter:blur(28px);">
-            Unlim8ted AI Assistant.</h2>
-          <p class="body-copy"
-            style="color:#000000;margin-top:28px;background:rgba(255, 255, 255, 0.281); backdrop-filter:blur(28px); -webkit-backdrop-filter:blur(28px);">
-            Use the assistant to browse project categories, get quick context on featured work, and navigate
-            collaboration, sponsor, and product information without leaving the page.</p>
+      <div class="meatball-home-grid">
+        <div class="meatball-home-copy">
+          <div>
+            <div class="kicker" style="color:white">AI layer</div>
+            <h2 class="meatball-home-title">Unlim8ted Meatball.</h2>
+            <p class="body-copy meatball-home-body">
+              Meatball now finds the subject from history, rewrites follow-ups into standalone questions, routes the question into the right subject bank, and plates the answer right on the homepage. The sauce is on.
+            </p>
+          </div>
+
+          <section class="meatball-home-shell">
+            <div class="chatShell">
+              <div class="controlRow">
+                <div class="modelPanel" aria-label="Model controls">
+                  <div class="modelCopy">
+                    <p class="modelLabel">Pipeline</p>
+                    <p id="modelMeta" class="modelMeta">Loading finder, rewriter, selector, and topic banks.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="chatLog" class="chatLog" aria-label="Conversation log">
+                <div class="msg bot">I am loading my tiny brain. Sauce may take one second.</div>
+              </div>
+
+              <form id="chatForm" class="composer" aria-label="Meatball chat composer">
+                <textarea id="chatInput" disabled placeholder="Loading Meatball models..."></textarea>
+                <button id="sendButton" type="submit" disabled>Send</button>
+              </form>
+
+              <div id="debugPanel" class="debugPanel" aria-label="Debug output"></div>
+            </div>
+          </section>
         </div>
 
-        <div class="assistant">
-          <div class="assistant-top">
-            <span>Unlim8ted AI Assistant</span>
-            <div class="assistant-top-right">
-              <span id="assistantStatus">Ready on first question</span>
+        <aside class="meatball-home-stage">
+          <div class="meatball-home-cosmos">
+            <div class="meatball-home-display" aria-hidden="true">
+              <div id="bigMeatballMount"></div>
             </div>
           </div>
-          <div class="messages" id="messages">
-            <div class="msg">Ask anything about Unlim8ted. On first submit, the page loads the best local path it can
-              use on this device and answers from the company prompt.</div>
-          </div>
-          <div class="assistant-loader" id="assistantLoader" hidden>
-            <div class="assistant-loader-text" id="assistantLoaderText">Loading local model</div>
-            <div class="assistant-loader-bar">
-              <div class="assistant-loader-fill" id="assistantLoaderFill"></div>
-            </div>
-          </div>
-          <form class="ask" id="askForm">
-            <input id="askInput" autocomplete="off" placeholder="Ask about the studio, products, or projects" />
-            <button class="btn magnetic" type="submit">Transmit</button>
-          </form>
-        </div>
+        </aside>
       </div>
     </section>
 
@@ -1868,10 +2452,19 @@ Z"></path>
   </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-  <script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="./products/resources/js/meatball-avatar-embed.js"></script>
+<script>
+  window.MeatballAvatarEmbed.mount("#bigMeatballMount", {
+    avatarId: "bigMeatballAvatar",
+    variant: "astronaut",
+    label: "Meatball in a space suit"
+  });
+</script>
+<script src="./products/resources/js/meatball-chat-app.js"></script>
+<script>
     (function () {
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const isMobile = window.matchMedia("(max-width: 900px)").matches;
@@ -2052,416 +2645,13 @@ Z"></path>
         ease: "none"
       });
 
-      gsap.from(".assistant", {
+      gsap.from(".meatball-home-shell, .meatball-home-stage", {
         scrollTrigger: { trigger: ".ai", start: "top 65%" },
         y: 120,
         rotateX: 16,
         opacity: 0,
         duration: 1.2,
         ease: "power4.out"
-      });
-
-      const form = document.getElementById("askForm");
-      const input = document.getElementById("askInput");
-      const messages = document.getElementById("messages");
-
-      function answer(q) {
-        const s = q.toLowerCase();
-
-        if (s.includes("meatball") || s.includes("life of a meatball")) return "The Life of a Meatball is essential Unlim8ted energy: absurd on the surface, cinematic underneath, and important enough to deserve dramatic lighting.";
-        if (s.includes("timecat") || s.includes("cat")) return "TimeCat is the time-bending game doorway: a cat, an abandoned underground laboratory, strange loops, and a world built for mystery.";
-        if (s.includes("star") || s.includes("sky") || s.includes("astronomy")) return "Star Tracker turns the sky into an interface—camera, sensors, astronomy data, and wonder packed into a mobile creative tool.";
-        if (s.includes("phone") || s.includes("hardware")) return "Unlim8ted Phone is a CM4-based handheld build connecting hardware, 3D design, PCB experiments, OS work, and maker ambition.";
-        if (s.includes("ai") || s.includes("tools") || s.includes("software")) return "Unlim8ted AI tools are made for creative acceleration: generators, assistants, UI experiments, video tools, and weird practical utilities.";
-        if (s.includes("game") || s.includes("square")) return "The games side includes TimeCat, Square Pixels, sandbox ideas, 2D worlds, exploration, crafting, procedural systems, and playful experiments.";
-        if (s.includes("music") || s.includes("audio") || s.includes("podcast")) return "Music gives Unlim8ted atmosphere: soundtracks, headphone worlds, podcasts, and emotional audio layers for bigger stories.";
-        if (s.includes("sponsor") || s.includes("support") || s.includes("sigil")) return "The sponsor area highlights collaborators and support around the Unlim8ted universe: projects, releases, builds, and major creative worlds.";
-        if (s.includes("collab") || s.includes("community") || s.includes("discord") || s.includes("github")) return "The community layer connects GitHub, Discord, YouTube, Reddit, feedback, dev moments, open experiments, and collaboration.";
-
-        return "Unlim8ted turns strange ideas into worlds: films, games, music, books, software, AI, hardware, and experiments with no finish line.";
-      }
-
-      form.addEventListener("submit", e => {
-        e.preventDefault();
-        const q = input.value.trim();
-        if (!q) return;
-
-        messages.insertAdjacentHTML("beforeend", `<div class="msg user">${q}</div>`);
-        input.value = "";
-
-        setTimeout(() => {
-          messages.insertAdjacentHTML("beforeend", `<div class="msg">${answer(q)}</div>`);
-          messages.scrollTop = messages.scrollHeight;
-        }, 320);
-      });
-
-      const assistantStatus = document.getElementById("assistantStatus");
-      const assistantLoader = document.getElementById("assistantLoader");
-      const assistantLoaderText = document.getElementById("assistantLoaderText");
-      const assistantLoaderFill = document.getElementById("assistantLoaderFill");
-      const companyPromptUrl = "https://assets.unlim8ted.com/data/Assistent-Prompt.txt";
-      //const companyPromptUrl="/frontend/Assistent-Prompt.txt"; 
-      const assistantModelProfiles = {
-        low: {
-          label: "small",
-          preferredPatterns: [
-            /qwen.*0\.5b/i,
-            /llama-3\.2-1b/i,
-            /gemma-2b/i,
-            /phi-3.*mini/i
-          ]
-        },
-        high: {
-          label: "enhanced",
-          preferredPatterns: [
-            /phi-3.*mini/i,
-            /llama-3\.2-3b/i,
-            /qwen.*1\.5b/i,
-            /gemma-2b/i,
-            /llama-3\.2-1b/i
-          ]
-        }
-      };
-      let assistantGenerator = null;
-      let assistantRuntimePromise = null;
-      let assistantImportPromise = null;
-      let companyPromptText = "";
-      let companyPromptPromise = null;
-      let companyPromptSections = [];
-      let assistantModelProfile = null;
-      let assistantLoadedModelId = "";
-      let assistantResolvedModel = null;
-      let assistantBackend = "webllm";
-      let assistantFallbackNoticePending = false;
-
-      function setAssistantLoadProgress(percent, text) {
-        if (text) assistantLoaderText.textContent = text;
-        assistantLoader.hidden = false;
-        assistantLoaderFill.style.width = `${Math.max(0, Math.min(100, percent))}%`;
-      }
-
-      function hideAssistantLoader() {
-        assistantLoader.hidden = true;
-        assistantLoaderFill.style.width = "0%";
-      }
-
-      function escapeAssistantHtml(text) {
-        return String(text || "")
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#39;");
-      }
-
-      function formatAssistantError(error) {
-        const raw = String(error?.message || error || "Unknown error").trim();
-        if (!raw) return "Model error: Unknown error";
-        return `Model error: ${raw}`;
-      }
-
-      function chooseAssistantModelProfile() {
-        if (assistantModelProfile) return assistantModelProfile;
-
-        const nav = navigator;
-        const ua = (nav.userAgent || "").toLowerCase();
-        const deviceMemory = Number(nav.deviceMemory || 0);
-        const hardwareConcurrency = Number(nav.hardwareConcurrency || 0);
-        const maxTouchPoints = Number(nav.maxTouchPoints || 0);
-        const connection = nav.connection || nav.mozConnection || nav.webkitConnection;
-        const effectiveType = String(connection?.effectiveType || "").toLowerCase();
-        const saveData = Boolean(connection?.saveData);
-        const isMobileDevice = /android|iphone|ipad|ipod|mobile/.test(ua) || (maxTouchPoints > 1 && window.innerWidth < 1024);
-        const weakConnection = /slow-2g|2g|3g/.test(effectiveType);
-
-        const useHighModel =
-          !isMobileDevice &&
-          !saveData &&
-          !weakConnection &&
-          hardwareConcurrency >= 8 &&
-          deviceMemory >= 8;
-
-        assistantModelProfile = useHighModel ? assistantModelProfiles.high : assistantModelProfiles.low;
-        return assistantModelProfile;
-      }
-
-      function refreshAssistantStatus() {
-        const modelProfile = chooseAssistantModelProfile();
-        if (!assistantGenerator) {
-          assistantStatus.textContent = `Ready (${modelProfile.label})`;
-        }
-      }
-
-      function resetAssistantModelRuntime() {
-        assistantGenerator = null;
-        assistantRuntimePromise = null;
-        assistantLoadedModelId = "";
-        assistantResolvedModel = null;
-        assistantBackend = "webllm";
-        assistantFallbackNoticePending = false;
-      }
-
-      function loadCompanyPrompt() {
-        if (companyPromptText.trim()) return Promise.resolve(companyPromptText);
-        if (companyPromptPromise) return companyPromptPromise;
-
-        companyPromptPromise = fetch(companyPromptUrl, { cache: "no-store" })
-          .then(response => {
-            if (!response.ok) throw new Error(`Failed to load ${companyPromptUrl}`);
-            return response.text();
-          })
-          .then(text => {
-            companyPromptText = text;
-            companyPromptSections = buildPromptSections(text);
-            return companyPromptText;
-          });
-
-        return companyPromptPromise;
-      }
-
-      function loadWebLLMRuntime() {
-        if (assistantImportPromise) return assistantImportPromise;
-        assistantImportPromise = import("https://esm.run/@mlc-ai/web-llm");
-        return assistantImportPromise;
-      }
-
-      function normalizeAssistantText(text) {
-        return String(text || "")
-          .toLowerCase()
-          .replace(/[^a-z0-9\s]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
-      }
-
-      function buildPromptSections(text) {
-        return String(text || "")
-          .split(/\r?\n\s*\r?\n/)
-          .map(section => section.trim())
-          .filter(section => section.length > 40);
-      }
-
-      function getRelevantPromptSections(question) {
-        if (!companyPromptSections.length) {
-          return [companyPromptText.trim()].filter(Boolean);
-        }
-
-        const tokens = [...new Set(normalizeAssistantText(question).split(" ").filter(token => token.length > 2))];
-        if (!tokens.length) {
-          return companyPromptSections.slice(0, 3);
-        }
-
-        const scoredSections = companyPromptSections.map((section, index) => {
-          const haystack = normalizeAssistantText(section);
-          let score = 0;
-
-          tokens.forEach(token => {
-            if (haystack.includes(token)) {
-              score += token.length > 6 ? 3 : 2;
-            }
-          });
-
-          if (index < 8) {
-            score += 1;
-          }
-
-          return { section, score };
-        });
-
-        const topSections = scoredSections
-          .filter(item => item.score > 0)
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 4)
-          .map(item => item.section);
-
-        return topSections.length ? topSections : companyPromptSections.slice(0, 3);
-      }
-
-      function getRelevantPromptContext(question) {
-        return getRelevantPromptSections(question).join("\n\n");
-      }
-
-      function getFastAssistantReply(question) {
-        const normalized = normalizeAssistantText(question);
-        if (!normalized) {
-          return "Ask a question about Unlim8ted and I will answer from the company notes.";
-        }
-        if (/^(hi|hello|hey|yo|sup)$/.test(normalized)) {
-          return "Hi. Ask a question about Unlim8ted and I will answer from the company notes.";
-        }
-        return null;
-      }
-
-      function buildAssistantPrompt(question) {
-        const relevantContext = getRelevantPromptContext(question);
-        return {
-          system: [
-            "You are the Unlim8ted AI Assistant.",
-            "Answer only using the company background below.",
-            "Use the most relevant facts you can find in the provided context.",
-            "If the answer is not supported by the context, say: I do not see that in the current company notes.",
-            "Keep the answer concise, direct, and in plain English.",
-            "",
-            "Relevant company background:",
-            relevantContext
-          ].join("\n"),
-          user: question
-        };
-      }
-
-      function resolveAssistantModelRecord(webllm, modelProfile) {
-        const records = (webllm?.prebuiltAppConfig?.model_list || []).slice();
-        if (!records.length) {
-          throw new Error("No WebLLM models available");
-        }
-
-        for (const pattern of modelProfile.preferredPatterns) {
-          const match = records.find(record => pattern.test(String(record.model_id || "")));
-          if (match) return match;
-        }
-
-        const instructFallback = records.find(record => /instruct|chat/i.test(String(record.model_id || "")));
-        return instructFallback || records[0];
-      }
-
-      function isWebGPUUnsupportedError(error) {
-        const text = String(error?.message || error || "").toLowerCase();
-        return text.includes("webgpu is not supported");
-      }
-
-      function answerFromNotes(question) {
-        const sections = getRelevantPromptSections(question);
-        if (!sections.length) {
-          return "I do not see that in the current company notes.";
-        }
-
-        const lines = sections
-          .flatMap(section => section.split(/\r?\n/))
-          .map(line => line.trim())
-          .filter(line => line && !/^=+$/.test(line) && !/^[A-Z0-9\s\/:\-]{20,}$/.test(line));
-
-        if (!lines.length) {
-          return "I do not see that in the current company notes.";
-        }
-
-        const picked = [];
-        for (const line of lines) {
-          picked.push(line);
-          if (picked.join(" ").length > 420 || picked.length >= 5) {
-            break;
-          }
-        }
-
-        return picked.join(" ").replace(/\s+/g, " ").trim();
-      }
-
-      async function ensureAssistantRuntime() {
-        const modelProfile = chooseAssistantModelProfile();
-        if (assistantGenerator && assistantResolvedModel && assistantLoadedModelId === assistantResolvedModel.model_id) return assistantGenerator;
-        if (assistantRuntimePromise) return assistantRuntimePromise;
-
-        assistantRuntimePromise = (async () => {
-          const modelProfile = chooseAssistantModelProfile();
-          assistantStatus.textContent = "Loading local model";
-          setAssistantLoadProgress(8, "Loading company prompt");
-          await loadCompanyPrompt();
-          try {
-            setAssistantLoadProgress(20, "Loading WebLLM runtime");
-            const webllm = await loadWebLLMRuntime();
-            assistantResolvedModel = resolveAssistantModelRecord(webllm, modelProfile);
-            setAssistantLoadProgress(36, `Loading ${assistantResolvedModel.model_id}`);
-            assistantGenerator = await webllm.CreateMLCEngine(assistantResolvedModel.model_id, {
-              initProgressCallback: update => {
-                const progress = typeof update?.progress === "number"
-                  ? 36 + (Math.max(0, Math.min(1, update.progress)) * 0.64)
-                  : 54;
-                setAssistantLoadProgress(progress, update?.text || update?.status || `Loading ${assistantResolvedModel.model_id}`);
-              }
-            });
-            assistantLoadedModelId = assistantResolvedModel.model_id;
-            assistantBackend = "webllm";
-          } catch (error) {
-            if (!isWebGPUUnsupportedError(error)) {
-              throw error;
-            }
-            setAssistantLoadProgress(28, "WebGPU unavailable, switching to local notes mode");
-            assistantGenerator = { localNotes: true };
-            assistantResolvedModel = { model_id: "local-notes" };
-            assistantLoadedModelId = "local-notes";
-            assistantBackend = "notes";
-            assistantFallbackNoticePending = true;
-          }
-          assistantStatus.textContent = `${modelProfile.label} model ready`;
-          hideAssistantLoader();
-          return assistantGenerator;
-        })().catch(error => {
-          assistantRuntimePromise = null;
-          assistantStatus.textContent = "Model load failed";
-          hideAssistantLoader();
-          throw error;
-        });
-
-        return assistantRuntimePromise;
-      }
-
-      async function answer(question) {
-        const fastReply = getFastAssistantReply(question);
-        if (fastReply) return fastReply;
-
-        const engine = await ensureAssistantRuntime();
-        assistantStatus.textContent = "Generating";
-        const prompt = buildAssistantPrompt(question);
-        const modelProfile = chooseAssistantModelProfile();
-        assistantStatus.textContent = `${modelProfile.label} model ready`;
-        let text = "";
-        if (assistantBackend === "webllm") {
-          const result = await engine.chat.completions.create({
-            messages: [
-              { role: "system", content: prompt.system },
-              { role: "user", content: prompt.user }
-            ],
-            temperature: 0.2,
-            max_tokens: 180
-          });
-          text = String(result?.choices?.[0]?.message?.content || "").trim();
-        } else {
-          text = answerFromNotes(question);
-        }
-        if (!text) {
-          return "I do not see that in the current company notes.";
-        }
-        return text.trim();
-      }
-      refreshAssistantStatus();
-
-      const activeForm = document.getElementById("askForm");
-      const replacementForm = activeForm.cloneNode(true);
-      activeForm.replaceWith(replacementForm);
-
-      replacementForm.addEventListener("submit", e => {
-        e.preventDefault();
-        const liveInput = document.getElementById("askInput");
-        const q = liveInput.value.trim();
-        if (!q) return;
-
-        messages.insertAdjacentHTML("beforeend", `<div class="msg user">${q}</div>`);
-        liveInput.value = "";
-
-        setTimeout(async () => {
-          try {
-            const reply = await answer(q);
-            if (assistantFallbackNoticePending) {
-              assistantFallbackNoticePending = false;
-              messages.insertAdjacentHTML("beforeend", `<div class="msg">WebGPU is unavailable in this browser, so the assistant switched to local notes mode using the company prompt directly.</div>`);
-            }
-            messages.insertAdjacentHTML("beforeend", `<div class="msg">${reply}</div>`);
-          } catch (error) {
-            assistantStatus.textContent = "Unavailable";
-            hideAssistantLoader();
-            const errorText = escapeAssistantHtml(formatAssistantError(error));
-            messages.insertAdjacentHTML("beforeend", `<div class="msg">${errorText}</div>`);
-          }
-          messages.scrollTop = messages.scrollHeight;
-        }, 320);
       });
 
       document.querySelectorAll(".stat .num").forEach(num => {

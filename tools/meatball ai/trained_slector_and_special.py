@@ -47,11 +47,10 @@ WEIGHT_DECAY = 2e-3
 LABEL_SMOOTHING = 0.06
 GRAD_CLIP = 1.0
 
+PROMPT_SIZE = 128
 HIDDEN_SIZE = 192
 EMBED_SIZE = 128
 DROPOUT = 0.35
-
-EXPORT_ONNX = False
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -131,7 +130,6 @@ def load_jsonl(path: Path):
                 {
                     "question": question,
                     "answer": answer,
-                    "history": row.get("history", []),
                 }
             )
 
@@ -197,14 +195,7 @@ def make_input_ngrams(tokens, ngrams=INPUT_NGRAMS):
 
 def row_to_input_text(row):
     question = row.get("question", "")
-
-    history = row.get("history", [])
-    if isinstance(history, list):
-        history_text = " ".join(str(x) for x in history)
-    else:
-        history_text = str(history)
-
-    return f"question: {question} history: {history_text}"
+    return f"question: {question}"
 
 
 # ============================================================
@@ -681,6 +672,48 @@ class SelectorModel(nn.Module):
         return self.model(x)
 
 
+class ManualGRUCell(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super().__init__()
+
+        self.weight_ih = nn.Parameter(torch.empty(3 * hidden_size, input_size))
+        self.weight_hh = nn.Parameter(torch.empty(3 * hidden_size, hidden_size))
+        self.bias_ih = nn.Parameter(torch.empty(3 * hidden_size))
+        self.bias_hh = nn.Parameter(torch.empty(3 * hidden_size))
+
+        self.hidden_size = hidden_size
+        self.reset_parameters()
+
+    def reset_parameters(self):
+        # Match PyTorch GRUCell-style initialization closely enough for safe standalone use.
+        stdv = 1.0 / math.sqrt(self.hidden_size)
+        for weight in self.parameters():
+            nn.init.uniform_(weight, -stdv, stdv)
+
+    @torch.no_grad()
+    def copy_from_gru_cell(self, gru_cell):
+        # Copy weights from a trained nn.GRUCell into this ONNX-friendly manual cell.
+        self.weight_ih.copy_(gru_cell.weight_ih)
+        self.weight_hh.copy_(gru_cell.weight_hh)
+        self.bias_ih.copy_(gru_cell.bias_ih)
+        self.bias_hh.copy_(gru_cell.bias_hh)
+
+    def forward(self, x, h):
+        gi = torch.matmul(x, self.weight_ih.t()) + self.bias_ih
+        gh = torch.matmul(h, self.weight_hh.t()) + self.bias_hh
+
+        i_r, i_z, i_n = gi.chunk(3, dim=-1)
+        h_r, h_z, h_n = gh.chunk(3, dim=-1)
+
+        r = torch.sigmoid(i_r + h_r)
+        z = torch.sigmoid(i_z + h_z)
+        n = torch.tanh(i_n + r * h_n)
+
+        h_new = n + z * (h - n)
+
+        return h_new
+
+
 class ChunkAnswerModel(nn.Module):
     def __init__(
         self,
@@ -689,6 +722,8 @@ class ChunkAnswerModel(nn.Module):
         hidden_size=HIDDEN_SIZE,
         embed_size=EMBED_SIZE,
         dropout=DROPOUT,
+        prompt_size=PROMPT_SIZE,
+        manual_gru=False,
     ):
         super().__init__()
 
@@ -696,36 +731,48 @@ class ChunkAnswerModel(nn.Module):
         self.output_vocab_size = output_vocab_size
         self.hidden_size = hidden_size
         self.embed_size = embed_size
+        self.prompt_size = prompt_size
+        self.manual_gru = manual_gru
 
         self.encoder = nn.Sequential(
-            nn.Linear(input_size, hidden_size),
-            nn.LayerNorm(hidden_size),
+            nn.Linear(input_size, prompt_size),
+            nn.LayerNorm(prompt_size),
             nn.GELU(),
             nn.Dropout(dropout),
-            nn.Linear(hidden_size, hidden_size),
-            nn.LayerNorm(hidden_size),
+            nn.Linear(prompt_size, prompt_size),
+            nn.LayerNorm(prompt_size),
             nn.GELU(),
             nn.Dropout(dropout),
         )
 
         self.embedding = nn.Embedding(output_vocab_size, embed_size)
 
-        self.decoder_cell = nn.GRUCell(embed_size, hidden_size)
+        if manual_gru:
+            self.decoder_cell = ManualGRUCell(prompt_size + embed_size, hidden_size)
+        else:
+            self.decoder_cell = nn.GRUCell(prompt_size + embed_size, hidden_size)
 
         self.output = nn.Sequential(
-            nn.LayerNorm(hidden_size),
+            nn.LayerNorm(prompt_size + hidden_size),
             nn.Dropout(dropout),
-            nn.Linear(hidden_size, output_vocab_size),
+            nn.Linear(prompt_size + hidden_size, output_vocab_size),
         )
 
     def encode(self, x):
         return self.encoder(x)
 
-    def decoder_step(self, prev_token, hidden):
+    def decoder_step(self, prev_token, prompt_context, write_hidden):
         emb = self.embedding(prev_token)
-        hidden = self.decoder_cell(emb, hidden)
-        logits = self.output(hidden)
-        return logits, hidden
+
+        gru_input = torch.cat([emb, prompt_context], dim=-1)
+
+        write_hidden = self.decoder_cell(gru_input, write_hidden)
+
+        output_input = torch.cat([prompt_context, write_hidden], dim=-1)
+
+        logits = self.output(output_input)
+
+        return logits, write_hidden
 
     def forward(
         self,
@@ -736,7 +783,13 @@ class ChunkAnswerModel(nn.Module):
     ):
         batch_size = x.size(0)
 
-        hidden = self.encode(x)
+        prompt_context = self.encode(x)
+
+        write_hidden = torch.zeros(
+            batch_size,
+            self.hidden_size,
+            device=x.device,
+        )
 
         prev_token = torch.full(
             (batch_size,),
@@ -748,7 +801,12 @@ class ChunkAnswerModel(nn.Module):
         logits_steps = []
 
         for t in range(max_len):
-            logits, hidden = self.decoder_step(prev_token, hidden)
+            logits, write_hidden = self.decoder_step(
+                prev_token,
+                prompt_context,
+                write_hidden,
+            )
+
             logits_steps.append(logits.unsqueeze(1))
 
             if teacher_forcing and target is not None:
@@ -757,6 +815,65 @@ class ChunkAnswerModel(nn.Module):
                 prev_token = torch.argmax(logits, dim=-1)
 
         return torch.cat(logits_steps, dim=1)
+
+
+class ChunkAnswerExportWrapper(nn.Module):
+    def __init__(self, model, max_len=MAX_OUTPUT_CHUNKS + 1):
+        super().__init__()
+        self.model = model
+        self.max_len = max_len
+
+    def forward(self, x):
+        return self.model(
+            x,
+            target=None,
+            teacher_forcing=False,
+            max_len=self.max_len,
+        )
+
+
+def clone_state_dict(model):
+    return {
+        key: value.detach().cpu().clone() for key, value in model.state_dict().items()
+    }
+
+
+def export_selector_onnx(model, path: Path, input_size: int):
+    model.eval()
+    dummy = torch.zeros(1, input_size, dtype=torch.float32, device=DEVICE)
+
+    torch.onnx.export(
+        model,
+        dummy,
+        str(path),
+        input_names=["input"],
+        output_names=["logits"],
+        dynamic_axes={
+            "input": {0: "batch"},
+            "logits": {0: "batch"},
+        },
+        opset_version=17,
+    )
+
+
+def export_topic_onnx(model, path: Path, input_size: int):
+    model.eval()
+    dummy = torch.zeros(1, input_size, dtype=torch.float32, device=DEVICE)
+    wrapper = ChunkAnswerExportWrapper(model).to(DEVICE)
+    wrapper.eval()
+
+    torch.onnx.export(
+        wrapper,
+        dummy,
+        str(path),
+        input_names=["input"],
+        output_names=["logits"],
+        dynamic_axes={
+            "input": {0: "batch"},
+            "logits": {0: "batch"},
+        },
+        opset_version=17,
+    )
 
 
 # ============================================================
@@ -853,7 +970,13 @@ def predict_answer(
 
     x = vectorize_input(row, input_vocab).unsqueeze(0).to(DEVICE)
 
-    hidden = model.encode(x)
+    prompt_context = model.encode(x)
+
+    write_hidden = torch.zeros(
+        1,
+        model.hidden_size,
+        device=DEVICE,
+    )
 
     prev_token = torch.tensor([BOS_ID], dtype=torch.long, device=DEVICE)
 
@@ -861,7 +984,11 @@ def predict_answer(
     scores = []
 
     for _ in range(max_len):
-        logits, hidden = model.decoder_step(prev_token, hidden)
+        logits, write_hidden = model.decoder_step(
+            prev_token,
+            prompt_context,
+            write_hidden,
+        )
         probs = torch.softmax(logits, dim=-1)
         score, token = torch.max(probs, dim=-1)
 
@@ -952,7 +1079,7 @@ def print_samples(topic, model, rows, input_vocab, output_chunks, count=5):
 # ============================================================
 
 
-def train_selector(selector_examples, out_dir: Path, topics):
+def train_selector(selector_examples, out_dir: Path, topics, export_pt=False):
     print()
     print("====================================================")
     print("TRAINING SELECTOR")
@@ -1005,6 +1132,8 @@ def train_selector(selector_examples, out_dir: Path, topics):
     epochs_without_improvement = 0
 
     selector_pt_path = out_dir / "selector.pt"
+    selector_onnx_path = out_dir / "selector.onnx"
+    best_checkpoint = None
 
     for epoch in range(1, SELECTOR_EPOCHS + 1):
         model.train()
@@ -1043,7 +1172,7 @@ def train_selector(selector_examples, out_dir: Path, topics):
             epochs_without_improvement = 0
 
             checkpoint = {
-                "model_state_dict": model.state_dict(),
+                "model_state_dict": clone_state_dict(model),
                 "input_size": len(selector_vocab),
                 "num_topics": len(topics),
                 "hidden_size": HIDDEN_SIZE,
@@ -1051,8 +1180,8 @@ def train_selector(selector_examples, out_dir: Path, topics):
                 "best_val_loss": best_val_loss,
             }
 
-            torch.save(checkpoint, selector_pt_path)
-            print(f"[saved best selector] {selector_pt_path}")
+            best_checkpoint = checkpoint
+            print("[saved best selector state]")
 
         else:
             epochs_without_improvement += 1
@@ -1062,6 +1191,19 @@ def train_selector(selector_examples, out_dir: Path, topics):
                     f"[selector early stop] no val_loss improvement for {PATIENCE} epochs"
                 )
                 break
+
+    if best_checkpoint is None:
+        best_checkpoint = {
+            "model_state_dict": clone_state_dict(model),
+            "input_size": len(selector_vocab),
+            "num_topics": len(topics),
+            "hidden_size": HIDDEN_SIZE,
+            "dropout": DROPOUT,
+            "best_val_loss": best_val_loss,
+        }
+
+    model.load_state_dict(best_checkpoint["model_state_dict"])
+    model.eval()
 
     save_json(out_dir / "selector_vocab.json", selector_vocab)
     save_json(out_dir / "selector_labels.json", id_to_topic)
@@ -1073,14 +1215,24 @@ def train_selector(selector_examples, out_dir: Path, topics):
         "max_input_vocab_size": MAX_INPUT_VOCAB_SIZE,
         "hidden_size": HIDDEN_SIZE,
         "dropout": DROPOUT,
-        "model_pt_path": "selector.pt",
+        "model_onnx_path": "selector.onnx",
         "selector_vocab_path": "selector_vocab.json",
         "selector_labels_path": "selector_labels.json",
+        "history_in_input": False,
     }
+
+    if export_pt:
+        torch.save(best_checkpoint, selector_pt_path)
+        selector_config["model_pt_path"] = "selector.pt"
+
+    export_selector_onnx(model, selector_onnx_path, len(selector_vocab))
 
     save_json(out_dir / "selector_config.json", selector_config)
 
     print("[saved] selector files")
+    print(f"[saved] {selector_onnx_path}")
+    if export_pt:
+        print(f"[saved] {selector_pt_path}")
 
 
 # ============================================================
@@ -1088,7 +1240,7 @@ def train_selector(selector_examples, out_dir: Path, topics):
 # ============================================================
 
 
-def train_topic_model(topic, rows, topic_dir: Path):
+def train_topic_model(topic, rows, topic_dir: Path, export_pt=False):
     print()
     print("====================================================")
     print(f"TRAINING TOPIC SPECIALIST: {topic}")
@@ -1142,12 +1294,16 @@ def train_topic_model(topic, rows, topic_dir: Path):
     print()
     print("[3] training chunk model...")
 
+    # Train with fast PyTorch nn.GRUCell.
+    # A manual GRU copy is created only for ONNX export.
     model = ChunkAnswerModel(
         input_size=len(input_vocab),
         output_vocab_size=len(output_chunks),
         hidden_size=HIDDEN_SIZE,
         embed_size=EMBED_SIZE,
         dropout=DROPOUT,
+        prompt_size=PROMPT_SIZE,
+        manual_gru=False,
     ).to(DEVICE)
 
     optimizer = torch.optim.AdamW(
@@ -1165,6 +1321,8 @@ def train_topic_model(topic, rows, topic_dir: Path):
     epochs_without_improvement = 0
 
     model_pt_path = topic_dir / "model.pt"
+    model_onnx_path = topic_dir.parent / f"{topic}.onnx"
+    best_checkpoint = None
 
     for epoch in range(1, TOPIC_EPOCHS + 1):
         model.train()
@@ -1211,13 +1369,13 @@ def train_topic_model(topic, rows, topic_dir: Path):
         if metrics["loss"] < best_val_loss - MIN_DELTA:
             best_val_loss = metrics["loss"]
             epochs_without_improvement = 0
-
             checkpoint = {
-                "model_state_dict": model.state_dict(),
+                "model_state_dict": clone_state_dict(model),
                 "input_vocab_size": len(input_vocab),
                 "output_vocab_size": len(output_chunks),
                 "hidden_size": HIDDEN_SIZE,
                 "embed_size": EMBED_SIZE,
+                "prompt_size": PROMPT_SIZE,
                 "dropout": DROPOUT,
                 "max_output_chunks": MAX_OUTPUT_CHUNKS,
                 "best_val_loss": best_val_loss,
@@ -1232,9 +1390,8 @@ def train_topic_model(topic, rows, topic_dir: Path):
                     "UNK_ID": UNK_ID,
                 },
             }
-
-            torch.save(checkpoint, model_pt_path)
-            print(f"[saved best {topic}] {model_pt_path}")
+            best_checkpoint = checkpoint
+            print(f"[saved best {topic} state]")
 
         else:
             epochs_without_improvement += 1
@@ -1248,8 +1405,30 @@ def train_topic_model(topic, rows, topic_dir: Path):
     print()
     print("[4] saving topic files...")
 
-    checkpoint = torch.load(model_pt_path, map_location=DEVICE)
-    model.load_state_dict(checkpoint["model_state_dict"])
+    if best_checkpoint is None:
+        best_checkpoint = {
+            "model_state_dict": clone_state_dict(model),
+            "input_vocab_size": len(input_vocab),
+            "output_vocab_size": len(output_chunks),
+            "hidden_size": HIDDEN_SIZE,
+            "embed_size": EMBED_SIZE,
+            "prompt_size": PROMPT_SIZE,
+            "dropout": DROPOUT,
+            "max_output_chunks": MAX_OUTPUT_CHUNKS,
+            "best_val_loss": best_val_loss,
+            "special_tokens": {
+                "PAD": PAD,
+                "BOS": BOS,
+                "EOS": EOS,
+                "UNK": UNK,
+                "PAD_ID": PAD_ID,
+                "BOS_ID": BOS_ID,
+                "EOS_ID": EOS_ID,
+                "UNK_ID": UNK_ID,
+            },
+        }
+
+    model.load_state_dict(best_checkpoint["model_state_dict"])
     model.eval()
 
     save_json(topic_dir / "input_vocab.json", input_vocab)
@@ -1269,23 +1448,47 @@ def train_topic_model(topic, rows, topic_dir: Path):
         "max_output_vocab_size": MAX_OUTPUT_VOCAB_SIZE,
         "hidden_size": HIDDEN_SIZE,
         "embed_size": EMBED_SIZE,
+        "prompt_size": PROMPT_SIZE,
         "dropout": DROPOUT,
         "pad_id": PAD_ID,
         "bos_id": BOS_ID,
         "eos_id": EOS_ID,
         "unk_id": UNK_ID,
-        "model_pt_path": "model.pt",
+        "model_onnx_path": f"../{topic}.onnx",
         "input_vocab_path": "input_vocab.json",
         "output_chunks_path": "output_chunks.json",
+        "history_in_input": False,
         "note": "Topic-specialized Meatball chunk model using original mined chunk logic.",
     }
+
+    if export_pt:
+        torch.save(best_checkpoint, model_pt_path)
+        config["model_pt_path"] = "model.pt"
+
+    # Export with ONNX-safe manual GRUCell to avoid aten::_thnn_fused_gru_cell.
+    onnx_model = ChunkAnswerModel(
+        input_size=len(input_vocab),
+        output_vocab_size=len(output_chunks),
+        hidden_size=HIDDEN_SIZE,
+        embed_size=EMBED_SIZE,
+        dropout=0.0,
+        prompt_size=PROMPT_SIZE,
+        manual_gru=True,
+    ).to(DEVICE)
+
+    onnx_model.load_state_dict(best_checkpoint["model_state_dict"], strict=True)
+    onnx_model.eval()
+
+    export_topic_onnx(onnx_model, model_onnx_path, len(input_vocab))
 
     save_json(topic_dir / "config.json", config)
 
     print(f"[saved] {topic_dir / 'input_vocab.json'}")
     print(f"[saved] {topic_dir / 'output_chunks.json'}")
     print(f"[saved] {topic_dir / 'config.json'}")
-    print(f"[saved] {model_pt_path}")
+    print(f"[saved] {model_onnx_path}")
+    if export_pt:
+        print(f"[saved] {model_pt_path}")
 
     print_samples(topic, model, val_rows, input_vocab, output_chunks, count=5)
 
@@ -1329,7 +1532,24 @@ def main():
         help="Train only one topic, e.g. --only_topic art",
     )
 
+    parser.add_argument(
+        "--general_only",
+        action="store_true",
+        help="Shortcut for training only the general topic.",
+    )
+
+    parser.add_argument(
+        "--export_pt",
+        action="store_true",
+        help="Also export optional .pt checkpoint files alongside the default ONNX exports",
+    )
+
     args = parser.parse_args()
+
+    if args.general_only:
+        if args.only_topic and args.only_topic != "general":
+            raise ValueError("--general_only conflicts with --only_topic unless --only_topic general is used.")
+        args.only_topic = "general"
 
     print(f"device: {DEVICE}")
 
@@ -1380,7 +1600,6 @@ def main():
                 {
                     "question": q,
                     "answer": a,
-                    "history": row.get("history", []),
                 }
             )
 
@@ -1408,7 +1627,12 @@ def main():
     print(f"selector examples: {len(selector_examples)}")
 
     if not args.skip_selector and not args.only_topic:
-        train_selector(selector_examples, out_dir, topics)
+        train_selector(
+            selector_examples,
+            out_dir,
+            topics,
+            export_pt=args.export_pt,
+        )
     elif args.only_topic:
         print("[selector skipped] only_topic mode")
     else:
@@ -1417,7 +1641,7 @@ def main():
     manifest = {
         "architecture": "MeatballAI selector plus topic-specialized original chunk models",
         "selector": {
-            "model": "selector.pt",
+            "model": "selector.onnx",
             "config": "selector_config.json",
             "vocab": "selector_vocab.json",
             "labels": "selector_labels.json",
@@ -1427,21 +1651,33 @@ def main():
             "Each topic has its own input_vocab.json and output_chunks.json.",
             "Specialized models use original mined chunk logic.",
             "Do not use one shared chunk vocabulary across topics.",
+            "History is intentionally excluded from specialized model inputs.",
         ],
     }
+
+    if args.export_pt:
+        manifest["selector"]["model_pt"] = "selector.pt"
 
     for topic in topics:
         topic_dir = topics_dir / topic
 
-        train_topic_model(topic, topic_rows[topic], topic_dir)
+        train_topic_model(
+            topic,
+            topic_rows[topic],
+            topic_dir,
+            export_pt=args.export_pt,
+        )
 
         manifest["topics"][topic] = {
             "dir": f"topics/{topic}",
-            "model": f"topics/{topic}/model.pt",
+            "model": f"topics/{topic}.onnx",
             "config": f"topics/{topic}/config.json",
             "input_vocab": f"topics/{topic}/input_vocab.json",
             "output_chunks": f"topics/{topic}/output_chunks.json",
         }
+
+        if args.export_pt:
+            manifest["topics"][topic]["model_pt"] = f"topics/{topic}/model.pt"
 
         save_json(out_dir / "manifest.json", manifest)
 
