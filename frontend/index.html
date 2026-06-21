@@ -1683,6 +1683,40 @@
         scroll-behavior: auto !important
       }
     }
+    @media (max-width: 900px) {
+  .ai {
+    overflow: hidden;
+    padding-left: 6vw;
+    padding-right: 6vw;
+  }
+
+  .meatball-home-grid {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .meatball-home-copy,
+  .meatball-home-shell,
+  .meatball-home-stage {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .meatball-home-shell {
+    box-sizing: border-box;
+  }
+
+  .meatball-home-shell .composer {
+    grid-template-columns: 1fr;
+  }
+
+  .meatball-home-shell button {
+    width: 100%;
+    min-height: 56px;
+  }
+}
   </style>
   <script type="module" src="/components/site-navbar.js"></script>
 </head>
@@ -1931,28 +1965,17 @@
           <div>
             <div class="kicker" style="color:white">AI layer</div>
             <h2 class="meatball-home-title">Unlim8ted Meatball.</h2>
-            <p class="body-copy meatball-home-body">
-              Meatball now finds the subject from history, rewrites follow-ups into standalone questions, routes the question into the right subject bank, and plates the answer right on the homepage. The sauce is on.
-            </p>
+          
           </div>
 
           <section class="meatball-home-shell">
             <div class="chatShell">
-              <div class="controlRow">
-                <div class="modelPanel" aria-label="Model controls">
-                  <div class="modelCopy">
-                    <p class="modelLabel">Pipeline</p>
-                    <p id="modelMeta" class="modelMeta">Loading finder, rewriter, selector, and topic banks.</p>
-                  </div>
-                </div>
-              </div>
-
               <div id="chatLog" class="chatLog" aria-label="Conversation log">
                 <div class="msg bot">I am loading my tiny brain. Sauce may take one second.</div>
               </div>
 
               <form id="chatForm" class="composer" aria-label="Meatball chat composer">
-                <textarea id="chatInput" disabled placeholder="Loading Meatball models..."></textarea>
+                <textarea id="chatInput" disabled placeholder="Ask something! I might know."></textarea>
                 <button id="sendButton" type="submit" disabled>Send</button>
               </form>
 

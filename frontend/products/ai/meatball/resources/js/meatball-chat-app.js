@@ -547,5 +547,9 @@ window.addEventListener("DOMContentLoaded", async () => {
   setModelMeta("Models stay asleep until you talk to Meatball.");
   if (chatLog) chatLog.innerHTML = "";
   addMessage("bot", "I am here. Ask me something and I will wake the sauce.");
-  chatInput.focus();
+
+  requestAnimationFrame(() => {
+    chatInput.blur();
+    document.activeElement?.blur?.();
+  });
 });
