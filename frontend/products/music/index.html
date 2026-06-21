@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,7 +11,7 @@
 
   <!-- Modern navbar web component -->
   <script type="module" src="/components/site-navbar.js"></script>
-  <link rel="stylesheet" href="../resources/css/meatball-assistant.css">
+  <link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-assistant.css">
 
   <!-- MIDI parser -->
   <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
@@ -37,7 +37,7 @@
 
       <div class="song-list" id="songList">
         <!-- Built from https://assets.unlim8ted.com/data/products.json -->
-        <div class="empty">Loading tracks…</div>
+        <div class="empty">Loading tracksâ€¦</div>
       </div>
 
       <div class="footer">
@@ -98,14 +98,14 @@
       <div class="reviews">
         <div class="reviewsHead">
           <div class="avgWrap">
-            <div class="avgNum" id="avgNum">—</div>
+            <div class="avgNum" id="avgNum">â€”</div>
             <div class="avgMeta">
-              <div class="stars" id="avgStarsBig">☆☆☆☆☆</div>
+              <div class="stars" id="avgStarsBig">â˜†â˜†â˜†â˜†â˜†</div>
               <div class="muted" id="avgLabel">Select a track</div>
               <div class="muted" id="countLabel">0 reviews</div>
             </div>
           </div>
-          <div class="stars" id="avgStars">☆☆☆☆☆</div>
+          <div class="stars" id="avgStars">â˜†â˜†â˜†â˜†â˜†</div>
         </div>
 
         <div class="bars" id="bars"></div>
@@ -122,16 +122,16 @@
           <div class="fieldRow">
             <input class="input" id="displayName" maxlength="80" placeholder="Display name (optional)" />
             <select class="select" id="ratingSel" aria-label="Rating">
-              <option value="5">★★★★★ (5)</option>
-              <option value="4">★★★★☆ (4)</option>
-              <option value="3">★★★☆☆ (3)</option>
-              <option value="2">★★☆☆☆ (2)</option>
-              <option value="1">★☆☆☆☆ (1)</option>
+              <option value="5">â˜…â˜…â˜…â˜…â˜… (5)</option>
+              <option value="4">â˜…â˜…â˜…â˜…â˜† (4)</option>
+              <option value="3">â˜…â˜…â˜…â˜†â˜† (3)</option>
+              <option value="2">â˜…â˜…â˜†â˜†â˜† (2)</option>
+              <option value="1">â˜…â˜†â˜†â˜†â˜† (1)</option>
             </select>
           </div>
 
           <textarea class="textarea" id="commentText" maxlength="2000"
-            placeholder="Write a review (max 2000 chars)…"></textarea>
+            placeholder="Write a review (max 2000 chars)â€¦"></textarea>
 
           <div class="controls-row">
             <div class="formMsg" id="formMsg"></div>
@@ -147,6 +147,9 @@
   </div>
 
   <script type="module" src="./resources/js/music.01.js"></script>
-  <script src="../resources/js/meatball-assistant.js"></script>
+  <script src="/products/ai/meatball/resources/js/meatball-assistant.js"></script>
 </body>
 </html>
+
+
+

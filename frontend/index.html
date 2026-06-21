@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
   <title>Unlim8ted - Home</title>
-  <link rel="stylesheet" href="./products/resources/css/meatball-assistant.css">
+  <link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-assistant.css">
+  <link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-astronaut.css">
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
 
   <style>
@@ -1538,338 +1539,6 @@
       width: 100%;
     }
 
-    .meatball-home-display {
-      --meatball-size: clamp(138px, 16vw, 202px);
-      position: relative;
-      width: min(520px, 100%);
-      aspect-ratio: 1 / 1.28;
-      display: grid;
-      place-items: center;
-      background: none;
-    }
-
-    .meatballAstronaut {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: grid;
-      place-items: center;
-    }
-
-    .meatballAstronaut-suit {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .meatballAstronaut-pack {
-      position: absolute;
-      left: 50%;
-      top: 41%;
-      width: 27%;
-      height: 24%;
-      transform: translate(-50%, -50%);
-      border-radius: 26px;
-      background: linear-gradient(180deg, #d8e3f3, #97aac0);
-      box-shadow: 0 10px 18px rgba(0, 0, 0, .18);
-      z-index: 0;
-    }
-
-    .meatballAstronaut-suitTorso {
-      position: absolute;
-      left: 50%;
-      bottom: 8%;
-      width: 39%;
-      height: 32%;
-      transform: translateX(-50%);
-      border-radius: 30px 30px 24px 24px;
-      background: linear-gradient(180deg, #fbfdff, #d4dfeb 52%, #9aaac0 100%);
-      box-shadow: inset 0 -10px 18px rgba(98, 115, 140, .22), 0 18px 26px rgba(0, 0, 0, .2);
-      z-index: 1;
-    }
-
-    .meatballAstronaut-suitTorso::before {
-      content: "";
-      position: absolute;
-      inset: 14% 22% auto;
-      height: 24%;
-      border-radius: 14px;
-      background: linear-gradient(180deg, #8ed6ff, #4f84b6);
-      box-shadow: 0 0 0 4px rgba(255, 255, 255, .24);
-    }
-
-    .meatballAstronaut-suitTorso::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: 18%;
-      width: 42%;
-      height: 16%;
-      transform: translateX(-50%);
-      border-radius: 999px;
-      background: linear-gradient(180deg, #f8fbff, #b8c7d8);
-      box-shadow: inset 0 -4px 8px rgba(92, 109, 134, .18);
-    }
-
-    .meatballAstronaut-suitArm,
-    .meatballAstronaut-suitLeg {
-      position: absolute;
-      background: linear-gradient(180deg, #eef6ff, #aebed1);
-      box-shadow: 0 10px 18px rgba(0, 0, 0, .18);
-      z-index: 1;
-    }
-
-    .meatballAstronaut-suitArm {
-      top: 55%;
-      width: 10%;
-      height: 26%;
-      border-radius: 999px;
-    }
-
-    .meatballAstronaut-suitArm-left {
-      left: 24%;
-      transform: rotate(24deg);
-    }
-
-    .meatballAstronaut-suitArm-right {
-      right: 24%;
-      transform: rotate(-24deg);
-    }
-
-    .meatballAstronaut-suitLeg {
-      bottom: 1%;
-      width: 10%;
-      height: 18%;
-      border-radius: 999px;
-    }
-
-    .meatballAstronaut-suitLeg-left {
-      left: 39%;
-      transform: rotate(7deg);
-    }
-
-    .meatballAstronaut-suitLeg-right {
-      right: 39%;
-      transform: rotate(-7deg);
-    }
-
-    .meatballAstronaut-boot,
-    .meatballAstronaut-glove {
-      position: absolute;
-      background: linear-gradient(180deg, #f8fbff, #c6d3e1);
-      box-shadow: 0 8px 14px rgba(0, 0, 0, .18);
-      z-index: 1;
-    }
-
-    .meatballAstronaut-boot {
-      bottom: 0;
-      width: 14%;
-      height: 8%;
-      border-radius: 999px 999px 18px 18px;
-    }
-
-    .meatballAstronaut-boot-left {
-      left: 35%;
-    }
-
-    .meatballAstronaut-boot-right {
-      right: 35%;
-    }
-
-    .meatballAstronaut-glove {
-      top: 75%;
-      width: 7%;
-      height: 7%;
-      border-radius: 50%;
-    }
-
-    .meatballAstronaut-glove-left {
-      left: 18.5%;
-    }
-
-    .meatballAstronaut-glove-right {
-      right: 18.5%;
-    }
-
-    .meatballAstronaut-helmet {
-      position: absolute;
-      inset: 0% 6% 10%;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 32% 22%, rgba(255, 255, 255, .56), rgba(255, 255, 255, .18) 16%, rgba(255, 255, 255, .06) 34%, rgba(255, 255, 255, .02) 55%, rgba(112, 170, 219, .06) 100%),
-        linear-gradient(180deg, rgba(214, 240, 255, .24), rgba(255, 255, 255, .03));
-      border: 1px solid rgba(255, 255, 255, .34);
-      box-shadow:
-        inset 0 0 18px rgba(255, 255, 255, .1),
-        inset 0 -14px 18px rgba(95, 124, 155, .12);
-      z-index: 4;
-    }
-
-    .meatballAstronaut-helmetShell {
-      position: absolute;
-      inset: -2% 2% 2%;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 50% 36%, #fbfdff 0%, #edf4fb 54%, #cad7e5 76%, #aab8c8 100%);
-      box-shadow:
-        0 18px 28px rgba(0, 0, 0, .18),
-        inset 0 -10px 18px rgba(145, 160, 180, .18);
-      z-index: 2;
-    }
-
-    .meatballAstronaut-helmetShell::before {
-      content: "";
-      position: absolute;
-      inset: 8% 8% auto 12%;
-      height: 18%;
-      border-radius: 999px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(255, 255, 255, 0));
-      opacity: .7;
-    }
-
-    .meatballAstronaut-helmetShell::after {
-      content: "";
-      position: absolute;
-      inset: auto 12% 10% 12%;
-      height: 18%;
-      border-radius: 50%;
-      background: radial-gradient(circle at 50% 0%, rgba(76, 97, 123, .24), rgba(76, 97, 123, 0));
-      opacity: .7;
-    }
-
-    .meatballAstronaut-helmetRim {
-      position: absolute;
-      inset: 0% 5% 6%;
-      border-radius: 50%;
-      border: 14px solid rgba(236, 243, 250, .98);
-      box-shadow:
-        inset 0 0 0 2px rgba(142, 160, 184, .65),
-        inset 0 -8px 10px rgba(143, 158, 177, .22),
-        0 10px 18px rgba(0, 0, 0, .14);
-      z-index: 5;
-      pointer-events: none;
-    }
-
-    .meatballAstronaut-tube {
-      position: absolute;
-      left: 61%;
-      bottom: 12%;
-      width: 20%;
-      height: 24%;
-      border: 10px solid #c7d3df;
-      border-left: 0;
-      border-top: 0;
-      border-radius: 0 0 999px 0;
-      transform: rotate(10deg);
-      box-shadow:
-        inset -2px -2px 0 rgba(150, 167, 188, .65),
-        0 0 0 2px rgba(237, 244, 255, .22);
-      z-index: 2;
-    }
-
-    .meatballAstronaut-collar {
-      position: absolute;
-      left: 50%;
-      bottom: 13%;
-      width: 36%;
-      height: 13%;
-      transform: translateX(-50%);
-      border-radius: 999px;
-      background: linear-gradient(180deg, #f4f7ff, #bcc8db);
-      box-shadow: 0 14px 30px rgba(0, 0, 0, .26);
-      z-index: 2;
-    }
-
-    .meatballAstronaut-jet {
-      position: absolute;
-      bottom: 20%;
-      width: 11%;
-      height: 18%;
-      border-radius: 999px;
-      background: linear-gradient(180deg, #edf4ff, #9eaec6);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, .24);
-      z-index: 0;
-    }
-
-    .meatballAstronaut-jet-left {
-      left: 23%;
-      transform: rotate(-10deg);
-    }
-
-    .meatballAstronaut-jet-right {
-      right: 23%;
-      transform: rotate(10deg);
-    }
-
-    .meatballAstronaut-jet::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 100%;
-      width: 42%;
-      height: 46%;
-      transform: translateX(-50%);
-      background: linear-gradient(180deg, rgba(255, 214, 111, .92), rgba(98, 214, 255, 0));
-      filter: blur(3px);
-      opacity: .42;
-    }
-
-    .meatball-home-display .meatballAvatar {
-      width: var(--meatball-size);
-      height: var(--meatball-size);
-      cursor: default;
-      pointer-events: none;
-      z-index: 3;
-      transform: translateY(-4%);
-      filter: none;
-    }
-
-    .meatball-home-display .meatballAvatar-shadow {
-      left: 20px;
-      right: 20px;
-      bottom: 8px;
-      height: 14px;
-      filter: blur(8px);
-      opacity: .45;
-    }
-
-    .meatball-home-display .meatballAvatar-body {
-      filter: none;
-      image-rendering: auto;
-    }
-
-    .meatball-home-display .meatballAvatar-eye {
-      top: 27.5%;
-      width: clamp(18px, 20%, 28px);
-      height: clamp(18px, 20%, 28px);
-      z-index: 4;
-    }
-
-    .meatball-home-display .meatballAvatar-eye.left {
-      left: 22%;
-    }
-
-    .meatball-home-display .meatballAvatar-eye.right {
-      right: 22%;
-    }
-
-    .meatball-home-display .meatballAvatar-eye .pupil {
-      width: clamp(8px, 9.6%, 13px);
-      height: clamp(8px, 9.6%, 13px);
-      transform: translate(-50%, -50%);
-    }
-
-    .meatball-home-display .meatballAvatar-mouth {
-      bottom: 15.5%;
-      width: clamp(34px, 38%, 52px);
-      height: clamp(14px, 17%, 24px);
-      z-index: 3;
-      transform-origin: 50% 50%;
-      border-radius: 0 0 999px 999px;
-      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .08);
-    }
-
     .meatball-home-shell .chatShell {
       display: grid;
       gap: 14px;
@@ -1991,19 +1660,9 @@
       display: block;
     }
 
-    @keyframes meatballTalk {
-      0% { width: clamp(24px, 22%, 36px); height: clamp(9px, 8%, 14px); border-radius: 999px 999px 10px 10px; transform: translateX(-50%) scaleY(.82); }
-      50% { width: clamp(28px, 27%, 42px); height: clamp(13px, 14%, 22px); border-radius: 50% 50% 44% 44%; transform: translateX(-50%) scaleY(1.04); }
-      100% { width: clamp(25px, 24%, 38px); height: clamp(10px, 10%, 16px); border-radius: 999px 999px 12px 12px; transform: translateX(-50%) scaleY(.9); }
-    }
-
     @media (max-width: 1100px) {
       .meatball-home-grid {
         grid-template-columns: 1fr;
-      }
-
-      .meatball-home-stage {
-        min-height: 440px;
       }
     }
 
@@ -2011,15 +1670,6 @@
       .meatball-home-shell .modelPanel,
       .meatball-home-shell .composer {
         grid-template-columns: 1fr;
-      }
-
-      .meatball-home-stage {
-        min-height: 320px;
-      }
-
-      .meatball-home-display {
-        --meatball-size: clamp(118px, 33vw, 156px);
-        width: min(360px, 88vw);
       }
     }
 
@@ -2455,7 +2105,7 @@ Z"></path>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-<script src="./products/resources/js/meatball-avatar-embed.js"></script>
+<script src="/products/ai/meatball/resources/js/meatball-avatar-embed.js"></script>
 <script>
   window.MeatballAvatarEmbed.mount("#bigMeatballMount", {
     avatarId: "bigMeatballAvatar",
@@ -2463,7 +2113,7 @@ Z"></path>
     label: "Meatball in a space suit"
   });
 </script>
-<script src="./products/resources/js/meatball-chat-app.js"></script>
+<script src="/products/ai/meatball/resources/js/meatball-chat-app.js"></script>
 <script>
     (function () {
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -3350,3 +3000,6 @@ Z"></path>
 </body>
 
 </html>
+
+
+

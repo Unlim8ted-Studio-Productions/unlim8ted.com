@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WiseSize — Settings</title>
+  <title>WiseSize â€” Settings</title>
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
@@ -75,7 +75,7 @@
       <div class="row">
         <label>Features</label>
         <div class="muted" style="display:grid;gap:8px">
-          <label><input type="checkbox" id="featSave" /> Enable “Save profile”</label>
+          <label><input type="checkbox" id="featSave" /> Enable â€œSave profileâ€</label>
           <label><input type="checkbox" id="featTry" /> Enable AI Try-On</label>
         </div>
       </div>
@@ -115,7 +115,7 @@
 
     document.getElementById("btnSave").addEventListener("click", async () => {
       try {
-        msg.textContent = "Saving…";
+        msg.textContent = "Savingâ€¦";
         const n = name.value.trim();
         const w = website.value.trim().replace(/\/+$/, "");
 
@@ -129,7 +129,7 @@
           features: { profileSaveEnabled: !!featSave.checked, aiTryOnEnabled: !!featTry.checked }
         });
 
-        msg.textContent = "Saved ✓";
+        msg.textContent = "Saved âœ“";
         toastify(toastWrap, "Saved");
       } catch (e) {
         console.error(e);
@@ -145,3 +145,4 @@
   </script>
 </body>
 </html>
+
