@@ -6,17 +6,18 @@ const SPECIALIZED_TOPICS = [
 ];
 
 const MODEL_PATHS = {
-  selectorModel: "/assets/models/specialized_meatball_chunks/selector.onnx",
-  selectorConfig: "/assets/models/specialized_meatball_chunks/selector_config.json",
-  selectorLabels: "/assets/models/specialized_meatball_chunks/selector_labels.json",
-  selectorVocab: "/assets/models/specialized_meatball_chunks/selector_vocab.json",
-  subjectInserterModel: "/assets/models/subject_inserter/subject_inserter.onnx",
-  subjectInserterConfig: "/assets/models/subject_inserter/config.json",
-  subjectInserterLabels: "/assets/models/subject_inserter/labels.json",
-  subjectInserterVocab: "/assets/models/subject_inserter/vocab.json",
-  subjectFinderConfig: "/assets/models/subject_finder/config.json",
-  subjectFinderVocab: "/assets/models/subject_finder/vocab.json",
-  specializedDataBase: "/assets/data/specialized_QA"
+  selectorModel: "https://assets.unlim8ted.com/models/specialized_meatball_chunks/selector.onnx",
+  selectorConfig: "https://assets.unlim8ted.com/models/specialized_meatball_chunks/selector_config.json",
+  selectorLabels: "https://assets.unlim8ted.com/models/specialized_meatball_chunks/selector_labels.json",
+  selectorVocab: "https://assets.unlim8ted.com/models/specialized_meatball_chunks/selector_vocab.json",
+  specializedModelBase: "https://assets.unlim8ted.com/models/specialized_meatball_chunks/topics",
+  subjectInserterModel: "https://assets.unlim8ted.com/models/subject_inserter/subject_inserter.onnx",
+  subjectInserterConfig: "https://assets.unlim8ted.com/models/subject_inserter/config.json",
+  subjectInserterLabels: "https://assets.unlim8ted.com/models/subject_inserter/labels.json",
+  subjectInserterVocab: "https://assets.unlim8ted.com/models/subject_inserter/vocab.json",
+  subjectFinderConfig: "https://assets.unlim8ted.com/models/subject_finder/config.json",
+  subjectFinderVocab: "https://assets.unlim8ted.com/models/subject_finder/vocab.json",
+  specializedDataBase: "https://assets.unlim8ted.com/data/specialized_QA"
 };
 
 const DEBUG_ENABLED = new URLSearchParams(location.search).has("debug");
@@ -35,11 +36,16 @@ let subjectFinderConfig = null;
 let subjectFinderVocab = null;
 let modelsLoaded = false;
 let modelsLoadingPromise = null;
+let topicRuntimeCache = new Map();
 
-let answerBankCache = new Map();
 let historyTurns = [];
 let lastSubject = "";
 let lastTopic = "general";
+
+const PAD_ID = 0;
+const BOS_ID = 1;
+const EOS_ID = 2;
+const UNK_ID = 3;
 
 function setModelMeta(text) {
   if (modelMeta) modelMeta.textContent = text;
@@ -165,12 +171,6 @@ async function fetchJson(url) {
   return response.json();
 }
 
-async function fetchText(url) {
-  const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) throw new Error(`Failed to fetch ${url}`);
-  return response.text();
-}
-
 async function createSession(url) {
   return ort.InferenceSession.create(url, { executionProviders: ["wasm"] });
 }
@@ -180,75 +180,7 @@ async function runSessionWithFirstInput(session, tensor) {
   return session.run({ [inputName]: tensor });
 }
 
-function parseAnswerBank(rawText, url = "") {
-  const trimmed = String(rawText || "").trim();
-  if (!trimmed) return [];
-  if (url.endsWith(".json")) {
-    const parsed = JSON.parse(trimmed);
-    return Array.isArray(parsed) ? parsed : (Array.isArray(parsed.rows) ? parsed.rows : []);
-  }
-  return trimmed
-    .split(/\r?\n/)
-    .map(line => line.trim())
-    .filter(Boolean)
-    .map(line => {
-      try {
-        return JSON.parse(line);
-      } catch {
-        return null;
-      }
-    })
-    .filter(Boolean);
-}
-
-function normalizeRows(rows) {
-  return rows.map((row, index) => ({
-    id: row.id || `answer_${index}`,
-    question: row.question || row.input || "",
-    answer: row.answer || row.response || row.text || "",
-    category: row.category || row.topic || "general",
-    tags: Array.isArray(row.tags) ? row.tags : []
-  }));
-}
-
-async function loadTopicRows(topic) {
-  const safeTopic = SPECIALIZED_TOPICS.includes(topic) ? topic : "general";
-  if (answerBankCache.has(safeTopic)) return answerBankCache.get(safeTopic);
-  const url = `${MODEL_PATHS.specializedDataBase}/${safeTopic}.jsonl`;
-  const rows = normalizeRows(parseAnswerBank(await fetchText(url), url));
-  answerBankCache.set(safeTopic, rows);
-  return rows;
-}
-
-function lexicalScore(question, row, subject) {
-  const q = normalizeText(question);
-  const rowText = normalizeText(`${row.question} ${row.answer} ${row.category} ${(row.tags || []).join(" ")}`);
-  if (!q || !rowText) return -1;
-  let score = 0;
-  if (normalizeText(row.question) === q) score += 80;
-  const words = q.split(/\s+/).filter(word => word.length > 2);
-  for (const word of words) {
-    if (rowText.includes(word)) score += 3;
-  }
-  if (subject && rowText.includes(subject)) score += 9;
-  score += Math.min(row.answer.length / 220, 3);
-  return score;
-}
-
-function pickBestRow(question, rows, subject) {
-  let best = null;
-  let bestScore = -Infinity;
-  for (const row of rows) {
-    const score = lexicalScore(question, row, subject);
-    if (score > bestScore) {
-      best = row;
-      bestScore = score;
-    }
-  }
-  return { row: best, score: bestScore };
-}
-
-function getFallbackAnswer(topic, subject) {
+function getFallbackAnswer(topic, subject, inputText = "") {
   if (topic === "unlim8ted") {
     return subject
       ? `The sauce is on: ${subject} is in the Unlim8ted lane, but I need a cleaner question to plate the right answer.`
@@ -287,7 +219,8 @@ function extractCandidatePhrases(text) {
 function sanitizeSubject(candidate) {
   const stop = new Set([
     "it", "this", "that", "they", "them", "he", "she", "him", "her", "these", "those",
-    "something", "anything", "everything", "nothing", "question", "answer", "thing", "stuff"
+    "something", "anything", "everything", "nothing", "question", "answer", "thing", "stuff",
+    "sauce", "yes", "yeah", "no", "none", "what", "who", "why", "how", "when", "where"
   ]);
   const words = normalizeText(candidate)
     .split(/\s+/)
@@ -298,10 +231,15 @@ function sanitizeSubject(candidate) {
 }
 
 function findSubject(historyText, inputText) {
-  const combined = `${historyText} ${inputText}`.trim();
+  const userHistoryText = historyTurns
+    .filter(turn => turn.role === "user")
+    .slice(-4)
+    .map(turn => turn.text)
+    .join(" ");
+  const combined = `${userHistoryText} ${inputText}`.trim();
   const candidates = [
     ...extractCandidatePhrases(inputText),
-    ...extractCandidatePhrases(historyText),
+    ...extractCandidatePhrases(userHistoryText),
     lastSubject
   ].map(sanitizeSubject).filter(Boolean);
   if (candidates.length) return candidates[0];
@@ -311,6 +249,153 @@ function findSubject(historyText, inputText) {
   const filtered = tokens.filter(token => token.length > 2 && vocabWords.has(token));
   if (filtered.length) return filtered.slice(-3).join(" ");
   return "";
+}
+
+function vectorizeTopicQuestion(question, inputVocab) {
+  const tokens = tokenizeSelectorText(`question: ${question}`);
+  const feats = makeTokenNgrams(tokens, [1, 2, 3]);
+  const vec = new Float32Array(Object.keys(inputVocab || {}).length);
+  const counts = new Map();
+
+  for (const feat of feats) {
+    counts.set(feat, (counts.get(feat) || 0) + 1);
+  }
+
+  for (const [feat, count] of counts.entries()) {
+    const idx = inputVocab[feat];
+    const unkIdx = inputVocab["<UNK>"];
+    const useIdx = typeof idx === "number" ? idx : unkIdx;
+    if (typeof useIdx === "number" && useIdx >= 0 && useIdx < vec.length) {
+      vec[useIdx] = Math.min(Number(count) || 0, 5);
+    }
+  }
+
+  return vec;
+}
+
+function joinChunkTexts(chunks) {
+  let out = "";
+
+  for (const rawChunk of chunks) {
+    const chunk = String(rawChunk || "").trim();
+    if (!chunk) continue;
+
+    if (/[.,!?:;%)\]}]/.test(chunk) && chunk.length === 1) {
+      out = out.replace(/\s+$/, "") + chunk;
+      continue;
+    }
+
+    if (/^[([{]$/.test(chunk)) {
+      if (out && !out.endsWith(" ")) out += " ";
+      out += chunk;
+      continue;
+    }
+
+    if (/^['’]/.test(chunk)) {
+      out = out.replace(/\s+$/, "") + chunk;
+      continue;
+    }
+
+    if (out && !/[ ([{'’]$/.test(out)) out += " ";
+    out += chunk;
+  }
+
+  return out.replace(/\s+/g, " ").trim();
+}
+
+function decodeChunkIds(ids, outputChunks) {
+  const texts = [];
+
+  for (const rawId of ids) {
+    const idx = Number(rawId);
+    if (idx === EOS_ID) break;
+    if (idx === PAD_ID || idx === BOS_ID || idx === UNK_ID) continue;
+    if (idx >= 0 && idx < outputChunks.length) {
+      texts.push(outputChunks[idx]?.text || "");
+    }
+  }
+
+  return joinChunkTexts(texts);
+}
+
+async function loadTopicRuntime(topic) {
+  const safeTopic = SPECIALIZED_TOPICS.includes(topic) ? topic : "general";
+  if (topicRuntimeCache.has(safeTopic)) return topicRuntimeCache.get(safeTopic);
+
+  const base = `${MODEL_PATHS.specializedModelBase}/${safeTopic}`;
+  const [config, inputVocab, outputChunks] = await Promise.all([
+    fetchJson(`${base}/config.json`),
+    fetchJson(`${base}/input_vocab.json`),
+    fetchJson(`${base}/output_chunks.json`)
+  ]);
+  const modelPath = `${base}/${String(config?.model_onnx_path || "model.onnx").replace(/^.\//, "")}`;
+  const session = await createSession(modelPath);
+
+  const runtime = {
+    topic: safeTopic,
+    config,
+    inputVocab,
+    outputChunks,
+    session,
+    maxOutputChunks: Number(config?.max_output_chunks || 40)
+  };
+
+  topicRuntimeCache.set(safeTopic, runtime);
+  return runtime;
+}
+
+async function generateTopicAnswer(question, topic) {
+  const runtime = await loadTopicRuntime(topic);
+  const vec = vectorizeTopicQuestion(question, runtime.inputVocab);
+  const tensor = new ort.Tensor("float32", vec, [1, vec.length]);
+  const outputs = await runSessionWithFirstInput(runtime.session, tensor);
+  const firstKey = Object.keys(outputs)[0];
+  const logitsSteps = outputs[firstKey]?.data;
+  const dims = outputs[firstKey]?.dims || [];
+
+  if (!logitsSteps || dims.length < 2) {
+    return {
+      text: "",
+      ids: [],
+      scores: []
+    };
+  }
+
+  const stepCount = dims.length >= 3 ? dims[1] : dims[0];
+  const vocabSize = dims.length >= 3 ? dims[2] : dims[1];
+  const predIds = [];
+  const scores = [];
+
+  for (let step = 0; step < Math.min(stepCount, runtime.maxOutputChunks + 1); step += 1) {
+    let bestId = 0;
+    let bestLogit = -Infinity;
+
+    for (let token = 0; token < vocabSize; token += 1) {
+      const value = logitsSteps[(step * vocabSize) + token];
+      if (value > bestLogit) {
+        bestLogit = value;
+        bestId = token;
+      }
+    }
+
+    const start = step * vocabSize;
+    const end = start + vocabSize;
+    const probs = softmax(Array.from(logitsSteps.slice(start, end)));
+    const score = probs[bestId] || 0;
+
+    if (bestId === EOS_ID) break;
+    if (bestId === PAD_ID || bestId === BOS_ID || bestId === UNK_ID) break;
+
+    predIds.push(bestId);
+    scores.push(score);
+  }
+
+  return {
+    text: decodeChunkIds([...predIds, EOS_ID], runtime.outputChunks),
+    ids: predIds,
+    scores,
+    runtime
+  };
 }
 
 async function predictRewriteAction(inputText, subject) {
@@ -414,21 +499,18 @@ async function answerQuestion(inputText) {
   const rewritePrediction = await predictRewriteAction(inputText, subject);
   const standaloneInput = rewriteStandalone(inputText, subject, rewritePrediction.action);
   const topicPrediction = await predictTopic(standaloneInput);
-  const rows = await loadTopicRows(topicPrediction.topic);
-  const picked = pickBestRow(standaloneInput, rows, subject);
+  const generated = await generateTopicAnswer(standaloneInput, topicPrediction.topic);
 
   lastSubject = subject || lastSubject;
   lastTopic = topicPrediction.topic || lastTopic;
 
-  const answer = picked.row && picked.score >= 6
-    ? picked.row.answer
-    : getFallbackAnswer(topicPrediction.topic, subject);
+  const answer = generated.text || getFallbackAnswer(topicPrediction.topic, subject, inputText);
 
   historyTurns.push({ role: "user", text: inputText });
   historyTurns.push({ role: "bot", text: answer });
   historyTurns = historyTurns.slice(-12);
 
-  setModelMeta(`Finder: ${subject || "none"}. Rewrite: ${standaloneInput}. Topic: ${topicPrediction.topic}.`);
+  setModelMeta(`Finder: ${subject || "none"}. Rewrite: ${standaloneInput}. Topic: ${topicPrediction.topic}. Generator: ${generated.runtime?.topic || topicPrediction.topic}.`);
 
   return {
     text: answer,
@@ -438,12 +520,9 @@ async function answerQuestion(inputText) {
       rewritePrediction,
       standaloneInput,
       topicPrediction,
-      pickedRow: picked.row ? {
-        id: picked.row.id,
-        question: picked.row.question,
-        category: picked.row.category,
-        score: picked.score
-      } : null
+      generatedIds: generated.ids || [],
+      generatedScores: generated.scores || [],
+      generatedTopic: generated.runtime?.topic || topicPrediction.topic
     }
   };
 }

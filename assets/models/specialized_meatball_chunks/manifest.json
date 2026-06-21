@@ -9,7 +9,7 @@
   "topics": {
     "general": {
       "dir": "topics/general",
-      "model": "topics/general.onnx",
+      "model": "topics/general/model.onnx",
       "config": "topics/general/config.json",
       "input_vocab": "topics/general/input_vocab.json",
       "output_chunks": "topics/general/output_chunks.json"

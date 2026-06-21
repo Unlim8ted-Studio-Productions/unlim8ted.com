@@ -258,7 +258,7 @@ def load_topic_model(topic_dir):
     input_vocab = load_json(topic_dir / "input_vocab.json")
     output_chunks = load_json(topic_dir / "output_chunks.json")
 
-    model_rel = config.get("model_onnx_path", "../model.onnx")
+    model_rel = config.get("model_onnx_path", "model.onnx")
     model_path = (topic_dir / model_rel).resolve()
     if not model_path.exists():
         raise FileNotFoundError(f"Missing topic ONNX: {model_path}")

@@ -1,4 +1,4 @@
-{
+﻿{
   "model_type": "question_to_answer_chunks_gru_topic_specialist",
   "topic": "biology",
   "input_type": "bag_of_words_ngrams",
@@ -22,7 +22,7 @@
   "bos_id": 1,
   "eos_id": 2,
   "unk_id": 3,
-  "model_onnx_path": "../biology.onnx",
+  "model_onnx_path": "model.onnx",
   "input_vocab_path": "input_vocab.json",
   "output_chunks_path": "output_chunks.json",
   "history_in_input": false,

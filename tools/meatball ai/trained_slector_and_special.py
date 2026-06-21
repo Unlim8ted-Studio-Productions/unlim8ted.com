@@ -1321,7 +1321,7 @@ def train_topic_model(topic, rows, topic_dir: Path, export_pt=False):
     epochs_without_improvement = 0
 
     model_pt_path = topic_dir / "model.pt"
-    model_onnx_path = topic_dir.parent / f"{topic}.onnx"
+    model_onnx_path = topic_dir / "model.onnx"
     best_checkpoint = None
 
     for epoch in range(1, TOPIC_EPOCHS + 1):
@@ -1454,7 +1454,7 @@ def train_topic_model(topic, rows, topic_dir: Path, export_pt=False):
         "bos_id": BOS_ID,
         "eos_id": EOS_ID,
         "unk_id": UNK_ID,
-        "model_onnx_path": f"../{topic}.onnx",
+        "model_onnx_path": "model.onnx",
         "input_vocab_path": "input_vocab.json",
         "output_chunks_path": "output_chunks.json",
         "history_in_input": False,
@@ -1670,7 +1670,7 @@ def main():
 
         manifest["topics"][topic] = {
             "dir": f"topics/{topic}",
-            "model": f"topics/{topic}.onnx",
+            "model": f"topics/{topic}/model.onnx",
             "config": f"topics/{topic}/config.json",
             "input_vocab": f"topics/{topic}/input_vocab.json",
             "output_chunks": f"topics/{topic}/output_chunks.json",

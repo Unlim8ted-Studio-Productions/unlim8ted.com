@@ -178,7 +178,7 @@ def main():
 
         manifest["topics"][topic] = {
             "dir": f"topics/{topic}",
-            "model": f"topics/{topic}.onnx",
+            "model": f"topics/{topic}/model.onnx",
             "config": f"topics/{topic}/config.json",
             "input_vocab": f"topics/{topic}/input_vocab.json",
             "output_chunks": f"topics/{topic}/output_chunks.json",
