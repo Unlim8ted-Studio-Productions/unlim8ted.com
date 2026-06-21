@@ -255,9 +255,10 @@
 .meatballAvatar-mouth {
   position: absolute;
   left: 50%;
-  bottom: 17px;
+  bottom: 25%;
   width: 30px;
   height: 14px;
+  overflow: hidden;
   border-radius: 0 0 18px 18px;
   background: linear-gradient(180deg, rgba(74, 19, 9, 0.92), rgba(42, 10, 5, 0.98));
   transform: translateX(-50%);

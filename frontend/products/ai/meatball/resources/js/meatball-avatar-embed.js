@@ -29,13 +29,15 @@
     return `
       <div class="${variant}" data-meatball-variant="${options?.variant || "plain"}">
         ${shellMarkup}
-        <div id="${options?.avatarId || "bigMeatballAvatar"}" class="meatballAvatar" aria-label="${label}">
-          <span class="meatballAvatar-shadow"></span>
-          <span class="meatballAvatar-body">
-            <span class="meatballAvatar-eye left"><span class="pupil"></span></span>
-            <span class="meatballAvatar-eye right"><span class="pupil"></span></span>
-            <span class="meatballAvatar-mouth"></span>
-          </span>
+        <div class="meatballAstronaut-core">
+          <div id="${options?.avatarId || "bigMeatballAvatar"}" class="meatballAvatar" aria-label="${label}">
+            <span class="meatballAvatar-shadow"></span>
+            <span class="meatballAvatar-body">
+              <span class="meatballAvatar-eye left"><span class="pupil"></span></span>
+              <span class="meatballAvatar-eye right"><span class="pupil"></span></span>
+              <span class="meatballAvatar-mouth"></span>
+            </span>
+          </div>
         </div>
       </div>
     `;
@@ -52,6 +54,32 @@
     if (!avatar) return null;
     avatar.classList.toggle("talking", Boolean(talking));
     return avatar;
+  }
+
+  function updatePupils(avatar, clientX, clientY) {
+    if (!avatar || !Number.isFinite(clientX) || !Number.isFinite(clientY)) return;
+    const rect = avatar.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = Math.max(-1, Math.min(1, (clientX - cx) / Math.max(rect.width / 2, 1)));
+    const dy = Math.max(-1, Math.min(1, (clientY - cy) / Math.max(rect.height / 2, 1)));
+    avatar.style.setProperty("--pupil-x", `${(dx * 3.8).toFixed(2)}px`);
+    avatar.style.setProperty("--pupil-y", `${(dy * 3.8).toFixed(2)}px`);
+  }
+
+  function attachCursorTracking(avatar) {
+    if (!avatar || avatar.dataset.eyeTrackingAttached === "1") return;
+    avatar.dataset.eyeTrackingAttached = "1";
+
+    window.addEventListener("pointermove", (event) => {
+      if (event.pointerType === "touch") return;
+      updatePupils(avatar, event.clientX, event.clientY);
+    });
+
+    window.addEventListener("pointerleave", () => {
+      avatar.style.setProperty("--pupil-x", "0px");
+      avatar.style.setProperty("--pupil-y", "0px");
+    });
   }
 
   function speakFor(target, text, maxMs) {
@@ -71,7 +99,9 @@
     const container = typeof target === "string" ? document.querySelector(target) : target;
     if (!container) return null;
     container.innerHTML = createAvatarMarkup(options);
-    return resolveAvatar(container);
+    const avatar = resolveAvatar(container);
+    attachCursorTracking(avatar);
+    return avatar;
   }
 
   window.MeatballAvatarEmbed = {
