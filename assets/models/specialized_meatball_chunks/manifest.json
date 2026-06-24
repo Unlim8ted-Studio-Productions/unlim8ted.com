@@ -7,12 +7,12 @@
     "labels": "selector_labels.json"
   },
   "topics": {
-    "general": {
-      "dir": "topics/general",
-      "model": "topics/general/model.onnx",
-      "config": "topics/general/config.json",
-      "input_vocab": "topics/general/input_vocab.json",
-      "output_chunks": "topics/general/output_chunks.json"
+    "ai": {
+      "dir": "topics/ai",
+      "model": "topics/ai/model.onnx",
+      "config": "topics/ai/config.json",
+      "input_vocab": "topics/ai/input_vocab.json",
+      "output_chunks": "topics/ai/output_chunks.json"
     }
   },
   "notes": [

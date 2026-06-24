@@ -10,7 +10,6 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 
-
 # ============================================================
 # CONFIG
 # ============================================================
@@ -68,6 +67,7 @@ UNK_ID = 3
 # TEXT
 # ============================================================
 
+
 def normalize(text):
     text = str(text).strip()
     text = re.sub(r"\s+", " ", text)
@@ -84,7 +84,7 @@ def word_ngrams(tokens, ns=(1, 2, 3)):
 
     for n in ns:
         for i in range(len(tokens) - n + 1):
-            out.append(" ".join(tokens[i:i + n]))
+            out.append(" ".join(tokens[i : i + n]))
 
     return out
 
@@ -95,7 +95,7 @@ def char_ngrams(text, ns=(3, 4, 5)):
 
     for n in ns:
         for i in range(len(text) - n + 1):
-            out.append(text[i:i + n])
+            out.append(text[i : i + n])
 
     return out
 
@@ -121,6 +121,7 @@ def question_chunks(text):
 # ============================================================
 # DATA
 # ============================================================
+
 
 def load_jsonl_file(path):
     rows = []
@@ -171,11 +172,13 @@ def load_dataset(data_dir):
             q, a = extract_qa(raw)
 
             if q and a:
-                rows.append({
-                    "question": q,
-                    "answer": a,
-                    "source": str(path),
-                })
+                rows.append(
+                    {
+                        "question": q,
+                        "answer": a,
+                        "source": str(path),
+                    }
+                )
 
     cleaned = []
     seen = set()
@@ -195,6 +198,7 @@ def load_dataset(data_dir):
 # ============================================================
 # VOCABS
 # ============================================================
+
 
 def build_char_vocab(rows):
     counts = Counter()
@@ -310,6 +314,7 @@ def decode_answer(ids, id_to_token):
 # DATASET
 # ============================================================
 
+
 class ChunkQADataset(Dataset):
     def __init__(self, rows, char_vocab, answer_vocab):
         self.rows = rows
@@ -331,6 +336,7 @@ class ChunkQADataset(Dataset):
 # ============================================================
 # LATENT MODEL
 # ============================================================
+
 
 class ChunkToLatentModel(nn.Module):
     """
@@ -430,6 +436,7 @@ class ChunkToLatentModel(nn.Module):
 # PREDICTION MODEL
 # ============================================================
 
+
 class PredictionModel(nn.Module):
     """
     This is the prediction model.
@@ -517,6 +524,7 @@ class PredictionModel(nn.Module):
 # HELPERS
 # ============================================================
 
+
 def set_requires_grad(module, value):
     for p in module.parameters():
         p.requires_grad = value
@@ -602,7 +610,9 @@ def evaluate(latent_model, prediction_model, loader, criterion):
 
 
 @torch.no_grad()
-def sample_predictions(latent_model, prediction_model, rows, char_vocab, id_to_token, count=3):
+def sample_predictions(
+    latent_model, prediction_model, rows, char_vocab, id_to_token, count=3
+):
     if not rows:
         return
 
@@ -618,7 +628,9 @@ def sample_predictions(latent_model, prediction_model, rows, char_vocab, id_to_t
         q_chunks = q_chunks.unsqueeze(0).to(DEVICE)
 
         z = latent_model(q_chunks)
-        pred_ids = prediction_model.generate(z, max_len=MAX_GENERATE_LEN)[0].cpu().tolist()
+        pred_ids = (
+            prediction_model.generate(z, max_len=MAX_GENERATE_LEN)[0].cpu().tolist()
+        )
 
         print("Q:", row["question"])
         print("T:", row["answer"])
@@ -629,6 +641,7 @@ def sample_predictions(latent_model, prediction_model, rows, char_vocab, id_to_t
 # ============================================================
 # TRAINING
 # ============================================================
+
 
 def train():
     random.seed(SEED)
@@ -806,7 +819,7 @@ def train():
             latent_optimizer.step()
 
             total_pred_loss += pred_loss.item()
-            total_latent_loss += ((latent_loss_1.item() + latent_loss_2.item()) / 2.0)
+            total_latent_loss += (latent_loss_1.item() + latent_loss_2.item()) / 2.0
             batches += 1
 
         set_requires_grad(latent_model, True)

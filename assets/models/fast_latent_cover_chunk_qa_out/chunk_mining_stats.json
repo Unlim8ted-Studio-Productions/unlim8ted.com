@@ -1,0 +1,10 @@
+{
+  "rows": 180835,
+  "output_chunks": 21425,
+  "selected_phrase_chunks": 12000,
+  "single_fallback_chunks": 9421,
+  "elapsed_seconds": 243.66734671592712,
+  "max_candidates": 350000,
+  "max_selected_phrase_chunks": 12000,
+  "max_output_chunks": 24000
+}

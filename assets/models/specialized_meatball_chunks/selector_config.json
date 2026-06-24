@@ -12,5 +12,9 @@
   "model_onnx_path": "selector.onnx",
   "selector_vocab_path": "selector_vocab.json",
   "selector_labels_path": "selector_labels.json",
-  "history_in_input": false
+  "history_in_input": false,
+  "question_augmentation": {
+    "enabled_for_training_split": true,
+    "max_augmentations_per_question": 4
+  }
 }

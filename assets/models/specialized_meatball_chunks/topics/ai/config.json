@@ -1,4 +1,4 @@
-﻿{
+{
   "model_type": "question_to_answer_chunks_gru_topic_specialist",
   "topic": "ai",
   "input_type": "bag_of_words_ngrams",
@@ -26,5 +26,9 @@
   "input_vocab_path": "input_vocab.json",
   "output_chunks_path": "output_chunks.json",
   "history_in_input": false,
-  "note": "Topic-specialized Meatball chunk model using original mined chunk logic."
+  "note": "Topic-specialized Meatball chunk model using original mined chunk logic.",
+  "question_augmentation": {
+    "enabled_for_training_split": true,
+    "max_augmentations_per_question": 4
+  }
 }
