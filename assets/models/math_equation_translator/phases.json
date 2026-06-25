@@ -1,0 +1,46 @@
+[
+  {
+    "name": "phase_1_arithmetic_heavy",
+    "rows": 250000,
+    "epochs": 4,
+    "mix": {
+      "synthetic": 0.85,
+      "mathqa": 0.05,
+      "gsm8k": 0.05,
+      "mawps_asdiv_svamp": 0.05
+    }
+  },
+  {
+    "name": "phase_2_program_heavy",
+    "rows": 160000,
+    "epochs": 4,
+    "mix": {
+      "synthetic": 0.45,
+      "mathqa": 0.35,
+      "gsm8k": 0.1,
+      "mawps_asdiv_svamp": 0.1
+    }
+  },
+  {
+    "name": "phase_3_word_problem_heavy",
+    "rows": 120000,
+    "epochs": 5,
+    "mix": {
+      "synthetic": 0.3,
+      "mathqa": 0.2,
+      "gsm8k": 0.35,
+      "mawps_asdiv_svamp": 0.15
+    }
+  },
+  {
+    "name": "phase_4_clean_word_problem_tune",
+    "rows": 80000,
+    "epochs": 4,
+    "mix": {
+      "synthetic": 0.25,
+      "mathqa": 0.15,
+      "gsm8k": 0.2,
+      "mawps_asdiv_svamp": 0.4
+    }
+  }
+]
