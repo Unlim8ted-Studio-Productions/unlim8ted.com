@@ -23,6 +23,7 @@ VAL_SPLIT = 0.12
 
 OUT_DIR = Path("assets/models/math_classifier")
 MATH_DATA_DIR = Path("assets/data/math")
+LABELS = ["general", "math"]
 
 
 random.seed(SEED)
@@ -75,6 +76,8 @@ def load_general_questions(specialized_dir, smart_qa_path):
     rows = []
 
     for path in sorted(Path(specialized_dir).glob("*.jsonl")):
+        if path.stem.lower() == "math":
+            continue
         rows.extend(load_jsonl(path))
 
     rows.extend(load_jsonl(smart_qa_path))
@@ -95,6 +98,73 @@ def load_math_questions(math_dir):
             if q:
                 out.append({"text": q, "label": 1})
     return out
+
+
+def dedupe_and_drop_conflicts(rows):
+    by_text = {}
+    conflicted = set()
+
+    for row in rows:
+        text = normalize(row["text"])
+        if not text:
+            continue
+        label = int(row["label"])
+        prev = by_text.get(text)
+        if prev is None:
+            by_text[text] = label
+        elif prev != label:
+            conflicted.add(text)
+
+    out = []
+    seen = set()
+    for row in rows:
+        text = normalize(row["text"])
+        if not text or text in conflicted or text in seen:
+            continue
+        seen.add(text)
+        out.append({"text": row["text"], "label": int(row["label"])})
+
+    if conflicted:
+        print(f"[dedupe] dropped conflicted texts: {len(conflicted)}", flush=True)
+    print(f"[dedupe] kept unique texts: {len(out)}", flush=True)
+    return out
+
+
+def balance_rows(rows):
+    grouped = {0: [], 1: []}
+    for row in rows:
+        grouped[int(row["label"])].append(row)
+
+    if not grouped[0] or not grouped[1]:
+        raise RuntimeError("Need both general and math rows to train the classifier.")
+
+    target = min(len(grouped[0]), len(grouped[1]))
+    rng = random.Random(SEED)
+    balanced = rng.sample(grouped[0], target) + rng.sample(grouped[1], target)
+    rng.shuffle(balanced)
+    return balanced
+
+
+def stratified_split(rows, val_split=VAL_SPLIT):
+    grouped = {0: [], 1: []}
+    for row in rows:
+        grouped[int(row["label"])].append(row)
+
+    rng = random.Random(SEED)
+    train_rows = []
+    val_rows = []
+
+    for label_rows in grouped.values():
+        rng.shuffle(label_rows)
+        cut = int(len(label_rows) * (1 - val_split))
+        if len(label_rows) > 1:
+            cut = max(1, min(cut, len(label_rows) - 1))
+        train_rows.extend(label_rows[:cut])
+        val_rows.extend(label_rows[cut:])
+
+    rng.shuffle(train_rows)
+    rng.shuffle(val_rows)
+    return train_rows, val_rows
 
 
 def add_synthetic_math(n=25000):
@@ -206,6 +276,8 @@ def evaluate(model, loader, loss_fn):
     correct = 0
     loss_total = 0
     batches = 0
+    per_label_total = [0, 0]
+    per_label_correct = [0, 0]
 
     for x, y in loader:
         x, y = x.to(DEVICE), y.to(DEVICE)
@@ -216,8 +288,18 @@ def evaluate(model, loader, loss_fn):
         pred = torch.argmax(logits, dim=-1)
         correct += int((pred == y).sum().item())
         total += int(y.numel())
+        for label in range(len(LABELS)):
+            mask = y == label
+            if mask.any():
+                per_label_total[label] += int(mask.sum().item())
+                per_label_correct[label] += int((pred[mask] == y[mask]).sum().item())
 
-    return loss_total / max(1, batches), correct / max(1, total)
+    return {
+        "loss": loss_total / max(1, batches),
+        "acc": correct / max(1, total),
+        "general_acc": per_label_correct[0] / max(1, per_label_total[0]),
+        "math_acc": per_label_correct[1] / max(1, per_label_total[1]),
+    }
 
 
 def main():
@@ -236,17 +318,18 @@ def main():
     rows.extend(add_synthetic_math())
     rows.extend(add_synthetic_general())
 
-    random.shuffle(rows)
+    rows = dedupe_and_drop_conflicts(rows)
     if args.limit:
+        random.Random(SEED).shuffle(rows)
         rows = rows[: args.limit]
+
+    rows = balance_rows(rows)
 
     print("rows:", len(rows), flush=True)
     print("math:", sum(r["label"] == 1 for r in rows), flush=True)
     print("general:", sum(r["label"] == 0 for r in rows), flush=True)
 
-    split = int(len(rows) * (1 - VAL_SPLIT))
-    train_rows = rows[:split]
-    val_rows = rows[split:] or rows[:]
+    train_rows, val_rows = stratified_split(rows)
 
     vocab = build_vocab(train_rows)
 
@@ -280,14 +363,14 @@ def main():
             total += float(loss.item())
             batches += 1
 
-        val_loss, val_acc = evaluate(model, val_loader, loss_fn)
+        metrics = evaluate(model, val_loader, loss_fn)
         print(
-            f"epoch {epoch:03d} | train {total/max(1,batches):.4f} | val {val_loss:.4f} | acc {val_acc:.4f}",
+            f"epoch {epoch:03d} | train {total/max(1,batches):.4f} | val {metrics['loss']:.4f} | acc {metrics['acc']:.4f} | general {metrics['general_acc']:.4f} | math {metrics['math_acc']:.4f}",
             flush=True,
         )
 
-        if val_loss < best:
-            best = val_loss
+        if metrics["loss"] < best:
+            best = metrics["loss"]
             torch.save(
                 {
                     "model_state_dict": model.state_dict(),
@@ -297,6 +380,7 @@ def main():
                 OUT_DIR / "math_classifier.pt",
             )
             save_json(OUT_DIR / "input_vocab.json", vocab)
+            save_json(OUT_DIR / "labels.json", LABELS)
             save_json(
                 OUT_DIR / "config.json",
                 {
@@ -305,7 +389,8 @@ def main():
                     "word_ngrams": list(WORD_NGRAMS),
                     "hidden": HIDDEN,
                     "dropout": DROPOUT,
-                    "labels": ["general", "math"],
+                    "labels": LABELS,
+                    "labels_path": str(OUT_DIR / "labels.json").replace("\\", "/"),
                 },
             )
             print("[saved best]", flush=True)

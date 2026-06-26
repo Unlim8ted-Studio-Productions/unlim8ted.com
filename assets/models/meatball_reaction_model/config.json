@@ -1,0 +1,17 @@
+{
+  "model_type": "meatball_reaction_model",
+  "meaning": "Predicts what Meatball should feel/show in response to the message, not the user's emotion.",
+  "char_ngrams": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "word_ngrams": [
+    1,
+    2,
+    3
+  ],
+  "hidden": 256,
+  "dropout": 0.2
+}

@@ -1,0 +1,17 @@
+{
+  "model_type": "complexity_classifier",
+  "meaning": "Predicts routing complexity: normal/list/compare/multi/followup/smalltalk/unknown. Math is handled by the separate existing math classifier.",
+  "char_ngrams": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "word_ngrams": [
+    1,
+    2,
+    3
+  ],
+  "hidden": 320,
+  "dropout": 0.22
+}

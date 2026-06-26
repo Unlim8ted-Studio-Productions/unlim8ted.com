@@ -10,8 +10,7 @@
   <script type="module" src="/components/site-navbar.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
 
-  <link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-assistant.css" />
-  <link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-astronaut.css" />
+  <link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-renderer.css" />
 
   <style>
     :root {
@@ -145,8 +144,20 @@
       min-height: 0;
       display: grid;
       place-items: center;
-      padding: clamp(12px, 2.5vh, 22px);
+      padding: 0;
       overflow: hidden;
+      border: 0;
+      background: none;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    #bigMeatballMount {
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      display: grid;
+      place-items: center;
     }
 
     .chatShell {
@@ -413,10 +424,6 @@
         padding: 10px;
       }
 
-      .chatShell {
-        min-height: 360px;
-      }
-
       .composer textarea {
         min-height: 54px;
         max-height: 120px;
@@ -500,7 +507,7 @@
       }
 
       .meatballStage {
-        min-height: 136px;
+        min-height: 0;
         border-radius: 22px;
       }
 
@@ -521,7 +528,7 @@
       }
 
       .meatballStage {
-        min-height: 124px;
+        min-height: 0;
       }
     }
 
@@ -663,21 +670,15 @@
       </section>
 
       <aside class="panel meatballStage">
-        <div class="meatballDisplay" aria-hidden="true">
-          <div id="bigMeatballMount"></div>
-        </div>
+        <div id="bigMeatballMount" aria-hidden="true"></div>
       </aside>
     </section>
   </main>
 
 
-  <script src="/products/ai/meatball/resources/js/meatball-avatar-embed.js"></script>
+  <script src="/products/ai/meatball/resources/js/meatball-renderer.js"></script>
   <script>
-    window.MeatballAvatarEmbed.mount("#bigMeatballMount", {
-      avatarId: "bigMeatballAvatar",
-      variant: "plain",
-      label: "Meatball"
-    });
+    window.MeatballEmotionRenderer.mount("#bigMeatballMount");
   </script>
   <script src="/products/ai/meatball/resources/js/meatball-chat-app.js"></script>
 </body>

@@ -15,5 +15,6 @@
   "labels": [
     "general",
     "math"
-  ]
+  ],
+  "labels_path": "assets/models/math_classifier/labels.json"
 }

@@ -1,0 +1,854 @@
+.meatballEmotionStage {
+  --bg: #050202;
+  --panel: #150b08;
+  --cream: #fff0cf;
+  --muted: rgba(255, 240, 207, 0.68);
+  --line: rgba(255, 220, 170, 0.16);
+  --meat: #7b3c28;
+  --meat2: #b46442;
+  --sauce: #b72718;
+  --sauce2: #ff4b2f;
+  --dark: #180705;
+  --pasta: #ffd447;
+  --blue: #79dbff;
+  --violet: #9d5cff;
+  --demon: #ff143d;
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  min-height: 0;
+  height: auto;
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 50% 16%, #2a120d 0, #090504 58%, #030202 100%);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+  color: var(--cream);
+  isolation: isolate;
+}
+
+.meatballEmotionStage.is-glitching {
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.52),
+    0 0 0 1px rgba(121, 219, 255, 0.18),
+    14px 0 40px rgba(255, 20, 61, 0.16),
+    -14px 0 40px rgba(121, 219, 255, 0.16);
+}
+
+.meatballEmotionStage::before {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 0 42%, rgba(255, 210, 140, 0.055) 43% 45%, transparent 46% 100%);
+  animation: meatballScan 11s linear infinite;
+  mix-blend-mode: screen;
+}
+
+.meatballEmotionStage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.027) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, black, transparent 73%);
+  pointer-events: none;
+}
+
+.meatballEmotionStage.is-glitching::before {
+  animation: meatballScan .32s steps(2, end) infinite;
+  opacity: .95;
+}
+
+.meatballEmotionStage.is-glitching::after {
+  opacity: 1;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(121, 219, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(180deg, transparent 0 16%, rgba(255, 20, 61, 0.18) 17% 21%, transparent 22% 44%, rgba(121, 219, 255, 0.14) 45% 49%, transparent 50% 70%, rgba(255, 240, 207, 0.1) 71% 73%, transparent 74% 100%);
+  background-size: 42px 42px, 42px 42px, 100% 100%;
+}
+
+.meatballEmotionStage * {
+  box-sizing: border-box;
+}
+
+.meatballEmotionStage .cutsceneLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.meatballEmotionStage .blackout,
+.meatballEmotionStage .impact,
+.meatballEmotionStage .shock,
+.meatballEmotionStage .aura,
+.meatballEmotionStage .moon,
+.meatballEmotionStage .speedline,
+.meatballEmotionStage .slash,
+.meatballEmotionStage .eyeReveal,
+.meatballEmotionStage .letterbox,
+.meatballEmotionStage .subtitle,
+.meatballEmotionStage .kanji {
+  position: absolute;
+}
+
+.meatballEmotionStage .blackout,
+.meatballEmotionStage .impact,
+.meatballEmotionStage .shock {
+  inset: 0;
+}
+
+.meatballEmotionStage .blackout {
+  background: #000;
+}
+
+.meatballEmotionStage .letterbox {
+  left: 0;
+  width: 100%;
+  height: 14%;
+  background: #000;
+  transform: scaleY(0);
+  transform-origin: center;
+}
+
+.meatballEmotionStage .letterbox.top {
+  top: 0;
+}
+
+.meatballEmotionStage .letterbox.bottom {
+  bottom: 0;
+}
+
+.meatballEmotionStage .eyeReveal {
+  top: 42%;
+  width: 62px;
+  height: 22px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fff7df, #ffcc66);
+  box-shadow: 0 0 24px rgba(255, 204, 102, 0.65);
+}
+
+.meatballEmotionStage .eyeReveal.left {
+  left: calc(50% - 78px);
+}
+
+.meatballEmotionStage .eyeReveal.right {
+  left: calc(50% + 16px);
+}
+
+.meatballEmotionStage .moon {
+  right: 9%;
+  top: 13%;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.22) 48%, rgba(255, 255, 255, 0) 72%),
+    radial-gradient(circle, rgba(255, 75, 47, 0.24), rgba(255, 75, 47, 0) 72%);
+}
+
+.meatballEmotionStage .aura {
+  left: 50%;
+  top: 50%;
+  width: 280px;
+  height: 280px;
+  margin: -140px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 20, 61, 0.5);
+  box-shadow: 0 0 46px rgba(255, 20, 61, 0.42), inset 0 0 32px rgba(255, 75, 47, 0.2);
+}
+
+.meatballEmotionStage .kanji {
+  left: 8%;
+  bottom: 19%;
+  font-size: 44px;
+  font-weight: 1000;
+  letter-spacing: 0.12em;
+  color: rgba(255, 240, 207, 0.92);
+  text-shadow: 0 0 24px rgba(255, 20, 61, 0.75);
+}
+
+.meatballEmotionStage .speedline {
+  top: 50%;
+  width: 160vw;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 240, 207, 0.72), transparent);
+}
+
+.meatballEmotionStage .speedline.s1 { transform: rotate(-8deg); }
+.meatballEmotionStage .speedline.s2 { transform: rotate(6deg); }
+.meatballEmotionStage .speedline.s3 { transform: rotate(-16deg); }
+.meatballEmotionStage .speedline.s4 { transform: rotate(14deg); }
+
+.meatballEmotionStage .slash {
+  left: 50%;
+  top: 50%;
+  width: 520px;
+  height: 10px;
+  margin-left: -260px;
+  background: linear-gradient(90deg, transparent, rgba(255, 240, 207, 0.9), transparent);
+  box-shadow: 0 0 28px rgba(255, 240, 207, 0.52);
+}
+
+.meatballEmotionStage .impact {
+  background: radial-gradient(circle, rgba(255, 240, 207, 0.9), rgba(255, 20, 61, 0) 36%);
+}
+
+.meatballEmotionStage .shock {
+  background: radial-gradient(circle, rgba(255, 20, 61, 0.28), rgba(255, 20, 61, 0) 56%);
+}
+
+.meatballEmotionStage .subtitle {
+  left: 50%;
+  bottom: 10%;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(0, 0, 0, 0.72);
+  border-radius: 999px;
+  font-weight: 1000;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.meatballEmotionStage .hud {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 22px 24px 0;
+  pointer-events: none;
+}
+
+.meatballEmotionStage .label {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.meatballEmotionStage .label strong {
+  display: block;
+  font-size: 28px;
+  color: var(--cream);
+  letter-spacing: -0.045em;
+  text-transform: capitalize;
+}
+
+.meatballEmotionStage .status {
+  text-align: right;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: rgba(255, 240, 207, 0.62);
+  line-height: 1.4;
+}
+
+.meatballEmotionStage .world {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  min-height: 430px;
+  perspective: 900px;
+}
+
+.meatballEmotionStage.is-glitching .world {
+  animation: glitchStageShift .9s steps(2, end) infinite;
+}
+
+.meatballEmotionStage .orbital {
+  position: absolute;
+  width: min(58vw, 510px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 240, 207, 0.08);
+  animation: meatballOrbit 19s linear infinite;
+}
+
+.meatballEmotionStage .orbital.two {
+  width: min(74vw, 690px);
+  animation-duration: 33s;
+  animation-direction: reverse;
+}
+
+.meatballEmotionStage .orbital::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sauce2);
+  box-shadow: 0 0 24px var(--sauce2);
+}
+
+.meatballEmotionStage .wrap {
+  position: relative;
+  width: 330px;
+  height: 330px;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 34px 30px rgba(0, 0, 0, 0.44));
+  transform-style: preserve-3d;
+  animation: meatballBaseFloat 3.5s ease-in-out infinite;
+}
+
+.meatballEmotionStage .shadow {
+  position: absolute;
+  bottom: 7px;
+  width: 245px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.56), transparent 72%);
+  filter: blur(6px);
+  animation: meatballShadowPulse 3.5s ease-in-out infinite;
+}
+
+.meatballEmotionStage .arm {
+  position: absolute;
+  top: 158px;
+  width: 88px;
+  height: 18px;
+  background: #5d2a1c;
+  border: 3px solid #2b130e;
+  border-radius: 999px;
+  transform-origin: 100% 50%;
+  z-index: 0;
+}
+
+.meatballEmotionStage .arm.left {
+  left: 4px;
+  transform: rotate(-16deg);
+}
+
+.meatballEmotionStage .arm.right {
+  right: 4px;
+  transform-origin: 0 50%;
+  transform: rotate(16deg);
+}
+
+.meatballEmotionStage .meatball {
+  position: relative;
+  z-index: 1;
+  width: 235px;
+  height: 226px;
+  border-radius: 48% 52% 46% 54% / 52% 44% 56% 48%;
+  background:
+    radial-gradient(circle at 34% 28%, #c27a50 0 8%, transparent 9%),
+    radial-gradient(circle at 62% 20%, #9a4d33 0 7%, transparent 8%),
+    radial-gradient(circle at 70% 62%, #512418 0 8%, transparent 9%),
+    radial-gradient(circle at 30% 70%, #5d2a1c 0 7%, transparent 8%),
+    linear-gradient(145deg, var(--meat2), var(--meat) 52%, #4a2018 100%);
+  box-shadow: inset 18px 20px 32px rgba(255, 215, 155, 0.13), inset -26px -28px 40px rgba(42, 11, 7, 0.42);
+  border: 3px solid rgba(41, 18, 12, 0.86);
+  transform-origin: 50% 72%;
+}
+
+.meatballEmotionStage .sauce {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  animation: meatballSauceFollow 3.8s ease-in-out infinite;
+}
+
+.meatballEmotionStage .sauce::before {
+  content: "";
+  position: absolute;
+  left: 33px;
+  top: 5px;
+  width: 158px;
+  height: 52px;
+  border-radius: 48% 52% 68% 32%;
+  background: linear-gradient(180deg, #ff5838, #a51b12);
+  box-shadow: 0 7px 0 rgba(92, 16, 10, 0.45);
+  transform: rotate(-7deg);
+}
+
+.meatballEmotionStage .sauce::after {
+  content: "";
+  position: absolute;
+  left: 94px;
+  top: 43px;
+  width: 34px;
+  height: 66px;
+  border-radius: 0 0 22px 22px;
+  background: linear-gradient(180deg, #db2b1c, #86150f);
+  animation: meatballDrip 3.1s ease-in-out infinite;
+}
+
+.meatballEmotionStage .eye {
+  position: absolute;
+  top: 86px;
+  width: 47px;
+  height: 57px;
+  background: #fff7df;
+  border: 3px solid #2b130e;
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 3;
+  transition: 0.25s ease;
+}
+
+.meatballEmotionStage .eye.left { left: 56px; }
+.meatballEmotionStage .eye.right { right: 56px; }
+
+.meatballEmotionStage .pupil {
+  position: absolute;
+  left: 15px;
+  top: 19px;
+  width: 17px;
+  height: 22px;
+  background: #110806;
+  border-radius: 50%;
+  box-shadow: inset 4px 3px 0 rgba(255, 255, 255, 0.18);
+}
+
+.meatballEmotionStage .brow {
+  position: absolute;
+  top: 64px;
+  width: 58px;
+  height: 12px;
+  background: #2b130e;
+  border-radius: 999px;
+  z-index: 4;
+}
+
+.meatballEmotionStage .brow.left {
+  left: 49px;
+  transform: rotate(-7deg);
+}
+
+.meatballEmotionStage .brow.right {
+  right: 49px;
+  transform: rotate(7deg);
+}
+
+.meatballEmotionStage .mouth {
+  position: absolute;
+  left: 50%;
+  top: 151px;
+  width: 72px;
+  height: 31px;
+  margin-left: -36px;
+  background: #210806;
+  border: 3px solid #140504;
+  border-radius: 0 0 50px 50px;
+  overflow: hidden;
+  z-index: 3;
+}
+
+.meatballEmotionStage .tongue {
+  position: absolute;
+  left: 15px;
+  bottom: -10px;
+  width: 43px;
+  height: 20px;
+  background: linear-gradient(180deg, #fff18a, #ffd447 55%, #d9a918);
+  border-radius: 50% 50% 0 0;
+  box-shadow: inset 0 4px 0 rgba(255, 255, 255, 0.2);
+}
+
+.meatballEmotionStage .fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.meatballEmotionStage .ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 285px;
+  height: 285px;
+  margin: -142px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 75, 47, 0.32);
+  opacity: 0;
+}
+
+.meatballEmotionStage .glitch {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(121, 219, 255, 0.13), transparent);
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+.meatballEmotionStage .flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 0, 40, 0.24), transparent 60%);
+  opacity: 0;
+}
+
+.meatballEmotionStage.is-glitching .wrap {
+  animation: glitchWrap .22s steps(2, end) infinite;
+  filter:
+    drop-shadow(0 34px 30px rgba(0, 0, 0, 0.44))
+    drop-shadow(12px 0 0 rgba(255, 20, 61, 0.22))
+    drop-shadow(-12px 0 0 rgba(121, 219, 255, 0.22));
+}
+
+.meatballEmotionStage.is-glitching .meatball {
+  animation: glitchMeat .18s steps(2, end) infinite;
+  filter: contrast(1.12) saturate(1.45) brightness(1.1);
+}
+
+.meatballEmotionStage.is-glitching .sauce {
+  animation: glitchSauce .12s steps(2, end) infinite;
+}
+
+.meatballEmotionStage.is-glitching .eye,
+.meatballEmotionStage.is-glitching .pupil,
+.meatballEmotionStage.is-glitching .brow,
+.meatballEmotionStage.is-glitching .mouth,
+.meatballEmotionStage.is-glitching .arm {
+  animation: glitchParts .14s steps(2, end) infinite;
+}
+
+.meatballEmotionStage.is-glitching .glitch {
+  opacity: 1;
+  animation:
+    glitchBand .14s steps(2, end) infinite,
+    glitchSkew .48s steps(2, end) infinite;
+}
+
+.meatballEmotionStage.is-glitching .flash {
+  opacity: .9;
+  animation: glitchFlash .6s steps(2, end) infinite;
+}
+
+.meatballEmotionStage.is-glitching .shock {
+  opacity: .82;
+  animation: glitchShock .95s ease-out infinite;
+}
+
+.meatballEmotionStage.is-glitching .aura {
+  opacity: 1;
+  animation: glitchAura .9s linear infinite;
+}
+
+.meatballEmotionStage.is-glitching .symbol.a,
+.meatballEmotionStage.is-glitching .symbol.b,
+.meatballEmotionStage.is-glitching .symbol.c {
+  opacity: 1;
+  animation: glitchSymbols .22s steps(2, end) infinite;
+}
+
+.meatballEmotionStage .symbol {
+  position: absolute;
+  z-index: 3;
+  font-weight: 1000;
+  text-shadow: 0 0 22px currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.meatballEmotionStage .symbol.a {
+  left: 18%;
+  top: 28%;
+  font-size: 50px;
+  color: var(--blue);
+}
+
+.meatballEmotionStage .symbol.b {
+  right: 20%;
+  top: 56%;
+  font-size: 40px;
+  color: var(--pasta);
+}
+
+.meatballEmotionStage .symbol.c {
+  left: 60%;
+  top: 22%;
+  font-size: 42px;
+  color: #ff765e;
+}
+
+.meatballEmotionStage .bubble {
+  position: relative;
+  z-index: 20;
+  margin: 0 auto 20px;
+  width: min(680px, calc(100% - 44px));
+  padding: 16px 19px;
+  border-radius: 22px;
+  background: rgba(12, 7, 6, 0.78);
+  border: 1px solid rgba(255, 220, 170, 0.16);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+  font-size: 17px;
+  line-height: 1.35;
+  color: rgba(255, 240, 207, 0.88);
+}
+
+.meatballEmotionStage[data-emotion="neutral"]:not(.is-cutscene) .wrap { animation: neutralBreath 3.6s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="neutral"]:not(.is-cutscene) .pupil { animation: neutralLook 5s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="neutral"]:not(.is-cutscene) .mouth { height: 18px; border-radius: 999px; }
+.meatballEmotionStage[data-emotion="neutral"]:not(.is-cutscene) .arm.left { animation: neutralHandL 4.2s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="neutral"]:not(.is-cutscene) .arm.right { animation: neutralHandR 4.2s ease-in-out infinite; }
+
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .wrap { animation: excitedJump 1.05s cubic-bezier(.15, 1.8, .32, 1) infinite; }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .meatball { filter: saturate(1.28) brightness(1.05); animation: excitedSquash 1.05s cubic-bezier(.15, 1.8, .32, 1) infinite; }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .sauce { animation: excitedSauce 1.05s cubic-bezier(.15, 1.8, .32, 1) infinite; }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .eye { height: 64px; transform: scale(1.08); }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .pupil { animation: excitedPupils .52s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .brow.left { top: 56px; transform: rotate(-18deg) translateY(-4px); }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .brow.right { top: 56px; transform: rotate(18deg) translateY(-4px); }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .mouth { height: 58px; width: 92px; margin-left: -46px; border-radius: 0 0 70px 70px; }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .ring { animation: ringBurst 1.05s ease-out infinite; }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .symbol.b { animation: excitedBang 1.05s ease-out infinite; }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .symbol.c { animation: excitedSpark 1.35s ease-out infinite; }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .arm.left { animation: exciteL .8s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="excited"]:not(.is-cutscene) .arm.right { animation: exciteR .8s ease-in-out infinite; }
+
+.meatballEmotionStage[data-emotion="confused"]:not(.is-cutscene) .wrap { animation: confusedBody 1.15s cubic-bezier(.2, .7, .4, .8) infinite; }
+.meatballEmotionStage[data-emotion="confused"]:not(.is-cutscene) .meatball { animation: confusedSquish 1.15s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="confused"]:not(.is-cutscene) .sauce { animation: confusedSauce 1.15s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="confused"]:not(.is-cutscene) .pupil { animation: confusedEyes .7s steps(2, end) infinite; }
+.meatballEmotionStage[data-emotion="confused"]:not(.is-cutscene) .brow.left { top: 61px; transform: rotate(20deg); }
+.meatballEmotionStage[data-emotion="confused"]:not(.is-cutscene) .brow.right { top: 70px; transform: rotate(-20deg); }
+.meatballEmotionStage[data-emotion="confused"]:not(.is-cutscene) .mouth { width: 42px; height: 42px; margin-left: -21px; border-radius: 50%; }
+.meatballEmotionStage[data-emotion="confused"]:not(.is-cutscene) .symbol.a { animation: questionPop 1.1s infinite; }
+.meatballEmotionStage[data-emotion="confused"]:not(.is-cutscene) .symbol.c { animation: confusedLoop 2s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="confused"]:not(.is-cutscene) .arm.left { animation: confusedArmL 1.15s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="confused"]:not(.is-cutscene) .arm.right { animation: confusedArmR 1.15s ease-in-out infinite; }
+
+.meatballEmotionStage[data-emotion="suspicious"]:not(.is-cutscene) .wrap { animation: sneak 2.6s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="suspicious"]:not(.is-cutscene) .meatball { animation: susLean 2.6s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="suspicious"]:not(.is-cutscene) .eye { height: 28px; top: 106px; }
+.meatballEmotionStage[data-emotion="suspicious"]:not(.is-cutscene) .pupil { top: 8px; animation: susEyes 2.6s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="suspicious"]:not(.is-cutscene) .brow.left { top: 82px; transform: rotate(15deg); }
+.meatballEmotionStage[data-emotion="suspicious"]:not(.is-cutscene) .brow.right { top: 82px; transform: rotate(-15deg); }
+.meatballEmotionStage[data-emotion="suspicious"]:not(.is-cutscene) .mouth { width: 52px; height: 14px; border-radius: 999px; transform: translateX(14px); }
+.meatballEmotionStage[data-emotion="suspicious"]:not(.is-cutscene) .glitch { animation: susScan 2.6s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="suspicious"]:not(.is-cutscene) .symbol.a { animation: susQuestion 2.6s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="suspicious"]:not(.is-cutscene) .arm.left { animation: susArmL 2.6s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="suspicious"]:not(.is-cutscene) .arm.right { animation: susArmR 2.6s ease-in-out infinite; }
+
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .wrap { animation: rageHover .72s cubic-bezier(.2, .9, .25, 1.2) infinite; }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .meatball { animation: angerShake .13s linear infinite, angrySquash .72s ease-in-out infinite; background: radial-gradient(circle at 35% 28%, #ff9a5f 0 8%, transparent 9%), radial-gradient(circle at 70% 62%, #5b120d 0 8%, transparent 9%), linear-gradient(145deg, #c1462d, #7b2119 52%, #310908 100%); }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .sauce { animation: angrySauce .72s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .brow.left { top: 70px; transform: rotate(17deg); }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .brow.right { top: 70px; transform: rotate(-17deg); }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .eye { top: 90px; height: 42px; }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .pupil { animation: angryPupils .72s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .mouth { height: 42px; width: 86px; margin-left: -43px; }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .flash { animation: angryFlash .72s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .symbol.c { animation: angryRune .72s ease-in-out infinite; opacity: 1; }
+
+.meatballEmotionStage[data-emotion="sad"]:not(.is-cutscene) .wrap { animation: sadSink 3.6s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="sad"]:not(.is-cutscene) .eye { top: 100px; height: 48px; }
+.meatballEmotionStage[data-emotion="sad"]:not(.is-cutscene) .pupil { top: 23px; animation: sadEyes 3.2s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="sad"]:not(.is-cutscene) .brow.left { top: 77px; transform: rotate(-18deg); }
+.meatballEmotionStage[data-emotion="sad"]:not(.is-cutscene) .brow.right { top: 77px; transform: rotate(18deg); }
+.meatballEmotionStage[data-emotion="sad"]:not(.is-cutscene) .mouth { top: 162px; height: 20px; width: 68px; margin-left: -34px; border-radius: 50px 50px 0 0; }
+.meatballEmotionStage[data-emotion="sad"]:not(.is-cutscene) .arm.left { animation: sadArmL 3.2s ease-in-out infinite; }
+.meatballEmotionStage[data-emotion="sad"]:not(.is-cutscene) .arm.right { animation: sadArmR 3.2s ease-in-out infinite; }
+
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .wrap { animation: overwhelmedWobble .42s linear infinite; }
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .eye { top: 76px; width: 52px; height: 68px; }
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .eye.left { left: 48px; }
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .eye.right { right: 48px; }
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .pupil { animation: overwhelmedPupils .22s steps(2, end) infinite; }
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .brow.left { top: 56px; transform: rotate(-25deg); }
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .brow.right { top: 56px; transform: rotate(25deg); }
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .mouth { top: 148px; width: 96px; height: 54px; margin-left: -48px; }
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .glitch { animation: overwhelmedGlitch .18s linear infinite; opacity: 0.8; }
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .symbol.a,
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .symbol.b,
+.meatballEmotionStage[data-emotion="overwhelmed"]:not(.is-cutscene) .symbol.c { animation: overwhelmedMarks .44s ease-in-out infinite; opacity: 1; }
+
+.meatballEmotionStage[data-talking="true"]:not(.is-cutscene) .mouth {
+  animation: talkingMouth .24s ease-in-out infinite alternate;
+}
+
+.meatballEmotionStage.is-cutscene .cutsceneLayer { opacity: 1; }
+.meatballEmotionStage.is-cutscene .blackout { animation: blackIntro 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .eyeReveal.left,
+.meatballEmotionStage.is-cutscene .eyeReveal.right { animation: eyesOnlyReveal 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .letterbox.top,
+.meatballEmotionStage.is-cutscene .letterbox.bottom { animation: letterboxIn 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .moon { animation: moonReveal 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .aura { animation: auraCut 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .kanji { animation: kanjiCut 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .speedline.s1 { animation: speedCut 4.9s linear both; }
+.meatballEmotionStage.is-cutscene .speedline.s2 { animation: speedCut2 4.9s linear both; }
+.meatballEmotionStage.is-cutscene .speedline.s3 { animation: speedCut 4.9s linear both; }
+.meatballEmotionStage.is-cutscene .speedline.s4 { animation: speedCut2 4.9s linear both; }
+.meatballEmotionStage.is-cutscene .slash.one { animation: slashOne 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .slash.two { animation: slashTwo 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .slash.three { animation: slashThree 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .impact { animation: impactCut 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .shock { animation: shockCut 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .subtitle { animation: subtitleCut 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .wrap { animation: cutsceneBody 4.9s cubic-bezier(.2, .8, .2, 1) both; filter: drop-shadow(0 34px 30px rgba(0, 0, 0, 0.44)) drop-shadow(0 0 34px rgba(255, 20, 61, 0.65)); }
+.meatballEmotionStage.is-cutscene .meatball { animation: cutsceneMeat 4.9s cubic-bezier(.2, .8, .2, 1) both; background: radial-gradient(circle at 35% 28%, #ffb15f 0 8%, transparent 9%), radial-gradient(circle at 70% 62%, #5b120d 0 8%, transparent 9%), linear-gradient(145deg, #d34c2f, #7d1715 52%, #210203 100%); }
+.meatballEmotionStage.is-cutscene .sauce { animation: cutsceneSauce 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .eye { animation: cutsceneEyes 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .pupil { animation: cutscenePupils 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .brow.left { animation: cutsceneBrowL 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .brow.right { animation: cutsceneBrowR 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .mouth { animation: cutsceneMouth 4.9s steps(2, end) both; }
+.meatballEmotionStage.is-cutscene .arm.left { animation: cutsceneArmL 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .arm.right { animation: cutsceneArmR 4.9s ease both; }
+.meatballEmotionStage.is-cutscene .orbital { animation: cutsceneOrbit 4.9s linear both; }
+.meatballEmotionStage.is-cutscene .orbital.two { animation: cutsceneOrbit2 4.9s linear both; }
+.meatballEmotionStage.is-cutscene .bubble { animation: cutsceneBubble 4.9s ease both; }
+
+@keyframes meatballScan { to { transform: translateX(18%); } }
+@keyframes meatballOrbit { to { transform: rotate(360deg); } }
+@keyframes meatballBaseFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(1deg); } }
+@keyframes meatballShadowPulse { 50% { transform: scale(.84); opacity: .58; } }
+@keyframes meatballSauceFollow { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-2px) rotate(.8deg); } }
+@keyframes meatballDrip { 0%, 100% { height: 66px; transform: translateY(0); } 50% { height: 82px; transform: translateY(4px); } }
+@keyframes neutralBreath { 0%, 100% { transform: translateY(0) rotate(0deg) scale(1); } 45% { transform: translateY(-10px) rotate(.8deg) scaleX(1.015) scaleY(.985); } 72% { transform: translateY(-5px) rotate(-.4deg); } }
+@keyframes neutralLook { 20% { transform: translateX(8px); } 42% { transform: translateX(-5px) translateY(3px); } 70% { transform: translateX(2px); } }
+@keyframes neutralHandL { 50% { transform: rotate(-23deg) translateY(-3px); } }
+@keyframes neutralHandR { 50% { transform: rotate(23deg) translateY(-3px); } }
+@keyframes excitedJump { 0%, 100% { transform: translateY(8px) rotate(-1deg); } 14% { transform: translateY(16px) rotate(-3deg); } 46% { transform: translateY(-58px) rotate(4deg); } 66% { transform: translateY(-37px) rotate(-2deg); } }
+@keyframes excitedSquash { 0%, 100% { transform: scaleX(1.06) scaleY(.94); } 14% { transform: scaleX(1.13) scaleY(.88); } 46% { transform: scaleX(.92) scaleY(1.12); } 66% { transform: scaleX(1.02) scaleY(.98); } }
+@keyframes excitedSauce { 0%, 100% { transform: translateY(0) rotate(0deg); } 46% { transform: translateY(8px) rotate(-6deg); } 66% { transform: translateY(-5px) rotate(4deg); } }
+@keyframes excitedPupils { 50% { transform: translateY(-6px) scale(1.12); } }
+@keyframes ringBurst { 0% { opacity: .9; transform: scale(.5); } 100% { opacity: 0; transform: scale(1.55); } }
+@keyframes excitedBang { 0% { opacity: 0; transform: translateY(20px) scale(.4) rotate(-18deg); } 35% { opacity: 1; transform: translateY(-15px) scale(1.35) rotate(10deg); } 100% { opacity: 0; transform: translateY(-60px) scale(.9) rotate(24deg); } }
+@keyframes excitedSpark { 0%, 28% { opacity: 0; transform: scale(.2); } 45% { opacity: 1; transform: scale(1.4) rotate(18deg); } 100% { opacity: 0; transform: scale(.8) translateY(-40px) rotate(80deg); } }
+@keyframes exciteL { 0%, 100% { transform: rotate(-18deg); } 50% { transform: rotate(-76deg) translateY(-10px); } }
+@keyframes exciteR { 0%, 100% { transform: rotate(18deg); } 50% { transform: rotate(76deg) translateY(-10px); } }
+@keyframes confusedBody { 0%, 100% { transform: rotate(-5deg) translateX(-4px); } 25% { transform: rotate(6deg) translateX(10px) translateY(-8px); } 55% { transform: rotate(-9deg) translateX(-12px) translateY(2px); } 78% { transform: rotate(3deg) translateX(4px); } }
+@keyframes confusedSquish { 0%, 100% { transform: scale(1); } 25% { transform: scaleX(.97) scaleY(1.04); } 55% { transform: scaleX(1.04) scaleY(.97); } }
+@keyframes confusedSauce { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px) rotate(-5deg); } 55% { transform: translateX(10px) rotate(6deg); } }
+@keyframes confusedEyes { 50% { transform: translateX(14px) translateY(-5px); } }
+@keyframes questionPop { 0%, 100% { opacity: 0; transform: scale(.5) rotate(-20deg); } 50% { opacity: 1; transform: scale(1.35) rotate(15deg); } }
+@keyframes confusedLoop { 0%, 100% { opacity: 0; transform: rotate(0deg) scale(.5); } 40% { opacity: .9; transform: rotate(180deg) scale(1.2); } 70% { opacity: .5; transform: rotate(270deg) scale(.9); } }
+@keyframes confusedArmL { 0%, 100% { transform: rotate(-16deg); } 50% { transform: rotate(-4deg) translateX(8px); } }
+@keyframes confusedArmR { 0%, 100% { transform: rotate(16deg); } 50% { transform: rotate(42deg) translateY(-4px); } }
+@keyframes sneak { 0%, 100% { transform: translateX(0) rotate(0deg); } 20% { transform: translateX(-24px) rotate(-4deg) scale(.98); } 50% { transform: translateX(-18px) rotate(-2deg) scale(.98); } 80% { transform: translateX(14px) rotate(2deg) scale(.99); } }
+@keyframes susLean { 0%, 100% { transform: skewX(0); } 50% { transform: skewX(-3deg); } }
+@keyframes susEyes { 20% { transform: translateX(-12px); } 68% { transform: translateX(14px); } 86% { transform: translateX(0); } }
+@keyframes susScan { 45%, 55% { opacity: 1; transform: translateX(18%) skewX(-18deg); } }
+@keyframes susQuestion { 0%, 100% { opacity: 0; transform: translateX(-20px) scale(.6); } 50% { opacity: .85; transform: translateX(0) scale(1.08) rotate(-12deg); } }
+@keyframes susArmL { 0%, 100% { transform: rotate(-16deg); } 50% { transform: rotate(-38deg) translateY(7px); } }
+@keyframes susArmR { 0%, 100% { transform: rotate(16deg); } 50% { transform: rotate(4deg) translateY(4px); } }
+@keyframes rageHover { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-16px) scale(1.02); } }
+@keyframes angerShake { 50% { transform: translateX(-2px); } }
+@keyframes angrySquash { 0%, 100% { transform: scaleX(1.04) scaleY(.96); } 50% { transform: scaleX(.98) scaleY(1.04); } }
+@keyframes angrySauce { 50% { transform: translateY(6px) rotate(-6deg); } }
+@keyframes angryPupils { 50% { transform: translateY(-4px) scale(.92); } }
+@keyframes angryFlash { 50% { opacity: .9; } }
+@keyframes angryRune { 0%, 100% { transform: scale(.9) translateY(0); } 50% { transform: scale(1.16) translateY(-8px); } }
+@keyframes sadSink { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(18px) scaleY(.96); } }
+@keyframes sadEyes { 50% { transform: translateY(4px); } }
+@keyframes sadArmL { 50% { transform: rotate(-24deg) translateY(10px); } }
+@keyframes sadArmR { 50% { transform: rotate(24deg) translateY(10px); } }
+@keyframes overwhelmedWobble { 25% { transform: translate(-4px, 3px) rotate(-2deg); } 50% { transform: translate(5px, -2px) rotate(2deg); } 75% { transform: translate(-3px, -4px) rotate(-1deg); } }
+@keyframes overwhelmedPupils { 50% { transform: translateX(12px); } }
+@keyframes overwhelmedGlitch { 50% { transform: translateX(8px); } }
+@keyframes overwhelmedMarks { 50% { transform: scale(1.2) rotate(10deg); } }
+@keyframes glitchStageShift { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(6px); } 40% { transform: translateX(-8px) translateY(2px); } 60% { transform: translateX(10px) translateY(-2px); } 80% { transform: translateX(-4px); } }
+@keyframes glitchWrap { 0%, 100% { transform: translate3d(0, 0, 0); } 25% { transform: translate3d(-10px, 3px, 0) rotate(-2deg); } 50% { transform: translate3d(12px, -4px, 0) rotate(2deg); } 75% { transform: translate3d(-6px, 2px, 0) scaleX(1.03); } }
+@keyframes glitchMeat { 0%, 100% { clip-path: inset(0 0 0 0); transform: translateX(0); } 20% { clip-path: inset(12% 0 48% 0); transform: translateX(9px); } 40% { clip-path: inset(52% 0 16% 0); transform: translateX(-11px); } 60% { clip-path: inset(20% 0 58% 0); transform: translateX(7px); } 80% { clip-path: inset(68% 0 8% 0); transform: translateX(-5px); } }
+@keyframes glitchSauce { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-14px) rotate(-8deg); } }
+@keyframes glitchParts { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(8px) skewX(-10deg); } }
+@keyframes glitchBand { 0%, 100% { transform: translateX(0) scaleX(1); } 25% { transform: translateX(18px) scaleX(1.05); } 50% { transform: translateX(-24px) scaleX(.98); } 75% { transform: translateX(10px) scaleX(1.08); } }
+@keyframes glitchSkew { 50% { transform: skewX(-22deg); } }
+@keyframes glitchFlash { 0%, 100% { opacity: .08; } 18% { opacity: .95; } 21% { opacity: .18; } 48% { opacity: .88; } 52% { opacity: .06; } 76% { opacity: .72; } }
+@keyframes glitchShock { 0%, 100% { transform: scale(.55); opacity: .08; } 50% { transform: scale(1.6); opacity: .82; } }
+@keyframes glitchAura { 0% { transform: scale(.82) rotate(0deg); } 50% { transform: scale(1.38) rotate(180deg); } 100% { transform: scale(.94) rotate(360deg); } }
+@keyframes glitchSymbols { 0%, 100% { transform: translateX(0) scale(1); } 50% { transform: translateX(12px) scale(1.2) rotate(12deg); } }
+@keyframes talkingMouth { from { transform: scaleY(.75); } to { transform: scaleY(1.15); } }
+@keyframes blackIntro { 0% { opacity: 0; } 4%, 28% { opacity: 1; } 37%, 100% { opacity: 0; } }
+@keyframes eyesOnlyReveal { 0%, 8% { opacity: 0; transform: scaleX(.2); } 13% { opacity: 1; transform: scaleX(1); } 23% { opacity: 1; transform: scaleX(1.16); } 30%, 100% { opacity: 0; transform: scaleX(.2); } }
+@keyframes letterboxIn { 0%, 100% { transform: scaleY(0); } 8%, 88% { transform: scaleY(1); } }
+@keyframes moonReveal { 0%, 30%, 100% { opacity: 0; transform: scale(.8); } 38%, 84% { opacity: .95; transform: scale(1); } 56% { transform: scale(1.12); } }
+@keyframes auraCut { 0%, 28%, 100% { opacity: 0; transform: scale(.35) rotate(0deg); } 38% { opacity: .4; transform: scale(.75) rotate(80deg); } 50% { opacity: .8; transform: scale(1.02) rotate(220deg); } 62% { opacity: 1; transform: scale(1.55) rotate(420deg); } 76% { opacity: .35; transform: scale(2.2) rotate(600deg); } }
+@keyframes kanjiCut { 0%, 34%, 100% { opacity: 0; transform: translateY(30px) rotate(-9deg) scale(.8); } 42%, 58% { opacity: .9; transform: translateY(0) rotate(-9deg) scale(1); } 62% { opacity: 1; transform: translateY(-12px) rotate(-14deg) scale(1.35); } 75% { opacity: 0; transform: translateY(-60px) rotate(-20deg) scale(.8); } }
+@keyframes speedCut { 0%, 38%, 100% { opacity: 0; transform: translateX(0) rotate(-8deg); } 46% { opacity: .75; } 62% { opacity: 1; transform: translateX(120vw) rotate(-8deg); } 72% { opacity: 0; } }
+@keyframes speedCut2 { 0%, 40%, 100% { opacity: 0; transform: translateX(0) rotate(6deg); } 48% { opacity: .75; } 63% { opacity: 1; transform: translateX(-120vw) rotate(6deg); } 73% { opacity: 0; } }
+@keyframes slashOne { 0%, 53%, 100% { opacity: 0; transform: rotate(-22deg) scaleX(.12); } 56% { opacity: 1; transform: rotate(-22deg) scaleX(1.2); } 61% { opacity: 0; transform: rotate(-22deg) scaleX(1.55); } }
+@keyframes slashTwo { 0%, 59%, 100% { opacity: 0; transform: rotate(18deg) scaleX(.12); } 62% { opacity: 1; transform: rotate(18deg) scaleX(1.28); } 68% { opacity: 0; transform: rotate(18deg) scaleX(1.65); } }
+@keyframes slashThree { 0%, 65%, 100% { opacity: 0; transform: rotate(-4deg) scaleX(.12); } 68% { opacity: 1; transform: rotate(-4deg) scaleX(1.45); } 74% { opacity: 0; transform: rotate(-4deg) scaleX(1.9); } }
+@keyframes impactCut { 0%, 68%, 100% { opacity: 0; transform: scale(.2); } 70% { opacity: 1; transform: scale(2.4); } 76% { opacity: 0; transform: scale(12); } }
+@keyframes shockCut { 0%, 68%, 100% { opacity: 0; transform: scale(.2); } 71% { opacity: 1; transform: scale(1); } 86% { opacity: 0; transform: scale(7); } }
+@keyframes subtitleCut { 0%, 32%, 100% { opacity: 0; transform: translateX(-50%) translateY(14px); } 41%, 82% { opacity: 1; transform: translateX(-50%) translateY(0); } }
+@keyframes cutsceneBody { 0%, 24% { transform: translateY(0) rotate(0) scale(1); opacity: 0; } 31% { transform: translateY(0) rotate(0) scale(1); opacity: 1; } 38% { transform: translateY(16px) scaleX(1.1) scaleY(.9); } 48% { transform: translateY(-28px) rotate(-7deg) scaleX(.96) scaleY(1.08); } 58% { transform: translateY(-58px) translateX(12px) rotate(-13deg) scale(1.16); } 64% { transform: translateY(-88px) translateX(-70px) rotate(-24deg) scale(.86); } 70% { transform: translateY(-82px) translateX(80px) rotate(24deg) scale(.9); } 76% { transform: translateY(-20px) translateX(0) rotate(0) scale(1.28); } 88% { transform: translateY(6px) rotate(0) scaleX(1.1) scaleY(.92); } 100% { transform: translateY(0) rotate(0) scale(1); opacity: 1; } }
+@keyframes cutsceneMeat { 0%, 100% { transform: scale(1); filter: saturate(1); } 38% { transform: scaleX(1.14) scaleY(.86); filter: saturate(1.4); } 52% { transform: scaleX(.9) scaleY(1.15); filter: saturate(1.8) brightness(1.1); } 64% { transform: scaleX(.78) scaleY(1.28); filter: saturate(2.2) brightness(1.28); } 76% { transform: scaleX(1.22) scaleY(.82); filter: saturate(2.5) brightness(1.45); } }
+@keyframes cutsceneSauce { 0%, 100% { transform: translateY(0) rotate(0); } 48% { transform: translateY(8px) rotate(-10deg); } 62% { transform: translateY(-10px) rotate(14deg); } 72% { transform: translateY(18px) rotate(-18deg); } }
+@keyframes cutsceneEyes { 0%, 35%, 100% { height: 57px; top: 86px; } 52%, 82% { height: 38px; top: 92px; } 64%, 76% { height: 29px; top: 100px; } }
+@keyframes cutscenePupils { 0%, 35%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translateX(10px) scale(.85); } 62% { transform: translateX(-9px) translateY(-2px) scale(.75); } 72% { transform: translateY(-4px) scale(.62); } }
+@keyframes cutsceneBrowL { 0%, 35%, 100% { top: 64px; transform: rotate(-7deg); } 50%, 82% { top: 69px; transform: rotate(22deg); } 64%, 76% { top: 72px; transform: rotate(28deg); } }
+@keyframes cutsceneBrowR { 0%, 35%, 100% { top: 64px; transform: rotate(7deg); } 50%, 82% { top: 69px; transform: rotate(-22deg); } 64%, 76% { top: 72px; transform: rotate(-28deg); } }
+@keyframes cutsceneMouth { 0%, 35%, 100% { height: 31px; width: 72px; margin-left: -36px; border-radius: 0 0 50px 50px; } 52%, 62% { height: 18px; width: 58px; margin-left: -29px; border-radius: 999px; } 66%, 82% { height: 66px; width: 98px; margin-left: -49px; border-radius: 0 0 80px 80px; } }
+@keyframes cutsceneArmL { 0%, 35%, 100% { transform: rotate(-16deg); } 46% { transform: rotate(-70deg) translateY(-12px); } 62% { transform: rotate(-132deg) translateX(-8px) translateY(-18px); } 72% { transform: rotate(32deg) translateX(30px); } 84% { transform: rotate(-42deg); } }
+@keyframes cutsceneArmR { 0%, 35%, 100% { transform: rotate(16deg); } 46% { transform: rotate(70deg) translateY(-12px); } 62% { transform: rotate(132deg) translateX(8px) translateY(-18px); } 72% { transform: rotate(-32deg) translateX(-30px); } 84% { transform: rotate(42deg); } }
+@keyframes cutsceneOrbit { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(540deg) scale(.82); } 72% { transform: rotate(900deg) scale(1.32); } 100% { transform: rotate(1080deg) scale(1); } }
+@keyframes cutsceneOrbit2 { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(-620deg) scale(1.15); } 72% { transform: rotate(-980deg) scale(.72); } 100% { transform: rotate(-1200deg) scale(1); } }
+@keyframes cutsceneBubble { 0%, 100% { opacity: 1; transform: translateY(0); } 22%, 74% { opacity: .88; transform: translateY(-4px); } 67% { opacity: 1; transform: translateY(-8px) scale(1.03); } }
+
+@media (max-width: 860px) {
+  .meatballEmotionStage {
+    min-height: 0;
+    border-radius: 22px;
+  }
+
+  .meatballEmotionStage .hud {
+    padding: 12px 14px 0;
+  }
+
+  .meatballEmotionStage .label {
+    font-size: 9px;
+  }
+
+  .meatballEmotionStage .label strong {
+    font-size: 20px;
+  }
+
+  .meatballEmotionStage .status {
+    font-size: 9px;
+  }
+
+  .meatballEmotionStage .world {
+    min-height: 300px;
+  }
+
+  .meatballEmotionStage .wrap {
+    width: 250px;
+    height: 250px;
+    transform: scale(.82);
+  }
+
+  .meatballEmotionStage .meatball {
+    width: 198px;
+    height: 190px;
+  }
+
+  .meatballEmotionStage .arm {
+    top: 122px;
+    width: 74px;
+  }
+
+  .meatballEmotionStage .eye {
+    top: 72px;
+    width: 40px;
+    height: 49px;
+  }
+
+  .meatballEmotionStage .eye.left { left: 45px; }
+  .meatballEmotionStage .eye.right { right: 45px; }
+  .meatballEmotionStage .brow { top: 53px; width: 50px; }
+  .meatballEmotionStage .brow.left { left: 41px; }
+  .meatballEmotionStage .brow.right { right: 41px; }
+  .meatballEmotionStage .mouth { top: 127px; }
+  .meatballEmotionStage .bubble { width: calc(100% - 18px); font-size: 12px; padding: 10px 12px; margin-bottom: 8px; border-radius: 16px; }
+}
