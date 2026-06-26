@@ -1,0 +1,19 @@
+{
+  "model_type": "math_vs_general_classifier",
+  "char_ngrams": [
+    2,
+    3,
+    4
+  ],
+  "word_ngrams": [
+    1,
+    2,
+    3
+  ],
+  "hidden": 384,
+  "dropout": 0.25,
+  "labels": [
+    "general",
+    "math"
+  ]
+}

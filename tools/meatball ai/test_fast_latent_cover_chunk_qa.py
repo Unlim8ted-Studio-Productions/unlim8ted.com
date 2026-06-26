@@ -9,7 +9,9 @@ from collections import Counter
 import numpy as np
 import onnxruntime as ort
 
-DEFAULT_MODEL_PATH = Path(r"assets/models/general_cover_chunks_test/model.onnx")
+DEFAULT_MODEL_PATH = Path(
+    r"assets\models\general_cover_chunks_noisy_continue\model.onnx"
+)
 
 PAD_ID = 0
 BOS_ID = 1
