@@ -1,0 +1,7 @@
+{
+  "model_type": "char_seq2seq_input_corrector",
+  "max_len": 96,
+  "embed": 160,
+  "hidden": 320,
+  "note": "Corrects noisy user questions before subject finding and routing."
+}

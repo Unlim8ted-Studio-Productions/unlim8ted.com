@@ -18,6 +18,8 @@ MATH_CLASSIFIER_DIR = Path("assets/models/math_classifier")
 
 SUBJECT_FINDER_DIR = Path("assets/models/subject_finder")
 SUBJECT_INSERTER_DIR = Path("assets/models/subject_inserter")
+INPUT_CORRECTOR_DIR = Path("assets/models/input_text_corrector")
+OUTPUT_SANITY_DIR = Path("assets/models/output_sanity_checker")
 
 GENERATOR_DIR = Path("assets/models/general_cover_chunks_noisy_continue")
 MATH_MODEL_PATH = Path(
@@ -36,6 +38,10 @@ HIDDEN_SIZE = 192
 EMBED_SIZE = 128
 DROPOUT = 0.35
 MAX_OUTPUT_CHUNKS = 24
+INPUT_CORRECTOR_EMBED = 160
+INPUT_CORRECTOR_HIDDEN = 320
+OUTPUT_SANITY_HIDDEN = 256
+OUTPUT_SANITY_DROPOUT = 0.22
 
 
 def load_json(path):
@@ -61,6 +67,57 @@ def normalize_no_punc(text):
     text = normalize(text)
     text = re.sub(r"[!?.,:;\"'`()\[\]{}]", " ", text)
     return re.sub(r"\s+", " ", text).strip()
+
+
+def maybe_load_json(path):
+    path = Path(path)
+    if not path.exists():
+        return None
+    return load_json(path)
+
+
+def restore_entity_casing(text):
+    out = str(text or "")
+    replacements = [
+        ("the glitch", "The Glitch"),
+        ("timecat", "TimeCat"),
+        ("time cat", "TimeCat"),
+        ("meatball ai", "Meatball AI"),
+        ("unlim8ted", "Unlim8ted"),
+    ]
+    for old, new in replacements:
+        out = re.sub(rf"\b{re.escape(old)}\b", new, out, flags=re.I)
+    return out
+
+
+def heuristic_input_correction(text):
+    out = str(text or "").strip()
+    if not out:
+        return out
+
+    fixes = [
+        (r"\bteh\b", "the"),
+        (r"\bwaht\b", "what"),
+        (r"\bwich\b", "which"),
+        (r"\bglich\b", "glitch"),
+        (r"\bgltich\b", "glitch"),
+        (r"\bglotch\b", "glitch"),
+        (r"\bmeetball\b", "meatball"),
+        (r"\bmeatbal\b", "meatball"),
+        (r"\btime cat\b", "TimeCat"),
+        (r"\bunlimited\b", "Unlim8ted"),
+    ]
+
+    for pattern, repl in fixes:
+        out = re.sub(pattern, repl, out, flags=re.I)
+
+    out = restore_entity_casing(out)
+    out = re.sub(r"\s+", " ", out).strip()
+
+    if re.match(r"^(what|who|where|when|why|how|does|do|did|is|are|can)\b", out, flags=re.I) and not re.search(r"[?.!]$", out):
+        out += "?"
+
+    return out
 
 
 # ============================================================
@@ -152,6 +209,38 @@ class GenericClassifier(nn.Module):
         return self.net(x)
 
 
+class InputCorrector(nn.Module):
+    def __init__(self, src_vocab_size, tgt_vocab_size):
+        super().__init__()
+        self.src_embed = nn.Embedding(src_vocab_size, INPUT_CORRECTOR_EMBED, padding_idx=0)
+        self.tgt_embed = nn.Embedding(tgt_vocab_size, INPUT_CORRECTOR_EMBED, padding_idx=0)
+        self.encoder = nn.GRU(INPUT_CORRECTOR_EMBED, INPUT_CORRECTOR_HIDDEN, batch_first=True)
+        self.decoder = nn.GRU(INPUT_CORRECTOR_EMBED, INPUT_CORRECTOR_HIDDEN, batch_first=True)
+        self.head = nn.Linear(INPUT_CORRECTOR_HIDDEN, tgt_vocab_size)
+
+    def forward(self, src_ids, tgt_ids):
+        src_emb = self.src_embed(src_ids)
+        _, hidden = self.encoder(src_emb)
+        decoder_input = tgt_ids[:, :-1]
+        tgt_emb = self.tgt_embed(decoder_input)
+        decoded, _ = self.decoder(tgt_emb, hidden)
+        return self.head(decoded)
+
+
+class OutputSanityClassifier(nn.Module):
+    def __init__(self, input_size, num_classes):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_size, OUTPUT_SANITY_HIDDEN),
+            nn.ReLU(),
+            nn.Dropout(OUTPUT_SANITY_DROPOUT),
+            nn.Linear(OUTPUT_SANITY_HIDDEN, num_classes),
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+
 def resolve_labels(model_dir, config, fallback_labels=None):
     labels_path = model_dir / "labels.json"
 
@@ -212,6 +301,63 @@ def load_classifier(
     }
 
 
+def load_output_sanity(model_dir):
+    model_dir = Path(model_dir)
+    pt_path = model_dir / "output_sanity_checker.pt"
+    vocab_path = model_dir / "input_vocab.json"
+    labels_path = model_dir / "labels.json"
+
+    if not (pt_path.exists() and vocab_path.exists() and labels_path.exists()):
+        return None
+
+    vocab = load_json(vocab_path)
+    labels = load_json(labels_path)
+    config = maybe_load_json(model_dir / "config.json") or {}
+    ckpt = torch.load(pt_path, map_location=DEVICE)
+
+    model = OutputSanityClassifier(len(vocab), len(labels)).to(DEVICE)
+    model.load_state_dict(ckpt["model_state_dict"], strict=True)
+    model.eval()
+
+    return {
+        "model": model,
+        "vocab": vocab,
+        "labels": labels,
+        "config": config,
+        "dir": str(model_dir),
+    }
+
+
+def load_input_corrector(model_dir):
+    model_dir = Path(model_dir)
+    pt_path = model_dir / "input_text_corrector.pt"
+    src_vocab_path = model_dir / "input_vocab.json"
+    tgt_vocab_path = model_dir / "output_vocab.json"
+
+    if not (pt_path.exists() and src_vocab_path.exists() and tgt_vocab_path.exists()):
+        return None
+
+    src_vocab = load_json(src_vocab_path)
+    tgt_vocab = load_json(tgt_vocab_path)
+    config = maybe_load_json(model_dir / "config.json") or {}
+    ckpt = torch.load(pt_path, map_location=DEVICE)
+
+    model = InputCorrector(len(src_vocab), len(tgt_vocab)).to(DEVICE)
+    model.load_state_dict(ckpt["model_state_dict"], strict=True)
+    model.eval()
+
+    id_to = {int(idx): token for token, idx in tgt_vocab.items()}
+
+    return {
+        "model": model,
+        "src_vocab": src_vocab,
+        "tgt_vocab": tgt_vocab,
+        "id_to": id_to,
+        "config": config,
+        "dir": str(model_dir),
+    }
+
+
 @torch.no_grad()
 def predict_classifier(text, runtime):
     config = runtime.get("config", {})
@@ -233,6 +379,109 @@ def predict_classifier(text, runtime):
             runtime["labels"][i]: float(probs[i].item())
             for i in range(len(runtime["labels"]))
         },
+    }
+
+
+def encode_chars(text, vocab, max_len, add_bos=False, add_eos=True):
+    ids = []
+    if add_bos:
+        ids.append(vocab.get("<bos>", BOS_ID))
+    for ch in str(text or "")[: max(1, max_len - 2)]:
+        ids.append(vocab.get(ch, vocab.get("<unk>", UNK_ID)))
+    if add_eos:
+        ids.append(vocab.get("<eos>", EOS_ID))
+    return ids[:max_len]
+
+
+@torch.no_grad()
+def run_input_corrector(text, runtime):
+    heuristic = heuristic_input_correction(text)
+    if runtime is None:
+        return {
+            "text": heuristic,
+            "changed": heuristic.strip() != str(text or "").strip(),
+            "source": "heuristic",
+        }
+
+    max_len = int(runtime.get("config", {}).get("max_len", 96))
+    src_ids = encode_chars(heuristic, runtime["src_vocab"], max_len, add_bos=True, add_eos=True)
+    src = torch.tensor([src_ids], dtype=torch.long, device=DEVICE)
+    model = runtime["model"]
+
+    src_emb = model.src_embed(src)
+    _, hidden = model.encoder(src_emb)
+    next_token = torch.tensor([[runtime["tgt_vocab"].get("<bos>", BOS_ID)]], dtype=torch.long, device=DEVICE)
+    out_tokens = []
+
+    for _ in range(max_len):
+        emb = model.tgt_embed(next_token[:, -1:])
+        decoded, hidden = model.decoder(emb, hidden)
+        logits = model.head(decoded[:, -1, :])
+        pred = int(torch.argmax(logits, dim=-1).item())
+        if pred == runtime["tgt_vocab"].get("<eos>", EOS_ID):
+            break
+        out_tokens.append(runtime["id_to"].get(pred, ""))
+        next_token = torch.cat(
+            [next_token, torch.tensor([[pred]], dtype=torch.long, device=DEVICE)],
+            dim=1,
+        )
+
+    corrected = "".join(out_tokens).strip() or heuristic
+    corrected = restore_entity_casing(re.sub(r"\s+", " ", corrected).strip())
+    return {
+        "text": corrected,
+        "changed": corrected.strip() != str(text or "").strip(),
+        "source": "model",
+    }
+
+
+@torch.no_grad()
+def run_output_sanity_check(answer, runtime):
+    text = str(answer or "").strip()
+    normalized = normalize_no_punc(text)
+    fallback = "I'm not quite sure what you mean. It might just be the sauce getting tangled up in itself."
+
+    if not text:
+        return {
+            "label": "confused_fallback",
+            "confidence": 1.0,
+            "answer": fallback,
+            "used_fallback": True,
+            "source": "heuristic",
+        }
+
+    if normalized == "im not":
+        return {
+            "label": "confused_fallback",
+            "confidence": 1.0,
+            "answer": fallback,
+            "used_fallback": True,
+            "source": "heuristic",
+        }
+
+    if runtime is None:
+        return {
+            "label": "accept",
+            "confidence": 0.0,
+            "answer": text,
+            "used_fallback": False,
+            "source": "disabled",
+        }
+
+    pred = predict_classifier(text, runtime)
+    if pred["label"] == "confused_fallback" and pred["confidence"] >= 0.72:
+        return {
+            **pred,
+            "answer": fallback,
+            "used_fallback": True,
+            "source": "model",
+        }
+
+    return {
+        **pred,
+        "answer": text,
+        "used_fallback": False,
+        "source": "model",
     }
 
 
@@ -532,6 +781,36 @@ def post_process_answer(text):
     return text.strip()
 
 
+def apply_answer_overrides(answer, reaction, animation, sanity):
+    next_answer = str(answer or "").strip()
+    next_reaction = reaction
+    next_animation = animation
+
+    if sanity.get("used_fallback"):
+        next_answer = sanity["answer"]
+        next_reaction = "confused"
+        next_animation = "confused"
+
+    if next_answer == "The Meatball chooses to interpret that as":
+        next_answer = "The Meatball chooses to interpret that as completely true."
+
+    if next_answer in {"I'm not", "I’m not"}:
+        next_answer = "I'm not quite sure what you mean. It might just be the sauce getting tangled up in itself."
+        next_reaction = "confused"
+        next_animation = "confused"
+
+    if next_answer == "Thank you. The sauce accepts the compliment.":
+        next_reaction = "excited"
+        next_animation = "excited"
+
+    return {
+        "answer": next_answer,
+        "reaction": next_reaction,
+        "animation": next_animation,
+        "sanity": sanity,
+    }
+
+
 def math_normalize_question(q):
     q = math_replace_symbols(q).lower().replace("\n", " ")
 
@@ -774,8 +1053,9 @@ class RuntimeMemory:
         self.last_answer = ""
         self.previous_reaction = "neutral"
         self.angry_streak = 0
+        self.sauce_attack_cooldown = 0
 
-    def update(self, user_text, answer, reaction, subject=None):
+    def update(self, user_text, answer, reaction, subject=None, preserve_angry_state=False):
         self.history.append(user_text)
         self.history.append(answer)
         self.history = self.history[-8:]
@@ -785,6 +1065,10 @@ class RuntimeMemory:
         if subject and subject != "NONE":
             self.subjects.append(subject)
             self.subjects = self.subjects[-5:]
+
+        if preserve_angry_state:
+            self.previous_reaction = reaction
+            return
 
         if reaction == "angry":
             self.angry_streak += 1
@@ -801,23 +1085,92 @@ def split_multi(text):
 
 
 def format_list(answer):
+    dashed = [part.strip().lstrip("-").strip() for part in re.split(r"\s+-\s+", str(answer or "").strip()) if part.strip()]
+    if len(dashed) > 1:
+        return "\n".join(f"- {part}" for part in dashed[:8])
+
     parts = re.split(r"(?<=[.!?])\s+", answer)
     parts = [p.strip() for p in parts if p.strip()]
 
     if len(parts) <= 1:
-        return answer
+        return f"- {parts[0]}" if parts else ""
 
     return "\n".join(f"- {p}" for p in parts[:8])
 
 
-def angry_escalation(reaction, memory):
-    if reaction != "angry":
-        return reaction, "none"
+def normalize_subject_text(text):
+    out = normalize_no_punc(text)
+    out = re.sub(r"^(between|of)\s+", "", out, flags=re.I)
+    return restore_entity_casing(out).strip()
 
-    if memory.angry_streak >= 2:
-        return "sad", "sad_to_sauce_attack_cutscene"
 
-    return "angry", "none"
+def parse_compare_subjects(text):
+    clean = str(text or "").strip().rstrip("?")
+    if not clean:
+        return []
+
+    patterns = [
+        r"\bcompare\s+(.+?)\s+(?:and|vs|versus)\s+(.+)$",
+        r"\bcomparison\s+of\s+(.+?)\s+(?:and|vs|versus)\s+(.+)$",
+        r"\bdifference\s+between\s+(.+?)\s+(?:and|vs|versus)\s+(.+)$",
+        r"^(.+?)\s+(?:vs|versus)\s+(.+)$",
+        r"^(.+?)\s+and\s+(.+)$",
+    ]
+
+    for pattern in patterns:
+        match = re.search(pattern, clean, flags=re.I)
+        if not match:
+            continue
+        subjects = [
+            normalize_subject_text(match.group(1)),
+            normalize_subject_text(match.group(2)),
+        ]
+        subjects = [item for item in subjects if item]
+        if len(subjects) == 2:
+            return subjects
+
+    return []
+
+
+def strip_route_prefix(text):
+    out = str(text or "").strip()
+    out = re.sub(r"^(please\s+)?(list|facts|examples|features)\s+(out\s+)?", "", out, flags=re.I)
+    out = re.sub(r"^(give me|tell me)\s+(a\s+)?(list of\s+|facts about\s+|examples of\s+|features of\s+)", "", out, flags=re.I)
+    return out.strip()
+
+
+def build_generator_question_for_route(raw_input, rewritten_question, complexity, subject, memory):
+    base = str(rewritten_question or raw_input or "").strip()
+    normalized = normalize_no_punc(raw_input)
+    previous_subject = memory.subjects[-1] if memory.subjects else "NONE"
+
+    if complexity == "list":
+        stripped = strip_route_prefix(base)
+        if re.search(r"\babout\b", stripped, flags=re.I) or re.search(r"\bof\b", stripped, flags=re.I):
+            return stripped
+        if stripped:
+            return f"facts about {stripped}"
+        return base
+
+    if complexity in {"followup", "normal_qa"} and subject == "NONE" and previous_subject != "NONE":
+        if re.search(r"\bit\b", raw_input, flags=re.I):
+            return apply_subject_insertion(raw_input, "replace_pronoun", previous_subject, memory)
+        if re.search(r"\bthis\b", raw_input, flags=re.I):
+            return re.sub(r"\bthis\b", previous_subject, raw_input, flags=re.I)
+        if re.search(r"\bthat\b", raw_input, flags=re.I):
+            return re.sub(r"\bthat\b", previous_subject, raw_input, flags=re.I)
+        if re.search(r"\bthey\b|\bthem\b|\btheir\b", raw_input, flags=re.I):
+            return apply_subject_insertion(raw_input, "replace_pronoun", previous_subject, memory)
+
+    if complexity == "normal_qa" and previous_subject != "NONE" and normalized in {
+        "what is it",
+        "who is it",
+        "what is this",
+        "what is that",
+    }:
+        return apply_subject_insertion(raw_input, "replace_pronoun", previous_subject, memory)
+
+    return base
 
 
 def answer_once(text, runtimes, memory, debug=True):
@@ -828,6 +1181,8 @@ def answer_once(text, runtimes, memory, debug=True):
     subject_inserter_rt = runtimes["subject_inserter"]
     generator = runtimes["generator"]
     math_model = runtimes["math_model"]
+    input_corrector_rt = runtimes.get("input_corrector")
+    output_sanity_rt = runtimes.get("output_sanity")
 
     if debug:
         print_step("RAW_INPUT", text)
@@ -839,22 +1194,33 @@ def answer_once(text, runtimes, memory, debug=True):
                 "last_answer": memory.last_answer,
                 "previous_reaction": memory.previous_reaction,
                 "angry_streak": memory.angry_streak,
+                "sauce_attack_cooldown": memory.sauce_attack_cooldown,
             },
         )
 
-    reaction_pred = predict_classifier(text, reaction_rt)
-    complexity_pred = predict_classifier(text, complexity_rt)
-    math_pred = predict_classifier(text, math_classifier_rt)
+    if memory.sauce_attack_cooldown > 0:
+        memory.sauce_attack_cooldown -= 1
+
+    correction = run_input_corrector(text, input_corrector_rt)
+    corrected = correction["text"]
+    normalized = normalize_no_punc(corrected)
+
+    if debug:
+        print_step("INPUT_CORRECTOR", correction)
+
+    reaction_pred = predict_classifier(corrected, reaction_rt)
+    complexity_pred = predict_classifier(corrected, complexity_rt)
+    math_pred = predict_classifier(corrected, math_classifier_rt)
 
     reaction = reaction_pred["label"]
     complexity = complexity_pred["label"]
     is_math = math_pred["label"] == "math" and math_pred["confidence"] >= 0.55
 
-    subject_pred = predict_subject(text, subject_finder_rt)
+    subject_pred = predict_subject(corrected, subject_finder_rt)
     subject = subject_pred["subject"]
 
     inserter_pred = predict_subject_insert_action(
-        text=text,
+        text=corrected,
         subject=subject,
         complexity=complexity,
         memory=memory,
@@ -862,14 +1228,20 @@ def answer_once(text, runtimes, memory, debug=True):
     )
 
     rewritten = apply_subject_insertion(
-        text=text,
+        text=corrected,
         action=inserter_pred["action"],
         subject=subject,
         memory=memory,
     )
-
-    reaction, animation_path = angry_escalation(reaction, memory)
-    animation = "sauce_attack_cutscene" if animation_path != "none" else reaction
+    generator_question = build_generator_question_for_route(
+        corrected,
+        rewritten,
+        complexity,
+        subject,
+        memory,
+    )
+    animation = reaction
+    animation_path = "none"
 
     if debug:
         print_step("REACTION_MODEL", reaction_pred)
@@ -886,11 +1258,31 @@ def answer_once(text, runtimes, memory, debug=True):
             },
         )
         print_step("REWRITTEN_INPUT", rewritten)
+        print_step("GENERATOR_QUESTION", generator_question)
 
     route = ""
     final = ""
 
-    if is_math:
+    if normalized in {"ok", "okay"}:
+        route = "smalltalk"
+        final = "Yep."
+        animation = "neutral"
+
+    elif normalized == "yep":
+        route = "smalltalk"
+        final = "Yes."
+        animation = "neutral"
+
+    elif reaction == "angry" and memory.angry_streak >= 1 and memory.sauce_attack_cooldown <= 0:
+        route = "anger_escalation_attack"
+        final = "YOU DONT LIKE ME??? THEN FACE THE SAUCE."
+        animation = "angry"
+        animation_path = "sad_to_sauce_attack_cutscene"
+        memory.sauce_attack_cooldown = 15
+        memory.angry_streak = 0
+        memory.previous_reaction = "angry"
+
+    elif is_math:
         route = "math"
 
         if math_model is None:
@@ -903,21 +1295,13 @@ def answer_once(text, runtimes, memory, debug=True):
 
     elif complexity == "smalltalk":
         route = "smalltalk"
-
-        if reaction == "angry":
-            final = "The sauce is annoyed, but the tiny meatball brain is still operational."
-        elif reaction == "sad":
-            final = "Soft sauce moment. I am still here."
-        elif reaction == "excited":
-            final = "Sauce detected. I am awake."
-        else:
-            final = generate_answer(rewritten, generator)
+        final = generate_answer(generator_question, generator)
 
     elif complexity == "unknown":
         route = "unknown"
         final = "The sauce blinked twice. I need a clearer question."
 
-    elif complexity == "followup" and normalize_no_punc(text) in {
+    elif complexity == "followup" and normalized in {
         "what does that mean",
         "what did that mean",
         "explain that",
@@ -932,10 +1316,14 @@ def answer_once(text, runtimes, memory, debug=True):
             final = "I do not have a previous answer to explain yet."
 
     elif complexity == "compare":
-        route = "compare_refusal"
-        final = (
-            "Comparing two things at once might make this tiny meatball brain explode."
-        )
+        route = "compare"
+        compare_subjects = parse_compare_subjects(corrected)
+        if len(compare_subjects) == 2:
+            left = generate_answer(f"what is {compare_subjects[0]}", generator)
+            right = generate_answer(f"what is {compare_subjects[1]}", generator)
+            final = " ".join(part for part in [left, right] if part).strip()
+        if not final:
+            final = "Comparing two things at once might make this tiny meatball brain explode."
 
     elif complexity == "multi_part":
         route = "multi_part"
@@ -959,7 +1347,7 @@ def answer_once(text, runtimes, memory, debug=True):
 
     elif complexity == "list":
         route = "list"
-        raw = generate_answer(rewritten, generator)
+        raw = generate_answer(generator_question, generator)
         final = format_list(raw)
 
         if debug:
@@ -967,42 +1355,55 @@ def answer_once(text, runtimes, memory, debug=True):
                 "GENERATOR_CALL",
                 {
                     "question": rewritten,
+                    "generator_question": generator_question,
                     "answer": raw,
                 },
             )
 
     else:
         route = "normal_qa"
-        final = generate_answer(rewritten, generator)
+        final = generate_answer(generator_question, generator)
 
         if debug:
             print_step(
                 "GENERATOR_CALL",
                 {
                     "question": rewritten,
+                    "generator_question": generator_question,
                     "answer": final,
                 },
             )
 
     final = post_process_answer(final)
+    sanity = run_output_sanity_check(final, output_sanity_rt)
+    overridden = apply_answer_overrides(final, reaction, animation, sanity)
 
     packet = {
-        "answer": final,
+        "answer": overridden["answer"],
         "route": route,
-        "reaction": reaction,
-        "animation": animation,
+        "reaction": overridden["reaction"],
+        "animation": overridden["animation"],
         "animation_path": animation_path,
         "complexity": complexity,
         "math": is_math,
         "subject": subject,
         "subject_action": inserter_pred["action"],
+        "corrected_input": corrected,
         "rewritten_input": rewritten,
+        "generator_question": generator_question,
+        "sanity": sanity,
     }
 
     if debug:
         print_step("FINAL_PACKET", packet)
 
-    memory.update(text, final, reaction, subject)
+    memory.update(
+        text,
+        overridden["answer"],
+        overridden["reaction"],
+        subject,
+        preserve_angry_state=(route == "anger_escalation_attack"),
+    )
 
     if debug:
         print_step(
@@ -1013,6 +1414,7 @@ def answer_once(text, runtimes, memory, debug=True):
                 "last_answer": memory.last_answer,
                 "previous_reaction": memory.previous_reaction,
                 "angry_streak": memory.angry_streak,
+                "sauce_attack_cooldown": memory.sauce_attack_cooldown,
             },
         )
 
@@ -1056,6 +1458,8 @@ def load_all(args):
         default_dropout=0.25,
     )
 
+    input_corrector = load_input_corrector(args.input_corrector_dir)
+    output_sanity = load_output_sanity(args.output_sanity_dir)
     generator = load_generator(args.generator_dir)
     math_model = load_math_model(args.math_model)
 
@@ -1065,6 +1469,8 @@ def load_all(args):
         "math_classifier": math_classifier,
         "subject_finder": subject_finder,
         "subject_inserter": subject_inserter,
+        "input_corrector": input_corrector,
+        "output_sanity": output_sanity,
         "generator": generator,
         "math_model": math_model,
     }
@@ -1075,11 +1481,14 @@ def smoke_tests(runtimes):
 
     tests = [
         "hi",
+        "what is the glich",
         "what is The Glitch",
         "facts about dogs",
         "what does that mean",
         "what is 1+1",
         "cats vs dogs",
+        "ok",
+        "yep",
         "I HATE YOU",
         "YOUR STUPII",
         "be angry",
@@ -1111,6 +1520,9 @@ def main():
     parser.add_argument("--subject_inserter_dir", default=str(SUBJECT_INSERTER_DIR))
     parser.add_argument("--subject_inserter_pt", default="subject_inserter.pt")
 
+    parser.add_argument("--input_corrector_dir", default=str(INPUT_CORRECTOR_DIR))
+    parser.add_argument("--output_sanity_dir", default=str(OUTPUT_SANITY_DIR))
+
     parser.add_argument("--generator_dir", default=str(GENERATOR_DIR))
     parser.add_argument("--math_model", default=str(MATH_MODEL_PATH))
 
@@ -1130,6 +1542,8 @@ def main():
     print("Loaded math classifier:", args.math_classifier_dir)
     print("Loaded subject finder:", args.subject_finder_dir)
     print("Loaded subject inserter:", args.subject_inserter_dir)
+    print("Loaded input corrector:", bool(runtimes["input_corrector"]))
+    print("Loaded output sanity:", bool(runtimes["output_sanity"]))
     print("Loaded generator:", args.generator_dir)
     print("Loaded math model:", bool(runtimes["math_model"]))
 
