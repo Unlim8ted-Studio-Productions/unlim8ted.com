@@ -29,7 +29,12 @@ const MODEL_PATHS = {
 
   mathTranslatorModel: `${ASSET_BASE}/models/math_equation_translator/math_equation_translator_final.onnx`,
   mathTranslatorInputVocab: `${ASSET_BASE}/models/math_equation_translator/input_vocab.json`,
-  mathTranslatorOutputVocab: `${ASSET_BASE}/models/math_equation_translator/output_vocab.json`
+  mathTranslatorOutputVocab: `${ASSET_BASE}/models/math_equation_translator/output_vocab.json`,
+
+  outputSanityModel: `${ASSET_BASE}/models/output_sanity_checker/output_sanity_checker.onnx`,
+  outputSanityVocab: `${ASSET_BASE}/models/output_sanity_checker/input_vocab.json`,
+  outputSanityLabels: `${ASSET_BASE}/models/output_sanity_checker/labels.json`,
+  outputSanityConfig: `${ASSET_BASE}/models/output_sanity_checker/config.json`
 };
 
 const DEBUG_ENABLED = new URLSearchParams(location.search).has("debug");
@@ -506,7 +511,14 @@ function splitMulti(text) {
 }
 
 function formatList(answer) {
-  const parts = String(answer || "")
+  const text = String(answer || "").trim();
+  const dashedParts = text
+    .split(/\s+-\s+/)
+    .map(part => part.trim())
+    .filter(Boolean);
+  if (dashedParts.length > 1) return dashedParts.slice(0, 8).map(part => `- ${part.replace(/^-+\s*/, "")}`).join("\n");
+
+  const parts = text
     .split(/(?<=[.!?])\s+/)
     .map(part => part.trim())
     .filter(Boolean);
@@ -520,6 +532,113 @@ function stripRoutePrefix(text) {
     .replace(/^(please\s+)?(list|facts|examples|features)\s+(out\s+)?/i, "")
     .replace(/^(give me|tell me)\s+(a\s+)?(list of\s+|facts about\s+|examples of\s+|features of\s+)/i, "")
     .trim();
+}
+
+function restoreEntityCasing(text) {
+  let out = String(text || "");
+  const replacements = [
+    ["the glitch", "The Glitch"],
+    ["timecat", "TimeCat"],
+    ["time cat", "TimeCat"],
+    ["meatball ai", "Meatball AI"],
+    ["unlim8ted", "Unlim8ted"]
+  ];
+  for (const [from, to] of replacements) {
+    out = out.replace(new RegExp(`\\b${from.replace(/\s+/g, "\\s+")}\\b`, "gi"), to);
+  }
+  return out;
+}
+
+function runInputCorrection(text) {
+  let out = String(text || "").trim();
+  if (!out) return out;
+
+  const fixes = [
+    [/\bteh\b/gi, "the"],
+    [/\bwaht\b/gi, "what"],
+    [/\bwich\b/gi, "which"],
+    [/\bglich\b/gi, "glitch"],
+    [/\bgltich\b/gi, "glitch"],
+    [/\bglotch\b/gi, "glitch"],
+    [/\bmeetball\b/gi, "meatball"],
+    [/\bmeatbal\b/gi, "meatball"],
+    [/\btime cat\b/gi, "TimeCat"],
+    [/\bunlimited\b/gi, "Unlim8ted"]
+  ];
+
+  for (const [pattern, replacement] of fixes) {
+    out = out.replace(pattern, replacement);
+  }
+
+  out = restoreEntityCasing(out);
+  out = out.replace(/\s+/g, " ").trim();
+
+  if (/^(what|who|where|when|why|how|does|do|did|is|are|can)\b/i.test(out) && !/[?.!]$/.test(out)) {
+    out += "?";
+  }
+
+  return out;
+}
+
+async function loadOptionalGenericClassifier(modelUrl, vocabUrl, labelsUrl, configUrl) {
+  try {
+    return await loadGenericClassifier(modelUrl, vocabUrl, labelsUrl, configUrl);
+  } catch (error) {
+    console.warn("Optional Meatball model unavailable:", modelUrl, error);
+    return null;
+  }
+}
+
+async function runOutputSanityCheck(answer, runtime) {
+  const text = String(answer || "").trim();
+  const normalized = normalizeNoPunc(text);
+
+  if (!text) {
+    return {
+      label: "confused_fallback",
+      confidence: 1,
+      answer: "I'm not quite sure what you mean. It might just be the sauce getting tangled up in itself.",
+      usedFallback: true,
+      source: "heuristic"
+    };
+  }
+
+  if (normalized === "im not") {
+    return {
+      label: "confused_fallback",
+      confidence: 1,
+      answer: "I'm not quite sure what you mean. It might just be the sauce getting tangled up in itself.",
+      usedFallback: true,
+      source: "heuristic"
+    };
+  }
+
+  if (!runtime) {
+    return {
+      label: "accept",
+      confidence: 0,
+      answer: text,
+      usedFallback: false,
+      source: "disabled"
+    };
+  }
+
+  const prediction = await runGenericClassifier(text, runtime);
+  if (prediction.label === "confused_fallback" && prediction.confidence >= 0.72) {
+    return {
+      ...prediction,
+      answer: "I'm not quite sure what you mean. It might just be the sauce getting tangled up in itself.",
+      usedFallback: true,
+      source: "model"
+    };
+  }
+
+  return {
+    ...prediction,
+    answer: text,
+    usedFallback: false,
+    source: "model"
+  };
 }
 
 function parseCompareSubjects(text) {
@@ -637,17 +756,23 @@ function postProcessAnswerPreserveLines(text) {
   return lines.join("\n").trim();
 }
 
-function applyAnswerOverrides(answer, reaction, animation) {
+function applyAnswerOverrides(answer, reaction, animation, sanity) {
   let nextAnswer = String(answer || "").trim();
   let nextReaction = reaction;
   let nextAnimation = animation;
+
+  if (sanity?.usedFallback) {
+    nextAnswer = sanity.answer;
+    nextReaction = "confused";
+    nextAnimation = "confused";
+  }
 
   if (nextAnswer === "The Meatball chooses to interpret that as") {
     nextAnswer = "The Meatball chooses to interpret that as completely true.";
   }
 
   if (nextAnswer === "I'm not" || nextAnswer === "I’m not") {
-    nextAnswer = "I'm not quite sure what you mean. It might just be the sauce getting tangled up in itself, but idk...";
+    nextAnswer = "I'm not quite sure what you mean. It might just be the sauce getting tangled up in itself.";
     nextReaction = "confused";
     nextAnimation = "confused";
   }
@@ -660,7 +785,8 @@ function applyAnswerOverrides(answer, reaction, animation) {
   return {
     answer: nextAnswer,
     reaction: nextReaction,
-    animation: nextAnimation
+    animation: nextAnimation,
+    sanity
   };
 }
 
@@ -908,6 +1034,13 @@ async function loadModels() {
     ]);
     setLoadingProgress(0.97, "Math system loaded.");
 
+    const outputSanity = await loadOptionalGenericClassifier(
+      MODEL_PATHS.outputSanityModel,
+      MODEL_PATHS.outputSanityVocab,
+      MODEL_PATHS.outputSanityLabels,
+      MODEL_PATHS.outputSanityConfig
+    );
+
     const mathIdToToken = {};
     for (const [token, id] of Object.entries(mathOutputVocab || {})) mathIdToToken[Number(id)] = token;
 
@@ -941,7 +1074,8 @@ async function loadModels() {
           max_input_len: 96,
           max_output_len: 64
         }
-      }
+      },
+      outputSanity
     };
     clearLoadingProgress("Reaction, routing, subject, generator, and math systems are ready.");
     window.setTimeout(() => removeLoadingUi(), 260);
@@ -1272,29 +1406,30 @@ async function processUserMessage(rawInput) {
   const loaded = await loadModels();
   setLoadingProgress(0.08, "Reading the plate.");
   if (runtimeMemory.sauceAttackCooldown > 0) runtimeMemory.sauceAttackCooldown -= 1;
+  const correctedInput = runInputCorrection(rawInput);
 
-  const reaction = await runGenericClassifier(rawInput, loaded.reaction);
+  const reaction = await runGenericClassifier(correctedInput, loaded.reaction);
   setLoadingProgress(0.2, "Reading reaction.");
-  const complexityPrediction = await runGenericClassifier(rawInput, loaded.complexity);
+  const complexityPrediction = await runGenericClassifier(correctedInput, loaded.complexity);
   setLoadingProgress(0.32, "Classifying question shape.");
   const complexity = {
     ...complexityPrediction,
     modelLabel: complexityPrediction.label,
-    label: resolveComplexityLabel(rawInput, complexityPrediction.label)
+    label: resolveComplexityLabel(correctedInput, complexityPrediction.label)
   };
-  const mathPrediction = await runGenericClassifier(rawInput, loaded.mathClassifier);
+  const mathPrediction = await runGenericClassifier(correctedInput, loaded.mathClassifier);
   setLoadingProgress(0.44, "Checking for math routing.");
   const math = {
     ...mathPrediction,
     modelLabel: mathPrediction.label,
-    heuristicMatch: isLikelyMathQuestion(rawInput)
+    heuristicMatch: isLikelyMathQuestion(correctedInput)
   };
-  const finder = await runSubjectFinder(rawInput, loaded.subjectFinder);
+  const finder = await runSubjectFinder(correctedInput, loaded.subjectFinder);
   setLoadingProgress(0.58, "Finding the subject.");
-  const inserter = await runSubjectInserter(rawInput, finder.subject, complexity.label, loaded.subjectInserter);
+  const inserter = await runSubjectInserter(correctedInput, finder.subject, complexity.label, loaded.subjectInserter);
   setLoadingProgress(0.72, "Rewriting follow-up context.");
 
-  const rewrittenQuestion = inserter.action === "keep" ? rawInput : inserter.rewritten;
+  const rewrittenQuestion = inserter.action === "keep" ? correctedInput : inserter.rewritten;
 
   const staged = {
     reaction,
@@ -1306,13 +1441,15 @@ async function processUserMessage(rawInput) {
     rewrittenQuestion
   };
 
-  const routed = await routeRequest(rawInput, staged);
+  const routed = await routeRequest(correctedInput, staged);
   setLoadingProgress(0.92, "Plating the answer.");
   const finalAnswer = postProcessAnswerPreserveLines(routed.answer);
+  const sanity = await runOutputSanityCheck(finalAnswer, loaded.outputSanity);
   const overridden = applyAnswerOverrides(
     finalAnswer,
     reaction.label,
-    routed.animation || reaction.label
+    routed.animation || reaction.label,
+    sanity
   );
   setLoadingProgress(1, "Answer ready.");
 
@@ -1329,12 +1466,14 @@ async function processUserMessage(rawInput) {
     cooldown: runtimeMemory.sauceAttackCooldown,
     debug: {
       rawInput,
+      correctedInput,
       reaction,
       complexity,
       math,
       subjectFinder: finder,
       subjectInserter: inserter,
       rewrittenQuestion,
+      sanity,
       route: routed.route,
       memory: {
         history: runtimeMemory.history,
