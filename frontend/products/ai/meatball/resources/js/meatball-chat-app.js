@@ -57,6 +57,9 @@ const sendButton = document.getElementById("sendButton");
 const debugPanel = document.getElementById("debugPanel");
 const meatballStage = document.getElementById("bigMeatballMount");
 const modelMeta = document.getElementById("modelMeta");
+const loadingPanel = document.getElementById("loadingPanel");
+const loadingBar = document.getElementById("loadingBar");
+const loadingBarFill = document.getElementById("loadingBarFill");
 
 const runtimeMemory = {
   history: [],
@@ -69,12 +72,51 @@ const runtimeMemory = {
 
 let models = null;
 let modelsLoadingPromise = null;
+let loadingUiRemoved = false;
 
 function setModelMeta(text) {
   if (modelMeta) modelMeta.textContent = text;
   if (window.MeatballEmotionRenderer?.setBubble && text) {
     window.MeatballEmotionRenderer.setBubble(meatballStage, `<strong>System.</strong> ${text}`);
   }
+}
+
+function setLoadingProgress(value, label, options = {}) {
+  if (loadingUiRemoved) return;
+  const indeterminate = options.indeterminate === true;
+  if (label) setModelMeta(label);
+  if (loadingPanel) loadingPanel.hidden = false;
+  if (!loadingBar || !loadingBarFill) return;
+
+  loadingBar.hidden = false;
+  loadingBar.classList.toggle("is-indeterminate", indeterminate);
+
+  if (indeterminate) {
+    loadingBarFill.style.width = "42%";
+    return;
+  }
+
+  const clamped = Math.max(0, Math.min(1, Number(value) || 0));
+  loadingBarFill.style.width = `${Math.round(clamped * 100)}%`;
+}
+
+function clearLoadingProgress(label) {
+  if (loadingUiRemoved) return;
+  if (label) setModelMeta(label);
+  if (!loadingBar || !loadingBarFill) return;
+  loadingBar.classList.remove("is-indeterminate");
+  loadingBarFill.style.width = "100%";
+  window.setTimeout(() => {
+    loadingBar.hidden = true;
+    loadingBarFill.style.width = "0%";
+    if (loadingPanel) loadingPanel.hidden = true;
+  }, 220);
+}
+
+function removeLoadingUi() {
+  if (loadingUiRemoved) return;
+  loadingUiRemoved = true;
+  loadingPanel?.remove();
 }
 
 function setDebug(data) {
@@ -115,7 +157,7 @@ function animateMeatballTalk(text, emotion) {
   const mapped = REACTION_EMOTION_MAP[emotion] || emotion;
   if (mapped) setMeatballEmotion(mapped, `emotion: ${mapped}<br>talking: true`);
   if (window.MeatballEmotionRenderer?.speakFor) {
-    window.MeatballEmotionRenderer.speakFor(meatballStage, text, talkDuration);
+    window.MeatballEmotionRenderer.speakFor(meatballStage, text, talkDuration, { emotion: mapped });
     return;
   }
   setMeatballTalking(true);
@@ -147,8 +189,8 @@ async function playAnimationPath(animationPath, finalReaction, answer) {
     animateMeatballTalk(answer, finalReaction);
     return;
   }
-  setMeatballEmotion("sad", "emotion: sad<br>talking: false");
-  await sleep(1000);
+  setMeatballEmotion("angry", "emotion: angry<br>talking: false");
+  await sleep(180);
   if (window.MeatballEmotionRenderer?.playCutscene) {
     window.MeatballEmotionRenderer.playCutscene(meatballStage);
   }
@@ -350,11 +392,7 @@ function normalizeSubjectText(text) {
 }
 
 function subjectFinderInputText(message) {
-  const historyText = runtimeMemory.history
-    .slice(-6)
-    .map(item => `${item.role}: ${item.text}`)
-    .join(" ");
-  return `message: ${String(message || "").trim()} history: ${historyText}`.trim();
+  return `message: ${String(message || "").trim()}`.trim();
 }
 
 function encodeSubjectFinderInput(text, vocab, maxLen) {
@@ -472,8 +510,105 @@ function formatList(answer) {
     .split(/(?<=[.!?])\s+/)
     .map(part => part.trim())
     .filter(Boolean);
-  if (parts.length <= 1) return answer;
+  if (parts.length <= 1) return parts[0] ? `- ${parts[0]}` : "";
   return parts.slice(0, 8).map(part => `- ${part}`).join("\n");
+}
+
+function stripRoutePrefix(text) {
+  return String(text || "")
+    .trim()
+    .replace(/^(please\s+)?(list|facts|examples|features)\s+(out\s+)?/i, "")
+    .replace(/^(give me|tell me)\s+(a\s+)?(list of\s+|facts about\s+|examples of\s+|features of\s+)/i, "")
+    .trim();
+}
+
+function parseCompareSubjects(text) {
+  const clean = String(text || "").trim().replace(/\?+$/g, "");
+  if (!clean) return [];
+
+  const patterns = [
+    /\bcompare\s+(.+?)\s+(?:and|vs|versus)\s+(.+)$/i,
+    /\bcomparison\s+of\s+(.+?)\s+(?:and|vs|versus)\s+(.+)$/i,
+    /\bdifference\s+between\s+(.+?)\s+(?:and|vs|versus)\s+(.+)$/i,
+    /^(.+?)\s+(?:vs|versus)\s+(.+)$/i,
+    /^(.+?)\s+and\s+(.+)$/i
+  ];
+
+  for (const pattern of patterns) {
+    const match = clean.match(pattern);
+    if (!match) continue;
+    const subjects = [match[1], match[2]]
+      .map(part => normalizeSubjectText(part.replace(/^(between|of)\s+/i, "")))
+      .filter(Boolean);
+    if (subjects.length === 2) return subjects;
+  }
+
+  return [];
+}
+
+function buildGeneratorQuestionForRoute(rawInput, staged) {
+  const base = String(staged.rewrittenQuestion || rawInput || "").trim();
+  const normalized = normalizeNoPunc(rawInput);
+  const previousSubject = staged.inserter?.previousSubject || "NONE";
+
+  if (staged.complexity.label === "list") {
+    const stripped = stripRoutePrefix(base);
+    if (/\babout\b/i.test(stripped) || /\bof\b/i.test(stripped)) return stripped;
+    if (stripped) return `facts about ${stripped}`;
+    return base;
+  }
+
+  if ((staged.complexity.label === "followup" || staged.complexity.label === "normal_qa") && staged.subject === "NONE" && previousSubject !== "NONE") {
+    if (/\bit\b/i.test(rawInput)) return applyInserterRewrite(rawInput, "replace_it_with_subject", staged.subject, previousSubject);
+    if (/\bthis\b/i.test(rawInput)) return applyInserterRewrite(rawInput, "replace_this_with_subject", staged.subject, previousSubject);
+    if (/\bthat\b/i.test(rawInput)) return applyInserterRewrite(rawInput, "replace_that_with_subject", staged.subject, previousSubject);
+    if (/\bthey\b|\bthem\b|\btheir\b/i.test(rawInput)) return applyInserterRewrite(rawInput, "replace_they_with_subject", staged.subject, previousSubject);
+  }
+
+  if (staged.complexity.label === "normal_qa" && previousSubject !== "NONE" && ["what is it", "who is it", "what is this", "what is that"].includes(normalized)) {
+    if (normalized.includes("this")) return applyInserterRewrite(rawInput, "replace_this_with_subject", staged.subject, previousSubject);
+    if (normalized.includes("that")) return applyInserterRewrite(rawInput, "replace_that_with_subject", staged.subject, previousSubject);
+    return applyInserterRewrite(rawInput, "replace_it_with_subject", staged.subject, previousSubject);
+  }
+
+  return base;
+}
+
+function isLikelyMathQuestion(text) {
+  const normalized = mathNormalizeQuestion(text);
+  if (!normalized) return false;
+  if (/\b(calculate|solve|evaluate|simplify|equation|math|plus|minus|times|divided by|square root|squared|cubed)\b/i.test(text)) return true;
+  if (/\d/.test(normalized) && /[+\-*/^=]/.test(normalized)) return true;
+  if (/^\s*what is\s+[-(]?\d/.test(normalized)) return true;
+  return false;
+}
+
+function tryDirectMathAnswer(text) {
+  const normalized = mathNormalizeQuestion(text);
+  const directExpr = normalized
+    .replace(/^(what is|whats|calculate|solve|evaluate|simplify)\s+/i, "")
+    .replace(/\?+$/g, "")
+    .trim();
+
+  if (!directExpr || !/\d/.test(directExpr) || !/[+\-*/^()]/.test(directExpr)) return "";
+
+  try {
+    return String(safeEvalExpression(directExpr));
+  } catch (error) {
+    return "";
+  }
+}
+
+function resolveComplexityLabel(rawInput, predictedLabel) {
+  const normalized = normalizeNoPunc(rawInput);
+  const previousSubject = runtimeMemory.subjects.length ? runtimeMemory.subjects[runtimeMemory.subjects.length - 1] : "NONE";
+
+  if (/\b(compare|contrast|vs|versus|difference|different|better)\b/i.test(rawInput)) return "compare";
+  if (/^(list|facts|examples|features)\b/i.test(normalized) || /\b(list|facts|examples|features)\s+(about|of)\b/i.test(normalized)) return "list";
+  if (splitMulti(rawInput).length > 1 && /\b(and|also|plus)\b/i.test(rawInput)) return "multi_part";
+  if (["what does that mean", "what do you mean", "explain that", "what was that", "tell me more", "more"].includes(normalized)) return "followup";
+  if (previousSubject !== "NONE" && /\b(it|this|that|they|them|their)\b/i.test(rawInput)) return "followup";
+  return predictedLabel || "unknown";
 }
 
 function postProcessAnswer(text) {
@@ -491,6 +626,42 @@ function postProcessAnswer(text) {
   out = out.replace(/([.!?]\s+)([a-z])/g, (_, prefix, letter) => `${prefix}${letter.toUpperCase()}`);
   out = out.replace(/ i’m /gi, " I’m ").replace(/ i'm /gi, " I'm ");
   return out.trim();
+}
+
+function postProcessAnswerPreserveLines(text) {
+  const lines = String(text || "")
+    .replace(/\r\n/g, "\n")
+    .split("\n")
+    .map(line => postProcessAnswer(line))
+    .filter(Boolean);
+  return lines.join("\n").trim();
+}
+
+function applyAnswerOverrides(answer, reaction, animation) {
+  let nextAnswer = String(answer || "").trim();
+  let nextReaction = reaction;
+  let nextAnimation = animation;
+
+  if (nextAnswer === "The Meatball chooses to interpret that as") {
+    nextAnswer = "The Meatball chooses to interpret that as completely true.";
+  }
+
+  if (nextAnswer === "I'm not" || nextAnswer === "I’m not") {
+    nextAnswer = "I'm not quite sure what you mean. It might just be the sauce getting tangled up in itself, but idk...";
+    nextReaction = "confused";
+    nextAnimation = "confused";
+  }
+
+  if (nextAnswer === "Thank you. The sauce accepts the compliment.") {
+    nextReaction = "excited";
+    nextAnimation = "excited";
+  }
+
+  return {
+    answer: nextAnswer,
+    reaction: nextReaction,
+    animation: nextAnimation
+  };
 }
 
 function mathReplaceSymbols(text) {
@@ -681,45 +852,61 @@ async function loadModels() {
   if (models) return models;
   if (modelsLoadingPromise) return modelsLoadingPromise;
 
-  setModelMeta("Loading the tiny meatball brain.");
+  setLoadingProgress(0.04, "Loading the tiny meatball brain.");
   modelsLoadingPromise = (async () => {
-    const [
-      reaction,
-      complexity,
-      mathClassifier,
-      subjectFinderConfig,
-      subjectFinderVocab,
-      subjectFinderSession,
-      subjectInserterConfig,
-      subjectInserterVocab,
-      subjectInserterLabels,
-      subjectInserterSession,
-      generatorConfig,
-      generatorInputVocab,
-      generatorOutputChunks,
-      generatorSession,
-      mathInputVocab,
-      mathOutputVocab,
-      mathSession
-    ] = await Promise.all([
-      loadGenericClassifier(MODEL_PATHS.reactionModel, MODEL_PATHS.reactionVocab, MODEL_PATHS.reactionLabels, `${ASSET_BASE}/models/meatball_reaction_model/config.json`),
-      loadGenericClassifier(MODEL_PATHS.complexityModel, MODEL_PATHS.complexityVocab, MODEL_PATHS.complexityLabels, `${ASSET_BASE}/models/complexity_classifier/config.json`),
-      loadGenericClassifier(MODEL_PATHS.mathClassifierModel, MODEL_PATHS.mathClassifierVocab, MODEL_PATHS.mathClassifierLabels, `${ASSET_BASE}/models/math_classifier/config.json`),
+    const reaction = await loadGenericClassifier(
+      MODEL_PATHS.reactionModel,
+      MODEL_PATHS.reactionVocab,
+      MODEL_PATHS.reactionLabels,
+      `${ASSET_BASE}/models/meatball_reaction_model/config.json`
+    );
+    setLoadingProgress(0.16, "Reaction model loaded.");
+
+    const complexity = await loadGenericClassifier(
+      MODEL_PATHS.complexityModel,
+      MODEL_PATHS.complexityVocab,
+      MODEL_PATHS.complexityLabels,
+      `${ASSET_BASE}/models/complexity_classifier/config.json`
+    );
+    setLoadingProgress(0.28, "Complexity classifier loaded.");
+
+    const mathClassifier = await loadGenericClassifier(
+      MODEL_PATHS.mathClassifierModel,
+      MODEL_PATHS.mathClassifierVocab,
+      MODEL_PATHS.mathClassifierLabels,
+      `${ASSET_BASE}/models/math_classifier/config.json`
+    );
+    setLoadingProgress(0.4, "Math classifier loaded.");
+
+    const [subjectFinderConfig, subjectFinderVocab, subjectFinderSession] = await Promise.all([
       fetchJson(MODEL_PATHS.subjectFinderConfig),
       fetchJson(MODEL_PATHS.subjectFinderVocab),
-      createSession(MODEL_PATHS.subjectFinderModel),
+      createSession(MODEL_PATHS.subjectFinderModel)
+    ]);
+    setLoadingProgress(0.55, "Subject finder loaded.");
+
+    const [subjectInserterConfig, subjectInserterVocab, subjectInserterLabels, subjectInserterSession] = await Promise.all([
       fetchJson(MODEL_PATHS.subjectInserterConfig),
       fetchJson(MODEL_PATHS.subjectInserterVocab),
       fetchJson(MODEL_PATHS.subjectInserterLabels),
-      createSession(MODEL_PATHS.subjectInserterModel),
+      createSession(MODEL_PATHS.subjectInserterModel)
+    ]);
+    setLoadingProgress(0.7, "Subject inserter loaded.");
+
+    const [generatorConfig, generatorInputVocab, generatorOutputChunks, generatorSession] = await Promise.all([
       fetchJson(MODEL_PATHS.generatorConfig),
       fetchJson(MODEL_PATHS.generatorInputVocab),
       fetchJson(MODEL_PATHS.generatorOutputChunks),
-      createSession(MODEL_PATHS.generatorModel),
+      createSession(MODEL_PATHS.generatorModel)
+    ]);
+    setLoadingProgress(0.86, "Neutral generator loaded.");
+
+    const [mathInputVocab, mathOutputVocab, mathSession] = await Promise.all([
       fetchJson(MODEL_PATHS.mathTranslatorInputVocab),
       fetchJson(MODEL_PATHS.mathTranslatorOutputVocab),
       createSession(MODEL_PATHS.mathTranslatorModel)
     ]);
+    setLoadingProgress(0.97, "Math system loaded.");
 
     const mathIdToToken = {};
     for (const [token, id] of Object.entries(mathOutputVocab || {})) mathIdToToken[Number(id)] = token;
@@ -756,7 +943,8 @@ async function loadModels() {
         }
       }
     };
-    setModelMeta("Reaction, routing, subject, generator, and math systems are ready.");
+    clearLoadingProgress("Reaction, routing, subject, generator, and math systems are ready.");
+    window.setTimeout(() => removeLoadingUi(), 260);
     chatInput.disabled = false;
     sendButton.disabled = false;
     chatInput.placeholder = "Ask Meatball...";
@@ -958,13 +1146,6 @@ function updateMemory(userText, answer, reaction, subject, options = {}) {
   else runtimeMemory.angryStreak = 0;
 }
 
-function makeSmalltalkResponse(reaction) {
-  if (reaction === "angry") return "The sauce is annoyed, but the tiny meatball brain is still operational.";
-  if (reaction === "sad") return "Soft sauce moment. I am still here.";
-  if (reaction === "excited") return "Sauce detected. I am awake.";
-  return "The sauce is awake. Speak clearly and I will try to plate an answer.";
-}
-
 function explainLastAnswer() {
   if (!runtimeMemory.lastAnswer) return "The sauce blinked twice. I need a clearer question.";
   return `That means: ${runtimeMemory.lastAnswer}`;
@@ -972,13 +1153,28 @@ function explainLastAnswer() {
 
 async function routeRequest(rawInput, staged) {
   const normalized = normalizeNoPunc(rawInput);
+  const generatorQuestion = buildGeneratorQuestionForRoute(rawInput, staged);
   const route = {
     route: "normal_qa",
     answer: "",
     animation: staged.reaction.label,
     animationPath: "",
-    rewrittenQuestion: staged.rewrittenQuestion
+    rewrittenQuestion: generatorQuestion
   };
+
+  if (normalized === "ok" || normalized === "okay") {
+    route.route = "smalltalk";
+    route.answer = "Yep.";
+    route.animation = "neutral";
+    return route;
+  }
+
+  if (normalized === "yep") {
+    route.route = "smalltalk";
+    route.answer = "Yes.";
+    route.animation = "neutral";
+    return route;
+  }
 
   if (staged.reaction.label === "angry" && runtimeMemory.angryStreak >= 1 && runtimeMemory.sauceAttackCooldown <= 0) {
     route.route = "anger_escalation_attack";
@@ -991,8 +1187,18 @@ async function routeRequest(rawInput, staged) {
     return route;
   }
 
-  if (staged.math.label === "math" && staged.math.confidence >= MATH_ROUTE_THRESHOLD) {
-    const math = await runMathSystem(staged.rewrittenQuestion, models.math);
+  if ((staged.math.label === "math" && staged.math.confidence >= MATH_ROUTE_THRESHOLD) || isLikelyMathQuestion(rawInput)) {
+    const directAnswer = tryDirectMathAnswer(staged.rewrittenQuestion);
+    const math = directAnswer
+      ? {
+          normalized: mathNormalizeQuestion(staged.rewrittenQuestion),
+          decoded: "",
+          equation: "",
+          predictedAnswer: "",
+          computedAnswer: directAnswer,
+          final: directAnswer
+        }
+      : await runMathSystem(staged.rewrittenQuestion, models.math);
     route.route = "math";
     route.answer = math.final;
     route.math = math;
@@ -1007,13 +1213,23 @@ async function routeRequest(rawInput, staged) {
 
   if (staged.complexity.label === "compare") {
     route.route = "compare";
+    const compareSubjects = parseCompareSubjects(rawInput);
+    if (compareSubjects.length === 2) {
+      const left = await runGenerator(`what is ${compareSubjects[0]}`, models.generator);
+      const right = await runGenerator(`what is ${compareSubjects[1]}`, models.generator);
+      const leftText = left.text || "";
+      const rightText = right.text || "";
+      route.answer = [leftText, rightText].filter(Boolean).join(" ");
+      if (route.answer) return route;
+    }
     route.answer = "Comparing two things at once might make this tiny meatball brain explode.";
     return route;
   }
 
   if (staged.complexity.label === "smalltalk") {
     route.route = "smalltalk";
-    route.answer = makeSmalltalkResponse(staged.reaction.label);
+    const generated = await runGenerator(generatorQuestion, models.generator);
+    route.answer = generated.text || "The sauce is on, but I need a sharper question.";
     return route;
   }
 
@@ -1025,7 +1241,7 @@ async function routeRequest(rawInput, staged) {
 
   if (staged.complexity.label === "multi_part") {
     route.route = "multi_part";
-    const parts = splitMulti(staged.rewrittenQuestion);
+    const parts = splitMulti(generatorQuestion);
     const answers = [];
     for (const part of parts) {
       const generated = await runGenerator(part, models.generator);
@@ -1035,7 +1251,7 @@ async function routeRequest(rawInput, staged) {
     return route;
   }
 
-  const generated = await runGenerator(staged.rewrittenQuestion, models.generator);
+  const generated = await runGenerator(generatorQuestion, models.generator);
   route.answer = generated.text || "The sauce is on, but I need a sharper question.";
   if (staged.complexity.label === "list") {
     route.route = "list";
@@ -1054,12 +1270,29 @@ async function routeRequest(rawInput, staged) {
 
 async function processUserMessage(rawInput) {
   const loaded = await loadModels();
+  setLoadingProgress(0.08, "Reading the plate.");
   if (runtimeMemory.sauceAttackCooldown > 0) runtimeMemory.sauceAttackCooldown -= 1;
+
   const reaction = await runGenericClassifier(rawInput, loaded.reaction);
-  const complexity = await runGenericClassifier(rawInput, loaded.complexity);
-  const math = await runGenericClassifier(rawInput, loaded.mathClassifier);
+  setLoadingProgress(0.2, "Reading reaction.");
+  const complexityPrediction = await runGenericClassifier(rawInput, loaded.complexity);
+  setLoadingProgress(0.32, "Classifying question shape.");
+  const complexity = {
+    ...complexityPrediction,
+    modelLabel: complexityPrediction.label,
+    label: resolveComplexityLabel(rawInput, complexityPrediction.label)
+  };
+  const mathPrediction = await runGenericClassifier(rawInput, loaded.mathClassifier);
+  setLoadingProgress(0.44, "Checking for math routing.");
+  const math = {
+    ...mathPrediction,
+    modelLabel: mathPrediction.label,
+    heuristicMatch: isLikelyMathQuestion(rawInput)
+  };
   const finder = await runSubjectFinder(rawInput, loaded.subjectFinder);
+  setLoadingProgress(0.58, "Finding the subject.");
   const inserter = await runSubjectInserter(rawInput, finder.subject, complexity.label, loaded.subjectInserter);
+  setLoadingProgress(0.72, "Rewriting follow-up context.");
 
   const rewrittenQuestion = inserter.action === "keep" ? rawInput : inserter.rewritten;
 
@@ -1074,16 +1307,23 @@ async function processUserMessage(rawInput) {
   };
 
   const routed = await routeRequest(rawInput, staged);
-  const finalAnswer = postProcessAnswer(routed.answer);
+  setLoadingProgress(0.92, "Plating the answer.");
+  const finalAnswer = postProcessAnswerPreserveLines(routed.answer);
+  const overridden = applyAnswerOverrides(
+    finalAnswer,
+    reaction.label,
+    routed.animation || reaction.label
+  );
+  setLoadingProgress(1, "Answer ready.");
 
-  updateMemory(rawInput, finalAnswer, reaction.label, finder.subject, {
+  updateMemory(rawInput, overridden.answer, overridden.reaction, finder.subject, {
     preserveAngryState: routed.route === "anger_escalation_attack"
   });
 
   return {
-    answer: finalAnswer,
-    reaction: reaction.label,
-    animation: routed.animation || reaction.label,
+    answer: overridden.answer,
+    reaction: overridden.reaction,
+    animation: overridden.animation,
     animationPath: routed.animationPath || "",
     route: routed.route,
     cooldown: runtimeMemory.sauceAttackCooldown,
@@ -1124,11 +1364,12 @@ chatForm?.addEventListener("submit", async event => {
     addMessage("bot", result.answer, { skipAnimation: true, emotion: result.reaction });
     if (result.animationPath) await playAnimationPath(result.animationPath, result.reaction, result.answer);
     else animateMeatballTalk(result.answer, result.reaction);
-    setModelMeta(`Reaction: ${result.reaction}. Route: ${result.route}. Subjects: ${runtimeMemory.subjects.join(" | ") || "NONE"}. Cooldown: ${runtimeMemory.sauceAttackCooldown}.`);
+    clearLoadingProgress(`Reaction: ${result.reaction}. Route: ${result.route}. Subjects: ${runtimeMemory.subjects.join(" | ") || "NONE"}. Cooldown: ${runtimeMemory.sauceAttackCooldown}.`);
     setDebug(result.debug);
   } catch (error) {
     addMessage("bot", "The sauce jammed. Ask again with a cleaner plate.", { skipAnimation: true, emotion: "angry" });
     await playAnimationPath("error_glitch", "angry", "The sauce jammed. Ask again with a cleaner plate.");
+    clearLoadingProgress("The runtime glitched while plating that answer.");
     setDebug({ error: String(error?.message || error) });
   } finally {
     chatInput.disabled = false;
@@ -1148,9 +1389,10 @@ window.addEventListener("DOMContentLoaded", () => {
   chatInput.disabled = false;
   sendButton.disabled = false;
   chatInput.placeholder = "Ask Meatball...";
-  setModelMeta("Models stay asleep until you talk to Meatball.");
+  clearLoadingProgress("Models stay asleep until you talk to Meatball.");
   setMeatballEmotion("neutral");
-  if (chatLog) chatLog.innerHTML = "";
+  const initialBotMessage = chatLog?.querySelector(".msg.bot");
+  if (initialBotMessage) initialBotMessage.remove();
   addMessage("bot", "I am here. Ask me something and I will wake the sauce.", { skipAnimation: true });
 
   requestAnimationFrame(() => {

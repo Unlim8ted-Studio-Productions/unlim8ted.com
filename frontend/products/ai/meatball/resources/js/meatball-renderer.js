@@ -157,7 +157,9 @@
 
     window.clearTimeout(state.talkTimer);
 
-    state.emotion = inferEmotionFromText(text, options);
+    state.emotion = VALID_EMOTIONS.has(options?.emotion)
+      ? options.emotion
+      : inferEmotionFromText(text, options);
     state.talking = true;
     state.bubbleHtml = text ? `<strong>${state.emotion}.</strong> ${String(text)}` : DEFAULT_LINES[state.emotion];
     state.statusHtml = `emotion: ${state.emotion}<br>talking: true`;

@@ -640,11 +640,19 @@
 .meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .wrap { animation: rageHover .72s cubic-bezier(.2, .9, .25, 1.2) infinite; }
 .meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .meatball { animation: angerShake .13s linear infinite, angrySquash .72s ease-in-out infinite; background: radial-gradient(circle at 35% 28%, #ff9a5f 0 8%, transparent 9%), radial-gradient(circle at 70% 62%, #5b120d 0 8%, transparent 9%), linear-gradient(145deg, #c1462d, #7b2119 52%, #310908 100%); }
 .meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .sauce { animation: angrySauce .72s ease-in-out infinite; }
-.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .brow.left { top: 70px; transform: rotate(17deg); }
-.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .brow.right { top: 70px; transform: rotate(-17deg); }
-.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .eye { top: 90px; height: 42px; }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .brow.left { top: 76px; transform: rotate(28deg) translateX(3px); }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .brow.right { top: 76px; transform: rotate(-28deg) translateX(-3px); }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .eye { top: 96px; height: 34px; }
 .meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .pupil { animation: angryPupils .72s ease-in-out infinite; }
-.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .mouth { height: 42px; width: 86px; margin-left: -43px; }
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .mouth {
+  top: 158px;
+  height: 16px;
+  width: 82px;
+  margin-left: -41px;
+  border-radius: 999px 999px 12px 12px;
+  transform: translateY(0) scaleY(.92);
+}
+.meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .tongue { opacity: 0; }
 .meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .flash { animation: angryFlash .72s ease-in-out infinite; }
 .meatballEmotionStage[data-emotion="angry"]:not(.is-cutscene) .symbol.c { animation: angryRune .72s ease-in-out infinite; opacity: 1; }
 
@@ -787,9 +795,38 @@
 @keyframes cutsceneSauce { 0%, 100% { transform: translateY(0) rotate(0); } 48% { transform: translateY(8px) rotate(-10deg); } 62% { transform: translateY(-10px) rotate(14deg); } 72% { transform: translateY(18px) rotate(-18deg); } }
 @keyframes cutsceneEyes { 0%, 35%, 100% { height: 57px; top: 86px; } 52%, 82% { height: 38px; top: 92px; } 64%, 76% { height: 29px; top: 100px; } }
 @keyframes cutscenePupils { 0%, 35%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translateX(10px) scale(.85); } 62% { transform: translateX(-9px) translateY(-2px) scale(.75); } 72% { transform: translateY(-4px) scale(.62); } }
-@keyframes cutsceneBrowL { 0%, 35%, 100% { top: 64px; transform: rotate(-7deg); } 50%, 82% { top: 69px; transform: rotate(22deg); } 64%, 76% { top: 72px; transform: rotate(28deg); } }
-@keyframes cutsceneBrowR { 0%, 35%, 100% { top: 64px; transform: rotate(7deg); } 50%, 82% { top: 69px; transform: rotate(-22deg); } 64%, 76% { top: 72px; transform: rotate(-28deg); } }
-@keyframes cutsceneMouth { 0%, 35%, 100% { height: 31px; width: 72px; margin-left: -36px; border-radius: 0 0 50px 50px; } 52%, 62% { height: 18px; width: 58px; margin-left: -29px; border-radius: 999px; } 66%, 82% { height: 66px; width: 98px; margin-left: -49px; border-radius: 0 0 80px 80px; } }
+@keyframes cutsceneBrowL { 0%, 18% { top: 76px; transform: rotate(28deg) translateX(3px); } 32%, 82% { top: 72px; transform: rotate(30deg) translateX(4px); } 64%, 76% { top: 74px; transform: rotate(34deg) translateX(6px); } 100% { top: 76px; transform: rotate(28deg) translateX(3px); } }
+@keyframes cutsceneBrowR { 0%, 18% { top: 76px; transform: rotate(-28deg) translateX(-3px); } 32%, 82% { top: 72px; transform: rotate(-30deg) translateX(-4px); } 64%, 76% { top: 74px; transform: rotate(-34deg) translateX(-6px); } 100% { top: 76px; transform: rotate(-28deg) translateX(-3px); } }
+@keyframes cutsceneMouth {
+  0%, 22% {
+    top: 158px;
+    height: 16px;
+    width: 82px;
+    margin-left: -41px;
+    border-radius: 999px 999px 12px 12px;
+  }
+  34%, 52% {
+    top: 154px;
+    height: 12px;
+    width: 68px;
+    margin-left: -34px;
+    border-radius: 999px;
+  }
+  66%, 82% {
+    top: 150px;
+    height: 52px;
+    width: 94px;
+    margin-left: -47px;
+    border-radius: 0 0 78px 78px;
+  }
+  100% {
+    top: 158px;
+    height: 16px;
+    width: 82px;
+    margin-left: -41px;
+    border-radius: 999px 999px 12px 12px;
+  }
+}
 @keyframes cutsceneArmL { 0%, 35%, 100% { transform: rotate(-16deg); } 46% { transform: rotate(-70deg) translateY(-12px); } 62% { transform: rotate(-132deg) translateX(-8px) translateY(-18px); } 72% { transform: rotate(32deg) translateX(30px); } 84% { transform: rotate(-42deg); } }
 @keyframes cutsceneArmR { 0%, 35%, 100% { transform: rotate(16deg); } 46% { transform: rotate(70deg) translateY(-12px); } 62% { transform: rotate(132deg) translateX(8px) translateY(-18px); } 72% { transform: rotate(-32deg) translateX(-30px); } 84% { transform: rotate(42deg); } }
 @keyframes cutsceneOrbit { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(540deg) scale(.82); } 72% { transform: rotate(900deg) scale(1.32); } 100% { transform: rotate(1080deg) scale(1); } }

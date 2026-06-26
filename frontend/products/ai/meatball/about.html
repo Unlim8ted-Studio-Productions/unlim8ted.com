@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -6,24 +6,19 @@
 <title>Unlim8ted - About the meatball</title>
 <script type="module" src="/components/site-navbar.js"></script>
 <style>
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   :root {
     --bg: #071018;
-    --panel: rgba(255,255,255,0.065);
-    --panel-2: rgba(255,255,255,0.095);
+    --panel: rgba(255,255,255,0.06);
     --line: rgba(255,255,255,0.14);
     --text: rgba(246,248,255,0.96);
-    --muted: rgba(246,248,255,0.66);
+    --muted: rgba(246,248,255,0.68);
     --soft: rgba(246,248,255,0.48);
     --orange: #ffb46a;
     --blue: #62d6ff;
     --green: #9cffc7;
-    --pink: #ff7ad9;
-    --purple: #b79cff;
-    --danger: #ff6969;
+    --red: #ff8f8f;
   }
 
   body {
@@ -32,10 +27,10 @@
     background:
       radial-gradient(circle at 12% 5%, rgba(255,180,106,0.18), transparent 30%),
       radial-gradient(circle at 88% 10%, rgba(98,214,255,0.16), transparent 32%),
-      radial-gradient(circle at 50% 100%, rgba(183,156,255,0.12), transparent 38%),
+      radial-gradient(circle at 50% 100%, rgba(156,255,199,0.10), transparent 38%),
       var(--bg);
     color: var(--text);
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: "Segoe UI", system-ui, sans-serif;
     padding: 0 16px 42px;
   }
 
@@ -45,20 +40,20 @@
   }
 
   .page {
-    max-width: 1280px;
+    max-width: 1240px;
     margin: 0 auto;
   }
 
   .hero {
     text-align: center;
-    margin-bottom: 42px;
+    margin-bottom: 34px;
     padding-top: 18px;
   }
 
   .eyebrow {
     color: var(--orange);
     text-transform: uppercase;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.18em;
     font-size: 12px;
     font-weight: 900;
     margin-bottom: 12px;
@@ -73,16 +68,16 @@
 
   .subtitle {
     margin: 18px auto 0;
-    max-width: 840px;
+    max-width: 900px;
     color: var(--muted);
-    line-height: 1.6;
+    line-height: 1.65;
     font-size: 16px;
   }
 
   .section {
-    margin: 28px 0;
+    margin: 26px 0;
     border: 1px solid var(--line);
-    border-radius: 30px;
+    border-radius: 28px;
     background: rgba(255,255,255,0.045);
     box-shadow: 0 30px 90px rgba(0,0,0,0.28);
     overflow: hidden;
@@ -91,7 +86,7 @@
   .section-head {
     padding: 24px;
     border-bottom: 1px solid var(--line);
-    background: rgba(255,255,255,0.045);
+    background: rgba(255,255,255,0.04);
   }
 
   .section-title {
@@ -103,11 +98,48 @@
 
   .section-desc {
     color: var(--muted);
-    line-height: 1.55;
+    line-height: 1.6;
   }
 
   .content {
     padding: 24px;
+  }
+
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    display: grid;
+    gap: 14px;
+  }
+
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+  .card,
+  .node,
+  .model-box {
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--panel);
+    padding: 18px;
+  }
+
+  .card h3,
+  .model-name {
+    margin: 0 0 8px;
+    font-size: 18px;
+    color: var(--blue);
+    letter-spacing: -0.02em;
+  }
+
+  .card p,
+  .model-lines,
+  .node-desc {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.55;
+    font-size: 14px;
   }
 
   .flow {
@@ -118,27 +150,28 @@
   }
 
   .node {
-    width: min(100%, 920px);
-    border: 1px solid var(--line);
-    border-radius: 22px;
-    padding: 20px;
-    background: var(--panel);
+    width: min(100%, 980px);
     position: relative;
   }
 
   .node.hot {
-    border-color: rgba(255,180,106,0.38);
-    background: linear-gradient(135deg, rgba(255,180,106,0.15), rgba(255,255,255,0.055));
+    border-color: rgba(255,180,106,0.36);
+    background: linear-gradient(135deg, rgba(255,180,106,0.14), rgba(255,255,255,0.05));
   }
 
   .node.blue {
-    border-color: rgba(98,214,255,0.38);
-    background: linear-gradient(135deg, rgba(98,214,255,0.14), rgba(255,255,255,0.055));
+    border-color: rgba(98,214,255,0.36);
+    background: linear-gradient(135deg, rgba(98,214,255,0.12), rgba(255,255,255,0.05));
   }
 
   .node.green {
-    border-color: rgba(156,255,199,0.35);
-    background: linear-gradient(135deg, rgba(156,255,199,0.10), rgba(255,255,255,0.055));
+    border-color: rgba(156,255,199,0.32);
+    background: linear-gradient(135deg, rgba(156,255,199,0.10), rgba(255,255,255,0.05));
+  }
+
+  .node.red {
+    border-color: rgba(255,143,143,0.34);
+    background: linear-gradient(135deg, rgba(255,143,143,0.10), rgba(255,255,255,0.05));
   }
 
   .tag {
@@ -164,54 +197,10 @@
     margin-bottom: 7px;
   }
 
-  .node-desc {
-    color: var(--muted);
-    line-height: 1.55;
-  }
-
   .arrow {
     color: rgba(255,255,255,0.42);
     font-size: 28px;
     line-height: 1;
-  }
-
-  .grid-2 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
-  }
-
-  .grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-
-  .grid-4 {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-  }
-
-  .card {
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    background: var(--panel);
-    padding: 18px;
-  }
-
-  .card h3 {
-    margin: 0 0 9px;
-    font-size: 18px;
-    color: var(--blue);
-    letter-spacing: -0.025em;
-  }
-
-  .card p {
-    margin: 0;
-    color: var(--muted);
-    line-height: 1.5;
-    font-size: 14px;
   }
 
   .pill {
@@ -224,6 +213,15 @@
     font-size: 14px;
   }
 
+  .mini-label {
+    color: var(--soft);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
   pre {
     margin: 12px 0 0;
     padding: 16px;
@@ -234,83 +232,32 @@
     color: rgba(245,247,255,0.9);
     font-size: 13px;
     line-height: 1.45;
+    white-space: pre-wrap;
   }
 
-  code {
-    color: var(--orange);
-  }
-
-  .split-flow {
+  .list {
     display: grid;
-    grid-template-columns: 1fr 44px 1fr;
-    gap: 12px;
-    align-items: center;
+    gap: 10px;
   }
 
-  .middle-arrow {
-    text-align: center;
-    color: rgba(255,255,255,0.42);
-    font-size: 28px;
-  }
-
-  .model-box {
-    border: 1px solid rgba(98,214,255,0.28);
-    border-radius: 18px;
-    padding: 16px;
-    background: rgba(98,214,255,0.07);
-  }
-
-  .model-name {
-    color: var(--blue);
-    font-weight: 900;
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
-  }
-
-  .model-lines {
+  .list-item {
+    padding: 12px 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.04);
     color: var(--muted);
-    line-height: 1.55;
-    font-size: 14px;
-  }
-
-  .mini-label {
-    color: var(--soft);
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .warning {
-    border-color: rgba(255,105,105,0.36);
-    background: rgba(255,105,105,0.08);
-  }
-
-  .success {
-    border-color: rgba(156,255,199,0.35);
-    background: rgba(156,255,199,0.08);
+    line-height: 1.5;
   }
 
   @media (max-width: 900px) {
     .grid-2,
     .grid-3,
-    .grid-4,
-    .split-flow {
+    .grid-4 {
       grid-template-columns: 1fr;
     }
 
-    .middle-arrow {
-      transform: rotate(90deg);
-    }
-
-    body {
-      padding: 0 12px 28px;
-    }
-
-    site-navbar {
-      margin: 0 -12px 28px;
-    }
+    body { padding: 0 12px 28px; }
+    site-navbar { margin: 0 -12px 28px; }
   }
 </style>
 </head>
@@ -318,45 +265,172 @@
 <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
 
 <main class="page">
-
   <header class="hero">
     <div class="eyebrow">About the Meatball AI</div>
-    <h1>A small browser AI made from fragments</h1>
+    <h1>The current staged runtime</h1>
     <p class="subtitle">
-      The Meatball does not need a huge live AI model running on a server. Instead, it uses small browser-friendly models
-      to understand the question, pick the right topic, choose useful answer fragments, and stitch them together.
+      Meatball is not one generator answering everything. The page runs a sequence of small models in the browser, keeps short conversational memory,
+      rewrites followups when needed, routes math away from the normal generator, applies answer overrides, and drives the emotion renderer separately
+      from the QA system.
     </p>
   </header>
 
   <section class="section">
     <div class="section-head">
-      <div class="section-title">The Simple Idea</div>
+      <div class="section-title">Current Message Pipeline</div>
       <div class="section-desc">
-        The Meatball is not trying to invent every answer from scratch. It chooses from prepared pieces of knowledge.
+        This is the architecture the page is actually using right now, including runtime fallbacks and post-processing.
       </div>
     </div>
-
     <div class="content">
-      <div class="grid-3">
-        <div class="card">
-          <h3>1. Understand the question</h3>
-          <p>
-            It figures out what the user is asking about, especially when the question is vague or depends on the previous message.
-          </p>
+      <div class="flow">
+        <div class="node hot">
+          <div class="tag">Input</div>
+          <div class="node-title">Raw user message enters the runtime</div>
+          <div class="node-desc">
+            Example: <code>what is the glich</code>, <code>what is it</code>, <code>what is 1+1</code>, <code>cats vs dogs</code>.
+          </div>
         </div>
 
-        <div class="card">
-          <h3>2. Pick the right topic</h3>
-          <p>
-            It sends the question to the correct small model, like Unlim8ted projects, products, science, movies, or fallback.
-          </p>
+        <div class="arrow">↓</div>
+
+        <div class="grid-4" style="width:min(100%,1120px);">
+          <div class="card">
+            <h3>Reaction classifier</h3>
+            <p>Predicts Meatball's response state: neutral, excited, confused, suspicious, angry, sad, or overwhelmed.</p>
+          </div>
+          <div class="card">
+            <h3>Complexity classifier</h3>
+            <p>Predicts route shape: normal_qa, list, compare, multi_part, followup, smalltalk, unknown.</p>
+          </div>
+          <div class="card">
+            <h3>Math classifier</h3>
+            <p>Predicts general vs math. The runtime also has a heuristic backup for obvious arithmetic.</p>
+          </div>
+          <div class="card">
+            <h3>Subject finder</h3>
+            <p>Extracts the current subject span from the current message only, not the whole conversation blob.</p>
+          </div>
         </div>
 
-        <div class="card">
-          <h3>3. Build the answer</h3>
-          <p>
-            It selects useful text fragments, joins them in order, and cleans up the final response.
-          </p>
+        <div class="arrow">↓</div>
+
+        <div class="grid-2" style="width:min(100%,1120px);">
+          <div class="card">
+            <h3>Subject inserter</h3>
+            <p>
+              Sees the raw question, current subject, complexity label, previous subject, and last answer. It decides whether to keep the input
+              or rewrite it using the remembered subject.
+            </p>
+            <pre>question: does it have clothes
+previous subject: The Glitch
+
+rewritten:
+does The Glitch have clothes</pre>
+          </div>
+          <div class="card">
+            <h3>Runtime memory</h3>
+            <p>
+              The page keeps short JS memory:
+              history, recent subjects, lastAnswer, previousReaction, angryStreak, and sauceAttackCooldown.
+            </p>
+            <pre>{
+  history: last 8 messages,
+  subjects: last 5 non-NONE subjects,
+  lastAnswer: "...",
+  previousReaction: "neutral",
+  angryStreak: 0,
+  sauceAttackCooldown: 0
+}</pre>
+          </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="node blue">
+          <div class="tag">Router</div>
+          <div class="node-title">Route logic decides what actually answers</div>
+          <div class="node-desc">
+            The generator is only one possible branch. Smalltalk overrides, compare handling, math routing, followup explanation,
+            multi-part splitting, angry escalation, and answer fallbacks all happen in runtime logic.
+          </div>
+          <div class="grid-4" style="margin-top:16px;">
+            <div class="pill">anger attack</div>
+            <div class="pill">math</div>
+            <div class="pill">compare</div>
+            <div class="pill">smalltalk</div>
+            <div class="pill">followup explain</div>
+            <div class="pill">multi_part</div>
+            <div class="pill">list</div>
+            <div class="pill">normal_qa</div>
+          </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="grid-3" style="width:min(100%,1120px);">
+          <div class="model-box">
+            <div class="mini-label">Answer branch</div>
+            <div class="model-name">Neutral generator</div>
+            <div class="model-lines">
+              The normal generator answers rewritten questions, list prompts, followups, multi-part splits, and many smalltalk-style replies.
+            </div>
+          </div>
+          <div class="model-box">
+            <div class="mini-label">Answer branch</div>
+            <div class="model-name">Math system</div>
+            <div class="model-lines">
+              Obvious arithmetic can be handled directly with safe evaluation. Otherwise the ONNX math translator is used and then safely evaluated.
+            </div>
+          </div>
+          <div class="model-box">
+            <div class="mini-label">Answer branch</div>
+            <div class="model-name">Compare handler</div>
+            <div class="model-lines">
+              Compare prompts can parse two subjects and currently answer by generating a short description for each side and appending both.
+            </div>
+          </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="node green">
+          <div class="tag">Post-processing</div>
+          <div class="node-title">The raw answer gets cleaned and overridden</div>
+          <div class="node-desc">
+            Punctuation cleanup, capitalization fixes, line-preserving list formatting, and hard response overrides all happen after routing.
+          </div>
+          <pre>examples:
+The Meatball chooses to interpret that as
+→ The Meatball chooses to interpret that as completely true.
+
+I'm not
+→ I'm not quite sure what you mean. It might just be the sauce getting tangled up in itself.
+
+Thank you. The sauce accepts the compliment.
+→ force excited animation</pre>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="node red">
+          <div class="tag">Animation</div>
+          <div class="node-title">Emotion and animation are separate from QA</div>
+          <div class="node-desc">
+            The reaction model controls the renderer state. Angry escalation can trigger a dedicated cutscene path.
+            Error paths can trigger the glitch animation. The text answer does not directly decide the route.
+          </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <div class="node hot">
+          <div class="tag">UI output</div>
+          <div class="node-title">Final answer + final emotion + updated memory</div>
+          <div class="node-desc">
+            After the response is shown, the page stores the last answer, remembers any detected subject, updates angry cooldown logic,
+            and keeps only a short sliding window of history.
+          </div>
         </div>
       </div>
     </div>
@@ -364,104 +438,54 @@
 
   <section class="section">
     <div class="section-head">
-      <div class="section-title">How a Message Moves Through the System</div>
+      <div class="section-title">Current Special Behaviors</div>
       <div class="section-desc">
-        History is used only to clarify the question. The answer system receives a clean standalone question.
+        These are runtime rules that exist in addition to the learned models.
       </div>
     </div>
-
     <div class="content">
-      <div class="flow">
+      <div class="list">
+        <div class="list-item"><strong>Math fallback:</strong> obvious expressions like <code>what is 1+1</code> can route to math even if the classifier misses.</div>
+        <div class="list-item"><strong>List behavior:</strong> list/facts/examples/features requests reshape the question before generation, then render each sentence as bullets.</div>
+        <div class="list-item"><strong>Compare behavior:</strong> if two subjects are parsed, the runtime asks <code>what is X</code> and <code>what is Y</code> and appends both outputs.</div>
+        <div class="list-item"><strong>Followup rewrite:</strong> pronoun followups like <code>what is it</code> or <code>does it have clothes</code> can be rewritten using the previous subject.</div>
+        <div class="list-item"><strong>Micro overrides:</strong> <code>ok</code> and <code>okay</code> reply with <code>Yep.</code> and <code>yep</code> replies with <code>Yes.</code></div>
+        <div class="list-item"><strong>Angry escalation:</strong> repeated angry reactions can bypass normal QA and trigger the sauce attack cutscene with cooldown protection.</div>
+      </div>
+    </div>
+  </section>
 
-        <div class="node hot">
-          <div class="tag">User says</div>
-          <div class="node-title">â€œdoes the company have clothes?â€</div>
-          <div class="node-desc">
-            This is vague because â€œthe companyâ€ depends on what the user was just talking about.
-          </div>
+  <section class="section">
+    <div class="section-head">
+      <div class="section-title">Planned Next Stages</div>
+      <div class="section-desc">
+        These are the next model stages being prepared alongside the current runtime.
+      </div>
+    </div>
+    <div class="content">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Input text corrector</h3>
+          <p>
+            A denoising model can learn to turn misspelled or noisy questions into cleaner inputs before subject finding and routing.
+          </p>
+          <pre>what is the glich
+→ what is The Glitch?</pre>
         </div>
+        <div class="card">
+          <h3>Output sanity checker</h3>
+          <p>
+            A final classifier can decide whether the generated answer looks acceptable or should be replaced with a confusion fallback.
+          </p>
+          <pre>bad:
+I'm not
 
-        <div class="arrow">â†“</div>
-
-        <div class="grid-3" style="width: min(100%, 1100px);">
-          <div class="card">
-            <h3>Find the subject</h3>
-            <p>
-              The system looks at the recent conversation and sees that â€œthe companyâ€ means Unlim8ted.
-            </p>
-            <pre>subject found:
-"Unlim8ted"</pre>
-          </div>
-
-          <div class="card">
-            <h3>Rewrite the question</h3>
-            <p>
-              The system replaces the vague phrase with the real subject.
-            </p>
-            <pre>before:
-does the company have clothes?
-
-after:
-does Unlim8ted have clothes?</pre>
-          </div>
-
-          <div class="card">
-            <h3>Use the clean question</h3>
-            <p>
-              The answer model does not need the full chat history anymore.
-            </p>
-            <pre>standalone question:
-does Unlim8ted have clothes?</pre>
-          </div>
+fallback:
+I'm not quite sure what you mean...</pre>
         </div>
-
-        <div class="arrow">â†“</div>
-
-        <div class="node blue">
-          <div class="tag">Router</div>
-          <div class="node-title">Send it to the right mini-model</div>
-          <div class="node-desc">
-            The router chooses the best category so random facts do not compete with the correct answer.
-          </div>
-
-          <div class="grid-4" style="margin-top: 16px;">
-            <div class="pill">Unlim8ted</div>
-            <div class="pill">Products</div>
-            <div class="pill">Movies</div>
-            <div class="pill">Games</div>
-            <div class="pill">AI</div>
-            <div class="pill">Science</div>
-            <div class="pill">Objects</div>
-            <div class="pill">Fallback</div>
-          </div>
-        </div>
-
-        <div class="arrow">â†“</div>
-
-        <div class="node green">
-          <div class="tag">Answer Model</div>
-          <div class="node-title">Choose answer fragments</div>
-          <div class="node-desc">
-            The chosen mini-model predicts an ordered list of chunks, like â€œUnlim8ted,â€ â€œmay have,â€ â€œclothing,â€ and â€œif listed.â€
-          </div>
-          <pre>chosen chunks:
-["Unlim8ted", "may have", "clothing", "if those products are listed", "."]</pre>
-        </div>
-
-        <div class="arrow">â†“</div>
-
-        <div class="node hot">
-          <div class="tag">Final answer</div>
-          <div class="node-title">â€œUnlim8ted may have clothing if those products are listed.â€</div>
-          <div class="node-desc">
-            The sauce is on, but the answer is still built from controlled pieces.
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
 </main>
 </body>
 </html>
-

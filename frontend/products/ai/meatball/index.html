@@ -312,6 +312,72 @@
       line-height: 1.35;
     }
 
+    .loadingPanel {
+      display: grid;
+      gap: 8px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .chatLoadingPanel {
+      width: min(100%, 420px);
+      align-self: flex-start;
+      border-color: rgba(255, 180, 106, 0.18);
+      background: rgba(255, 180, 106, 0.08);
+      max-height: none;
+      overflow: visible;
+      white-space: normal;
+    }
+
+    .chatLoadingPanel .modelLabel,
+    .chatLoadingPanel .modelMeta {
+      white-space: normal;
+    }
+
+    .loadingBar {
+      position: relative;
+      width: 100%;
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+        rgba(7, 13, 20, 0.78);
+    }
+
+    .loadingBar[hidden] {
+      display: none;
+    }
+
+    .loadingBarFill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background:
+        linear-gradient(90deg, rgba(255, 180, 106, 0.86), rgba(98, 214, 255, 0.94) 55%, rgba(255, 240, 207, 0.95));
+      box-shadow:
+        0 0 18px rgba(98, 214, 255, 0.24),
+        0 0 28px rgba(255, 180, 106, 0.18);
+      transition: width 180ms ease;
+    }
+
+    .loadingBar.is-indeterminate .loadingBarFill {
+      width: 42%;
+      animation: loadingSweep 1.05s cubic-bezier(.55, .08, .31, .96) infinite;
+    }
+
+    @keyframes loadingSweep {
+      0% {
+        transform: translateX(-115%);
+      }
+      100% {
+        transform: translateX(255%);
+      }
+    }
+
     .modelSelect {
       width: 100%;
       border-radius: 14px;
@@ -395,32 +461,42 @@
         --nav-space: 74px;
       }
 
+      html,
+      body {
+        height: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
       .page {
-        height: 100dvh;
-        max-height: 100dvh;
+        height: auto;
+        min-height: 100dvh;
+        max-height: none;
         display: grid;
         padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-        overflow: hidden;
+        overflow: visible;
       }
 
       .hero {
-        height: 100%;
+        height: auto;
         min-height: 0;
-        max-height: 100%;
+        max-height: none;
         grid-template-columns: 1fr;
-        grid-template-rows: minmax(0, 1fr) clamp(132px, 24dvh, 190px);
+        grid-template-rows: auto auto;
         gap: 12px;
         align-items: stretch;
-        overflow: hidden;
+        overflow: visible;
         transform: none;
       }
 
       .intro {
-        height: 100%;
+        height: auto;
+        min-height: 0;
       }
 
       .meatballStage {
-        height: 100%;
+        height: auto;
         padding: 10px;
       }
 
@@ -622,6 +698,14 @@
       overflow: hidden;
     }
 
+    @media (max-width: 860px) {
+      .intro,
+      .chatShell {
+        max-height: none;
+        overflow: visible;
+      }
+    }
+
     .chatLog {
       overflow-y: auto;
     }
@@ -658,6 +742,13 @@
         <div class="chatShell">
           <div id="chatLog" class="chatLog" aria-label="Conversation log">
             <div class="msg bot">Loading Meatball.</div>
+            <div id="loadingPanel" class="msg bot loadingPanel chatLoadingPanel" aria-live="polite" hidden>
+              <p class="modelLabel">Runtime status</p>
+              <p id="modelMeta" class="modelMeta">Models stay asleep until you talk to Meatball.</p>
+              <div id="loadingBar" class="loadingBar" hidden aria-hidden="true">
+                <div id="loadingBarFill" class="loadingBarFill"></div>
+              </div>
+            </div>
           </div>
 
           <form id="chatForm" class="composer" aria-label="Meatball chat composer">
