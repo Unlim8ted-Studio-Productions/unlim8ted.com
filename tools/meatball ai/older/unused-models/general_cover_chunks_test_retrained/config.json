@@ -1,0 +1,28 @@
+{
+  "model_type": "general_cover_chunk_retrained_reuse_vocab",
+  "topic": "general",
+  "input_type": "bag_of_words_ngrams",
+  "input_ngrams": [
+    1,
+    2,
+    3
+  ],
+  "max_output_chunks": 24,
+  "chunk_strategy": "reuse_previous_output_chunks",
+  "max_chunk_words": 8,
+  "min_chunk_occurrences": 2,
+  "min_chunk_gain": 4,
+  "prompt_size": 128,
+  "hidden_size": 192,
+  "embed_size": 128,
+  "dropout": 0.35,
+  "model_onnx_path": "model.onnx",
+  "model_pt_path": "model.pt",
+  "input_vocab_path": "input_vocab.json",
+  "output_chunks_path": "output_chunks.json",
+  "reused_from": "assets\\models\\general_cover_chunks_test",
+  "rebuilt_vocab": false,
+  "loaded_previous_weights": false,
+  "best_val_loss": 1.1184053471613309,
+  "best_epoch": 27
+}

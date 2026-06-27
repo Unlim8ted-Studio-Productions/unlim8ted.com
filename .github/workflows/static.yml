@@ -328,6 +328,31 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Copy 404 page into published subdirectories
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          OUT_DIR="${{ env.FRONTEND_DIR }}"
+          SOURCE_404="${OUT_DIR}/404.html"
+
+          if [ ! -f "$SOURCE_404" ]; then
+            echo "404 page not found: $SOURCE_404" >&2
+            exit 1
+          fi
+
+          find "$OUT_DIR" -type f -name "index.html" -print0 | while IFS= read -r -d '' index_file; do
+            target_dir="$(dirname "$index_file")"
+            target_404="${target_dir}/404.html"
+
+            if [ "$target_404" = "$SOURCE_404" ]; then
+              continue
+            fi
+
+            cp "$SOURCE_404" "$target_404"
+            echo "Copied 404.html to $target_dir"
+          done
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

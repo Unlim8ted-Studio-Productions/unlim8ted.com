@@ -1,40 +1,45 @@
-const ASSET_BASE = "https://assets.unlim8ted.com";
+const assets = "https://assets.unlim8ted.com";
 
 const MODEL_PATHS = {
-  reactionModel: `${ASSET_BASE}/models/meatball_reaction_model/reaction_model.onnx`,
-  reactionVocab: `${ASSET_BASE}/models/meatball_reaction_model/input_vocab.json`,
-  reactionLabels: `${ASSET_BASE}/models/meatball_reaction_model/labels.json`,
+  reactionModel: `${assets}/models/meatball_reaction_model/reaction_model.onnx`,
+  reactionVocab: `${assets}/models/meatball_reaction_model/input_vocab.json`,
+  reactionLabels: `${assets}/models/meatball_reaction_model/labels.json`,
 
-  complexityModel: `${ASSET_BASE}/models/complexity_classifier/complexity_classifier.onnx`,
-  complexityVocab: `${ASSET_BASE}/models/complexity_classifier/input_vocab.json`,
-  complexityLabels: `${ASSET_BASE}/models/complexity_classifier/labels.json`,
+  complexityModel: `${assets}/models/complexity_classifier/complexity_classifier.onnx`,
+  complexityVocab: `${assets}/models/complexity_classifier/input_vocab.json`,
+  complexityLabels: `${assets}/models/complexity_classifier/labels.json`,
 
-  mathClassifierModel: `${ASSET_BASE}/models/math_classifier/math_classifier.onnx`,
-  mathClassifierVocab: `${ASSET_BASE}/models/math_classifier/input_vocab.json`,
-  mathClassifierLabels: `${ASSET_BASE}/models/math_classifier/labels.json`,
+  mathClassifierModel: `${assets}/models/math_classifier/math_classifier.onnx`,
+  mathClassifierVocab: `${assets}/models/math_classifier/input_vocab.json`,
+  mathClassifierLabels: `${assets}/models/math_classifier/labels.json`,
 
-  subjectFinderModel: `${ASSET_BASE}/models/subject_finder/subject_finder.onnx`,
-  subjectFinderConfig: `${ASSET_BASE}/models/subject_finder/config.json`,
-  subjectFinderVocab: `${ASSET_BASE}/models/subject_finder/vocab.json`,
+  subjectFinderModel: `${assets}/models/subject_finder/subject_finder.onnx`,
+  subjectFinderConfig: `${assets}/models/subject_finder/config.json`,
+  subjectFinderVocab: `${assets}/models/subject_finder/vocab.json`,
 
-  subjectInserterModel: `${ASSET_BASE}/models/subject_inserter/subject_inserter.onnx`,
-  subjectInserterConfig: `${ASSET_BASE}/models/subject_inserter/config.json`,
-  subjectInserterVocab: `${ASSET_BASE}/models/subject_inserter/vocab.json`,
-  subjectInserterLabels: `${ASSET_BASE}/models/subject_inserter/labels.json`,
+  subjectInserterModel: `${assets}/models/subject_inserter/subject_inserter.onnx`,
+  subjectInserterConfig: `${assets}/models/subject_inserter/config.json`,
+  subjectInserterVocab: `${assets}/models/subject_inserter/vocab.json`,
+  subjectInserterLabels: `${assets}/models/subject_inserter/labels.json`,
 
-  generatorModel: `${ASSET_BASE}/models/general_cover_chunks_noisy_continue/model.onnx`,
-  generatorConfig: `${ASSET_BASE}/models/general_cover_chunks_noisy_continue/config.json`,
-  generatorInputVocab: `${ASSET_BASE}/models/general_cover_chunks_noisy_continue/input_vocab.json`,
-  generatorOutputChunks: `${ASSET_BASE}/models/general_cover_chunks_noisy_continue/output_chunks.json`,
+  generatorModel: `${assets}/models/general_cover_chunks_noisy_continue/model.onnx`,
+  generatorConfig: `${assets}/models/general_cover_chunks_noisy_continue/config.json`,
+  generatorInputVocab: `${assets}/models/general_cover_chunks_noisy_continue/input_vocab.json`,
+  generatorOutputChunks: `${assets}/models/general_cover_chunks_noisy_continue/output_chunks.json`,
 
-  mathTranslatorModel: `${ASSET_BASE}/models/math_equation_translator/math_equation_translator_final.onnx`,
-  mathTranslatorInputVocab: `${ASSET_BASE}/models/math_equation_translator/input_vocab.json`,
-  mathTranslatorOutputVocab: `${ASSET_BASE}/models/math_equation_translator/output_vocab.json`,
+  mathTranslatorModel: `${assets}/models/math_equation_translator/math_equation_translator_final.onnx`,
+  mathTranslatorInputVocab: `${assets}/models/math_equation_translator/input_vocab.json`,
+  mathTranslatorOutputVocab: `${assets}/models/math_equation_translator/output_vocab.json`,
 
-  outputSanityModel: `${ASSET_BASE}/models/output_sanity_checker/output_sanity_checker.onnx`,
-  outputSanityVocab: `${ASSET_BASE}/models/output_sanity_checker/input_vocab.json`,
-  outputSanityLabels: `${ASSET_BASE}/models/output_sanity_checker/labels.json`,
-  outputSanityConfig: `${ASSET_BASE}/models/output_sanity_checker/config.json`
+  inputCorrectorModel: `${assets}/models/input_text_corrector/input_text_corrector.onnx`,
+  inputCorrectorInputVocab: `${assets}/models/input_text_corrector/input_vocab.json`,
+  inputCorrectorOutputVocab: `${assets}/models/input_text_corrector/output_vocab.json`,
+  inputCorrectorConfig: `${assets}/models/input_text_corrector/config.json`,
+
+  outputSanityModel: `${assets}/models/output_sanity_checker/output_sanity_checker.onnx`,
+  outputSanityVocab: `${assets}/models/output_sanity_checker/input_vocab.json`,
+  outputSanityLabels: `${assets}/models/output_sanity_checker/labels.json`,
+  outputSanityConfig: `${assets}/models/output_sanity_checker/config.json`
 };
 
 const DEBUG_ENABLED = new URLSearchParams(location.search).has("debug");
@@ -541,7 +546,8 @@ function restoreEntityCasing(text) {
     ["timecat", "TimeCat"],
     ["time cat", "TimeCat"],
     ["meatball ai", "Meatball AI"],
-    ["unlim8ted", "Unlim8ted"]
+    ["unlim8ted", "Unlim8ted"],
+    ["seinfeld", "Seinfeld"]
   ];
   for (const [from, to] of replacements) {
     out = out.replace(new RegExp(`\\b${from.replace(/\s+/g, "\\s+")}\\b`, "gi"), to);
@@ -549,35 +555,81 @@ function restoreEntityCasing(text) {
   return out;
 }
 
-function runInputCorrection(text) {
-  let out = String(text || "").trim();
-  if (!out) return out;
+function encodeCorrectorInput(text, vocab, maxLen) {
+  const ids = new BigInt64Array(maxLen);
+  let cursor = 0;
+  ids[cursor] = BigInt(typeof vocab["<bos>"] === "number" ? vocab["<bos>"] : BOS_ID);
+  cursor += 1;
+  for (const ch of String(text || "").slice(0, Math.max(0, maxLen - 2))) {
+    if (cursor >= maxLen - 1) break;
+    const id = typeof vocab[ch] === "number" ? vocab[ch] : (vocab["<unk>"] ?? UNK_ID);
+    ids[cursor] = BigInt(id);
+    cursor += 1;
+  }
+  if (cursor < maxLen) ids[cursor] = BigInt(typeof vocab["<eos>"] === "number" ? vocab["<eos>"] : EOS_ID);
+  return ids;
+}
 
-  const fixes = [
-    [/\bteh\b/gi, "the"],
-    [/\bwaht\b/gi, "what"],
-    [/\bwich\b/gi, "which"],
-    [/\bglich\b/gi, "glitch"],
-    [/\bgltich\b/gi, "glitch"],
-    [/\bglotch\b/gi, "glitch"],
-    [/\bmeetball\b/gi, "meatball"],
-    [/\bmeatbal\b/gi, "meatball"],
-    [/\btime cat\b/gi, "TimeCat"],
-    [/\bunlimited\b/gi, "Unlim8ted"]
-  ];
+function decodeCorrectorOutput(logits, dims, idToToken, eosId) {
+  if (!logits || !dims?.length) return "";
+  const stepCount = dims.length >= 3 ? dims[1] : dims[0];
+  const vocabSize = dims.length >= 3 ? dims[2] : dims[1];
+  const out = [];
+  for (let step = 0; step < stepCount; step += 1) {
+    let bestId = 0;
+    let bestLogit = -Infinity;
+    for (let token = 0; token < vocabSize; token += 1) {
+      const value = logits[(step * vocabSize) + token];
+      if (value > bestLogit) {
+        bestLogit = value;
+        bestId = token;
+      }
+    }
+    if (bestId === eosId) break;
+    if ([PAD_ID, BOS_ID, UNK_ID].includes(bestId)) continue;
+    out.push(idToToken[bestId] || "");
+  }
+  return out.join("");
+}
 
-  for (const [pattern, replacement] of fixes) {
-    out = out.replace(pattern, replacement);
+async function runInputCorrection(text, runtime) {
+  const raw = String(text || "").trim();
+  if (!raw) {
+    return {
+      text: "",
+      changed: false,
+      source: "empty"
+    };
   }
 
-  out = restoreEntityCasing(out);
-  out = out.replace(/\s+/g, " ").trim();
-
-  if (/^(what|who|where|when|why|how|does|do|did|is|are|can)\b/i.test(out) && !/[?.!]$/.test(out)) {
-    out += "?";
+  if (!runtime) {
+    const passthrough = restoreEntityCasing(raw).replace(/\s+/g, " ").trim();
+    return {
+      text: passthrough,
+      changed: passthrough !== raw,
+      source: "disabled"
+    };
   }
 
-  return out;
+  const maxLen = Number(runtime.config?.max_len || 96);
+  const inputName = runtime.session.inputNames?.[0] || "input_ids";
+  const feeds = {
+    [inputName]: new ort.Tensor("int64", encodeCorrectorInput(raw, runtime.inputVocab, maxLen), [1, maxLen])
+  };
+  const outputs = await runtime.session.run(feeds);
+  const outputName = runtime.session.outputNames?.[0] || Object.keys(outputs)[0];
+  const decoded = decodeCorrectorOutput(
+    outputs[outputName]?.data,
+    outputs[outputName]?.dims,
+    runtime.idToToken,
+    runtime.eosId
+  );
+  const corrected = restoreEntityCasing(String(decoded || raw).replace(/\s+/g, " ").trim());
+  return {
+    text: corrected || raw,
+    changed: (corrected || raw) !== raw,
+    source: "model"
+  };
 }
 
 async function loadOptionalGenericClassifier(modelUrl, vocabUrl, labelsUrl, configUrl) {
@@ -589,7 +641,42 @@ async function loadOptionalGenericClassifier(modelUrl, vocabUrl, labelsUrl, conf
   }
 }
 
-async function runOutputSanityCheck(answer, runtime) {
+function vectorizeQaAlignment(question, answer, vocab, charNgrams = [2, 3, 4, 5], wordNgrams = [1, 2, 3]) {
+  const questionText = normalize(String(question || ""));
+  const answerText = normalize(String(answer || ""));
+  const merged = `question: ${questionText} answer: ${answerText}`;
+  const features = [];
+  const wrapped = `<${merged}>`;
+
+  for (const n of charNgrams) {
+    for (let i = 0; i <= wrapped.length - n; i += 1) {
+      features.push(`c:${wrapped.slice(i, i + n)}`);
+    }
+  }
+
+  const words = merged.split(/\s+/).filter(Boolean);
+  for (const n of wordNgrams) {
+    for (let i = 0; i <= words.length - n; i += 1) {
+      features.push(`w:${words.slice(i, i + n).join("_")}`);
+    }
+  }
+
+  const questionWords = new Set((questionText.match(/[a-z0-9']+/g) || []).filter(word => !["what", "is", "the", "a", "an", "tell", "me", "about"].includes(word)));
+  const answerWords = new Set(answerText.match(/[a-z0-9']+/g) || []);
+  const overlap = Array.from(questionWords).filter(word => answerWords.has(word)).length;
+  if (overlap === 0) features.push("flag:no_overlap");
+  if (overlap >= 2) features.push("flag:good_overlap");
+  if (answerText.split(/\s+/).filter(Boolean).length <= 3) features.push("flag:short_answer");
+  if (/^(yes|yeah|yep|no|nope)\.?$/.test(answerText)) features.push("flag:bare_yes_no");
+  if (/\b(speed of light|quantum|nebula|planet|seinfeld)\b/.test(answerText) && !/\b(speed of light|quantum|nebula|planet|seinfeld)\b/.test(questionText)) {
+    features.push("flag:topic_drift");
+  }
+  if (/^(i don't know|im not|i'm not)\b/.test(answerText)) features.push("flag:weak_fallback");
+
+  return vectorFromFeatureVocab(vocab, features);
+}
+
+async function runOutputSanityCheck(question, answer, runtime) {
   const text = String(answer || "").trim();
   const normalized = normalizeNoPunc(text);
 
@@ -623,7 +710,22 @@ async function runOutputSanityCheck(answer, runtime) {
     };
   }
 
-  const prediction = await runGenericClassifier(text, runtime);
+  const config = runtime.config || {};
+  const charNgrams = Array.isArray(config.char_ngrams) ? config.char_ngrams : [2, 3, 4, 5];
+  const wordNgrams = Array.isArray(config.word_ngrams) ? config.word_ngrams : [1, 2, 3];
+  const vec = vectorizeQaAlignment(question, text, runtime.vocab, charNgrams, wordNgrams);
+  const inputName = runtime.session.inputNames?.[0] || "input";
+  const outputs = await runtime.session.run({ [inputName]: new ort.Tensor("float32", vec, [1, vec.length]) });
+  const outputName = runtime.session.outputNames?.[0] || Object.keys(outputs)[0];
+  const logits = Array.from(outputs[outputName].data || []);
+  const probs = softmax(logits);
+  const idx = probs.indexOf(Math.max(...probs));
+  const prediction = {
+    label: runtime.labels[idx],
+    confidence: probs[idx] || 0,
+    probs: Object.fromEntries(runtime.labels.map((label, labelIdx) => [label, probs[labelIdx] || 0]))
+  };
+
   if (prediction.label === "confused_fallback" && prediction.confidence >= 0.72) {
     return {
       ...prediction,
@@ -780,6 +882,10 @@ function applyAnswerOverrides(answer, reaction, animation, sanity) {
   if (nextAnswer === "Thank you. The sauce accepts the compliment.") {
     nextReaction = "excited";
     nextAnimation = "excited";
+  }
+
+  if (/with a tiny neural$/i.test(nextAnswer)) {
+    nextAnswer = `${nextAnswer} sauce brain.`;
   }
 
   return {
@@ -974,6 +1080,30 @@ async function loadGenericClassifier(modelUrl, vocabUrl, labelsUrl, configUrl) {
   return { session, vocab, labels, config };
 }
 
+async function loadOptionalInputCorrector() {
+  try {
+    const [session, inputVocab, outputVocab, config] = await Promise.all([
+      createSession(MODEL_PATHS.inputCorrectorModel),
+      fetchJson(MODEL_PATHS.inputCorrectorInputVocab),
+      fetchJson(MODEL_PATHS.inputCorrectorOutputVocab),
+      fetchJson(MODEL_PATHS.inputCorrectorConfig)
+    ]);
+    const idToToken = {};
+    for (const [token, id] of Object.entries(outputVocab || {})) idToToken[Number(id)] = token;
+    return {
+      session,
+      inputVocab,
+      outputVocab,
+      idToToken,
+      eosId: typeof outputVocab?.["<eos>"] === "number" ? outputVocab["<eos>"] : EOS_ID,
+      config
+    };
+  } catch (error) {
+    console.warn("Optional Meatball model unavailable:", MODEL_PATHS.inputCorrectorModel, error);
+    return null;
+  }
+}
+
 async function loadModels() {
   if (models) return models;
   if (modelsLoadingPromise) return modelsLoadingPromise;
@@ -984,7 +1114,7 @@ async function loadModels() {
       MODEL_PATHS.reactionModel,
       MODEL_PATHS.reactionVocab,
       MODEL_PATHS.reactionLabels,
-      `${ASSET_BASE}/models/meatball_reaction_model/config.json`
+      `${assets}/models/meatball_reaction_model/config.json`
     );
     setLoadingProgress(0.16, "Reaction model loaded.");
 
@@ -992,7 +1122,7 @@ async function loadModels() {
       MODEL_PATHS.complexityModel,
       MODEL_PATHS.complexityVocab,
       MODEL_PATHS.complexityLabels,
-      `${ASSET_BASE}/models/complexity_classifier/config.json`
+      `${assets}/models/complexity_classifier/config.json`
     );
     setLoadingProgress(0.28, "Complexity classifier loaded.");
 
@@ -1000,16 +1130,19 @@ async function loadModels() {
       MODEL_PATHS.mathClassifierModel,
       MODEL_PATHS.mathClassifierVocab,
       MODEL_PATHS.mathClassifierLabels,
-      `${ASSET_BASE}/models/math_classifier/config.json`
+      `${assets}/models/math_classifier/config.json`
     );
-    setLoadingProgress(0.4, "Math classifier loaded.");
+    setLoadingProgress(0.36, "Math classifier loaded.");
+
+    const inputCorrector = await loadOptionalInputCorrector();
+    setLoadingProgress(0.46, "Input corrector loaded.");
 
     const [subjectFinderConfig, subjectFinderVocab, subjectFinderSession] = await Promise.all([
       fetchJson(MODEL_PATHS.subjectFinderConfig),
       fetchJson(MODEL_PATHS.subjectFinderVocab),
       createSession(MODEL_PATHS.subjectFinderModel)
     ]);
-    setLoadingProgress(0.55, "Subject finder loaded.");
+    setLoadingProgress(0.58, "Subject finder loaded.");
 
     const [subjectInserterConfig, subjectInserterVocab, subjectInserterLabels, subjectInserterSession] = await Promise.all([
       fetchJson(MODEL_PATHS.subjectInserterConfig),
@@ -1017,7 +1150,7 @@ async function loadModels() {
       fetchJson(MODEL_PATHS.subjectInserterLabels),
       createSession(MODEL_PATHS.subjectInserterModel)
     ]);
-    setLoadingProgress(0.7, "Subject inserter loaded.");
+    setLoadingProgress(0.72, "Subject inserter loaded.");
 
     const [generatorConfig, generatorInputVocab, generatorOutputChunks, generatorSession] = await Promise.all([
       fetchJson(MODEL_PATHS.generatorConfig),
@@ -1032,7 +1165,7 @@ async function loadModels() {
       fetchJson(MODEL_PATHS.mathTranslatorOutputVocab),
       createSession(MODEL_PATHS.mathTranslatorModel)
     ]);
-    setLoadingProgress(0.97, "Math system loaded.");
+    setLoadingProgress(0.94, "Math system loaded.");
 
     const outputSanity = await loadOptionalGenericClassifier(
       MODEL_PATHS.outputSanityModel,
@@ -1048,6 +1181,7 @@ async function loadModels() {
       reaction,
       complexity,
       mathClassifier,
+      inputCorrector,
       subjectFinder: {
         session: subjectFinderSession,
         config: subjectFinderConfig,
@@ -1077,7 +1211,7 @@ async function loadModels() {
       },
       outputSanity
     };
-    clearLoadingProgress("Reaction, routing, subject, generator, and math systems are ready.");
+    clearLoadingProgress("Correction, routing, subject, generator, sanity, and math systems are ready.");
     window.setTimeout(() => removeLoadingUi(), 260);
     chatInput.disabled = false;
     sendButton.disabled = false;
@@ -1406,7 +1540,8 @@ async function processUserMessage(rawInput) {
   const loaded = await loadModels();
   setLoadingProgress(0.08, "Reading the plate.");
   if (runtimeMemory.sauceAttackCooldown > 0) runtimeMemory.sauceAttackCooldown -= 1;
-  const correctedInput = runInputCorrection(rawInput);
+  const correction = await runInputCorrection(rawInput, loaded.inputCorrector);
+  const correctedInput = correction.text;
 
   const reaction = await runGenericClassifier(correctedInput, loaded.reaction);
   setLoadingProgress(0.2, "Reading reaction.");
@@ -1444,7 +1579,7 @@ async function processUserMessage(rawInput) {
   const routed = await routeRequest(correctedInput, staged);
   setLoadingProgress(0.92, "Plating the answer.");
   const finalAnswer = postProcessAnswerPreserveLines(routed.answer);
-  const sanity = await runOutputSanityCheck(finalAnswer, loaded.outputSanity);
+  const sanity = await runOutputSanityCheck(correctedInput, finalAnswer, loaded.outputSanity);
   const overridden = applyAnswerOverrides(
     finalAnswer,
     reaction.label,
@@ -1466,6 +1601,7 @@ async function processUserMessage(rawInput) {
     cooldown: runtimeMemory.sauceAttackCooldown,
     debug: {
       rawInput,
+      correction,
       correctedInput,
       reaction,
       complexity,

@@ -1,31 +1,27 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary Meta Tags -->
     <title>Unlim8ted - Products</title>
-    <meta name="title" content="Products - Unlim8ted" />
-    <meta name="description"
-        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more." />
+    <meta name="title" content="Products - Unlim8ted">
+    <meta name="description" content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://unlim8ted.com/products/" />
-    <meta property="og:title" content="Products - Unlim8ted Studio Productions" />
-    <meta property="og:description"
-        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more." />
-    <meta property="og:image" content="https://assets.unlim8ted.com/images/products-meta-image.jpg" />
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://unlim8ted.com/products/">
+    <meta property="og:title" content="Products - Unlim8ted Studio Productions">
+    <meta property="og:description" content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
+    <meta property="og:image" content="https://assets.unlim8ted.com/images/products-meta-image.jpg">
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://unlim8ted.com/products/" />
-    <meta property="twitter:title" content="Products - Unlim8ted Studio Productions" />
-    <meta property="twitter:description"
-        content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more." />
-    <meta property="twitter:image" content="https://assets.unlim8ted.com/images/products-meta-image.jpg" />
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://unlim8ted.com/products/">
+    <meta property="twitter:title" content="Products - Unlim8ted Studio Productions">
+    <meta property="twitter:description" content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
+    <meta property="twitter:image" content="https://assets.unlim8ted.com/images/products-meta-image.jpg">
 
     <!-- Navbar component -->
     <script type="module" src="/components/site-navbar.js"></script>
@@ -38,54 +34,157 @@
         const { auth, db } = getFirebase();
     </script>
 
-    <link rel="stylesheet" href="resources/css/main.css" />
-    <link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-assistant.css" />
+    <link rel="stylesheet" href="resources/css/main.css">
+    <link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-assistant.css">
 
     <!-- Page-specific polish -->
     <style>
         :root {
-            --bg: #0b0f14;
+            --bg: #07090d;
             --panel: rgba(255, 255, 255, 0.06);
-            --panel2: rgba(255, 255, 255, 0.08);
-            --text: rgba(255, 255, 255, 0.92);
-            --muted: rgba(255, 255, 255, 0.72);
-            --border: rgba(255, 255, 255, 0.12);
-            --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-            --radius: 18px;
-            --max: 1100px;
-            --focus: 0 0 0 3px rgba(85, 170, 255, 0.35);
-            --accent: #55aaff;
-            --accent2: #9b7bff;
-            --good: #2dd4bf;
-            --warn: #fbbf24;
+            --panel2: rgba(255, 255, 255, 0.09);
+            --text: rgba(255, 247, 236, 0.95);
+            --muted: rgba(244, 228, 208, 0.72);
+            --border: rgba(255, 242, 227, 0.14);
+            --shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
+            --radius: 24px;
+            --max: 1240px;
+            --focus: 0 0 0 3px rgba(255, 171, 77, 0.34);
+            --accent: #ffb45a;
+            --accent2: #ff6f61;
+            --good: #5de0c4;
+            --warn: #ffd166;
+            --card-bg: linear-gradient(180deg, rgba(255, 248, 240, 0.12), rgba(255, 248, 240, 0.04));
+            --frame: rgba(255, 200, 140, 0.22);
         }
 
         body {
-            background: radial-gradient(1100px 600px at 20% -10%, rgba(85, 170, 255, 0.22), transparent 60%),
-                radial-gradient(900px 500px at 95% 10%, rgba(155, 123, 255, 0.18), transparent 55%),
-                radial-gradient(700px 500px at 30% 120%, rgba(45, 212, 191, 0.14), transparent 55%),
+            background:
+                radial-gradient(900px 420px at 10% -10%, rgba(255, 180, 90, 0.2), transparent 62%),
+                radial-gradient(760px 460px at 92% 8%, rgba(255, 111, 97, 0.16), transparent 56%),
+                radial-gradient(780px 520px at 55% 112%, rgba(93, 224, 196, 0.12), transparent 58%),
+                linear-gradient(180deg, rgba(255, 210, 140, 0.03), transparent 22%),
                 var(--bg);
             color: var(--text);
             margin: 0;
             min-height: 100vh;
+            position: relative;
         }
 
-        /* Keep content below your navbar (custom element) */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+            background-size: 120px 120px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), transparent 88%);
+            pointer-events: none;
+            opacity: 0.38;
+        }
+
+        .backgroundCollage {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.32;
+        }
+
+        .backgroundCollage::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 50% 50%, transparent 0, rgba(7, 9, 13, 0.04) 46%, rgba(7, 9, 13, 0.58) 100%),
+                linear-gradient(180deg, rgba(7, 9, 13, 0.22), rgba(7, 9, 13, 0.64));
+        }
+
+        .collageTrack {
+            position: absolute;
+            left: 0;
+            display: flex;
+            gap: 18px;
+            width: max-content;
+            will-change: transform;
+        }
+
+        .collageTrack.is-hidden {
+            opacity: 0;
+        }
+
+        .collageTrack.row1 {
+            top: 5%;
+            animation: collageMarqueeLeft 34s linear infinite;
+        }
+
+        .collageTrack.row2 {
+            top: 34%;
+            animation: collageMarqueeRight 40s linear infinite;
+        }
+
+        .collageTrack.row3 {
+            top: 63%;
+            animation: collageMarqueeLeft 46s linear infinite;
+        }
+
+        .collageCard {
+            position: relative;
+            flex: 0 0 auto;
+            width: min(22vw, 260px);
+            height: min(15vw, 170px);
+            overflow: hidden;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 237, 215, 0.14);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.36);
+            transform-origin: center;
+            background: rgba(255, 248, 240, 0.05);
+        }
+
+        .collageCard.tall {
+            width: min(18vw, 220px);
+            height: min(22vw, 270px);
+        }
+
+        .collageCard.square {
+            width: min(18vw, 210px);
+            height: min(18vw, 210px);
+        }
+
+        .collageCard.wide {
+            width: min(28vw, 320px);
+            height: min(16vw, 180px);
+        }
+
+        .collageCard img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: saturate(1.04) contrast(1.02) brightness(0.8);
+            transform: scale(1.06);
+        }
+
         .page {
-            padding: clamp(18px, 3vw, 34px) 16px 40px;
+            padding: clamp(18px, 3vw, 34px) 16px 54px;
+            position: relative;
+            z-index: 1;
         }
 
         .wrap {
             max-width: var(--max);
             margin: 0 auto;
+            position: relative;
         }
 
         .hero {
             display: grid;
-            grid-template-columns: 1.25fr 0.75fr;
-            gap: 18px;
+            grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
+            gap: 22px;
             align-items: stretch;
-            margin-top: 14px;
+            margin-top: 20px;
         }
 
         @media (max-width: 900px) {
@@ -95,11 +194,14 @@
         }
 
         .heroCard {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
-            border: 1px solid var(--border);
+            background:
+                linear-gradient(140deg, rgba(255, 177, 86, 0.08), transparent 24%),
+                linear-gradient(220deg, rgba(255, 111, 97, 0.07), transparent 28%),
+                linear-gradient(180deg, rgba(12, 14, 18, 0.97), rgba(16, 18, 23, 0.95));
+            border: 1px solid var(--frame);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: clamp(18px, 3.5vw, 28px);
+            padding: clamp(20px, 3.8vw, 34px);
             overflow: hidden;
             position: relative;
         }
@@ -107,69 +209,169 @@
         .heroCard::before {
             content: "";
             position: absolute;
-            inset: -40px -60px auto auto;
-            width: 260px;
-            height: 260px;
-            background: radial-gradient(circle at 30% 30%, rgba(85, 170, 255, 0.35), transparent 60%);
-            filter: blur(6px);
+            inset: -10% -6% auto auto;
+            width: min(42vw, 480px);
+            height: min(42vw, 480px);
+            background: radial-gradient(circle at 30% 30%, rgba(255, 194, 122, 0.28), transparent 62%);
+            filter: blur(10px);
             pointer-events: none;
         }
 
+        .heroCard::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0 0;
+            height: 42%;
+            background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.34));
+            pointer-events: none;
+        }
+
+        .heroTop,
+        .catalogMeta,
+        .heroCopy,
+        .sectionTitle,
+        .grid {
+            position: relative;
+            z-index: 1;
+        }
+
+        .heroTop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 214, 173, 0.2);
+            background: rgba(255, 248, 240, 0.06);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(255, 234, 214, 0.88);
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 9px;
+            height: 9px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, var(--accent), var(--accent2));
+            box-shadow: 0 0 18px rgba(255, 180, 90, 0.55);
+        }
+
         h1 {
-            margin: 0 0 8px 0;
-            font-size: clamp(28px, 3.2vw, 42px);
-            letter-spacing: 0.2px;
-            line-height: 1.06;
+            margin: 0;
+            font-size: clamp(46px, 7vw, 96px);
+            letter-spacing: -0.05em;
+            line-height: 0.92;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-wrap: balance;
+            max-width: 8ch;
+            text-shadow: 0 14px 36px rgba(0, 0, 0, 0.44);
         }
 
         .sub {
             margin: 0;
             color: var(--muted);
-            font-size: clamp(14px, 1.25vw, 16px);
-            line-height: 1.5;
-            max-width: 62ch;
+            font-size: clamp(15px, 1.4vw, 18px);
+            line-height: 1.6;
+            max-width: 58ch;
         }
 
-        .pillRow {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 14px;
+        .heroCopy {
+            display: grid;
+            gap: 18px;
         }
 
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 10px;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 999px;
-            font-size: 13px;
+        .catalogMeta {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 680px) {
+            .catalogMeta {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .metaCard {
+            position: relative;
+            overflow: hidden;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 224, 189, 0.12);
+            background: rgba(255, 250, 244, 0.12);
+            padding: 14px 16px;
+            min-height: 108px;
+        }
+
+        .metaCard::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent), var(--accent2));
+        }
+
+        .metaKicker {
+            display: block;
+            margin-bottom: 12px;
+            color: rgba(255, 231, 210, 0.66);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .metaValue {
+            display: block;
+            font-size: clamp(20px, 2vw, 28px);
+            line-height: 1;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .metaCard p {
+            margin: 0;
             color: var(--muted);
-            user-select: none;
-        }
-
-        .pillDot {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            background: var(--accent);
-            box-shadow: 0 0 0 3px rgba(85, 170, 255, 0.18);
+            font-size: 13px;
+            line-height: 1.45;
         }
 
         .sectionTitle {
-            margin: 26px 0 12px;
-            font-size: 18px;
-            letter-spacing: 0.2px;
-            color: rgba(255, 255, 255, 0.88);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 32px 0 14px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(255, 235, 214, 0.8);
         }
 
-        /* Category grid */
+        .sectionTitle::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255, 190, 120, 0.42), transparent);
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
+            gap: 16px;
         }
 
         @media (max-width: 980px) {
@@ -186,25 +388,45 @@
 
         .card {
             display: grid;
-            grid-template-columns: 92px 1fr;
-            gap: 12px;
-            align-items: center;
-
-            padding: 14px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.055);
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+            grid-template-columns: 112px minmax(0, 1fr);
+            gap: 14px;
+            align-items: start;
+            padding: 16px;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 227, 194, 0.12);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.04)),
+                radial-gradient(circle at 100% 0%, rgba(255, 180, 90, 0.12), transparent 35%);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
             text-decoration: none;
             color: inherit;
-            transition: transform 150ms ease, background 150ms ease, border-color 150ms ease;
-            min-height: 96px;
+            transition: transform 220ms ease, background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+            min-height: 154px;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            animation: cardRise 720ms ease both;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.12) 50%, transparent 80%);
+            transform: translateX(-120%);
+            transition: transform 520ms ease;
+            z-index: 0;
+        }
+
+        .card:hover::before,
+        .card:focus-visible::before {
+            transform: translateX(120%);
         }
 
         .card:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.18);
+            transform: translateY(-6px) scale(1.01);
+            border-color: rgba(255, 208, 158, 0.28);
+            box-shadow: 0 28px 48px rgba(0, 0, 0, 0.34);
         }
 
         .card:focus-visible {
@@ -213,12 +435,16 @@
         }
 
         .thumb {
-            width: 92px;
-            height: 72px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.16);
+            width: 112px;
+            height: auto;
+            min-height: 100%;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 228, 197, 0.16);
             overflow: hidden;
             background: rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1;
+            align-self: stretch;
         }
 
         .thumb img {
@@ -226,31 +452,77 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            transform: scale(1.02);
+            transition: transform 320ms ease, filter 320ms ease;
+            filter: saturate(1.05) contrast(1.02);
+        }
+
+        .card:hover .thumb img,
+        .card:focus-visible .thumb img {
+            transform: scale(1.08);
+            filter: saturate(1.12) contrast(1.06);
+        }
+
+        .cardBody {
+            display: grid;
+            align-content: start;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+            overflow: visible;
+            padding-block: 2px 4px;
+        }
+
+        .cardTag {
+            display: inline-flex;
+            width: fit-content;
+            padding: 5px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 218, 179, 0.14);
+            background: rgba(255, 249, 243, 0.06);
+            color: rgba(255, 232, 211, 0.7);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
         }
 
         .card h2 {
-            margin: 0 0 4px;
-            font-size: 16px;
-            letter-spacing: 0.2px;
+            margin: 0;
+            font-size: clamp(17px, 1.6vw, 22px);
+            letter-spacing: -0.04em;
+            line-height: 1.2;
+            padding-bottom: 6px;
+            text-wrap: balance;
+            overflow: visible;
         }
 
         .card p {
             margin: 0;
             color: var(--muted);
             font-size: 13px;
-            line-height: 1.35;
+            line-height: 1.45;
+            max-width: 28ch;
         }
 
-        /* Spinner area */
+        @media (max-width: 980px) {
+            .card {
+                min-height: 162px;
+            }
+        }
+
         .spinnerCard {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
-            border: 1px solid var(--border);
+            background:
+                radial-gradient(circle at 50% 12%, rgba(255, 180, 90, 0.1), transparent 34%),
+                linear-gradient(180deg, rgba(12, 14, 18, 0.98), rgba(17, 19, 24, 0.96));
+            border: 1px solid var(--frame);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 18px;
+            padding: 20px;
             display: grid;
             grid-template-rows: auto auto auto;
-            gap: 12px;
+            gap: 16px;
             position: relative;
             overflow: hidden;
         }
@@ -258,54 +530,59 @@
         .spinnerCard::before {
             content: "";
             position: absolute;
-            inset: auto auto -120px -120px;
-            width: 320px;
-            height: 320px;
-            background: radial-gradient(circle at 55% 45%, rgba(45, 212, 191, 0.25), transparent 60%);
-            filter: blur(8px);
+            inset: auto auto -160px -100px;
+            width: 360px;
+            height: 360px;
+            background: radial-gradient(circle at 55% 45%, rgba(93, 224, 196, 0.22), transparent 60%);
+            filter: blur(12px);
             pointer-events: none;
         }
 
         .spinnerHeader {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
+            position: relative;
+            z-index: 1;
         }
 
         .spinnerHeader strong {
-            font-size: 16px;
-            letter-spacing: 0.2px;
+            font-size: 24px;
+            letter-spacing: -0.04em;
+            line-height: 1;
         }
 
         .spinnerHeader span {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--muted);
-            line-height: 1.35;
+            line-height: 1.5;
         }
 
         .spinnerWrap {
             display: grid;
             place-items: center;
-            padding: 6px 0 2px;
+            padding: 8px 0 4px;
+            position: relative;
+            z-index: 1;
         }
 
         .wheelShell {
             position: relative;
-            width: min(360px, 72vw);
+            width: min(390px, 78vw);
             aspect-ratio: 1 / 1;
         }
 
         .selector {
             position: absolute;
-            top: -8px;
+            top: -10px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 14px solid transparent;
-            border-right: 14px solid transparent;
-            border-bottom: 22px solid var(--warn);
-            filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45));
+            border-left: 16px solid transparent;
+            border-right: 16px solid transparent;
+            border-bottom: 28px solid var(--warn);
+            filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.5));
             z-index: 3;
         }
 
@@ -313,9 +590,13 @@
             position: absolute;
             inset: 0;
             border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: rgba(255, 255, 255, 0.04);
-            box-shadow: inset 0 0 0 10px rgba(255, 255, 255, 0.05), 0 16px 38px rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 233, 210, 0.18);
+            background:
+                radial-gradient(circle at 50% 50%, rgba(255, 251, 247, 0.06), rgba(255, 251, 247, 0.02));
+            box-shadow:
+                inset 0 0 0 14px rgba(255, 245, 232, 0.05),
+                inset 0 0 40px rgba(0, 0, 0, 0.18),
+                0 16px 38px rgba(0, 0, 0, 0.45);
             overflow: hidden;
         }
 
@@ -327,7 +608,6 @@
             will-change: transform;
         }
 
-        /* Each slice is a clipped block */
         .slice {
             position: absolute;
             inset: 0;
@@ -339,22 +619,22 @@
 
         .sliceLabel {
             position: absolute;
-            top: 18%;
+            top: 17%;
             left: 50%;
             transform: translateX(-50%);
-            width: 70%;
+            width: 72%;
             text-align: center;
             font-weight: 700;
             font-size: clamp(11px, 2.4vw, 13px);
             color: rgba(255, 255, 255, 0.92);
-            text-shadow: 0 8px 18px rgba(0, 0, 0, 0.55);
+            text-shadow: 0 10px 24px rgba(0, 0, 0, 0.58);
             line-height: 1.1;
             user-select: none;
             padding: 6px 8px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.14);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            backdrop-filter: blur(6px);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(8px);
         }
 
         .sliceSmall {
@@ -371,25 +651,29 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
 
         .btn {
             appearance: none;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: linear-gradient(180deg, rgba(85, 170, 255, 0.95), rgba(85, 170, 255, 0.72));
-            color: #07121f;
+            border: 1px solid rgba(255, 225, 190, 0.22);
+            background: linear-gradient(180deg, rgba(255, 189, 103, 0.98), rgba(255, 127, 98, 0.88));
+            color: #180d08;
             font-weight: 800;
-            letter-spacing: 0.2px;
-            padding: 10px 12px;
-            border-radius: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 12px 14px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: transform 150ms ease, filter 150ms ease, opacity 150ms ease;
-            min-width: 170px;
+            transition: transform 180ms ease, filter 180ms ease, opacity 180ms ease, box-shadow 180ms ease;
+            min-width: 184px;
+            box-shadow: 0 16px 28px rgba(255, 127, 98, 0.22);
         }
 
         .btn:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.05);
+            transform: translateY(-2px);
+            filter: brightness(1.04);
         }
 
         .btn:active {
@@ -406,18 +690,17 @@
         .hint {
             font-size: 12px;
             color: var(--muted);
-            line-height: 1.35;
+            line-height: 1.45;
             flex: 1;
             min-width: 200px;
         }
 
-        /* Popup */
         .overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.58);
-            backdrop-filter: blur(6px);
+            background: rgba(4, 6, 8, 0.68);
+            backdrop-filter: blur(10px);
             z-index: 999999;
         }
 
@@ -432,9 +715,10 @@
         .modalCard {
             max-width: 560px;
             margin: 10vh auto 0;
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: rgba(15, 20, 28, 0.88);
+            border-radius: 22px;
+            border: 1px solid rgba(255, 223, 188, 0.18);
+            background:
+                linear-gradient(180deg, rgba(30, 20, 14, 0.92), rgba(12, 14, 18, 0.94));
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
             overflow: hidden;
         }
@@ -471,8 +755,8 @@
 
         .modalText h3 {
             margin: 0 0 6px;
-            font-size: 18px;
-            letter-spacing: 0.2px;
+            font-size: 24px;
+            letter-spacing: -0.04em;
             line-height: 1.2;
         }
 
@@ -497,8 +781,8 @@
             gap: 8px;
             text-decoration: none;
             padding: 10px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 230, 201, 0.16);
             background: rgba(255, 255, 255, 0.08);
             color: rgba(255, 255, 255, 0.92);
             font-weight: 700;
@@ -513,13 +797,133 @@
         }
 
         .footer {
-            margin-top: 18px;
-            color: rgba(255, 255, 255, 0.6);
+            margin-top: 26px;
+            color: rgba(255, 239, 221, 0.54);
             font-size: 12px;
             text-align: center;
         }
 
-        /* A11y */
+        .card:nth-child(2) {
+            animation-delay: 40ms;
+        }
+
+        .card:nth-child(3) {
+            animation-delay: 80ms;
+        }
+
+        .card:nth-child(4) {
+            animation-delay: 120ms;
+        }
+
+        .card:nth-child(5) {
+            animation-delay: 160ms;
+        }
+
+        .card:nth-child(6) {
+            animation-delay: 200ms;
+        }
+
+        .card:nth-child(7) {
+            animation-delay: 240ms;
+        }
+
+        .card:nth-child(8) {
+            animation-delay: 280ms;
+        }
+
+        .card:nth-child(9) {
+            animation-delay: 320ms;
+        }
+
+        .card:nth-child(10) {
+            animation-delay: 360ms;
+        }
+
+        @keyframes cardRise {
+            0% {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes collageMarqueeLeft {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(-50%, 0, 0);
+            }
+        }
+
+        @keyframes collageMarqueeRight {
+            0% {
+                transform: translate3d(-50%, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .backgroundCollage {
+                opacity: 0.24;
+            }
+
+            .collageCard {
+                width: min(32vw, 240px);
+                height: min(22vw, 170px);
+            }
+
+            .collageCard.tall {
+                width: min(24vw, 180px);
+                height: min(30vw, 220px);
+            }
+
+            .collageCard.square {
+                width: min(22vw, 170px);
+                height: min(22vw, 170px);
+            }
+
+            .collageCard.wide {
+                width: min(38vw, 280px);
+                height: min(22vw, 170px);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .backgroundCollage {
+                display: none;
+            }
+
+            .collageTrack.row3 {
+                display: none;
+            }
+
+            .collageCard {
+                width: min(46vw, 220px);
+                height: min(28vw, 132px);
+                border-radius: 18px;
+            }
+
+            .collageCard.tall,
+            .collageCard.square {
+                width: min(32vw, 150px);
+                height: min(32vw, 150px);
+            }
+
+            .collageCard.wide {
+                width: min(52vw, 250px);
+                height: min(28vw, 132px);
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .wheelInner {
                 transition: none !important;
@@ -529,11 +933,24 @@
             .btn {
                 transition: none !important;
             }
+
+            .card {
+                animation: none !important;
+            }
+
+            .collageCard {
+                animation: none !important;
+            }
         }
     </style>
 </head>
 
 <body>
+    <div class="backgroundCollage" aria-hidden="true">
+        <div id="collageRow1" class="collageTrack row1"><figure class="collageCard wide"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/ancient.jpg"></figure><figure class="collageCard"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/ant.jpg"></figure><figure class="collageCard square"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/jellyfish-closeup.jpg"></figure><figure class="collageCard"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/fireworks.jpg"></figure><figure class="collageCard tall"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/products/films/TheGlitchCover.png"></figure><figure class="collageCard"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/boat.jpg"></figure></div>
+        <div id="collageRow2" class="collageTrack row2"><figure class="collageCard wide"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/cloudy-ocean.jpg"></figure><figure class="collageCard"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/city-silhouette.jpg"></figure><figure class="collageCard square"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/ducko.jpg"></figure><figure class="collageCard"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/golden-starry-night.jpg"></figure><figure class="collageCard tall"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/earth-horizon.jpg"></figure><figure class="collageCard"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/cloud-attacks-sun.jpg"></figure></div>
+        <div id="collageRow3" class="collageTrack row3"><figure class="collageCard wide"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/products/music/music%20icon%20new.png"></figure><figure class="collageCard"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/elemental-light-2.jpg"></figure><figure class="collageCard square"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/hazy-city.jpg"></figure><figure class="collageCard"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/gallery/fish.jpg"></figure><figure class="collageCard tall"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/products/films/The%20Life%20of%20a%20Meatball1.jpg"></figure><figure class="collageCard"><img alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="https://assets.unlim8ted.com/images/effects/sea.gif"></figure></div>
+    </div>
     <site-navbar cart-href="https://unlim8ted.com/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
 
     <main class="page">
@@ -541,10 +958,14 @@
 
             <section class="hero">
                 <div class="heroCard">
+
+
+                    <div class="heroCopy">
                     <h1>Our Products</h1>
                     <p class="sub">
                         Discover what Unlim8ted is building: films, music, games, software, physical items, and more.
                     </p>
+                    </div>
 
                     <div class="sectionTitle">Browse by category</div>
 
@@ -553,101 +974,92 @@
                  Keeping them as-is but styled nicer. -->
 
                         <a href="films" class="card">
-                            <div class="thumb"><img
-                                    src="https://assets.unlim8ted.com/images/products/films/The%20Life%20of%20a%20Meatball.jpg"
-                                    alt="Films" /></div>
-                            <div>
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/films/TheGlitchCover.png" alt="Films"></div>
+                            <div class="cardBody">
+                                <span class="cardTag">Screen</span>
                                 <h2>Films</h2>
                                 <p>Explore our latest films.</p>
                             </div>
                         </a>
 
                         <a href="music" class="card">
-                            <div class="thumb"><img
-                                    src="https://assets.unlim8ted.com/images/products/music/music%20icon.png"
-                                    alt="Music" />
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/music/music%20icon%20new.png" alt="Music">
                             </div>
-                            <div>
+                            <div class="cardBody">
+                                <span class="cardTag">Sound</span>
                                 <h2>Music</h2>
                                 <p>Listen to our newest music releases.</p>
                             </div>
                         </a>
 
                         <a href="podcasts" class="card">
-                            <div class="thumb"><img
-                                    src="https://assets.unlim8ted.com/images/products/podcasts/podcasts%20icon.png"
-                                    alt="Podcasts" /></div>
-                            <div>
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/podcasts/podcasts%20icon.png" alt="Podcasts"></div>
+                            <div class="cardBody">
+                                <span class="cardTag">Voice</span>
                                 <h2>Podcasts</h2>
                                 <p>Listen to our newest podcasts.</p>
                             </div>
                         </a>
 
                         <a href="books" class="card">
-                            <div class="thumb"><img
-                                    src="https://assets.unlim8ted.com/images/products/books/book%20icon.png"
-                                    alt="Books" />
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/books/book%20icon.png" alt="Books">
                             </div>
-                            <div>
+                            <div class="cardBody">
+                                <span class="cardTag">Story</span>
                                 <h2>Books</h2>
                                 <p>Read our latest books.</p>
                             </div>
                         </a>
 
                         <a href="games" class="card">
-                            <div class="thumb"><img
-                                    src="https://assets.unlim8ted.com/images/products/games/air-hockey-preview.webp"
-                                    alt="Games" /></div>
-                            <div>
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/games/air-hockey-preview.webp" alt="Games"></div>
+                            <div class="cardBody">
+                                <span class="cardTag">Play</span>
                                 <h2>Games</h2>
                                 <p>Play fun and challenging games.</p>
                             </div>
                         </a>
 
                         <a href="physical-items" class="card">
-                            <div class="thumb"><img
-                                    src="https://assets.unlim8ted.com/images/products/clothes/image.webp"
-                                    alt="Physical Items" /></div>
-                            <div>
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/clothes/icon_new.png" alt="Physical Items"></div>
+                            <div class="cardBody">
+                                <span class="cardTag">Wear</span>
                                 <h2>Physical Items</h2>
                                 <p>Check out our stylish items.</p>
                             </div>
                         </a>
 
                         <a href="hardware" class="card">
-                            <div class="thumb"><img
-                                    src="https://assets.unlim8ted.com/images/products/hardware/hardware-image.png"
-                                    alt="Hardware" /></div>
-                            <div>
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/hardware/hardware-image.png" alt="Hardware"></div>
+                            <div class="cardBody">
+                                <span class="cardTag">Build</span>
                                 <h2>Hardware</h2>
                                 <p>Explore handheld and embedded builds.</p>
                             </div>
                         </a>
 
                         <a href="software" class="card">
-                            <div class="thumb"><img
-                                    src="https://assets.unlim8ted.com/images/products/software/Screenshot%202023-09-21%20181742(1).png"
-                                    alt="Software" /></div>
-                            <div>
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/software/Screenshot%202023-09-21%20181742(1).png" alt="Software"></div>
+                            <div class="cardBody">
+                                <span class="cardTag">Tool</span>
                                 <h2>Software</h2>
                                 <p>Explore our apps and tools.</p>
                             </div>
                         </a>
 
                         <a href="ai" class="card">
-                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/ai/ai%20icon.png"
-                                    alt="AI" /></div>
-                            <div>
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/films/The%20Life%20of%20a%20Meatball1.jpg" alt="Meatball AI"></div>
+                            <div class="cardBody">
+                                <span class="cardTag">Machine</span>
                                 <h2>AI</h2>
                                 <p>Explore our AI products.</p>
                             </div>
                         </a>
 
                         <a href="images" class="card">
-                            <div class="thumb"><img
-                                    src="https://assets.unlim8ted.com/images/gallery/jellyfish-closeup.jpg"
-                                    alt="Images" /></div>
-                            <div>
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/gallery/jellyfish-closeup.jpg" alt="Images"></div>
+                            <div class="cardBody">
+                                <span class="cardTag">Visual</span>
                                 <h2>Images</h2>
                                 <p>Explore some of our best images.</p>
                             </div>
@@ -666,38 +1078,55 @@
                         <div class="wheelShell" aria-label="Product wheel">
                             <div class="selector" aria-hidden="true"></div>
                             <div class="wheel" aria-hidden="true">
-                                <div class="wheelInner" id="wheelInner">
-                                    <!-- slices injected -->
-                                </div>
+                                <div class="wheelInner" id="wheelInner"><div class="slice" style="transform: rotate(0deg); background: linear-gradient(rgb(29, 237, 35), rgba(0, 0, 0, 0.15));"><div class="sliceLabel" style="transform: translateX(-50%) rotate(0deg);">
+          Books
+          <span class="sliceSmall">2 items</span>
+        </div></div><div class="slice" style="transform: rotate(45deg); background: linear-gradient(rgb(32, 237, 29), rgba(0, 0, 0, 0.15));"><div class="sliceLabel" style="transform: translateX(-50%) rotate(-45deg);">
+          Films
+          <span class="sliceSmall">2 items</span>
+        </div></div><div class="slice" style="transform: rotate(90deg); background: linear-gradient(rgb(29, 81, 237), rgba(0, 0, 0, 0.15));"><div class="sliceLabel" style="transform: translateX(-50%) rotate(-90deg);">
+          Games
+          <span class="sliceSmall">7 items</span>
+        </div></div><div class="slice" style="transform: rotate(135deg); background: linear-gradient(rgb(29, 29, 237), rgba(0, 0, 0, 0.15));"><div class="sliceLabel" style="transform: translateX(-50%) rotate(-135deg);">
+          Images
+          <span class="sliceSmall">73 items</span>
+        </div></div><div class="slice" style="transform: rotate(180deg); background: linear-gradient(rgb(237, 46, 29), rgba(0, 0, 0, 0.15));"><div class="sliceLabel" style="transform: translateX(-50%) rotate(-180deg);">
+          Music
+          <span class="sliceSmall">67 items</span>
+        </div></div><div class="slice" style="transform: rotate(225deg); background: linear-gradient(rgb(237, 230, 29), rgba(0, 0, 0, 0.15));"><div class="sliceLabel" style="transform: translateX(-50%) rotate(-225deg);">
+          Physical Items
+          <span class="sliceSmall">14 items</span>
+        </div></div><div class="slice" style="transform: rotate(270deg); background: linear-gradient(rgb(237, 219, 29), rgba(0, 0, 0, 0.15));"><div class="sliceLabel" style="transform: translateX(-50%) rotate(-270deg);">
+          Software
+          <span class="sliceSmall">10 items</span>
+        </div></div><div class="slice" style="transform: rotate(315deg); background: linear-gradient(rgb(112, 237, 29), rgba(0, 0, 0, 0.15));"><div class="sliceLabel" style="transform: translateX(-50%) rotate(-315deg);">
+          Surprise
+          <span class="sliceSmall">3 items</span>
+        </div></div></div>
                             </div>
                         </div>
                     </div>
 
                     <div class="spinRow">
-                        <button class="btn" id="spinBtn" disabled>Loading productsâ€¦</button>
-                        <div class="hint" id="spinHint">
-                            Tip: the wheel is category-based (so you donâ€™t land on â€œrandom URL soupâ€). Then we pick a
-                            specific item inside
-                            that category.
-                        </div>
+                        <button class="btn" id="spinBtn">Spin the wheel</button>
+                        <div class="hint" id="spinHint">Loaded 178 product(s) across 8 wheel category slice(s).</div>
                     </div>
                 </aside>
             </section>
 
             <div class="footer">
-                <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
+                <p id="footer-text">© 2019-2026 Unlim8ted Studio Productions. All rights reserved.</p>
             </div>
         </div>
     </main>
 
     <!-- Popup -->
     <div class="overlay" id="overlay" aria-hidden="true"></div>
-    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"
-        aria-describedby="modalDesc">
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
         <div class="modalCard">
             <div class="modalTop">
                 <div class="modalImg" id="modalImgWrap" aria-hidden="true">
-                    <img id="modalImg" alt="" />
+                    <img id="modalImg" alt="">
                 </div>
                 <div class="modalText">
                     <h3 id="modalTitle">Recommendation</h3>
@@ -726,10 +1155,20 @@
          *****************************************************************/
 
         const PRODUCTS_URL = "https://assets.unlim8ted.com/data/products.json";
+        const COLLAGE_MANIFEST_URLS = [
+            "resources/image-collage-manifest.json",
+            "/products/resources/image-collage-manifest.json",
+            "/frontend/products/resources/image-collage-manifest.json",
+        ];
 
         const wheelInner = document.getElementById("wheelInner");
         const spinBtn = document.getElementById("spinBtn");
         const spinHint = document.getElementById("spinHint");
+        const collageRows = [
+            document.getElementById("collageRow1"),
+            document.getElementById("collageRow2"),
+            document.getElementById("collageRow3"),
+        ];
 
         const overlay = document.getElementById("overlay");
         const modal = document.getElementById("modal");
@@ -743,6 +1182,105 @@
         let categories = []; // [{ key, label, link, products: [...] }]
         let currentRotation = 0;
         let isSpinning = false;
+        let collageCursor = 0;
+
+        function shuffleArray(items) {
+            const copy = items.slice();
+            for (let i = copy.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function nextCollageImage(manifest) {
+            if (!manifest.length) return "";
+            const value = manifest[collageCursor % manifest.length];
+            collageCursor += 1;
+            return value;
+        }
+
+        function collageCardClass(index) {
+            const cycle = ["wide", "", "square", "", "tall", "", "wide", "square", ""];
+            return cycle[index % cycle.length];
+        }
+
+        function createCollageCard(src, className) {
+            const figure = document.createElement("figure");
+            figure.className = `collageCard ${className}`.trim();
+            const img = document.createElement("img");
+            img.alt = "";
+            img.loading = "lazy";
+            img.decoding = "async";
+            img.referrerPolicy = "no-referrer";
+            img.src = src;
+            figure.appendChild(img);
+            return figure;
+        }
+
+        function fillCollageRow(rowEl, manifest, count) {
+            rowEl.innerHTML = "";
+            const cards = [];
+            const total = count * 2;
+            for (let i = 0; i < total; i += 1) {
+                const className = collageCardClass(i);
+                const card = createCollageCard(nextCollageImage(manifest), className);
+                rowEl.appendChild(card);
+                cards.push(card);
+            }
+            rowEl.classList.remove("is-hidden");
+            return cards;
+        }
+
+        function startCollageCycling(rows, manifest) {
+            if (!manifest.length) return;
+            const slots = rows.map((cards, rowIndex) => ({
+                cards,
+                rowIndex,
+                cursor: rowIndex,
+            }));
+
+            window.setInterval(() => {
+                for (const slot of slots) {
+                    if (!slot.cards.length) continue;
+                    const index = slot.cursor % slot.cards.length;
+                    const card = slot.cards[index];
+                    const img = card?.querySelector("img");
+                    if (img) img.src = nextCollageImage(manifest);
+                    slot.cursor += 3;
+                }
+            }, 1800);
+        }
+
+        async function loadCollageManifest() {
+            for (const url of COLLAGE_MANIFEST_URLS) {
+                try {
+                    const response = await fetch(url, { cache: "force-cache" });
+                    if (!response.ok) continue;
+                    const manifest = await response.json();
+                    if (Array.isArray(manifest) && manifest.length) return manifest;
+                } catch (error) {
+                    console.warn("Collage manifest load failed:", url, error);
+                }
+            }
+            return [];
+        }
+
+        async function initBackgroundCollage() {
+            try {
+                const manifest = shuffleArray(await loadCollageManifest());
+                const usable = manifest.filter(src => typeof src === "string" && src);
+                if (!usable.length) return;
+                const rows = [
+                    fillCollageRow(collageRows[0], usable, 10),
+                    fillCollageRow(collageRows[1], usable, 10),
+                    fillCollageRow(collageRows[2], usable, 10),
+                ];
+                startCollageCycling(rows, usable);
+            } catch (error) {
+                console.error("Error loading collage manifest:", error);
+            }
+        }
 
         // Map product-type â†’ category destination + voice
         function normalizeType(t) {
@@ -1079,6 +1617,7 @@
 
         // Load products.json and build wheel
         (async function initWheel() {
+            initBackgroundCollage();
             try {
                 const res = await fetch(PRODUCTS_URL, { cache: "no-store" });
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1105,8 +1644,6 @@
         })();
     </script>
     <script src="/products/ai/meatball/resources/js/meatball-assistant.js"></script>
-</body>
-</html>
 
 
-
+</body></html>

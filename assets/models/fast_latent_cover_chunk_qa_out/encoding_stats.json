@@ -1,7 +1,0 @@
-{
-  "rows": 200928,
-  "output_chunk_vocab_size": 21425,
-  "avg_chunks_per_answer": 7.665019310399745,
-  "max_chunks_per_answer": 46,
-  "encoded_unk_uses": 19878
-}
