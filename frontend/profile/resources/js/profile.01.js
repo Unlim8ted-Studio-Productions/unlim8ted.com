@@ -1,4 +1,4 @@
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+﻿import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
     import { getFirebase } from "/components/firebase-init.js";
 
@@ -180,3 +180,4 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
     // Footer year
     const y = new Date().getFullYear();
     $("footerText").innerHTML = `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+

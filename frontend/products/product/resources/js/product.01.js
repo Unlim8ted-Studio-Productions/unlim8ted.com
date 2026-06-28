@@ -1,4 +1,4 @@
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+﻿import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import {
       collection, query, orderBy, onSnapshot, doc, setDoc, getDoc, deleteDoc, updateDoc,
       Timestamp
@@ -1513,3 +1513,4 @@ function renderVariantUI(item) {
 
     const y = new Date().getFullYear();
     $("footerText").innerHTML = `&copy; 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
+

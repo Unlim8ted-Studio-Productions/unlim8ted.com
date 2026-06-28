@@ -1,4 +1,4 @@
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+﻿import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import {
       collection,
       query,
@@ -1097,3 +1097,4 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/fi
 
     // Expose a tiny API (optional; list uses internal click listeners anyway)
     window.playByIndex = playByIndex;
+

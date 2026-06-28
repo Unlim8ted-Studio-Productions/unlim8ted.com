@@ -1,4 +1,4 @@
-:root {
+﻿:root {
       --bg0: #07070c;
       --bg1: #0a0b12;
       --card: rgba(255, 255, 255, 0.06);
@@ -320,3 +320,4 @@
 
     footer a { color: rgba(233,231,255,0.78); }
     footer a:hover { color: var(--accent); }
+

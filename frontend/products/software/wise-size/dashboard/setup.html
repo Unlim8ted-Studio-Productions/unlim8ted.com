@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WiseSize â€” Merchant Setup</title>
+  <title>WiseSize — Merchant Setup</title>
 
   <meta name="robots" content="noindex,nofollow" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
@@ -216,16 +216,16 @@
         </div>
 
         <div class="stepper" id="stepper" style="margin-top:12px;">
-          <div class="step active" data-step="1">1 â€” Profile</div>
-          <div class="step" data-step="2">2 â€” Verify</div>
-          <div class="step" data-step="3">3 â€” Done</div>
+          <div class="step active" data-step="1">1 — Profile</div>
+          <div class="step" data-step="2">2 — Verify</div>
+          <div class="step" data-step="3">3 — Done</div>
         </div>
 
         <hr/>
 
         <!-- STEP 1 -->
         <div class="pane active" id="pane1">
-          <h2>Step 1 â€” Store profile</h2>
+          <h2>Step 1 — Store profile</h2>
 
           <div class="row">
             <label for="storeName">Store name</label>
@@ -243,7 +243,7 @@
             <div style="display:grid; gap:8px">
               <label class="inline">
                 <input type="checkbox" id="featSave" style="width:auto" />
-                Enable â€œSave profileâ€
+                Enable “Save profile”
               </label>
               <label class="inline">
                 <input type="checkbox" id="featTryOn" style="width:auto" />
@@ -262,7 +262,7 @@
 
         <!-- STEP 2 -->
         <div class="pane" id="pane2">
-          <h2>Step 2 â€” Verify domain ownership</h2>
+          <h2>Step 2 — Verify domain ownership</h2>
 
           <div class="row">
             <label for="verifyMethod">Method</label>
@@ -291,15 +291,15 @@
           </div>
 
           <div class="muted" style="margin-top:10px;">
-            After verification, youâ€™ll be redirected into the dashboard automatically.
+            After verification, you’ll be redirected into the dashboard automatically.
           </div>
         </div>
 
         <!-- STEP 3 -->
         <div class="pane" id="pane3">
-          <h2>Step 3 â€” Done</h2>
+          <h2>Step 3 — Done</h2>
           <div class="notice">
-            <div style="font-weight:950;">Verified âœ“</div>
+            <div style="font-weight:950;">Verified ✓</div>
             <div class="muted" style="margin-top:6px;">
               Your merchant account is ready. You can now access the WiseSize dashboard.
             </div>
@@ -314,12 +314,12 @@
       <!-- SIDE -->
       <div class="card">
         <h2>Signed in</h2>
-        <div id="authLine" class="muted">â€”</div>
+        <div id="authLine" class="muted">—</div>
 
         <hr/>
 
         <h2>Embed preview</h2>
-        <div class="muted">After you add items, youâ€™ll copy a snippet like this per product:</div>
+        <div class="muted">After you add items, you’ll copy a snippet like this per product:</div>
         <div class="code" id="embedPreview"></div>
 
         <hr/>
@@ -439,7 +439,7 @@
       setTimeout(() => el.remove(), ms);
     }
 
-    function setBusy(btn, busy, labelWhileBusy = "Workingâ€¦") {
+    function setBusy(btn, busy, labelWhileBusy = "Working…") {
       if (!btn) return;
       if (busy) {
         btn.dataset._prev = btn.textContent;
@@ -543,7 +543,7 @@
       setupProgress.style.width = `${pct}%`;
 
       if (st.ready) {
-        setupMsg.textContent = "Setup complete âœ“";
+        setupMsg.textContent = "Setup complete ✓";
         markDone(1, true);
         markDone(2, true);
         setStep(3);
@@ -645,7 +645,7 @@
         renderVerifyInstructions(merchant.website, verifyMethod.value, cached);
       }
 
-      profileMsg.textContent = "Saved âœ“";
+      profileMsg.textContent = "Saved ✓";
       setTimeout(() => profileMsg.textContent = "", 1400);
       toast("Saved", "Merchant profile updated.");
       return true;
@@ -682,8 +682,8 @@
       const website = merchant.website;
       if (!isValidHttpUrl(website)) { toast("Website invalid", "Save profile again."); return; }
 
-      setBusy(btnStartVerify, true, "Startingâ€¦");
-      verifyState.textContent = "Startingâ€¦";
+      setBusy(btnStartVerify, true, "Starting…");
+      verifyState.textContent = "Starting…";
 
       try {
         const idToken = await auth.currentUser.getIdToken(true);
@@ -728,8 +728,8 @@
       }
       if (!lastToken) { toast("Start verification first"); return; }
 
-      setBusy(btnCheckVerify, true, "Checkingâ€¦");
-      verifyState.textContent = "Checkingâ€¦";
+      setBusy(btnCheckVerify, true, "Checking…");
+      verifyState.textContent = "Checking…";
 
       try {
         const idToken = await auth.currentUser.getIdToken(true);
@@ -749,7 +749,7 @@
         if (!res.ok || !data?.ok) throw new Error(data?.error || `check failed (${res.status})`);
 
         if (data.verified === true) {
-          verifyState.textContent = "Verified âœ“ Updating accountâ€¦";
+          verifyState.textContent = "Verified ✓ Updating account…";
 
           // Your rules currently allow merchant to set websiteVerified. Do it here.
           await setDoc(wsDoc(db, "merchants", uid), {
@@ -760,7 +760,7 @@
           merchant = await loadMerchant();
           renderStatus(merchant);
 
-          toast("Verified âœ“", "Redirecting to dashboardâ€¦");
+          toast("Verified ✓", "Redirecting to dashboard…");
           setTimeout(() => {
             window.location.href = DASHBOARD_INDEX; // relative: dashboard/index.html
           }, 700);
@@ -784,8 +784,8 @@
     // -----------------------------
     btnSaveProfile.addEventListener("click", async () => {
       try {
-        setBusy(btnSaveProfile, true, "Savingâ€¦");
-        profileMsg.textContent = "Savingâ€¦";
+        setBusy(btnSaveProfile, true, "Saving…");
+        profileMsg.textContent = "Saving…";
         await saveProfile();
       } catch (e) {
         console.error(e);
@@ -814,7 +814,7 @@
       const t = (verifyToken.textContent || "").trim();
       if (!t) { toast("No token to copy"); return; }
       await copyText(t);
-      toast("Copied âœ“");
+      toast("Copied ✓");
     });
 
     verifyMethod.addEventListener("change", () => {
@@ -876,4 +876,8 @@
   </script>
 </body>
 </html>Uncaught (in promise) FirebaseError: Expected first argument to collection() to be a CollectionReference, a DocumentReference or FirebaseFirestore
+
+
+
+
 

@@ -1,4 +1,4 @@
-import { getFirebase } from "/components/firebase-init.js";
+﻿import { getFirebase } from "/components/firebase-init.js";
         import {
             doc, setDoc, serverTimestamp
         } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
@@ -76,3 +76,6 @@ import { getFirebase } from "/components/firebase-init.js";
                 setMsg("error", "<strong>Couldn’t subscribe.</strong> Please try again in a moment.");
             }
         });
+
+
+

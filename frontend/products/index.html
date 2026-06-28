@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en"><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="UTF-8">
@@ -1070,7 +1070,7 @@
                 <aside class="spinnerCard">
                     <div class="spinnerHeader">
                         <strong>Not sure what to get?</strong>
-                        <span>Spin the wheel. Weâ€™ll pick a category and recommend
+                        <span>Spin the wheel. We’ll pick a category and recommend
                             something.</span>
                     </div>
 
@@ -1151,7 +1151,7 @@
 
     <script>
         /*****************************************************************
-         * PRODUCTS.JSON â†’ CATEGORY WHEEL
+         * PRODUCTS.JSON → CATEGORY WHEEL
          *****************************************************************/
 
         const PRODUCTS_URL = "https://assets.unlim8ted.com/data/products.json";
@@ -1282,7 +1282,7 @@
             }
         }
 
-        // Map product-type â†’ category destination + voice
+        // Map product-type → category destination + voice
         function normalizeType(t) {
             return String(t || "")
                 .trim()
@@ -1339,22 +1339,22 @@
 
             if (type === "music") {
                 return {
-                    title: `You should go listen to â€œ${name}â€.`,
-                    desc: `Your wheel pick landed on Music â€” go check out the music section${name ? ` and look for â€œ${name}â€.` : "."}`,
+                    title: `You should go listen to “${name}”.`,
+                    desc: `Your wheel pick landed on Music — go check out the music section${name ? ` and look for “${name}”.` : "."}`,
                 };
             }
 
             if (type === "image" || type === "images") {
                 return {
-                    title: `You should go check out â€œ${name}â€.`,
-                    desc: `Your wheel pick landed on Images â€” browse the images section${name ? ` and find â€œ${name}â€.` : "."}`,
+                    title: `You should go check out “${name}”.`,
+                    desc: `Your wheel pick landed on Images — browse the images section${name ? ` and find “${name}”.` : "."}`,
                 };
             }
 
             if (type === "film" || type === "films") {
                 return {
-                    title: `You should go watch â€œ${name}â€.`,
-                    desc: `Your wheel pick landed on Films â€” explore the films section${name ? ` and queue up â€œ${name}â€.` : "."}`,
+                    title: `You should go watch “${name}”.`,
+                    desc: `Your wheel pick landed on Films — explore the films section${name ? ` and queue up “${name}”.` : "."}`,
                 };
             }
 
@@ -1367,65 +1367,65 @@
 
             if (type === "software") {
                 return {
-                    title: `You should go try â€œ${name}â€.`,
-                    desc: `Your wheel pick landed on Software â€” check out the software section${name ? ` and open â€œ${name}â€.` : "."}`,
+                    title: `You should go try “${name}”.`,
+                    desc: `Your wheel pick landed on Software — check out the software section${name ? ` and open “${name}”.` : "."}`,
                 };
             }
 
             if (type === "video-game" || type === "videogame" || type === "game" || type === "games") {
                 return {
-                    title: `You should go play â€œ${name}â€.`,
-                    desc: `Your wheel pick landed on Games â€” jump into the games section${name ? ` and try â€œ${name}â€.` : "."}`,
+                    title: `You should go play “${name}”.`,
+                    desc: `Your wheel pick landed on Games — jump into the games section${name ? ` and try “${name}”.` : "."}`,
                 };
             }
 
             if (type === "physical" || type === "clothes" || type === "merch" || type === "apparel") {
                 return {
-                    title: `You should go grab â€œ${name}â€.`,
-                    desc: `Your wheel pick landed on Physical Items â€” browse the shop${name ? ` and check out â€œ${name}â€.` : "."}`,
+                    title: `You should go grab “${name}”.`,
+                    desc: `Your wheel pick landed on Physical Items — browse the shop${name ? ` and check out “${name}”.` : "."}`,
                 };
             }
 
             if (type === "book" || type === "books") {
                 return {
-                    title: `You should go read â€œ${name}â€.`,
-                    desc: `Your wheel pick landed on Books â€” browse the books section${name ? ` and look for â€œ${name}â€.` : "."}`,
+                    title: `You should go read “${name}”.`,
+                    desc: `Your wheel pick landed on Books — browse the books section${name ? ` and look for “${name}”.` : "."}`,
                 };
             }
 
             if (type === "card-game") {
                 return {
-                    title: `You should go play â€œ${name}â€.`,
-                    desc: `Your wheel pick landed on Card Games â€” head to the card games section${name ? ` and start â€œ${name}â€.` : "."}`,
+                    title: `You should go play “${name}”.`,
+                    desc: `Your wheel pick landed on Card Games — head to the card games section${name ? ` and start “${name}”.` : "."}`,
                 };
             }
 
             if (type === "instant") {
                 return {
-                    title: `You should go solve â€œ${name}â€.`,
-                    desc: `Your wheel pick landed on Instant Games â€” launch â€œ${name}â€ right now.`,
+                    title: `You should go solve “${name}”.`,
+                    desc: `Your wheel pick landed on Instant Games — launch “${name}” right now.`,
                 };
             }
 
             if (type === "ai") {
                 return {
-                    title: `You should go explore â€œ${name}â€.`,
-                    desc: `Your wheel pick landed on AI â€” visit the AI section${name ? ` and check out â€œ${name}â€.` : "."}`,
+                    title: `You should go explore “${name}”.`,
+                    desc: `Your wheel pick landed on AI — visit the AI section${name ? ` and check out “${name}”.` : "."}`,
                 };
             }
 
             if (type === "podcast" || type === "podcasts") {
                 return {
-                    title: `You should go listen to â€œ${name}â€.`,
-                    desc: `Your wheel pick landed on Podcasts â€” head to the podcasts section${name ? ` and start â€œ${name}â€.` : "."}`,
+                    title: `You should go listen to “${name}”.`,
+                    desc: `Your wheel pick landed on Podcasts — head to the podcasts section${name ? ` and start “${name}”.` : "."}`,
                 };
             }
 
 
             // fallback
             return {
-                title: `You should check out â€œ${name}â€.`,
-                desc: `This one doesnâ€™t have a mapped category yet, so weâ€™ll take you to its product anchor: #${id}`,
+                title: `You should check out “${name}”.`,
+                desc: `This one doesn’t have a mapped category yet, so we’ll take you to its product anchor: #${id}`,
             };
         }
 
@@ -1574,10 +1574,10 @@
             if (isSpinning || !categories.length) return;
             isSpinning = true;
             spinBtn.disabled = true;
-            spinBtn.textContent = "Spinningâ€¦";
+            spinBtn.textContent = "Spinning…";
 
             const n = categories.length;
-            const extraTurns = 5 + Math.floor(Math.random() * 4); // 5â€“8 turns
+            const extraTurns = 5 + Math.floor(Math.random() * 4); // 5–8 turns
             const randomOffset = Math.random() * 360;
 
             const targetRotation = currentRotation + extraTurns * 360 + randomOffset;
@@ -1638,7 +1638,7 @@
             } catch (err) {
                 console.error("Error loading products.json:", err);
                 spinBtn.disabled = true;
-                spinBtn.textContent = "Couldnâ€™t load products";
+                spinBtn.textContent = "Couldn’t load products";
                 spinHint.textContent = "Make sure products.json is reachable and valid JSON.";
             }
         })();
@@ -1647,3 +1647,9 @@
 
 
 </body></html>
+
+
+
+
+
+

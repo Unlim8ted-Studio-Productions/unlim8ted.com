@@ -1,4 +1,4 @@
-import { getFirebase } from "/components/firebase-init.js";
+﻿import { getFirebase } from "/components/firebase-init.js";
     import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
     const { db, auth } = getFirebase();
@@ -100,3 +100,6 @@ import { getFirebase } from "/components/firebase-init.js";
         startCooldown(4000);
       }
     });
+
+
+

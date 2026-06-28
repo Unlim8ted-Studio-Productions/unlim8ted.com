@@ -1,4 +1,4 @@
-// Footer year + last updated
+﻿// Footer year + last updated
     document.addEventListener("DOMContentLoaded", () => {
       const y = new Date().getFullYear();
       const ft = document.getElementById("footer-text");
@@ -66,3 +66,4 @@
     } else {
       canvas.style.display = "none";
     }
+

@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
            cart.js (ESM) — Unlim8ted custom checkout
            IMPORTANT UPDATE:
            - https://assets.unlim8ted.com/data/products.json varients[].id IS the Printful catalog variant id (printful_catalog_variant_id).
@@ -88,7 +88,6 @@
             _variantByKey = new Map();
 
             for (const p of (products || [])) {
-                // ✅ YOUR https://assets.unlim8ted.com/data/products.json uses "id" as the product key
                 const pid = String(p.id ?? p.productId ?? p.printful_sync_id ?? "").trim();
                 if (!pid) continue;
 
@@ -96,7 +95,6 @@
 
                 const vars = Array.isArray(p.varients) ? p.varients : (Array.isArray(p.variants) ? p.variants : []);
                 for (const v of vars) {
-                    // ✅ Variant id should be v.id (your rule: printful_catalog_variant_id is just varient.id)
                     const vid = String(v.id ?? v.printful_catalog_variant_id ?? v.variantId ?? "").trim();
                     if (!vid) continue;
 
@@ -1621,3 +1619,6 @@ modalConfirm.addEventListener("click", () => {
         if (cc) cc.value = "US";
 
         btnQuote.textContent = "Next";
+
+
+

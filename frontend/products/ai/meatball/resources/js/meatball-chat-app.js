@@ -1,4 +1,4 @@
-const assets = "https://assets.unlim8ted.com";
+﻿const assets = "https://assets.unlim8ted.com";
 
 const MODEL_PATHS = {
   reactionModel: `${assets}/models/meatball_reaction_model/reaction_model.onnx`,
@@ -556,7 +556,7 @@ function restoreEntityCasing(text) {
   return out;
 }
 
-const DICTIONARY_URL = "https://raw.githubusercontent.com/hermitdave/FrequencyWords/master/content/2018/en/en_50k.txt";
+const DICTIONARY_URL = "${assets}/data/en_50k_symSpell.txt";
 const SYMSPELL_MAX_EDIT_DISTANCE = 2;
 const SYMSPELL_PREFIX_LENGTH = 7;
 
@@ -1087,11 +1087,11 @@ function mathReplaceSymbols(text) {
   let out = String(text || "");
   for (const [from, to] of Object.entries({
     "×": "*",
-    "÷": "/",
-    "−": "-",
+    "Ã·": "/",
+    "âˆ’": "-",
     "²": " ^ 2 ",
     "³": " ^ 3 ",
-    "√": " sqrt "
+    "âˆš": " sqrt "
   })) {
     out = out.split(from).join(to);
   }
@@ -1885,3 +1885,5 @@ window.addEventListener("DOMContentLoaded", () => {
     document.activeElement?.blur?.();
   });
 });
+
+

@@ -1,4 +1,4 @@
-// -----------------------------
+﻿// -----------------------------
         // THEMES -> CSS variables
         // -----------------------------
         const themes = {
@@ -812,3 +812,6 @@ wallCollisions();
 
         // Show help once on load (like your old version)
         window.addEventListener("load", () => showOverlay(helpOverlay));
+
+
+

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WiseSize â€” Dashboard</title>
+  <title>WiseSize — Dashboard</title>
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
@@ -67,10 +67,10 @@
         <div class="muted">Quick snapshot from your last 100 usage events.</div>
 
         <div class="kpis">
-          <div class="kpi"><div class="n" id="kTotal">â€”</div><div class="t">Events</div></div>
-          <div class="kpi"><div class="n" id="kOpen">â€”</div><div class="t">open_embed</div></div>
-          <div class="kpi"><div class="n" id="kRec">â€”</div><div class="t">recommendation</div></div>
-          <div class="kpi"><div class="n" id="kSave">â€”</div><div class="t">save_profile</div></div>
+          <div class="kpi"><div class="n" id="kTotal">—</div><div class="t">Events</div></div>
+          <div class="kpi"><div class="n" id="kOpen">—</div><div class="t">open_embed</div></div>
+          <div class="kpi"><div class="n" id="kRec">—</div><div class="t">recommendation</div></div>
+          <div class="kpi"><div class="n" id="kSave">—</div><div class="t">save_profile</div></div>
         </div>
 
         <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
@@ -83,7 +83,7 @@
 
       <div class="card">
         <h2>Next steps</h2>
-        <div class="muted" id="merchantInfo">Loadingâ€¦</div>
+        <div class="muted" id="merchantInfo">Loading…</div>
 
         <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:12px 0">
 
@@ -123,12 +123,12 @@
 
       const st = merchantReady(merchant);
       merchantInfo.innerHTML = `
-        <div><b>Store:</b> ${escapeHtml(merchant.name || "â€”")}</div>
-        <div class="muted" style="margin-top:4px"><b>Website:</b> ${escapeHtml(merchant.website || "â€”")}</div>
-        <div class="muted" style="margin-top:6px"><b>Status:</b> ${st.ready ? "Verified âœ“" : "Setup needed"}</div>
+        <div><b>Store:</b> ${escapeHtml(merchant.name || "—")}</div>
+        <div class="muted" style="margin-top:4px"><b>Website:</b> ${escapeHtml(merchant.website || "—")}</div>
+        <div class="muted" style="margin-top:6px"><b>Status:</b> ${st.ready ? "Verified ✓" : "Setup needed"}</div>
       `;
 
-      msg.textContent = "Loading usageâ€¦";
+      msg.textContent = "Loading usage…";
       const events = await listUsageEvents(db, merchantId, { limitN: 100 });
 
       const counts = events.reduce((acc, e) => {
@@ -142,7 +142,7 @@
       kRec.textContent   = String(counts.recommendation || 0);
       kSave.textContent  = String(counts.save_profile || 0);
 
-      msg.textContent = "Updated âœ“";
+      msg.textContent = "Updated ✓";
     }
 
     let ctx = null;
@@ -159,4 +159,5 @@
   </script>
 </body>
 </html>
+
 

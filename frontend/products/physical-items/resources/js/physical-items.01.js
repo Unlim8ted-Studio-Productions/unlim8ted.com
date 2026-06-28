@@ -1,4 +1,4 @@
-const grid = document.getElementById("grid");
+﻿const grid = document.getElementById("grid");
     const searchEl = document.getElementById("search");
     const filterEl = document.getElementById("filter");
 
@@ -216,3 +216,4 @@ const grid = document.getElementById("grid");
         grid.innerHTML = `<div class="empty"><strong>Could not load products.</strong><div style="margin-top:8px;color:rgba(255,255,255,.68)">Please refresh and try again.</div></div>`;
       }
     })();
+

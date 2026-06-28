@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -269,9 +269,9 @@
     <div class="eyebrow">About the Meatball AI</div>
     <h1>The current staged runtime</h1>
     <p class="subtitle">
-      Meatball is not one generator answering everything. The page runs a sequence of small models in the browser, keeps short conversational memory,
-      rewrites followups when needed, routes math away from the normal generator, applies answer overrides, and drives the emotion renderer separately
-      from the QA system.
+      Meatball is not one generator answering everything. The page runs a sequence of small models in the browser, applies token-level spelling cleanup
+      before classification, keeps short conversational memory, rewrites followups when needed, routes math away from the normal generator, applies
+      answer overrides, and drives the emotion renderer separately from the QA system.
     </p>
   </header>
 
@@ -293,6 +293,33 @@
         </div>
 
         <div class="arrow">↓</div>
+
+        <div class="node blue">
+          <div class="tag">Normalization</div>
+          <div class="node-title">SymSpell-style spelling cleanup runs before the classifiers</div>
+          <div class="node-desc">
+            The earlier input corrector model is not part of the active runtime path. Input cleanup now uses a dictionary-based SymSpell-style pass
+            before reaction, complexity, math, subject finding, and subject insertion.
+          </div>
+          <pre>dictionary sources:
+- online frequency list when fetch succeeds
+- embedded fallback word list when fetch fails
+- extra words taken from runtime subject memory
+
+rules:
+- token-level alphabetical word matching
+- max edit distance: 2
+- prefix length: 7
+- original token casing preserved
+- known entity casing restored after correction
+
+example:
+what is the glich
+-> what is the glitch
+-> what is The Glitch</pre>
+        </div>
+
+        <div class="arrow">-></div>
 
         <div class="grid-4" style="width:min(100%,1120px);">
           <div class="card">
@@ -445,6 +472,7 @@ Thank you. The sauce accepts the compliment.
     </div>
     <div class="content">
       <div class="list">
+        <div class="list-item"><strong>Spelling normalization:</strong> misspelled word tokens go through a SymSpell-style correction pass before the classifiers run. The dictionary uses a fetched frequency list when available, falls back to an embedded list when it is not, and adds remembered subject words from runtime memory.</div>
         <div class="list-item"><strong>Math fallback:</strong> obvious expressions like <code>what is 1+1</code> can route to math even if the classifier misses.</div>
         <div class="list-item"><strong>List behavior:</strong> list/facts/examples/features requests reshape the question before generation, then render each sentence as bullets.</div>
         <div class="list-item"><strong>Compare behavior:</strong> if two subjects are parsed, the runtime asks <code>what is X</code> and <code>what is Y</code> and appends both outputs.</div>
@@ -465,12 +493,17 @@ Thank you. The sauce accepts the compliment.
     <div class="content">
       <div class="grid-2">
         <div class="card">
-          <h3>Input text corrector</h3>
+          <h3>Input cleanup status</h3>
           <p>
-            A denoising model can learn to turn misspelled or noisy questions into cleaner inputs before subject finding and routing.
+            The learned input corrector is not part of the active runtime. Misspelling cleanup currently uses the SymSpell-style dictionary pass
+            described above, so input cleanup happens without loading a separate correction model.
           </p>
-          <pre>what is the glich
-→ what is The Glitch?</pre>
+          <pre>current order:
+raw input
+-> SymSpell-style correction
+-> restore entity casing
+-> run classifiers
+-> route request</pre>
         </div>
         <div class="card">
           <h3>Output sanity checker</h3>
@@ -479,6 +512,7 @@ Thank you. The sauce accepts the compliment.
           </p>
           <pre>bad:
 I'm not
+
 
 fallback:
 I'm not quite sure what you mean...</pre>
@@ -489,3 +523,5 @@ I'm not quite sure what you mean...</pre>
 </main>
 </body>
 </html>
+
+

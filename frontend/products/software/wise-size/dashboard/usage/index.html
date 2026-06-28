@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WiseSize â€” Usage</title>
+  <title>WiseSize — Usage</title>
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
@@ -72,10 +72,10 @@
         </div>
 
         <div class="kpis">
-          <div class="kpi"><div class="n" id="kTotal">â€”</div><div class="t">Events</div></div>
-          <div class="kpi"><div class="n" id="kOpen">â€”</div><div class="t">open_embed</div></div>
-          <div class="kpi"><div class="n" id="kRec">â€”</div><div class="t">recommendation</div></div>
-          <div class="kpi"><div class="n" id="kSave">â€”</div><div class="t">save_profile</div></div>
+          <div class="kpi"><div class="n" id="kTotal">—</div><div class="t">Events</div></div>
+          <div class="kpi"><div class="n" id="kOpen">—</div><div class="t">open_embed</div></div>
+          <div class="kpi"><div class="n" id="kRec">—</div><div class="t">recommendation</div></div>
+          <div class="kpi"><div class="n" id="kSave">—</div><div class="t">save_profile</div></div>
         </div>
 
         <div id="events" class="list"></div>
@@ -129,7 +129,7 @@
         div.className = "item";
         div.innerHTML = `
           <div style="font-weight:950">${escapeHtml(e.type || "unknown")}</div>
-          <div class="muted" style="margin-top:4px">item: ${escapeHtml(e.itemId || "â€”")} â€¢ session: ${escapeHtml(e.anonSessionId || "â€”")}</div>
+          <div class="muted" style="margin-top:4px">item: ${escapeHtml(e.itemId || "—")} • session: ${escapeHtml(e.anonSessionId || "—")}</div>
         `;
         eventsEl.appendChild(div);
       });
@@ -170,4 +170,5 @@
   </script>
 </body>
 </html>
+
 

@@ -1,4 +1,4 @@
-import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0";
+﻿import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0";
 
     let generator = null;
     let isBusy = false;
@@ -139,3 +139,4 @@ import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.
 
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) tick();
     else canvas.style.display = "none";
+

@@ -1,4 +1,4 @@
-// Footer year
+﻿// Footer year
     (function(){
       const y = new Date().getFullYear();
       const el = document.getElementById("footer-text");
@@ -27,3 +27,4 @@
         localStorage.removeItem(key);
       });
     })();
+

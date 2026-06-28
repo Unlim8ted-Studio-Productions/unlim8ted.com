@@ -1,4 +1,4 @@
-/******************************************************************
+﻿/******************************************************************
      * Modern single-file chess with:
      * - Legal move gen (incl castling/en passant/promotion)
      * - Check/checkmate/stalemate detection
@@ -1061,3 +1061,4 @@ el.classList.toggle('black-piece', !!p && p === p.toLowerCase());
     }
 
     boot();
+

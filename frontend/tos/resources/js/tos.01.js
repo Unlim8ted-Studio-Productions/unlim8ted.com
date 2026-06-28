@@ -1,4 +1,4 @@
-// Footer year
+﻿// Footer year
     document.addEventListener("DOMContentLoaded", () => {
       const y = new Date().getFullYear();
       document.getElementById("footer-text").textContent =
@@ -66,3 +66,4 @@
     } else {
       canvas.style.display = "none";
     }
+

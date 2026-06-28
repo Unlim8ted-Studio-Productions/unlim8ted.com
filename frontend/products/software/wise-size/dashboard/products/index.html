@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WiseSize â€” Products</title>
+  <title>WiseSize — Products</title>
 <script type="module" src="/components/site-navbar.js"></script>
 <site-navbar
   cart-href="/cart"
@@ -149,8 +149,8 @@
         const el = document.createElement("div");
         el.className = "item";
         el.innerHTML = `
-          <div style="font-weight:950">${escapeHtml(it.brand)} â€” ${escapeHtml(it.name)}</div>
-          <div class="muted" style="margin-top:4px">category: ${escapeHtml(it.category)} â€¢ id: ${escapeHtml(it.id)}</div>
+          <div style="font-weight:950">${escapeHtml(it.brand)} — ${escapeHtml(it.name)}</div>
+          <div class="muted" style="margin-top:4px">category: ${escapeHtml(it.category)} • id: ${escapeHtml(it.id)}</div>
           <div class="muted" style="margin-top:6px">publish: ${escapeHtml(it.publishStatus || "draft")}</div>
           <div class="code"></div>
         `;
@@ -164,10 +164,10 @@
     authState.textContent = ctx.user.email || ctx.user.uid;
 
     async function refresh() {
-      msg.textContent = "Loadingâ€¦";
+      msg.textContent = "Loading…";
       const items = await listMyItems(ctx.db, ctx.merchantId, { limitN: 60 });
       render(items, ctx.merchantId);
-      msg.textContent = "Updated âœ“";
+      msg.textContent = "Updated ✓";
     }
 
     document.getElementById("btnRefresh").addEventListener("click", async () => {
@@ -177,7 +177,7 @@
 
     document.getElementById("btnCreate").addEventListener("click", async () => {
       try {
-        msg.textContent = "Submittingâ€¦";
+        msg.textContent = "Submitting…";
 
         const b = brand.value.trim();
         const n = name.value.trim();
@@ -200,8 +200,8 @@
           verification: { stage: "auto_schema", status: "pending", progress: 10 }
         });
 
-        msg.textContent = "Submitted âœ“";
-        toastify(toastWrap, "Submitted âœ“");
+        msg.textContent = "Submitted ✓";
+        toastify(toastWrap, "Submitted ✓");
         brand.value = "";
         name.value = "";
         await refresh();
@@ -216,4 +216,5 @@
   </script>
 </body>
 </html>
+
 

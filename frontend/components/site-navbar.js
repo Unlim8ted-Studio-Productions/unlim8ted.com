@@ -1,4 +1,4 @@
-import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+﻿import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
@@ -30,7 +30,6 @@ class SiteNavbar extends HTMLElement {
     const signInHref = this.getAttribute("signin-href") || "https://unlim8ted.com/sign-in";
     const profileHref = this.getAttribute("profile-href") || "https://unlim8ted.com/profile";
 
-    // ✅ NEW: no-spacer option (use: <site-navbar no-spacer="true">)
     const noSpacerAttr = this.getAttribute("no-spacer");
     const thisNoSpacer =
       noSpacerAttr !== null &&
@@ -452,7 +451,7 @@ class SiteNavbar extends HTMLElement {
             <span>Unlim8ted</span>
           </a>
 
-          <button class="navbar-toggle" id="toggleBtn" aria-label="Toggle menu" aria-expanded="false">☰</button>
+          <button class="navbar-toggle" id="toggleBtn" aria-label="Toggle menu" aria-expanded="false">â˜°</button>
 
           <ul id="links" role="menubar">
             <li><a href="${base}/" role="menuitem">Home</a></li>
@@ -510,7 +509,7 @@ class SiteNavbar extends HTMLElement {
       </nav>
     `;
 
-    // ✅ spacer below fixed nav (skippable)
+    // spacer below fixed nav (skippable)
     if (!thisNoSpacer) this.syncSpacer();
     else this.removeSpacer();
 
@@ -621,11 +620,11 @@ class SiteNavbar extends HTMLElement {
     if (this._onWinResize) window.removeEventListener("resize", this._onWinResize);
     this._onWinResize = null;
 
-    // ✅ if unmounted, remove spacer as well
+    // if unmounted, remove spacer as well
     this.removeSpacer();
   }
 
-  // ✅ NEW: allow toggling no-spacer dynamically if attribute changes
+  // NEW: allow toggling no-spacer dynamically if attribute changes
   static get observedAttributes() {
     return ["no-spacer"];
   }
@@ -1003,3 +1002,4 @@ class SiteNavbar extends HTMLElement {
 }
 
 customElements.define("site-navbar", SiteNavbar);
+

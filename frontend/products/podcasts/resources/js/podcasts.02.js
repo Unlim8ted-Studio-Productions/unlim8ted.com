@@ -1,4 +1,4 @@
-// Fade loader out cleanly (and remove it from the DOM)
+﻿// Fade loader out cleanly (and remove it from the DOM)
     window.addEventListener("load", () => {
       const loader = document.getElementById("pageLoader");
       if (!loader) return;
@@ -146,3 +146,4 @@
       isPlaying = false;
       if (playBtn) playBtn.textContent = "Play";
     });
+
