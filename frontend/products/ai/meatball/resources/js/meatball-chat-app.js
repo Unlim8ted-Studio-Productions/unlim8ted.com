@@ -556,6 +556,212 @@ function restoreEntityCasing(text) {
   return out;
 }
 
+const DICTIONARY_URL = "https://raw.githubusercontent.com/hermitdave/FrequencyWords/master/content/2018/en/en_50k.txt";
+const SYMSPELL_MAX_EDIT_DISTANCE = 2;
+const SYMSPELL_PREFIX_LENGTH = 7;
+
+let SYMSPELL_WORD_FREQUENCY = null;
+let symSpellIndex = null;
+let symSpellDictionaryPromise = null;
+
+async function loadSymSpellDictionary() {
+  const fallbackWords = new Map(Object.entries({
+    "the": 50000, "be": 48000, "to": 47000, "of": 46000, "and": 45000, "a": 44000, "in": 43000,
+    "that": 42000, "have": 41000, "i": 40500, "it": 40000, "for": 39000, "not": 38000,
+    "on": 37000, "with": 36000, "you": 33000, "is": 33000, "do": 32000, "this": 30000,
+    "what": 14500, "about": 12000, "who": 11500, "meatball": 10000, "when": 9600,
+    "can": 9200, "why": 9000, "sauce": 9000, "time": 8800, "where": 8500,
+    "unlim8ted": 8000, "tell": 7000, "timecat": 7000, "explain": 6500,
+    "seinfeld": 6000, "compare": 5200, "list": 5000, "glitch": 5000,
+    "facts": 4300, "examples": 4200, "features": 4100, "math": 3900,
+    "solve": 3800, "calculate": 3700, "equation": 3600, "plus": 3500,
+    "minus": 3400, "times": 3300, "divided": 3200, "squared": 3100,
+    "cubed": 3000, "really": 7600, "rainy": 7400, "brainy": 5000,
+    "yes": 7400, "yep": 7300, "yeah": 7200, "okay": 7100, "ok": 7000,
+    "hello": 6900, "hi": 6800, "hey": 6700, "thanks": 6600, "thank": 6500,
+    "please": 6400, "answer": 6300, "question": 6200, "subject": 6100,
+    "reaction": 6000, "emotion": 5900, "neutral": 5800, "excited": 5700,
+    "confused": 5600, "suspicious": 5500, "angry": 5400, "sad": 5300,
+    "overwhelmed": 5200, "generator": 5100, "classifier": 5000,
+    "corrector": 4900, "input": 4800, "output": 4700, "route": 4600,
+    "followup": 4500, "smalltalk": 4400, "normal": 4300, "unknown": 4200,
+    "rewrite": 4100, "previous": 4000, "history": 3900, "memory": 3800,
+    "model": 3700, "models": 3600, "runtime": 3500, "loaded": 3400,
+    "loading": 3300, "ready": 3200, "system": 3100, "brain": 3000,
+    "ask": 2900, "made": 2800, "does": 2700, "mean": 2600, "more": 2500
+  }));
+
+  try {
+    const response = await fetch(DICTIONARY_URL, { cache: "force-cache" });
+    if (!response.ok) throw new Error("dictionary fetch failed");
+    const text = await response.text();
+    const words = new Map();
+
+    for (const line of text.split(/\r?\n/)) {
+      const [word, count] = line.trim().split(/\s+/);
+      if (!word || !count) continue;
+      if (!/^[a-z][a-z0-9']{1,30}$/.test(word)) continue;
+      words.set(word, Number(count) || 1);
+    }
+
+    for (const [word, count] of fallbackWords.entries()) {
+      words.set(word, Math.max(words.get(word) || 0, count));
+    }
+
+    return words;
+  } catch (error) {
+    console.warn("SymSpell online dictionary unavailable; using fallback dictionary.", error);
+    return fallbackWords;
+  }
+}
+
+async function getSymSpellWords() {
+  if (SYMSPELL_WORD_FREQUENCY) return SYMSPELL_WORD_FREQUENCY;
+  if (!symSpellDictionaryPromise) symSpellDictionaryPromise = loadSymSpellDictionary();
+  SYMSPELL_WORD_FREQUENCY = await symSpellDictionaryPromise;
+  return SYMSPELL_WORD_FREQUENCY;
+}
+
+function symSpellPreserveCase(original, corrected) {
+  original = String(original || "");
+  corrected = String(corrected || "");
+  if (!original || !corrected) return corrected;
+  if (original.toUpperCase() === original && /[A-Z]/.test(original)) return corrected.toUpperCase();
+  if (original[0].toUpperCase() === original[0]) return corrected[0].toUpperCase() + corrected.slice(1);
+  return corrected;
+}
+
+function symSpellDeletes(word, maxDistance = SYMSPELL_MAX_EDIT_DISTANCE) {
+  const deletes = new Set();
+  const queue = [String(word || "").slice(0, SYMSPELL_PREFIX_LENGTH)];
+
+  for (let distance = 0; distance < maxDistance; distance += 1) {
+    const level = [...new Set(queue.splice(0))];
+
+    for (const item of level) {
+      if (item.length <= 1) continue;
+
+      for (let i = 0; i < item.length; i += 1) {
+        const del = item.slice(0, i) + item.slice(i + 1);
+        if (!deletes.has(del)) {
+          deletes.add(del);
+          queue.push(del);
+        }
+      }
+    }
+  }
+
+  return deletes;
+}
+
+function symSpellEditDistance(a, b, maxDistance = SYMSPELL_MAX_EDIT_DISTANCE) {
+  a = String(a || "");
+  b = String(b || "");
+
+  if (Math.abs(a.length - b.length) > maxDistance) return maxDistance + 1;
+
+  const prev = new Array(b.length + 1);
+  const curr = new Array(b.length + 1);
+
+  for (let j = 0; j <= b.length; j += 1) prev[j] = j;
+
+  for (let i = 1; i <= a.length; i += 1) {
+    curr[0] = i;
+    let rowMin = curr[0];
+
+    for (let j = 1; j <= b.length; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      curr[j] = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost);
+      rowMin = Math.min(rowMin, curr[j]);
+    }
+
+    if (rowMin > maxDistance) return maxDistance + 1;
+
+    for (let j = 0; j <= b.length; j += 1) prev[j] = curr[j];
+  }
+
+  return prev[b.length];
+}
+
+async function buildSymSpellRuntime(extraWords = []) {
+  const baseWords = await getSymSpellWords();
+  const words = new Map(baseWords);
+
+  for (const raw of extraWords) {
+    const word = String(raw || "").toLowerCase();
+    if (/^[a-z][a-z'-]{1,31}$/.test(word)) {
+      words.set(word, Math.max(words.get(word) || 0, 2500));
+    }
+  }
+
+  const deletes = new Map();
+
+  for (const word of words.keys()) {
+    for (const del of symSpellDeletes(word)) {
+      if (!deletes.has(del)) deletes.set(del, new Set());
+      deletes.get(del).add(word);
+    }
+  }
+
+  return { words, deletes };
+}
+
+async function getSymSpellRuntime() {
+  if (!symSpellIndex) {
+    const memoryWords = (runtimeMemory?.subjects || [])
+      .flatMap(subject => String(subject || "").match(/[A-Za-z][A-Za-z'-]+/g) || []);
+
+    symSpellIndex = await buildSymSpellRuntime(memoryWords);
+  }
+
+  return symSpellIndex;
+}
+
+function symSpellLookup(token, runtime) {
+  const lower = String(token || "").toLowerCase();
+
+  if (!/^[a-z][a-z'-]{1,31}$/.test(lower)) return lower;
+  if (!runtime) return lower;
+  if (runtime.words.has(lower)) return lower;
+  if (lower.length <= 2) return lower;
+
+  const candidates = new Set();
+
+  for (const del of symSpellDeletes(lower)) {
+    const bucket = runtime.deletes.get(del);
+    if (bucket) {
+      for (const candidate of bucket) candidates.add(candidate);
+    }
+  }
+
+  let best = lower;
+  let bestDistance = SYMSPELL_MAX_EDIT_DISTANCE + 1;
+  let bestFreq = 0;
+
+  for (const candidate of candidates) {
+    const distance = symSpellEditDistance(lower, candidate, SYMSPELL_MAX_EDIT_DISTANCE);
+    const freq = runtime.words.get(candidate) || 0;
+
+    if (distance < bestDistance || (distance === bestDistance && freq > bestFreq)) {
+      best = candidate;
+      bestDistance = distance;
+      bestFreq = freq;
+    }
+  }
+
+  return bestDistance <= SYMSPELL_MAX_EDIT_DISTANCE ? best : lower;
+}
+
+async function symSpellCorrectText(text) {
+  const runtime = await getSymSpellRuntime();
+  const source = String(text || "");
+
+  const corrected = source.replace(/[A-Za-z][A-Za-z'-]*/g, token => {
+    return symSpellPreserveCase(token, symSpellLookup(token, runtime));
+  });
+
+  return restoreEntityCasing(corrected).replace(/\s+/g, " ").trim();
+}
 function encodeCorrectorInput(text, vocab, maxLen) {
   const ids = new BigInt64Array(maxLen);
   let cursor = 0;
@@ -595,6 +801,7 @@ function decodeCorrectorOutput(logits, dims, idToToken, eosId) {
 
 async function runInputCorrection(text, runtime) {
   const raw = String(text || "").trim();
+
   if (!raw) {
     return {
       text: "",
@@ -603,33 +810,12 @@ async function runInputCorrection(text, runtime) {
     };
   }
 
-  if (!runtime) {
-    const passthrough = restoreEntityCasing(raw).replace(/\s+/g, " ").trim();
-    return {
-      text: passthrough,
-      changed: passthrough !== raw,
-      source: "disabled"
-    };
-  }
+  const corrected = await symSpellCorrectText(raw);
 
-  const maxLen = Number(runtime.config?.max_len || 96);
-  const inputName = runtime.session.inputNames?.[0] || "input_ids";
-  const feeds = {
-    [inputName]: new ort.Tensor("int64", encodeCorrectorInput(raw, runtime.inputVocab, maxLen), [1, maxLen])
-  };
-  const outputs = await runtime.session.run(feeds);
-  const outputName = runtime.session.outputNames?.[0] || Object.keys(outputs)[0];
-  const decoded = decodeCorrectorOutput(
-    outputs[outputName]?.data,
-    outputs[outputName]?.dims,
-    runtime.idToToken,
-    runtime.eosId
-  );
-  const corrected = restoreEntityCasing(String(decoded || raw).replace(/\s+/g, " ").trim());
   return {
     text: corrected || raw,
     changed: (corrected || raw) !== raw,
-    source: "model"
+    source: "symspell"
   };
 }
 
@@ -1082,27 +1268,16 @@ async function loadGenericClassifier(modelUrl, vocabUrl, labelsUrl, configUrl) {
 }
 
 async function loadOptionalInputCorrector() {
-  try {
-    const [session, inputVocab, outputVocab, config] = await Promise.all([
-      createSession(MODEL_PATHS.inputCorrectorModel),
-      fetchJson(MODEL_PATHS.inputCorrectorInputVocab),
-      fetchJson(MODEL_PATHS.inputCorrectorOutputVocab),
-      fetchJson(MODEL_PATHS.inputCorrectorConfig)
-    ]);
-    const idToToken = {};
-    for (const [token, id] of Object.entries(outputVocab || {})) idToToken[Number(id)] = token;
-    return {
-      session,
-      inputVocab,
-      outputVocab,
-      idToToken,
-      eosId: typeof outputVocab?.["<eos>"] === "number" ? outputVocab["<eos>"] : EOS_ID,
-      config
-    };
-  } catch (error) {
-    console.warn("Optional Meatball model unavailable:", MODEL_PATHS.inputCorrectorModel, error);
-    return null;
-  }
+  const words = await getSymSpellWords();
+
+  return {
+    kind: "symspell",
+    config: {
+      max_edit_distance: SYMSPELL_MAX_EDIT_DISTANCE,
+      prefix_length: SYMSPELL_PREFIX_LENGTH,
+      dictionary_size: words.size
+    }
+  };
 }
 
 async function loadModels() {
@@ -1444,6 +1619,22 @@ async function routeRequest(rawInput, staged) {
     rewrittenQuestion: generatorQuestion
   };
 
+  const wordCount = normalized.split(/\s+/).filter(Boolean).length;
+
+  if (/^it'?s\s+[a-z0-9_'-]+$/i.test(normalized)) {
+    route.route = "smalltalk";
+    route.answer = "Okay.";
+    route.animation = "neutral";
+    return route;
+  }
+
+  if (wordCount <= 4 && /\breally\b/i.test(normalized)) {
+    route.route = "smalltalk";
+    route.answer = "Yep!";
+    route.animation = "neutral";
+    return route;
+  }
+
   if (normalized === "ok" || normalized === "okay") {
     route.route = "smalltalk";
     route.answer = "Yep.";
@@ -1457,7 +1648,12 @@ async function routeRequest(rawInput, staged) {
     route.animation = "neutral";
     return route;
   }
-
+if (normalized === "b") {
+  route.route = "smalltalk";
+  route.answer = "B? I'm not a bee.";
+  route.animation = "angry";
+  return route;
+}
   if (staged.reaction.label === "angry" && runtimeMemory.angryStreak >= 1 && runtimeMemory.sauceAttackCooldown <= 0) {
     route.route = "anger_escalation_attack";
     route.answer = "YOU DONT LIKE ME??? THEN FACE THE SAUCE.";
