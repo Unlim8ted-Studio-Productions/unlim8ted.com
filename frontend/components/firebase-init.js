@@ -12,7 +12,7 @@ import {
 
 const firebaseConfig = {
   apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
-  authDomain: "unlim8ted-db.firebaseapp.com",
+  authDomain: "auth.unlim8ted.com",
   projectId: "unlim8ted-db",
   storageBucket: "unlim8ted-db.appspot.com",
   messagingSenderId: "1059428499872",

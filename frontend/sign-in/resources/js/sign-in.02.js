@@ -5,6 +5,7 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   setPersistence,
   browserLocalPersistence,
   browserSessionPersistence,
@@ -19,7 +20,7 @@ import {
 
 const firebaseConfig = {
   apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
-  authDomain: "unlim8ted-db.firebaseapp.com",
+  authDomain: "auth.unlim8ted.com",
   projectId: "unlim8ted-db",
   storageBucket: "unlim8ted-db.appspot.com",
   messagingSenderId: "1059428499872",
@@ -61,6 +62,13 @@ function getRedirectTarget() {
 
 function redirectAfterLogin() {
   window.location.href = getRedirectTarget();
+}
+
+function setStatus(message, tone = "") {
+  const status = document.getElementById("auth-status");
+  if (!status) return;
+  status.textContent = message || "";
+  status.className = `auth-status${tone ? ` ${tone}` : ""}`;
 }
 
 // If already signed in, bounce to redirect target (nice UX)
@@ -120,6 +128,25 @@ async function handleAccountCreation(email, password) {
   redirectAfterLogin();
 }
 
+async function handlePasswordReset() {
+  const email = document.getElementById("email").value.trim();
+  if (!email) {
+    setStatus("Enter your email address first, then request a reset link.", "error");
+    return;
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email, {
+      url: "https://unlim8ted.com/sign-in",
+      handleCodeInApp: false,
+    });
+    setStatus("Password reset email sent. Check your inbox.", "success");
+  } catch (err) {
+    console.error("Password reset error:", err);
+    setStatus("Could not send reset email. Verify the address and try again.", "error");
+  }
+}
+
 let isCreateMode = false;
 
 function setMode(createMode) {
@@ -134,6 +161,8 @@ function setMode(createMode) {
   document.getElementById("toggle-text").textContent = createMode
     ? "Already have an account? Sign In."
     : "Don't have an account? Create one.";
+  document.getElementById("forgot-password-btn").hidden = createMode;
+  setStatus("");
 }
 
 function toggleMode() {
@@ -146,6 +175,9 @@ window.addEventListener("DOMContentLoaded", () => {
     .addEventListener("click", handleGoogleSignIn);
 
   document.getElementById("toggle-text").addEventListener("click", toggleMode);
+  document
+    .getElementById("forgot-password-btn")
+    .addEventListener("click", handlePasswordReset);
 
   // Use the FORM submit event (more reliable than button click)
   document.getElementById("email-signin-form").addEventListener("submit", async (e) => {
@@ -161,6 +193,12 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     } catch (err) {
       console.error("Auth error:", err);
+      setStatus(
+        isCreateMode
+          ? "Failed to create account. Try again."
+          : "Sign-in failed. Check your email and password.",
+        "error"
+      );
       alert(
         isCreateMode
           ? "Failed to create account. Try again."

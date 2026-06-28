@@ -1085,6 +1085,8 @@ def train_alignment_model(args):
             "feature_mode": "qa_pair",
             "char_ngrams": list(CHAR_NGRAMS),
             "word_ngrams": list(WORD_NGRAMS),
+            "hidden": ALIGN_HIDDEN,
+            "dropout": ALIGN_DROPOUT,
             "sources": [
                 "public:wizard_of_wikipedia",
                 "public:celestial_catalog",

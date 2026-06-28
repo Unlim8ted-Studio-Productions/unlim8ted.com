@@ -189,6 +189,63 @@ def vectorize_classifier(text, vocab, char_ngrams=(2, 3, 4, 5), word_ngrams=(1, 
     return x
 
 
+def output_sanity_pair_features(question, answer, char_ngrams=(2, 3, 4, 5), word_ngrams=(1, 2, 3)):
+    q = normalize(question)
+    a = normalize(answer)
+    merged = f"question: {q} answer: {a}"
+    wrapped = f"<{merged}>"
+    feats = []
+
+    for n in char_ngrams:
+        for i in range(0, max(0, len(wrapped) - n + 1)):
+            feats.append("c:" + wrapped[i : i + n])
+
+    words = merged.split()
+    for n in word_ngrams:
+        for i in range(0, max(0, len(words) - n + 1)):
+            feats.append("w:" + "_".join(words[i : i + n]))
+
+    q_words = set(re.findall(r"[a-z0-9']+", q))
+    a_words = set(re.findall(r"[a-z0-9']+", a))
+    overlap = len(
+        (q_words & a_words) - {"what", "is", "the", "a", "an", "tell", "me", "about"}
+    )
+    if overlap == 0:
+        feats.append("flag:no_overlap")
+    if overlap >= 2:
+        feats.append("flag:good_overlap")
+    if a.startswith("- "):
+        feats.append("flag:list")
+    if a in {"i'm not", "the meatball chooses to interpret that as"}:
+        feats.append("flag:known_bad")
+    if len(a.split()) <= 2:
+        feats.append("flag:very_short")
+    if a.count("?") > 2:
+        feats.append("flag:many_questions")
+    if re.fullmatch(r"(yes|yeah|yep|no|nope)\.?", a):
+        feats.append("flag:bare_yes_no")
+    if (
+        a.startswith("i don't know")
+        or a.startswith("im not")
+        or a.startswith("i'm not")
+    ):
+        feats.append("flag:weak_fallback")
+    return feats
+
+
+def vectorize_output_sanity(question, answer, vocab, char_ngrams=(2, 3, 4, 5), word_ngrams=(1, 2, 3)):
+    x = torch.zeros(1, len(vocab), dtype=torch.float32)
+    counts = Counter(
+        output_sanity_pair_features(question, answer, char_ngrams, word_ngrams)
+    )
+
+    for feat, count in counts.items():
+        idx = vocab.get(feat, 0)
+        x[0, idx] = min(float(count), 5.0)
+
+    return x
+
+
 class GenericClassifier(nn.Module):
     def __init__(self, input_size, classes, hidden=320, dropout=0.22):
         super().__init__()
@@ -228,13 +285,13 @@ class InputCorrector(nn.Module):
 
 
 class OutputSanityClassifier(nn.Module):
-    def __init__(self, input_size, num_classes):
+    def __init__(self, input_size, num_classes, hidden_size=OUTPUT_SANITY_HIDDEN, dropout=OUTPUT_SANITY_DROPOUT):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(input_size, OUTPUT_SANITY_HIDDEN),
+            nn.Linear(input_size, hidden_size),
             nn.ReLU(),
-            nn.Dropout(OUTPUT_SANITY_DROPOUT),
-            nn.Linear(OUTPUT_SANITY_HIDDEN, num_classes),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_size, num_classes),
         )
 
     def forward(self, x):
@@ -314,9 +371,19 @@ def load_output_sanity(model_dir):
     labels = load_json(labels_path)
     config = maybe_load_json(model_dir / "config.json") or {}
     ckpt = torch.load(pt_path, map_location=DEVICE)
+    state_dict = ckpt["model_state_dict"]
+    first_weight = state_dict.get("net.0.weight")
+    hidden_size = (
+        int(first_weight.shape[0])
+        if first_weight is not None
+        else int(config.get("hidden", OUTPUT_SANITY_HIDDEN))
+    )
+    dropout = float(config.get("dropout", OUTPUT_SANITY_DROPOUT))
 
-    model = OutputSanityClassifier(len(vocab), len(labels)).to(DEVICE)
-    model.load_state_dict(ckpt["model_state_dict"], strict=True)
+    model = OutputSanityClassifier(
+        len(vocab), len(labels), hidden_size=hidden_size, dropout=dropout
+    ).to(DEVICE)
+    model.load_state_dict(state_dict, strict=True)
     model.eval()
 
     return {
@@ -436,8 +503,9 @@ def run_input_corrector(text, runtime):
 
 
 @torch.no_grad()
-def run_output_sanity_check(answer, runtime):
+def run_output_sanity_check(question, answer, runtime):
     text = str(answer or "").strip()
+    prompt = str(question or "").strip()
     normalized = normalize_no_punc(text)
     fallback = "I'm not quite sure what you mean. It might just be the sauce getting tangled up in itself."
 
@@ -468,7 +536,28 @@ def run_output_sanity_check(answer, runtime):
             "source": "disabled",
         }
 
-    pred = predict_classifier(text, runtime)
+    config = runtime.get("config", {})
+    char_ngrams = tuple(config.get("char_ngrams", [2, 3, 4, 5]))
+    word_ngrams = tuple(config.get("word_ngrams", [1, 2, 3]))
+
+    if config.get("feature_mode") == "qa_pair":
+        x = vectorize_output_sanity(
+            prompt, text, runtime["vocab"], char_ngrams, word_ngrams
+        ).to(DEVICE)
+        logits = runtime["model"](x)
+        probs = torch.softmax(logits, dim=-1)[0]
+        idx = int(torch.argmax(probs).item())
+        pred = {
+            "label": runtime["labels"][idx],
+            "confidence": float(probs[idx].item()),
+            "probs": {
+                runtime["labels"][i]: float(probs[i].item())
+                for i in range(len(runtime["labels"]))
+            },
+        }
+    else:
+        pred = predict_classifier(text, runtime)
+
     if pred["label"] == "confused_fallback" and pred["confidence"] >= 0.72:
         return {
             **pred,
@@ -1375,7 +1464,7 @@ def answer_once(text, runtimes, memory, debug=True):
             )
 
     final = post_process_answer(final)
-    sanity = run_output_sanity_check(final, output_sanity_rt)
+    sanity = run_output_sanity_check(generator_question, final, output_sanity_rt)
     overridden = apply_answer_overrides(final, reaction, animation, sanity)
 
     packet = {

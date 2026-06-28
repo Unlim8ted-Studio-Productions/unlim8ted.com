@@ -61,41 +61,61 @@ def normalize(text):
     return re.sub(r"\s+", " ", text).strip()
 
 
-def features(text):
-    clean = normalize(text)
-    wrapped = f"<{clean}>"
+def pair_features(question, answer):
+    q = normalize(question)
+    a = normalize(answer)
+    merged = f"question: {q} answer: {a}"
+    wrapped = f"<{merged}>"
     out = []
     for n in CHAR_NGRAMS:
         for i in range(0, max(0, len(wrapped) - n + 1)):
             out.append(f"c:{wrapped[i:i+n]}")
-    words = clean.split()
+    words = merged.split()
     for n in WORD_NGRAMS:
         for i in range(0, max(0, len(words) - n + 1)):
             out.append(f"w:{'_'.join(words[i:i+n])}")
-    if clean.startswith("- "):
+
+    q_words = set(re.findall(r"[a-z0-9']+", q))
+    a_words = set(re.findall(r"[a-z0-9']+", a))
+    overlap = len(
+        (q_words & a_words) - {"what", "is", "the", "a", "an", "tell", "me", "about"}
+    )
+    if overlap == 0:
+        out.append("flag:no_overlap")
+    if overlap >= 2:
+        out.append("flag:good_overlap")
+    if a.startswith("- "):
         out.append("flag:list")
-    if clean in {"i'm not", "the meatball chooses to interpret that as"}:
+    if a in {"i'm not", "the meatball chooses to interpret that as"}:
         out.append("flag:known_bad")
-    if len(clean.split()) <= 2:
+    if len(a.split()) <= 2:
         out.append("flag:very_short")
-    if clean.count("?") > 2:
+    if a.count("?") > 2:
         out.append("flag:many_questions")
+    if re.fullmatch(r"(yes|yeah|yep|no|nope)\.?", a):
+        out.append("flag:bare_yes_no")
+    if (
+        a.startswith("i don't know")
+        or a.startswith("im not")
+        or a.startswith("i'm not")
+    ):
+        out.append("flag:weak_fallback")
     return out
 
 
 def build_vocab(rows):
     counts = Counter()
     for row in rows:
-        counts.update(features(row["text"]))
+        counts.update(pair_features(row["question"], row["answer"]))
     vocab = {"<unk>": 0}
     for token, _ in counts.most_common(MAX_VOCAB - 1):
         vocab[token] = len(vocab)
     return vocab
 
 
-def vectorize(text, vocab):
+def vectorize(question, answer, vocab):
     vec = torch.zeros(len(vocab), dtype=torch.float32)
-    counts = Counter(features(text))
+    counts = Counter(pair_features(question, answer))
     for token, count in counts.items():
         vec[vocab.get(token, 0)] = min(float(count), 5.0)
     return vec
@@ -111,7 +131,7 @@ class RowDataset(Dataset):
 
     def __getitem__(self, idx):
         row = self.rows[idx]
-        x = vectorize(row["text"], self.vocab)
+        x = vectorize(row["question"], row["answer"], self.vocab)
         y = LABELS.index(row["label"])
         return x, torch.tensor(y, dtype=torch.long)
 
@@ -130,36 +150,38 @@ class TinyClassifier(nn.Module):
         return self.net(x)
 
 
-def gather_good_answers(limit=18000):
-    answers = []
+def gather_good_pairs(limit=18000):
+    pairs = []
     seen = set()
 
     for path in sorted(SPECIALIZED_DIR.glob("*.jsonl")):
         for row in load_jsonl(path):
+            question = str(row.get("question", "")).strip()
             answer = str(row.get("answer", "")).strip()
-            if not answer:
+            if not question or not answer:
                 continue
-            key = answer.lower()
+            key = (question.lower(), answer.lower())
             if key in seen:
                 continue
             seen.add(key)
-            answers.append(answer)
-            if len(answers) >= limit:
-                return answers
+            pairs.append({"question": question, "answer": answer})
+            if len(pairs) >= limit:
+                return pairs
 
     for row in load_jsonl(SMART_QA_PATH):
+        question = str(row.get("question", "")).strip()
         answer = str(row.get("answer", "")).strip()
-        if not answer:
+        if not question or not answer:
             continue
-        key = answer.lower()
+        key = (question.lower(), answer.lower())
         if key in seen:
             continue
         seen.add(key)
-        answers.append(answer)
-        if len(answers) >= limit:
+        pairs.append({"question": question, "answer": answer})
+        if len(pairs) >= limit:
             break
 
-    return answers
+    return pairs
 
 
 def corrupt_answer(answer):
@@ -191,16 +213,58 @@ def corrupt_answer(answer):
 
 
 def build_rows(limit):
-    good = gather_good_answers(limit)
-    rows = [{"text": text, "label": "accept"} for text in good]
+    good = gather_good_pairs(limit)
+    if not good:
+        raise RuntimeError("No question/answer pairs found for output sanity training.")
 
-    for text in good:
-        rows.append({"text": corrupt_answer(text), "label": "confused_fallback"})
+    rows = [
+        {"question": pair["question"], "answer": pair["answer"], "label": "accept"}
+        for pair in good
+    ]
+
+    all_answers = [pair["answer"] for pair in good]
+
+    for idx, pair in enumerate(good):
+        wrong_answer = all_answers[(idx * 7 + 13) % len(all_answers)]
+        if wrong_answer != pair["answer"]:
+            rows.append(
+                {
+                    "question": pair["question"],
+                    "answer": wrong_answer,
+                    "label": "confused_fallback",
+                }
+            )
+
+    for pair in good:
+        rows.append(
+            {
+                "question": pair["question"],
+                "answer": corrupt_answer(pair["answer"]),
+                "label": "confused_fallback",
+            }
+        )
 
     rows.extend([
-        {"text": "The Meatball chooses to interpret that as", "label": "confused_fallback"},
-        {"text": "I'm not", "label": "confused_fallback"},
-        {"text": "Thank you. The sauce accepts the compliment.", "label": "accept"},
+        {
+            "question": "what is The Glitch",
+            "answer": "The Meatball chooses to interpret that as",
+            "label": "confused_fallback",
+        },
+        {
+            "question": "what is The Glitch",
+            "answer": "I'm not",
+            "label": "confused_fallback",
+        },
+        {
+            "question": "thanks",
+            "answer": "Thank you. The sauce accepts the compliment.",
+            "label": "accept",
+        },
+        {
+            "question": "yes, what year was seinfield started",
+            "answer": "the speed of light is approximately 299,792,458 meters per second.",
+            "label": "confused_fallback",
+        },
     ])
 
     random.shuffle(rows)
@@ -294,10 +358,13 @@ def train(args):
     save_json(
         OUT_DIR / "config.json",
         {
-            "model_type": "tiny_output_sanity_classifier",
+            "model_type": "qa_pair_alignment_classifier",
+            "feature_mode": "qa_pair",
             "char_ngrams": list(CHAR_NGRAMS),
             "word_ngrams": list(WORD_NGRAMS),
-            "note": "Classifies final generated text as acceptable or in need of confused fallback.",
+            "hidden": HIDDEN,
+            "dropout": DROPOUT,
+            "note": "Classifies whether an answer fits the input question using question and answer pairs.",
         },
     )
 

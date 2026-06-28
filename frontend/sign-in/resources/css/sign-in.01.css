@@ -210,6 +210,34 @@
     }
     .remember input{ transform: translateY(5px); accent-color: var(--accent); }
 
+    .auth-actions{
+      display:flex;
+      justify-content:flex-end;
+      margin:-4px 0 14px;
+    }
+    .link-button{
+      width:auto;
+      padding:0;
+      background:none;
+      border:none;
+      color:var(--accent);
+      text-decoration:underline;
+      font-size:.95rem;
+    }
+    .link-button:hover{ color:var(--accent2); }
+    .auth-status{
+      min-height:1.25rem;
+      margin:12px 0 0;
+      font-size:.92rem;
+      color:var(--muted);
+    }
+    .auth-status.error{
+      color:#ff8f8f;
+    }
+    .auth-status.success{
+      color:var(--accent);
+    }
+
     .info{
       margin-top:1rem;
       font-size:.9rem;
