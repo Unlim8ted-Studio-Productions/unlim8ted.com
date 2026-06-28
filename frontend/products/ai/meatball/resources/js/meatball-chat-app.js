@@ -43,6 +43,7 @@ const MODEL_PATHS = {
 };
 
 const DEBUG_ENABLED = new URLSearchParams(location.search).has("debug");
+const USE_VALIDATION_MODELS = window.MeatballPageConfig?.useValidationModels === true;
 const PAD_ID = 0;
 const BOS_ID = 1;
 const EOS_ID = 2;
@@ -1134,8 +1135,15 @@ async function loadModels() {
     );
     setLoadingProgress(0.36, "Math classifier loaded.");
 
-    const inputCorrector = await loadOptionalInputCorrector();
-    setLoadingProgress(0.46, "Input corrector loaded.");
+    const inputCorrector = USE_VALIDATION_MODELS
+      ? await loadOptionalInputCorrector()
+      : null;
+    setLoadingProgress(
+      0.46,
+      USE_VALIDATION_MODELS
+        ? "Input corrector loaded."
+        : "Input corrector disabled."
+    );
 
     const [subjectFinderConfig, subjectFinderVocab, subjectFinderSession] = await Promise.all([
       fetchJson(MODEL_PATHS.subjectFinderConfig),
@@ -1167,12 +1175,14 @@ async function loadModels() {
     ]);
     setLoadingProgress(0.94, "Math system loaded.");
 
-    const outputSanity = await loadOptionalGenericClassifier(
-      MODEL_PATHS.outputSanityModel,
-      MODEL_PATHS.outputSanityVocab,
-      MODEL_PATHS.outputSanityLabels,
-      MODEL_PATHS.outputSanityConfig
-    );
+    const outputSanity = USE_VALIDATION_MODELS
+      ? await loadOptionalGenericClassifier(
+          MODEL_PATHS.outputSanityModel,
+          MODEL_PATHS.outputSanityVocab,
+          MODEL_PATHS.outputSanityLabels,
+          MODEL_PATHS.outputSanityConfig
+        )
+      : null;
 
     const mathIdToToken = {};
     for (const [token, id] of Object.entries(mathOutputVocab || {})) mathIdToToken[Number(id)] = token;
@@ -1211,7 +1221,11 @@ async function loadModels() {
       },
       outputSanity
     };
-    clearLoadingProgress("Correction, routing, subject, generator, sanity, and math systems are ready.");
+    clearLoadingProgress(
+      USE_VALIDATION_MODELS
+        ? "Correction, routing, subject, generator, sanity, and math systems are ready."
+        : "Core routing, subject, generator, and math systems are ready."
+    );
     window.setTimeout(() => removeLoadingUi(), 260);
     chatInput.disabled = false;
     sendButton.disabled = false;

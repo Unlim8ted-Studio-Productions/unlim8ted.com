@@ -746,7 +746,7 @@ def collate_corrections(batch):
 
 
 class GreedyInputCorrector(nn.Module):
-    def __init__(self, src_vocab_size, tgt_vocab_size, max_len):
+    def __init__(self, src_vocab_size, tgt_vocab_size, max_len, bos_id):
         super().__init__()
         self.src_embed = nn.Embedding(src_vocab_size, CORRECTOR_EMBED, padding_idx=0)
         self.tgt_embed = nn.Embedding(tgt_vocab_size, CORRECTOR_EMBED, padding_idx=0)
@@ -754,6 +754,7 @@ class GreedyInputCorrector(nn.Module):
         self.decoder = nn.GRU(CORRECTOR_EMBED, CORRECTOR_HIDDEN, batch_first=True)
         self.head = nn.Linear(CORRECTOR_HIDDEN, tgt_vocab_size)
         self.max_len = int(max_len)
+        self.bos_id = int(bos_id)
 
     def forward_train(self, src_ids, tgt_ids):
         src_emb = self.src_embed(src_ids)
@@ -767,7 +768,9 @@ class GreedyInputCorrector(nn.Module):
         batch = src_ids.size(0)
         src_emb = self.src_embed(src_ids)
         _, hidden = self.encoder(src_emb)
-        prev = torch.full((batch, 1), BOS_ID, dtype=torch.long, device=src_ids.device)
+        prev = torch.full(
+            (batch, 1), self.bos_id, dtype=torch.long, device=src_ids.device
+        )
         steps = []
         for _ in range(self.max_len):
             emb = self.tgt_embed(prev[:, -1:])
@@ -805,6 +808,40 @@ class TinyAlignmentClassifier(nn.Module):
 
     def forward(self, x):
         return self.net(x)
+
+
+def export_input_corrector_onnx(model, output_path, max_len):
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    model = model.to("cpu")
+    model.eval()
+    dummy = torch.zeros(1, int(max_len), dtype=torch.long)
+    torch.onnx.export(
+        model,
+        dummy,
+        output_path,
+        input_names=["input_ids"],
+        output_names=["logits"],
+        dynamic_axes={"input_ids": {0: "batch"}, "logits": {0: "batch"}},
+        opset_version=17,
+    )
+
+
+def export_alignment_onnx(model, output_path, input_size):
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    model = model.to("cpu")
+    model.eval()
+    dummy = torch.zeros(1, int(input_size), dtype=torch.float32)
+    torch.onnx.export(
+        model,
+        dummy,
+        output_path,
+        input_names=["input"],
+        output_names=["logits"],
+        dynamic_axes={"input": {0: "batch"}, "logits": {0: "batch"}},
+        opset_version=17,
+    )
 
 
 @torch.no_grad()
@@ -870,9 +907,9 @@ def train_input_corrector(args):
         collate_fn=collate_corrections,
     )
 
-    model = GreedyInputCorrector(len(src_vocab), len(tgt_vocab), CORRECTOR_MAX_LEN).to(
-        DEVICE
-    )
+    model = GreedyInputCorrector(
+        len(src_vocab), len(tgt_vocab), CORRECTOR_MAX_LEN, tgt_vocab[BOS]
+    ).to(DEVICE)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=CORRECTOR_LR, weight_decay=CORRECTOR_WEIGHT_DECAY
     )
@@ -926,19 +963,13 @@ def train_input_corrector(args):
             "src_vocab_size": len(src_vocab),
             "tgt_vocab_size": len(tgt_vocab),
             "max_len": CORRECTOR_MAX_LEN,
+            "bos_id": tgt_vocab[BOS],
         },
         INPUT_OUT_DIR / "input_text_corrector.pt",
     )
 
-    dummy = torch.zeros(1, CORRECTOR_MAX_LEN, dtype=torch.long)
-    torch.onnx.export(
-        model,
-        dummy,
-        INPUT_OUT_DIR / "input_text_corrector.onnx",
-        input_names=["input_ids"],
-        output_names=["logits"],
-        dynamic_axes={"input_ids": {0: "batch"}, "logits": {0: "batch"}},
-        opset_version=17,
+    export_input_corrector_onnx(
+        model, INPUT_OUT_DIR / "input_text_corrector.onnx", CORRECTOR_MAX_LEN
     )
 
     save_json(INPUT_OUT_DIR / "input_vocab.json", src_vocab)
@@ -1031,15 +1062,8 @@ def train_alignment_model(args):
         ALIGN_OUT_DIR / "output_sanity_checker.pt",
     )
 
-    dummy = torch.zeros(1, len(vocab), dtype=torch.float32)
-    torch.onnx.export(
-        model,
-        dummy,
-        ALIGN_OUT_DIR / "output_sanity_checker.onnx",
-        input_names=["input"],
-        output_names=["logits"],
-        dynamic_axes={"input": {0: "batch"}, "logits": {0: "batch"}},
-        opset_version=17,
+    export_alignment_onnx(
+        model, ALIGN_OUT_DIR / "output_sanity_checker.onnx", len(vocab)
     )
 
     save_json(ALIGN_OUT_DIR / "input_vocab.json", vocab)
