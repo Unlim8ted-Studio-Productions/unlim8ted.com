@@ -33,6 +33,10 @@ PAD = "<pad>"
 BOS = "<bos>"
 EOS = "<eos>"
 UNK = "<unk>"
+PAD_ID = 0
+BOS_ID = 1
+EOS_ID = 2
+UNK_ID = 3
 
 LABELS = ["accept", "confused_fallback"]
 
@@ -746,7 +750,7 @@ def collate_corrections(batch):
 
 
 class GreedyInputCorrector(nn.Module):
-    def __init__(self, src_vocab_size, tgt_vocab_size, max_len, bos_id):
+    def __init__(self, src_vocab_size, tgt_vocab_size, max_len, bos_id=BOS_ID):
         super().__init__()
         self.src_embed = nn.Embedding(src_vocab_size, CORRECTOR_EMBED, padding_idx=0)
         self.tgt_embed = nn.Embedding(tgt_vocab_size, CORRECTOR_EMBED, padding_idx=0)
@@ -754,7 +758,7 @@ class GreedyInputCorrector(nn.Module):
         self.decoder = nn.GRU(CORRECTOR_EMBED, CORRECTOR_HIDDEN, batch_first=True)
         self.head = nn.Linear(CORRECTOR_HIDDEN, tgt_vocab_size)
         self.max_len = int(max_len)
-        self.bos_id = int(bos_id)
+        self.bos_id = int(BOS_ID if bos_id is None else bos_id)
 
     def forward_train(self, src_ids, tgt_ids):
         src_emb = self.src_embed(src_ids)
@@ -797,13 +801,19 @@ class AlignmentDataset(Dataset):
 
 
 class TinyAlignmentClassifier(nn.Module):
-    def __init__(self, input_size, num_classes):
+    def __init__(
+        self,
+        input_size,
+        num_classes,
+        hidden_size=ALIGN_HIDDEN,
+        dropout=ALIGN_DROPOUT,
+    ):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(input_size, ALIGN_HIDDEN),
+            nn.Linear(input_size, hidden_size),
             nn.ReLU(),
-            nn.Dropout(ALIGN_DROPOUT),
-            nn.Linear(ALIGN_HIDDEN, num_classes),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_size, num_classes),
         )
 
     def forward(self, x):

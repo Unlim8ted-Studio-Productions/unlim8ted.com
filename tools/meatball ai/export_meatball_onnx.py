@@ -46,9 +46,12 @@ def load_alignment_model(checkpoint_path, vocab_path, labels_path):
 
     input_size = int(checkpoint.get("input_size") or len(vocab))
     num_classes = int(checkpoint.get("num_classes") or len(labels))
+    state_dict = checkpoint["model_state_dict"]
+    first_weight = state_dict.get("net.0.weight")
+    hidden_size = int(first_weight.shape[0]) if first_weight is not None else 320
 
-    model = TinyAlignmentClassifier(input_size, num_classes)
-    model.load_state_dict(checkpoint["model_state_dict"], strict=True)
+    model = TinyAlignmentClassifier(input_size, num_classes, hidden_size=hidden_size)
+    model.load_state_dict(state_dict, strict=True)
     model.eval()
     return model, input_size
 
