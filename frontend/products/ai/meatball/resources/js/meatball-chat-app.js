@@ -1621,12 +1621,12 @@ async function routeRequest(rawInput, staged) {
 
   const wordCount = normalized.split(/\s+/).filter(Boolean).length;
 
-  if (/^it'?s\s+[a-z0-9_'-]+$/i.test(normalized)) {
-    route.route = "smalltalk";
-    route.answer = "Okay.";
-    route.animation = "neutral";
-    return route;
-  }
+if (/^it(?:'?s|\s+is)?\s+[a-z0-9_'-]+$/i.test(rawInput.trim())) {
+  route.route = "smalltalk";
+  route.answer = "Okay.";
+  route.animation = "neutral";
+  return route;
+}
 
   if (wordCount <= 4 && /\breally\b/i.test(normalized)) {
     route.route = "smalltalk";
