@@ -1,4 +1,4 @@
-name: Sync /assets and /services into their repos + publish /frontend to GitHub Pages + deploy /auth to Firebase Hosting
+name: Sync Website
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: sync-assets-services-frontend-auth
+  group: sync-assets-services-frontend-auth-products
   cancel-in-progress: false
 
 env:
@@ -30,6 +30,7 @@ jobs:
       api_changed: ${{ steps.changes.outputs.api_changed }}
       frontend_changed: ${{ steps.changes.outputs.frontend_changed }}
       auth_changed: ${{ steps.changes.outputs.auth_changed }}
+      products_changed: ${{ steps.changes.outputs.products_changed }}
     steps:
       - name: Checkout main repo
         uses: actions/checkout@v4
@@ -61,6 +62,7 @@ jobs:
           api_changed=false
           frontend_changed=false
           auth_changed=false
+          products_changed=false
 
           if echo "$CHANGED" | grep -qE '^assets/'; then
             assets_changed=true
@@ -78,10 +80,15 @@ jobs:
             auth_changed=true
           fi
 
+          if echo "$CHANGED" | grep -qE '^assets/data/products\.json$'; then
+            products_changed=true
+          fi
+
           echo "assets_changed=$assets_changed" | tee -a "$GITHUB_OUTPUT"
           echo "api_changed=$api_changed" | tee -a "$GITHUB_OUTPUT"
           echo "frontend_changed=$frontend_changed" | tee -a "$GITHUB_OUTPUT"
           echo "auth_changed=$auth_changed" | tee -a "$GITHUB_OUTPUT"
+          echo "products_changed=$products_changed" | tee -a "$GITHUB_OUTPUT"
 
   sync:
     name: Sync assets + services
@@ -255,10 +262,106 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-service-account.json
         run: |
+          set +e
           cd auth
           npm install -g firebase-tools
-          firebase deploy --only hosting --project unlim8ted-db
-          
+          firebase deploy --only hosting --project unlim8ted-db 2>&1 | tee deploy.log
+          EXIT_CODE=${PIPESTATUS[0]}
+
+          if grep -q "is the current active version" deploy.log; then
+            echo "Firebase deploy completed; ignoring duplicate active-version release error."
+            exit 0
+          fi
+
+          exit $EXIT_CODE
+
+  upload_products_firestore:
+    name: Upload products.json to Firestore
+    runs-on: ubuntu-latest
+    needs: [detect]
+    if: needs.detect.outputs.products_changed == 'true'
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload products to Firestore
+        shell: bash
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_UNLIM8TED_DB }}
+        run: |
+          npm install firebase-admin
+
+          node <<'NODE'
+          const fs = require("fs");
+          const admin = require("firebase-admin");
+
+          const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+
+          admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount)
+          });
+
+          const db = admin.firestore();
+          const raw = JSON.parse(fs.readFileSync("assets/data/products.json", "utf8"));
+          const products = Array.isArray(raw) ? raw : raw.products;
+
+          if (!Array.isArray(products)) {
+            throw new Error("products.json must be a list or an object with a products list");
+          }
+
+          async function main() {
+            let uploaded = 0;
+            let skipped = 0;
+            let batch = db.batch();
+            let batchCount = 0;
+
+            for (const rawProduct of products) {
+              if (!rawProduct || typeof rawProduct !== "object") {
+                continue;
+              }
+
+              const id = rawProduct.id;
+
+              if (!id) {
+                skipped++;
+                continue;
+              }
+
+              const product = { ...rawProduct };
+
+              // Do not write comments as a document field.
+              // Real comments live in:
+              // /products/{productId}/comments/{commentId}
+              delete product.comments;
+
+              const ref = db.collection("products").doc(String(id));
+              batch.set(ref, product, { merge: false });
+
+              uploaded++;
+              batchCount++;
+
+              if (batchCount >= 450) {
+                await batch.commit();
+                batch = db.batch();
+                batchCount = 0;
+              }
+            }
+
+            if (batchCount > 0) {
+              await batch.commit();
+            }
+
+            console.log(`Done. Uploaded: ${uploaded} | Skipped: ${skipped} | Total fetched: ${products.length}`);
+          }
+
+          main().catch((err) => {
+            console.error(err);
+            process.exit(1);
+          });
+          NODE
+
   deploy_pages:
     name: Deploy frontend to GitHub Pages
     runs-on: ubuntu-latest
