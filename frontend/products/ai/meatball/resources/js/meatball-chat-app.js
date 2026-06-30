@@ -756,7 +756,16 @@ async function symSpellCorrectText(text) {
   const runtime = await getSymSpellRuntime();
   const source = String(text || "");
 
-  const corrected = source.replace(/[A-Za-z][A-Za-z'-]*/g, token => {
+  const corrected = source.replace(/[A-Za-z0-9][A-Za-z0-9'-]*/g, token => {
+    const lower = token.toLowerCase();
+
+    if (lower === "unlim8ted") return "Unlim8ted";
+    if (lower === "timecat") return "TimeCat";
+    if (lower === "glitch") return "Glitch";
+
+    // Do not spell-correct brand/project tokens with numbers.
+    if (/\d/.test(lower)) return token;
+
     return symSpellPreserveCase(token, symSpellLookup(token, runtime));
   });
 
@@ -1648,6 +1657,28 @@ if (/^it(?:'?s|\s+is)?\s+[a-z0-9_'-]+$/i.test(rawInput.trim())) {
     route.animation = "neutral";
     return route;
   }
+  const normalized = rawInput.trim().toLowerCase();
+
+if (normalized === "whoops") {
+  return {
+    answer: "Accepted. The sauce forgives you. What are we talking about now?",
+    emotion: "neutral",
+    animation: "neutral",
+    intent: "smalltalk",
+    confidence: 1.0
+  };
+}
+
+if (normalized === "oops") {
+  return {
+    answer: "Accepted. The sauce forgives you. What are we talking about now?",
+    emotion: "neutral",
+    animation: "neutral",
+    intent: "smalltalk",
+    confidence: 1.0
+  };
+}
+
 if (normalized === "b") {
   route.route = "smalltalk";
   route.answer = "B? I'm not a bee.";
