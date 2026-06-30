@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Unlim8ted Auth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root{
+      --bg1:#0f0c29; --bg2:#302b63; --bg3:#24243e;
+      --panel:rgba(30,30,30,.92);
+      --accent:#00ff99;
+      --accent2:#00cc77;
+      --text:#e0e0e0;
+      --muted:#b0b0b0;
+    }
+
+    body{
+      font-family:Arial,sans-serif;
+      background:radial-gradient(circle at center,var(--bg1),var(--bg2),var(--bg3));
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      color:var(--text);
+      overflow:hidden;
+      box-sizing:border-box;
+    }
+
+    .background{
+      position:fixed;
+      inset:0;
+      overflow:hidden;
+      z-index:-1;
+    }
+
+    .background span{
+      position:absolute;
+      width:50px;
+      height:50px;
+      background:linear-gradient(45deg,var(--accent),#ff0077);
+      opacity:.7;
+      filter:blur(8px);
+      animation:float 6s infinite ease-in-out;
+      border-radius:50%;
+    }
+
+    .background span:nth-child(1){ left:10%; top:20%; animation-delay:0s; }
+    .background span:nth-child(2){ left:80%; top:25%; animation-delay:1s; }
+    .background span:nth-child(3){ left:20%; top:75%; animation-delay:2s; }
+    .background span:nth-child(4){ left:70%; top:80%; animation-delay:3s; }
+    .background span:nth-child(5){ left:50%; top:50%; animation-delay:4s; }
+
+    @keyframes float{
+      0%,100%{ transform:translateY(0) translateX(0); }
+      50%{ transform:translateY(-40px) translateX(20px); }
+    }
+
+    .container{
+      text-align:center;
+      background:var(--panel);
+      border-radius:15px;
+      box-shadow:0 10px 30px rgba(0,255,153,.3);
+      padding:2rem;
+      max-width:420px;
+      width:min(92vw,420px);
+      margin:20px;
+    }
+
+    .logo{
+      font-size:2rem;
+      font-weight:bold;
+      color:var(--accent);
+      margin-bottom:.25rem;
+      text-shadow:0 0 10px var(--accent);
+    }
+
+    .subtitle{
+      margin:0 0 1rem;
+      color:var(--muted);
+      line-height:1.35;
+    }
+
+    input{
+      padding:10px;
+      margin:0 0 10px;
+      width:100%;
+      border:none;
+      border-radius:10px;
+      outline:none;
+      box-sizing:border-box;
+      font-size:16px;
+    }
+
+    button{
+      padding:10px 16px;
+      border:none;
+      border-radius:25px;
+      font-size:16px;
+      cursor:pointer;
+      width:100%;
+      background:var(--accent);
+      color:var(--bg3);
+      box-shadow:0 5px 10px rgba(0,255,153,.3);
+      transition:background-color .2s ease, transform .2s ease;
+      font-weight:bold;
+    }
+
+    button:hover{
+      background:var(--accent2);
+      transform:translateY(-1px);
+    }
+
+    button:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .auth-status{
+      min-height:1.25rem;
+      margin:12px 0 0;
+      font-size:.92rem;
+      color:var(--muted);
+      line-height:1.35;
+    }
+
+    .auth-status.error{ color:#ff8f8f; }
+    .auth-status.success{ color:var(--accent); }
+
+    .info{
+      margin-top:1rem;
+      font-size:.9rem;
+      color:var(--muted);
+      line-height:1.35;
+    }
+
+    .info a{
+      color:var(--accent);
+      text-decoration:none;
+      font-weight:bold;
+    }
+
+    .info a:hover{ text-decoration:underline; }
+  </style>
+</head>
+
+<body>
+  <div class="background">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <main class="container">
+    <div class="logo">Unlim8ted</div>
+    <p class="subtitle" id="subtitle">Loading authentication action...</p>
+    <div id="content"></div>
+    <div id="message" class="auth-status"></div>
+
+    <p class="info">
+      Return to <a href="https://unlim8ted.com">unlim8ted.com</a>
+    </p>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getAuth,
+      verifyPasswordResetCode,
+      confirmPasswordReset,
+      applyActionCode,
+      checkActionCode
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC8rw6kaFhJ2taebKRKKEA7iLqBvak_Dbc",
+      authDomain: "auth.unlim8ted.com",
+      projectId: "unlim8ted-db"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get("mode");
+    const oobCode = params.get("oobCode");
+    const continueUrl = params.get("continueUrl");
+    const lang = params.get("lang") || "en";
+
+    const subtitle = document.getElementById("subtitle");
+    const content = document.getElementById("content");
+    const message = document.getElementById("message");
+
+    function setStatus(text, type = "") {
+      message.textContent = text;
+      message.className = "auth-status" + (type ? " " + type : "");
+    }
+
+    function safeText(value) {
+      const div = document.createElement("div");
+      div.textContent = value || "";
+      return div.innerHTML;
+    }
+
+    function redirectIfNeeded(delay = 1800) {
+      if (!continueUrl) return;
+
+      try {
+        const url = new URL(continueUrl);
+        setTimeout(() => {
+          window.location.href = url.toString();
+        }, delay);
+      } catch {
+        // Ignore invalid continueUrl.
+      }
+    }
+
+    async function handleResetPassword() {
+      subtitle.textContent = "Create a new password for your account.";
+
+      try {
+        const email = await verifyPasswordResetCode(auth, oobCode);
+
+        content.innerHTML = `
+          <p class="subtitle">Reset password for ${safeText(email)}</p>
+          <input id="password" type="password" placeholder="New password" autocomplete="new-password">
+          <input id="confirm" type="password" placeholder="Confirm new password" autocomplete="new-password">
+          <button id="submit">Reset Password</button>
+        `;
+
+        document.getElementById("submit").onclick = async () => {
+          const btn = document.getElementById("submit");
+          const password = document.getElementById("password").value;
+          const confirm = document.getElementById("confirm").value;
+
+          if (password.length < 6) {
+            setStatus("Password must be at least 6 characters.", "error");
+            return;
+          }
+
+          if (password !== confirm) {
+            setStatus("Passwords do not match.", "error");
+            return;
+          }
+
+          btn.disabled = true;
+          setStatus("Resetting password...");
+
+          try {
+            await confirmPasswordReset(auth, oobCode, password);
+            content.innerHTML = "";
+            setStatus("Password reset successfully. You can now sign in.", "success");
+            redirectIfNeeded();
+          } catch (err) {
+            setStatus("Could not reset password. The link may be expired.", "error");
+            btn.disabled = false;
+          }
+        };
+      } catch (err) {
+        setStatus("This password reset link is invalid or expired.", "error");
+      }
+    }
+
+    async function handleVerifyEmail() {
+      subtitle.textContent = "Verifying your email address...";
+
+      try {
+        await applyActionCode(auth, oobCode);
+        setStatus("Your email address has been verified successfully.", "success");
+        redirectIfNeeded();
+      } catch (err) {
+        setStatus("This verification link is invalid or expired.", "error");
+      }
+    }
+
+    async function handleRecoverEmail() {
+      subtitle.textContent = "Recovering your previous email address...";
+
+      try {
+        const info = await checkActionCode(auth, oobCode);
+        await applyActionCode(auth, oobCode);
+
+        const restoredEmail = info?.data?.email || "your previous email address";
+        setStatus(`Your email address has been restored to ${restoredEmail}.`, "success");
+        redirectIfNeeded();
+      } catch (err) {
+        setStatus("This email recovery link is invalid or expired.", "error");
+      }
+    }
+
+    async function handleVerifyAndChangeEmail() {
+      subtitle.textContent = "Verifying and updating your email address...";
+
+      try {
+        const info = await checkActionCode(auth, oobCode);
+        await applyActionCode(auth, oobCode);
+
+        const newEmail = info?.data?.email;
+        setStatus(
+          newEmail
+            ? `Your new email address, ${newEmail}, has been verified successfully.`
+            : "Your new email address has been verified successfully.",
+          "success"
+        );
+
+        redirectIfNeeded();
+      } catch (err) {
+        setStatus("This email change link is invalid or expired.", "error");
+      }
+    }
+
+    async function handleRevertSecondFactorAddition() {
+      subtitle.textContent = "Reverting multi-factor authentication enrollment...";
+
+      try {
+        await applyActionCode(auth, oobCode);
+        setStatus("Multi-factor authentication enrollment has been reverted.", "success");
+        redirectIfNeeded();
+      } catch (err) {
+        setStatus("This multi-factor action link is invalid or expired.", "error");
+      }
+    }
+
+    if (!oobCode) {
+      subtitle.textContent = "Authentication link error.";
+      setStatus("Missing authentication code.", "error");
+    } else {
+      switch (mode) {
+        case "resetPassword":
+          handleResetPassword();
+          break;
+
+        case "verifyEmail":
+          handleVerifyEmail();
+          break;
+
+        case "recoverEmail":
+          handleRecoverEmail();
+          break;
+
+        case "verifyAndChangeEmail":
+          handleVerifyAndChangeEmail();
+          break;
+
+        case "revertSecondFactorAddition":
+          handleRevertSecondFactorAddition();
+          break;
+
+        default:
+          subtitle.textContent = "Unsupported action.";
+          setStatus("This authentication action is not supported.", "error");
+      }
+    }
+  </script>
+</body>
+</html>

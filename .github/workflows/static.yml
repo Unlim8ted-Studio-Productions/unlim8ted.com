@@ -1,4 +1,4 @@
-name: Sync /assets and /services into their repos + publish /frontend to GitHub Pages (GitHub App auth)
+name: Sync /assets and /services into their repos + publish /frontend to GitHub Pages + deploy /auth to Firebase Hosting
 
 on:
   push:
@@ -6,13 +6,14 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: sync-assets-services-frontend
+  group: sync-assets-services-frontend-auth
   cancel-in-progress: false
 
 env:
   ASSETS_DIR: assets
   PUBLIC_API_DIR: services
   FRONTEND_DIR: frontend
+  AUTH_DIR: auth
 
   ASSETS_REPO: Unlim8ted-Studio-Productions/assets.unlim8ted.com
   API_REPO: Unlim8ted-Studio-Productions/services.unlim8ted.com
@@ -28,6 +29,7 @@ jobs:
       assets_changed: ${{ steps.changes.outputs.assets_changed }}
       api_changed: ${{ steps.changes.outputs.api_changed }}
       frontend_changed: ${{ steps.changes.outputs.frontend_changed }}
+      auth_changed: ${{ steps.changes.outputs.auth_changed }}
     steps:
       - name: Checkout main repo
         uses: actions/checkout@v4
@@ -43,7 +45,6 @@ jobs:
           BEFORE="${{ github.event.before }}"
           AFTER="${{ github.sha }}"
 
-          # workflow_dispatch doesn't always have a usable "before"
           if [ -z "${BEFORE}" ] || [ "${BEFORE}" = "0000000000000000000000000000000000000000" ]; then
             if git rev-parse "${AFTER}~1" >/dev/null 2>&1; then
               BEFORE="$(git rev-parse "${AFTER}~1")"
@@ -59,12 +60,12 @@ jobs:
           assets_changed=false
           api_changed=false
           frontend_changed=false
+          auth_changed=false
 
           if echo "$CHANGED" | grep -qE '^assets/'; then
             assets_changed=true
           fi
 
-          # folder is literally "services" (space)
           if echo "$CHANGED" | grep -qE '^services/'; then
             api_changed=true
           fi
@@ -73,9 +74,14 @@ jobs:
             frontend_changed=true
           fi
 
-          echo "assets_changed=$assets_changed"   | tee -a "$GITHUB_OUTPUT"
-          echo "api_changed=$api_changed"         | tee -a "$GITHUB_OUTPUT"
+          if echo "$CHANGED" | grep -qE '^auth/'; then
+            auth_changed=true
+          fi
+
+          echo "assets_changed=$assets_changed" | tee -a "$GITHUB_OUTPUT"
+          echo "api_changed=$api_changed" | tee -a "$GITHUB_OUTPUT"
           echo "frontend_changed=$frontend_changed" | tee -a "$GITHUB_OUTPUT"
+          echo "auth_changed=$auth_changed" | tee -a "$GITHUB_OUTPUT"
 
   sync:
     name: Sync assets + services
@@ -98,7 +104,7 @@ jobs:
           git config --global user.name  "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Validate GitHub App inputs (fail fast)
+      - name: Validate GitHub App inputs
         shell: bash
         env:
           GH_APP_ID: ${{ vars.GH_APP_ID }}
@@ -107,21 +113,19 @@ jobs:
           set -euo pipefail
 
           if [ -z "${GH_APP_ID:-}" ]; then
-            echo "ERROR: vars.GH_APP_ID is not set (your GitHub App ID)."
+            echo "ERROR: vars.GH_APP_ID is not set."
             exit 1
           fi
 
           if [ -z "${GH_APP_PRIVATE_KEY:-}" ]; then
-            echo "ERROR: secrets.GH_APP_PRIVATE_KEY is not set (GitHub App private key PEM)."
+            echo "ERROR: secrets.GH_APP_PRIVATE_KEY is not set."
             exit 1
           fi
 
           if ! [[ "${GH_APP_ID}" =~ ^[0-9]+$ ]]; then
-            echo "ERROR: vars.GH_APP_ID must be numeric. Got: '${GH_APP_ID}'"
+            echo "ERROR: vars.GH_APP_ID must be numeric."
             exit 1
           fi
-
-          echo "App inputs look present."
 
       - name: Create GitHub App token
         id: app-token
@@ -134,19 +138,18 @@ jobs:
             assets.unlim8ted.com
             services.unlim8ted.com
 
-      - name: Fail if any file > 95MB in assets or services (only when needed)
+      - name: Fail if any file > 95MB in assets or services
         shell: bash
         run: |
           set -euo pipefail
           THRESHOLD_BYTES=$((95 * 1024 * 1024))
-          echo "Checking for files over $THRESHOLD_BYTES bytes..."
 
           check_dir () {
             local DIR="$1"
             if [ -d "$DIR" ]; then
               BIG="$(find "$DIR" -type f -printf '%s %p\n' | awk -v t="$THRESHOLD_BYTES" '$1>t{print}')"
               if [ -n "$BIG" ]; then
-                echo "ERROR: Found files too large for a normal git push in '$DIR':"
+                echo "ERROR: Found files too large in '$DIR':"
                 echo "$BIG"
                 exit 1
               fi
@@ -156,11 +159,12 @@ jobs:
           if [ "${{ needs.detect.outputs.assets_changed }}" = "true" ]; then
             check_dir "${ASSETS_DIR}"
           fi
+
           if [ "${{ needs.detect.outputs.api_changed }}" = "true" ]; then
             check_dir "${PUBLIC_API_DIR}"
           fi
 
-      - name: Sync assets repo (only if assets changed)
+      - name: Sync assets repo
         if: needs.detect.outputs.assets_changed == 'true'
         shell: bash
         env:
@@ -173,17 +177,10 @@ jobs:
           export GIT_TERMINAL_PROMPT=0
 
           SRC_PATH="${GITHUB_WORKSPACE}/${SRC_DIR}"
-          if [ ! -d "${SRC_PATH}" ]; then
-            echo "Source folder not found: ${SRC_PATH}" >&2
-            exit 1
-          fi
-
           WORKDIR="$(mktemp -d)"
-          echo "Workdir (assets): $WORKDIR"
           PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
 
           git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
-          test -d "${WORKDIR}/repo/.git"
 
           rsync -a --delete \
             --exclude='.git/' \
@@ -191,6 +188,7 @@ jobs:
             "${SRC_PATH}/" "${WORKDIR}/repo/"
 
           git -C "${WORKDIR}/repo" add -A
+
           if git -C "${WORKDIR}/repo" diff --cached --quiet; then
             echo "No changes to push to ${REPO}."
             rm -rf "$WORKDIR"
@@ -201,7 +199,7 @@ jobs:
           git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"
           rm -rf "$WORKDIR"
 
-      - name: Sync services repo (only if services changed)
+      - name: Sync services repo
         if: needs.detect.outputs.api_changed == 'true'
         shell: bash
         env:
@@ -214,17 +212,10 @@ jobs:
           export GIT_TERMINAL_PROMPT=0
 
           SRC_PATH="${GITHUB_WORKSPACE}/${SRC_DIR}"
-          if [ ! -d "${SRC_PATH}" ]; then
-            echo "Source folder not found: ${SRC_PATH}" >&2
-            exit 1
-          fi
-
           WORKDIR="$(mktemp -d)"
-          echo "Workdir (services): $WORKDIR"
           PUSH_URL="https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
 
           git clone --branch "${BRANCH}" --depth 1 "${PUSH_URL}" "${WORKDIR}/repo"
-          test -d "${WORKDIR}/repo/.git"
 
           rsync -a --delete \
             --exclude='.git/' \
@@ -232,6 +223,7 @@ jobs:
             "${SRC_PATH}/" "${WORKDIR}/repo/"
 
           git -C "${WORKDIR}/repo" add -A
+
           if git -C "${WORKDIR}/repo" diff --cached --quiet; then
             echo "No changes to push to ${REPO}."
             rm -rf "$WORKDIR"
@@ -241,6 +233,26 @@ jobs:
           git -C "${WORKDIR}/repo" commit -m "Deploy services from unlim8ted.com (${GITHUB_SHA})"
           git -C "${WORKDIR}/repo" push "${PUSH_URL}" "HEAD:${BRANCH}"
           rm -rf "$WORKDIR"
+
+  deploy_auth_firebase:
+    name: Deploy auth to Firebase Hosting
+    runs-on: ubuntu-latest
+    needs: [detect]
+    if: needs.detect.outputs.auth_changed == 'true'
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy auth folder to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_UNLIM8TED_DB }}
+          projectId: unlim8ted-db
+          channelId: live
+          entryPoint: auth
 
   deploy_pages:
     name: Deploy frontend to GitHub Pages
@@ -257,7 +269,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Inject snippet after <!DOCTYPE html>; if no doctype exists, prepend the old way
       - name: Inject snippet into frontend HTML files
         shell: bash
         run: |
@@ -298,10 +309,8 @@ jobs:
                   }
                   close(snip_file)
                 }
-
                 {
                   print $0
-
                   if (!injected && tolower($0) ~ /<!doctype[[:space:]]+html[[:space:]]*>/) {
                     print mark
                     printf "%s", snip

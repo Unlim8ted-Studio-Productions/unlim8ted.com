@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Unlim8ted — 404 Page Not Found</title>
+  <meta name="description"
+    content="404 - Page Not Found. Looks like the page you're searching for doesn't exist at Unlim8ted Studio Productions.">
+
+  <!-- Modern Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <script type="module" src="/components/site-navbar.js"></script>
+
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a, #1e293b);
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --text-main: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.7);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .card {
+      max-width: 600px;
+      width: 100%;
+      padding: 50px;
+      border-radius: 24px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    h1 {
+      font-size: 100px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      background: linear-gradient(90deg, #818cf8, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 22px;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    .description {
+      margin-top: 20px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    img {
+      margin: 30px 0;
+      max-width: 220px;
+      opacity: 0.9;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 14px 30px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 35px 25px;
+      }
+
+      h1 {
+        font-size: 70px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <site-navbar
+    cart-href="/cart"
+    signin-href="/sign-in"
+    profile-href="/profile"
+    no-spacer="true">
+  </site-navbar>
+
+  <main>
+    <div class="card">
+      <h1>404</h1>
+      <div class="subtitle">Well… this is awkward.</div>
+
+      <img src="images/error/not_found.png" alt="Page not found">
+
+      <div class="description">
+        The page you're looking for doesn't exist.<br>
+        It may have been moved, deleted, or is just hiding from you. ðŸ±
+        Back in time?
+      </div>
+
+      <a href="javascript:history.back()" class="button">
+        Take Me Back
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2019-<span id="year"></span> Unlim8ted Studio Productions. All rights reserved.
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>
+
+
