@@ -311,16 +311,26 @@ jobs:
             throw new Error("products.json must be a list or an object with a products list");
           }
 
+          async function commitBatch(batch, count, label) {
+            if (count > 0) {
+              await batch.commit();
+              console.log(`Committed ${label}: ${count}`);
+            }
+          }
+
           async function main() {
+            const collection = db.collection("products");
+            const jsonIds = new Set();
+
             let uploaded = 0;
             let skipped = 0;
+            let deleted = 0;
+
             let batch = db.batch();
             let batchCount = 0;
 
             for (const rawProduct of products) {
-              if (!rawProduct || typeof rawProduct !== "object") {
-                continue;
-              }
+              if (!rawProduct || typeof rawProduct !== "object") continue;
 
               const id = rawProduct.id;
 
@@ -329,39 +339,61 @@ jobs:
                 continue;
               }
 
-              const product = { ...rawProduct };
+              const docId = String(id);
+              jsonIds.add(docId);
 
-              // Do not write comments as a document field.
-              // Real comments live in:
-              // /products/{productId}/comments/{commentId}
+              const product = { ...rawProduct };
               delete product.comments;
 
-              const ref = db.collection("products").doc(String(id));
+              const ref = collection.doc(docId);
               batch.set(ref, product, { merge: false });
 
               uploaded++;
               batchCount++;
 
               if (batchCount >= 450) {
-                await batch.commit();
+                await commitBatch(batch, batchCount, "product upload batch");
                 batch = db.batch();
                 batchCount = 0;
               }
             }
 
-            if (batchCount > 0) {
-              await batch.commit();
+            await commitBatch(batch, batchCount, "final product upload batch");
+
+            const existingSnapshot = await collection.get();
+
+            batch = db.batch();
+            batchCount = 0;
+
+            for (const doc of existingSnapshot.docs) {
+              if (!jsonIds.has(doc.id)) {
+                batch.delete(doc.ref);
+                deleted++;
+                batchCount++;
+
+                console.log(`Queued delete for removed product: ${doc.id}`);
+
+                if (batchCount >= 450) {
+                  await commitBatch(batch, batchCount, "delete batch");
+                  batch = db.batch();
+                  batchCount = 0;
+                }
+              }
             }
 
-            console.log(`Done. Uploaded: ${uploaded} | Skipped: ${skipped} | Total fetched: ${products.length}`);
+            await commitBatch(batch, batchCount, "final delete batch");
+
+            console.log(
+              `Done. Uploaded: ${uploaded} | Deleted: ${deleted} | Skipped: ${skipped} | Total JSON products: ${products.length}`
+            );
           }
 
           main().catch((err) => {
+            console.error("UPLOAD FAILED:");
             console.error(err);
             process.exit(1);
           });
           NODE
-
   deploy_pages:
     name: Deploy frontend to GitHub Pages
     runs-on: ubuntu-latest
