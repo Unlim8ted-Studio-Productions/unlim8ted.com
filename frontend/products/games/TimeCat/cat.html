@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Runaway Wall Cat</title>
+<style>
+  :root {
+    --bg: #101217;
+    --panel: #191d26;
+    --wall: #2a3140;
+    --fur: #9da3aa;
+    --fur-dark: #6f767d;
+    --fur-light: #c4c9ce;
+    --stripe: rgba(72, 78, 85, 0.42);
+    --pink: #f4a7b8;
+    --eye: #baf57a;
+    --shadow: rgba(0,0,0,.35);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: system-ui, sans-serif;
+    color: white;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,.08), transparent 26%),
+      radial-gradient(circle at 80% 90%, rgba(120,150,255,.12), transparent 30%),
+      var(--bg);
+  }
+
+  .hud {
+    position: fixed;
+    z-index: 20;
+    top: 18px;
+    left: 18px;
+    width: min(390px, calc(100vw - 36px));
+    padding: 16px 18px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 18px;
+    background: rgba(10,12,18,.72);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  }
+
+  .hud h1 {
+    margin: 0 0 6px;
+    font-size: 17px;
+  }
+
+  .hud p {
+    margin: 0;
+    opacity: .72;
+    line-height: 1.35;
+    font-size: 13px;
+  }
+
+  .arena {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .wall {
+    position: absolute;
+    background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: inset 0 0 40px rgba(255,255,255,.035);
+  }
+
+  .wall.top { left: 0; top: 0; right: 0; height: 28px; }
+  .wall.bottom { left: 0; bottom: 0; right: 0; height: 28px; }
+  .wall.left { left: 0; top: 0; bottom: 0; width: 28px; }
+  .wall.right { right: 0; top: 0; bottom: 0; width: 28px; }
+
+  .mouse-dot {
+    position: fixed;
+    z-index: 5;
+    width: 16px;
+    height: 16px;
+    margin: -8px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: rgba(255,255,255,.92);
+    box-shadow: 0 0 0 8px rgba(255,255,255,.08), 0 0 28px rgba(255,255,255,.3);
+    transform: translate(-100px, -100px);
+  }
+
+  .cat-wrap {
+    position: absolute;
+    width: 180px;
+    height: 150px;
+    left: 50%;
+    top: 50%;
+    transform-origin: 50% 80%;
+    will-change: transform;
+    filter: drop-shadow(0 24px 20px var(--shadow));
+  }
+
+  .cat {
+    position: absolute;
+    inset: 0;
+    transform-origin: 50% 80%;
+    animation: breathe 2.4s ease-in-out infinite;
+  }
+
+  .body {
+    position: absolute;
+    left: 38px;
+    top: 62px;
+    width: 110px;
+    height: 66px;
+    border-radius: 55% 48% 48% 55% / 58% 58% 45% 45%;
+    background:
+      radial-gradient(circle at 38% 28%, rgba(255,255,255,.22), transparent 32%),
+      var(--fur);
+    overflow: hidden;
+  }
+
+  .body::before,
+  .body::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    width: 18px;
+    height: 62px;
+    border-radius: 50%;
+    border-left: 5px solid var(--stripe);
+    transform: rotate(-18deg);
+  }
+
+  .body::before { left: 28px; }
+  .body::after { left: 60px; transform: rotate(-12deg); }
+
+  .head {
+    position: absolute;
+    left: 52px;
+    top: 18px;
+    width: 82px;
+    height: 72px;
+    border-radius: 48% 48% 45% 45%;
+    background:
+      radial-gradient(circle at 34% 25%, rgba(255,255,255,.25), transparent 35%),
+      var(--fur);
+    transform-origin: 50% 82%;
+    animation: headBob 2.1s ease-in-out infinite;
+  }
+
+  .head::before,
+  .head::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    width: 14px;
+    height: 42px;
+    border-radius: 50%;
+    border-left: 4px solid var(--stripe);
+    opacity: .9;
+  }
+
+  .head::before { left: 25px; transform: rotate(-18deg); }
+  .head::after { right: 23px; transform: rotate(18deg) scaleX(-1); }
+
+  .ear {
+    position: absolute;
+    top: -14px;
+    width: 30px;
+    height: 34px;
+    background: var(--fur);
+    clip-path: polygon(50% 0, 0 100%, 100% 100%);
+    transform-origin: 50% 100%;
+  }
+
+  .ear::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 10px;
+    width: 14px;
+    height: 18px;
+    background: var(--pink);
+    clip-path: polygon(50% 0, 0 100%, 100% 100%);
+    opacity: .75;
+  }
+
+  .ear.left {
+    left: 7px;
+    transform: rotate(-24deg);
+    animation: earTwitch 4.8s ease-in-out infinite;
+  }
+
+  .ear.right {
+    right: 7px;
+    transform: rotate(24deg);
+    animation: earTwitch2 5.2s ease-in-out infinite;
+  }
+
+  .eye {
+    position: absolute;
+    top: 30px;
+    width: 14px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--eye);
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,.14);
+    overflow: hidden;
+  }
+
+  .eye::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 4px;
+    height: 14px;
+    border-radius: 5px;
+    background: #111;
+  }
+
+  .eye.left { left: 23px; }
+  .eye.right { right: 23px; }
+
+  .blink .eye {
+    animation: blink .18s ease-in-out;
+  }
+
+  .nose {
+    position: absolute;
+    left: 50%;
+    top: 49px;
+    width: 9px;
+    height: 7px;
+    background: #3b2a2e;
+    border-radius: 55% 55% 70% 70%;
+    transform: translateX(-50%);
+  }
+
+  .mouth {
+    position: absolute;
+    left: 50%;
+    top: 56px;
+    width: 18px;
+    height: 10px;
+    border-bottom: 2px solid rgba(30,25,25,.7);
+    border-radius: 0 0 20px 20px;
+    transform: translateX(-50%);
+  }
+
+  .whisker {
+    position: absolute;
+    top: 51px;
+    width: 34px;
+    height: 1.5px;
+    background: rgba(255,255,255,.72);
+    transform-origin: right center;
+  }
+
+  .w1 { left: -16px; transform: rotate(8deg); }
+  .w2 { left: -17px; top: 58px; transform: rotate(-5deg); }
+  .w3 { right: -16px; transform-origin: left center; transform: rotate(-8deg); }
+  .w4 { right: -17px; top: 58px; transform-origin: left center; transform: rotate(5deg); }
+
+  .leg {
+    position: absolute;
+    width: 24px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--fur-dark);
+    transform-origin: 50% 10%;
+  }
+
+  .leg.front {
+    left: 60px;
+    top: 105px;
+    animation: pawRunA .36s ease-in-out infinite;
+  }
+
+  .leg.back {
+    left: 106px;
+    top: 106px;
+    animation: pawRunB .36s ease-in-out infinite;
+  }
+
+  .paw {
+    position: absolute;
+    bottom: -4px;
+    left: -4px;
+    width: 32px;
+    height: 16px;
+    border-radius: 18px;
+    background: var(--fur-light);
+  }
+
+  .tail {
+    position: absolute;
+    left: 130px;
+    top: 65px;
+    width: 78px;
+    height: 24px;
+    border-radius: 999px;
+    border-top: 16px solid var(--fur-dark);
+    border-right: 12px solid var(--fur-dark);
+    transform-origin: 4px 13px;
+    animation: tailSwish 1.1s ease-in-out infinite;
+  }
+
+  .shadow {
+    position: absolute;
+    left: 42px;
+    bottom: 5px;
+    width: 100px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(0,0,0,.22);
+    transform-origin: center;
+    animation: shadowPulse .36s ease-in-out infinite;
+  }
+
+  .cat-wrap.climbing .cat {
+    animation: climbSquash .32s ease-in-out infinite;
+  }
+
+  .cat-wrap.climbing .leg.front {
+    animation: climbPawA .28s ease-in-out infinite;
+  }
+
+  .cat-wrap.climbing .leg.back {
+    animation: climbPawB .28s ease-in-out infinite;
+  }
+
+  .cat-wrap.slipping .cat {
+    animation: slipSquash .16s ease-in-out infinite;
+  }
+
+  .cat-wrap.slipping .eye {
+    transform: scaleY(1.25);
+  }
+
+  .cat-wrap.scared .tail {
+    animation: tailPanic .22s ease-in-out infinite;
+  }
+
+  .cat-wrap.scared .ear.left {
+    transform: rotate(-45deg);
+  }
+
+  .cat-wrap.scared .ear.right {
+    transform: rotate(45deg);
+  }
+
+  @keyframes breathe {
+    0%,100% { transform: scale(1,1); }
+    50% { transform: scale(1.025,.985); }
+  }
+
+  @keyframes headBob {
+    0%,100% { transform: rotate(-1deg) translateY(0); }
+    50% { transform: rotate(1deg) translateY(2px); }
+  }
+
+  @keyframes earTwitch {
+    0%,88%,100% { transform: rotate(-24deg); }
+    91% { transform: rotate(-38deg); }
+    94% { transform: rotate(-18deg); }
+  }
+
+  @keyframes earTwitch2 {
+    0%,84%,100% { transform: rotate(24deg); }
+    87% { transform: rotate(38deg); }
+    90% { transform: rotate(18deg); }
+  }
+
+  @keyframes blink {
+    0%,100% { transform: scaleY(1); }
+    50% { transform: scaleY(.08); }
+  }
+
+  @keyframes tailSwish {
+    0%,100% { transform: rotate(16deg); }
+    50% { transform: rotate(-10deg); }
+  }
+
+  @keyframes tailPanic {
+    0%,100% { transform: rotate(30deg); }
+    50% { transform: rotate(-22deg); }
+  }
+
+  @keyframes pawRunA {
+    0%,100% { transform: rotate(20deg) translateY(0); }
+    50% { transform: rotate(-26deg) translateY(-8px); }
+  }
+
+  @keyframes pawRunB {
+    0%,100% { transform: rotate(-25deg) translateY(-8px); }
+    50% { transform: rotate(22deg) translateY(0); }
+  }
+
+  @keyframes climbPawA {
+    0%,100% { transform: rotate(8deg) translateY(-9px); }
+    50% { transform: rotate(-18deg) translateY(7px); }
+  }
+
+  @keyframes climbPawB {
+    0%,100% { transform: rotate(-18deg) translateY(7px); }
+    50% { transform: rotate(8deg) translateY(-9px); }
+  }
+
+  @keyframes climbSquash {
+    0%,100% { transform: scale(.96,1.05); }
+    50% { transform: scale(1.04,.96); }
+  }
+
+  @keyframes slipSquash {
+    0%,100% { transform: skewX(-4deg) scale(1.05,.94); }
+    50% { transform: skewX(5deg) scale(.96,1.05); }
+  }
+
+  @keyframes shadowPulse {
+    0%,100% { transform: scaleX(1); opacity: .22; }
+    50% { transform: scaleX(.82); opacity: .12; }
+  }
+
+  .tip {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 20;
+    padding: 10px 13px;
+    border-radius: 999px;
+    color: rgba(255,255,255,.72);
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.1);
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+  <div class="hud">
+    <h1>Runaway Cat Test Page</h1>
+    <p>Move your mouse toward the cat. It runs away, climbs walls, panics near corners, and sometimes slips.</p>
+  </div>
+
+  <div class="arena" id="arena">
+    <div class="wall top"></div>
+    <div class="wall bottom"></div>
+    <div class="wall left"></div>
+    <div class="wall right"></div>
+
+    <div class="mouse-dot" id="mouseDot"></div>
+
+    <div class="cat-wrap" id="catWrap">
+      <div class="shadow"></div>
+      <div class="cat" id="cat">
+        <div class="tail"></div>
+        <div class="body"></div>
+        <div class="leg front"><div class="paw"></div></div>
+        <div class="leg back"><div class="paw"></div></div>
+        <div class="head" id="head">
+          <div class="ear left"></div>
+          <div class="ear right"></div>
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="nose"></div>
+          <div class="mouth"></div>
+          <div class="whisker w1"></div>
+          <div class="whisker w2"></div>
+          <div class="whisker w3"></div>
+          <div class="whisker w4"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">Mouse = scary giant hand</div>
+
+<script>
+(() => {
+  const cat = document.getElementById("catWrap");
+  const face = document.getElementById("head");
+  const dot = document.getElementById("mouseDot");
+
+  const state = {
+    x: innerWidth * 0.5,
+    y: innerHeight * 0.5,
+    vx: 0,
+    vy: 0,
+    angle: 0,
+    mouseX: -9999,
+    mouseY: -9999,
+    lastTime: performance.now(),
+    slippingUntil: 0,
+    blinkAt: performance.now() + 1600,
+    mood: "idle"
+  };
+
+  const CAT_W = 180;
+  const CAT_H = 150;
+  const WALL = 32;
+
+  function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function length(x, y) {
+    return Math.hypot(x, y) || 1;
+  }
+
+  function randomSlip(now) {
+    return Math.random() < 0.006 && now > state.slippingUntil + 1200;
+  }
+
+  addEventListener("mousemove", e => {
+    state.mouseX = e.clientX;
+    state.mouseY = e.clientY;
+    dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+  });
+
+  addEventListener("touchmove", e => {
+    const t = e.touches[0];
+    state.mouseX = t.clientX;
+    state.mouseY = t.clientY;
+    dot.style.transform = `translate(${t.clientX}px, ${t.clientY}px)`;
+  }, { passive: true });
+
+  function update(now) {
+    const dt = Math.min(0.032, (now - state.lastTime) / 1000);
+    state.lastTime = now;
+
+    const cx = state.x + CAT_W / 2;
+    const cy = state.y + CAT_H / 2;
+    const dx = cx - state.mouseX;
+    const dy = cy - state.mouseY;
+    const d = length(dx, dy);
+
+    const fearRadius = 310;
+    const panic = clamp(1 - d / fearRadius, 0, 1);
+
+    let ax = 0;
+    let ay = 0;
+
+    if (panic > 0) {
+      ax += (dx / d) * panic * 2200;
+      ay += (dy / d) * panic * 2200;
+    }
+
+    const nearLeft = state.x < WALL + 40;
+    const nearRight = state.x > innerWidth - CAT_W - WALL - 40;
+    const nearTop = state.y < WALL + 40;
+    const nearBottom = state.y > innerHeight - CAT_H - WALL - 40;
+
+    const climbing = (nearLeft || nearRight || nearTop || nearBottom) && panic > 0.22;
+
+    if (climbing) {
+      if (nearLeft || nearRight) {
+        ay += Math.sin(now * 0.008) * 700 - 260;
+        ax += nearLeft ? 500 : -500;
+      }
+      if (nearTop || nearBottom) {
+        ax += Math.sin(now * 0.007) * 700;
+        ay += nearTop ? 500 : -500;
+      }
+
+      if (randomSlip(now)) {
+        state.slippingUntil = now + 540 + Math.random() * 420;
+      }
+    }
+
+    const slipping = now < state.slippingUntil;
+
+    if (slipping) {
+      ay += 1450;
+      ax += Math.sin(now * 0.04) * 260;
+    }
+
+    ax += (innerWidth * 0.5 - cx) * 0.12;
+    ay += (innerHeight * 0.5 - cy) * 0.08;
+
+    state.vx += ax * dt;
+    state.vy += ay * dt;
+
+    const maxSpeed = slipping ? 780 : 940;
+    const speed = length(state.vx, state.vy);
+    if (speed > maxSpeed) {
+      state.vx = state.vx / speed * maxSpeed;
+      state.vy = state.vy / speed * maxSpeed;
+    }
+
+    state.vx *= Math.pow(0.86, dt * 60);
+    state.vy *= Math.pow(0.86, dt * 60);
+
+    state.x += state.vx * dt;
+    state.y += state.vy * dt;
+
+    if (state.x < WALL) {
+      state.x = WALL;
+      state.vx = Math.abs(state.vx) * 0.7;
+    }
+    if (state.x > innerWidth - CAT_W - WALL) {
+      state.x = innerWidth - CAT_W - WALL;
+      state.vx = -Math.abs(state.vx) * 0.7;
+    }
+    if (state.y < WALL) {
+      state.y = WALL;
+      state.vy = Math.abs(state.vy) * 0.7;
+    }
+    if (state.y > innerHeight - CAT_H - WALL) {
+      state.y = innerHeight - CAT_H - WALL;
+      state.vy = -Math.abs(state.vy) * 0.55;
+    }
+
+    const targetAngle = clamp(state.vx * 0.035, -14, 14);
+    state.angle = lerp(state.angle, targetAngle, 0.13);
+
+    const faceTurn = clamp((state.mouseX - cx) / 220, -1, 1);
+    face.style.transform = `rotate(${faceTurn * 5}deg) translateY(${panic * -2}px)`;
+
+    cat.classList.toggle("scared", panic > 0.18);
+    cat.classList.toggle("climbing", climbing);
+    cat.classList.toggle("slipping", slipping);
+
+    if (now > state.blinkAt) {
+      cat.classList.add("blink");
+      setTimeout(() => cat.classList.remove("blink"), 190);
+      state.blinkAt = now + 1800 + Math.random() * 3600;
+    }
+
+    const stretch = clamp(speed / 900, 0, 1);
+    const squashX = 1 + stretch * 0.08;
+    const squashY = 1 - stretch * 0.045;
+
+    let rotate = state.angle;
+    if (climbing) {
+      if (nearLeft) rotate = -82;
+      if (nearRight) rotate = 82;
+      if (nearTop) rotate = 180 + state.angle * 0.2;
+      if (nearBottom) rotate = state.angle;
+    }
+
+    cat.style.transform =
+      `translate3d(${state.x}px, ${state.y}px, 0) rotate(${rotate}deg) scale(${squashX}, ${squashY})`;
+
+    requestAnimationFrame(update);
+  }
+
+  requestAnimationFrame(update);
+})();
+</script>
+</body>
+</html>
