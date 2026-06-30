@@ -295,16 +295,16 @@ jobs:
 
           node <<'NODE'
           const fs = require("fs");
-          const admin = require("firebase-admin");
-          const { cert } = require("firebase-admin/app");
+          const { initializeApp, cert } = require("firebase-admin/app");
+          const { getFirestore } = require("firebase-admin/firestore");
 
           const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
 
-          admin.initializeApp({
+          initializeApp({
             credential: cert(serviceAccount)
           });
 
-          const db = admin.firestore();
+          const db = getFirestore();
           const raw = JSON.parse(fs.readFileSync("assets/data/products.json", "utf8"));
           const products = Array.isArray(raw) ? raw : raw.products;
 
