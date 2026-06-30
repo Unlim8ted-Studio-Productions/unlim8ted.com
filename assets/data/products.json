@@ -4388,10 +4388,10 @@
     "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/funnel-web.jpg"
   },
   {
-    "id": "ancient",
+    "id": "ancient-jungle",
     "product-type": "image",
-    "name": "Ancient",
-    "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/ancient.jpg"
+    "name": "Ancient Jungle",
+    "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/ancient-jungle.jpg"
   },
   {
     "id": "ant",
@@ -4566,12 +4566,6 @@
     "product-type": "image",
     "name": "Light Rays From The Sun",
     "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/light-rays-from-the-sun.jpg"
-  },
-  {
-    "id": "lizard",
-    "product-type": "image",
-    "name": "Lizard",
-    "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/lizard.jpg"
   },
   {
     "id": "milky-way",
@@ -4766,12 +4760,6 @@
     "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/sunny-water.jpg"
   },
   {
-    "id": "taxi-outruns-light",
-    "product-type": "image",
-    "name": "Taxi Outruns Light",
-    "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/taxi-outruns-light.jpg"
-  },
-  {
     "id": "trees",
     "product-type": "image",
     "name": "Trees",
@@ -4802,12 +4790,6 @@
     "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/weaker-ant.jpg"
   },
   {
-    "id": "wet-flowers",
-    "product-type": "image",
-    "name": "Wet Flowers",
-    "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/wet-flowers.jpg"
-  },
-  {
     "id": "woah",
     "product-type": "image",
     "name": "Woah",
@@ -4818,5 +4800,17 @@
     "product-type": "image",
     "name": "Yum",
     "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/yum.jpg"
+  },
+  {
+    "id": "bridge-over-very-sparkly-ocean",
+    "product-type": "image",
+    "name": "Bridge Over Very Sparkly Ocean",
+    "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/bridge-over-very-sparkly-ocean.jpg"
+  },
+  {
+    "id": "cloudy-clouds",
+    "product-type": "image",
+    "name": "Cloudy Clouds",
+    "file": "https:\/\/assets.unlim8ted.com\/images\/gallery\/cloudy-clouds.jpg"
   }
 ]
