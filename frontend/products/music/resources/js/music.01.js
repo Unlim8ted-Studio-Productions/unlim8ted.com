@@ -494,6 +494,7 @@
       "music-clocks-sound-like",
       "music-know-what-you-do",
       "music-the-black-box-problem",
+      "music-unexpected-twist",
       "music-credits",
     ];
 
