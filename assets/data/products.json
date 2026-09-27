@@ -4099,6 +4099,14 @@
     ]
   },
   {
+    "id": "unlim8ted-stinger",
+    "product-type": "music",
+    "name": "Unlim8ted Stinger",
+    "file": "https:\/\/assets.unlim8ted.com\/music\/Unlim8ted%20Stinger.mp3",
+    "midi": "https:\/\/assets.unlim8ted.com\/music\/Unlim8ted%20Stinger.mid",
+    "pdf": "https:\/\/assets.unlim8ted.com\/music\/pdf's\/Unlim8ted%20Stinger-Score_and_Parts.pdf"
+  },
+  {
     "id": "music-the-echos-of-the-bells",
     "product-type": "music",
     "name": "The Echos of the Bells",
@@ -4217,6 +4225,14 @@
     "file": "https:\/\/assets.unlim8ted.com\/music\/The%20Black%20Box%20Problem.mp3",
     "midi": "https:\/\/assets.unlim8ted.com\/music\/The%20Black%20Box%20Problem.mid",
     "pdf": "https:\/\/assets.unlim8ted.com\/music\/pdf's\/The%20Black%20Box%20Problem-Score_and_Parts.pdf"
+  },
+  {
+    "id": "music-credits",
+    "product-type": "music",
+    "name": "Credits",
+    "file": "https://assets.unlim8ted.com/music/Credits.mp3",
+    "midi": "https://assets.unlim8ted.com/music/Credits.mid",
+    "pdf": "https://assets.unlim8ted.com/music/pdf's/Credits-Score_and_Parts.pdf"
   },
   {
     "id": "timecat-01-untitled-title",
@@ -4535,12 +4551,6 @@
     "product-type": "music",
     "name": "TimeCat — Extras - 13",
     "file": "https:\/\/assets.unlim8ted.com\/music\/TimeCat\/puzzle-8.mp3"
-  },
-  {
-    "id": "1-unlim8ted-stinger",
-    "product-type": "music",
-    "name": "Unlim8ted Stinger",
-    "file": "https:\/\/assets.unlim8ted.com\/music\/Unlim8ted%20Stinger.mp3"
   },
   {
     "id": "funnel-web",

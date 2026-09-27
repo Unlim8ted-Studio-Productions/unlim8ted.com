@@ -476,51 +476,66 @@
     }
 
     function inferIsTimecat(item) {
-      // No special flag in JSON, so infer by path or lack of midi (you can change this any time)
+      // Identify Time Cat tracks by their audio path.
       const file = safeUrl(item.file);
       return file.includes("/products/games/TimeCat/") || file.includes("/TimeCat/");
+    }
+
+    const musicCategories = [
+      { id: "electronic", kicker: "Library", title: "Electronic", sub: "Original electronic compositions." },
+      { id: "glitch", kicker: "Soundtrack", title: "The Glitch Soundtrack", sub: "Music from The Glitch." },
+      { id: "detective-edward", kicker: "Soundtrack", title: "Detective Edward Soundtrack", sub: "Music from Detective Edward." },
+      { id: "timecat", kicker: "Soundtrack", title: "Time Cat", sub: "The soundtracks to Unlim8ted's newest game in development, Time Cat. Note that songs in this section utilize AI to enhance the audio." },
+      { id: "branding", kicker: "Studio", title: "Audio Branding", sub: "Signature sounds from Unlim8ted." },
+    ];
+
+    const detectiveTrackIds = [
+      "music-sharp-strings",
+      "music-clocks-sound-like",
+      "music-know-what-you-do",
+      "music-the-black-box-problem",
+      "music-credits",
+    ];
+
+    function musicCategory(item) {
+      const id = String(item.id || "").toLowerCase();
+      if (inferIsTimecat(item)) return "timecat";
+      if (id === "music-emergency-override") return "glitch";
+      if (detectiveTrackIds.includes(id)) return "detective-edward";
+      if (id === "unlim8ted-stinger") return "branding";
+      return "electronic";
     }
 
     function renderSongList() {
       songListEl.innerHTML = "";
 
-      const normal = allMusic.filter(i => isMidiTrack(i));
-      const timecat = allMusic.filter(i => !isMidiTrack(i) && inferIsTimecat(i));
-      const otherAudio = allMusic.filter(i => !isMidiTrack(i) && !inferIsTimecat(i));
-
-      if (!normal.length && !timecat.length && !otherAudio.length) {
+      if (!allMusic.length) {
         songListEl.innerHTML = `<div class="empty">No tracks found in https://assets.unlim8ted.com/data/products.json.</div>`;
         return;
       }
 
-      if (normal.length) {
-        const d = buildDivider("Library", "Scores + MIDI", "MIDI + MP3 with falling-note visuals and optional PDFs.");
-        songListEl.appendChild(d);
-        normal.forEach(item => {
-          const idx = allMusic.indexOf(item);
-          songListEl.appendChild(buildSongItem(item, idx));
-        });
+      // Keep playback order aligned with the displayed categories.
+      const selectedItem = allMusic[currentIndex];
+      allMusic = musicCategories.flatMap(category => {
+        const tracks = allMusic.filter(item => musicCategory(item) === category.id);
+        if (category.id === "detective-edward") {
+          tracks.sort((a, b) => detectiveTrackIds.indexOf(String(a.id).toLowerCase())
+            - detectiveTrackIds.indexOf(String(b.id).toLowerCase()));
+        }
+        return tracks;
+      });
+      currentIndex = selectedItem ? allMusic.indexOf(selectedItem) : -1;
+
+      let index = 0;
+      for (const category of musicCategories) {
+        const tracks = allMusic.filter(item => musicCategory(item) === category.id);
+        if (!tracks.length) continue;
+        songListEl.appendChild(buildDivider(category.kicker, category.title, category.sub));
+        for (const item of tracks) {
+          songListEl.appendChild(buildSongItem(item, index++));
+        }
       }
 
-      if (timecat.length) {
-        const d = buildDivider("Soundtrack", "TimeCat", "The soundracks to Unlim8ted's newest game in development, Time Cat. Note that songs in this section utilize AI to enhance the audio.");
-        songListEl.appendChild(d);
-        timecat.forEach(item => {
-          const idx = allMusic.indexOf(item);
-          songListEl.appendChild(buildSongItem(item, idx));
-        });
-      }
-
-      if (otherAudio.length) {
-        const d = buildDivider("Audio", "Other Tracks", "Audio-only tracks with reactive visuals.");
-        songListEl.appendChild(d);
-        otherAudio.forEach(item => {
-          const idx = allMusic.indexOf(item);
-          songListEl.appendChild(buildSongItem(item, idx));
-        });
-      }
-
-      // restore highlight if something is selected
       if (currentIndex >= 0) setPlayingHighlight(currentIndex);
     }
 
