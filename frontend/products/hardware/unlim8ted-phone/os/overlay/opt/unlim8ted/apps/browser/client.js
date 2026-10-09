@@ -206,7 +206,11 @@ window.Unlim8tedAppClients.browser = (() => {
         messageHookInstalled = true;
         window.addEventListener('message', (event) => {
             if (!currentCtx || currentCtx.state.appId !== 'browser') return;
-            if (!event?.data || event.data.type !== 'browser-location') return;
+            const frame = document.getElementById('browserFrame');
+            if (event.origin !== window.location.origin || event.source !== frame?.contentWindow) return;
+            const data = event.data;
+            if (!data || typeof data !== 'object' || Array.isArray(data) || data.type !== 'browser-location' || typeof data.url !== 'string' || data.url.length > 2048 || typeof data.title !== 'string' || data.title.length > 300) return;
+            try { if (!['https:', 'http:'].includes(new URL(data.url).protocol)) return; } catch { return; }
             const browser = browserState();
             const tab = activeTab(browser);
             const url = normalizeUrl(event.data.url || tab?.url || browser.home);

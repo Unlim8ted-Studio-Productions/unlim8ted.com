@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,7 +8,7 @@
   <meta name="description" content="Direct line to Meatball. Subject finding, follow-up rewriting, topic routing, and specialized answer banks." />
 
   <script type="module" src="/components/site-navbar.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+
 
   <link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-renderer.css" />
 
@@ -728,16 +728,20 @@
       }
     }
   </style>
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/products/ai/meatball/">
 </head>
 
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
   <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
 
-  <main class="page">
+  <main class="page" id="main-content">
     <section class="hero">
       <section class="panel intro">
         <h1>A smarter Meatball</h1>
-        <a class="aboutLink" href="about">Click to find out how it works</a>
+        <a class="aboutLink" href="/about/">Click to find out how it works</a>
 
         <div class="chatShell">
           <div id="chatLog" class="chatLog" aria-label="Conversation log">

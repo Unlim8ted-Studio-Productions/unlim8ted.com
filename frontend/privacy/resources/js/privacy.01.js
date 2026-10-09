@@ -4,11 +4,7 @@
       const ft = document.getElementById("footer-text");
       if (ft) ft.textContent = `© 2019-${y} Unlim8ted Studio Productions. All rights reserved.`;
 
-      const lu = document.getElementById("lastUpdated");
-      if (lu) {
-        const d = new Date();
-        lu.textContent = d.toLocaleDateString(undefined, { year:"numeric", month:"long", day:"numeric" });
-      }
+
     });
 
     // Custom cursor (desktop only)

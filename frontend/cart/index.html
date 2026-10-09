@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -13,9 +13,14 @@
     <script src="https://web.squarecdn.com/v1/square.js"></script>
 
     <link rel="stylesheet" href="./resources/css/cart.01.css">
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/cart/">
+<meta name="robots" content="noindex, follow">
 </head>
 
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
     <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
         profile-href="https://unlim8ted.com/profile"></site-navbar>
 
@@ -23,7 +28,7 @@
     <div id="notice" class="notice"></div>
 
     <!-- CART PAGE -->
-    <main class="page">
+    <main class="page" id="main-content">
         <header class="pageHeader">
             <h1 id="pageTitle">Your Cart</h1>
             <p id="pageSub">Review your items before checkout.</p>
@@ -71,24 +76,26 @@
                     <h2>Shipping address</h2>
 
                     <div class="formGrid">
-                        <input id="ship_full_name" placeholder="Full name">
-                        <input id="ship_email" placeholder="Email">
-                        <input id="ship_phone" placeholder="Phone">
+                        <label for="ship_full_name">Full name<input id="ship_full_name" type="text" autocomplete="name" required aria-describedby="quoteHint"></label>
+                        <label for="ship_email">Email<input id="ship_email" type="email" autocomplete="email" required aria-describedby="quoteHint"></label>
+                        <label for="ship_phone">Phone (optional)<input id="ship_phone" type="tel" autocomplete="tel" aria-describedby="quoteHint"></label>
 
-                        <input id="ship_address1" placeholder="Address line 1">
-                        <input id="ship_address2" placeholder="Address line 2">
+                        <label for="ship_address1">Address line 1<input id="ship_address1" type="text" autocomplete="address-line1" required aria-describedby="quoteHint"></label>
+                        <label for="ship_address2">Address line 2 (optional)<input id="ship_address2" type="text" autocomplete="address-line2" aria-describedby="quoteHint"></label>
 
-                        <input id="ship_city" placeholder="City">
-                        <input id="ship_state_code" placeholder="State">
-                        <input id="ship_zip" placeholder="ZIP / Postal code">
+                        <label for="ship_city">City<input id="ship_city" type="text" autocomplete="address-level2" required aria-describedby="quoteHint"></label>
+                        <label for="ship_state_code">State / province<input id="ship_state_code" type="text" autocomplete="address-level1" required aria-describedby="quoteHint"></label>
+                        <label for="ship_zip">ZIP / postal code<input id="ship_zip" type="text" autocomplete="postal-code" required aria-describedby="quoteHint"></label>
 
-                        <select id="ship_country_code">
+                        <label for="ship_country_code">Country</label>
+<select id="ship_country_code" autocomplete="country">
                             <option value="US">United States</option>
                         </select>
                     </div>
 
                     <h3>Shipping method</h3>
-                    <select id="ship_method" disabled>
+                    <label for="ship_method">Shipping method</label>
+<select id="ship_method" disabled>
                         <option value="">Shipping options will appear after Next…</option>
                     </select>
 
@@ -133,7 +140,7 @@
                         Quote expires at <strong id="q_exp_time"></strong>
                     </div>
 
-                    <div id="payStatus" class="notice" style="display:none; margin-top:10px;"></div>
+                    <div id="payStatus" role="status" aria-live="polite" class="notice" style="display:none; margin-top:10px;"></div>
 
                     <div id="card-container" class="cardContainer" style="display:none; background-color: white;"></div>
 
@@ -153,7 +160,7 @@
     <!-- CONFIRM MODAL -->
     <div id="modalOverlay" class="overlay" aria-hidden="true">
         <div class="modal">
-            <button id="modalClose" class="modalClose">×</button>
+            <button id="modalClose" class="modalClose" type="button" aria-label="Close dialog">×</button>
             <h3 id="modalTitle">Confirm</h3>
             <div id="modalBody"></div>
             <div class="modalActions">
@@ -166,7 +173,7 @@
     <!-- DONATION MODAL -->
     <div id="donateOverlay" class="overlay" aria-hidden="true">
         <div class="modal">
-            <button id="donateClose" class="modalClose">×</button>
+            <button id="donateClose" class="modalClose" type="button" aria-label="Close dialog">×</button>
             <h3>Support Unlim8ted</h3>
 
             <label>
@@ -199,7 +206,7 @@
     <!-- EXPIRED MODAL -->
     <div id="expiredOverlay" class="overlay" aria-hidden="true">
         <div class="modal">
-            <button id="expiredClose" class="modalClose">×</button>
+            <button id="expiredClose" class="modalClose" type="button" aria-label="Close dialog">×</button>
             <h3>Quote expired</h3>
             <p>Your shipping quote has expired. Please restart checkout.</p>
             <div class="modalActions">

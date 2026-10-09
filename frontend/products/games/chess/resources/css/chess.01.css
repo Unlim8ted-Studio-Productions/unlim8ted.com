@@ -490,3 +490,7 @@
       --hl-selected: rgba(247,226,107,0.45);
       --hl-check: rgba(232,72,85,0.40);
     }
+
+.grid > * { min-width:0; } .board { width:100%; max-width:560px; } button.sq { padding:0; border:0; border-radius:0; min-width:0; color:inherit; }
+
+.modal { width:min(680px,100%); max-height:90dvh; overflow-y:auto; box-sizing:border-box; } .pill { white-space:normal; flex-wrap:wrap; min-width:0; }

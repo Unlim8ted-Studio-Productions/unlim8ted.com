@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -11,11 +11,8 @@
     style-src 'self' 'unsafe-inline';
     script-src 'self' https://www.gstatic.com 'unsafe-inline';
     connect-src 'self' https:;"><script type="module" src="/components/site-navbar.js"></script>
-<site-navbar
-  cart-href="/cart"
-  signin-href="/sign-in"
-  profile-href="/profile">
-</site-navbar>
+
+
   <style>
     :root{--bg:#0b0c10;--panel:rgba(20,22,28,.92);--card:rgba(255,255,255,.05);--border:rgba(255,255,255,.12);--muted:rgba(255,255,255,.72);--field:rgba(255,255,255,.06);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;}
@@ -39,9 +36,20 @@
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
     .toastWrap{position:fixed;right:16px;bottom:16px;z-index:999;display:grid;gap:10px;max-width:min(520px, calc(100vw - 32px));}
   </style>
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/products/software/wise-size/dashboard/settings/">
+<meta name="robots" content="noindex, follow">
 </head>
 
 <body>
+<site-navbar
+  cart-href="/cart"
+  signin-href="/sign-in"
+  profile-href="/profile">
+</site-navbar>
+<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
   <div class="topbar">
     <div class="brand">WiseSize</div>
     <nav class="nav">
@@ -143,6 +151,7 @@
       window.location.href = PATHS.SETUP;
     });
   </script>
+</main>
 </body>
 </html>
 

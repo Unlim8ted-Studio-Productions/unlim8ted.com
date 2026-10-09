@@ -78,6 +78,7 @@ const sleepScreen = document.getElementById('sleepScreen');
 const sleepTime = document.getElementById('sleepTime');
 const networkStatusLabel = document.getElementById('networkStatusLabel');
 const networkIcons = Array.from(document.querySelectorAll('#statusNetworkIcon, #ccNetworkIcon'));
+networkIcons.forEach(icon => icon.setAttribute('role', 'img'));
 const toggles = Array.from(document.querySelectorAll('.toggle'));
 
 closeAppBtn.textContent = '×';

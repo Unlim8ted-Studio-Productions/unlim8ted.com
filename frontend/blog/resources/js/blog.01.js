@@ -1,6 +1,6 @@
 ﻿import { getFirebase } from "/components/firebase-init.js";
         import {
-            doc, setDoc, serverTimestamp
+            collection, addDoc, serverTimestamp
         } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
         const { db, auth } = getFirebase();
@@ -36,12 +36,6 @@
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
 
-        async function sha256Hex(str) {
-            const data = new TextEncoder().encode(str);
-            const hash = await crypto.subtle.digest("SHA-256", data);
-            return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, "0")).join("");
-        }
-
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
             msgEl.textContent = "";
@@ -49,31 +43,36 @@
             // Honeypot = bot
             if (honeypotEl.value && honeypotEl.value.trim().length) return;
 
+            if (form.dataset.submitting) return;
             const email = (emailEl.value || "").trim().toLowerCase();
             if (!isValidEmail(email)) {
+                emailEl.setAttribute("aria-invalid", "true");
+                emailEl.focus();
                 setMsg("error", "<strong>Invalid email.</strong> Please check and try again.");
                 return;
             }
 
+            form.dataset.submitting = "true";
+            form.querySelector("button").disabled = true;
             try {
                 setMsg("info", "Adding you to the list…");
 
-                // DEDUPE: stable doc id derived from email (keeps emails out of the URL path)
-                const id = await sha256Hex(email);
-
-                await setDoc(doc(db, "newsletter_signups", id), {
+                await addDoc(collection(db, "newsletter_signups"), {
                     email,
                     createdAt: serverTimestamp(),     // first time set; subsequent merges keep it unless overwritten
-                    updatedAt: serverTimestamp(),     // you can keep this to track resubscribes
                     source: location.pathname,
                     uid: auth?.currentUser?.uid || null
-                }, { merge: true });
+                });
 
+                emailEl.removeAttribute("aria-invalid");
                 emailEl.value = "";
                 setMsg("success", "<strong>Subscribed.</strong> You’re on the list.");
             } catch (err) {
                 console.error(err);
                 setMsg("error", "<strong>Couldn’t subscribe.</strong> Please try again in a moment.");
+            } finally {
+                delete form.dataset.submitting;
+                form.querySelector("button").disabled = false;
             }
         });
 

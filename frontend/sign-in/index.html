@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -11,14 +11,22 @@
 
   <script type="module" src="/components/site-navbar.js"></script>
   <script type="module" src="./resources/js/sign-in.02.js"></script>
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/sign-in/">
+<meta name="robots" content="noindex, follow">
+<meta name="description" content="Sign in to Unlim8ted, create an account, or reset your password. Browsing projects and using a guest cart do not require an account.">
 </head>
 
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
   <site-navbar
     cart-href="/cart"
     signin-href="/sign-in"
     profile-href="/profile">
   </site-navbar>
+<main id="main-content">
+<h1 class="sr-only">Sign In</h1>
 
   <div class="background">
     <span style="top: 20%; left: 10%; animation-delay: 0s;"></span>
@@ -37,17 +45,19 @@
     <button id="google-signin-btn" type="button">
       <img
         src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA"
-        alt="Google Logo" />
+        alt="" />
       Sign in with Google
     </button>
 
     <div class="divider">Or</div>
 
     <form id="email-signin-form">
-      <input type="email" id="email" placeholder="Email" autocomplete="email" required />
-      <input type="password" id="password" placeholder="Password" autocomplete="current-password" required />
+      <label for="email">Email</label>
+<input type="email" id="email" placeholder="Email" autocomplete="email" required />
+      <label for="password">Password</label>
+<input type="password" id="password" placeholder="Password" autocomplete="current-password" required />
 
-      <div id="confirm-password-wrap" hidden>
+      <div id="confirm-password-wrap" hidden><label for="confirm-password">Confirm password</label>
         <input
           type="password"
           id="confirm-password"
@@ -72,8 +82,8 @@
       <p id="auth-status" class="auth-status" aria-live="polite"></p>
 
       <div class="info">
-        <span id="toggle-text" class="toggle">Don't have an account? Create one.</span>
-        <p>An account is needed to comment, rate products, and add things to your cart, but it is not required.</p>
+        <button type="button" id="toggle-text" class="toggle">Don't have an account? Create one.</button>
+        <p>You can browse and keep a cart without an account. Sign in to comment, rate products, or sync your cart across devices.</p>
         <p>If you'd prefer not to create an account, you can visit our <a href="/products">Products</a> or <a href="/about">About Us</a> pages.</p>
         <p id="footer-text"></p>
       </div>
@@ -96,5 +106,6 @@
       </div>
     </div>
   </div>
+</main>
 </body>
 </html>

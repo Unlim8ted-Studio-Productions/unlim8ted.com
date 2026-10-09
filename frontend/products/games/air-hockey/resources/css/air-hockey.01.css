@@ -276,3 +276,7 @@ select:focus {
   outline: 2px solid rgba(0, 238, 255, 0.35);
   outline-offset: 2px;
 }
+
+@media(max-width:480px) { .hud { flex-wrap:wrap; max-width:calc(100vw - 24px); } .score { flex-wrap:wrap; } }
+
+main, .app, .stage { min-width:0; width:100%; } canvas { max-width:100%; } .controls { flex-wrap:wrap; min-width:0; }

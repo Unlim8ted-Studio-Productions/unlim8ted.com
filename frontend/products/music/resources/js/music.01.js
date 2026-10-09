@@ -199,9 +199,9 @@
 
     // ===== MIDI "falling notes" =====
     function drawMidiNotes() {
-      if (!isPlaying || vizMode !== "midi") return;
+      if (!isPlaying || vizMode !== "midi" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      const currentTime = performance.now() - startTime;
+      const currentTime = audio ? audio.currentTime * 1000 : performance.now() - startTime;
       const w = canvas.getBoundingClientRect().width;
       const h = canvas.getBoundingClientRect().height;
 
@@ -217,8 +217,9 @@
 
       for (const note of notes) {
         const timeOffset = note.startTime - currentTime;
-        const y = h - (timeOffset / 10) - (note.duration / 10);
-        const noteHeight = note.duration / 10;
+        const pixelsPerMs = h / 4000;
+        const y = h - timeOffset * pixelsPerMs - note.duration * pixelsPerMs;
+        const noteHeight = note.duration * pixelsPerMs;
 
         if (y > h || y + noteHeight < 0) continue;
 
@@ -234,6 +235,7 @@
 
     // ===== Audio-reactive "cool" visualizer =====
     function drawAudioViz() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       if (!isPlaying || vizMode !== "audio" || !analyser || !freqData || !timeData) return;
 
       const w = canvas.getBoundingClientRect().width;
@@ -511,7 +513,7 @@
       songListEl.innerHTML = "";
 
       if (!allMusic.length) {
-        songListEl.innerHTML = `<div class="empty">No tracks found in https://assets.unlim8ted.com/data/products.json.</div>`;
+        songListEl.innerHTML = `<div class="empty">The music library is unavailable right now. Please try again in a moment.</div>`;
         return;
       }
 

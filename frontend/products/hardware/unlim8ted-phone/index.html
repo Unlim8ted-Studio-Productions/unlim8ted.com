@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -562,15 +562,21 @@
       .reveal { opacity: 1; transform: none; }
     }
   </style>  <script type="module" src="/components/site-navbar.js"></script>
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/products/hardware/unlim8ted-phone/">
+<style>.hero-copy, .viewer-card, .part-button { min-width:0; } .hero h1 { overflow-wrap:anywhere; } @media(max-width:620px) { .hero h1 { font-size:clamp(3rem,17vw,4.5rem); } }</style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
   <site-navbar
-    cart-href="https://unlim8ted.com/sign-in/cart"
+    cart-href="/cart/"
     signin-href="https://unlim8ted.com/sign-in"
     profile-href="https://unlim8ted.com/profile">
   </site-navbar>
+<main id="main-content">
   <nav class="nav">
-    <a class="brand" href="#top" aria-label="Unlim8ted Phone home"></span><span>Unlim8ted Phone</span></a>
+    <a class="brand" href="#top" aria-label="Unlim8ted Phone home"><span>Unlim8ted Phone</span></a>
     <div class="nav-links" aria-label="Page sections">
       <a href="#context">Context</a>
       <a href="#build">Build</a>
@@ -1026,6 +1032,7 @@
       state.renderer.render(state.scene, state.camera);
     }
   </script>
+</main>
 </body>
 </html>
 

@@ -974,3 +974,6 @@
 
 
 
+
+.formGrid label { display: grid; gap: 8px; min-width: 0; font-size: .9rem; }
+@media(max-width: 480px) { .pageHeader { padding-top: 16px; } .cartActions { flex-wrap: wrap; } .modal { max-height: 90dvh; overflow-y: auto; } }

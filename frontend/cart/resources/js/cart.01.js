@@ -574,18 +574,11 @@
                     (Array.isArray(v?.optionParts) ? v.optionParts.join(" / ") : "");
             }
 
-            const hasPrice =
-                it.price !== null &&
-                it.price !== undefined &&
-                Number.isFinite(Number(it.price));
-
-            if (!hasPrice) {
-                const catalogPrice =
-                    (v && Number.isFinite(Number(v.price)) ? Number(v.price) : null) ??
-                    (p && Number.isFinite(Number(p.price)) ? Number(p.price) : null) ??
-                    null;
-                if (catalogPrice !== null) it.price = catalogPrice;
-            }
+            // Catalog owns price, availability and free access; local cart fields are untrusted.
+            const catalogPrice = v?.price ?? p?.price;
+            it.price = catalogPrice != null && Number.isFinite(Number(catalogPrice)) ? Number(catalogPrice) : null;
+            it.available = !!p && v?.available !== false;
+            it.accessUrl = it.price === 0 ? safeUrl(p?.accessUrl || p?.downloadUrl || p?.url || p?.link || p?.file) : '';
 
             const hasImage = !!safeUrl(it.image || it.imageUrl || "");
             if (!hasImage) {
@@ -781,7 +774,7 @@
                 .map(it => {
                     const qty = Math.max(1, Number(it.qty) || 1);
                     const accessUrl = safeUrl(it.accessUrl || it.downloadUrl || it.url || it.link);
-                    return { ...it, qty, _isFree: !!accessUrl, accessUrl };
+                    return { ...it, qty, _isFree: !!accessUrl && Number(it.price) === 0, accessUrl };
                 })
                 .filter(it => !it._isFree);
         }
@@ -933,6 +926,10 @@
                 return;
             }
 
+            if (cartItems.some(item => item.available === false)) {
+                setNotice('warn', '<strong>An item is unavailable.</strong> Remove it or choose an available variant before checkout.');
+                return;
+            }
             const paid = getPaidItems(cartItems);
             if (!paid.length) {
                 setNotice("ok",
@@ -950,7 +947,7 @@
             if (missingVariant.length) {
                 setNotice("warn",
                     `<strong>Some paid items can’t be checked out yet.</strong><br/>
-           These need productId + variantId (Printful catalog variant id) in your cart https://assets.unlim8ted.com/data/products.json:<br/>
+           Choose an available size or color on the product page, then add the item again:<br/>
            <div style="margin-top:6px;opacity:.9">${missingVariant.map(m => `• ${escapeHtml(m.title)}`).join("<br/>")}</div>`
                 );
                 return;
@@ -1119,6 +1116,7 @@
 
             setPayStatus("warn", `<strong>Processing payment…</strong> Do not refresh.`);
 
+            let paymentSubmitted = false;
             try {
                 await ensureSquareCardMounted();
 
@@ -1133,6 +1131,7 @@
                     return;
                 }
 
+                paymentSubmitted = true;
                 await workerPay({
                     quoteId: _quote.quoteId,
                     selectedShippingId,
@@ -1143,17 +1142,13 @@
                 const hardStop = 60 * 1000;
 
                 while (true) {
-                    if (Date.now() >= _quoteExpiresAt) {
-                        showExpired();
-                        return;
-                    }
                     if (Date.now() - start > hardStop) break;
 
                     const st = await workerPaymentStatus(_quote.quoteId);
                     const status = String(st.status || "").toLowerCase();
 
                     if (status === "paid" || status === "completed") {
-  setPayStatus("ok", `...`);
+  setPayStatus("ok", `<strong>Payment confirmed.</strong> Your order is being prepared.`);
 
   await openAlertModal({
     title: "Payment confirmed",
@@ -1184,7 +1179,10 @@
   okText: "Try again"
 });
 
-                        btnPay.disabled = false;
+                        _quote = null;
+                        setStep(1);
+                        btnQuote.disabled = false;
+                        quoteHint.textContent = 'Payment was not completed. Calculate shipping again to retry.';
                         shipMethodEl.disabled = false;
                         return;
                     }
@@ -1193,12 +1191,16 @@
                 }
 
                 setPayStatus("warn",
-                    `<strong>Processing.</strong><br/>If you were charged, it will finalize shortly. You can keep this page open and retry Pay if needed.`
+                    `<strong>Processing.</strong><br/>If you were charged, it will finalize shortly. Keep this order reference: ${escapeHtml(_quote.quoteId)}. Please contact support before starting another checkout.`
                 );
 
             } catch (err) {
                 console.error(err);
-                setPayStatus("bad", `<strong>Payment error:</strong> ${escapeHtml(err?.message || String(err))}`);
+                const uncertain = paymentSubmitted && ![400, 404, 410].includes(err.status);
+                const message = uncertain
+                    ? `Payment status needs checking. Keep this order reference: ${escapeHtml(_quote?.quoteId || '')}. Please contact support before starting another checkout.`
+                    : escapeHtml(err?.message || String(err));
+                setPayStatus('bad', `<strong>Payment error:</strong> ${message}`);
                 await openAlertModal({
   title: "Payment error",
   kind: "bad",
@@ -1211,7 +1213,7 @@
 
             } finally {
                 if (!expiredOverlay.classList.contains("show")) {
-                    btnPay.disabled = false;
+                    btnPay.disabled = !_quote || Date.now() >= _quoteExpiresAt;
                     shipMethodEl.disabled = false;
                 }
             }
@@ -1348,7 +1350,7 @@ modalConfirm.addEventListener("click", () => {
 
               <div class="qty" aria-label="Quantity">
                 <button type="button" data-dec="${escapeHtml(it.id)}" aria-label="Decrease quantity">−</button>
-                <input type="text" inputmode="numeric" value="${qty}" data-qty="${escapeHtml(it.id)}" aria-label="Quantity value">
+                <input type="number" min="1" max="99" step="1" inputmode="numeric" value="${qty}" data-qty="${escapeHtml(it.id)}" aria-label="Quantity value">
                 <button type="button" data-inc="${escapeHtml(it.id)}" aria-label="Increase quantity">+</button>
               </div>
             </div>
@@ -1552,7 +1554,7 @@ modalConfirm.addEventListener("click", () => {
                 renderCart();
                 setNotice("warn",
                     `<strong>This free item is missing its link.</strong><br/>
-           Add <code>accessUrl</code> (or <code>downloadUrl/url/link</code>) in https://assets.unlim8ted.com/data/products.json.`
+           Please contact support@unlim8ted.com and include the product name.`
                 );
                 return;
             }
@@ -1602,7 +1604,7 @@ modalConfirm.addEventListener("click", () => {
         if (BUY_MODE) {
             if (!BUY_PRODUCT) {
                 setNotice("warn",
-                    `<strong>Missing product.</strong> Use <code>?source=buy&amp;product=theglitch</code><br/>
+                    `<strong>No product selected.</strong> Choose a product to start checkout.<br/>
            <a href="/products" style="color:rgba(99,214,255,.95);text-decoration:none;font-weight:900;">Go to products</a>`
                 );
             } else {

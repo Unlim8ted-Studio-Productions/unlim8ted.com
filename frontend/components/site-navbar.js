@@ -154,6 +154,7 @@ class SiteNavbar extends HTMLElement {
           transform: translateY(-1px);
         }
 
+        :focus-visible { outline: 3px solid #62d9ff; outline-offset: 3px; }
         .active{
           border-color: rgba(184,107,255,.35) !important;
           background: rgba(184,107,255,.10) !important;
@@ -497,24 +498,27 @@ class SiteNavbar extends HTMLElement {
 
           <button class="navbar-toggle" id="toggleBtn" aria-label="Toggle menu" aria-expanded="false">☰</button>
 
-          <ul id="links" role="menubar">
-            <li><a href="${base}/" role="menuitem">Home</a></li>
-            <li><a href="${base}/products" role="menuitem">Products</a></li>
-            <li><a href="${base}/contact" role="menuitem">Contact</a></li>
-            <li><a href="${base}/about" role="menuitem">About</a></li>
+          <ul id="links">
+            <li><a href="${base}/">Home</a></li>
+            <li><a href="${base}/products">Products</a></li>
+            <li><a href="${base}/contact">Contact</a></li>
+            <li><a href="${base}/about">About</a></li>
 
             <li class="dropdown" id="moreDropdown">
-              <a href="javascript:void(0)" id="moreBtn" role="menuitem" aria-haspopup="true" aria-expanded="false">
+              <button type="button" id="moreBtn" aria-controls="moreMenu" aria-expanded="false" style="font:inherit;color:inherit;background:transparent;border:0;cursor:pointer">
                 More <span aria-hidden="true">▾</span>
-              </a>
-              <div class="dropdown-content" id="moreMenu" role="menu" aria-label="More links">
-                <a href="${base}/portfolio" role="menuitem">Portfolio</a>
-                <a href="${base}/blog" role="menuitem">Blog</a>
+              </button>
+              <div class="dropdown-content" id="moreMenu" aria-label="More links">
+                <a href="${base}/portfolio">Portfolio</a>
+                <a href="${base}/blog">Blog</a>
+                <a href="${base}/help">Help</a>
+                <a href="${base}/privacy">Privacy</a>
+                <a href="${base}/tos">Terms</a>
               </div>
             </li>
 
             <li>
-              <a href="${base}/old" role="menuitem"
+              <a href="${base}/old"
                 style="font-weight:900;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.06);">
                 Old site
               </a>
@@ -542,10 +546,10 @@ class SiteNavbar extends HTMLElement {
                 ${this.userSvg()}
               </button>
 
-              <div class="menu" id="profileMenu" role="menu" aria-label="Account menu">
+              <div class="menu" id="profileMenu" aria-label="Account menu">
                 <div class="meta" id="menuMeta">Not signed in</div>
-                <a id="menuPrimary" href="${signInHref}" role="menuitem">Sign In</a>
-                <button id="menuSignOut" type="button" role="menuitem" style="display:none;">Sign out</button>
+                <a id="menuPrimary" href="${signInHref}">Sign In</a>
+                <button id="menuSignOut" type="button" style="display:none;">Sign out</button>
               </div>
             </div>
           </div>
@@ -578,18 +582,25 @@ class SiteNavbar extends HTMLElement {
     const moreDropdown = this.shadowRoot.getElementById("moreDropdown");
     const moreBtn = this.shadowRoot.getElementById("moreBtn");
     moreBtn.addEventListener("click", (e) => {
-      if (!window.matchMedia("(max-width: 820px)").matches) return;
       e.preventDefault();
       const open = moreDropdown.classList.toggle("open");
       moreBtn.setAttribute("aria-expanded", open ? "true" : "false");
     });
 
+    this.shadowRoot.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      this.shadowRoot.querySelectorAll('.open').forEach(el => el.classList.remove('open'));
+      moreBtn.setAttribute('aria-expanded', 'false');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+      links.classList.remove('show');
+      moreBtn.focus();
+    });
     // Active link styling
     const path = window.location.pathname.replace(/\/$/, "");
     this.shadowRoot.querySelectorAll("a[href]").forEach((a) => {
       try {
         const href = new URL(a.getAttribute("href"), window.location.origin).pathname.replace(/\/$/, "");
-        if (href === path) a.classList.add("active");
+        if (href === path) { a.classList.add("active"); a.setAttribute("aria-current", "page"); }
       } catch { }
     });
 

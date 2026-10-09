@@ -1262,7 +1262,20 @@ async function fetchJson(url) {
   return response.json();
 }
 
+let onnxRuntimePromise;
+async function ensureOnnxRuntime() {
+  if (window.ort) return;
+  if (!onnxRuntimePromise) onnxRuntimePromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js';
+    script.onload = resolve;
+    script.onerror = () => { onnxRuntimePromise = null; script.remove(); reject(new Error('The AI runtime could not load. Please try again.')); };
+    document.head.appendChild(script);
+  });
+  await onnxRuntimePromise;
+}
 async function createSession(url) {
+  await ensureOnnxRuntime();
   return ort.InferenceSession.create(url, { executionProviders: ["wasm"] });
 }
 

@@ -1,11 +1,11 @@
 // /products/software/wise-size/dashboard/ws-shared.js
 import { getFirebase } from "/components/firebase-init.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import {
   doc, getDoc, setDoc, updateDoc,
   collection, query, where, orderBy, limit, getDocs, addDoc,
   serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
 export const PATHS = {
   DASHBOARD_BASE: "/products/software/wise-size/dashboard/",
@@ -34,7 +34,7 @@ export function getApp() {
  * /wise-size/app/{subcollection}/{docId?}
  */
 // /products/software/wise-size/dashboard/shared/wisesize-firebase.js
-import { doc, collection } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
 
 export function wsCol(db, sub) {
   // /wise-size/app/{sub}/...
@@ -63,7 +63,7 @@ export function merchantReady(merchantDoc) {
 export function isValidHttpUrl(u) {
   try {
     const x = new URL(u);
-    return x.protocol === "http:" || x.protocol === "https:";
+    return x.protocol === "https:" && !x.username && !x.password && !x.port;
   } catch {
     return false;
   }
@@ -163,7 +163,7 @@ export async function ensureMerchantDocExists(db, merchantId) {
 export async function createMerchantDoc(db, merchantId, { name, website }) {
   if (!String(name || "").trim()) throw new Error("Store name required");
   if (!String(website || "").trim()) throw new Error("Website required");
-  if (!isValidHttpUrl(website)) throw new Error("Website must be http(s)");
+  if (!isValidHttpUrl(website)) throw new Error("Website must use HTTPS");
 
   const ref = wsDoc(db, "merchants", merchantId);
 

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -2273,18 +2273,19 @@
         trailerVideo.pause();
 
         // refresh Unity to stop audio/game loop
-        unityFrame.src = unityFrame.src;
+        unityFrame.removeAttribute("src");
       }
 
       // TRAILER button
       watchBtn.addEventListener("click", () => {
         openPopup(trailerPopup);
         trailerVideo.currentTime = 0;
-        trailerVideo.play();
+        trailerVideo.play().catch(() => { /* Native controls remain available. */ });
       });
 
       // DEMO button
       playDemoBtn.addEventListener("click", () => {
+        unityFrame.src = unityFrame.dataset.src;
         openPopup(demoPopup);
       });
 
@@ -2304,9 +2305,16 @@
     });
   </script>
   <script type="module" src="/components/site-navbar.js"></script>
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/products/games/TimeCat/">
+<style>@media (max-width:900px) { .header-inner { flex-wrap:wrap; } header nav { flex-wrap:wrap; min-width:0; } } .cutscene-scroll { max-width:100%; }</style>
+<style>.world-grid > *, .world-layout > *, .section-grid > *, .cutscene-strip { min-width:0; max-width:100%; }</style>
+<meta name="description" content="Explore TimeCat, an early time-shifting cat platformer. Try the browser demo, watch the early trailer, and see the planned story and features.">
 </head>
+<body class="timeline-past">
   <site-navbar
-    cart-href="https://unlim8ted.com/sign-in/cart"
+    cart-href="/cart/"
     signin-href="https://unlim8ted.com/sign-in"
     profile-href="https://unlim8ted.com/profile">
   </site-navbar>
@@ -2316,10 +2324,9 @@
 <!-- TRAILER POPUP -->
 <div id="trailerPopup" class="popup hidden">
   <div class="popup-content">
-    <button class="popup-close">✖</button>
+    <button class="popup-close" type="button" aria-label="Close preview">✖</button>
     <video id="popupTrailer" controls autoplay>
-      <source src="TimeCat EarlyTrailer.mp4" type="video/mp4">
-      <source src="TimeCat EarlyTrailer.mov" type="video/quicktime">
+      <source src="https://assets.unlim8ted.com/videos/products/games/TimeCat/TimeCat%20EarlyTrailer.mp4" type="video/mp4">
     </video>
   </div>
 </div>
@@ -2327,16 +2334,16 @@
 <!-- DEMO POPUP (Unity WebGL) -->
 <div id="demoPopup" class="popup hidden">
   <div class="popup-content demo-content">
-    <button class="popup-close">✖</button>
+    <button class="popup-close" type="button" aria-label="Close preview">✖</button>
 
     <!-- CHANGE THIS TO YOUR UNITY INDEX.HTML -->
-    <iframe id="unityFrame" src="WebGL/index.html"></iframe>
+    <iframe id="unityFrame" data-src="WebGL/index.html" title="TimeCat playable demo"></iframe>
 
   </div>
 </div>
 
 
-<body class="timeline-past">
+<a class="skip-link" href="#main-content">Skip to main content</a>
   <div class="scanlines"></div>
   <div class="dust"></div>
 
@@ -2363,9 +2370,9 @@
           <a href="#music">Music</a>
           <button class="time-toggle" id="timeToggle">
             <span class="time-toggle-label">Timeline</span>
-            <div class="time-toggle-track">
-              <div class="time-toggle-thumb"></div>
-            </div>
+            <span class="time-toggle-track">
+              <span class="time-toggle-thumb"></span>
+            </span>
           </button>
           <button class="btn-wishlist">
             <span>Wishlist</span>
@@ -2382,7 +2389,8 @@
               <a href="/contact">Contact</a>
               <a href="/blog">Blog</a>
             </div>
-            <a href="old"><button>Old site</button></a>
+            <a href="/old/">Old site</a>
+          </div>
         </nav>
       </div>
     </header>
@@ -2423,7 +2431,8 @@
             flipping the entire world between a flawless past and a ruined present.
           </p>
 
-          <div class="hero-cta-row">
+          <p><span class="project-status">Early demo / in development</span> Try the browser build below. This page also shows story ideas, art, and planned features; the demo does not include everything described here.</p>
+<div class="hero-cta-row">
             <button class="btn-primary" id="playDemoBtn">
               <span>Play Free Demo*</span>
               <span>▶</span>
@@ -2487,7 +2496,8 @@
       </div>
     </section>
 
-    <main>
+    <main id="main-content">
+<h1 class="sr-only">Timecat</h1>
       <!-- FEATURES -->
       <section id="features" class="reveal">
         <div class="section-header">
@@ -2496,7 +2506,7 @@
             <h2 class="section-title">A Time-Bending Platformer Starring One Reckless Cat</h2>
           </div>
           <p class="section-subtitle">
-            Built like a console-quality release: sharp controls, handcrafted puzzles, and a full story about a lab that
+            Built like a pixel-art release: sharp controls, handcrafted puzzles, and a full story about a lab that
             broke time itself.
           </p>
         </div>
@@ -2848,7 +2858,7 @@
         <div class="cutscene-layout">
           <article class="cutscene-strip">
             <h3>Key Moments</h3>
-            <div class="cutscene-scroll">
+            <div class="cutscene-scroll" tabindex="0" aria-label="Cutscene storyboard" role="region">
               <div class="cutscene-card">
                 <img
                   src="https://assets.unlim8ted.com/images/products/games/TimeCat/Cutscenes/20250922_1835_Pixel Cat's Stormy Night_simple_compose_01k5ss0t3tfenv3pfptxd7z5rf.png"
@@ -3177,7 +3187,7 @@
             <div class="time-rule">
               <span class="time-rule-index">TRACK 36</span>
               <h4>Ur the only evil one ðŸ˜ˆ</h4>
-              <audio controls preload="none" src="https://assets.unlim8ted.com/music/TimeCat/Ur the only evil one ðŸ˜ˆ.mp3">
+              <audio controls preload="none" src="https://assets.unlim8ted.com/music/TimeCat/Ur%20the%20only%20evil%20one%20%F0%9F%98%88.mp3">
               </audio>
             </div>
 
@@ -3289,28 +3299,28 @@
             <div class="time-rule">
               <span class="time-rule-index">TRACK 52</span>
               <h4>Extras - 12a</h4>
-              <audio controls preload="none" src="https://assets.unlim8ted.com/music/TimeCat/Puzzle-7a.mp3">
+              <audio controls preload="none" src="https://assets.unlim8ted.com/music/TimeCat/puzzle-7b.mp3">
               </audio>
             </div>
 
             <div class="time-rule">
               <span class="time-rule-index">TRACK 53</span>
               <h4>Extras - 12b</h4>
-              <audio controls preload="none" src="https://assets.unlim8ted.com/music/TimeCat/Puzzle-7b.mp3">
+              <audio controls preload="none" src="https://assets.unlim8ted.com/music/TimeCat/puzzle-7b.mp3">
               </audio>
             </div>
 
             <div class="time-rule">
               <span class="time-rule-index">TRACK 54</span>
               <h4>Extras - 13</h4>
-              <audio controls preload="none" src="https://assets.unlim8ted.com/music/TimeCat/Puzzle-8.mp3">
+              <audio controls preload="none" src="https://assets.unlim8ted.com/music/TimeCat/puzzle-8.mp3">
               </audio>
             </div>
 
             <div class="time-rule">
               <span class="time-rule-index">TRACK 55</span>
               <h4>Unlim8ted Stinger</h4>
-              <audio controls preload="none" src="https://assets.unlim8ted.com/music/TimeCat/Unlim8ted Stinger.mp3">
+              <audio controls preload="none" src="https://assets.unlim8ted.com/music/Unlim8ted%20Stinger.mp3">
               </audio>
             </div>
 

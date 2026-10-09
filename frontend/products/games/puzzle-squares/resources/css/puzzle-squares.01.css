@@ -251,3 +251,7 @@
     @media (prefers-reduced-motion: reduce){
       *{ scroll-behavior:auto !important; transition:none !important; }
     }
+
+#footer-text { color:#e0e0e0; }
+
+#footer-text { color:#eaf0ff; background:#070a0f; padding:8px; }

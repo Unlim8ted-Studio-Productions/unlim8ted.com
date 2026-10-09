@@ -1,0 +1,11 @@
+/* Shared accessibility defaults; page styles still own their visual identity. */
+.skip-link { position: fixed; top: 8px; left: 8px; z-index: 2147483647; padding: 12px 18px; color: #fff; background: #111827; border: 2px solid #fff; transform: translateY(-160%); }
+.skip-link:focus { transform: none; }
+:focus-visible { outline: 3px solid #62d9ff !important; outline-offset: 4px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.project-status { display: inline-block; font-size: .8rem; padding: .25rem .6rem; border: 1px solid currentColor; border-radius: 1rem; }
+.project-action { display: inline-block; margin-top: .7rem; text-decoration: underline; text-underline-offset: .2em; }
+img { max-width: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

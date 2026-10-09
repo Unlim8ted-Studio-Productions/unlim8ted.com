@@ -1432,7 +1432,7 @@ function resetUI() {
   pDesc.textContent = "";
   pPrice.textContent = "$—";
 
-  setBuyEnabled(true, "#"); // default, gets set later
+  setBuyEnabled(false);
   buyBtn.textContent = "Buy Now";
   buyBtn.removeAttribute("target");
   buyBtn.removeAttribute("rel");
@@ -1509,6 +1509,12 @@ async function renderCurrentProduct(force = false) {
   if (isBook) {
     pPrice.textContent = toMoney(Number(item.price || 0));
 
+    if (Number(item.price || 0) > 0) {
+      hero.textContent = 'Paid downloads require a verified purchase. Contact support with your order reference.';
+      setBuyEnabled(false);
+      addBtn.style.display = 'none';
+      return;
+    }
     await renderBookReader(item);
 
     /*

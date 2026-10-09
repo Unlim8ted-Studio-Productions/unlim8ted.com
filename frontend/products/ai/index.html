@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -16,7 +16,7 @@
     <meta property="og:title" content="Products - Unlim8ted Studio Productions">
     <meta property="og:description"
         content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
-    <meta property="og:image" content="https://unlim8ted.com/images/products-meta-image.jpg">
+    <meta property="og:image" content="https://assets.unlim8ted.com/images/products-meta-image.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -24,7 +24,7 @@
     <meta property="twitter:title" content="Products - Unlim8ted Studio Productions">
     <meta property="twitter:description"
         content="Explore a wide range of products from Unlim8ted Studio Productions, including films, music, games, AI, and more.">
-    <meta property="twitter:image" content="https://unlim8ted.com/images/products-meta-image.jpg">
+    <meta property="twitter:image" content="https://assets.unlim8ted.com/images/products-meta-image.jpg">
     <style>
         /* Navigation Bar Styles */
         .navbar {
@@ -351,14 +351,19 @@
     import { getFirebase } from "/components/firebase-init.js";
 
     const { auth, db } = getFirebase();</script>
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/products/ai/">
 </head>
-<body>   <site-navbar cart-href="https://unlim8ted.com/sign-in/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>   <site-navbar cart-href="/cart/" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+<main id="main-content">
 
     <div id="AI" class="content-section">
         <h1>AI</h1>
         <div class="search-bar">
             <input type="text" id="ai-search" placeholder="Search AI's...">
-            <select id="ai-filter">
+            <select aria-label="Filter projects" id="ai-filter">
                 <option value="all">All</option>
                 <option value="Text generation">Text Generation</option>
                 <option value="Text modification">Text Modification</option>
@@ -369,43 +374,39 @@
             </select>
         </div>
         <div class="item-category" id="ai-items">
-            <a href="script-generator" class="item-box" data-category="Text generation">
-                <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
-                <h3>Film Script Generator (removed)</h3>
-            </a>
             <a href="meatball" class="item-box" data-category="Text generation">
-                <img src="https://assets.unlim8ted.com/images/products/films/The Life of a Meatball1.jpg" alt="Meatball AI">
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Talk to Meatball">
                 <h3>Talk to Meatball</h3>
             </a><!--
             <a href="text-generator" class="item-box" data-category="Text generation">
-                <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Text Generator">
                 <h3>Text Generator</h3>
             </a>
             <a href="text-summarizer" class="item-box" data-category="Text modification">
-                <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Text Summarizer">
                 <h3>Text Summarizer</h3>
             </a>
             <a href="text-classifier" class="item-box" data-category="Text classification">
-                <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Text Classifier">
                 <h3>Text Classifier</h3>
             </a>-->
             <!--
             <a href="text-translator" class="item-box" data-category="Text modification">
-        <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
+        <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Text Translator">
         <h3>Text Translator</h3>
       </a>
       <a href="text2speech" class="item-box" data-category="Text modification">
-        <img src="https://unlim8ted.com/images/products/Film-Script-Generator.jpg" alt="">
+        <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Text2Speech">
         <h3>Text2Speech</h3>
       </a>
       <music generator/>
       -->
 
-            <!-- Add more AI items here -->
+<a href="text2speech/" class="item-box" data-category="Text modification"><h3>Text to Speech</h3><p>Read text aloud using your browser voices. Available now.</p></a>
         </div>
         <!-- Copyright -->
         <div style="margin-top: 20px;">
-            <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
+            <p id="footer-text">&copy; 2019-2026 Unlim8ted Studio Productions. All rights reserved.</p>
             <script>document.addEventListener("DOMContentLoaded", function () {
                 const currentYear = new Date().getFullYear();
                 const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
@@ -413,6 +414,9 @@
             });
             </script>
     <script src="/products/ai/meatball/resources/js/meatball-assistant.js"></script>
+</div>
+</div>
+</main>
 </body>
 </html>
 

@@ -6,3 +6,11 @@ node_modules/
 tools/city-bake/desktop/
 tools/city-bake/tablet/
 tools/city-bake/mobile/
+
+.site-preview/
+test-results/
+playwright-report/
+firebase-debug.log
+firestore-debug.log
+
+.tools-java/

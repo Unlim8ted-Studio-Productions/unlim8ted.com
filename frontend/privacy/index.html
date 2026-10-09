@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -14,12 +14,16 @@
 
 <script type="module" src="/components/site-navbar.js"></script>
 
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/privacy/">
 </head>
 
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
   <canvas id="bgFX"></canvas>
 <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
-  <main class="wrap">
+  <main class="wrap" id="main-content">
     <section>
       <div class="panel hero">
         <span class="kicker">Legal • Privacy</span>
@@ -29,7 +33,7 @@
           our website, games, software, and other digital services.
         </p>
         <div class="meta">
-          <span class="pill">Last updated: <span id="lastUpdated"></span></span>
+          <span class="pill">Last updated: <time id="lastUpdated" datetime="2026-10-09">October 9, 2026</time></span>
           <span class="pill">Contact: <span class="mono">support@unlim8ted.com</span></span>
         </div>
         <div class="callout">
@@ -62,7 +66,7 @@
           <li><strong>Monitoring:</strong> We monitor for suspicious activity to protect accounts and systems.</li>
         </ul>
 
-        <h2>Sharing Your Information</h2>
+        <h2>Accounts, checkout, and local storage</h2><p>Firebase supports accounts, saved carts, reviews, contact messages, and newsletter requests. A guest cart can also be stored in your browser. Clearing browser storage removes the local cart but does not delete account data.</p><p>Card payment details are collected through Square's payment interface. Our checkout service uses a payment token and stores payment references, shipping details, and fulfillment status. Shipping details are sent to Printful to calculate delivery options and fulfill physical orders.</p><p>Temporary checkout quotes expire. Completed order records are retained separately for order support and recovery. For access or deletion requests, email support@unlim8ted.com; transaction records may need to be retained.</p><p>Help and contact submissions may also be forwarded to our support inbox through our email provider so we can respond. The message and your reply address are included in that notification.</p><h2>Sharing Your Information</h2>
         <p>We do not sell your personal information. We may share information only in these cases:</p>
         <ul>
           <li><strong>Service providers:</strong> Vendors that help us operate services (e.g., hosting, analytics, payments) under appropriate safeguards.</li>

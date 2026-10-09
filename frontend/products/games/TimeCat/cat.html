@@ -438,8 +438,12 @@
     font-size: 12px;
   }
 </style>
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content">
   <div class="hud">
     <h1>Runaway Cat Test Page</h1>
     <p>Move your mouse toward the cat. It runs away, climbs walls, panics near corners, and sometimes slips.</p>
@@ -654,5 +658,6 @@
   requestAnimationFrame(update);
 })();
 </script>
+</main>
 </body>
 </html>

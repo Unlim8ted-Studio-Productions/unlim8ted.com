@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,7 +17,7 @@
   <meta property="og:title" content="Contact - Unlim8ted Studio Productions" />
   <meta property="og:description"
     content="Get in touch with Unlim8ted Studio Productions for inquiries, support, or collaboration opportunities." />
-  <meta property="og:image" content="https://unlim8ted.com/images/contact-meta-image.jpg" />
+  <meta property="og:image" content="https://assets.unlim8ted.com/images/contact-meta-image.jpg" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
@@ -25,7 +25,7 @@
   <meta property="twitter:title" content="Contact - Unlim8ted Studio Productions" />
   <meta property="twitter:description"
     content="Get in touch with Unlim8ted Studio Productions for inquiries, support, or collaboration opportunities." />
-  <meta property="twitter:image" content="https://unlim8ted.com/images/contact-meta-image.jpg" />
+  <meta property="twitter:image" content="https://assets.unlim8ted.com/images/contact-meta-image.jpg" />
 
   <link rel="icon" href="https://unlim8ted.com/favicon.ico" type="image/x-icon" />
 
@@ -35,13 +35,17 @@
 
 
   <link rel="stylesheet" href="./resources/css/contact.01.css">
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/contact/">
 </head>
 
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
   <site-navbar cart-href="/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile">
   </site-navbar>
 
-  <main class="page">
+  <main class="page" id="main-content">
     <div class="hero">
       <div>
         <h1>Contact</h1>
@@ -69,21 +73,21 @@
             <div class="two">
               <div>
                 <label for="name">Name</label>
-                <input id="name" name="name" type="text" autocomplete="name" required />
+                <input id="name" name="name" maxlength="80" aria-describedby="status" type="text" autocomplete="name" required />
               </div>
               <div>
                 <label for="email">Email</label>
-                <input id="email" name="email" type="email" autocomplete="email" required />
+                <input id="email" name="email" maxlength="254" aria-describedby="status" type="email" autocomplete="email" required />
               </div>
             </div>
 
             <div>
               <label for="message">Message</label>
-              <textarea id="message" name="message" rows="5" required></textarea>
+              <textarea id="message" name="message" maxlength="5000" aria-describedby="status" rows="5" required></textarea>
             </div>
 
             <!-- Honeypot -->
-            <input id="website" name="website" type="text" autocomplete="off" tabindex="-1"
+            <input aria-hidden="true" id="website" name="website" type="text" autocomplete="off" tabindex="-1"
               style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
 
             <div class="actions">
@@ -143,14 +147,14 @@
     </div>
 
     <footer class="footer">
-      <div id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</div>
+      <div id="footer-text">&copy; 2019-2026 Unlim8ted Studio Productions. All rights reserved.</div>
     </footer>
   </main>
 
   <script src="./resources/js/contact.01.js"></script>
 
   <!-- Firebase submit -->
-  <script type="module" src="./resources/js/contact.02.js"></script>
+  <script type="module" src="/components/contact-form.js"></script>
 </body>
 
 </html>

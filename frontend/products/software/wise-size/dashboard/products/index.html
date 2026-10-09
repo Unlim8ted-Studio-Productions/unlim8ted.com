@@ -1,15 +1,12 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WiseSize — Products</title>
 <script type="module" src="/components/site-navbar.js"></script>
-<site-navbar
-  cart-href="/cart"
-  signin-href="/sign-in"
-  profile-href="/profile">
-</site-navbar>  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     img-src 'self' data: https:;
@@ -44,9 +41,20 @@
     .code{margin-top:8px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;white-space:pre-wrap;overflow:auto}
     .toastWrap{position:fixed;right:16px;bottom:16px;z-index:999;display:grid;gap:10px;max-width:min(520px, calc(100vw - 32px));}
   </style>
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/products/software/wise-size/dashboard/products/">
+<meta name="robots" content="noindex, follow">
 </head>
 
 <body>
+<site-navbar
+  cart-href="/cart"
+  signin-href="/sign-in"
+  profile-href="/profile">
+</site-navbar>
+<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
   <div class="topbar">
     <div class="brand">WiseSize</div>
     <nav class="nav">
@@ -214,6 +222,7 @@
 
     await refresh();
   </script>
+</main>
 </body>
 </html>
 

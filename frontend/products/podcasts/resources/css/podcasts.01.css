@@ -422,3 +422,5 @@
       .player-inner{gap:10px}
       .volume{min-width:150px}
     }
+
+.episode-play { font:inherit; color:inherit; background:transparent; border:0; text-align:left; padding:10px 0; cursor:pointer; }

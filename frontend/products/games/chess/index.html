@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -12,11 +12,16 @@
   <script type="module" src="./resources/js/chess.01.js"></script>
 
   <link rel="stylesheet" href="./resources/css/chess.01.css">
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/products/games/chess/">
 </head>
 
 <body class="theme-default">
-  <site-navbar cart-href="https://unlim8ted.com/sign-in/cart" signin-href="https://unlim8ted.com/sign-in"
+<a class="skip-link" href="#main-content">Skip to main content</a>
+  <site-navbar cart-href="/cart/" signin-href="https://unlim8ted.com/sign-in"
     profile-href="https://unlim8ted.com/profile"></site-navbar>
+<main id="main-content">
 
   <div class="app">
     <div class="hud panel">
@@ -46,7 +51,7 @@
     <div class="grid">
       <div class="board-card panel">
         <div class="board-wrap">
-          <div class="board" id="board" aria-label="Chessboard" role="grid"></div>
+          <div class="board" id="board" aria-label="Chessboard" role="group"></div>
           <div class="coords">
             <div>Files: a b c d e f g h</div>
             <div id="turnText">Turn: White</div>
@@ -70,7 +75,7 @@
           <button class="ghost" id="flipBtn" title="Flip board">Flip</button>
         </div>
 
-        <div class="log" aria-label="Move log">
+        <div class="log" role="region" tabindex="0" aria-label="Move log">
           <ul id="moveLog"></ul>
         </div>
 
@@ -239,6 +244,7 @@
   </div>
 
   <script src="./resources/js/chess.02.js"></script>
+</main>
 </body>
 </html>
 

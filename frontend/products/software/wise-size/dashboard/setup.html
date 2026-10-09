@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -183,9 +183,12 @@
     .toast .t{ font-weight: 950; }
     .toast .d{ margin-top:4px; color: var(--muted); font-size:12px; line-height:1.35; }
   </style>
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
 </head>
 
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
   <!-- REQUIRED: your site navbar -->
   <script type="module" src="/components/site-navbar.js"></script>
   <site-navbar
@@ -194,6 +197,7 @@
     profile-href="/profile"
     no-spacer="true">
   </site-navbar>
+<main id="main-content">
 
   <div class="container">
     <div class="grid">
@@ -268,7 +272,6 @@
             <label for="verifyMethod">Method</label>
             <select id="verifyMethod">
               <option value="dns" selected>DNS TXT record (recommended)</option>
-              <option value="wellknown">HTTP file: /.well-known/wisesize-verification.txt</option>
             </select>
           </div>
 
@@ -454,7 +457,7 @@
     function isValidHttpUrl(u) {
       try {
         const x = new URL(u);
-        return x.protocol === "http:" || x.protocol === "https:";
+        return x.protocol === "https:" && !x.username && !x.password && !x.port;
       } catch { return false; }
     }
 
@@ -751,12 +754,6 @@
         if (data.verified === true) {
           verifyState.textContent = "Verified ✓ Updating account…";
 
-          // Your rules currently allow merchant to set websiteVerified. Do it here.
-          await setDoc(wsDoc(db, "merchants", uid), {
-            websiteVerified: true,
-            updatedAt: serverTimestamp(),
-          }, { merge: true });
-
           merchant = await loadMerchant();
           renderStatus(merchant);
 
@@ -874,6 +871,7 @@
       }
     });
   </script>
+</main>
 </body>
 </html>Uncaught (in promise) FirebaseError: Expected first argument to collection() to be a CollectionReference, a DocumentReference or FirebaseFirestore
 

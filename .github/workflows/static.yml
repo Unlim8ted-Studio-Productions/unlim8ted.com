@@ -20,9 +20,13 @@ env:
   TARGET_BRANCH: main
 
 jobs:
+  validate:
+    uses: ./.github/workflows/validate.yml
+    secrets: inherit
   detect:
     name: Detect changes
     runs-on: ubuntu-latest
+    needs: [validate]
     permissions:
       contents: read
     outputs:
@@ -283,8 +287,10 @@ jobs:
 
       - name: Write Firebase service account
         shell: bash
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_UNLIM8TED_DB }}
         run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_UNLIM8TED_DB }}' > "$RUNNER_TEMP/firebase-service-account.json"
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/firebase-service-account.json"
 
       - name: Deploy auth folder to Firebase Hosting
         shell: bash
@@ -447,8 +453,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          rm -rf publish
-          cp -R "${{ env.FRONTEND_DIR }}" publish
+          python tools/prepare_publish.py --output publish
 
       - name: Generate product pages and sitemap
         shell: pwsh

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -21,7 +21,7 @@
         property="og:description"
         content="Explore scripts, stories, parodies, documentaries, and other written works from Unlim8ted Studio Productions."
     >
-    <meta property="og:image" content="https://unlim8ted.com/images/products/products-meta-image.jpg">
+    <meta property="og:image" content="https://assets.unlim8ted.com/images/products/products-meta-image.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -31,7 +31,7 @@
         property="twitter:description"
         content="Explore scripts, stories, parodies, documentaries, and other written works from Unlim8ted Studio Productions."
     >
-    <meta property="twitter:image" content="https://unlim8ted.com/images/products/products-meta-image.jpg">
+    <meta property="twitter:image" content="https://assets.unlim8ted.com/images/products/products-meta-image.jpg">
 
     <link rel="stylesheet" href="./resources/css/books.01.css">
     <link rel="stylesheet" href="./resources/css/books.02.css">
@@ -42,17 +42,22 @@
     <script src="./resources/js/books.01.js" defer></script>
     <script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
     <script type="module" src="./resources/js/books.02.js"></script>
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/products/books/">
 </head>
 
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
     <site-navbar
-        cart-href="https://unlim8ted.com/sign-in/cart"
+        cart-href="/cart/"
         signin-href="https://unlim8ted.com/sign-in"
         profile-href="https://unlim8ted.com/profile"
     ></site-navbar>
+<main id="main-content">
 
     <div id="books" class="content-section">
-        <h1>Books</h1>
+        <h1>Books and scripts</h1><p>These entries include screenplays, comedy sketches, and story texts. Each project page identifies its format and links to the available reader.</p>
 
         <div class="search-bar">
             <input
@@ -62,7 +67,7 @@
                 aria-label="Search books"
             >
 
-            <select id="book-filter" aria-label="Filter books by category">
+            <select aria-label="Filter projects" id="book-filter" aria-label="Filter books by category">
                 <option value="all">All</option>
                 <option value="fiction">Fiction</option>
                 <option value="non-fiction">Non-fiction</option>
@@ -80,12 +85,8 @@
                 class="item-box"
                 data-category="thriller"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="Don't Kill Me"
-                    loading="lazy"
-                >
-                <h3>Don't Kill Me</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Don&#x27;t Kill Me">
+                <h3>Don't Kill Me</h3><p>A darkly comedic thriller about a terrified homeowner who turns the tables on an armed intruder.</p>
             </a>
 
             <a
@@ -93,12 +94,8 @@
                 class="item-box"
                 data-category="non-fiction documentary"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/non-fiction-book.jpg"
-                    alt="Exploring the Impacts of Generative Artificial Intelligence"
-                    loading="lazy"
-                >
-                <h3>Exploring the Impacts of Generative Artificial Intelligence</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Exploring the Impacts of Generative Artificial Intelligence">
+                <h3>Exploring the Impacts of Generative Artificial Intelligence</h3><p>A documentary-style exploration of generative AI, its environmental costs, social effects, benefits, and the need for responsible oversight.</p>
             </a>
 
             <a
@@ -106,12 +103,8 @@
                 class="item-box"
                 data-category="comedy"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="Failed Unlim8ted Advertisement"
-                    loading="lazy"
-                >
-                <h3>Failed Unlim8ted Advertisement</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Failed Unlim8ted Advertisement">
+                <h3>Failed Unlim8ted Advertisement</h3><p>A chaotic comedy sketch in which an increasingly disastrous commercial shoot completely fails to explain what Unlim8ted does.</p>
             </a>
 
             <a
@@ -119,12 +112,8 @@
                 class="item-box"
                 data-category="comedy"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="Watch Till End Be Like"
-                    loading="lazy"
-                >
-                <h3>Watch Till End Be Like</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Watch Till End Be Like">
+                <h3>Watch Till End Be Like</h3><p>A cinematic cosmic buildup that ends with an absurd reveal and a shameless subscribe-button joke.</p>
             </a>
 
             <a
@@ -132,12 +121,8 @@
                 class="item-box"
                 data-category="comedy"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="I Unwillfully Let My Cat Answer My Emails for Approximately One Week"
-                    loading="lazy"
-                >
-                <h3>I (Unwillfully) Let My Cat Answer My Emails for ~1 Week</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="I (Unwillfully) Let My Cat Answer My Emails for ~1 Week">
+                <h3>I (Unwillfully) Let My Cat Answer My Emails for ~1 Week</h3><p>A comedy sketch about letting a cat manage an email inbox and discovering it may be better at corporate communication than its owner.</p>
             </a>
 
             <a
@@ -145,12 +130,8 @@
                 class="item-box"
                 data-category="comedy gaming"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="If Video Games Had Realistic Physics"
-                    loading="lazy"
-                >
-                <h3>If Video Games Had Realistic Physics</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="If Video Games Had Realistic Physics">
+                <h3>If Video Games Had Realistic Physics</h3><p>A fantasy adventure parody where inventory weight, climbing, boats, combat rolls, and other game mechanics obey inconvenient real-world physics.</p>
             </a>
 
             <a
@@ -158,12 +139,8 @@
                 class="item-box"
                 data-category="comedy"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="Natural Water"
-                    loading="lazy"
-                >
-                <h3>Natural™ Water</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Natural™ Water">
+                <h3>Natural™ Water</h3><p>A fake commercial about a company pursuing increasingly ridiculous methods to create the world&#x27;s most natural bottled water.</p>
             </a>
 
             <a
@@ -171,12 +148,8 @@
                 class="item-box"
                 data-category="comedy documentary"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="Office Wildlife Documentary"
-                    loading="lazy"
-                >
-                <h3>Office Wildlife Documentary</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Office Wildlife Documentary">
+                <h3>Office Wildlife Documentary</h3><p>A nature-documentary parody observing office workers, managers, fake productivity, and a dramatic race to hide a Sudoku game.</p>
             </a>
 
             <a
@@ -184,12 +157,8 @@
                 class="item-box"
                 data-category="comedy"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="The Chicken Crosses the Road, Why?"
-                    loading="lazy"
-                >
-                <h3>The Chicken Crosses the Road... Why?</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="The Chicken Crosses the Road... Why?">
+                <h3>The Chicken Crosses the Road... Why?</h3><p>An absurd comedy sketch in which a simple chicken joke becomes dangerously and inexplicably hilarious.</p>
             </a>
 
             <a
@@ -197,12 +166,8 @@
                 class="item-box"
                 data-category="fiction sci-fi"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="The Glitch"
-                    loading="lazy"
-                >
-                <h3>The Glitch</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/products/films/TheGlitchCover.png" alt="The Glitch">
+                <h3>The Glitch</h3><p>A short film about a figure who must decide what reality means to them, while learning to forgive and striving to save those they love.</p>
             </a>
 
             <a
@@ -210,12 +175,8 @@
                 class="item-box"
                 data-category="comedy gaming"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="Trackmania Be Like"
-                    loading="lazy"
-                >
-                <h3>Trackmania Be Like</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Trackmania Be Like">
+                <h3>Trackmania Be Like</h3><p>A comedy sketch about someone attempting to apply absurd Trackmania speed techniques to real-world driving.</p>
             </a>
 
             <a
@@ -223,12 +184,8 @@
                 class="item-box"
                 data-category="comedy"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="Trailers Be Like"
-                    loading="lazy"
-                >
-                <h3>Trailers Be Like</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Trailers Be Like">
+                <h3>Trailers Be Like</h3><p>A parody of modern movie trailers that reveals every twist, spoils the ending, and includes an inexplicable goose interrogation.</p>
             </a>
 
             <a
@@ -236,12 +193,8 @@
                 class="item-box"
                 data-category="fiction sci-fi"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="The Glitch Trailer"
-                    loading="lazy"
-                >
-                <h3>The Glitch Trailer</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="The Glitch Trailer">
+                <h3>The Glitch Trailer</h3><p>A suspenseful trailer for The Glitch, teasing a simulated world, an approaching reset, and a desperate escape.</p>
             </a>
 
             <a
@@ -249,12 +202,8 @@
                 class="item-box"
                 data-category="comedy gaming"
             >
-                <img
-                    src="https://unlim8ted.com/images/products/fiction-book.jpg"
-                    alt="Celeste Be Like"
-                    loading="lazy"
-                >
-                <h3>Celeste Be Like</h3>
+                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Celeste Be Like">
+                <h3>Celeste Be Like</h3><p>A gaming parody in which a tiny Madeline repeatedly dashes, dies, and respawns while solving ordinary household problems.</p>
             </a>
         </div>
 
@@ -268,6 +217,7 @@
     <script src="./resources/js/books.03.js"></script>
     <script src="./resources/js/books.04.js"></script>
     <script src="/products/ai/meatball/resources/js/meatball-assistant.js"></script>
+</main>
 </body>
 
 </html>

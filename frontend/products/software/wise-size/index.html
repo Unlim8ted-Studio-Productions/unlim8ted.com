@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -1502,9 +1502,14 @@
   </style>
   <script type="module" src="/components/site-navbar.js"></script>
 
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/products/software/wise-size/">
+<meta name="description" content="WiseSize is a clothing-fit project with merchant tools for size charts and website verification. Explore the product and setup documentation.">
 </head>
 
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
   <canvas id="dust"></canvas>
 
 
@@ -1513,6 +1518,7 @@
     signin-href="https://unlim8ted.com/sign-in"
     profile-href="https://unlim8ted.com/profile">
   </site-navbar>
+<main id="main-content">
 
   <div id="smooth-wrapper">
     <div id="smooth-content">
@@ -1577,12 +1583,12 @@
             We’re building a fit decision engine — a clear, reliable size decision at the moment of purchase.
           </p>
 
-          <div class="hero-button" id="heroBtn" role="button" aria-label="Scroll for more">
+          <button type="button" class="hero-button" id="heroBtn" aria-label="Scroll for more">
             Scroll for more <span class="arrow" aria-hidden="true"></span>
-          </div>
-          <div class="hero-button" id="heroBtn" role="button" href="dashboard/">
+          </button>
+          <a class="hero-button" href="dashboard/">
             Get Started
-          </div>
+          </a>
         </div>
       </section>
 
@@ -2273,7 +2279,7 @@
             and compounds into a cross-brand sizing network.
           </p>
         </div>
-        <div class="para muted" style="margin-top: 18px; font-size:12.5px;" id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.
+        <div class="para muted" style="margin-top: 18px; font-size:12.5px;" id="footer-text">&copy; 2019-2026 Unlim8ted Studio Productions. All rights reserved.
          </div> <script>document.addEventListener("DOMContentLoaded", function () {
       const currentYear = new Date().getFullYear();
       const footerText = `&copy; 2019-${currentYear} Unlim8ted Studio Productions. All rights reserved.`;
@@ -3153,6 +3159,7 @@ heroStrip.style.clipPath = "polygon(0 0,100% 0,100% 100%,0 100%)";
     computeDecision(true);
   })();
   </script>
+</main>
 </body>
                     </html>
 

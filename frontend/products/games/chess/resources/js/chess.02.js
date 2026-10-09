@@ -745,10 +745,11 @@
             const r = flipped ? (7-uiRank) : uiRank;
             const i = idx(f, r);
 
-            const sq = document.createElement('div');
+            const sq = document.createElement('button');
+            sq.type = 'button';
             sq.className = 'sq ' + (((uiFile+uiRank)%2===0) ? 'light' : 'dark');
             sq.dataset.i = String(i);
-            sq.setAttribute('role','gridcell');
+            sq.setAttribute('aria-label', String.fromCharCode(97 + f) + (r + 1));
             sq.addEventListener('click', onSquareClick);
             boardEl.appendChild(sq);
           }
@@ -761,6 +762,10 @@
         const i = parseInt(el.dataset.i,10);
         const p = board[i];
         el.textContent = p ? PIECE_EMOJI[p] : '';
+        const pieceNames = { p:'pawn', n:'knight', b:'bishop', r:'rook', q:'queen', k:'king' };
+        const coordinate = String.fromCharCode(97 + (i % 8)) + (Math.floor(i / 8) + 1);
+        el.setAttribute('aria-label', coordinate + (p ? ': ' + (p === p.toUpperCase() ? 'white ' : 'black ') + pieceNames[p.toLowerCase()] : ': empty'));
+        el.setAttribute('aria-pressed', String(i === selected));
 el.classList.toggle('black-piece', !!p && p === p.toLowerCase());
 
         el.classList.toggle('selected', i === selected);

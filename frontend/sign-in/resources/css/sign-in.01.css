@@ -361,3 +361,8 @@ form{
     flex-direction:column-reverse;
   }
 }
+main { width:100%; min-width:0; }
+.container { box-sizing:border-box; width:min(420px,calc(100vw - 32px)); margin:16px auto; }
+
+form > label { display:block; text-align:left; margin-top:12px; }
+button.toggle { background:none; border:0; padding:8px; color:var(--accent); font:inherit; }

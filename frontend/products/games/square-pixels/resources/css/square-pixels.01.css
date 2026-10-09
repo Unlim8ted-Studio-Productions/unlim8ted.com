@@ -291,3 +291,7 @@
   margin: 0 0.5em;
   vertical-align: middle;
 }
+
+.grid > *, .hero-card { min-width: 0; }
+pre { max-width:100%; overflow-x:auto; }
+.hero-meta { flex-wrap:wrap; }

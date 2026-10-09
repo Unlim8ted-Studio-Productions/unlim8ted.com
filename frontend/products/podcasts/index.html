@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -12,15 +12,19 @@
   <!-- Modern theme (matches your newer “glassy neon” pages) -->
   <link rel="stylesheet" href="./resources/css/podcasts.01.css"><link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-assistant.css"><script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
       <script type="module" src="./resources/js/podcasts.01.js"></script>
+<link rel="stylesheet" href="/components/site-base.css">
+<script defer src="/components/site-accessibility.js"></script>
+<link rel="canonical" href="https://unlim8ted.com/products/podcasts/">
 </head>
+<body><a class="skip-link" href="#main-content">Skip to main content</a>
 
 
   <!-- Nav -->
-  <site-navbar cart-href="https://unlim8ted.com/sign-in/cart" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
+  <site-navbar cart-href="/cart/" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
 
 
 
-  <main class="page">
+  <main class="page" id="main-content">
     <section class="hero">
       <h1>Unlim8ted Podcasts</h1>
       <p class="sub">
@@ -29,51 +33,51 @@
       </p>
 
       <div class="podcast-grid">
-        <div class="podcast-card" onclick="playPodcast('What is Unlim8ted.wav','What is “Unlim8ted”?')">
-          <div class="podcast-title">What is “Unlim8ted”?</div>
-          <div class="podcast-description">An unbiased review of our company.</div>
-          <div class="badge"><span class="dot" aria-hidden="true"></span> Available now</div>
+        <div class="podcast-card">
+          <h2 class="podcast-title"><button type="button" class="episode-play" data-file="What is Unlim8ted.wav">What is “Unlim8ted”?</button></h2>
+          <div class="podcast-description">A playful introduction to Unlim8ted and its projects.</div>
+          <div class="badge"><span class="dot" aria-hidden="true"></span> Available now &middot; 17:06 &middot; Release date not listed</div>
         </div>
 
-        <div class="podcast-card" onclick="playPodcast('The Meatball Adventures','The Meatball Adventures')">
+        <div class="podcast-card">
           <div class="podcast-title">The Meatball Adventures</div>
-          <div class="podcast-description">Follow the beloved character from “The Life of a Meatball” on humorous and touching journeys.</div>
+          <div class="podcast-description">Follow the character from “The Life of a Meatball” on humorous and touching journeys.</div>
           <div class="badge"><span class="dot" aria-hidden="true"></span> Coming soon</div>
         </div>
 
-        <div class="podcast-card" onclick="playPodcast('AI and You','AI and You')">
+        <div class="podcast-card">
           <div class="podcast-title">AI and You</div>
           <div class="podcast-description">Exploring how AI shows up in daily life—and what it means for creative industries.</div>
           <div class="badge"><span class="dot" aria-hidden="true"></span> Coming soon</div>
         </div>
 
-        <div class="podcast-card" onclick="playPodcast('Computers.wav','Computers')">
-          <div class="podcast-title">Computers</div>
+        <div class="podcast-card">
+          <h2 class="podcast-title"><button type="button" class="episode-play" data-file="Computers.wav">Computers</button></h2>
           <div class="podcast-description">From gears to silicon—how the modern computer came to be.</div>
-          <div class="badge"><span class="dot" aria-hidden="true"></span> Available now</div>
+          <div class="badge"><span class="dot" aria-hidden="true"></span> Available now &middot; 12:40 &middot; Release date not listed</div>
         </div>
 
-        <div class="podcast-card" onclick="playPodcast('Guide to the Zipper Economy.wav','Guide to the Zipper Economy')">
-          <div class="podcast-title">Guide to the Zipper Economy</div>
+        <div class="podcast-card">
+          <h2 class="podcast-title"><button type="button" class="episode-play" data-file="Guide to the Zipper Economy.wav">Guide to the Zipper Economy</button></h2>
           <div class="podcast-description">A review of the 2024 “Guide to the Zipper Economy”.</div>
-          <div class="badge"><span class="dot" aria-hidden="true"></span> Available now</div>
+          <div class="badge"><span class="dot" aria-hidden="true"></span> Available now &middot; 16:48 &middot; Release date not listed</div>
         </div>
 
-        <div class="podcast-card" onclick="playPodcast('Jokes.wav','Jokes')">
-          <div class="podcast-title">Jokes</div>
+        <div class="podcast-card">
+          <h2 class="podcast-title"><button type="button" class="episode-play" data-file="Jokes.wav">Jokes</button></h2>
           <div class="podcast-description">Bad jokes, delivered confidently. You’ve been warned.</div>
-          <div class="badge"><span class="dot" aria-hidden="true"></span> Available now</div>
+          <div class="badge"><span class="dot" aria-hidden="true"></span> Available now &middot; 3:36 &middot; Release date not listed</div>
         </div>
 
-        <div class="podcast-card" onclick="playPodcast('The Gusian Language Guide.wav','The Gusian Language')">
+        <div class="podcast-card">
           <div class="podcast-title">The Gusian Language</div>
           <div class="podcast-description">A review of “The Gusian Language” — spoken in the Gusian Kingdoms.</div>
-          <div class="badge"><span class="dot" aria-hidden="true"></span> Available now</div>
+          <div class="badge"><span class="dot" aria-hidden="true"></span> Unavailable</div>
         </div>
       </div>
 
       <div class="footer">
-        <p id="footer-text">&copy; 2019-2025 Unlim8ted Studio Productions. All rights reserved.</p>
+        <p id="footer-text">&copy; 2019-2026 Unlim8ted Studio Productions. All rights reserved.</p>
       </div>
     </section>
   </main>
@@ -81,20 +85,14 @@
   <!-- Player controls -->
   <div class="player-controls" role="region" aria-label="Podcast player">
     <div class="player-inner">
-      <button class="btn" onclick="togglePlayPause()" id="playBtn">Play</button>
+      <button class="btn" id="playBtn">Play</button>
 
-      <div class="now-playing" id="nowPlaying">
+      <div class="now-playing" id="nowPlaying" role="status" aria-live="polite">
         <div class="np-title">Now Playing</div>
         <div class="np-name" id="npName">Nothing yet</div>
       </div>
 
-      <div class="time-bar"
-        onmousemove="showHoverLine(event)"
-        onmouseleave="hideHoverLine()"
-        onclick="setPlaybackPosition(event)">
-        <div class="time-bar-fill" id="timeBarFill"></div>
-        <div class="time-bar-hover-line" id="timeBarHoverLine"></div>
-      </div>
+      <input id="podcastSeek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Podcast playback position">
 
       <div class="volume">
         <span class="volume-icon" aria-hidden="true">ðŸ”Š</span>
