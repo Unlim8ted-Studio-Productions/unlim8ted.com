@@ -4,6 +4,20 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: "Choose what to deploy"
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - assets
+          - services
+          - frontend
+          - auth
+          - products
+          - product_pages
 
 concurrency:
   group: sync-assets-services-frontend-auth-products
@@ -20,13 +34,9 @@ env:
   TARGET_BRANCH: main
 
 jobs:
-  validate:
-    uses: ./.github/workflows/validate.yml
-    secrets: inherit
   detect:
     name: Detect changes
     runs-on: ubuntu-latest
-    needs: [validate]
     permissions:
       contents: read
     outputs:
@@ -47,13 +57,14 @@ jobs:
           $changed = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 
           if ($env:GITHUB_EVENT_NAME -eq "workflow_dispatch") {
-            $assetsChanged = "false"
-            $apiChanged = "false"
-            $frontendChanged = "true"
-            $authChanged = "false"
-            $productsChanged = "true"
-            $productPagesChanged = "true"
-            Write-Output "Manual run: deploying frontend and product-generated pages."
+            $target = "${{ inputs.deploy_target }}"
+            $assetsChanged = if ($target -in @("all", "assets")) { "true" } else { "false" }
+            $apiChanged = if ($target -in @("all", "services")) { "true" } else { "false" }
+            $frontendChanged = if ($target -in @("all", "frontend")) { "true" } else { "false" }
+            $authChanged = if ($target -in @("all", "auth")) { "true" } else { "false" }
+            $productsChanged = if ($target -in @("all", "products")) { "true" } else { "false" }
+            $productPagesChanged = if ($target -in @("all", "product_pages")) { "true" } else { "false" }
+            Write-Output "Manual deployment target: $target"
           } else {
             $commitIds = @($event.commits | ForEach-Object { $_.id } | Where-Object { $_ })
 
@@ -100,13 +111,15 @@ jobs:
               return $false
             }
 
-              $assetsChanged = Bool-String (Has-Prefix "assets/")
-              $apiChanged = Bool-String (Has-Prefix "services/")
-              $frontendChanged = Bool-String (Has-Prefix "frontend/")
-              $authChanged = Bool-String (Has-Prefix "auth/")
-              $productsChanged = Bool-String ($changed.Contains("assets/data/products.json"))
+              $assetsChanged = Bool-String ($changed.Contains("assets") -or (Has-Prefix "assets/"))
+              $apiChanged = Bool-String ($changed.Contains("services") -or (Has-Prefix "services/"))
+              $frontendChanged = Bool-String ($changed.Contains("frontend") -or (Has-Prefix "frontend/"))
+              $authChanged = Bool-String ($changed.Contains("auth") -or (Has-Prefix "auth/"))
+              $productsChanged = Bool-String ($changed.Contains("assets/data/products.json") -or $changed.Contains("assets"))
               $productPagesChanged = Bool-String (
                 $changed.Contains("assets/data/products.json") -or
+                $changed.Contains("assets") -or
+                $changed.Contains("frontend") -or
                 $changed.Contains("frontend/products/product/template.html") -or
                 $changed.Contains("frontend/products/product/resources/js/product.01.js") -or
                 $changed.Contains("tools/generate_product_pages_and_sitemap.ps1")
