@@ -25,7 +25,7 @@ html{overflow-x:clip}body{overflow-x:clip}button{touch-action:manipulation}
 #machine:before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(125deg,#c1cbd0,#263340 17%,#536879 72%,#d4d9db);opacity:var(--phone);pointer-events:none}
 #screen{border:0;will-change:auto}#heroWords h1{font-weight:500}#heroWords{bottom:9%}
 #caption{top:9%;left:6%;right:6%;visibility:hidden;opacity:0}#caption h2{font-size:clamp(27px,min(4.6vw,6.7vh),60px);line-height:1.02}#caption p{max-width:520px;line-height:1.6}
-#caption.side{top:32%;width:31%;left:7%;right:auto}#caption.side h2{font-size:clamp(30px,min(4.4vw,7vh),62px)}#caption.ending{top:35%}
+#caption.side{top:32%;width:31%;left:7%;right:auto}#caption.side h2{font-size:clamp(30px,min(4.4vw,7vh),62px)}#caption.ending{top:16%}
 #caption.ending p{max-width:440px}#progress{width:100%;transform:scaleX(0);transform-origin:left;will-change:transform}
 #gameHUD{position:absolute;z-index:8;left:5%;right:5%;top:90px;display:flex;justify-content:space-between;gap:25px;opacity:0;visibility:hidden;pointer-events:none}
 #gameHUD button{pointer-events:auto;border:1px solid #b6d4cd40;background:#0c202abf;padding:8px 12px;border-radius:8px;color:#d6e7df;font-size:10px;margin:9px 0 0 5px}
@@ -41,7 +41,7 @@ html{overflow-x:clip}body{overflow-x:clip}button{touch-action:manipulation}
 @media(max-width:650px){
  #caption{top:11%;left:7%;right:7%}#caption h2{font-size:clamp(26px,8vw,35px)}#caption p{max-width:300px;font-size:11px}
  #caption.side{top:12%;left:7%;width:86%;text-align:center}#caption.side h2{font-size:clamp(27px,8vw,36px)}#caption.side p{margin:10px auto;max-width:300px}
- #caption.ending{top:34%}#gameHUD{top:78px;left:6%;right:6%;gap:13px}.game-heading h3{font-size:25px}.game-heading p{font-size:6px;max-width:120px;line-height:1.7}
+ #caption.ending{top:18%}#gameHUD{top:78px;left:6%;right:6%;gap:13px}.game-heading h3{font-size:25px}.game-heading p{font-size:6px;max-width:120px;line-height:1.7}
  .game-heading .eyebrow{font-size:6px}.game-score{max-width:155px}.game-score strong{font-size:12px}.game-score p{font-size:9px;min-height:39px}
  #gameHUD button{font-size:8px;padding:7px 8px;margin:6px 0 0 4px}#gameControls .game-help{font-size:8px;max-width:300px;margin:0 auto 11px}
  #gameControls button{min-width:51px;min-height:49px}#footer{left:5%;right:5%}#scrollhint{max-width:43%;text-align:center;line-height:1.5}
@@ -60,16 +60,7 @@ html{overflow-x:clip}body{overflow-x:clip}button{touch-action:manipulation}
 </style>
 <script type="module" src="/components/site-navbar.js"></script>
 <style>site-navbar{position:fixed;top:0;left:0;width:100%;z-index:10000}#journeyControls{position:fixed;top:68px;right:4%;z-index:20}#motion{background:#10151dbb;border:1px solid var(--line);padding:10px 13px;border-radius:30px;font-size:10px;backdrop-filter:blur(12px)}.asset img{height:28px;width:37px;object-fit:cover;border:1px solid #ffffff1a;flex-shrink:0}@media(max-width:650px){.asset img{width:16px;height:20px}#journeyControls{right:5%}#motion{font-size:9px;padding:9px}}</style>
-<style>
-#musicPlayer{position:absolute;left:5%;right:5%;bottom:4%;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 14px;background:#0b101ad9;border:1px solid #ffffff25;border-radius:10px;visibility:hidden;opacity:0;color:var(--paper)}
-#musicPlayer label{font:12px monospace;color:var(--gold)}
-#musicTrack{font:inherit;font-size:13px;color:var(--paper);background:#202b3b;border:1px solid #ffffff40;border-radius:5px;padding:6px;width:100%}
-#musicPreview{background:#e5bd78;color:#101722;border-radius:20px;padding:7px 13px;white-space:nowrap;font-size:11px}#musicPreview:hover{background:#f2d39c}#homepageAudio{display:none}
-#musicActions{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px}
-#musicStatus{margin:0;color:#b9c5d6;font-size:11px}
-#musicMore{white-space:nowrap;color:var(--gold);text-underline-offset:3px}
-@media(max-width:650px){#musicPlayer{left:3%;right:3%;bottom:3%;gap:6px;padding:7px}#musicStatus,#musicMore,#musicPreview{font-size:9px}#musicActions{gap:4px}}
-</style>
+<style>#musicCta{display:inline-block;margin-top:0;padding:2px 0;border-bottom:1px solid currentColor;color:var(--gold);font-size:12px;text-decoration:none;pointer-events:auto;opacity:0;visibility:hidden}#caption.music h2{font-size:clamp(30px,4vw,48px);margin:4px 0}#caption.music p{margin:6px auto}@media(max-height:500px) and (min-width:651px){#caption,#caption.side{top:25%;left:3%;right:auto;width:35%;text-align:left}#caption p,#caption.side p{margin:8px 0}#caption.music p{margin:6px 0}}</style>
 <style>
 #phoneBody{position:absolute;inset:0;border-radius:inherit;transform-style:preserve-3d;pointer-events:none;display:none}
 .phone-layer{position:absolute;inset:0;border-radius:inherit;background:linear-gradient(100deg,#c4ced2,#38434d 8%,#9aa8ad 32%,#27333f 74%,#bac6ca);opacity:var(--phone);transform:translateZ(calc(var(--layer) * -1px * var(--phone)))}
@@ -80,10 +71,9 @@ html{overflow-x:clip}body{overflow-x:clip}button{touch-action:manipulation}
 #aiPanel{position:absolute;inset:8% 7%;z-index:6;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:18px;background:#101722ed;border:1px solid #ffffff25;border-radius:12px;visibility:hidden;opacity:0}#aiPanel h3{font-size:clamp(18px,2.2vw,30px);font-weight:500;letter-spacing:-.04em;margin:0}#aiPanel p{font-size:clamp(11px,1.2vw,14px);line-height:1.6;margin:0;color:#b9c5d6}#aiPanel a{color:var(--gold);font-size:13px;text-underline-offset:4px}
 @media(max-width:650px){#aiPanel{inset:5%;padding:12px;gap:8px}#aiPanel h3{font-size:20px}#aiPanel p,#aiPanel a{font-size:11px}}
 #planetIntro{position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden;background:#050505}#homePlanetCanvas{width:100%;height:100%;display:block}#planetIntroCopy{position:absolute;z-index:8;left:5%;right:5%;bottom:12%;text-align:center;text-shadow:0 3px 20px #000b;pointer-events:none}#planetIntroCopy h1{font-size:clamp(34px,5vw,72px);font-weight:500;letter-spacing:-.07em;line-height:1;margin:8px 0}#planetIntroCopy p{font:11px monospace;letter-spacing:.16em;color:#e5bd78}
-#sponsorsPanel{position:absolute;z-index:8;left:50%;bottom:13%;width:min(900px,92%);padding:15px 18px;text-align:center;background:#0b101ae9;border:1px solid #ffffff25;border-radius:18px;box-shadow:0 24px 70px #0009;opacity:0;visibility:hidden;transform:translate(-50%,35px);pointer-events:none}#sponsorsPanel p{color:#e5bd78;font:10px monospace;letter-spacing:.15em;margin:0 0 12px}#sponsorsPanel div{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,30px);flex-wrap:wrap}#sponsorsPanel img{max-height:39px;max-width:125px;width:auto;object-fit:contain;filter:grayscale(1);opacity:.85}#endBrand{position:absolute;z-index:9;top:55%;left:50%;width:68px;height:68px;object-fit:contain;transform:translate(-50%,18px);opacity:0;visibility:hidden}#endLink{top:74%}
-@media(max-width:650px){#planetIntroCopy{bottom:18%}#planetIntroCopy h1{font-size:35px}#sponsorsPanel{bottom:15%;padding:11px}#sponsorsPanel img{max-height:27px;max-width:75px}#endBrand{top:53%;width:50px;height:50px}#endLink{top:73%}}
+#sponsorsPanel{position:absolute;z-index:8;left:50%;bottom:27%;width:min(900px,92%);padding:15px 18px;text-align:center;background:#0b101ae9;border:1px solid #ffffff25;border-radius:18px;box-shadow:0 24px 70px #0009;opacity:0;visibility:hidden;transform:translate(-50%,35px);pointer-events:none}#sponsorsPanel p{color:#e5bd78;font:10px monospace;letter-spacing:.15em;margin:0 0 12px}#sponsorsPanel div{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,30px);flex-wrap:wrap}#sponsorsPanel img{max-height:39px;max-width:125px;width:auto;object-fit:contain;filter:grayscale(1);opacity:.85}#endBrand{position:absolute;z-index:9;top:50%;left:50%;width:110px;height:150px;object-fit:contain;transform:translate(-50%,-50%);opacity:0;visibility:hidden}#endLink{top:69%}
+@media(max-width:650px){#planetIntroCopy{bottom:18%}#planetIntroCopy h1{font-size:35px}#sponsorsPanel{bottom:25%;padding:11px}#sponsorsPanel img{max-height:27px;max-width:75px}#endBrand{width:92px;height:132px}#endLink{top:70%}}
 </style>
-<style>#sponsorsPanel{bottom:33%}#endBrand{top:64%;width:130px;height:110px}#endLink{top:82%}@media(max-width:650px){#sponsorsPanel{bottom:32%}#endBrand{top:67%;width:90px;height:80px}#endLink{top:84%}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js"></script>
 <script defer src="/components/home-planet.js"></script>
 </head>
@@ -102,17 +92,14 @@ html{overflow-x:clip}body{overflow-x:clip}button{touch-action:manipulation}
 <div class="transport"><span id="timecode">00:00:00:00</span><span><button data-go="2.4" aria-label="Go to films">◀</button> ▷ <button data-go="5.2" aria-label="Go to music">▶</button></span><span>1920 × 1080</span></div>
 <div class="timeline" id="timeline"><div class="ruler"><span>00:00</span><span>00:10</span><span>00:20</span><span>00:30</span><span>00:40</span></div><div class="track" data-label="V1"><div class="clip">THE GLITCH</div><div class="clip">THE LIFE OF A MEATBALL</div><div class="clip">DETECTIVE EDWARD</div></div><div class="track audio" data-label="A1"><div class="clip"></div></div><div class="track fx" data-label="FX"><div class="clip">ATMOSPHERE / ORIGINAL SCORE</div></div><div id="playhead"></div></div>
 </div>
-<div id="screen"><section id="aiPanel" aria-label="Meatball AI" inert><h3>Meet Meatball AI.</h3><p>A browser-based chat experiment. Ask a question, try a prompt, and see what the current models can do.</p><a href="/products/ai/meatball/">Try Meatball AI &rarr;</a><a href="/products/ai/">Browse AI projects</a></section><section id="musicPlayer" aria-label="Listen to Unlim8ted music" inert>
-<audio id="homepageAudio" preload="none" aria-label="Music preview" src="https://assets.unlim8ted.com/music/Sharp%20Strings.mp3"></audio>
-<button id="musicPreview" type="button">Play preview</button><div id="musicActions"><p id="musicStatus" role="status" aria-live="polite">Sharp Strings</p><a id="musicMore" href="/products/music/">Listen to more &rarr;</a></div>
-</section><canvas id="art" aria-label="Animated studio universe and creative scenes"></canvas><div id="planetIntro" aria-label="Animated 3D Unlim8ted world"><canvas id="homePlanetCanvas" aria-hidden="true"></canvas></div><div id="heroWords"><div class="eyebrow">UNLIM8TED STUDIOS</div><h1>Original stories.<br>Worlds to explore.</h1><p>FILM · MUSIC · GAMES · TECHNOLOGY</p></div><div id="phoneLinks" aria-label="Explore Unlim8ted" inert>
+<div id="screen"><section id="aiPanel" aria-label="Meatball AI" inert><h3>Meet Meatball AI.</h3><p>A browser-based chat experiment. Ask a question, try a prompt, and see what the current models can do.</p><a href="/products/ai/meatball/">Try Meatball AI &rarr;</a><a href="/products/ai/">Browse AI projects</a></section><canvas id="art" aria-label="Animated studio universe and creative scenes"></canvas><div id="planetIntro" aria-label="Animated 3D Unlim8ted world"><canvas id="homePlanetCanvas" aria-hidden="true"></canvas></div><div id="heroWords"><div class="eyebrow">UNLIM8TED STUDIOS</div><h1>Original stories.<br>Worlds to explore.</h1><p>FILM · MUSIC · GAMES · TECHNOLOGY</p></div><div id="phoneLinks" aria-label="Explore Unlim8ted" inert>
 <a class="phone-card-link" href="https://unlim8ted.com/products" aria-label="Explore Unlim8ted"><span class="sr">Explore Unlim8ted</span></a>
 <a class="phone-row-link phone-films" href="https://unlim8ted.com/products/films" aria-label="Browse Unlim8ted films"><span class="sr">Films and stories</span></a>
 <a class="phone-row-link phone-games" href="https://unlim8ted.com/products/games" aria-label="Browse Unlim8ted games"><span class="sr">Games</span></a>
 <a class="phone-row-link phone-music" href="https://unlim8ted.com/products/music" aria-label="Browse Unlim8ted music"><span class="sr">Music and soundtracks</span></a>
 </div><div id="notch"></div><div id="homebar"></div></div>
 </div>
-<div id="caption"><div class="eyebrow" id="chapterLabel"></div><h2 id="headline"></h2><p id="description"></p></div>
+<div id="caption"><div class="eyebrow" id="chapterLabel"></div><h2 id="headline"></h2><p id="description"></p><a id="musicCta" href="/products/music/" inert>Listen to more music &rarr;</a></div>
 <section id="gameHUD" aria-label="Signal Run game" inert>
   <div class="game-heading"><span class="eyebrow">UNLIM8TED / GAMES</span><h3>Signal Run</h3><p id="gameGoal">REACH THE OBSERVATORY</p></div>
   <div class="game-score"><strong id="signalCount">0 / 6 signals</strong><p id="gameStatus" role="status" aria-live="polite">Collect six signals. Reach the observatory.</p><button id="restartGame" title="Restart the game (R)">Restart ↺</button><button data-go="9.6">Continue exploring ↓</button></div>
@@ -123,7 +110,7 @@ html{overflow-x:clip}body{overflow-x:clip}button{touch-action:manipulation}
   <div class="game-buttons"><button data-action="left" aria-label="Hold to move left">←</button><button data-action="right" aria-label="Hold to move right">→</button><button data-action="jump" aria-label="Jump; press again for a double jump"><span>↑</span> Jump</button></div>
 </div>
 <section id="sponsorsPanel" aria-label="Collaborators" inert><p>IN COLLABORATION WITH</p><div><img src="https://assets.unlim8ted.com/images/logo/Zipper%20Line%20Logo.png" alt="Zipper Line" loading="lazy"><img src="https://assets.unlim8ted.com/images/logo/Bnacintech%20Industries%20logo.png" alt="Bnacintech Industries" loading="lazy"><img src="https://assets.unlim8ted.com/images/logo/Sky%20Tale%20Media%20Logo.png" alt="Sky Tale Media" loading="lazy"><img src="https://assets.unlim8ted.com/images/logo/LMMH_LOGO+BLACK.webp" alt="LMMH" loading="lazy"><img src="https://assets.unlim8ted.com/images/logo/New%20Heights%20Logo.png" alt="New Heights" loading="lazy"><img src="/components/ostrich-media-co.png" alt="Ostrich Media Co" loading="lazy"></div></section>
-<img id="endBrand" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Unlim8ted Studios logo"><a id="endLink" href="/products/">Explore Unlim8ted projects &nearr;</a>
+<img id="endBrand" src="/components/unlim8ted-end-logo.svg" alt="Unlim8ted Studios logo"><a id="endLink" href="/products/">Explore Unlim8ted projects &nearr;</a>
 </div>
 </main>
 <div id="footer"><span id="chapterCount">00 / THE UNIVERSE</span><span id="scrollhint">SCROLL TO PULL BACK ↓</span><span id="percent">00%</span></div><div id="progress"></div>
@@ -141,19 +128,7 @@ const machine=$('machine'), screen=$('screen'), chrome=$('chrome');
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const mix=(a,b,t)=>a+(b-a)*t;
 const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t)};
-const sections=[['The universe',0],['Film',2.25],['Music',5.2],['Games + software',7.55],['Technology',9.6],['AI',11.05],['Clothing',11.8],['Photography',12.55],['Books + writing',13.25],['Unlim8ted',14]];
-const homepageAudio=$('homepageAudio'),musicStatus=$('musicStatus'),musicPreview=$('musicPreview');
-const homepageTracks=[
-  {name:'Sharp Strings',url:'https://assets.unlim8ted.com/music/Sharp%20Strings.mp3'},
-  {name:'Unexpected Twist',url:'https://assets.unlim8ted.com/music/Unexpected%20Twist.mp3'},
-  {name:'Serene Winter Night',url:'https://assets.unlim8ted.com/music/Serene%20Winter%20Night.mp3'}
-];
-let previewIndex=0,previewStartedAt=0,previewWanted=false;
-async function playPreview(){const track=homepageTracks[previewIndex];previewStartedAt=performance.now();homepageAudio.src=track.url;homepageAudio.load();musicStatus.textContent=track.name;try{await homepageAudio.play();musicPreview.textContent='Pause preview'}catch{previewWanted=false;musicPreview.textContent='Play preview'}}
-musicPreview.addEventListener('click',()=>{if(previewWanted){previewWanted=false;homepageAudio.pause();musicPreview.textContent='Play preview'}else{previewWanted=true;playPreview()}});
-homepageAudio.addEventListener('ended',()=>{if(previewWanted){previewIndex=(previewIndex+1)%homepageTracks.length;playPreview()}});
-homepageAudio.addEventListener('error',()=>{previewWanted=false;musicPreview.textContent='Play preview';musicStatus.textContent='Audio unavailable';});
-window.addEventListener('pagehide',()=>homepageAudio.pause());
+const sections=[['The universe',0],['Film',2.25],['Music',5.2],['Games + software',7.55],['Technology',9.6],['AI',11.05],['Clothing',11.8],['Photography',12.55],['Books + writing',13.25],['Unlim8ted',13.68]];
 const phoneBody=$('phoneBody');
 for(let depth=28;depth>=1;depth--){const layer=document.createElement('div');layer.className='phone-layer';layer.style.setProperty('--layer',depth);phoneBody.prepend(layer)}
 const filmNames=['THE GLITCH','THE LIFE OF A MEATBALL','DETECTIVE EDWARD'];
@@ -372,9 +347,10 @@ const sceneStarts=[0,2.55,3.35,4.17,5,6.8,8.95,10.55,11.5,12.2,12.95,13.68];
 const sceneDrawers=[universe,(w,h,t)=>film(w,h,t,0),(w,h,t)=>film(w,h,t,1),(w,h,t)=>film(w,h,t,2),music,gameScene,phone,ai,clothing,photo,writing,universe];
 let keyframes=[];
 function makeKeyframes(){
-  const mobile=W<650, bw=Math.min(W*.88,1180), bh=mobile?Math.min(H*.46,bw*.95):Math.min(H*.58,640);
+  const mobile=W<650, compactLandscape=!mobile&&H<520, aspect=mobile?1.4:2, maxHeight=H*(mobile?.52:.6);
+  const bw=Math.min(W*.9,1180,maxHeight*aspect), bh=bw/aspect;
   const preview={sx:.22,sy:.12,sw:.75,sh:.54};
-  const base={width:bw,height:bh,x:0,y:H*(mobile?.08:.15),scale:1,...preview,radius:12,chrome:1,phone:0,rx:0,ry:0,rz:0};
+  const base={width:bw,height:bh,x:compactLandscape?W*.18:0,y:H*(mobile?0:W<900?.02:.12),scale:1,...preview,radius:12,chrome:1,phone:0,rx:0,ry:0,rz:0};
   const fill={...base,width:W,height:H,x:0,y:0,sx:0,sy:0,sw:1,sh:1,chrome:0,radius:0};
   const zoomScale=Math.max(W/(bw*.75),H/(bh*.54))*1.012;
   const opening={...base,scale:zoomScale,x:-(.22+.75/2-.5)*bw*zoomScale,y:-(.12+.54/2-.5)*bh*zoomScale};
@@ -404,9 +380,6 @@ function updateLayout(){
   const sw=Math.max(1,v.width*v.sw-rim*2),sh=Math.max(1,v.height*v.sh-rim*2);
   screen.style.left=(v.width*v.sx+rim)+'px';screen.style.top=(v.height*v.sy+rim)+'px';screen.style.width=sw+'px';screen.style.height=sh+'px';screen.style.borderRadius=Math.max(0,v.radius*(1-v.chrome)-rim)+'px';
   setShown(chrome,v.chrome);machine.style.setProperty('--phone',v.phone);
-  const musicVisibility=smooth(5.02,5.18,p)*(1-smooth(6.5,6.7,p));
-  setShown($('musicPlayer'),musicVisibility);
-  if(musicVisibility>.015){const now=performance.now();if(previewWanted&&now-previewStartedAt>5600){previewIndex=(previewIndex+1)%homepageTracks.length;playPreview()}else if(!previewWanted){musicStatus.textContent=homepageTracks[Math.floor(clock/3)%homepageTracks.length].name}}else if(!homepageAudio.paused){previewWanted=false;homepageAudio.pause();musicPreview.textContent='Play preview'}
   const planetOpacity=window.homePlanetAvailable===false?0:1-smooth(2.48,2.68,p),planetIntro=$('planetIntro');setShown(planetIntro,planetOpacity);planetIntro.hidden=planetOpacity<=.015;setShown($('planetIntroCopy'),window.homePlanetAvailable===false?0:1-smooth(.3,.85,p));if(window.setHomePlanetProgress)window.setHomePlanetProgress(smooth(0,2,p));
   const heroAlpha=1-smooth(1.2,1.95,p);setShown($('heroWords'),heroAlpha);
   const zoom=smooth(.25,2,p),initialScale=reduced?1:zoomScale;
@@ -423,12 +396,12 @@ function updateUI(){
   let alpha=ci<0?0:smooth(captionStarts[ci],captionStarts[ci]+.13,p);
   if(ci>=0&&ci<8)alpha*=1-smooth(captionStarts[ci+1]-.12,captionStarts[ci+1],p);
   if(ci===0)alpha*=1-smooth(2.6,3.15,p);if(ci===2)alpha*=1-smooth(7.3,7.65,p);
-  setShown($('caption'),alpha);
-  const side=ci>=3&&ci<=7;$('caption').classList.toggle('side',side);$('caption').classList.toggle('ending',ci===8);
+  setShown($('caption'),alpha);setShown($('musicCta'),ci===1?alpha:0);
+  const side=ci>=3&&ci<=7;$('caption').classList.toggle('side',side);$('caption').classList.toggle('music',ci===1);$('caption').classList.toggle('ending',ci===8);
   const gameOpacity=smooth(7.4,7.7,p)*(1-smooth(8.32,8.55,p));
   setShown($('gameHUD'),gameOpacity);setShown($('gameControls'),gameOpacity);
-  const sponsorFade=smooth(13.42,13.76,p);setShown($('sponsorsPanel'),sponsorFade);$('sponsorsPanel').style.transform=`translate(-50%,${(1-sponsorFade)*35}px)`;
-  const endFade=smooth(13.75,13.98,p);setShown($('endLink'),endFade);setShown($('endBrand'),endFade);$('endBrand').style.transform=`translate(-50%,${(1-endFade)*18}px)`;
+  const sponsorFade=smooth(13.66,13.8,p)*(1-smooth(13.88,13.97,p));setShown($('sponsorsPanel'),sponsorFade);$('sponsorsPanel').style.transform=`translate(-50%,${(1-sponsorFade)*35}px)`;
+  const endFade=smooth(13.94,14,p);setShown($('endLink'),endFade);setShown($('endBrand'),endFade);$('endBrand').style.transform=`translate(-50%,calc(-50% + ${(1-endFade)*18}px))`;
   const filmIndex=p<2.55?0:p<3.35?1:p<4.17?2:3;
   const assetIndex=p<5?filmIndex:-1;
   assets.forEach((a,i)=>a.classList.toggle('active',i===assetIndex));
