@@ -14,30 +14,31 @@
   <link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-assistant.css">
 
   <!-- MIDI parser -->
-  <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi@2.0.28"></script>
 
   <link rel="stylesheet" href="./resources/css/music.01.css">
 
 <link rel="stylesheet" href="/components/site-base.css">
 <script defer src="/components/site-accessibility.js"></script>
 <link rel="canonical" href="https://unlim8ted.com/products/music/">
+<link rel="stylesheet" href="./resources/css/studio.css">
 </head>
 
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
   <site-navbar base="" cart-href="/cart" signin-href="https://unlim8ted.com/sign-in"
     profile-href="https://unlim8ted.com/profile"></site-navbar>
-<main id="main-content">
+<main id="main-content"><header class="music-intro"><p class="music-kicker">UNLIM8TED / ORIGINAL SOUND</p><h1>The sound of the story.</h1><p>Film scores, game soundtracks, and music made along the way. Pick a collection, choose a track, and settle in.</p><a href="#songList">Explore the collections &darr;</a></header>
 
   <div class="shell" id="shell">
     <!-- Left panel -->
     <section class="panel">
       <div class="panel-header">
         <div>
-          <h1 class="title">Music</h1>
+          <h2 class="title">The library</h2>
           <p class="subtitle">Pick a track to play. PDFs open in a new tab.</p>
         </div>
-        <div class="now-playing" id="nowPlaying">Nothing playing</div>
+        <div class="now-playing" id="nowPlaying" role="status" aria-live="polite">Nothing playing</div>
       </div>
 
       <div class="song-list" id="songList">
@@ -125,7 +126,7 @@
 
         <form class="commentForm" id="commentForm">
           <div class="fieldRow">
-            <input class="input" id="displayName" maxlength="80" placeholder="Display name (optional)" />
+            <label for="displayName" class="sr-only">Display name</label><input class="input" id="displayName" maxlength="80" placeholder="Display name (optional)" />
             <select class="select" id="ratingSel" aria-label="Rating">
               <option value="5">â˜…â˜…â˜…â˜…â˜… (5)</option>
               <option value="4">â˜…â˜…â˜…â˜…â˜† (4)</option>
@@ -135,7 +136,7 @@
             </select>
           </div>
 
-          <textarea class="textarea" id="commentText" maxlength="2000"
+          <label for="commentText" class="sr-only">Your review</label><textarea class="textarea" id="commentText" maxlength="2000"
             placeholder="Write a review (max 2000 chars)…"></textarea>
 
           <div class="controls-row">

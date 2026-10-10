@@ -971,7 +971,7 @@
                     </p>
                     </div>
 
-                    <section aria-labelledby="featured-projects"><h2 id="featured-projects">Start here</h2><div class="grid"><a class="card" href="/products/games/TimeCat/"><h3>TimeCat</h3><p>A cat, a time button, and an underground lab. In development - explore the game.</p></a><a class="card" href="/products/films/"><h3>The Life of a Meatball</h3><p>An animated mock documentary. Find the film and watch.</p></a><a class="card" href="/products/music/"><h3>Soundtracks</h3><p>Music from the project worlds. Pick a track and listen.</p></a><a class="card" href="/products/hardware/unlim8ted-phone/"><h3>Unlim8ted Phone</h3><p>A custom handheld prototype. Try the browser interface preview.</p></a></div></section>
+
 <h2 class="sectionTitle">Browse by category</h2>
 
                     <div class="grid" id="categoryGrid">
@@ -1084,8 +1084,7 @@
                 <aside class="spinnerCard">
                     <div class="spinnerHeader">
                         <strong>Not sure what to get?</strong>
-                        <span>Spin the wheel. We’ll pick a category and recommend
-                            something.</span>
+                        <span>Spin the wheel to choose a category to explore.</span>
                     </div>
 
                     <div class="spinnerWrap">
@@ -1561,30 +1560,17 @@
             return arr;
         }
 
-        function showRecommendation(product) {
-            const cat = categoryForProduct(product);
-            const primaryLink = productUrl(product);
-
-            const msg = buildMessage(product);
-            modalTitle.textContent = msg.title;
-            modalDesc.textContent = msg.desc;
-
-            modalLink.href = primaryLink;
-            modalLink.textContent = `View ${cat.label} product`;
-
-            const img = getPrimaryImage(product);
-            if (img) {
-                modalImg.src = img;
-                modalImg.alt = product?.name ? `${product.name} preview` : "Product preview";
-                modalImgWrap.style.display = "";
-            } else {
-                modalImgWrap.style.display = "none";
-            }
-
-            overlay.style.display = "block";
-            modal.style.display = "block";
-            overlay.setAttribute("aria-hidden", "false");
-            document.body.style.overflow = "hidden";
+        function showRecommendation(category) {
+            modalTitle.textContent = category.label || 'Browse a category';
+            modalDesc.textContent = 'Explore the '+(category.label || 'projects')+' collection.';
+            modalLink.href = category.link || '/products/';
+            modalLink.textContent = 'Browse '+(category.label || 'projects');
+            modalImgWrap.style.display = 'none';
+            overlay.style.display = 'block';
+            modal.style.display = 'block';
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            modalClose.focus();
         }
 
         function closeModal() {
@@ -1647,10 +1633,10 @@
 
                 // If category is "other", still show the item (fallback link rules apply in showRecommendation)
                 if (picked) {
-                    showRecommendation(picked);
+                    showRecommendation(selectedCat);
                 } else {
                     // Extremely unlikely, but safe
-                    showRecommendation({ id: "unknown", name: selectedCat?.label || "Something", "product-type": selectedCat?.key || "other" });
+                    showRecommendation(selectedCat);
                 }
 
                 spinBtn.disabled = false;

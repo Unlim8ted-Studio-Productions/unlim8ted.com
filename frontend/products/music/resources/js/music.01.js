@@ -439,9 +439,11 @@
       }
 
       // Play button
-      const play = document.createElement("span");
+      const play = document.createElement("button");
+      play.type = "button";
       play.className = "pill pill-btn";
       play.textContent = "Play";
+      play.setAttribute("aria-label", "Play " + displayTitle(item));
       play.addEventListener("click", (e) => {
         e.stopPropagation();
         playByIndex(index);
