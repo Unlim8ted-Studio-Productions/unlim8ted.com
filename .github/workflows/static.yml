@@ -466,7 +466,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python tools/prepare_publish.py --output publish
+          rm -rf publish
+          cp -R "${{ env.FRONTEND_DIR }}" publish
 
       - name: Generate product pages and sitemap
         shell: pwsh
