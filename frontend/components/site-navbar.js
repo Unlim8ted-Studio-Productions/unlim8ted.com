@@ -445,6 +445,7 @@ class SiteNavbar extends HTMLElement {
           }
 
           .dropdown:hover .dropdown-content{ display:none; }
+          .dropdown.open .dropdown-content{ display:block; position:static; box-shadow:none; margin:4px 0 8px; }
         }
 
         @media (prefers-reduced-motion: reduce){

@@ -54,7 +54,7 @@ npm run test:browser
 
 On Linux CI, invoke the generator with `pwsh` instead of Windows PowerShell.
 
-Before enabling checkout, merge the `PAYMENT_DO` binding and the appended `new_sqlite_classes` migration from `backend/api/wrangler.example.jsonc` into the actual Worker configuration. Keep existing namespace IDs, `STOCK_DO`, and all existing migration history. The Worker deliberately returns 503 for payments if `PAYMENT_DO` is absent. Preserve the existing `MEMORY` and `VERIFY_KV` bindings, provider secrets, GitHub catalog credentials, and tax configuration.
+The live Worker configuration is `backend/api/wrangler.jsonc`. It preserves the existing `MEMORY` KV namespace and declares `PAYMENT_DO`, `STOCK_DO`, and `SUPPORT_DO` as SQLite Durable Objects. The Worker deliberately returns 503 for payments if `PAYMENT_DO` is absent. Keep provider secrets, GitHub catalog credentials, and tax configuration in Cloudflare runtime settings.
 
 Add `FIREBASE_SERVICE_ACCOUNT` as a Worker secret containing the service-account JSON, and set `FIREBASE_PROJECT_ID` and `FIREBASE_WEB_API_KEY` to the intended project. Grant only the IAM permissions needed for merchant verification. Set `ALLOWED_ORIGIN` to the comma-separated approved storefront origins; a wildcard is not accepted.
 

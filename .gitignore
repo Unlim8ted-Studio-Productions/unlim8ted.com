@@ -14,3 +14,6 @@ firebase-debug.log
 firestore-debug.log
 
 .tools-java/
+
+# Firebase Admin SDK private keys must never enter the website repository.
+*firebase-adminsdk*.json

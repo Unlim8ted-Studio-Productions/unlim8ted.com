@@ -1,9 +1,4 @@
-﻿import { getFirebase } from "/components/firebase-init.js";
-    import { addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-
-    const { db, auth } = getFirebase();
-
-    const form = document.getElementById("contactForm");
+﻿    const form = document.getElementById("contactForm");
     const btn = document.getElementById("submitBtn");
     const status = document.getElementById("status");
     const buttonLabel = btn.textContent.trim();
@@ -35,6 +30,8 @@
 
     let cooldownUntil = 0;
     let submitting = false;
+    let requestId = null;
+    let lastPayload = null;
     function startCooldown(ms) {
       cooldownUntil = Date.now() + ms;
       btn.disabled = true;
@@ -92,14 +89,18 @@
         btn.disabled = true;
         btn.textContent = "Sending…";
 
-        await addDoc(collection(db, "contact_messages"), {
-          name,
-          email,
-          message,
-          createdAt: serverTimestamp(),
-          source: location.pathname,
-          uid: auth?.currentUser?.uid || null
+        const source = location.pathname.replace(/\/index\.html$/, '/');
+        const payload = { name, email, message, source };
+        const fingerprint = JSON.stringify(payload);
+        if (!requestId || fingerprint !== lastPayload) { requestId = crypto.randomUUID(); lastPayload = fingerprint; }
+        const response = await fetch('https://api.unlim8ted.com/contact', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...payload, requestId }),
+          signal: AbortSignal.timeout(20000)
         });
+        const result = await response.json();
+        if (!response.ok || !result.ok) throw new Error('Support submission was not accepted');
+        requestId = null; lastPayload = null;
 
         form.reset();
         setStatus("ok", "<strong>Message received.</strong> We'll reply at the email address you provided.");

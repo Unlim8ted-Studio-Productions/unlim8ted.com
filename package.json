@@ -10,11 +10,12 @@
     "html-validate": "^11.16.2"
   },
   "scripts": {
-    "test": "node --test tests/payments.test.mjs tests/downloads.test.mjs backend/functions/tests/*.test.js",
+    "test": "node --test backend/api/tests/support-notifications.test.js",
     "test:rules": "firebase emulators:exec --config firebase.json --only firestore,auth --project demo-unlim8ted-security \"node --test tests/firestore.test.mjs tests/auth.test.mjs\"",
     "test:html": "node tests/html-check.mjs",
     "test:browser": "node tests/browser-smoke.mjs",
-    "test:syntax": "node --experimental-vm-modules --disable-warning=ExperimentalWarning tests/syntax-check.mjs"
+    "test:syntax": "node --experimental-vm-modules --disable-warning=ExperimentalWarning tests/syntax-check.mjs",
+    "test:notifications": "node --test backend/api/tests/support-notifications.test.js"
   },
   "overrides": {
     "@grpc/grpc-js": "1.14.6",

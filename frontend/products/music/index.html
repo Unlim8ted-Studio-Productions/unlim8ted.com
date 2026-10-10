@@ -41,7 +41,7 @@
         <div class="now-playing" id="nowPlaying" role="status" aria-live="polite">Nothing playing</div>
       </div>
 
-      <div class="song-list" id="songList">
+      <div class="song-list" id="songList" role="region" aria-label="Music library" tabindex="0">
         <!-- Built from https://assets.unlim8ted.com/data/products.json -->
         <div class="empty">Loading tracks…</div>
       </div>
@@ -52,7 +52,7 @@
     </section>
 
     <!-- Right panel -->
-    <section class="panel visualizer-wrap">
+    <section class="panel visualizer-wrap" aria-label="Visualizer and playback controls" tabindex="0">
       <div class="panel-header">
         <div>
           <h2 class="title">Visualizer</h2>

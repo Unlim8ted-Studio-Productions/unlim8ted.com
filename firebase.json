@@ -1,7 +1,6 @@
 {
   "firestore": {
-    "rules": "backend/rules/database.rules",
-    "indexes": "backend/rules/firestore.indexes.json"
+    "rules": "backend/rules/database.rules"
   },
   "emulators": {
     "firestore": {
@@ -13,20 +12,5 @@
     "auth": {
       "port": 9099
     }
-  },
-  "functions": [
-    {
-      "source": "backend/functions",
-      "codebase": "notifications",
-      "runtime": "nodejs22",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        ".env.example",
-        "tests"
-      ]
-    }
-  ]
+  }
 }

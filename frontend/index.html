@@ -61,14 +61,14 @@ html{overflow-x:clip}body{overflow-x:clip}button{touch-action:manipulation}
 <script type="module" src="/components/site-navbar.js"></script>
 <style>site-navbar{position:fixed;top:0;left:0;width:100%;z-index:10000}#journeyControls{position:fixed;top:68px;right:4%;z-index:20}#motion{background:#10151dbb;border:1px solid var(--line);padding:10px 13px;border-radius:30px;font-size:10px;backdrop-filter:blur(12px)}.asset img{height:28px;width:37px;object-fit:cover;border:1px solid #ffffff1a;flex-shrink:0}@media(max-width:650px){.asset img{width:16px;height:20px}#journeyControls{right:5%}#motion{font-size:9px;padding:9px}}</style>
 <style>
-#musicPlayer{position:absolute;inset:6% 5%;z-index:6;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:12px;background:#0b101aeb;border:1px solid #ffffff25;border-radius:8px;visibility:hidden;opacity:0;color:var(--paper)}
+#musicPlayer{position:absolute;left:5%;right:5%;bottom:4%;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 14px;background:#0b101ad9;border:1px solid #ffffff25;border-radius:10px;visibility:hidden;opacity:0;color:var(--paper)}
 #musicPlayer label{font:12px monospace;color:var(--gold)}
 #musicTrack{font:inherit;font-size:13px;color:var(--paper);background:#202b3b;border:1px solid #ffffff40;border-radius:5px;padding:6px;width:100%}
-#homepageAudio{width:100%;height:36px}
+#musicPreview{background:#e5bd78;color:#101722;border-radius:20px;padding:7px 13px;white-space:nowrap;font-size:11px}#musicPreview:hover{background:#f2d39c}#homepageAudio{display:none}
 #musicActions{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px}
 #musicStatus{margin:0;color:#b9c5d6;font-size:11px}
 #musicMore{white-space:nowrap;color:var(--gold);text-underline-offset:3px}
-@media(max-width:650px){#musicPlayer{inset:3% 3%;gap:4px;padding:7px}#musicPlayer label,#musicStatus,#musicMore{font-size:9px}#musicTrack{font-size:11px;padding:3px}#homepageAudio{height:32px}#musicActions{gap:4px}}
+@media(max-width:650px){#musicPlayer{left:3%;right:3%;bottom:3%;gap:6px;padding:7px}#musicStatus,#musicMore,#musicPreview{font-size:9px}#musicActions{gap:4px}}
 </style>
 <style>
 #phoneBody{position:absolute;inset:0;border-radius:inherit;transform-style:preserve-3d;pointer-events:none;display:none}
@@ -79,7 +79,13 @@ html{overflow-x:clip}body{overflow-x:clip}button{touch-action:manipulation}
 #machine.phone-solid #screen{transform:translateZ(2px);backface-visibility:hidden}
 #aiPanel{position:absolute;inset:8% 7%;z-index:6;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:18px;background:#101722ed;border:1px solid #ffffff25;border-radius:12px;visibility:hidden;opacity:0}#aiPanel h3{font-size:clamp(18px,2.2vw,30px);font-weight:500;letter-spacing:-.04em;margin:0}#aiPanel p{font-size:clamp(11px,1.2vw,14px);line-height:1.6;margin:0;color:#b9c5d6}#aiPanel a{color:var(--gold);font-size:13px;text-underline-offset:4px}
 @media(max-width:650px){#aiPanel{inset:5%;padding:12px;gap:8px}#aiPanel h3{font-size:20px}#aiPanel p,#aiPanel a{font-size:11px}}
+#planetIntro{position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden;background:#050505}#homePlanetCanvas{width:100%;height:100%;display:block}#planetIntro .intro-copy{position:absolute;left:5%;right:5%;bottom:12%;text-align:center;text-shadow:0 3px 20px #000b}#planetIntro h1{font-size:clamp(34px,5vw,72px);font-weight:500;letter-spacing:-.07em;line-height:1;margin:8px 0}#planetIntro p{font:11px monospace;letter-spacing:.16em;color:#e5bd78}
+#sponsorsPanel{position:absolute;z-index:8;left:50%;bottom:13%;width:min(900px,92%);padding:15px 18px;text-align:center;background:#0b101ae9;border:1px solid #ffffff25;border-radius:18px;box-shadow:0 24px 70px #0009;opacity:0;visibility:hidden;transform:translate(-50%,35px);pointer-events:none}#sponsorsPanel p{color:#e5bd78;font:10px monospace;letter-spacing:.15em;margin:0 0 12px}#sponsorsPanel div{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,30px);flex-wrap:wrap}#sponsorsPanel img{max-height:39px;max-width:125px;width:auto;object-fit:contain;filter:grayscale(1);opacity:.85}#endBrand{position:absolute;z-index:9;top:55%;left:50%;width:68px;height:68px;object-fit:contain;transform:translate(-50%,18px);opacity:0;visibility:hidden}#endLink{top:74%}
+@media(max-width:650px){#planetIntro .intro-copy{bottom:18%}#planetIntro h1{font-size:35px}#sponsorsPanel{bottom:15%;padding:11px}#sponsorsPanel img{max-height:27px;max-width:75px}#endBrand{top:53%;width:50px;height:50px}#endLink{top:73%}}
 </style>
+<style>#sponsorsPanel{bottom:33%}#endBrand{top:64%;width:130px;height:110px}#endLink{top:82%}@media(max-width:650px){#sponsorsPanel{bottom:32%}#endBrand{top:67%;width:90px;height:80px}#endLink{top:84%}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js"></script>
+<script defer src="/components/home-planet.js"></script>
 </head>
 <body>
 <site-navbar no-spacer cart-href="/cart" signin-href="/sign-in" profile-href="/profile"></site-navbar>
@@ -87,6 +93,7 @@ html{overflow-x:clip}body{overflow-x:clip}button{touch-action:manipulation}
 <main id="journey" aria-label="Unlim8ted interactive studio journey">
 <div class="sr"><h1>Unlim8ted Studios</h1><p>Explore film, music, games and software, technology and AI, clothing, photography, and writing.</p></div>
 <div id="stage">
+<div id="planetIntro" aria-label="Animated 3D Unlim8ted world"><canvas id="homePlanetCanvas" aria-hidden="true"></canvas><div class="intro-copy"><p>UNLIM8TED STUDIOS</p><h1>Stories with room to roam.</h1><p>SCROLL TO EXPLORE ↓</p></div></div>
 <div id="machine"><div id="phoneBody" aria-hidden="true"><div class="phone-back"><div class="rear-camera"><i></i><i></i><i></i><span></span></div><div class="rear-mark">8</div></div><div class="phone-power"></div><div class="phone-volume"></div><div class="phone-port"></div></div>
 <div class="chrome" id="chrome">
 <div class="titlebar"><span class="dots"><i></i><i></i><i></i></span><span id="appTitle">UNLIM8TED / FILMS</span><span>UNLIM8TED STUDIOS</span></div>
@@ -96,10 +103,8 @@ html{overflow-x:clip}body{overflow-x:clip}button{touch-action:manipulation}
 <div class="timeline" id="timeline"><div class="ruler"><span>00:00</span><span>00:10</span><span>00:20</span><span>00:30</span><span>00:40</span></div><div class="track" data-label="V1"><div class="clip">THE GLITCH</div><div class="clip">THE LIFE OF A MEATBALL</div><div class="clip">DETECTIVE EDWARD</div></div><div class="track audio" data-label="A1"><div class="clip"></div></div><div class="track fx" data-label="FX"><div class="clip">ATMOSPHERE / ORIGINAL SCORE</div></div><div id="playhead"></div></div>
 </div>
 <div id="screen"><section id="aiPanel" aria-label="Meatball AI" inert><h3>Meet Meatball AI.</h3><p>A browser-based chat experiment. Ask a question, try a prompt, and see what the current models can do.</p><a href="/products/ai/meatball/">Try Meatball AI &rarr;</a><a href="/products/ai/">Browse AI projects</a></section><section id="musicPlayer" aria-label="Listen to Unlim8ted music" inert>
-<label for="musicTrack">Pick a track</label>
-<select id="musicTrack"><option value="0">Sharp Strings</option><option value="1">Unexpected Twist</option><option value="2">Serene Winter Night</option></select>
-<audio id="homepageAudio" controls preload="none" aria-label="Music playback" src="https://assets.unlim8ted.com/music/Sharp%20Strings.mp3">Your browser does not support audio playback.</audio>
-<div id="musicActions"><p id="musicStatus" role="status" aria-live="polite">Press play to listen.</p><a id="musicMore" href="/products/music/">Listen to more &rarr;</a></div>
+<audio id="homepageAudio" preload="none" aria-label="Music preview" src="https://assets.unlim8ted.com/music/Sharp%20Strings.mp3"></audio>
+<button id="musicPreview" type="button">Play preview</button><div id="musicActions"><p id="musicStatus" role="status" aria-live="polite">Sharp Strings</p><a id="musicMore" href="/products/music/">Listen to more &rarr;</a></div>
 </section><canvas id="art" aria-label="Animated studio universe and creative scenes"></canvas><div id="heroWords"><div class="eyebrow">UNLIM8TED STUDIOS</div><h1>Original stories.<br>Worlds to explore.</h1><p>FILM · MUSIC · GAMES · TECHNOLOGY</p></div><div id="phoneLinks" aria-label="Explore Unlim8ted" inert>
 <a class="phone-card-link" href="https://unlim8ted.com/products" aria-label="Explore Unlim8ted"><span class="sr">Explore Unlim8ted</span></a>
 <a class="phone-row-link phone-films" href="https://unlim8ted.com/products/films" aria-label="Browse Unlim8ted films"><span class="sr">Films and stories</span></a>
@@ -117,7 +122,8 @@ html{overflow-x:clip}body{overflow-x:clip}button{touch-action:manipulation}
   <p class="game-help">A / D or ← / → to move · Space to jump · Jump twice to reach higher platforms</p>
   <div class="game-buttons"><button data-action="left" aria-label="Hold to move left">←</button><button data-action="right" aria-label="Hold to move right">→</button><button data-action="jump" aria-label="Jump; press again for a double jump"><span>↑</span> Jump</button></div>
 </div>
-<a id="endLink" href="https://unlim8ted.com/">Explore Unlim8ted ↗</a>
+<section id="sponsorsPanel" aria-label="Collaborators" inert><p>IN COLLABORATION WITH</p><div><img src="https://assets.unlim8ted.com/images/logo/Zipper%20Line%20Logo.png" alt="Zipper Line" loading="lazy"><img src="https://assets.unlim8ted.com/images/logo/Bnacintech%20Industries%20logo.png" alt="Bnacintech Industries" loading="lazy"><img src="https://assets.unlim8ted.com/images/logo/Sky%20Tale%20Media%20Logo.png" alt="Sky Tale Media" loading="lazy"><img src="https://assets.unlim8ted.com/images/logo/LMMH_LOGO+BLACK.webp" alt="LMMH" loading="lazy"><img src="https://assets.unlim8ted.com/images/logo/New%20Heights%20Logo.png" alt="New Heights" loading="lazy"><img src="/components/ostrich-media-co.png" alt="Ostrich Media Co" loading="lazy"></div></section>
+<img id="endBrand" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Unlim8ted Studios logo"><a id="endLink" href="/products/">Explore Unlim8ted projects &nearr;</a>
 </div>
 </main>
 <div id="footer"><span id="chapterCount">00 / THE UNIVERSE</span><span id="scrollhint">SCROLL TO PULL BACK ↓</span><span id="percent">00%</span></div><div id="progress"></div>
@@ -136,22 +142,17 @@ const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const mix=(a,b,t)=>a+(b-a)*t;
 const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t)};
 const sections=[['The universe',0],['Film',2.25],['Music',5.2],['Games + software',7.55],['Technology',9.6],['AI',11.05],['Clothing',11.8],['Photography',12.55],['Books + writing',13.25],['Unlim8ted',14]];
-const homepageAudio=$('homepageAudio'),musicTrack=$('musicTrack'),musicStatus=$('musicStatus');
+const homepageAudio=$('homepageAudio'),musicStatus=$('musicStatus'),musicPreview=$('musicPreview');
 const homepageTracks=[
   {name:'Sharp Strings',url:'https://assets.unlim8ted.com/music/Sharp%20Strings.mp3'},
   {name:'Unexpected Twist',url:'https://assets.unlim8ted.com/music/Unexpected%20Twist.mp3'},
   {name:'Serene Winter Night',url:'https://assets.unlim8ted.com/music/Serene%20Winter%20Night.mp3'}
 ];
-musicTrack.addEventListener('change',async()=>{
-  const track=homepageTracks[Number(musicTrack.value)];if(!track)return;
-  homepageAudio.pause();homepageAudio.src=track.url;homepageAudio.load();
-  musicStatus.textContent='Loading '+track.name+'...';
-  try{await homepageAudio.play()}catch{musicStatus.textContent='Press play to listen.'}
-});
-homepageAudio.addEventListener('play',()=>{musicStatus.textContent='Playing: '+homepageTracks[Number(musicTrack.value)].name});
-homepageAudio.addEventListener('pause',()=>{if(!homepageAudio.ended)musicStatus.textContent='Paused.'});
-homepageAudio.addEventListener('ended',()=>{musicStatus.textContent='Finished. Pick another track.'});
-homepageAudio.addEventListener('error',()=>{musicStatus.textContent='This track could not load. Try another.'});
+let previewIndex=0,previewStartedAt=0,previewWanted=false;
+async function playPreview(){const track=homepageTracks[previewIndex];previewStartedAt=performance.now();homepageAudio.src=track.url;homepageAudio.load();musicStatus.textContent=track.name;try{await homepageAudio.play();musicPreview.textContent='Pause preview'}catch{previewWanted=false;musicPreview.textContent='Play preview'}}
+musicPreview.addEventListener('click',()=>{if(previewWanted){previewWanted=false;homepageAudio.pause();musicPreview.textContent='Play preview'}else{previewWanted=true;playPreview()}});
+homepageAudio.addEventListener('ended',()=>{if(previewWanted){previewIndex=(previewIndex+1)%homepageTracks.length;playPreview()}});
+homepageAudio.addEventListener('error',()=>{previewWanted=false;musicPreview.textContent='Play preview';musicStatus.textContent='Audio unavailable';});
 window.addEventListener('pagehide',()=>homepageAudio.pause());
 const phoneBody=$('phoneBody');
 for(let depth=28;depth>=1;depth--){const layer=document.createElement('div');layer.className='phone-layer';layer.style.setProperty('--layer',depth);phoneBody.prepend(layer)}
@@ -214,7 +215,8 @@ function requestJump(){if(gameActive&&!game.won){game.jumpBuffer=.14;dirty=true;
 const keyActions={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp:'jump',KeyW:'jump',Space:'jump'};
 window.addEventListener('keydown',e=>{
   if(!gameActive||e.ctrlKey||e.altKey||e.metaKey||e.target.closest('input,textarea,select,[contenteditable="true"]'))return;
-  if((e.code==='Space'||e.code==='Enter')&&e.target.closest('button,a')&&!e.target.closest('[data-action]'))return;
+  if(e.code==='Space'){e.preventDefault();if(!e.repeat)requestJump();keys.add(e.code);dirty=true;wake();return}
+  if(e.code==='Enter'&&e.target.closest('button,a')&&!e.target.closest('[data-action]'))return;
   if(e.code==='KeyR'){e.preventDefault();if(!e.repeat)resetGame();return}
   const action=keyActions[e.code];if(!action)return;e.preventDefault();
   if(action==='jump'&&!e.repeat)requestJump();keys.add(e.code);dirty=true;wake();
@@ -292,7 +294,7 @@ function gameScene(w,h,t){
     c.lineTo(vw+35,vh);c.fillStyle=['#384e61','#2a4758','#1c3b49','#12313c'][l];c.fill();
   }
   function pine(x,y,s,color){c.fillStyle=color;rect(x-1*s,y-53*s,2*s,57*s,color);for(let i=0;i<3;i++){c.beginPath();c.moveTo(x,y-95*s+i*22*s);c.lineTo(x-(17+i*5)*s,y-40*s+i*22*s);c.lineTo(x+(17+i*5)*s,y-40*s+i*22*s);c.fill()}}
-  for(let i=-2;i<Math.ceil(vw/65)+8;i++){const x=i*65-(cam*.4)%65;pine(x,492+Math.sin(i*2.1)*21,.65+(i%3+3)%3*.18,'#102b3599')}
+  const treeParallax=cam*.4;for(let i=Math.floor((treeParallax-130)/65);i<=Math.ceil((treeParallax+vw+130)/65);i++){const x=i*65-treeParallax;pine(x,492+Math.sin(i*2.1)*21,.65+((i%3+3)%3)*.18,'#102b3599')}
   let fog=c.createLinearGradient(0,370,0,580);fog.addColorStop(0,'#91c8bc00');fog.addColorStop(.6,'#91c8bc12');fog.addColorStop(1,'#0a253000');rect(0,370,vw,220,fog);
   c.save();c.translate(-cam,0);
   // Ruins give the level its own landmarks and a visible destination.
@@ -356,15 +358,15 @@ function writing(w,h,t){
   text('UNLIM8TED STUDIOS',w*.1,h*.9,w*.018,'#8a7152','left','monospace');
 }
 const copy=[
-  ['01 / FILM','Creating memorable<br>moments.','The Glitch. The Life of a Meatball. Detective Edward. Original stories from Unlim8ted Studios.'],
-  ['02 / MUSIC','The sound<br>of the story.','Original music and film scores by Unlim8ted Studios. From Sharp Strings to Unexpected Twist, the story continues in sound.'],
-  ['03 / GAMES + SOFTWARE','Worlds you<br>can change.','Games, simulations, and software made for exploration. Play Signal Run here: collect six signals and reach the observatory.'],
-  ['04 / TECHNOLOGY','Ideas put<br>to work.','Code connects everything we make: the controls you use, the worlds you explore, and the systems behind them.'],
-  ['05 / AI','Try a conversation<br>with Meatball.','Browser-based AI experiments. Start with Meatball, our chat prototype, or explore the other tools.'],
+  ['01 / FILM','Three films,<br>three worlds.','Watch The Glitch and The Life of a Meatball. Detective Edward is in development.'],
+  ['02 / MUSIC','Music for<br>the scene.','Listen to Sharp Strings, Unexpected Twist, and more original tracks.'],
+  ['03 / GAMES + SOFTWARE','A game you<br>can jump into.','Play Signal Run here: collect six signals and reach the observatory.'],
+  ['04 / TECHNOLOGY','A phone under<br>construction.','Unlim8ted Phone is an ongoing hardware and operating system experiment.'],
+  ['05 / AI','Talk to<br>Meatball AI.','Try our browser chat prototype, then browse the other AI projects.'],
   ['06 / CLOTHING','Unlim8ted.<br>Off the screen.','Clothing that carries the studio’s visual identity into everyday life.'],
   ['07 / PHOTOGRAPHY','A different<br>point of view.','Photographs we take: places we explore, details we notice, and moments we want to keep.'],
   ['08 / BOOKS + WRITING','Stories beyond<br>the frame.','Fiction and writing from Unlim8ted: characters, ideas, and worlds with room to unfold.'],
-  ['UNLIM8TED STUDIOS','Create without<br>limits.','Films. Music. Games. Technology. Discover more from Unlim8ted.']
+  ['UNLIM8TED STUDIOS','Keep exploring.','The films, games, music, and tools are ready when you are.']
 ];
 const sceneStarts=[0,2.55,3.35,4.17,5,6.8,8.95,10.55,11.5,12.2,12.95,13.68];
 const sceneDrawers=[universe,(w,h,t)=>film(w,h,t,0),(w,h,t)=>film(w,h,t,1),(w,h,t)=>film(w,h,t,2),music,gameScene,phone,ai,clothing,photo,writing,universe];
@@ -404,7 +406,8 @@ function updateLayout(){
   setShown(chrome,v.chrome);machine.style.setProperty('--phone',v.phone);
   const musicVisibility=smooth(5.02,5.18,p)*(1-smooth(6.5,6.7,p));
   setShown($('musicPlayer'),musicVisibility);
-  if(musicVisibility<=.015&&!homepageAudio.paused)homepageAudio.pause();
+  if(musicVisibility>.015){const now=performance.now();if(previewWanted&&now-previewStartedAt>5600){previewIndex=(previewIndex+1)%homepageTracks.length;playPreview()}else if(!previewWanted){musicStatus.textContent=homepageTracks[Math.floor(clock/3)%homepageTracks.length].name}}else if(!homepageAudio.paused){previewWanted=false;homepageAudio.pause();musicPreview.textContent='Play preview'}
+  const planetOpacity=window.homePlanetAvailable===false?0:1-smooth(1.35,1.9,p),planetIntro=$('planetIntro');setShown(planetIntro,planetOpacity);planetIntro.hidden=planetOpacity<=.015;if(window.setHomePlanetProgress)window.setHomePlanetProgress(smooth(0,1.8,p));
   const heroAlpha=1-smooth(1.2,1.95,p);setShown($('heroWords'),heroAlpha);
   const zoom=smooth(.25,2,p),initialScale=reduced?1:zoomScale;
   heroHeading.style.fontSize=mix(reduced?(mobile?21:42):(mobile?46:61)/initialScale,mobile?23:45,zoom)+'px';
@@ -424,7 +427,8 @@ function updateUI(){
   const side=ci>=3&&ci<=7;$('caption').classList.toggle('side',side);$('caption').classList.toggle('ending',ci===8);
   const gameOpacity=smooth(7.4,7.7,p)*(1-smooth(8.32,8.55,p));
   setShown($('gameHUD'),gameOpacity);setShown($('gameControls'),gameOpacity);
-  setShown($('endLink'),smooth(13.75,13.98,p));
+  const sponsorFade=smooth(13.42,13.76,p);setShown($('sponsorsPanel'),sponsorFade);$('sponsorsPanel').style.transform=`translate(-50%,${(1-sponsorFade)*35}px)`;
+  const endFade=smooth(13.75,13.98,p);setShown($('endLink'),endFade);setShown($('endBrand'),endFade);$('endBrand').style.transform=`translate(-50%,${(1-endFade)*18}px)`;
   const filmIndex=p<2.55?0:p<3.35?1:p<4.17?2:3;
   const assetIndex=p<5?filmIndex:-1;
   assets.forEach((a,i)=>a.classList.toggle('active',i===assetIndex));
