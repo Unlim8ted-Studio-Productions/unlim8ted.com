@@ -1096,11 +1096,11 @@ function mathReplaceSymbols(text) {
   let out = String(text || "");
   for (const [from, to] of Object.entries({
     "×": "*",
-    "Ã·": "/",
-    "âˆ’": "-",
+    "÷": "/",
+    "−": "-",
     "²": " ^ 2 ",
     "³": " ^ 3 ",
-    "âˆš": " sqrt "
+    "√": " sqrt "
   })) {
     out = out.split(from).join(to);
   }

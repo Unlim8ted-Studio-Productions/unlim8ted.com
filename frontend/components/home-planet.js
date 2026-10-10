@@ -6,13 +6,27 @@
       try { renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: "high-performance" }); }
       catch { window.homePlanetAvailable = false; document.getElementById("planetIntro").hidden = true; return; }
       window.homePlanetAvailable = true;
-      renderer.setPixelRatio(Math.min(devicePixelRatio, isMobile ? 1 : 1.35));
-      renderer.setSize(innerWidth, innerHeight);
+      let renderedWidth = 0, renderedHeight = 0, renderedPixelRatio = 0;
+      function sizeToPreview() {
+        const width = Math.max(1, canvas.clientWidth);
+        const height = Math.max(1, canvas.clientHeight);
+        const displayedHeight = canvas.getBoundingClientRect().height;
+        const zoom = Math.max(1, displayedHeight / height);
+        const pixelRatio = Math.min(isMobile ? 3 : 2.5, devicePixelRatio * zoom);
+        if (width === renderedWidth && height === renderedHeight && Math.abs(pixelRatio - renderedPixelRatio) < .15) return;
+        renderedWidth = width;
+        renderedHeight = height;
+        renderedPixelRatio = pixelRatio;
+        renderer.setPixelRatio(pixelRatio);
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      }
 
       const scene = new THREE.Scene();
       scene.fog = new THREE.Fog(0x050505, 9, 18);
 
-      const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, .1, 1000);
+      const camera = new THREE.PerspectiveCamera(50, 1, .1, 1000);
       camera.position.set(0, .2, 9.4);
 
       const group = new THREE.Group();
@@ -541,6 +555,7 @@
           return;
         }
         lastWebglFrame = now;
+        sizeToPreview();
         const time = now * .001;
 
         px += (tx - px) * .04;
@@ -602,12 +617,5 @@
       }
 
       requestAnimationFrame(render);
-
-      window.addEventListener("resize", () => {
-        camera.aspect = innerWidth / innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(innerWidth, innerHeight);
-        renderer.setPixelRatio(Math.min(devicePixelRatio, isMobile ? 1 : 1.35));
-      });
 
     })();
