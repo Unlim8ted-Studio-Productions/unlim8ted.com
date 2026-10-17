@@ -1790,16 +1790,6 @@
           ['RESCUE PILOT','The fog is closing. Without the observatory beacon, I cannot find her. One pass, then I have to turn back.'],
           ['ELI','The old relays still hold a charge. Six signals to wake the beacon. Keep talking, Mara. I am on my way.']
         ],
-        valley: [
-          ['MARA / RADIO','Remember when we got lost here? You would not let go of my coat.'],
-          ['ELI','You left little lanterns so we could find our way back. I can still see them.'],
-          ['MARA / RADIO','I thought you had forgotten. It is getting cold up here.']
-        ],
-        ridge: [
-          ['RESCUE PILOT','I have enough fuel for the approach. I need that light now.'],
-          ['ELI','I used to think being brave meant not being scared.'],
-          ['MARA / RADIO','No, little brother. It means you keep going.']
-        ],
         ending: [
           ['ELI','Beacon online. Mara, look up.'],
           ['RESCUE PILOT','I have the light. I see her. Hold position, Mara.'],
@@ -1850,11 +1840,9 @@
         for(const cp of [1060,1920,2850])if(game.grounded&&game.x>cp&&game.checkpoint<cp)game.checkpoint=cp;
         signalLocations.forEach(([x,y],i)=>{if(!game.collected.has(i)&&Math.hypot(game.x-x,game.y+game.h*.5-y)<35){game.collected.add(i);burst(x,y,'#efd18d');game.message=game.collected.size===6?'The beacon has power. Reach the observatory.':'';syncGameUI()}});
         if(game.y>820){Object.assign(game,{x:game.checkpoint,y:groundY(game.checkpoint)-game.h-4,vx:0,vy:0,grounded:false,flash:.25,jumpBuffer:0});game.message='Your signals are safe.';syncGameUI()}
-        // Conversations wait for a safe landing; no dialogue interrupts a jump.
+        // The ending begins after a safe landing at the observatory.
         if(game.grounded&&!game.won){
-          if(game.x>1100&&!game.seen.has('valley'))beginStory('valley');
-          else if(game.x>2280&&!game.seen.has('ridge'))beginStory('ridge');
-          else if(game.x>3734){
+          if(game.x>3734){
             if(game.collected.size===6){game.won=true;game.rescue=0;burst(3760,480,'#efd18d');beginStory('ending')}
             else if(game.toast===0){game.message='The beacon still needs '+(6-game.collected.size)+' signals. Follow the lights on the upper trail.';game.toast=4;syncGameUI()}
           }
