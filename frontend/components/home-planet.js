@@ -12,7 +12,8 @@
         const height = Math.max(1, canvas.clientHeight);
         const displayedHeight = canvas.getBoundingClientRect().height;
         const zoom = Math.max(1, displayedHeight / height);
-        const pixelRatio = Math.min(isMobile ? 3 : 2.5, devicePixelRatio * zoom);
+        const budget=isMobile?450000:850000;
+        const pixelRatio = Math.min(isMobile?1.25:1.5,devicePixelRatio*zoom,Math.sqrt(budget/(width*height)));
         if (width === renderedWidth && height === renderedHeight && Math.abs(pixelRatio - renderedPixelRatio) < .15) return;
         renderedWidth = width;
         renderedHeight = height;
@@ -539,10 +540,20 @@
 
       scene.add(new THREE.AmbientLight(0xffffff, .38));
 
-      let px = 0, py = 0, tx = 0, ty = 0, scrollP = 0;
-      window.setHomePlanetProgress = value => { scrollP = Math.max(0, Math.min(1, value)); };
+      let px = 0, py = 0, tx = 0, ty = 0, scrollP = 0, planetVisible=true, planetRaf=0, planetDirty=true, planetReduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function queuePlanet(){if(!planetRaf&&!document.hidden&&planetVisible&&(!planetReduced||planetDirty))planetRaf=requestAnimationFrame(render)}
+      window.setHomePlanetProgress=(value,visible=true)=>{
+        const next=Math.max(0,Math.min(1,value));
+        if(next!==scrollP||visible!==planetVisible)planetDirty=true;
+        scrollP=next;planetVisible=visible;
+        if(visible)queuePlanet();else{cancelAnimationFrame(planetRaf);planetRaf=0}
+      };
+      window.addEventListener('resize',()=>{planetDirty=true;queuePlanet()},{passive:true});
+      document.addEventListener('home-motion-change',event=>{planetReduced=event.detail.reduced;planetDirty=true;queuePlanet()});
+      document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(planetRaf);planetRaf=0}else queuePlanet()});
 
       window.addEventListener("pointermove", e => {
+        if(planetReduced)return;
         tx = (e.clientX / innerWidth - .5);
         ty = (e.clientY / innerHeight - .5);
       });
@@ -550,10 +561,9 @@
 
       let lastWebglFrame = 0;
       function render(now) {
-        if (document.hidden || canvas.parentElement.hidden || now - lastWebglFrame < 28) {
-          requestAnimationFrame(render);
-          return;
-        }
+        planetRaf=0;
+        if(document.hidden||!planetVisible||canvas.parentElement.hidden)return;
+        if(now-lastWebglFrame<32){queuePlanet();return}
         lastWebglFrame = now;
         sizeToPreview();
         const time = now * .001;
@@ -613,9 +623,10 @@
         particles.rotation.x = py * .04;
 
         renderer.render(scene, camera);
-        requestAnimationFrame(render);
+        planetDirty=false;
+        queuePlanet();
       }
 
-      requestAnimationFrame(render);
+      queuePlanet();
 
     })();

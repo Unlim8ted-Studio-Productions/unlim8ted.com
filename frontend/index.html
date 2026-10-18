@@ -80,7 +80,7 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      box-shadow: inset 0 0 130px #0006;
+      box-shadow: none;
       z-index: 4
     }
 
@@ -123,7 +123,7 @@
       padding: 10px 13px;
       border-radius: 30px;
       font-size: 10px;
-      backdrop-filter: blur(12px)
+      backdrop-filter: none
     }
 
     #machine {
@@ -522,7 +522,7 @@
       border-radius: 8px;
       min-width: 45px;
       padding: 12px;
-      backdrop-filter: blur(8px)
+      backdrop-filter: none
     }
 
     #endLink {
@@ -1120,14 +1120,19 @@
 
     #gameHUD { top:115px }
     .game-score strong { display:block }
+    body.playing-game site-navbar { visibility:hidden; pointer-events:none }
+    body.playing-game #stage { perspective:none }
+    body.playing-game #machine { will-change:auto }
+    body.playing-game #gameControls button,body.playing-game #motion { backdrop-filter:none }
+    body.playing-game #machine { box-shadow:none }
+    body.playing-game #stage:after { box-shadow:none }
     #gameEntry { position:absolute; z-index:9; top:42%; left:50%; transform:translate(-50%,-50%); width:min(420px,88%); padding:25px; background:#0b2230e8; border:1px solid #b9ccb633; border-radius:10px; text-align:center; opacity:0; visibility:hidden }
     #gameEntry h3 { font:400 42px Georgia,serif; margin:12px 0 }
     #gameEntry p { font-size:14px; line-height:1.6; color:#cfdbd0 }
     #gameEntry button,#nextStory { padding:12px 20px; border-radius:5px; background:#dfc394; color:#122b37; pointer-events:auto }
-    #gameDialogue { position:absolute; z-index:12; bottom:14%; left:50%; transform:translateX(-50%); width:min(630px,90%); padding:20px 24px; text-align:center; background:linear-gradient(90deg,#0a1d29df,#0c2634f5,#0a1d29df); border-block:1px solid #a9bfa02a; opacity:0; visibility:hidden }
-    #storySpeaker { font:10px monospace; letter-spacing:.14em; color:#e1c18b }
-    #storyLine { font:400 clamp(17px,2vw,24px)/1.5 Georgia,serif; margin:12px 0 18px }
-    #nextStory { font-size:11px }
+    #gameDialogue { position:absolute; z-index:12; bottom:16%; left:50%; transform:translateX(-50%); width:min(720px,89%); padding:10px 14px; text-align:center; background:radial-gradient(ellipse,#061522b3,transparent 75%); opacity:0; visibility:hidden; pointer-events:none }
+    #storyLine { font:400 clamp(17px,2vw,24px)/1.45 Georgia,serif; margin:8px 0; color:#f1eedf; text-shadow:0 2px 7px #000,0 0 20px #03101d }
+    #nextStory { position:absolute; left:50%; transform:translateX(-50%); bottom:-50px; padding:9px 16px; font:10px monospace; background:#102633bb; color:#c4d1ce; border:1px solid #bac8be40 }
     @media(max-width:650px) { #gameHUD { top:115px } #gameDialogue { bottom:15%; padding:16px } }
   </style>
   <script type="module" src="/components/site-navbar.js"></script>
@@ -1153,7 +1158,7 @@
       padding: 10px 13px;
       border-radius: 30px;
       font-size: 10px;
-      backdrop-filter: blur(12px)
+      backdrop-filter: none
     }
 
     .asset img {
@@ -1512,6 +1517,7 @@
   </style>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js"></script>
   <script defer src="/components/home-planet.js"></script>
+  <script defer src="/components/signal-run-cinematics.js"></script>
 </head>
 
 <body>
@@ -1613,23 +1619,25 @@
       </div>
       <section id="gameEntry" inert>
         <span class="eyebrow">A SHORT PLAYABLE STORY</span><h3>Signal Run</h3>
-        <p>Your sister is stranded beyond the ruins. Restore the observatory beacon before the rescue flight turns back.</p>
+        <p>The bridge is gone. Your car is on the other side. Power the lighthouse so the rescue crew can find you.</p>
         <button id="startGame">Play Signal Run</button>
       </section>
       <section id="gameDialogue" aria-label="Story dialogue" inert>
-        <span id="storySpeaker"></span><p id="storyLine" role="status" aria-live="polite"></p><button id="nextStory">Continue</button>
+        <div role="status" aria-live="polite" aria-atomic="true">
+          <p id="storyLine"></p>
+        </div><button id="nextStory" aria-label="Skip cutscene and continue">Skip cutscene</button>
       </section>
       <section id="gameHUD" aria-label="Signal Run game" inert>
         <div class="game-heading"><span class="eyebrow">UNLIM8TED / GAMES</span>
           <h3>Signal Run</h3>
-          <p id="gameGoal">REACH THE OBSERVATORY</p>
+          <p id="gameGoal">REACH THE LIGHTHOUSE</p>
         </div>
-        <div class="game-score"><strong id="signalCount">0 / 6 signals</strong>
+        <div class="game-score"><strong id="signalCount">0 / 6 crystals</strong>
           <p id="gameStatus" role="status" aria-live="polite">Follow the lanterns through the ruins.</p><button
             id="restartGame" title="Restart the game (R)">Restart ↺</button><button data-go="9.6">Continue exploring
             ↓</button>
         </div>
-        <div id="gameFinish" hidden><span id="gameEnding">Mara is safe. The beacon brought her home.</span> <a href="https://unlim8ted.com/products/games">Discover what’s
+        <div id="gameFinish" hidden><span id="gameEnding">You're safe. The rescue helicopter found your light.</span> <a href="https://unlim8ted.com/products/games">Discover what’s
             next ↗</a></div>
       </section>
       <div id="gameControls" role="group" aria-label="Game controls" inert>
@@ -1727,7 +1735,7 @@
       const stars = Array.from({ length: 130 }, (_, i) => ({ x: ((i * 137.508) % 997) / 997, y: ((i * 73.731) % 991) / 991, s: .4 + (i % 5) * .3 }));
       function go(n) { window.scrollTo({ top: clamp(n / 14) * scrollSpan, behavior: reduced ? 'auto' : 'smooth' }) }
       document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
-      function motionUI() { $('motion').textContent = reduced ? 'Motion reduced' : 'Motion on'; $('motion').setAttribute('aria-pressed', String(reduced)); $('motion').setAttribute('aria-label', reduced ? 'Enable full animation' : 'Reduce animation'); dirty = true; wake(); }
+      function motionUI() { document.dispatchEvent(new CustomEvent('home-motion-change',{detail:{reduced}})); $('motion').textContent = reduced ? 'Motion reduced' : 'Motion on'; $('motion').setAttribute('aria-pressed', String(reduced)); $('motion').setAttribute('aria-label', reduced ? 'Enable full animation' : 'Reduce animation'); dirty = true; wake(); }
       $('motion').onclick = () => { manualMotion = true; reduced = !reduced; motionUI() };
       mediaPreference.addEventListener('change', e => { if (!manualMotion) { reduced = e.matches; motionUI() } });
       function readScroll() { target = clamp(scrollY / scrollSpan) * 14; dirty = true; wake() }
@@ -1752,7 +1760,7 @@
       function requestJump() { if (gameActive && !game.scene && !game.won) { game.jumpBuffer = .14; dirty = true; wake() } }
       const keyActions = { ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', ArrowUp: 'jump', KeyW: 'jump', Space: 'jump' };
       window.addEventListener('keydown', e => {
-        if (gameActive && game.scene && (e.code==='Space'||e.code==='Enter')) { e.preventDefault(); if(!e.repeat)nextStory(); return; }
+        if (gameActive && game.scene && (e.code==='Space'||e.code==='Enter')) { e.preventDefault(); if(!e.repeat)skipCutscene(); return; }
         if (!gameActive || game.scene || e.ctrlKey || e.altKey || e.metaKey || e.target.closest('input,textarea,select,[contenteditable="true"]')) return;
         if (e.code === 'Space') { e.preventDefault(); if (!e.repeat) requestJump(); keys.add(e.code); dirty = true; wake(); return }
         if (e.code === 'Enter' && e.target.closest('button,a') && !e.target.closest('[data-action]')) return;
@@ -1784,41 +1792,54 @@
       const groundY = x => { const tile=ground.find(tile=>x>=tile.x&&x<=tile.x+tile.w); return tile ? surfaceY(tile,x) : 880 };
       const archways = [{x:730,radius:81,spring:302,base:470},{x:1400,radius:70,spring:467,base:615},{x:2310,radius:86,spring:212,base:390}];
       const signalLocations = [[468,408],[686,318],[1260,428],[2095,338],[3055,448],[3310,358]];
+      const introShots = [
+        {shot:'hike',duration:3},{shot:'collapse',duration:4},
+        {shot:'call',duration:5},{shot:'crew',duration:6},
+        {shot:'hiker',duration:3},{shot:'route',duration:2}
+      ];
       const story = {
         opening: [
-          ['MARA / RADIO','Eli? The bridge is gone. I made it to the ridge, but my ankle... I cannot climb down.'],
-          ['RESCUE PILOT','The fog is closing. Without the observatory beacon, I cannot find her. One pass, then I have to turn back.'],
-          ['ELI','The old relays still hold a charge. Six signals to wake the beacon. Keep talking, Mara. I am on my way.']
+          "I'd better get back to the car.",
+          "No! My car's on the other side!",
+          "911? The bridge collapsed. I'm stranded in the storm. I need help.",
+          "We're in the rescue helicopter. Collect six crystals and power the lighthouse so we can find you.",
+          "I'll get the light on.",
+          "Collect six crystals. Reach the lighthouse."
         ],
         ending: [
-          ['ELI','Beacon online. Mara, look up.'],
-          ['RESCUE PILOT','I have the light. I see her. Hold position, Mara.'],
-          ['MARA / RADIO','I am aboard. Eli... you brought me home.'],
-          ['ELI','You left the lanterns. I only followed them.']
+          "We see your lighthouse! We're coming down to get you.",
+          "I can see you. Thank you!"
         ]
       };
-      const game = { x:130,y:516,vx:0,vy:0,w:24,h:42,grounded:true,coyote:0,jumpBuffer:0,jumpHeld:false,facing:1,camera:0,cameraY:28,viewW:1152,time:0,checkpoint:130,nudge:0,nudgeTime:0,collected:new Set(),particles:[],won:false,flash:0,toast:0,message:'',started:false,scene:null,line:0,seen:new Set(),rescue:0 };
-      function beginStory(name) { game.scene=name; game.line=0; game.seen.add(name); clearInputs(); game.vx=0; game.jumpBuffer=0; syncGameUI() }
-      function nextStory() { if(!game.scene)return; if(++game.line>=story[game.scene].length){game.scene=null;game.line=0} syncGameUI(); dirty=true;wake() }
+      const game = { x:130,y:516,vx:0,vy:0,w:24,h:42,grounded:true,coyote:0,jumpBuffer:0,jumpHeld:false,facing:1,camera:0,cameraY:28,viewW:1152,time:0,checkpoint:130,nudge:0,nudgeTime:0,collected:new Set(),particles:[],won:false,flash:0,toast:0,message:'',started:false,scene:null,line:0,shotTime:0,seen:new Set(),rescue:0 };
+      function beginStory(name) { game.scene=name; game.line=0; game.shotTime=0; game.seen.add(name); clearInputs(); game.vx=0; game.jumpBuffer=0; syncGameUI() }
+      function nextStory() {
+        if(!game.scene)return;
+        game.shotTime=0;
+        if(++game.line>=story[game.scene].length){game.scene=null;game.line=0;clearInputs();game.jumpBuffer=0;game.jumpHeld=false}
+        syncGameUI();dirty=true;wake();
+      }
+      function skipCutscene(){if(!game.scene)return;game.line=story[game.scene].length-1;nextStory()}
       function resetGame() {
-        Object.assign(game,{x:130,y:516,vx:0,vy:0,grounded:true,coyote:0,jumpBuffer:0,jumpHeld:false,facing:1,camera:0,cameraY:28,checkpoint:130,nudgeTime:0,won:false,flash:0,toast:0,message:'',started:true,scene:null,line:0,rescue:0});
+        Object.assign(game,{x:130,y:516,vx:0,vy:0,grounded:true,coyote:0,jumpBuffer:0,jumpHeld:false,facing:1,camera:0,cameraY:28,checkpoint:130,nudgeTime:0,won:false,flash:0,toast:0,message:'',started:true,scene:null,line:0,shotTime:0,rescue:0});
         game.collected.clear();game.seen.clear();game.particles.length=0;clearInputs();beginStory('opening');dirty=true;wake();
       }
       function syncGameUI() {
-        $('signalCount').textContent=game.collected.size+' / 6 signals';
+        $('signalCount').textContent=game.collected.size+' / 6 crystals';
         $('gameStatus').textContent=game.message;
-        $('gameGoal').textContent=game.won?'':'RESTORE THE BEACON / BRING MARA HOME';
+        $('gameGoal').textContent=game.won?'':'POWER THE LIGHTHOUSE / SIGNAL FOR RESCUE';
         $('gameStatus').hidden=!game.message || game.won;
         $('gameFinish').hidden=!game.won || !!game.scene;
         const line=game.scene?story[game.scene][game.line]:null;
-        $('storySpeaker').textContent=line?line[0]:'';$('storyLine').textContent=line?line[1]:'';
+        $('storyLine').textContent=line || '';
       }
-      $('startGame').onclick=resetGame;$('nextStory').onclick=nextStory;
+      $('startGame').onclick=resetGame;$('nextStory').onclick=skipCutscene;
       function burst(x,y,color){for(let i=0;i<18;i++){const a=i*Math.PI*2/18;game.particles.push({x,y,vx:Math.cos(a)*(45+i%4*20),vy:Math.sin(a)*(45+i%4*20),life:.6+i%5*.08,color})}}
       function gameStep(dt) {
         game.time+=dt;game.flash=Math.max(0,game.flash-dt);game.toast=Math.max(0,game.toast-dt);game.jumpBuffer=Math.max(0,game.jumpBuffer-dt);game.nudgeTime=Math.max(0,game.nudgeTime-dt);
         if(game.won)game.rescue+=dt;
-        if(game.scene || !game.started)return;
+        if(game.scene){game.shotTime+=dt;const duration=game.scene==='opening'?introShots[game.line].duration:4.5;if(game.shotTime>=duration)nextStory();return}
+        if(!game.started)return;
         if(game.grounded)game.coyote=.12;else game.coyote=Math.max(0,game.coyote-dt);
         const direction=game.won?0:((inputDown('right')?1:0)-(inputDown('left')?1:0)||(game.nudgeTime>0?game.nudge:0));
         const approach=(v,to,amount)=>v<to?Math.min(v+amount,to):Math.max(v-amount,to);
@@ -1838,13 +1859,13 @@
         }
         if(landing){game.y=landing.top-game.h;game.vy=0;game.grounded=true}
         for(const cp of [1060,1920,2850])if(game.grounded&&game.x>cp&&game.checkpoint<cp)game.checkpoint=cp;
-        signalLocations.forEach(([x,y],i)=>{if(!game.collected.has(i)&&Math.hypot(game.x-x,game.y+game.h*.5-y)<35){game.collected.add(i);burst(x,y,'#efd18d');game.message=game.collected.size===6?'The beacon has power. Reach the observatory.':'';syncGameUI()}});
-        if(game.y>820){Object.assign(game,{x:game.checkpoint,y:groundY(game.checkpoint)-game.h-4,vx:0,vy:0,grounded:false,flash:.25,jumpBuffer:0});game.message='Your signals are safe.';syncGameUI()}
-        // The ending begins after a safe landing at the observatory.
+        signalLocations.forEach(([x,y],i)=>{if(!game.collected.has(i)&&Math.hypot(game.x-x,game.y+game.h*.5-y)<35){game.collected.add(i);burst(x,y,'#efd18d');game.message=game.collected.size===6?'The beacon has power. Reach the lighthouse.':'';syncGameUI()}});
+        if(game.y>820){Object.assign(game,{x:game.checkpoint,y:groundY(game.checkpoint)-game.h-4,vx:0,vy:0,grounded:false,flash:.25,jumpBuffer:0});game.message='Your crystals are safe.';syncGameUI()}
+        // The ending begins after a safe landing at the lighthouse.
         if(game.grounded&&!game.won){
           if(game.x>3734){
             if(game.collected.size===6){game.won=true;game.rescue=0;burst(3760,480,'#efd18d');beginStory('ending')}
-            else if(game.toast===0){game.message='The beacon still needs '+(6-game.collected.size)+' signals. Follow the lights on the upper trail.';game.toast=4;syncGameUI()}
+            else if(game.toast===0){game.message='The beacon still needs '+(6-game.collected.size)+' crystals. Follow the lights on the upper trail.';game.toast=4;syncGameUI()}
           }
         }
         const cameraTarget=clamp(game.x+game.vx*.12-game.viewW*.42,0,Math.max(0,3960-game.viewW));game.camera=mix(game.camera,cameraTarget,1-Math.exp(-dt*9));
@@ -1870,21 +1891,9 @@
         atmosphere(w, h, ['#214a49', '#6d493a', '#303341'][n]); if (n === 0) { for (let i = 0; i < 35; i++) { let y = i * h / 35; rect(0, y, w, 1, '#7bb4a520'); if (i % 4 === 0) rect((Math.sin(i * 8 + t) * .5 + .5) * w, y, w * .2, 3, '#85d8cb55') } rect(w * .39, h * .14, w * .23, h * .64, '#102e32'); rect(w * .41, h * .16, w * .19, h * .6, '#6ca694'); rect(w * .43, h * .16, w * .17, h * .6, '#14333d'); for (let i = 0; i < 6; i++)rect(w * .12 + (i % 2) * w * .04, h * (.26 + i * .058), w * (.25 + (i % 3) * .04), h * .009, '#cfdee829') } else if (n === 1) { let g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#85583d'); g.addColorStop(1, '#201b20'); rect(0, 0, w, h, g); for (let i = 0; i < 7; i++)rect(i * w / 7, 0, w / 7 - 4, h * .6, '#b17b4822'); c.fillStyle = '#ece0c0'; c.beginPath(); c.ellipse(w * .53, h * .7, w * .22, h * .08, 0, 0, 7); c.fill(); let r = h * .16, x = w * .53, y = h * .5; let g2 = c.createRadialGradient(x - r * .4, y - r * .4, 0, x, y, r); g2.addColorStop(0, '#c88a53'); g2.addColorStop(1, '#5b2b21'); circle(x, y, r, g2); for (let i = 0; i < 40; i++) { let a = i * 2.4, rr = r * Math.sqrt((i % 17) / 18); circle(x + Math.cos(a) * rr, y + Math.sin(a) * rr, 1 + i % 3, '#401f1855') } circle(x - r * .28, y - r * .08, 3, '#211c1b'); circle(x + r * .28, y - r * .08, 3, '#211c1b') } else { for (let i = 0; i < 15; i++) { let bh = h * (.18 + ((i * 7) % 11) / 30), x = i * w / 15; rect(x, h * .75 - bh, w / 15 - 4, bh, '#0c1724'); for (let j = 0; j < 5; j++)rect(x + 5, h * .75 - bh + j * bh / 6, 3, 5, '#cdb58d44') } let x = w * .58, y = h * .64; circle(x, y - h * .13, h * .065, '#b8a88c'); c.fillStyle = '#1a2431'; c.beginPath(); c.moveTo(x - h * .1, y - h * .03); c.lineTo(x + h * .09, y - h * .03); c.lineTo(x + h * .16, y + h * .28); c.lineTo(x - h * .17, y + h * .28); c.fill(); rect(x - h * .105, y - h * .21, h * .21, h * .025, '#141a25', 2); rect(x - h * .065, y - h * .29, h * .13, h * .09, '#192230', 3); for (let i = 0; i < 55; i++) { let xx = (i * w / 55 + t * 14) % w, yy = (i * 67 + t * 80) % h; line(xx, yy, xx - 4, yy + 20, '#a7b4c333') } } const names = ['THE GLITCH', 'THE LIFE OF A MEATBALL', 'DETECTIVE EDWARD']; text('UNLIM8TED FILMS / 0' + (n + 1), w * .07, h * .81, Math.max(7, w * .014), '#e5bd78', 'left', 'monospace'); text(names[n], w * .07, h * .91, w * (n === 1 ? .046 : .063), '#f5ede0'); text('UPCOMING FILM / CONCEPT SCENE', w * .07, h * .75, Math.max(7, w * .014), '#e5bd78', 'left', 'monospace');
       }
       function music(w, h, t) { atmosphere(w, h, '#293449', '#090e19');  for (let row = 0; row < 4; row++) { let y = h * (.28 + row * .16); line(w * .05, y, w * .94, y, '#ffffff10'); for (let i = 0; i < 100; i++) { let a = (Math.sin(i * .42 + row * 4) * .5 + .5) * (Math.cos(i * .17 - row) * .5 + .5); let v = (.3 + .7 * Math.abs(Math.sin(i * .19 + t + row))) * a * h * .1; rect(w * (.06 + i * .0086), y - v / 2, w * .004, Math.max(2, v), ['#d3ac74', '#72a79e', '#8a8fae', '#9b7f91'][row], 1) } } let x = w * (.15 + (p - 5) / 2 * .68); line(x, h * .22, x, h * .88, '#f4e6c8', 1);  }
-      function gameScene(w, h, t) {
-        const vh = 720, scale = h / vh, vw = w / scale, cam = game.camera; game.viewW = vw;
-        c.save(); c.scale(scale, scale);
-        let sky = c.createLinearGradient(0, 0, 0, vh); sky.addColorStop(0, '#08192b'); sky.addColorStop(.52, '#30485a'); sky.addColorStop(.8, '#657a77'); sky.addColorStop(1, '#132936'); rect(0, 0, vw, vh, sky);
-        stars.forEach((s, i) => { if (s.y < .5) circle(s.x * vw - cam * .014 % (vw + 10), s.y * 560, s.s * .65, '#dde3cc88') });
-        const moonX = vw * .77 - cam * .012; let halo = c.createRadialGradient(moonX, 163, 20, moonX, 163, 130); halo.addColorStop(0, '#e2d5ae38'); halo.addColorStop(1, '#e2d5ae00'); circle(moonX, 163, 130, halo); circle(moonX, 163, 45, '#d5ccb0'); c.save(); c.beginPath(); c.arc(moonX, 163, 45, 0, Math.PI * 2); c.clip(); circle(moonX + 18, 153, 36, '#bcc1ad30'); c.restore();
-        for (let l = 0; l < 4; l++) {
-          c.beginPath(); c.moveTo(-30, vh);
-          for (let x = -30; x <= vw + 35; x += 14) { let world = x + cam * (.05 + l * .095), y = 280 + l * 65 + Math.sin(world * .003 + l * 2) * 48 + Math.sin(world * .009 + l) * 22 + Math.sin(world * .017 + l) * 8; c.lineTo(x, y) }
-          c.lineTo(vw + 35, vh); c.fillStyle = ['#384e61', '#2a4758', '#1c3b49', '#12313c'][l]; c.fill();
-        }
-        function pine(x, y, s, color) { c.fillStyle = color; rect(x - 1 * s, y - 53 * s, 2 * s, 57 * s, color); for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(x, y - 95 * s + i * 22 * s); c.lineTo(x - (17 + i * 5) * s, y - 40 * s + i * 22 * s); c.lineTo(x + (17 + i * 5) * s, y - 40 * s + i * 22 * s); c.fill() } }
-        const treeParallax = cam * .4; for (let i = Math.floor((treeParallax - 130) / 65); i <= Math.ceil((treeParallax + vw + 130) / 65); i++) { const x = i * 65 - treeParallax; pine(x, 492 + Math.sin(i * 2.1) * 21, .65 + ((i % 3 + 3) % 3) * .18, '#102b3599') }
-        let fog = c.createLinearGradient(0, 370, 0, 580); fog.addColorStop(0, '#91c8bc00'); fog.addColorStop(.6, '#91c8bc12'); fog.addColorStop(1, '#0a253000'); rect(0, 370, vw, 220, fog);
-        c.save(); c.translate(-cam, -game.cameraY);
+      let gameTerrainCache=null;
+      function drawGameTerrain() {
+        const cam=0,vw=3960,t=0;
         // Ruins give the level its own landmarks and a visible destination.
         for (const { x, radius, spring, base } of archways) {
           const left = x - radius, right = x + radius;
@@ -1913,17 +1922,15 @@
           }
           line(x - 3, groundY(x) - 4, x + blocks * 24, groundY(x) - 4, '#73917b66', 3);
         }
-        // The observatory's light switches on when all six signals are returned.
-        rect(3630, 414, 234, 147, '#152f3d'); rect(3660, 334, 173, 223, '#284652');
-        c.fillStyle = '#537177'; c.beginPath(); c.ellipse(3746, 334, 87, 64, 0, Math.PI, Math.PI * 2); c.fill();
-        rect(3658, 330, 178, 9, '#8c9990'); line(3746, 274, 3746, 232, '#c7b48b', 3); circle(3746, 232, 4, game.won ? '#f7d795' : '#718a85');
-        for (let i = 0; i < 3; i++)rect(3683 + i * 42, 369, 19, 37, game.won ? '#ecd398' : '#78968a');
-        rect(3717, 480, 61, 78, '#071b26', 29); c.strokeStyle = game.won ? '#ead5a1' : '#759895'; c.lineWidth = 2; c.strokeRect(3715, 478, 65, 80);
-        if (game.won) { let beam = c.createLinearGradient(3746, 40, 3746, 270); beam.addColorStop(0, '#e4d49a00'); beam.addColorStop(1, '#e4d49a66'); c.fillStyle = beam; c.beginPath(); c.moveTo(3741, 232); c.lineTo(3660, 0); c.lineTo(3835, 0); c.lineTo(3751, 232); c.fill() }
-        if(game.won){
-          const hx=3746-Math.max(0,500-game.rescue*55),hy=178+Math.sin(t*2)*3;
-          rect(hx-24,hy-10,48,20,'#9ab1ac',10);rect(hx+8,hy-6,13,10,'#21404b',3);line(hx-26,hy,hx-55,hy-12,'#9ab1ac',4);line(hx-48,hy-18,hx-48,hy-5,'#b7c7bc',3);line(hx-32,hy-18,hx+32,hy-18,'#bac9ba',2);circle(hx+24,hy,3,'#f3ce8c');
-        }
+        // A lighthouse on the final headland, powered by the six crystals.
+        rect(3688,300,116,258,'#7d918c');
+        for(let row=0;row<8;row++)line(3690,320+row*29,3802,320+row*29,'#526d7033',2);
+        rect(3678,290,136,14,'#b1b9a4');rect(3690,238,112,52,'#2b4a59');
+        for(let i=0;i<4;i++)rect(3698+i*26,244,18,36,game.won?'#f5d89e':'#739395');
+        c.fillStyle='#3b5963';c.beginPath();c.moveTo(3670,238);c.lineTo(3746,193);c.lineTo(3822,238);c.fill();
+        line(3746,193,3746,174,'#a5b8ad',3);circle(3746,171,3,game.won?'#f6d69a':'#728e87');
+        rect(3724,498,44,60,'#132e3c',19);rect(3714,551,64,7,'#a0ab97',3);
+        if(game.won){const beam=c.createLinearGradient(3746,265,3200,290);beam.addColorStop(0,'#f4dfa166');beam.addColorStop(1,'#e4d49a00');c.fillStyle=beam;c.beginPath();c.moveTo(3746,255);c.lineTo(3100,160);c.lineTo(3100,410);c.lineTo(3746,275);c.fill()}
         for (const tile of platforms) {
           if (tile.x + tile.w < cam - 80 || tile.x > cam + vw + 80) continue;
           const end=tile.end ?? tile.y;
@@ -1940,6 +1947,44 @@
         }
         line(1135,groundY(1135)-8,1190,groundY(1190)-8,'#546f62',8);
         for (const x of [200,1080,1930,2880]) { const y=groundY(x); rect(x - 2, y - 49, 4, 49, '#839183'); rect(x - 8, y - 54, 16, 18, '#243d46', 3); circle(x, y - 46, 4, '#efd19c'); let glow = c.createRadialGradient(x, y - 46, 1, x, y - 46, 40); glow.addColorStop(0, '#f5d08b30'); glow.addColorStop(1, '#f5d08b00'); circle(x, y - 46, 40, glow) }
+      }
+      function gameScene(w, h, t) {
+        if(game.scene && window.SignalRunCinema){
+          const shot=game.scene==='opening'?introShots[game.line]:{shot:['crew','hiker'][game.line],duration:4.5};
+          if(shot.shot!=='route'){window.SignalRunCinema.render(c,w,h,{shot:shot.shot,progress:game.shotTime/shot.duration,time:game.time,reduced});return;}
+        }
+        const vh = 720, scale = h / vh, vw = w / scale, cam = game.camera; game.viewW = vw;
+        c.save(); c.scale(scale, scale);
+        let sky = c.createLinearGradient(0, 0, 0, vh); sky.addColorStop(0, '#08192b'); sky.addColorStop(.52, '#30485a'); sky.addColorStop(.8, '#657a77'); sky.addColorStop(1, '#132936'); rect(0, 0, vw, vh, sky);
+        stars.forEach((s, i) => { if (s.y < .5) circle(s.x * vw - cam * .014 % (vw + 10), s.y * 560, s.s * .65, '#dde3cc88') });
+        const moonX = vw * .77 - cam * .012; let halo = c.createRadialGradient(moonX, 163, 20, moonX, 163, 130); halo.addColorStop(0, '#e2d5ae38'); halo.addColorStop(1, '#e2d5ae00'); circle(moonX, 163, 130, halo); circle(moonX, 163, 45, '#d5ccb0'); c.save(); c.beginPath(); c.arc(moonX, 163, 45, 0, Math.PI * 2); c.clip(); circle(moonX + 18, 153, 36, '#bcc1ad30'); c.restore();
+        for(let layer=0;layer<4;layer++) {
+          c.beginPath();c.moveTo(-30,720);
+          for(let x=-30;x<=vw+35;x+=20){const wx=x+cam*(.05+layer*.095),y=280+layer*65+Math.sin(wx*.003+layer*2)*48+Math.sin(wx*.009+layer)*22+Math.sin(wx*.017+layer)*8;c.lineTo(x,y)}
+          c.lineTo(vw+35,720);c.fillStyle=['#384e61','#2a4758','#1c3b49','#12313c'][layer];c.fill();
+        }
+        // Batch tree silhouettes into one path instead of filling every branch separately.
+        const treeOffset=cam*.4;c.fillStyle='#102b3599';c.beginPath();
+        for(let i=Math.floor((treeOffset-90)/80);i<=Math.ceil((treeOffset+vw+90)/80);i++) {
+          const x=i*80-treeOffset,y=492+Math.sin(i*2.1)*21,size=.65+((i%3+3)%3)*.18;
+          c.rect(x-size,y-53*size,2*size,57*size);
+          for(let k=0;k<3;k++){c.moveTo(x,y-95*size+k*22*size);c.lineTo(x+(17+k*5)*size,y-40*size+k*22*size);c.lineTo(x-(17+k*5)*size,y-40*size+k*22*size);c.closePath()}
+        }
+        c.fill();
+        let fog = c.createLinearGradient(0, 370, 0, 580); fog.addColorStop(0, '#91c8bc00'); fog.addColorStop(.6, '#91c8bc12'); fog.addColorStop(1, '#0a253000'); rect(0, 370, vw, 220, fog);
+        c.save(); c.translate(-cam, -game.cameraY);
+        if(!gameTerrainCache || gameTerrainCache.won!==game.won) {
+          const image=document.createElement('canvas');image.width=3960;image.height=880;
+          const previous=c;c=image.getContext('2d');
+          try { drawGameTerrain(); } finally { c=previous; }
+          gameTerrainCache={image,won:game.won};
+        }
+        const sourceX=Math.max(0,Math.floor(cam)-2),sourceW=Math.min(3960-sourceX,Math.ceil(vw)+4);
+        if(sourceW>0)c.drawImage(gameTerrainCache.image,sourceX,0,sourceW,880,sourceX,0,sourceW,880);
+        if(game.won){
+          const hx=3746-Math.max(0,500-game.rescue*55),hy=178+Math.sin(t*2)*3;
+          rect(hx-24,hy-10,48,20,'#9ab1ac',10);rect(hx+8,hy-6,13,10,'#21404b',3);line(hx-26,hy,hx-55,hy-12,'#9ab1ac',4);line(hx-48,hy-18,hx-48,hy-5,'#b7c7bc',3);line(hx-32,hy-18,hx+32,hy-18,'#bac9ba',2);circle(hx+24,hy,3,'#f3ce8c');
+        }
         signalLocations.forEach(([x, y], i) => { if (game.collected.has(i) || x < cam - 30 || x > cam + vw + 30) return; const bob = reduced ? 0 : Math.sin(t * 2 + i) * 4; let glow = c.createRadialGradient(x, y + bob, 2, x, y + bob, 26); glow.addColorStop(0, '#e4c99155'); glow.addColorStop(1, '#e4c99100'); circle(x, y + bob, 26, glow); c.save(); c.translate(x, y + bob); c.rotate(Math.PI / 4); rect(-6, -6, 12, 12, '#ead49b', 2); rect(-2, -6, 6, 6, '#fff0c5', 1); c.restore() });
         // The explorer has an animated scarf, leg cycle and a glass visor.
         const x = game.x, y = game.y, face = game.facing, walk = game.grounded ? Math.sin(game.time * 15) * Math.min(1, Math.abs(game.vx) / 150) : 0;
@@ -1953,6 +1998,7 @@
         for (const a of game.particles) { c.globalAlpha = clamp(a.life * 2); circle(a.x, a.y, 2.5, a.color) } c.globalAlpha = 1;
         c.restore();
         for (let i = 0; i < 16; i++) { const x = ((i * 137.9 - cam * .65 + t * 6) % Math.max(1, vw) + vw) % vw, y = 425 + Math.sin(i * 2.4 + t * .6) * 76; circle(x, y, 1.1, '#dce8b366') }
+        if(game.started&&window.SignalRunCinema)window.SignalRunCinema.weather(c,vw,vh,game.time,reduced,{x:cam,y:game.cameraY},groundY);
         let vignette = c.createLinearGradient(0, 580, 0, 720); vignette.addColorStop(0, '#07151d00'); vignette.addColorStop(1, '#06131bc0'); rect(0, 580, vw, 140, vignette);
         if (game.flash > 0) rect(0, 0, vw, vh, `rgba(177,202,198,${game.flash * .4})`);
         c.restore();
@@ -1981,7 +2027,7 @@
       const copy = [
         ['FILM', 'Films', 'Watch The Glitch and The Life of a Meatball. Detective Edward is in development.'],
         ['MUSIC', 'Music for<br>the scene.', 'Listen to Sharp Strings, Unexpected Twist, and more original tracks.'],
-        ['GAMES + SOFTWARE', 'A game you<br>can jump into.', 'Play Signal Run: follow the forest relays and light the observatory beacon to bring Mara home.'],
+        ['GAMES + SOFTWARE', 'A game you<br>can jump into.', 'Play Signal Run: follow the forest relays and light the lighthouse beacon so the rescue helicopter can find you.'],
         ['TECHNOLOGY', 'A phone under<br>construction.', 'Unlim8ted Phone is an ongoing hardware and operating system experiment.'],
         ['AI', 'Talk to<br>Meatball AI.', 'Try our browser chat prototype, then browse the other AI projects.'],
         ['CLOTHING', 'Unlim8ted.<br>Off the screen.', 'Clothing that carries the studio’s visual identity into everyday life.'],
@@ -2026,7 +2072,7 @@
         const sw = Math.max(1, v.width * v.sw - rim * 2), sh = Math.max(1, v.height * v.sh - rim * 2);
         screen.style.left = (v.width * v.sx + rim) + 'px'; screen.style.top = (v.height * v.sy + rim) + 'px'; screen.style.width = sw + 'px'; screen.style.height = sh + 'px'; screen.style.borderRadius = Math.max(0, v.radius * (1 - v.chrome) - rim) + 'px';
         setShown(chrome, v.chrome); machine.style.setProperty('--phone', v.phone);
-        const planetOpacity = window.homePlanetAvailable === false ? 0 : 1 - smooth(2.48, 2.68, p), planetIntro = $('planetIntro'); setShown(planetIntro, planetOpacity); planetIntro.hidden = planetOpacity <= .015; setShown($('planetIntroCopy'), window.homePlanetAvailable === false ? 0 : 1 - smooth(.3, .85, p)); if (window.setHomePlanetProgress) window.setHomePlanetProgress(smooth(0, 2, p));
+        const planetOpacity = window.homePlanetAvailable === false ? 0 : 1 - smooth(2.48, 2.68, p), planetIntro = $('planetIntro'); setShown(planetIntro, planetOpacity); planetIntro.hidden = planetOpacity <= .015; setShown($('planetIntroCopy'), window.homePlanetAvailable === false ? 0 : 1 - smooth(.3, .85, p)); if (window.setHomePlanetProgress) window.setHomePlanetProgress(smooth(0, 2, p),planetOpacity>.015);
         const heroAlpha = smooth(.65, .95, p) * (1 - smooth(1.2, 1.95, p)); setShown($('heroWords'), heroAlpha);
         const zoom = smooth(.25, 2, p), initialScale = reduced ? 1 : zoomScale;
         heroHeading.style.fontSize = mix(reduced ? (mobile ? 21 : 42) : (mobile ? 46 : 61) / initialScale, mobile ? 23 : 45, zoom) + 'px';
@@ -2037,6 +2083,7 @@
       }
       const captionStarts = [1.98, 5, 6.8, 8.95, 10.55, 11.5, 12.2, 12.95, 13.68];
       function updateUI() {
+        document.body.classList.toggle('playing-game',p>=7.3&&p<=8.6);
         let ci = -1; captionStarts.forEach((start, i) => { if (p >= start) ci = i });
         if (ci !== lastScene) { lastScene = ci; if (ci >= 0) { $('chapterLabel').textContent = copy[ci][0]; $('headline').innerHTML = copy[ci][1]; $('description').textContent = copy[ci][2]; } }
         let alpha = ci < 0 ? 0 : smooth(captionStarts[ci], captionStarts[ci] + .13, p);
@@ -2045,7 +2092,7 @@
         setShown($('caption'), alpha); setShown($('musicCta'), ci === 1 ? alpha : 0);
         const side = ci >= 3 && ci <= 7; $('caption').classList.toggle('side', side); $('caption').classList.toggle('music', ci === 1); $('caption').classList.toggle('ending', ci === 8);
         const gameOpacity = smooth(7.4, 7.7, p) * (1 - smooth(8.32, 8.55, p));
-        setShown($('gameEntry'), game.started?0:gameOpacity); setShown($('gameHUD'),game.started?gameOpacity:0); setShown($('gameControls'),game.started&&!game.scene&&!game.won?gameOpacity:0); setShown($('gameDialogue'),game.scene?gameOpacity:0);
+        setShown($('gameEntry'), game.started?0:gameOpacity); setShown($('gameHUD'),game.started&&!game.scene?gameOpacity:0); setShown($('gameControls'),game.started&&!game.scene&&!game.won?gameOpacity:0); setShown($('gameDialogue'),game.scene?gameOpacity:0);
         const sponsorFade = smooth(13.66, 13.8, p) * (1 - smooth(13.88, 13.97, p)); setShown($('sponsorsPanel'), sponsorFade); $('sponsorsPanel').style.transform = `translate(-50%,${(1 - sponsorFade) * 35}px)`;
         const endFade = smooth(13.94, 14, p); setShown($('endLink'), endFade); setShown($('endBrand'), endFade); $('endBrand').style.transform = `translate(-50%,calc(-50% + ${(1 - endFade) * 18}px))`;
         const filmIndex = p < 2.55 ? 0 : p < 3.35 ? 1 : p < 4.17 ? 2 : 3;
@@ -2060,34 +2107,66 @@
         if (section !== lastSection) { lastSection = section; $('chapterCount').textContent = String(section).padStart(2, '0') + ' / ' + String(sections.length - 1).padStart(2, '0'); $('chapterCount').setAttribute('aria-label', sections[section][0]); }
         $('progress').style.transform = `scaleX(${p / 14})`; setShown($('scrollhint'), 1 - smooth(.2, .65, p));
       }
+      // Reduce resolution under sustained load; restore it slowly after stable frames.
+      const renderQuality={scale:1,average:16.7,count:0,fast:0};
+      function sampleFrame(ms) {
+        renderQuality.average=mix(renderQuality.average,Math.min(ms,100),.12);
+        renderQuality.count++;renderQuality.fast=renderQuality.average<18.5?renderQuality.fast+1:0;
+        if(renderQuality.count>=24&&renderQuality.average>23&&renderQuality.scale>.55){renderQuality.scale=Math.max(.55,renderQuality.scale*.82);renderQuality.count=0;renderQuality.fast=0}
+        else if(renderQuality.fast>=240&&renderQuality.scale<1){renderQuality.scale=Math.min(1,renderQuality.scale+.08);renderQuality.fast=0;renderQuality.count=0}
+      }
+      function sceneNeedsAnimation() {
+        if(reduced)return gameActive;
+        if(window.homePlanetAvailable===true&&p<2.38)return false;
+        let index=0;sceneStarts.forEach((start,i)=>{if(p>=start)index=i});
+        if([0,3,4,5,7,11].includes(index))return true;
+        const key={1:'glitch',2:'meatball',8:'clothing',9:'photography'}[index],image=sceneImages.get(key);
+        return !!image&&image.readyAt!==undefined&&performance.now()<image.readyAt+400;
+      }
       function bufferSize(w, h, scale) {
-        const density = Math.min(dpr * Math.max(1, Math.min(scale, 2)), 2.3);
+        const inGame=p>=7.3&&p<=8.6;
+        const density = Math.min(dpr * Math.max(1, Math.min(scale, 2)), inGame?1:1.5)*renderQuality.scale;
         let bw = Math.max(64, Math.ceil(w * density / 64) * 64), bh = Math.max(64, Math.ceil(h * density / 64) * 64);
-        const budget = 2_000_000; if (bw * bh > budget) { const f = Math.sqrt(budget / (bw * bh)); bw = Math.max(1, Math.round(bw * f)); bh = Math.max(1, Math.round(bh * f)); }
-        if (bw !== canvasW || bh !== canvasH) { canvasW = bw; canvasH = bh; canvas.width = bw; canvas.height = bh; blendCanvas.width = bw; blendCanvas.height = bh; }
+        const budget = (inGame?(W<650?380_000:950_000):(W<650?650_000:1_300_000))*renderQuality.scale*renderQuality.scale; if (bw * bh > budget) { const f = Math.sqrt(budget / (bw * bh)); bw = Math.max(1, Math.round(bw * f)); bh = Math.max(1, Math.round(bh * f)); }
+        if (bw !== canvasW || bh !== canvasH) { canvasW = bw; canvasH = bh; canvas.width = bw; canvas.height = bh;  }
       }
       function prepareContext(ctx, w, h) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.clearRect(0, 0, canvasW, canvasH); ctx.setTransform(canvasW / w, 0, 0, canvasH / h, 0, 0); ctx.lineWidth = 1; ctx.lineCap = 'butt'; ctx.shadowBlur = 0; ctx.shadowOffsetX = ctx.shadowOffsetY = 0; ctx.textBaseline = 'alphabetic'; }
+      let lastCutscenePaint=-Infinity;
       function draw(w, h, scale) {
+        if(game.scene&&!dirty&&Math.abs(p-target)<.0001&&clock-lastCutscenePaint<1/30-.002)return;
+        if(game.scene)lastCutscenePaint=clock;else lastCutscenePaint=-Infinity;
+        if(window.homePlanetAvailable===true&&p<2.38)return;
         bufferSize(w, h, scale); const t = reduced ? 0 : clock;
         let index = 0; sceneStarts.forEach((start, i) => { if (p >= start) index = i });
         let a = index, b = index, alpha = 0;
         if (!reduced) { for (let i = 1; i < sceneStarts.length; i++) { const edge = sceneStarts[i]; if (p >= edge - .1 && p <= edge + .1) { a = i - 1; b = i; alpha = smooth(edge - .1, edge + .1, p); break } } }
         c = mainContext; prepareContext(c, w, h); c.save(); sceneDrawers[a](w, h, t); c.restore();
-        if (a !== b && alpha > 0 && blendContext) { c = blendContext; prepareContext(c, w, h); c.save(); sceneDrawers[b](w, h, t); c.restore(); c = mainContext; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = alpha; c.drawImage(blendCanvas, 0, 0); c.restore(); }
+        if (a !== b && alpha > 0 && blendContext) { if(blendCanvas.width!==canvasW||blendCanvas.height!==canvasH){blendCanvas.width=canvasW;blendCanvas.height=canvasH} c = blendContext; prepareContext(c, w, h); c.save(); sceneDrawers[b](w, h, t); c.restore(); c = mainContext; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = alpha; c.drawImage(blendCanvas, 0, 0); c.restore(); }
         c = mainContext;
       }
+      let lastLayoutProgress=NaN,layoutSize=null,lastGameUI="";
       function update(dt) {
         p = reduced ? target : mix(p, target, 1 - Math.exp(-dt * 10)); if (Math.abs(p - target) < .00015) p = target;
         const active = game.started && p >= 7.35 && p <= 8.5;
         if (active !== gameActive) { gameActive = active; clearInputs(); accumulator = 0; }
         if (gameActive) { accumulator += Math.min(dt, .05); while (accumulator >= 1 / 120) { gameStep(1 / 120); accumulator -= 1 / 120; } }
-        const size = updateLayout(); updateUI(); draw(size.w, size.h, size.scale); dirty = false; renderNumber++;
+        const frameDirty=dirty;
+        const layoutChanged=!layoutSize||dirty||Math.abs(p-lastLayoutProgress)>.00001;
+        const gameUI=game.started+':'+game.scene+':'+game.won;
+        const gameChanged=gameUI!==lastGameUI;
+        if(layoutChanged||gameChanged) {
+          layoutSize=updateLayout();updateUI();lastLayoutProgress=p;lastGameUI=gameUI;
+        }
+        if(frameDirty||layoutChanged||gameChanged||sceneNeedsAnimation())draw(layoutSize.w,layoutSize.h,layoutSize.scale);dirty=false;renderNumber++;
       }
       function tick(now) {
-        raf = 0; if (paused) return; const dt = last ? Math.min(.05, Math.max(0, (now - last) / 1000)) : 1 / 60; last = now;
-        const moving = Math.abs(p - target) > .0001;
-        if (!reduced || dirty || moving || gameActive) { clock += dt; update(dt) }
-        if (!reduced || gameActive || Math.abs(p - target) > .0001) raf = requestAnimationFrame(tick); else last = 0;
+        raf=0;if(paused)return;
+        const elapsed=last?Math.max(0,(now-last)/1000):1/60;
+        if(last)sampleFrame(elapsed*1000);
+        const dt=Math.min(.05,elapsed);last=now;
+        const moving=Math.abs(p-target)>.0001;
+        if(dirty||moving||gameActive||sceneNeedsAnimation()){clock+=dt;update(dt)}
+        if(gameActive||Math.abs(p-target)>.0001||sceneNeedsAnimation())raf=requestAnimationFrame(tick);else last=0;
       }
       function wake() { if (!paused && !raf) raf = requestAnimationFrame(tick) }
       // All geometry is derived from scroll position, so reverse scrolling is deterministic.
