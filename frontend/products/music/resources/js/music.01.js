@@ -426,6 +426,9 @@
 
       const actions = document.createElement("div");
       actions.className = "song-actions";
+      actions.addEventListener("click", (event) => {
+        if (event.target.closest("a")) event.stopPropagation();
+      });
 
       // PDF button (only if present)
       if (item.pdf) {
@@ -435,6 +438,15 @@
         a.target = "_blank";
         a.rel = "noopener";
         a.textContent = "View PDF";
+        actions.appendChild(a);
+      }
+
+      if (item.midi) {
+        const a = document.createElement("a");
+        a.className = "pill";
+        a.href = safeUrl(item.midi);
+        a.textContent = "Download MIDI";
+        a.setAttribute("download", "");
         actions.appendChild(a);
       }
 
@@ -482,14 +494,15 @@
     function inferIsTimecat(item) {
       // Identify Time Cat tracks by their audio path.
       const file = safeUrl(item.file);
-      return file.includes("/products/games/TimeCat/") || file.includes("/TimeCat/");
+      return String(item.id || "").startsWith("timecat-")
+        || file.includes("/products/games/TimeCat/") || file.includes("/TimeCat/");
     }
 
     const musicCategories = [
       { id: "electronic", kicker: "Library", title: "Electronic", sub: "Original electronic compositions." },
       { id: "glitch", kicker: "Soundtrack", title: "The Glitch Soundtrack", sub: "Music from The Glitch." },
       { id: "detective-edward", kicker: "Soundtrack", title: "Detective Edward Soundtrack", sub: "Music from Detective Edward." },
-      { id: "timecat", kicker: "Soundtrack", title: "Time Cat", sub: "The soundtracks to Unlim8ted's newest game in development, Time Cat. Note that songs in this section utilize AI to enhance the audio." },
+      { id: "timecat", kicker: "Soundtrack", title: "TimeCat Soundtrack", sub: "Music from Unlim8ted's game in development, TimeCat." },
       { id: "branding", kicker: "Studio", title: "Audio Branding", sub: "Signature sounds from Unlim8ted." },
     ];
 
@@ -503,6 +516,9 @@
     ];
 
     function musicCategory(item) {
+      if (musicCategories.some(category => category.id === item["music-section"])) {
+        return item["music-section"];
+      }
       const id = String(item.id || "").toLowerCase();
       if (inferIsTimecat(item)) return "timecat";
       if (id === "music-emergency-override") return "glitch";
@@ -535,10 +551,20 @@
       for (const category of musicCategories) {
         const tracks = allMusic.filter(item => musicCategory(item) === category.id);
         if (!tracks.length) continue;
-        songListEl.appendChild(buildDivider(category.kicker, category.title, category.sub));
+        const section = document.createElement("section");
+        section.id = `${category.id}-soundtrack`;
+        section.className = "music-section";
+        const divider = buildDivider(category.kicker, category.title, category.sub);
+        const heading = divider.querySelector(".section-title");
+        heading.id = `${section.id}-title`;
+        heading.setAttribute("role", "heading");
+        heading.setAttribute("aria-level", "2");
+        section.setAttribute("aria-labelledby", heading.id);
+        section.appendChild(divider);
         for (const item of tracks) {
-          songListEl.appendChild(buildSongItem(item, index++));
+          section.appendChild(buildSongItem(item, index++));
         }
+        songListEl.appendChild(section);
       }
 
       if (currentIndex >= 0) setPlayingHighlight(currentIndex);
