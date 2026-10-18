@@ -4255,12 +4255,14 @@
   {
     "id": "timecat-01-ominous-hawaiian-beach-dance",
     "product-type": "music",
+    "music-section": "timecat",
     "name": "TimeCat ? Ominous Hawaiian Beach Dance",
     "file": "https://assets.unlim8ted.com/music/OminousHawaiianBeachDance.wav"
   },
   {
     "id": "timecat-02-mysterious-beach-dance",
     "product-type": "music",
+    "music-section": "timecat",
     "name": "TimeCat ? Mysterious Beach Dance",
     "file": "https://assets.unlim8ted.com/music/MysteriousBeachDance.wav",
     "midi": "https://assets.unlim8ted.com/music/MysteriousBeachDance.mid",
@@ -4269,6 +4271,7 @@
   {
     "id": "timecat-03-ambient-lab",
     "product-type": "music",
+    "music-section": "timecat",
     "name": "TimeCat ? Ambient Lab",
     "file": "https://assets.unlim8ted.com/music/AmbientLab.wav",
     "midi": "https://assets.unlim8ted.com/music/AmbientLab.mid",
@@ -4277,8 +4280,10 @@
   {
     "id": "timecat-04-lab-boss",
     "product-type": "music",
+    "music-section": "timecat",
     "name": "TimeCat ? Lab Boss",
-    "file": "https://assets.unlim8ted.com/music/LabBoss.wav"
+    "file": "https://assets.unlim8ted.com/music/LabBoss.wav",
+    "midi": "https://assets.unlim8ted.com/music/LabBoss.mid"
   },
   {
     "id": "funnel-web",
