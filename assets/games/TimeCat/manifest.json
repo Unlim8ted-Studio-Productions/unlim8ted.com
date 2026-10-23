@@ -1,0 +1,123 @@
+{
+  "version": "1.0",
+  "built": "2026-10-23",
+  "files": {
+    "frameworkUrl": {
+      "name": "raw.framework.js",
+      "bytes": 412652,
+      "sha256": "1bdcf53f38416fa50e27d358fdadde2519177f98ad8f1b21e06d47dcedb87090",
+      "mime": "application/javascript",
+      "variants": [
+        {
+          "encoding": "gzip",
+          "bytes": 84889,
+          "parts": [
+            {
+              "url": "raw.framework.js.gzip.000.5ab01b140165.bin",
+              "bytes": 84889,
+              "sha256": "5ab01b1401651fa634bfd0cf57ad016120aa03f2c89e13d7dc0725d7cf1b2157"
+            }
+          ]
+        },
+        {
+          "encoding": "identity",
+          "bytes": 412652,
+          "parts": [
+            {
+              "url": "raw.framework.js.identity.000.1bdcf53f3841.bin",
+              "bytes": 412652,
+              "sha256": "1bdcf53f38416fa50e27d358fdadde2519177f98ad8f1b21e06d47dcedb87090"
+            }
+          ]
+        }
+      ]
+    },
+    "codeUrl": {
+      "name": "raw.wasm",
+      "bytes": 21204271,
+      "sha256": "d4c7887fe6c2184b33792498d282cd050b1af7f1553c8c9601f6d964311ef3bb",
+      "mime": "application/wasm",
+      "variants": [
+        {
+          "encoding": "gzip",
+          "bytes": 7269300,
+          "parts": [
+            {
+              "url": "raw.wasm.gzip.000.5505a97f568c.bin",
+              "bytes": 7269300,
+              "sha256": "5505a97f568c9b65b4b82dbbe8350583ba0cddbd84171d6c0ed351541893bd0e"
+            }
+          ]
+        },
+        {
+          "encoding": "identity",
+          "bytes": 21204271,
+          "parts": [
+            {
+              "url": "raw.wasm.identity.000.d4c7887fe6c2.bin",
+              "bytes": 21204271,
+              "sha256": "d4c7887fe6c2184b33792498d282cd050b1af7f1553c8c9601f6d964311ef3bb"
+            }
+          ]
+        }
+      ]
+    },
+    "dataUrl": {
+      "name": "raw.data",
+      "bytes": 109339090,
+      "sha256": "f169daf7e45f6da14714aeed8b704ba40062a4a8e508157d5156b58744c189e0",
+      "mime": "application/octet-stream",
+      "variants": [
+        {
+          "encoding": "gzip",
+          "bytes": 97437000,
+          "parts": [
+            {
+              "url": "raw.data.gzip.000.6c7f096b2574.bin",
+              "bytes": 33554432,
+              "sha256": "6c7f096b257461ee12dfb20ebc113f86e29e9db7b09401a2562b386d50597028"
+            },
+            {
+              "url": "raw.data.gzip.001.d0432585d6bd.bin",
+              "bytes": 33554432,
+              "sha256": "d0432585d6bdf6c6a3b49114aa9cc2a92a8414967ac941f526da0ec8425fc60a"
+            },
+            {
+              "url": "raw.data.gzip.002.4b6168b8ef03.bin",
+              "bytes": 30328136,
+              "sha256": "4b6168b8ef0360d1526900c7cfa0d08f969ef7ec1420d433946aafda2b8f4116"
+            }
+          ]
+        },
+        {
+          "encoding": "identity",
+          "bytes": 109339090,
+          "parts": [
+            {
+              "url": "raw.data.identity.000.4dcdf95d98de.bin",
+              "bytes": 33554432,
+              "sha256": "4dcdf95d98dea77c43b704acb3a5b0ebec16650bcf3c69daf95e692948aff204"
+            },
+            {
+              "url": "raw.data.identity.001.ade77dfda276.bin",
+              "bytes": 33554432,
+              "sha256": "ade77dfda276e18d1a53612d3b7a725d92d93aec31561031b34544bae36b4b3a"
+            },
+            {
+              "url": "raw.data.identity.002.dbab6af3a486.bin",
+              "bytes": 33554432,
+              "sha256": "dbab6af3a4864f6ab96497d9083a0ae019145ff4619458955566a577611a0ac5"
+            },
+            {
+              "url": "raw.data.identity.003.c27168013332.bin",
+              "bytes": 8675794,
+              "sha256": "c271680133321fb50812a156defecb19a496aac0d3ff30864e5458980f2da84c"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "loaderUrl": "raw.loader.js",
+  "buildId": "dea6aa2ef7caeb47"
+}

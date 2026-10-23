@@ -1129,11 +1129,7 @@
     #gameEntry { position:absolute; z-index:9; top:42%; left:50%; transform:translate(-50%,-50%); width:min(420px,88%); padding:25px; background:#0b2230e8; border:1px solid #b9ccb633; border-radius:10px; text-align:center; opacity:0; visibility:hidden }
     #gameEntry h3 { font:400 42px Georgia,serif; margin:12px 0 }
     #gameEntry p { font-size:14px; line-height:1.6; color:#cfdbd0 }
-    #gameEntry button,#nextStory { padding:12px 20px; border-radius:5px; background:#dfc394; color:#122b37; pointer-events:auto }
-    #gameDialogue { position:absolute; z-index:12; bottom:16%; left:50%; transform:translateX(-50%); width:min(720px,89%); padding:10px 14px; text-align:center; background:radial-gradient(ellipse,#061522b3,transparent 75%); opacity:0; visibility:hidden; pointer-events:none }
-    #storyLine { font:400 clamp(17px,2vw,24px)/1.45 Georgia,serif; margin:8px 0; color:#f1eedf; text-shadow:0 2px 7px #000,0 0 20px #03101d }
-    #nextStory { position:absolute; left:50%; transform:translateX(-50%); bottom:-50px; padding:9px 16px; font:10px monospace; background:#102633bb; color:#c4d1ce; border:1px solid #bac8be40 }
-    @media(max-width:650px) { #gameHUD { top:115px } #gameDialogue { bottom:15%; padding:16px } }
+    #gameEntry button { padding:12px 20px; border-radius:5px; background:#dfc394; color:#122b37; pointer-events:auto }
   </style>
   <script type="module" src="/components/site-navbar.js"></script>
   <style>
@@ -1517,7 +1513,8 @@
   </style>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js"></script>
   <script defer src="/components/home-planet.js"></script>
-  <script defer src="/components/signal-run-cinematics.js"></script>
+  <script src="/components/phase-water.js"></script>
+  <script src="/components/phase-water-view.js"></script>
 </head>
 
 <body>
@@ -1618,33 +1615,18 @@
         <p id="description"></p><a id="musicCta" href="/products/music/" inert>Listen to more music &rarr;</a>
       </div>
       <section id="gameEntry" inert>
-        <span class="eyebrow">A SHORT PLAYABLE STORY</span><h3>Signal Run</h3>
-        <p>The bridge is gone. Your car is on the other side. Power the lighthouse so the rescue crew can find you.</p>
-        <button id="startGame">Play Signal Run</button>
+        <span class="eyebrow">A PLAYABLE EXPERIMENT</span><h3>Condensate</h3>
+        <p>Restore the pump below, then reach the outlet above. Freeze to power the lift. Wait to melt, climb, and become vapor to cross the final grate.</p>
+        <button id="startGame">Enter Condensate</button>
       </section>
-      <section id="gameDialogue" aria-label="Story dialogue" inert>
-        <div role="status" aria-live="polite" aria-atomic="true">
-          <p id="storyLine"></p>
-        </div><button id="nextStory" aria-label="Skip cutscene and continue">Skip cutscene</button>
-      </section>
-      <section id="gameHUD" aria-label="Signal Run game" inert>
-        <div class="game-heading"><span class="eyebrow">UNLIM8TED / GAMES</span>
-          <h3>Signal Run</h3>
-          <p id="gameGoal">REACH THE LIGHTHOUSE</p>
-        </div>
-        <div class="game-score"><strong id="signalCount">0 / 6 crystals</strong>
-          <p id="gameStatus" role="status" aria-live="polite">Follow the lanterns through the ruins.</p><button
-            id="restartGame" title="Restart the game (R)">Restart ↺</button><button data-go="9.6">Continue exploring
-            ↓</button>
-        </div>
-        <div id="gameFinish" hidden><span id="gameEnding">You're safe. The rescue helicopter found your light.</span> <a href="https://unlim8ted.com/products/games">Discover what’s
-            next ↗</a></div>
+      <section id="gameHUD" aria-label="Condensate game" inert>
+        <div class="game-heading"><span class="eyebrow">UNLIM8TED / GAMES</span><h3>Condensate</h3><p id="gameGoal">REACH THE GREEN OUTLET</p></div>
+        <div class="game-score"><strong id="signalCount">LIQUID</strong><p id="gameStatus" role="status" aria-live="polite"></p><button id="restartGame" title="Restart (R)">Restart</button><button data-go="9.6">Exit game</button></div>
+        <div id="gameFinish" hidden><span>Circulation restored. The chamber is alive again.</span> <a href="/products/games">Explore our games &rarr;</a></div>
       </section>
       <div id="gameControls" role="group" aria-label="Game controls" inert>
-        <p class="game-help">A / D or &larr; / &rarr; to move &middot; Space to jump</p>
-        <div class="game-buttons"><button data-action="left" aria-label="Hold to move left">←</button><button
-            data-action="right" aria-label="Hold to move right">→</button><button data-action="jump"
-            aria-label="Jump"><span>↑</span> Jump</button></div>
+        <p class="game-help">Move: A / D &middot; Jump: Space &middot; Pool / fast fall: S / Down</p>
+        <div class="game-buttons"><button data-action="left" aria-label="Hold to move left">&larr;</button><button data-action="right" aria-label="Hold to move right">&rarr;</button><button data-action="down" aria-label="Hold to pool on ground, fast fall in air, or descend as vapor">&darr;</button><button data-action="jump" aria-label="Jump or vapor boost">Jump</button></div>
       </div>
       <section id="sponsorsPanel" aria-label="Collaborators" inert>
         <p>IN COLLABORATION WITH</p>
@@ -1757,11 +1739,10 @@
       const keys = new Set(), pointers = new Map();
       function inputDown(name) { return keys.has(name) || [...keys].some(code => keyActions[code] === name) || [...pointers.values()].includes(name) }
       function clearInputs() { keys.clear(); pointers.clear(); document.querySelectorAll('[data-action]').forEach(b => b.classList.remove('pressed')) }
-      function requestJump() { if (gameActive && !game.scene && !game.won) { game.jumpBuffer = .14; dirty = true; wake() } }
-      const keyActions = { ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', ArrowUp: 'jump', KeyW: 'jump', Space: 'jump' };
+      function requestJump() { if (gameActive && !game.won) { game.jumpBuffer = .14; dirty = true; wake() } }
+      const keyActions = { ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', ArrowUp: 'jump', KeyW: 'jump', Space: 'jump', ArrowDown: 'down', KeyS: 'down' };
       window.addEventListener('keydown', e => {
-        if (gameActive && game.scene && (e.code==='Space'||e.code==='Enter')) { e.preventDefault(); if(!e.repeat)skipCutscene(); return; }
-        if (!gameActive || game.scene || e.ctrlKey || e.altKey || e.metaKey || e.target.closest('input,textarea,select,[contenteditable="true"]')) return;
+        if (!gameActive || e.ctrlKey || e.altKey || e.metaKey || e.target.closest('input,textarea,select,[contenteditable="true"]')) return;
         if (e.code === 'Space') { e.preventDefault(); if (!e.repeat) requestJump(); keys.add(e.code); dirty = true; wake(); return }
         if (e.code === 'Enter' && e.target.closest('button,a') && !e.target.closest('[data-action]')) return;
         if (e.code === 'KeyR') { e.preventDefault(); if (!e.repeat) resetGame(); return }
@@ -1770,109 +1751,30 @@
       });
       window.addEventListener('keyup', e => { const action = keyActions[e.code]; if (action) keys.delete(e.code) });
       document.querySelectorAll('[data-action]').forEach(b => {
-        b.addEventListener('pointerdown', e => { if (!gameActive || game.scene) return; e.preventDefault(); b.setPointerCapture(e.pointerId); pointers.set(e.pointerId, b.dataset.action); b.classList.add('pressed'); if (b.dataset.action === 'jump') requestJump(); dirty = true; wake() });
+        b.addEventListener('pointerdown', e => { if (!gameActive) return; e.preventDefault(); b.setPointerCapture(e.pointerId); pointers.set(e.pointerId, b.dataset.action); b.classList.add('pressed'); if (b.dataset.action === 'jump') requestJump(); dirty = true; wake() });
         const release = e => { pointers.delete(e.pointerId); b.classList.remove('pressed') };
         b.addEventListener('pointerup', release); b.addEventListener('pointercancel', release); b.addEventListener('lostpointercapture', release);
-        b.addEventListener('click', e => { if (e.detail !== 0) return; if (b.dataset.action === 'jump') requestJump(); else { game.nudge = b.dataset.action === 'left' ? -1 : 1; game.nudgeTime = .18; wake() } });
+        b.addEventListener('click', e => { if (e.detail !== 0) return; if (b.dataset.action === 'jump') requestJump(); else { keys.add(b.dataset.action); setTimeout(() => keys.delete(b.dataset.action), 160); wake() } });
       });
       $('restartGame').onclick = () => resetGame();
-      const ground = [
-        { x:0,y:558,end:558,w:280,h:320 }, { x:280,y:558,end:470,w:320,h:400 }, { x:600,y:470,end:470,w:250,h:400 },
-        { x:980,y:520,end:615,w:300,h:350 }, { x:1280,y:615,end:615,w:240,h:265 }, { x:1520,y:615,end:535,w:200,h:350 },
-        { x:1840,y:500,end:390,w:340,h:490 }, { x:2180,y:390,end:390,w:260,h:490 }, { x:2440,y:390,end:510,w:200,h:370 },
-        { x:2770,y:550,end:610,w:240,h:330 }, { x:3010,y:610,end:610,w:230,h:270 }, { x:3240,y:610,end:558,w:300,h:330 }, { x:3540,y:558,end:558,w:420,h:320 }
-      ];
-      const platforms = [...ground,
-        {x:370,y:440,w:180,h:24},{x:600,y:350,w:170,h:24},
-        {x:1160,y:460,w:200,h:24},{x:1430,y:380,w:170,h:24},
-        {x:2000,y:370,w:190,h:24},{x:2270,y:275,w:175,h:24},
-        {x:2960,y:480,w:190,h:24},{x:3220,y:390,w:180,h:24}
-      ];
-      const surfaceY = (tile,x) => mix(tile.y,tile.end ?? tile.y,clamp((x-tile.x)/tile.w));
-      const groundY = x => { const tile=ground.find(tile=>x>=tile.x&&x<=tile.x+tile.w); return tile ? surfaceY(tile,x) : 880 };
-      const archways = [{x:730,radius:81,spring:302,base:470},{x:1400,radius:70,spring:467,base:615},{x:2310,radius:86,spring:212,base:390}];
-      const signalLocations = [[468,408],[686,318],[1260,428],[2095,338],[3055,448],[3310,358]];
-      const introShots = [
-        {shot:'hike',duration:3},{shot:'collapse',duration:4},
-        {shot:'call',duration:5},{shot:'crew',duration:6},
-        {shot:'hiker',duration:3},{shot:'route',duration:2}
-      ];
-      const story = {
-        opening: [
-          "I'd better get back to the car.",
-          "No! My car's on the other side!",
-          "911? The bridge collapsed. I'm stranded in the storm. I need help.",
-          "We're in the rescue helicopter. Collect six crystals and power the lighthouse so we can find you.",
-          "I'll get the light on.",
-          "Collect six crystals. Reach the lighthouse."
-        ],
-        ending: [
-          "We see your lighthouse! We're coming down to get you.",
-          "I can see you. Thank you!"
-        ]
-      };
-      const game = { x:130,y:516,vx:0,vy:0,w:24,h:42,grounded:true,coyote:0,jumpBuffer:0,jumpHeld:false,facing:1,camera:0,cameraY:28,viewW:1152,time:0,checkpoint:130,nudge:0,nudgeTime:0,collected:new Set(),particles:[],won:false,flash:0,toast:0,message:'',started:false,scene:null,line:0,shotTime:0,seen:new Set(),rescue:0 };
-      function beginStory(name) { game.scene=name; game.line=0; game.shotTime=0; game.seen.add(name); clearInputs(); game.vx=0; game.jumpBuffer=0; syncGameUI() }
-      function nextStory() {
-        if(!game.scene)return;
-        game.shotTime=0;
-        if(++game.line>=story[game.scene].length){game.scene=null;game.line=0;clearInputs();game.jumpBuffer=0;game.jumpHeld=false}
-        syncGameUI();dirty=true;wake();
-      }
-      function skipCutscene(){if(!game.scene)return;game.line=story[game.scene].length-1;nextStory()}
-      function resetGame() {
-        Object.assign(game,{x:130,y:516,vx:0,vy:0,grounded:true,coyote:0,jumpBuffer:0,jumpHeld:false,facing:1,camera:0,cameraY:28,checkpoint:130,nudgeTime:0,won:false,flash:0,toast:0,message:'',started:true,scene:null,line:0,shotTime:0,rescue:0});
-        game.collected.clear();game.seen.clear();game.particles.length=0;clearInputs();beginStory('opening');dirty=true;wake();
-      }
+      const water = window.PhaseWater.createEngine(), game = water.state;
+      let lastWaterUI = '';
       function syncGameUI() {
-        $('signalCount').textContent=game.collected.size+' / 6 crystals';
-        $('gameStatus').textContent=game.message;
-        $('gameGoal').textContent=game.won?'':'POWER THE LIGHTHOUSE / SIGNAL FOR RESCUE';
-        $('gameStatus').hidden=!game.message || game.won;
-        $('gameFinish').hidden=!game.won || !!game.scene;
-        const line=game.scene?story[game.scene][game.line]:null;
-        $('storyLine').textContent=line || '';
+        const hint = window.PhaseWater.guidance(game);
+        const countdown = game.mode === 'liquid' ? '' : ' ? '+Math.ceil(game.stateTimer)+'s';
+        const signature = game.mode + countdown + ':' + hint + ':' + game.sluice + ':' + game.won;
+        if (signature === lastWaterUI) return;
+        lastWaterUI = signature;
+        $('signalCount').textContent = window.PhaseWater.MODES[game.mode].name + countdown;
+        document.querySelector('.game-help').textContent = game.mode === 'gas' ? 'Move: A / D ? Rise: Space ? Descend: S / Down' : game.mode === 'ice' ? 'Move: A / D ? Jump: Space ? Keep speed to break cracked walls' : 'Move: A / D ? Jump: Space ? Pool / fast fall: S / Down';
+        $('gameStatus').textContent = hint;
+        $('gameGoal').textContent = game.won ? 'CIRCULATION RESTORED' : game.sluice ? 'PUMP RUNNING / REACH THE OUTLET ABOVE' : 'RESTORE THE PUMP BELOW';
+        $('gameFinish').hidden = !game.won;
+        $('gameStatus').hidden = game.won;
       }
-      $('startGame').onclick=resetGame;$('nextStory').onclick=skipCutscene;
-      function burst(x,y,color){for(let i=0;i<18;i++){const a=i*Math.PI*2/18;game.particles.push({x,y,vx:Math.cos(a)*(45+i%4*20),vy:Math.sin(a)*(45+i%4*20),life:.6+i%5*.08,color})}}
-      function gameStep(dt) {
-        game.time+=dt;game.flash=Math.max(0,game.flash-dt);game.toast=Math.max(0,game.toast-dt);game.jumpBuffer=Math.max(0,game.jumpBuffer-dt);game.nudgeTime=Math.max(0,game.nudgeTime-dt);
-        if(game.won)game.rescue+=dt;
-        if(game.scene){game.shotTime+=dt;const duration=game.scene==='opening'?introShots[game.line].duration:4.5;if(game.shotTime>=duration)nextStory();return}
-        if(!game.started)return;
-        if(game.grounded)game.coyote=.12;else game.coyote=Math.max(0,game.coyote-dt);
-        const direction=game.won?0:((inputDown('right')?1:0)-(inputDown('left')?1:0)||(game.nudgeTime>0?game.nudge:0));
-        const approach=(v,to,amount)=>v<to?Math.min(v+amount,to):Math.max(v-amount,to);
-        if(direction){game.facing=direction;if(game.vx*direction<0)game.vx=approach(game.vx,0,dt*7200);game.vx=approach(game.vx,direction*440,dt*(game.grounded?2600:2000))}
-        else game.vx=approach(game.vx,0,dt*(game.grounded?3400:500));
-        const held=inputDown('jump');
-        if(game.jumpHeld&&!held&&game.vy< -260)game.vy=-260;
-        game.jumpHeld=held;
-        if(game.jumpBuffer>0&&!game.won&&(game.grounded||game.coyote>0)){game.vy=-620;game.jumpBuffer=0;game.coyote=0;game.grounded=false}
-        const oldX=game.x,oldBottom=game.y+game.h,wasGrounded=game.grounded;
-        game.x=clamp(game.x+game.vx*dt,18,3940);game.vy=Math.min(game.vy+1280*dt,850);game.y+=game.vy*dt;game.grounded=false;
-        let landing=null;
-        if(game.vy>=0)for(const tile of platforms){
-          if(game.x+game.w/2<=tile.x||game.x-game.w/2>=tile.x+tile.w)continue;
-          const top=surfaceY(tile,game.x),previous=surfaceY(tile,oldX);
-          if(oldBottom<=previous+4&&(game.y+game.h>=top||(wasGrounded&&tile.end!==undefined&&Math.abs(oldBottom-previous)<4))&&(!landing||top<landing.top))landing={tile,top};
-        }
-        if(landing){game.y=landing.top-game.h;game.vy=0;game.grounded=true}
-        for(const cp of [1060,1920,2850])if(game.grounded&&game.x>cp&&game.checkpoint<cp)game.checkpoint=cp;
-        signalLocations.forEach(([x,y],i)=>{if(!game.collected.has(i)&&Math.hypot(game.x-x,game.y+game.h*.5-y)<35){game.collected.add(i);burst(x,y,'#efd18d');game.message=game.collected.size===6?'The beacon has power. Reach the lighthouse.':'';syncGameUI()}});
-        if(game.y>820){Object.assign(game,{x:game.checkpoint,y:groundY(game.checkpoint)-game.h-4,vx:0,vy:0,grounded:false,flash:.25,jumpBuffer:0});game.message='Your crystals are safe.';syncGameUI()}
-        // The ending begins after a safe landing at the lighthouse.
-        if(game.grounded&&!game.won){
-          if(game.x>3734){
-            if(game.collected.size===6){game.won=true;game.rescue=0;burst(3760,480,'#efd18d');beginStory('ending')}
-            else if(game.toast===0){game.message='The beacon still needs '+(6-game.collected.size)+' crystals. Follow the lights on the upper trail.';game.toast=4;syncGameUI()}
-          }
-        }
-        const cameraTarget=clamp(game.x+game.vx*.12-game.viewW*.42,0,Math.max(0,3960-game.viewW));game.camera=mix(game.camera,cameraTarget,1-Math.exp(-dt*9));
-        const support=ground.find(tile=>game.x>=tile.x&&game.x<=tile.x+tile.w);
-        if(support)game.cameraY=mix(game.cameraY,clamp(surfaceY(support,game.x)-530,-140,95),1-Math.exp(-dt*7));
-        for(const particle of game.particles){particle.life-=dt;particle.x+=particle.vx*dt;particle.y+=particle.vy*dt;particle.vy+=70*dt}game.particles=game.particles.filter(a=>a.life>0);
-      }
+      function resetGame() { water.reset(); game.started = true; clearInputs(); syncGameUI(); dirty = true; wake() }
+      $('startGame').onclick = resetGame;
+      function gameStep(dt) { water.step(dt, {left:inputDown('left'),right:inputDown('right'),down:inputDown('down'),jump:inputDown('jump')}); syncGameUI() }
       function rect(x, y, w, h, color, r = 0) { c.fillStyle = color; c.beginPath(); c.roundRect(x, y, w, h, r); c.fill() }
       function line(x, y, x2, y2, col, width = 1) { c.strokeStyle = col; c.lineWidth = width; c.beginPath(); c.moveTo(x, y); c.lineTo(x2, y2); c.stroke() }
       function circle(x, y, r, col) { c.fillStyle = col; c.beginPath(); c.arc(x, y, Math.max(.01, r), 0, Math.PI * 2); c.fill() }
@@ -1891,118 +1793,7 @@
         atmosphere(w, h, ['#214a49', '#6d493a', '#303341'][n]); if (n === 0) { for (let i = 0; i < 35; i++) { let y = i * h / 35; rect(0, y, w, 1, '#7bb4a520'); if (i % 4 === 0) rect((Math.sin(i * 8 + t) * .5 + .5) * w, y, w * .2, 3, '#85d8cb55') } rect(w * .39, h * .14, w * .23, h * .64, '#102e32'); rect(w * .41, h * .16, w * .19, h * .6, '#6ca694'); rect(w * .43, h * .16, w * .17, h * .6, '#14333d'); for (let i = 0; i < 6; i++)rect(w * .12 + (i % 2) * w * .04, h * (.26 + i * .058), w * (.25 + (i % 3) * .04), h * .009, '#cfdee829') } else if (n === 1) { let g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#85583d'); g.addColorStop(1, '#201b20'); rect(0, 0, w, h, g); for (let i = 0; i < 7; i++)rect(i * w / 7, 0, w / 7 - 4, h * .6, '#b17b4822'); c.fillStyle = '#ece0c0'; c.beginPath(); c.ellipse(w * .53, h * .7, w * .22, h * .08, 0, 0, 7); c.fill(); let r = h * .16, x = w * .53, y = h * .5; let g2 = c.createRadialGradient(x - r * .4, y - r * .4, 0, x, y, r); g2.addColorStop(0, '#c88a53'); g2.addColorStop(1, '#5b2b21'); circle(x, y, r, g2); for (let i = 0; i < 40; i++) { let a = i * 2.4, rr = r * Math.sqrt((i % 17) / 18); circle(x + Math.cos(a) * rr, y + Math.sin(a) * rr, 1 + i % 3, '#401f1855') } circle(x - r * .28, y - r * .08, 3, '#211c1b'); circle(x + r * .28, y - r * .08, 3, '#211c1b') } else { for (let i = 0; i < 15; i++) { let bh = h * (.18 + ((i * 7) % 11) / 30), x = i * w / 15; rect(x, h * .75 - bh, w / 15 - 4, bh, '#0c1724'); for (let j = 0; j < 5; j++)rect(x + 5, h * .75 - bh + j * bh / 6, 3, 5, '#cdb58d44') } let x = w * .58, y = h * .64; circle(x, y - h * .13, h * .065, '#b8a88c'); c.fillStyle = '#1a2431'; c.beginPath(); c.moveTo(x - h * .1, y - h * .03); c.lineTo(x + h * .09, y - h * .03); c.lineTo(x + h * .16, y + h * .28); c.lineTo(x - h * .17, y + h * .28); c.fill(); rect(x - h * .105, y - h * .21, h * .21, h * .025, '#141a25', 2); rect(x - h * .065, y - h * .29, h * .13, h * .09, '#192230', 3); for (let i = 0; i < 55; i++) { let xx = (i * w / 55 + t * 14) % w, yy = (i * 67 + t * 80) % h; line(xx, yy, xx - 4, yy + 20, '#a7b4c333') } } const names = ['THE GLITCH', 'THE LIFE OF A MEATBALL', 'DETECTIVE EDWARD']; text('UNLIM8TED FILMS / 0' + (n + 1), w * .07, h * .81, Math.max(7, w * .014), '#e5bd78', 'left', 'monospace'); text(names[n], w * .07, h * .91, w * (n === 1 ? .046 : .063), '#f5ede0'); text('UPCOMING FILM / CONCEPT SCENE', w * .07, h * .75, Math.max(7, w * .014), '#e5bd78', 'left', 'monospace');
       }
       function music(w, h, t) { atmosphere(w, h, '#293449', '#090e19');  for (let row = 0; row < 4; row++) { let y = h * (.28 + row * .16); line(w * .05, y, w * .94, y, '#ffffff10'); for (let i = 0; i < 100; i++) { let a = (Math.sin(i * .42 + row * 4) * .5 + .5) * (Math.cos(i * .17 - row) * .5 + .5); let v = (.3 + .7 * Math.abs(Math.sin(i * .19 + t + row))) * a * h * .1; rect(w * (.06 + i * .0086), y - v / 2, w * .004, Math.max(2, v), ['#d3ac74', '#72a79e', '#8a8fae', '#9b7f91'][row], 1) } } let x = w * (.15 + (p - 5) / 2 * .68); line(x, h * .22, x, h * .88, '#f4e6c8', 1);  }
-      let gameTerrainCache=null;
-      function drawGameTerrain() {
-        const cam=0,vw=3960,t=0;
-        // Ruins give the level its own landmarks and a visible destination.
-        for (const { x, radius, spring, base } of archways) {
-          const left = x - radius, right = x + radius;
-          rect(left - 10, spring, 20, base - spring, '#223e46');
-          rect(right - 10, spring, 20, base - spring, '#26454b');
-          c.strokeStyle = '#35595c'; c.lineWidth = 20; c.beginPath(); c.arc(x, spring, radius, Math.PI, Math.PI * 2); c.stroke();
-          for (let k = 1; k < 5; k++) {
-            const y = spring + k * (base - spring) / 5;
-            line(left - 9, y, left + 9, y + 2, '#82ac9555', 2);
-            line(right - 9, y, right + 9, y + 2, '#0c293466', 2);
-          }
-          // Radial seams follow the curve of the arch instead of cutting across it.
-          for (let k = 1; k < 7; k++) {
-            const a = Math.PI + k * Math.PI / 7;
-            line(x + Math.cos(a) * (radius - 9), spring + Math.sin(a) * (radius - 9), x + Math.cos(a) * (radius + 9), spring + Math.sin(a) * (radius + 9), '#102e3a88', 2);
-          }
-        }
-        // Small discoveries along the existing trail, with no additional objectives.
-        for (const [x, width, height] of [[320, 65, 33], [1030, 48, 25], [1890, 44, 47], [2810, 72, 36], [3450, 56, 30]]) {
-          const y = groundY(x);
-          c.fillStyle = '#173641'; c.beginPath(); c.moveTo(x, y); c.lineTo(x + width * .2, y - height); c.lineTo(x + width * .65, y - height * .8); c.lineTo(x + width, y); c.fill();
-        }
-        for (const [x, y, blocks] of [[100, 558, 3], [1600, 558, 4], [2810, 558, 2], [3510, 558, 3]]) {
-          for (let row = 0; row < blocks; row++) for (let col = 0; col < blocks - row; col++) {
-            rect(x + col * 24 + (row % 2) * 8, groundY(x) - (row + 1) * 16, 22, 14, row % 2 ? '#2e4b50' : '#35565a', 2);
-          }
-          line(x - 3, groundY(x) - 4, x + blocks * 24, groundY(x) - 4, '#73917b66', 3);
-        }
-        // A lighthouse on the final headland, powered by the six crystals.
-        rect(3688,300,116,258,'#7d918c');
-        for(let row=0;row<8;row++)line(3690,320+row*29,3802,320+row*29,'#526d7033',2);
-        rect(3678,290,136,14,'#b1b9a4');rect(3690,238,112,52,'#2b4a59');
-        for(let i=0;i<4;i++)rect(3698+i*26,244,18,36,game.won?'#f5d89e':'#739395');
-        c.fillStyle='#3b5963';c.beginPath();c.moveTo(3670,238);c.lineTo(3746,193);c.lineTo(3822,238);c.fill();
-        line(3746,193,3746,174,'#a5b8ad',3);circle(3746,171,3,game.won?'#f6d69a':'#728e87');
-        rect(3724,498,44,60,'#132e3c',19);rect(3714,551,64,7,'#a0ab97',3);
-        if(game.won){const beam=c.createLinearGradient(3746,265,3200,290);beam.addColorStop(0,'#f4dfa166');beam.addColorStop(1,'#e4d49a00');c.fillStyle=beam;c.beginPath();c.moveTo(3746,255);c.lineTo(3100,160);c.lineTo(3100,410);c.lineTo(3746,275);c.fill()}
-        for (const tile of platforms) {
-          if (tile.x + tile.w < cam - 80 || tile.x > cam + vw + 80) continue;
-          const end=tile.end ?? tile.y;
-          let stone=c.createLinearGradient(0,Math.min(tile.y,end),0,Math.max(tile.y,end)+140);stone.addColorStop(0,'#34515a');stone.addColorStop(1,'#102735');
-          if(tile.end!==undefined){c.fillStyle=stone;c.beginPath();c.moveTo(tile.x,tile.y);c.lineTo(tile.x+tile.w,end);c.lineTo(tile.x+tile.w,880);c.lineTo(tile.x,880);c.fill();line(tile.x,tile.y+3,tile.x+tile.w,end+3,'#8aa899',6)}
-          else{rect(tile.x,tile.y,tile.w,tile.h,stone,5);rect(tile.x,tile.y,tile.w,5,'#8aa899',3)}
-          for(let k=8;k<tile.w;k+=23){const y=surfaceY(tile,tile.x+k);line(tile.x+k,y+20+k%17,tile.x+k+12,y+23+k%17,'#74978925');line(tile.x+k,y,tile.x+k+Math.sin(k+t)*2,y-5-k%7,'#8ba885')}
-          if(tile.end===undefined)for(let k=12;k<tile.w;k+=36)line(tile.x+k,tile.y+23,tile.x+k+3,tile.y+33+k%11,'#5f928355',2);
-        }
-        for (const x of [75, 285, 810, 1020, 1530, 1880, 2540, 2805, 3440]) {
-          for (let leaf = -2; leaf <= 2; leaf++) {
-            c.strokeStyle = '#6b998377'; c.lineWidth = 2; c.beginPath(); c.moveTo(x, groundY(x)); c.quadraticCurveTo(x + leaf * 5, groundY(x) - 16 - Math.abs(leaf) * 2, x + leaf * 10, groundY(x) - 16 + Math.abs(leaf) * 3); c.stroke();
-          }
-        }
-        line(1135,groundY(1135)-8,1190,groundY(1190)-8,'#546f62',8);
-        for (const x of [200,1080,1930,2880]) { const y=groundY(x); rect(x - 2, y - 49, 4, 49, '#839183'); rect(x - 8, y - 54, 16, 18, '#243d46', 3); circle(x, y - 46, 4, '#efd19c'); let glow = c.createRadialGradient(x, y - 46, 1, x, y - 46, 40); glow.addColorStop(0, '#f5d08b30'); glow.addColorStop(1, '#f5d08b00'); circle(x, y - 46, 40, glow) }
-      }
-      function gameScene(w, h, t) {
-        if(game.scene && window.SignalRunCinema){
-          const shot=game.scene==='opening'?introShots[game.line]:{shot:['crew','hiker'][game.line],duration:4.5};
-          if(shot.shot!=='route'){window.SignalRunCinema.render(c,w,h,{shot:shot.shot,progress:game.shotTime/shot.duration,time:game.time,reduced});return;}
-        }
-        const vh = 720, scale = h / vh, vw = w / scale, cam = game.camera; game.viewW = vw;
-        c.save(); c.scale(scale, scale);
-        let sky = c.createLinearGradient(0, 0, 0, vh); sky.addColorStop(0, '#08192b'); sky.addColorStop(.52, '#30485a'); sky.addColorStop(.8, '#657a77'); sky.addColorStop(1, '#132936'); rect(0, 0, vw, vh, sky);
-        stars.forEach((s, i) => { if (s.y < .5) circle(s.x * vw - cam * .014 % (vw + 10), s.y * 560, s.s * .65, '#dde3cc88') });
-        const moonX = vw * .77 - cam * .012; let halo = c.createRadialGradient(moonX, 163, 20, moonX, 163, 130); halo.addColorStop(0, '#e2d5ae38'); halo.addColorStop(1, '#e2d5ae00'); circle(moonX, 163, 130, halo); circle(moonX, 163, 45, '#d5ccb0'); c.save(); c.beginPath(); c.arc(moonX, 163, 45, 0, Math.PI * 2); c.clip(); circle(moonX + 18, 153, 36, '#bcc1ad30'); c.restore();
-        for(let layer=0;layer<4;layer++) {
-          c.beginPath();c.moveTo(-30,720);
-          for(let x=-30;x<=vw+35;x+=20){const wx=x+cam*(.05+layer*.095),y=280+layer*65+Math.sin(wx*.003+layer*2)*48+Math.sin(wx*.009+layer)*22+Math.sin(wx*.017+layer)*8;c.lineTo(x,y)}
-          c.lineTo(vw+35,720);c.fillStyle=['#384e61','#2a4758','#1c3b49','#12313c'][layer];c.fill();
-        }
-        // Batch tree silhouettes into one path instead of filling every branch separately.
-        const treeOffset=cam*.4;c.fillStyle='#102b3599';c.beginPath();
-        for(let i=Math.floor((treeOffset-90)/80);i<=Math.ceil((treeOffset+vw+90)/80);i++) {
-          const x=i*80-treeOffset,y=492+Math.sin(i*2.1)*21,size=.65+((i%3+3)%3)*.18;
-          c.rect(x-size,y-53*size,2*size,57*size);
-          for(let k=0;k<3;k++){c.moveTo(x,y-95*size+k*22*size);c.lineTo(x+(17+k*5)*size,y-40*size+k*22*size);c.lineTo(x-(17+k*5)*size,y-40*size+k*22*size);c.closePath()}
-        }
-        c.fill();
-        let fog = c.createLinearGradient(0, 370, 0, 580); fog.addColorStop(0, '#91c8bc00'); fog.addColorStop(.6, '#91c8bc12'); fog.addColorStop(1, '#0a253000'); rect(0, 370, vw, 220, fog);
-        c.save(); c.translate(-cam, -game.cameraY);
-        if(!gameTerrainCache || gameTerrainCache.won!==game.won) {
-          const image=document.createElement('canvas');image.width=3960;image.height=880;
-          const previous=c;c=image.getContext('2d');
-          try { drawGameTerrain(); } finally { c=previous; }
-          gameTerrainCache={image,won:game.won};
-        }
-        const sourceX=Math.max(0,Math.floor(cam)-2),sourceW=Math.min(3960-sourceX,Math.ceil(vw)+4);
-        if(sourceW>0)c.drawImage(gameTerrainCache.image,sourceX,0,sourceW,880,sourceX,0,sourceW,880);
-        if(game.won){
-          const hx=3746-Math.max(0,500-game.rescue*55),hy=178+Math.sin(t*2)*3;
-          rect(hx-24,hy-10,48,20,'#9ab1ac',10);rect(hx+8,hy-6,13,10,'#21404b',3);line(hx-26,hy,hx-55,hy-12,'#9ab1ac',4);line(hx-48,hy-18,hx-48,hy-5,'#b7c7bc',3);line(hx-32,hy-18,hx+32,hy-18,'#bac9ba',2);circle(hx+24,hy,3,'#f3ce8c');
-        }
-        signalLocations.forEach(([x, y], i) => { if (game.collected.has(i) || x < cam - 30 || x > cam + vw + 30) return; const bob = reduced ? 0 : Math.sin(t * 2 + i) * 4; let glow = c.createRadialGradient(x, y + bob, 2, x, y + bob, 26); glow.addColorStop(0, '#e4c99155'); glow.addColorStop(1, '#e4c99100'); circle(x, y + bob, 26, glow); c.save(); c.translate(x, y + bob); c.rotate(Math.PI / 4); rect(-6, -6, 12, 12, '#ead49b', 2); rect(-2, -6, 6, 6, '#fff0c5', 1); c.restore() });
-        // The explorer has an animated scarf, leg cycle and a glass visor.
-        const x = game.x, y = game.y, face = game.facing, walk = game.grounded ? Math.sin(game.time * 15) * Math.min(1, Math.abs(game.vx) / 150) : 0;
-        if (game.grounded) { c.fillStyle = '#050f2055'; c.beginPath(); c.ellipse(x, y + 43, 17, 4, 0, 0, 7); c.fill() }
-        c.save(); c.translate(x, y); c.scale(face, 1);
-        c.fillStyle = '#be6e4d'; c.beginPath(); c.moveTo(-3, 16); c.lineTo(-22, 16 + Math.sin(t * 6) * 3); c.lineTo(-30, 22 + Math.sin(t * 6 + 1) * 4); c.lineTo(-13, 24); c.lineTo(2, 21); c.fill();
-        rect(-10, 2, 20, 18, '#d5c3a0', 6); rect(-1, 6, 12, 9, '#28464f', 3); line(1, 7, 7, 7, '#a3d5cc', 1);
-        rect(-11, 20, 21, 14, '#ba7756', 4); rect(-13, 22, 5, 12, '#466572', 2); line(8, 24, 12, 32, '#e3bb8d', 4);
-        line(-5, 33, -6 + walk * 5, 41 - Math.max(0, walk) * 3, '#adb8ae', 5); line(5, 33, 6 - walk * 5, 41 + Math.min(0, walk) * 3, '#adb8ae', 5);
-        c.restore();
-        for (const a of game.particles) { c.globalAlpha = clamp(a.life * 2); circle(a.x, a.y, 2.5, a.color) } c.globalAlpha = 1;
-        c.restore();
-        for (let i = 0; i < 16; i++) { const x = ((i * 137.9 - cam * .65 + t * 6) % Math.max(1, vw) + vw) % vw, y = 425 + Math.sin(i * 2.4 + t * .6) * 76; circle(x, y, 1.1, '#dce8b366') }
-        if(game.started&&window.SignalRunCinema)window.SignalRunCinema.weather(c,vw,vh,game.time,reduced,{x:cam,y:game.cameraY},groundY);
-        let vignette = c.createLinearGradient(0, 580, 0, 720); vignette.addColorStop(0, '#07151d00'); vignette.addColorStop(1, '#06131bc0'); rect(0, 580, vw, 140, vignette);
-        if (game.flash > 0) rect(0, 0, vw, vh, `rgba(177,202,198,${game.flash * .4})`);
-        c.restore();
-      }
+      function gameScene(w, h) { window.PhaseWater.render(c, w, h, water, reduced) }
       function phone(w, h, t) { let g = c.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#1f354c'); g.addColorStop(1, '#0b131e'); rect(0, 0, w, h, g); text('9:41', w * .1, h * .075, w * .046); text('● ● ▰', w * .9, h * .075, w * .032, '#becad7', 'right'); text('UNLIM8TED', w * .1, h * .17, w * .053, '#e5bd78'); text('Unlim8ted.', w * .1, h * .255, w * .115); text('Connected.', w * .1, h * .325, w * .115); let yy = h * .38; rect(w * .08, yy, w * .84, h * .27, '#324756', 18); c.save(); c.beginPath(); c.roundRect(w * .08, yy, w * .84, h * .27, 18); c.clip(); circle(w * .7, h * .48, w * .22, '#bea178'); for (let i = 0; i < 8; i++)line(w * .1, yy + i * 20, w, yy + i * 20, '#ffffff10'); c.restore(); text('FILM · MUSIC · GAMES', w * .14, h * .6, w * .043, '#f2e2c4', 'left', 'monospace'); for (let i = 0; i < 3; i++) { let y = h * (.7 + i * .075); rect(w * .09, y, w * .82, h * .06, '#ffffff09', 9); text(['01   Films & stories', '02   Games', '03   Music & soundtracks'][i], w * .14, y + h * .038, w * .041, '#c6d0dd'); text('↗', w * .84, y + h * .038, w * .055, '#e5bd78', 'right') } }
       function ai(w, h, t) { atmosphere(w, h, '#272741', '#090d17'); let pts = []; for (let i = 0; i < 32; i++) { let a = i * 2.399 + t * .08, r = Math.sqrt((i + .5) / 32) * Math.min(w, h) * .4; pts.push([w / 2 + Math.cos(a) * r, h / 2 + Math.sin(a) * r * .8]) } for (let i = 0; i < pts.length; i++) { for (let j = i + 1; j < pts.length; j++) { let a = pts[i], b = pts[j], d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (d < w * .22) { line(...a, ...b, '#bba8d529'); let s = (t * .2 + i * .11) % 1; circle(mix(a[0], b[0], s), mix(a[1], b[1], s), 1.5, '#d6c6e3') } } circle(...pts[i], i % 5 === 0 ? 4 : 2, i % 5 === 0 ? '#e5bd78' : '#a0a5c5') } text('LEARNING / SPECIALIZATION / COLLABORATION', w * .5, h * .9, Math.max(8, w * .017), '#c6bdd6', 'center', 'monospace') }
       function clothing(w, h, t) {
@@ -2027,7 +1818,7 @@
       const copy = [
         ['FILM', 'Films', 'Watch The Glitch and The Life of a Meatball. Detective Edward is in development.'],
         ['MUSIC', 'Music for<br>the scene.', 'Listen to Sharp Strings, Unexpected Twist, and more original tracks.'],
-        ['GAMES + SOFTWARE', 'A game you<br>can jump into.', 'Play Signal Run: follow the forest relays and light the lighthouse beacon so the rescue helicopter can find you.'],
+        ['GAMES + SOFTWARE', 'A game you<br>can jump into.', 'Become a drop of water. Explore an industrial ecosystem as liquid, vapor, and ice in Condensate.'],
         ['TECHNOLOGY', 'A phone under<br>construction.', 'Unlim8ted Phone is an ongoing hardware and operating system experiment.'],
         ['AI', 'Talk to<br>Meatball AI.', 'Try our browser chat prototype, then browse the other AI projects.'],
         ['CLOTHING', 'Unlim8ted.<br>Off the screen.', 'Clothing that carries the studio’s visual identity into everyday life.'],
@@ -2092,7 +1883,7 @@
         setShown($('caption'), alpha); setShown($('musicCta'), ci === 1 ? alpha : 0);
         const side = ci >= 3 && ci <= 7; $('caption').classList.toggle('side', side); $('caption').classList.toggle('music', ci === 1); $('caption').classList.toggle('ending', ci === 8);
         const gameOpacity = smooth(7.4, 7.7, p) * (1 - smooth(8.32, 8.55, p));
-        setShown($('gameEntry'), game.started?0:gameOpacity); setShown($('gameHUD'),game.started&&!game.scene?gameOpacity:0); setShown($('gameControls'),game.started&&!game.scene&&!game.won?gameOpacity:0); setShown($('gameDialogue'),game.scene?gameOpacity:0);
+        setShown($('gameEntry'), game.started?0:gameOpacity); setShown($('gameHUD'),game.started?gameOpacity:0); setShown($('gameControls'),game.started&&!game.won?gameOpacity:0);
         const sponsorFade = smooth(13.66, 13.8, p) * (1 - smooth(13.88, 13.97, p)); setShown($('sponsorsPanel'), sponsorFade); $('sponsorsPanel').style.transform = `translate(-50%,${(1 - sponsorFade) * 35}px)`;
         const endFade = smooth(13.94, 14, p); setShown($('endLink'), endFade); setShown($('endBrand'), endFade); $('endBrand').style.transform = `translate(-50%,calc(-50% + ${(1 - endFade) * 18}px))`;
         const filmIndex = p < 2.55 ? 0 : p < 3.35 ? 1 : p < 4.17 ? 2 : 3;
@@ -2119,6 +1910,7 @@
         if(reduced)return gameActive;
         if(window.homePlanetAvailable===true&&p<2.38)return false;
         let index=0;sceneStarts.forEach((start,i)=>{if(p>=start)index=i});
+        if(index===5)return gameActive;
         if([0,3,4,5,7,11].includes(index))return true;
         const key={1:'glitch',2:'meatball',8:'clothing',9:'photography'}[index],image=sceneImages.get(key);
         return !!image&&image.readyAt!==undefined&&performance.now()<image.readyAt+400;
@@ -2131,10 +1923,7 @@
         if (bw !== canvasW || bh !== canvasH) { canvasW = bw; canvasH = bh; canvas.width = bw; canvas.height = bh;  }
       }
       function prepareContext(ctx, w, h) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.clearRect(0, 0, canvasW, canvasH); ctx.setTransform(canvasW / w, 0, 0, canvasH / h, 0, 0); ctx.lineWidth = 1; ctx.lineCap = 'butt'; ctx.shadowBlur = 0; ctx.shadowOffsetX = ctx.shadowOffsetY = 0; ctx.textBaseline = 'alphabetic'; }
-      let lastCutscenePaint=-Infinity;
       function draw(w, h, scale) {
-        if(game.scene&&!dirty&&Math.abs(p-target)<.0001&&clock-lastCutscenePaint<1/30-.002)return;
-        if(game.scene)lastCutscenePaint=clock;else lastCutscenePaint=-Infinity;
         if(window.homePlanetAvailable===true&&p<2.38)return;
         bufferSize(w, h, scale); const t = reduced ? 0 : clock;
         let index = 0; sceneStarts.forEach((start, i) => { if (p >= start) index = i });
@@ -2152,7 +1941,7 @@
         if (gameActive) { accumulator += Math.min(dt, .05); while (accumulator >= 1 / 120) { gameStep(1 / 120); accumulator -= 1 / 120; } }
         const frameDirty=dirty;
         const layoutChanged=!layoutSize||dirty||Math.abs(p-lastLayoutProgress)>.00001;
-        const gameUI=game.started+':'+game.scene+':'+game.won;
+        const gameUI=game.started+':'+game.won;
         const gameChanged=gameUI!==lastGameUI;
         if(layoutChanged||gameChanged) {
           layoutSize=updateLayout();updateUI();lastLayoutProgress=p;lastGameUI=gameUI;
