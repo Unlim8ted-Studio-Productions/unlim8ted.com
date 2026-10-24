@@ -241,9 +241,9 @@
 
 .meatballAvatar-eye {
   position: absolute;
-  top: 26px;
-  width: 16px;
-  height: 16px;
+  top: 33%;
+  width: 19%;
+  height: 19%;
   border-radius: 50%;
   background: #fff7f0;
   overflow: hidden;
@@ -251,19 +251,19 @@
 }
 
 .meatballAvatar-eye.left {
-  left: 22px;
+  left: 25%;
 }
 
 .meatballAvatar-eye.right {
-  right: 22px;
+  right: 25%;
 }
 
 .meatballAvatar-eye .pupil {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 8px;
-  height: 8px;
+  width: 50%;
+  height: 50%;
   border-radius: 50%;
   background: #24130d;
   transform: translate(calc(-50% + var(--pupil-x)), calc(-50% + var(--pupil-y)));
@@ -273,8 +273,8 @@
   position: absolute;
   left: 50%;
   bottom: 25%;
-  width: 30px;
-  height: 14px;
+  width: 36%;
+  height: 17%;
   overflow: hidden;
   border-radius: 0 0 18px 18px;
   background: linear-gradient(180deg, rgba(74, 19, 9, 0.92), rgba(42, 10, 5, 0.98));

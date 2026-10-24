@@ -34,6 +34,18 @@
 <link rel="stylesheet" href="/components/site-base.css">
 <script defer src="/components/site-accessibility.js"></script>
 <link rel="canonical" href="https://unlim8ted.com/products/films/">
+<style>
+    #scrollys { scroll-margin-top: 90px; }
+    .scrollyStories { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 22px; max-width: 1200px; margin: 28px auto; text-align: left; }
+    .scrollyCard { display: block; overflow: hidden; border: 1px solid #454b53; border-radius: 16px; background: #171b22; color: #f2eee7; text-decoration: none; padding-bottom: 20px; }
+    .scrollyCard:hover, .scrollyCard:focus-visible { border-color: #00ffc6; }
+    .scrollyCard .poster { display: block; width: 100%; height: auto; }
+    .scrollyCard .line { stroke: #11161b; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    .scrollyCard .thin { stroke-width: 2.5; }
+    .scrollyCard h3, .scrollyCard p, .scrollyCard .open { margin: 16px 20px 0; }
+    .scrollyCard .open { display: inline-block; color: #00ffc6; }
+</style>
+<script defer src="/products/resources/js/category-search.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -67,17 +79,147 @@
         <img src="https://assets.unlim8ted.com/images/products/adventure-film.jpg" alt="Adventure Film">
         <h3>Adventure Film</h3>
       </a>-->
-            <!-- Add more film items here -->
+            <article class="item-box" id="detective-edward" data-category="short">
+                <h3>Detective Edward</h3>
+                <p>Upcoming film. Public viewing details are still to come.</p>
+            </article>            <!-- Add more film items here -->
         </div>
+
+    </div>
+    <script src="/products/ai/meatball/resources/js/meatball-assistant.js"></script>
+
+    <section id="scrollys" class="content-section" aria-labelledby="scrollys-title">
+        <h2 id="scrollys-title">Scrollys</h2>
+        <p>Scroll-controlled animated shorts. Open a story, then scroll, swipe, or use the arrow and Page Down keys to advance at your own pace.</p>
+        <div class="scrollyStories">
+            
+
+            
+
+            <a class="scrollyCard" href="/products/scrolly/if-stealth-games-were-realistic/" style="--accent: #76598c;">
+                <svg class="poster" viewBox="0 0 320 120" role="img" aria-label="Stealth guard and hidden body thumbnail">
+                    <rect width="320" height="120" fill="#172a2c"></rect>
+                    <path d="M0 92H320" class="line"></path>
+                    <path d="M55 92Q83 48 111 92Z" fill="#315d4a" class="line"></path>
+                    <circle cx="88" cy="70" r="13" fill="#d7a16f" class="line thin"></circle>
+                    <rect x="81" y="84" width="18" height="22" fill="#11161b"></rect>
+                    <circle cx="221" cy="55" r="17" fill="#c98d62" class="line"></circle>
+                    <rect x="204" y="74" width="36" height="34" fill="#405761" class="line"></rect>
+                    <path d="M252 37L286 26L276 59Z" fill="#ffd84d" class="line"></path>
+                    <path d="M142 94L205 84M142 106L202 101" class="line thin" fill="none"></path>
+                </svg>
+                <h3>If Stealth Games Were Realistic</h3>
+                <p>Suspicion meters, body hiding, disguises and guards with selective reasoning.</p>
+                <span class="open">Open</span>
+            </a>
+
+            <a class="scrollyCard" href="/products/scrolly/if-video-games-had-realistic-physics/" style="--accent: #6f9a57;">
+                <svg class="poster" viewBox="0 0 320 120" role="img" aria-label="Physics cliff quest thumbnail">
+                    <rect width="320" height="120" fill="#a8d8dc"></rect>
+                    <circle cx="270" cy="24" r="18" fill="#ffe58a"></circle>
+                    <path d="M0 94H134L163 54H320V120H0Z" fill="#6f9a57" class="line"></path>
+                    <circle cx="84" cy="61" r="13" fill="#e4ae78" class="line thin"></circle>
+                    <rect x="73" y="75" width="24" height="33" fill="#b34a3f" class="line thin"></rect>
+                    <rect x="34" y="87" width="34" height="24" rx="5" fill="#9b6841" class="line thin"></rect>
+                    <path d="M104 78L145 70" class="line thin"></path>
+                    <path d="M183 49L206 30L229 49" class="line thin" fill="none"></path>
+                </svg>
+                <h3>If Video Games Had Realistic Physics</h3>
+                <p>A quest where gravity has more authority than the player character.</p>
+                <span class="open">Open</span>
+            </a>
+
+            <a class="scrollyCard" href="/products/scrolly/i-unwillfully-let-my-cat-answer-my-emails-for-one-week/" style="--accent: #aaa59d;">
+                <svg class="poster" viewBox="0 0 320 120" role="img" aria-label="Cat at email laptop thumbnail">
+                    <rect width="320" height="120" fill="#efe2bd"></rect>
+                    <rect x="44" y="38" width="102" height="55" rx="5" fill="#ffffff" class="line"></rect>
+                    <path d="M58 54H132M58 68H118M58 82H137" class="line thin" fill="none"></path>
+                    <rect x="39" y="96" width="113" height="12" fill="#b8c8ce" class="line thin"></rect>
+                    <circle cx="226" cy="68" r="29" fill="#aaa59d" class="line"></circle>
+                    <path d="M202 45L210 22L225 44M247 45L264 25L260 55" fill="#aaa59d" class="line"></path>
+                    <circle cx="216" cy="67" r="4" fill="#11161b"></circle>
+                    <circle cx="238" cy="67" r="4" fill="#11161b"></circle>
+                    <path d="M226 75Q232 83 242 77M222 75Q215 82 207 76" class="line thin" fill="none"></path>
+                </svg>
+                <h3>I Let My Cat Answer My Emails</h3>
+                <p>The cat takes over the inbox and somehow improves corporate communication.</p>
+                <span class="open">Open</span>
+            </a>
+
+            <a class="scrollyCard" href="/products/scrolly/natural-water/" style="--accent: #61b6cf;">
+                <svg class="poster" viewBox="0 0 320 120" role="img" aria-label="Natural water bottle thumbnail">
+                    <rect width="320" height="120" fill="#bfe8ee"></rect>
+                    <path d="M0 93Q58 74 122 91T245 90T320 78V120H0Z" fill="#61b6cf" class="line"></path>
+                    <path d="M131 34H185L178 103H138Z" fill="#eafcff" class="line"></path>
+                    <rect x="141" y="21" width="34" height="17" fill="#8bc27a" class="line thin"></rect>
+                    <path d="M143 63H176" class="line thin"></path>
+                    <path d="M44 75Q67 35 91 75" fill="#315d4a" class="line"></path>
+                    <circle cx="257" cy="31" r="16" fill="#ffd84d" class="line thin"></circle>
+                </svg>
+                <h3>Natural Water</h3>
+                <p>A product pitch for water that may be more natural than anyone requested.</p>
+                <span class="open">Open</span>
+            </a>
+
+            <a class="scrollyCard" href="/products/scrolly/the-chicken-crosses-the-road-why/" style="--accent: #f2b84b;">
+                <svg class="poster" viewBox="0 0 320 120" role="img" aria-label="Chicken crossing road thumbnail">
+                    <rect width="320" height="120" fill="#a8d8dc"></rect>
+                    <rect x="0" y="63" width="320" height="57" fill="#343b42"></rect>
+                    <path d="M18 91H65M102 91H149M186 91H233M270 91H316" stroke="#fff8e7" stroke-width="7" stroke-linecap="round"></path>
+                    <circle cx="154" cy="56" r="20" fill="#fff8e7" class="line"></circle>
+                    <circle cx="181" cy="50" r="12" fill="#fff8e7" class="line thin"></circle>
+                    <path d="M190 50L211 43L195 59Z" fill="#f2b84b" class="line thin"></path>
+                    <path d="M145 74L136 98M165 73L174 98" class="line thin"></path>
+                    <circle cx="185" cy="47" r="3" fill="#11161b"></circle>
+                </svg>
+                <h3>The Chicken Crosses The Road... Why?</h3>
+                <p>The classic question gets treated like a major investigative event.</p>
+                <span class="open">Open</span>
+            </a>
+
+            <a class="scrollyCard" href="/products/scrolly/the-hole/" style="--accent: #8b7250;">
+                <svg class="poster" viewBox="0 0 320 120" role="img" aria-label="Backyard hole thumbnail">
+                    <rect width="320" height="120" fill="#94c88a"></rect>
+                    <path d="M0 87Q82 70 163 86T320 76V120H0Z" fill="#6f9a57" class="line"></path>
+                    <ellipse cx="171" cy="82" rx="62" ry="21" fill="#11161b"></ellipse>
+                    <ellipse cx="171" cy="76" rx="48" ry="13" fill="#2c2520"></ellipse>
+                    <circle cx="88" cy="54" r="13" fill="#d7a16f" class="line thin"></circle>
+                    <rect x="78" y="68" width="20" height="28" fill="#4f85a8" class="line thin"></rect>
+                    <circle cx="246" cy="55" r="13" fill="#d7a16f" class="line thin"></circle>
+                    <rect x="236" y="69" width="20" height="28" fill="#e44e48" class="line thin"></rect>
+                </svg>
+                <h3>The Hole</h3>
+                <p>Two kids discover a tiny hole in the backyard. This becomes a problem.</p>
+                <span class="open">Open</span>
+            </a>
+
+            
+
+            <a class="scrollyCard" href="/products/scrolly/trailers-be-like/" style="--accent: #d04b6b;">
+                <svg class="poster" viewBox="0 0 320 120" role="img" aria-label="Dramatic movie trailer thumbnail">
+                    <rect width="320" height="120" fill="#2e2230"></rect>
+                    <path d="M0 96H320" class="line"></path>
+                    <path d="M44 21H276V88H44Z" fill="#11161b" class="line"></path>
+                    <path d="M71 42H165M71 61H242" stroke="#ffd84d" stroke-width="8" stroke-linecap="round"></path>
+                    <circle cx="248" cy="48" r="18" fill="#d04b6b" class="line"></circle>
+                    <path d="M26 25L44 25M276 25L294 25M26 84L44 84M276 84L294 84" class="line thin"></path>
+                    <path d="M122 103L160 78L199 103" fill="#76598c" class="line"></path>
+                </svg>
+                <h3>Trailers Be Like</h3>
+                <p>A cinematic trailer builds impossible stakes out of nearly nothing.</p>
+                <span class="open">Open</span>
+            </a>
+        </div>
+    </section>
+</main>
+<footer class="content-section">
         <!-- Copyright -->
         <div style="margin-top: 20px;">
             <p id="footer-text">&copy; 2019-2026 Unlim8ted Studio Productions. All rights reserved.</p>
             <script src="./resources/js/films.03.js"></script><script src="./resources/js/films.04.js"></script>
 
         </div>
-    </div>
-    <script src="/products/ai/meatball/resources/js/meatball-assistant.js"></script>
-</main>
+</footer>
 </body>
 </html>
 

@@ -344,6 +344,9 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        .meatballLogo { height: 200px; display: grid; place-items: center; background: #191410; border-radius: 10px; --meatball-size: 140px; }
+        .unavailable { opacity: .7; }
+        .unavailable:hover { transform: none; }
     </style><link rel="stylesheet" href="/products/ai/meatball/resources/css/meatball-assistant.css"><link rel="stylesheet" href="../resources/css/legacy-category.css"><script type="module" src="https://unlim8ted.com/components/site-navbar.js"></script>
       <script type="module">
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
@@ -354,6 +357,7 @@
 <link rel="stylesheet" href="/components/site-base.css">
 <script defer src="/components/site-accessibility.js"></script>
 <link rel="canonical" href="https://unlim8ted.com/products/ai/">
+<script defer src="/products/resources/js/category-search.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>   <site-navbar cart-href="/cart/" signin-href="https://unlim8ted.com/sign-in" profile-href="https://unlim8ted.com/profile"></site-navbar>
@@ -375,34 +379,13 @@
         </div>
         <div class="item-category" id="ai-items">
             <a href="meatball" class="item-box" data-category="Text generation">
-                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Talk to Meatball">
+                <div class="meatballLogo"><span class="meatballAvatar" role="img" aria-label="Meatball"><span class="meatballAvatar-shadow"></span><span class="meatballAvatar-body"><span class="meatballAvatar-eye left"><span class="pupil"></span></span><span class="meatballAvatar-eye right"><span class="pupil"></span></span><span class="meatballAvatar-mouth"></span></span></span></div>
                 <h3>Talk to Meatball</h3>
-            </a><!--
-            <a href="text-generator" class="item-box" data-category="Text generation">
-                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Text Generator">
-                <h3>Text Generator</h3>
             </a>
-            <a href="text-summarizer" class="item-box" data-category="Text modification">
-                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Text Summarizer">
-                <h3>Text Summarizer</h3>
-            </a>
-            <a href="text-classifier" class="item-box" data-category="Text classification">
-                <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Text Classifier">
-                <h3>Text Classifier</h3>
-            </a>-->
-            <!--
-            <a href="text-translator" class="item-box" data-category="Text modification">
-        <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Text Translator">
-        <h3>Text Translator</h3>
-      </a>
-      <a href="text2speech" class="item-box" data-category="Text modification">
-        <img loading="lazy" src="https://assets.unlim8ted.com/images/logo/logo.png" alt="Text2Speech">
-        <h3>Text2Speech</h3>
-      </a>
-      <music generator/>
-      -->
-
-<a href="text2speech/" class="item-box" data-category="Text modification"><h3>Text to Speech</h3><p>Read text aloud using your browser voices. Available now.</p></a>
+            <div class="item-box unavailable" data-category="Text generation" aria-disabled="true">
+                <h3>Film Script Writer</h3>
+                <p>Removed for cost reasons.</p>
+            </div>
         </div>
         <!-- Copyright -->
         <div style="margin-top: 20px;">

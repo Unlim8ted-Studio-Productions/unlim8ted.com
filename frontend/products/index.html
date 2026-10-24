@@ -942,6 +942,40 @@
                 animation: none !important;
             }
         }
+        .backgroundCollage { opacity: .12; }
+        .hero { grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr); align-items: start; }
+        .hero > .heroCard { min-width: 0; }
+        .productSidebar { display: contents; }
+        .spinnerCard { grid-column: 2; }
+        #categoryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        #categoryGrid .card { grid-template-columns: 64px minmax(0, 1fr); min-width: 0; }
+        #categoryGrid .thumb { width: 64px; height: 74px; }
+        .featuredSection { grid-column: 1 / -1; min-width: 0; padding: clamp(20px, 3vw, 32px); border: 1px solid var(--frame); border-radius: var(--radius); background: #101319; box-shadow: var(--shadow); }
+        .featuredSection .sectionTitle { margin-top: 0; }
+        #featuredGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+        #featuredGrid .card { grid-template-columns: 100px minmax(0, 1fr); gap: 18px; min-width: 0; min-height: 164px; padding: 18px; background: linear-gradient(135deg, #23262c, #191c22); align-items: center; }
+        #featuredGrid .thumb { width: 100px; height: 120px; display: grid; place-items: center; background: #11161d; font-size: 12px; text-align: center; --meatball-size: 76px; }
+        #featuredGrid .thumb img { width: 100%; height: 100%; object-fit: contain; }
+        #featuredGrid .cardBody h3 { margin: 8px 0; font-size: 20px; line-height: 1.2; }
+        #featuredGrid .cardBody p { max-width: none; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        #featuredGrid .meatballAvatar { display: block; }
+        @media (max-width: 1000px) {
+            #featuredGrid .card { grid-template-columns: 72px minmax(0, 1fr); gap: 12px; }
+            #featuredGrid .thumb { width: 72px; height: 92px; --meatball-size: 64px; }
+        }
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: minmax(0, 1fr); }
+            .spinnerCard { grid-column: 1; }
+        }
+        @media (max-width: 680px) {
+            #featuredGrid { grid-template-columns: minmax(0, 1fr); }
+        }
+        @media (max-width: 560px) {
+            #categoryGrid { grid-template-columns: minmax(0, 1fr); }
+        }
+        .featuredJump { display: flex; justify-content: center; text-decoration: none; margin-top: 4px; }
+        #featured-projects { scroll-margin-top: 100px; }
+        @media (max-width: 900px) { .featuredJump { display: none; } }
     </style>
 <link rel="stylesheet" href="/components/site-base.css">
 <script defer src="/components/site-accessibility.js"></script>
@@ -960,16 +994,18 @@
     <main class="page" id="main-content">
         <div class="wrap">
 
-            <section class="hero">
-                <div class="heroCard">
-
-
                     <div class="heroCopy">
                     <h1>Our Products</h1>
                     <p class="sub">
                         Discover what Unlim8ted is building: films, music, games, software, physical items, and more.
                     </p>
                     </div>
+
+            <section class="hero">
+                <div class="heroCard">
+
+
+
 
 
 <h2 class="sectionTitle">Browse by category</h2>
@@ -997,15 +1033,6 @@
                             </div>
                         </a>
 
-                        <a href="podcasts" class="card">
-                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/podcasts/podcasts%20icon.png" alt="Podcasts"></div>
-                            <div class="cardBody">
-                                <span class="cardTag">Voice</span>
-                                <h2>Podcasts</h2>
-                                <p>Listen to our newest podcasts.</p>
-                            </div>
-                        </a>
-
                         <a href="books" class="card">
                             <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/books/book%20icon.png" alt="Books">
                             </div>
@@ -1026,7 +1053,7 @@
                         </a>
 
                         <a href="physical-items" class="card">
-                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/clothes/icon_new.png" alt="Physical Items"></div>
+                            <div class="thumb"><img src="https://assets.unlim8ted.com/images/products/clothes/clothes_main.png" alt="Physical Items"></div>
                             <div class="cardBody">
                                 <span class="cardTag">Wear</span>
                                 <h2>Physical Items</h2>
@@ -1069,22 +1096,14 @@
                                 <p>Explore some of our best images.</p>
                             </div>
                         </a>
-
-                        <a href="scrolly" class="card">
-                            <div class="thumb"><img src="/products/scrolly/icon.svg" alt="Scrollys"></div>
-                            <div class="cardBody">
-                                <span class="cardTag">Motion</span>
-                                <h2>Scrollys</h2>
-                                <p>Browse scroll-controlled animated shorts.</p>
-                            </div>
-                        </a>
                     </div>
                 </div>
 
+                <div class="productSidebar">
                 <aside class="spinnerCard">
                     <div class="spinnerHeader">
                         <strong>Not sure what to get?</strong>
-                        <span>Spin the wheel to choose a category to explore.</span>
+                        <span>Spin the wheel to discover a specific product.</span>
                     </div>
 
                     <div class="spinnerWrap">
@@ -1124,7 +1143,10 @@
                         <button class="btn" id="spinBtn">Spin the wheel</button>
                         <div class="hint" id="spinHint">Loading the project wheel?</div>
                     </div>
+                    <a class="btn featuredJump" href="#featured-projects">View featured projects &darr;</a>
                 </aside>
+<section class="featuredSection" id="featured-projects" aria-labelledby="featured-title"><h2 class="sectionTitle" id="featured-title">Featured projects</h2><div class="grid" id="featuredGrid"><a class="card" href="/products/games/TimeCat/"><div class="thumb"><img loading="lazy" src="https://assets.unlim8ted.com/images/products/games/TimeCatCover.png" alt=""></div><div class="cardBody"><span class="cardTag">video-game</span><h3>TimeCat</h3><p>A 2d platformer game about a cat who finds itself jumping through time, solving puzzles with a rat to survive.</p></div></a><a class="card" href="/products/films/#detective-edward"><div class="thumb"><span>Detective Edward</span></div><div class="cardBody"><span class="cardTag">film</span><h3>Detective Edward</h3><p>An upcoming Unlim8ted film. Public viewing details are still to come.</p></div></a><a class="card" href="/products/films/the-life-of-a-meatball/"><div class="thumb"><img loading="lazy" src="https://assets.unlim8ted.com/images/products/films/The%20Life%20of%20a%20Meatball.jpg" alt=""></div><div class="cardBody"><span class="cardTag">film</span><h3>The Life of a Meatball</h3><p>Deep within the Tasmanian Jungles lie meatball factories. These factories produce meatballs, although something quite special can happen as shown in this captivating documentary.</p></div></a><a class="card" href="/products/films/theglitch/"><div class="thumb"><img loading="lazy" src="https://assets.unlim8ted.com/images/products/films/TheGlitchCover.png" alt=""></div><div class="cardBody"><span class="cardTag">film</span><h3>The Glitch</h3><p>A short film about a figure who must decide what reality means to them, while learning to forgive and striving to save those they love.</p></div></a><a class="card" href="/products/hardware/unlim8ted-phone/"><div class="thumb"><img loading="lazy" src="https://assets.unlim8ted.com/images/products/hardware/unlim8ted-phone/render_transparent.gif" alt=""></div><div class="cardBody"><span class="cardTag">hardware</span><h3>Unlim8ted Phone</h3><p>Explore the Unlim8ted Phone project.</p></div></a><a class="card" href="/products/ai/meatball/"><div class="thumb"><span class="meatballAvatar" role="img" aria-label="Meatball"><span class="meatballAvatar-shadow"></span><span class="meatballAvatar-body"><span class="meatballAvatar-eye left"><span class="pupil"></span></span><span class="meatballAvatar-eye right"><span class="pupil"></span></span><span class="meatballAvatar-mouth"></span></span></span></div><div class="cardBody"><span class="cardTag">ai</span><h3>Talk to Meatball</h3><p>Talk directly to Meatball.</p></div></a><a class="card" href="/products/software/wise-size/"><div class="thumb"><span>WearWise</span></div><div class="cardBody"><span class="cardTag">software</span><h3>WearWise</h3><p>Explore our sizing assistant.</p></div></a></div></section>
+                </div>
             </section>
 
             <div class="footer">
@@ -1303,40 +1325,14 @@
                 .replace(/\s+/g, "-");
         }
 
-        function slugifyProduct(value) {
-            return String(value ?? "")
-                .normalize("NFKD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase()
-                .replace(/&/g, " and ")
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/^-+|-+$/g, "")
-                .replace(/-{2,}/g, "-") || "product";
-        }
-
-        function productRoute(product) {
-            const type = normalizeType(product?.["product-type"] || product?.productType || product?.type);
-            if (type === "music") return "/products/music/";
-            if (type === "image" || type === "images") return "/products/images/";
-            if (type === "film" || type === "films") return "/products/films/";
-            if (type === "physical" || type === "instant" || type === "clothes" || type === "merch" || type === "apparel") return "/products/physical-items/";
-            if (type === "hardware" || type === "device" || type === "embedded") return "/products/hardware/";
-            if (type === "software") return "/products/software/";
-            if (type === "scrolly" || type === "scrollys") return "/products/scrolly/";
-            if (type === "video-game" || type === "card-game" || type === "videogame" || type === "game" || type === "games") return "/products/games/";
-            if (type === "book" || type === "books") return "/products/books/";
-            if (type === "podcast" || type === "podcasts") return "/products/podcasts/";
-            if (type === "ai") return "/products/ai/";
-            return "/products/product/";
-        }
-
+        // The shared detail page resolves the exact catalog ID, including music.
         function productUrl(product) {
-            const type = normalizeType(product?.["product-type"] || product?.productType || product?.type);
-            if (type === "music") return "/products/music/";
-            if (type === "podcast" || type === "podcasts") return "/products/podcasts/";
-            if (type === "scrolly" || type === "scrollys") return "/products/scrolly/";
-            const slug = slugifyProduct(product?.slug || product?.handle || product?.id || product?.name);
-            return `${productRoute(product)}${slug}/`;
+            const destinations = {
+                "TimeCat": "/products/games/TimeCat/",
+                "Square-Pixels": "/products/games/square-pixels/",
+                "puzzle-squares": "/products/games/puzzle-squares/",
+            };
+            return destinations[product.id] || `/products/product/#${encodeURIComponent(product.id)}`;
         }
 
         function categoryForProduct(product) {
@@ -1358,8 +1354,8 @@
                 return { key: "hardware", label: "Hardware", link: "/products/hardware" };
             }
             if (type === "software") return { key: "software", label: "Software", link: "/products/software" };
-            if (type === "scrolly" || type === "scrollys") return { key: "scrolly", label: "Scrollys", link: "/products/scrolly" };
-            if (type === "video-game" || type === "videogame" || type === "game" || type === "games") {
+            if (type === "scrolly" || type === "scrollys") return { key: "films", label: "Films", link: "/products/films/#scrollys" };
+            if (type === "card-game" || type === "video-game" || type === "videogame" || type === "game" || type === "games") {
                 return { key: "games", label: "Games", link: "/products/games" };
             }
             if (type === "book" || type === "books") return { key: "books", label: "Books", link: "/products/books" };
@@ -1379,111 +1375,6 @@
             if (Array.isArray(product?.additional_images) && product.additional_images.length) return product.additional_images[0];
             if (Array.isArray(product?.varients) && product.varients.length && product.varients[0]?.image) return product.varients[0].image;
             return null;
-        }
-
-        function buildMessage(product) {
-            const name = product?.name || "this";
-            const id = product?.id || "";
-            const type = normalizeType(product?.["product-type"]);
-            // Styled message depending on type
-
-            if (type === "music") {
-                return {
-                    title: `You should go listen to “${name}”.`,
-                    desc: `Your wheel pick landed on Music — go check out the music section${name ? ` and look for “${name}”.` : "."}`,
-                };
-            }
-
-            if (type === "image" || type === "images") {
-                return {
-                    title: `You should go check out “${name}”.`,
-                    desc: `Your wheel pick landed on Images — browse the images section${name ? ` and find “${name}”.` : "."}`,
-                };
-            }
-
-            if (type === "film" || type === "films") {
-                return {
-                    title: `You should go watch “${name}”.`,
-                    desc: `Your wheel pick landed on Films — explore the films section${name ? ` and queue up “${name}”.` : "."}`,
-                };
-            }
-
-            if (type === "hardware" || type === "device" || type === "embedded") {
-                return {
-                    title: `You should go inspect "${name}".`,
-                    desc: `Your wheel pick landed on Hardware - head to the hardware section${name ? ` and open "${name}".` : "."}`,
-                };
-            }
-
-            if (type === "software") {
-                return {
-                    title: `You should go try “${name}”.`,
-                    desc: `Your wheel pick landed on Software — check out the software section${name ? ` and open “${name}”.` : "."}`,
-                };
-            }
-
-            if (type === "scrolly" || type === "scrollys") {
-                return {
-                    title: `You should go watch “${name}”.`,
-                    desc: `Your wheel pick landed on Scrollys - browse the animated shorts.`,
-                };
-            }
-
-            if (type === "video-game" || type === "videogame" || type === "game" || type === "games") {
-                return {
-                    title: `You should go play “${name}”.`,
-                    desc: `Your wheel pick landed on Games — jump into the games section${name ? ` and try “${name}”.` : "."}`,
-                };
-            }
-
-            if (type === "physical" || type === "clothes" || type === "merch" || type === "apparel") {
-                return {
-                    title: `You should go grab “${name}”.`,
-                    desc: `Your wheel pick landed on Physical Items — browse the shop${name ? ` and check out “${name}”.` : "."}`,
-                };
-            }
-
-            if (type === "book" || type === "books") {
-                return {
-                    title: `You should go read “${name}”.`,
-                    desc: `Your wheel pick landed on Books — browse the books section${name ? ` and look for “${name}”.` : "."}`,
-                };
-            }
-
-            if (type === "card-game") {
-                return {
-                    title: `You should go play “${name}”.`,
-                    desc: `Your wheel pick landed on Card Games — head to the card games section${name ? ` and start “${name}”.` : "."}`,
-                };
-            }
-
-            if (type === "instant") {
-                return {
-                    title: `You should go solve “${name}”.`,
-                    desc: `Your wheel pick landed on Instant Games — launch “${name}” right now.`,
-                };
-            }
-
-            if (type === "ai") {
-                return {
-                    title: `You should go explore “${name}”.`,
-                    desc: `Your wheel pick landed on AI — visit the AI section${name ? ` and check out “${name}”.` : "."}`,
-                };
-            }
-
-            if (type === "podcast" || type === "podcasts") {
-                return {
-                    title: `You should go listen to “${name}”.`,
-                    desc: `Your wheel pick landed on Podcasts — head to the podcasts section${name ? ` and start “${name}”.` : "."}`,
-                };
-            }
-
-
-            // fallback
-            return {
-                title: `You should check out “${name}”.`,
-                desc: `This one doesn’t have a mapped category yet, so we’ll take you to its product anchor: #${id}`,
-            };
         }
 
         function pickProductWithinCategory(cat) {
@@ -1537,6 +1428,8 @@
             const map = new Map();
 
             for (const p of products || []) {
+                const type = normalizeType(p["product-type"] || p.productType || p.type);
+                if (type === "podcast" || type === "podcasts") continue;
                 const cat = categoryForProduct(p);
 
                 if (!map.has(cat.key)) {
@@ -1560,16 +1453,23 @@
             return arr;
         }
 
-        function showRecommendation(category) {
-            modalTitle.textContent = category.label || 'Browse a category';
-            modalDesc.textContent = 'Explore the '+(category.label || 'projects')+' collection.';
-            modalLink.href = category.link || '/products/';
-            modalLink.textContent = 'Browse '+(category.label || 'projects');
-            modalImgWrap.style.display = 'none';
-            overlay.style.display = 'block';
-            modal.style.display = 'block';
-            overlay.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
+        function showRecommendation(product) {
+            modalTitle.textContent = product.name || product.id;
+            modalDesc.textContent = product.description || "Explore your next discovery.";
+            modalLink.href = productUrl(product);
+            modalLink.textContent = "Explore this product";
+            const image = getPrimaryImage(product);
+            modalImgWrap.style.display = image ? "" : "none";
+            if (image) {
+                modalImg.src = image;
+                modalImg.alt = product.name || "Product preview";
+            } else {
+                modalImg.removeAttribute("src");
+            }
+            overlay.style.display = "block";
+            modal.style.display = "block";
+            overlay.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
             modalClose.focus();
         }
 
@@ -1631,13 +1531,7 @@
 
                 const picked = pickProductWithinCategory(selectedCat);
 
-                // If category is "other", still show the item (fallback link rules apply in showRecommendation)
-                if (picked) {
-                    showRecommendation(selectedCat);
-                } else {
-                    // Extremely unlikely, but safe
-                    showRecommendation(selectedCat);
-                }
+                if (picked) showRecommendation(picked);
 
                 spinBtn.disabled = false;
                 spinBtn.textContent = "Spin the wheel";
@@ -1664,7 +1558,7 @@
 
                 // If there is only 1 category, add a "Surprise" fallback slice to keep wheel fun
                 if (categories.length === 1) {
-                    categories.push({ key: "other", label: "Surprise", link: "/products", products: products.slice() });
+                    categories.push({ key: "other", label: "Surprise", link: "/products", products: categories[0].products.slice() });
                 }
 
                 renderWheel(categories);
